@@ -484,3 +484,11 @@
 
 ## 87) 추가 문서
 - PR 자동 생성/업데이트 가이드: `/Users/hirediversity/Idle/docs/system/pr_create_auto_v1_kr.md`
+
+## 88) 다음 순차 작업
+1. [완료] PR 체크 대기 + 자동 머지 스크립트(`pr:merge:auto`) 추가.
+2. [완료] PR 워크플로우에 자동 머지 단계 반영.
+3. [완료] PR 자동 머지 사용 가이드 문서 추가.
+
+## 89) 추가 문서
+- PR 자동 머지 가이드: `/Users/hirediversity/Idle/docs/system/pr_merge_auto_v1_kr.md`

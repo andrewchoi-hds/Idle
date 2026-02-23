@@ -48,6 +48,10 @@ gh pr create \
 npm run pr:create:auto
 ```
 - 기본값으로 `git push -u origin <head>`까지 포함해 원격 동기화 후 PR을 생성/업데이트한다.
+- 머지 자동화(체크 대기 + squash 머지 + 브랜치 삭제):
+```bash
+npm run pr:merge:auto
+```
 
 ## 6) 병합 체크
 - Required check:
@@ -63,3 +67,4 @@ npm run pr:create:auto
 ## 7) 관련 파일
 - PR 템플릿: `/Users/hirediversity/Idle/.github/pull_request_template.md`
 - 브랜치 보호 가이드: `/Users/hirediversity/Idle/docs/system/github_required_checks_v1_kr.md`
+- PR 자동 머지 가이드: `/Users/hirediversity/Idle/docs/system/pr_merge_auto_v1_kr.md`
