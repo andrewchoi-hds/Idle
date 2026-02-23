@@ -32,3 +32,13 @@
   - 워크플로우를 수동 실행(`workflow_dispatch`) 후 다시 확인
 - 체크 이름이 바뀌어 Required Check가 깨졌을 때:
   - 워크플로우 `job id`를 고정(`verify-combat-diff`)하고 규칙을 다시 저장
+
+## 6) 플랜/가시성 제약 (중요)
+- 2026-02-23 기준, 개인 무료 플랜의 `private` 저장소는 Branch Protection(Required Check) API/설정이 제한될 수 있다.
+- 현재 저장소(`andrewchoi-hds/Idle`)는 `private` 상태이며, API 응답은 아래와 같이 반환됐다.
+  - `Upgrade to GitHub Pro or make this repository public to enable this feature.`
+
+## 7) 대응 옵션
+1. 저장소를 `public`으로 전환 후 Required Check 적용
+2. GitHub Pro(또는 Team/Enterprise) 플랜으로 전환 후 `private` 유지 상태에서 적용
+3. 플랜 전환 전까지는 CI 결과를 참고해 수동 게이트로 운영

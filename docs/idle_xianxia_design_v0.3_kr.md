@@ -367,3 +367,11 @@
 
 ## 59) 추가 문서
 - CI 워크플로우(artifact 포함): `/Users/hirediversity/Idle/.github/workflows/combat-diff-ci.yml`
+
+## 60) 다음 순차 작업
+1. [완료] Branch Protection 적용 시도 및 API 응답 확인.
+2. [완료] private 저장소/플랜 제약 사항 문서화.
+3. [완료] 회고 문서에 차단 원인/대응 옵션 반영.
+
+## 61) 추가 문서
+- Required Check 제약/대응: `/Users/hirediversity/Idle/docs/system/github_required_checks_v1_kr.md`
