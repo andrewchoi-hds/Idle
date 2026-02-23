@@ -9,3 +9,6 @@ data/sim/minimal_combat_report_ts_v1.json
 data/sim/minimal_combat_summary_v1.csv
 data/sim/minimal_combat_action_log_v1.csv
 data/sim/debug_ts_immortal_logs.json
+data/sim/save_auto_progress_regression_report_v1.json
+data/sim/save_offline_catchup_regression_report_v1.json
+data/sim/save_regression_ci_summary_v1.md

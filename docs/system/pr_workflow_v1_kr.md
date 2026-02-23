@@ -23,6 +23,8 @@ git checkout -b codex/<task-name>
 # 개발
 npm run typecheck
 npm run combat:diff:py-ts:suite
+npm run save:auto:regression:check
+npm run save:offline:regression:check
 
 git add .
 git commit -m "<type>: <summary>"
@@ -41,6 +43,8 @@ gh pr create \
 ## 6) 병합 체크
 - Required check:
   - `verify-combat-diff`
+- CI 요약 확인:
+  - PR Checks의 Step Summary에서 저장 회귀 결과 테이블(`Auto Progress`/`Offline Catchup`) 확인
 - 리뷰:
   - 1명 이상 승인
 - 정책:
