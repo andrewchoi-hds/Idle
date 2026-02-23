@@ -157,8 +157,11 @@ def classify_checks(pr_number: int) -> tuple[str, str]:
         capture=True,
     )
     text = (completed.stdout or completed.stderr or "").strip()
+    normalized = text.lower()
     if completed.returncode == 0:
         return "pass", text
+    if "no checks reported" in normalized:
+        return "pending", text
     if completed.returncode == 8:
         return "pending", text
     return "fail", text
