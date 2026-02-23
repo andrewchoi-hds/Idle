@@ -30,9 +30,10 @@ python3 scripts/lint_pr_body_v1.py \
 - `## Summary/Changes/Validation/Docs/Notes` 5개 섹션 존재
 - Summary: 의미 있는 bullet 3개 이상
 - Changes: 의미 있는 bullet 1개 이상(옵션 시 절대 경로 bullet 포함)
-- Validation: 표준 검증 5개 커맨드 체크박스 존재
+- Validation: 표준 검증 6개 커맨드 체크박스 존재
 - Docs: 체크리스트 bullet 2개 이상
 - Notes: `Generated at`, `Diff range` 존재
+- Validation 표준 명령 목록은 `/Users/hirediversity/Idle/scripts/pr_validation_commands_v1.py`를 기준으로 한다.
 
 ## 4) create/ship 자동 연계
 - `pr:create:auto`는 본문 생성 후 lint를 기본 실행한다.

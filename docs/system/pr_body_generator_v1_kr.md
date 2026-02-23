@@ -27,6 +27,7 @@ npm run pr:body:gen -- --run-validation
   - `npm run combat:diff:py-ts:suite`
   - `npm run save:auto:regression:check`
   - `npm run save:offline:regression:check`
+  - `npm run pr:validation:sync:check`
   - `npm run pr:body:lint:regression:check`
 
 ## 4) PR 생성 연계
@@ -43,3 +44,4 @@ gh pr create \
 - 필요 시 `--validated "<command>"`를 반복 전달해 체크 상태를 수동 지정할 수 있다.
 - 본문 품질 점검은 `npm run pr:body:lint`로 별도 수행할 수 있다.
 - `Changes` 항목은 `git diff --numstat` 기준의 `(+add/-del)` 정보를 함께 출력한다.
+- Validation 표준 명령 목록은 `/Users/hirediversity/Idle/scripts/pr_validation_commands_v1.py`를 단일 소스로 사용한다.

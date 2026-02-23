@@ -69,6 +69,8 @@
 - 회귀 안정성:
   - `PR Body Lint Regression` 단계에서 고정 fixture 기반 회귀 체크 실행
   - 결과는 `PR Body Lint Regression Summary` 섹션으로 Step Summary에 기록
+- 체크리스트 동기화:
+  - `PR Validation Checklist Sync` 단계에서 PR 템플릿 Validation 섹션과 표준 명령 목록 동기화 여부 확인
 - 목적:
   - 빈/부실한 PR 본문을 Required Check 단계에서 직접 차단
   - 로컬 `pr:create:auto`와 서버 CI 품질 기준 일치

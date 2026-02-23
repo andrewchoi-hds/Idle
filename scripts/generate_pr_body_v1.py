@@ -7,16 +7,11 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
+from pr_validation_commands_v1 import DEFAULT_VALIDATION_COMMANDS
+
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_OUTPUT = Path("/private/tmp/idle_pr_body_v1.md")
-DEFAULT_VALIDATION_COMMANDS = [
-    "npm run typecheck",
-    "npm run combat:diff:py-ts:suite",
-    "npm run save:auto:regression:check",
-    "npm run save:offline:regression:check",
-    "npm run pr:body:lint:regression:check",
-]
 
 
 @dataclass
