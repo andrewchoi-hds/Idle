@@ -24,3 +24,4 @@ npm run combat:diff:py-ts:suite
 ## 운영 문서
 - 전투 diff 가이드: `/Users/hirediversity/Idle/docs/sim/minimal_combat_ts_py_diff_v1_kr.md`
 - Required Check 설정 가이드: `/Users/hirediversity/Idle/docs/system/github_required_checks_v1_kr.md`
+- PR 워크플로우 가이드: `/Users/hirediversity/Idle/docs/system/pr_workflow_v1_kr.md`

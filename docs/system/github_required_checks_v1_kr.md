@@ -43,8 +43,10 @@
 - 적용 규칙:
   - Required status check: `verify-combat-diff`
   - strict mode: `true`
+  - enforce admins: `true`
   - PR 승인 수: `1`
   - stale review 무효화: `true`
+  - conversation 해결 필수: `true`
 
 ## 8) 대응 옵션 (참고)
 1. 저장소를 `public`으로 전환 후 Required Check 적용
