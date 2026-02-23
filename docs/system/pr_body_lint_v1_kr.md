@@ -15,6 +15,10 @@ npm run pr:body:gen
 npm run pr:body:lint
 ```
 - 기본 입력: `/private/tmp/idle_pr_body_v1.md`
+- GitHub PR 이벤트 본문 점검:
+```bash
+python3 scripts/lint_pr_body_v1.py --event-json "$GITHUB_EVENT_PATH"
+```
 
 ## 3) 점검 항목
 - `## Summary/Changes/Validation/Docs/Notes` 5개 섹션 존재
@@ -28,3 +32,7 @@ npm run pr:body:lint
 - `pr:create:auto`는 본문 생성 후 lint를 기본 실행한다.
 - `pr:ship:auto`도 create 단계를 통해 동일한 lint를 기본 실행한다.
 - 임시 우회가 필요하면 `--no-body-lint` 옵션을 사용한다.
+
+## 5) CI 연계
+- `verify-combat-diff` workflow는 `pull_request` 이벤트에서 PR 본문 lint를 먼저 실행한다.
+- 이 단계가 실패하면 typecheck/회귀 체크 이전에 PR이 차단된다.

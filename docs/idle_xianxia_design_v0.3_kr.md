@@ -524,3 +524,11 @@
 
 ## 97) 추가 문서
 - PR 본문 품질 Lint 가이드: `/Users/hirediversity/Idle/docs/system/pr_body_lint_v1_kr.md`
+
+## 98) 다음 순차 작업
+1. [완료] PR 본문 lint 스크립트가 GitHub `pull_request` 이벤트 본문(`GITHUB_EVENT_PATH`)을 직접 검사하도록 확장.
+2. [완료] Required Check workflow(`verify-combat-diff`)에 PR 본문 lint 선행 단계 추가.
+3. [완료] Required Check/PR 워크플로우 문서에 PR 본문 품질 게이트 운영 기준 반영.
+
+## 99) 추가 문서
+- Required Check 가이드(PR 본문 품질 게이트 반영): `/Users/hirediversity/Idle/docs/system/github_required_checks_v1_kr.md`

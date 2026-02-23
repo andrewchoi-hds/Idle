@@ -69,6 +69,7 @@ npm run pr:ship:auto
 - 체크 표시 기준:
   - PR 화면에서는 `pull_request` 트리거 실행 1건이 주 체크로 표시된다.
   - `main` 머지 후에는 `push(main)` 기반 검증이 별도로 실행된다.
+- PR 이벤트에서는 본문 품질 lint가 선행되며, 실패 시 나머지 검증 단계가 실행되지 않는다.
 - CI 요약 확인:
   - PR Checks의 Step Summary에서 저장 회귀 결과 테이블(`Auto Progress`/`Offline Catchup`) 확인
 - 리뷰:
