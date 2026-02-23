@@ -43,6 +43,11 @@ def parse_args() -> argparse.Namespace:
         default="",
         help="Inline markdown body text to lint.",
     )
+    parser.add_argument(
+        "--summary-file",
+        type=Path,
+        help="Optional markdown file path for lint result summary output.",
+    )
     return parser.parse_args()
 
 
@@ -153,6 +158,27 @@ def lint_text(text: str, strict_change_path: bool) -> list[str]:
     return errors
 
 
+def build_summary_markdown(source: str, errors: list[str]) -> str:
+    result = "PASS" if not errors else "FAIL"
+    lines: list[str] = []
+    lines.append("### PR Body Lint")
+    lines.append(f"- Source: `{source}`")
+    lines.append(f"- Result: `{result}`")
+    lines.append(f"- Error count: `{len(errors)}`")
+    if errors:
+        lines.append("")
+        lines.append("#### Errors")
+        for err in errors:
+            lines.append(f"- {err}")
+    return "\n".join(lines) + "\n"
+
+
+def write_summary_file(path: Path, source: str, errors: list[str]) -> None:
+    output = path.resolve()
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(build_summary_markdown(source, errors), encoding="utf-8")
+
+
 def load_event_body(event_json: Path) -> str:
     path = event_json.resolve()
     if not path.exists():
@@ -189,6 +215,8 @@ def main() -> None:
         text = body_file.read_text(encoding="utf-8")
 
     errors = lint_text(text, args.strict_change_path)
+    if args.summary_file is not None:
+        write_summary_file(args.summary_file, source, errors)
 
     if errors:
         print(f"[pr-body-lint] FAIL source={source}")

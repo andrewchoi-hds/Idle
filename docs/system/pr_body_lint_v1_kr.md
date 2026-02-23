@@ -19,6 +19,12 @@ npm run pr:body:lint
 ```bash
 python3 scripts/lint_pr_body_v1.py --event-json "$GITHUB_EVENT_PATH"
 ```
+- 요약 파일 출력:
+```bash
+python3 scripts/lint_pr_body_v1.py \
+  --event-json "$GITHUB_EVENT_PATH" \
+  --summary-file /tmp/pr_body_lint_summary_v1.md
+```
 
 ## 3) 점검 항목
 - `## Summary/Changes/Validation/Docs/Notes` 5개 섹션 존재
@@ -35,4 +41,5 @@ python3 scripts/lint_pr_body_v1.py --event-json "$GITHUB_EVENT_PATH"
 
 ## 5) CI 연계
 - `verify-combat-diff` workflow는 `pull_request` 이벤트에서 PR 본문 lint를 먼저 실행한다.
+- lint 결과는 GitHub Step Summary에 `PR Body Lint` 섹션으로 항상 남긴다(성공/실패 공통).
 - 이 단계가 실패하면 typecheck/회귀 체크 이전에 PR이 차단된다.
