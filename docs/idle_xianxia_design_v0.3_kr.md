@@ -540,3 +540,11 @@
 
 ## 101) 추가 문서
 - PR 본문 품질 Lint 가이드(Step Summary 반영): `/Users/hirediversity/Idle/docs/system/pr_body_lint_v1_kr.md`
+
+## 102) 다음 순차 작업
+1. [완료] PR 본문 자동 생성기에서 파일별 변경량(`git numstat`) 수집 로직 추가.
+2. [완료] `Summary`에 변경 규모(`files/commits/+add/-del`) 자동 표기 추가.
+3. [완료] `Changes`/`Notes`에 파일별 라인 증감 및 커밋 해시를 포함하도록 생성 포맷 개선.
+
+## 103) 추가 문서
+- PR 본문 자동 생성기 가이드(변경량/커밋 해시 반영): `/Users/hirediversity/Idle/docs/system/pr_body_generator_v1_kr.md`
