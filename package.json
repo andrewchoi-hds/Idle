@@ -14,6 +14,7 @@
     "tribulation:dump:ts": "tsx scripts/dump_tribulation_trials_ts_v1.ts",
     "save:breakthrough:dump:ts": "tsx scripts/dump_save_breakthrough_step_ts_v1.ts",
     "save:auto:tick:ts": "tsx scripts/dump_save_auto_progress_tick_ts_v1.ts",
+    "save:offline:catchup:ts": "tsx scripts/dump_save_offline_catchup_ts_v1.ts",
     "save:auto:regression:check": "python3 scripts/check_save_auto_progress_regression_v1.py --scenario-file data/sim/save_auto_progress_regression_scenarios_v1.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

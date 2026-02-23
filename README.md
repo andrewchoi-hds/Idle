@@ -15,6 +15,7 @@ npm run combat:diff:py-ts:suite
 npm run tribulation:dump:ts
 npm run save:breakthrough:dump:ts
 npm run save:auto:tick:ts
+npm run save:offline:catchup:ts
 npm run save:auto:regression:check
 ```
 
@@ -27,6 +28,7 @@ npm run save:auto:regression:check
 - 도겁 시뮬레이션 덤프(TS): `/Users/hirediversity/Idle/scripts/dump_tribulation_trials_ts_v1.ts`
 - save_v2 돌파 스텝 덤프(TS): `/Users/hirediversity/Idle/scripts/dump_save_breakthrough_step_ts_v1.ts`
 - save_v2 자동 진행 틱 덤프(TS): `/Users/hirediversity/Idle/scripts/dump_save_auto_progress_tick_ts_v1.ts`
+- save_v2 오프라인 복귀 정산 덤프(TS): `/Users/hirediversity/Idle/scripts/dump_save_offline_catchup_ts_v1.ts`
 - CI 워크플로우: `/Users/hirediversity/Idle/.github/workflows/combat-diff-ci.yml`
 
 ## 운영 문서
@@ -36,3 +38,4 @@ npm run save:auto:regression:check
 - 도겁 런타임 가이드: `/Users/hirediversity/Idle/docs/system/tribulation_runtime_v1_kr.md`
 - save_v2 돌파 런타임 가이드: `/Users/hirediversity/Idle/docs/system/save_breakthrough_runtime_v1_kr.md`
 - save_v2 자동 진행 루프 가이드: `/Users/hirediversity/Idle/docs/system/save_auto_progress_tick_runtime_v1_kr.md`
+- save_v2 오프라인 복귀 정산 가이드: `/Users/hirediversity/Idle/docs/system/save_offline_catchup_runtime_v1_kr.md`
