@@ -375,3 +375,11 @@
 
 ## 61) 추가 문서
 - Required Check 제약/대응: `/Users/hirediversity/Idle/docs/system/github_required_checks_v1_kr.md`
+
+## 62) 다음 순차 작업
+1. [완료] 저장소 `public` 전환.
+2. [완료] `main` 브랜치 보호 규칙에 Required Check(`verify-combat-diff`) 적용.
+3. [완료] 제약 문서를 현재 상태(적용 완료) 기준으로 갱신.
+
+## 63) 추가 문서
+- Required Check 적용 현황: `/Users/hirediversity/Idle/docs/system/github_required_checks_v1_kr.md`

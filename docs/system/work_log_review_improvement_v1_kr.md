@@ -31,10 +31,11 @@
    - 현상: `<OWNER>/<REPO>` placeholder를 치환하지 않으면 배지가 동작하지 않음.
    - 조치: 실제 원격 저장소 경로(`andrewchoi-hds/Idle`)로 치환.
    - 반영 위치: `/Users/hirediversity/Idle/README.md:7`
-3. [P2] Private 저장소 Branch Protection 적용 제약 (미해결, 플랜 의존)
+3. [P2] Private 저장소 Branch Protection 적용 제약 (해결됨)
    - 현상: Required Check API가 `403`으로 차단됨.
    - 원인: 개인 무료 플랜 + private 저장소 제약.
    - 증상 메시지: `Upgrade to GitHub Pro or make this repository public to enable this feature.`
+   - 조치: 저장소를 `public`으로 전환 후 `main`에 Required Check 적용 완료.
    - 대응 문서: `/Users/hirediversity/Idle/docs/system/github_required_checks_v1_kr.md`
 
 ## 3) 개선사항 점검표
@@ -42,9 +43,9 @@
    - 검증: `npm run combat:diff:py-ts:suite`
 2. 완료: CI에서 정합성 게이트 자동 실행.
    - 워크플로우: `/Users/hirediversity/Idle/.github/workflows/combat-diff-ci.yml`
-3. 진행 필요: Branch Protection에서 `verify-combat-diff`를 Required Check로 강제.
+3. 완료: Branch Protection에서 `verify-combat-diff` Required Check 강제.
    - 가이드: `/Users/hirediversity/Idle/docs/system/github_required_checks_v1_kr.md`
-   - 선행 조건: 저장소 공개 전환 또는 GitHub Pro 이상 플랜
+   - 적용 대상: `main` 브랜치
 4. 완료: README 배지 URL 실제 저장소 경로 치환.
 5. 완료: CI 결과물(JSON/CSV) artifact 업로드 추가.
    - 목적: 실패 시 시나리오별 결과 비교를 웹 UI에서 즉시 확인.
