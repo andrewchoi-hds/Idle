@@ -19,6 +19,7 @@ npm run save:offline:catchup:ts
 npm run save:auto:regression:check
 npm run save:offline:regression:check
 npm run save:regression:summary:md
+npm run pr:body:gen
 ```
 
 ## 주요 파일
@@ -32,12 +33,14 @@ npm run save:regression:summary:md
 - save_v2 자동 진행 틱 덤프(TS): `/Users/hirediversity/Idle/scripts/dump_save_auto_progress_tick_ts_v1.ts`
 - save_v2 오프라인 복귀 정산 덤프(TS): `/Users/hirediversity/Idle/scripts/dump_save_offline_catchup_ts_v1.ts`
 - 저장 회귀 CI 요약 빌더(PY): `/Users/hirediversity/Idle/scripts/build_save_regression_ci_summary_v1.py`
+- PR 본문 자동 생성기(PY): `/Users/hirediversity/Idle/scripts/generate_pr_body_v1.py`
 - CI 워크플로우: `/Users/hirediversity/Idle/.github/workflows/combat-diff-ci.yml`
 
 ## 운영 문서
 - 전투 diff 가이드: `/Users/hirediversity/Idle/docs/sim/minimal_combat_ts_py_diff_v1_kr.md`
 - Required Check 설정 가이드: `/Users/hirediversity/Idle/docs/system/github_required_checks_v1_kr.md`
 - PR 워크플로우 가이드: `/Users/hirediversity/Idle/docs/system/pr_workflow_v1_kr.md`
+- PR 본문 자동 생성 가이드: `/Users/hirediversity/Idle/docs/system/pr_body_generator_v1_kr.md`
 - 도겁 런타임 가이드: `/Users/hirediversity/Idle/docs/system/tribulation_runtime_v1_kr.md`
 - save_v2 돌파 런타임 가이드: `/Users/hirediversity/Idle/docs/system/save_breakthrough_runtime_v1_kr.md`
 - save_v2 자동 진행 루프 가이드: `/Users/hirediversity/Idle/docs/system/save_auto_progress_tick_runtime_v1_kr.md`
