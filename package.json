@@ -23,6 +23,7 @@
     "pr:body:gen": "python3 scripts/generate_pr_body_v1.py --base-ref origin/main --head-ref HEAD --output-file /private/tmp/idle_pr_body_v1.md",
     "pr:create:auto": "python3 scripts/create_pr_with_body_v1.py --base main --run-validation",
     "pr:merge:auto": "python3 scripts/merge_pr_when_ready_v1.py --base main --method squash --delete-branch --poll-interval-seconds 6 --wait-seconds 900",
+    "pr:ship:auto": "python3 scripts/ship_pr_auto_v1.py --base main --method squash",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -492,3 +492,11 @@
 
 ## 89) 추가 문서
 - PR 자동 머지 가이드: `/Users/hirediversity/Idle/docs/system/pr_merge_auto_v1_kr.md`
+
+## 90) 다음 순차 작업
+1. [완료] PR 생성+머지 단계를 묶은 원클릭 스크립트(`pr:ship:auto`) 추가.
+2. [완료] PR 워크플로우에 `pr:ship:auto` 단계 반영.
+3. [완료] 원클릭 ship 자동화 가이드 문서 추가.
+
+## 91) 추가 문서
+- PR 원클릭 ship 가이드: `/Users/hirediversity/Idle/docs/system/pr_ship_auto_v1_kr.md`

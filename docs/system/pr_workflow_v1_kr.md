@@ -52,6 +52,10 @@ npm run pr:create:auto
 ```bash
 npm run pr:merge:auto
 ```
+- End-to-end 원클릭(본문 생성 + PR 생성/업데이트 + 체크 대기 + 머지):
+```bash
+npm run pr:ship:auto
+```
 
 ## 6) 병합 체크
 - Required check:
