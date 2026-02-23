@@ -56,7 +56,13 @@ jobs:
         run: npm ci
 
       - name: PR Body Lint Regression
-        run: npm run pr:body:lint:regression:check
+        run: npm run pr:body:lint:regression:check:report
+
+      - name: PR Body Lint Regression Step Summary
+        if: always()
+        run: |
+          npm run pr:body:lint:regression:summary:md
+          cat data/sim/pr_body_lint_regression_ci_summary_v1.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: Typecheck
         run: npm run typecheck
@@ -92,3 +98,5 @@ jobs:
             data/sim/save_auto_progress_regression_report_v1.json
             data/sim/save_offline_catchup_regression_report_v1.json
             data/sim/save_regression_ci_summary_v1.md
+            data/sim/pr_body_lint_regression_report_v1.json
+            data/sim/pr_body_lint_regression_ci_summary_v1.md
