@@ -359,3 +359,11 @@
 
 ## 57) 추가 문서
 - 작업 기록·검토·개선 점검: `/Users/hirediversity/Idle/docs/system/work_log_review_improvement_v1_kr.md`
+
+## 58) 다음 순차 작업
+1. [완료] README CI 배지 URL을 실제 원격 저장소(`andrewchoi-hds/Idle`)로 치환.
+2. [완료] GitHub Actions에 전투 diff 결과 artifact 업로드 스텝 추가.
+3. [완료] 회고/점검 문서에서 미해결 항목 상태 갱신.
+
+## 59) 추가 문서
+- CI 워크플로우(artifact 포함): `/Users/hirediversity/Idle/.github/workflows/combat-diff-ci.yml`

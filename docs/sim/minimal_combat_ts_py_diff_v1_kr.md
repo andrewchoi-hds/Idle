@@ -58,6 +58,7 @@ npm run combat:diff:py-ts:suite
   - `npm ci`
   - `npm run typecheck`
   - `npm run combat:diff:py-ts:suite`
+  - 결과 artifact 업로드(`combat-diff-reports`)
 
 ## 8) 시나리오 세트
 - 기본 스위트 파일: `/Users/hirediversity/Idle/data/sim/combat_diff_scenarios_v1.json`

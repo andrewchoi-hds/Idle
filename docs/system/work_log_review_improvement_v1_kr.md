@@ -27,10 +27,10 @@
    - 현상: `skill_ids`, `monster_ids`, `include_action_log`가 잘못된 타입일 때 예측 불가 동작 가능.
    - 조치: 시나리오/CLI 입력 검증 및 bool 파서 추가.
    - 반영 위치: `/Users/hirediversity/Idle/scripts/compare_minimal_combat_ts_py_v1.py:82`, `/Users/hirediversity/Idle/scripts/compare_minimal_combat_ts_py_v1.py:108`, `/Users/hirediversity/Idle/scripts/compare_minimal_combat_ts_py_v1.py:149`
-2. [P3] README CI 배지가 템플릿 상태 (미해결, 환경의존)
+2. [P3] README CI 배지가 템플릿 상태 (해결됨)
    - 현상: `<OWNER>/<REPO>` placeholder를 치환하지 않으면 배지가 동작하지 않음.
+   - 조치: 실제 원격 저장소 경로(`andrewchoi-hds/Idle`)로 치환.
    - 반영 위치: `/Users/hirediversity/Idle/README.md:7`
-   - 필요 조치: 실제 원격 저장소 경로로 배지 URL 치환.
 
 ## 3) 개선사항 점검표
 1. 완료: TS/PY 전투 결과 완전 정합(3개 월드 시나리오) 확보.
@@ -39,8 +39,8 @@
    - 워크플로우: `/Users/hirediversity/Idle/.github/workflows/combat-diff-ci.yml`
 3. 진행 필요: Branch Protection에서 `verify-combat-diff`를 Required Check로 강제.
    - 가이드: `/Users/hirediversity/Idle/docs/system/github_required_checks_v1_kr.md`
-4. 진행 필요: README 배지 URL 실제 저장소 경로 치환.
-5. 선택 개선: CI 결과물(JSON 리포트) artifact 업로드 추가.
+4. 완료: README 배지 URL 실제 저장소 경로 치환.
+5. 완료: CI 결과물(JSON/CSV) artifact 업로드 추가.
    - 목적: 실패 시 시나리오별 결과 비교를 웹 UI에서 즉시 확인.
 
 ## 4) 재검증 결과

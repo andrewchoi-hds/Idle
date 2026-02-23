@@ -4,9 +4,7 @@
 현재는 밸런스 데이터 파이프라인 + 최소 전투 루프(TS/PY) + 교차 검증 CI를 중심으로 운영한다.
 
 ## CI Status
-[![Combat Diff CI](https://github.com/<OWNER>/<REPO>/actions/workflows/combat-diff-ci.yml/badge.svg)](https://github.com/<OWNER>/<REPO>/actions/workflows/combat-diff-ci.yml)
-
-- 위 배지 URL의 `<OWNER>/<REPO>`는 실제 GitHub 저장소 경로로 치환해서 사용한다.
+[![Combat Diff CI](https://github.com/andrewchoi-hds/Idle/actions/workflows/combat-diff-ci.yml/badge.svg)](https://github.com/andrewchoi-hds/Idle/actions/workflows/combat-diff-ci.yml)
 
 ## 핵심 검증 명령
 ```bash
