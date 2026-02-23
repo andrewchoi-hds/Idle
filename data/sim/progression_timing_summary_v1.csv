@@ -1,0 +1,4 @@
+world,stage_count,expected_world_hours,expected_world_deaths,avg_stage_hours,avg_stage_death_rate
+mortal,104,84.7374,1.2513,0.8148,0.012
+immortal,78,116.6801,10.5888,1.4959,0.1358
+true,16,115.4857,21.9838,7.2179,1.374

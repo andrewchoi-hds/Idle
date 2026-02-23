@@ -1,0 +1,112 @@
+[
+  {
+    "case_id": "bad_version",
+    "description": "version이 2가 아니면 실패해야 한다",
+    "operations": [
+      {
+        "op": "set",
+        "path": "version",
+        "value": 3
+      }
+    ],
+    "expected_error_contains": [
+      "version must be 2"
+    ]
+  },
+  {
+    "case_id": "missing_pity_counters",
+    "description": "pity_counters 누락 시 실패해야 한다",
+    "operations": [
+      {
+        "op": "delete",
+        "path": "pity_counters"
+      }
+    ],
+    "expected_error_contains": [
+      "missing keys: pity_counters"
+    ]
+  },
+  {
+    "case_id": "negative_breakthrough_streak",
+    "description": "돌파 실패 스택은 음수 불가",
+    "operations": [
+      {
+        "op": "set",
+        "path": "pity_counters.breakthrough_fail_streak",
+        "value": -1
+      }
+    ],
+    "expected_error_contains": [
+      "pity_counters.breakthrough_fail_streak must be non-negative int"
+    ]
+  },
+  {
+    "case_id": "negative_weekly_spirit_coin_spent",
+    "description": "주간 영석 사용량은 음수 불가",
+    "operations": [
+      {
+        "op": "set",
+        "path": "economy_tracking.weekly_spirit_coin_spent",
+        "value": -10
+      }
+    ],
+    "expected_error_contains": [
+      "economy_tracking.weekly_spirit_coin_spent must be non-negative number"
+    ]
+  },
+  {
+    "case_id": "invalid_last_week_reset_epoch",
+    "description": "주간 리셋 시각은 정수 타임스탬프여야 한다",
+    "operations": [
+      {
+        "op": "set",
+        "path": "economy_tracking.last_week_reset_epoch_ms",
+        "value": 12.34
+      }
+    ],
+    "expected_error_contains": [
+      "economy_tracking.last_week_reset_epoch_ms must be non-negative int"
+    ]
+  },
+  {
+    "case_id": "invalid_migrated_from_version",
+    "description": "마이그레이션 원본 버전은 1 이상이어야 한다",
+    "operations": [
+      {
+        "op": "set",
+        "path": "migration.migrated_from_version",
+        "value": 0
+      }
+    ],
+    "expected_error_contains": [
+      "migration.migrated_from_version must be int >= 1"
+    ]
+  },
+  {
+    "case_id": "invalid_migrated_at",
+    "description": "migrated_at은 ISO date-time이어야 한다",
+    "operations": [
+      {
+        "op": "set",
+        "path": "migration.migrated_at",
+        "value": "not_iso"
+      }
+    ],
+    "expected_error_contains": [
+      "migration.migrated_at must be valid ISO date-time"
+    ]
+  },
+  {
+    "case_id": "missing_migration",
+    "description": "migration 누락 시 실패해야 한다",
+    "operations": [
+      {
+        "op": "delete",
+        "path": "migration"
+      }
+    ],
+    "expected_error_contains": [
+      "missing keys: migration"
+    ]
+  }
+]

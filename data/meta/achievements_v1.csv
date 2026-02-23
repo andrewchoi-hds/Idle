@@ -1,0 +1,26 @@
+achievement_id,category,name_ko,tier,condition_type,condition_value,reward_type,reward_value,reward_item_ref,is_hidden,note
+ach_realm_001,realm,연기의 시작,bronze,reach_difficulty,4,currency_spirit_coin,400,pot_qi_01,no,초기 달성
+ach_realm_002,realm,축기의 문,silver,reach_difficulty,17,currency_spirit_coin,900,pot_brk_01,no,인간계 중반
+ach_realm_003,realm,결단의 의지,silver,reach_difficulty,30,currency_spirit_coin,1300,pot_brk_02,no,인간계 중반
+ach_realm_004,realm,원영 현현,gold,reach_difficulty,43,currency_rebirth_essence,12,pot_def_01,no,인간계 후반
+ach_realm_005,realm,화신 개안,gold,reach_difficulty,56,currency_rebirth_essence,18,pot_def_02,no,인간계 후반
+ach_realm_006,realm,연허 관문,platinum,reach_difficulty,69,currency_rebirth_essence,24,pot_tri_02,no,고난도 진입
+ach_realm_007,realm,합체 완성,platinum,reach_difficulty,82,currency_rebirth_essence,32,tal_guard_02,no,대승 직전
+ach_realm_008,realm,인간계 초월,diamond,reach_difficulty,104,currency_rebirth_essence,60,pot_tri_02,no,인간계 완주
+ach_realm_009,realm,신선계 입문,diamond,reach_difficulty,105,currency_rebirth_essence,70,pot_def_03,no,신선계 시작
+ach_realm_010,realm,금선 경지,mythic,reach_difficulty,156,currency_rebirth_essence,120,pot_tri_03,no,신선계 후반
+ach_realm_011,realm,도군 정점,mythic,reach_difficulty,182,currency_rebirth_essence,160,tal_luck_02,no,신선계 완주
+ach_realm_012,realm,원조의 발걸음,legend,reach_difficulty,198,currency_rebirth_essence,260,pot_tri_03,no,최종 도달
+ach_battle_001,battle,첫 보스 격파,bronze,kill_boss_count,1,currency_spirit_coin,500,pot_brk_01,no,전투 시작
+ach_battle_002,battle,정예 사냥꾼,silver,kill_elite_count,50,currency_spirit_coin,1200,pot_def_01,no,누적 정예
+ach_battle_003,battle,보스 파쇄자,gold,kill_boss_count,25,currency_rebirth_essence,26,pot_tri_02,no,누적 보스
+ach_battle_004,battle,무패의 칼날,platinum,win_streak,40,currency_rebirth_essence,40,tal_crit_02,no,연승 업적
+ach_battle_005,battle,도겁 생환자,diamond,survive_tribulation_count,10,currency_rebirth_essence,80,tal_guard_02,no,도겁 생존
+ach_battle_006,battle,원초 집행관,legend,kill_monster,mob_t_009:20,currency_rebirth_essence,140,tal_luck_02,no,진선계 타깃
+ach_growth_001,growth,첫 환생,bronze,rebirth_count,1,currency_rebirth_essence,10,none,no,환생 입문
+ach_growth_002,growth,윤회 숙련,silver,rebirth_count,10,currency_rebirth_essence,45,none,no,중반 환생
+ach_growth_003,growth,윤회 대가,gold,rebirth_count,30,currency_rebirth_essence,90,tal_luck_01,no,고환생 유저
+ach_growth_004,growth,시간의 축적,platinum,offline_hours_claimed,120,currency_spirit_coin,3000,tal_qi_02,no,방치 보상
+ach_growth_005,growth,영약의 달인,diamond,consume_item_count,pot_tri_03:20,currency_rebirth_essence,110,pot_tri_03,no,영약 소비
+ach_hidden_001,hidden,벼락 속 생환,legend,survive_tribulation_hp_below,0.05,currency_rebirth_essence,100,pot_tri_03,yes,체력 5% 이하 생존
+ach_hidden_002,hidden,무영의 사냥꾼,legend,kill_elite_without_hit,15,currency_rebirth_essence,120,tal_luck_02,yes,무피격 조건

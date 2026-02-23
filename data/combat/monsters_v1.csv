@@ -1,0 +1,37 @@
+monster_id,name_ko,world,zone,type,element,tier,hp_mult,atk_mult,def_mult,speed_mult,crit_rate,evasion,drop_group,rebirth_essence_drop,ai_pattern,special_mechanic,note
+mob_m_001,회색 들쥐,mortal,초심평원,normal,none,1,0.90,0.85,0.80,1.00,0.03,0.02,mortal_common,1,basic,none,튜토리얼 몹
+mob_m_002,청엽 늑대,mortal,초심평원,normal,wind,1,1.00,0.95,0.85,1.08,0.04,0.05,mortal_common,1,basic,none,이동속도 빠름
+mob_m_003,적안 들개,mortal,초심평원,elite,fire,2,1.45,1.20,1.00,1.05,0.08,0.06,mortal_elite,2,burst,burn_claw,초반 정예
+mob_m_004,망혼 도적,mortal,황혼고도,normal,none,2,1.20,1.10,1.00,1.02,0.06,0.03,mortal_common,2,basic,none,균형형
+mob_m_005,혈영 자객,mortal,황혼고도,elite,dark,3,1.65,1.35,1.05,1.15,0.12,0.12,mortal_elite,3,assassin,high_crit,치명 특화
+mob_m_006,철갑 멧돼지,mortal,요수림,normal,earth,2,1.55,1.00,1.45,0.82,0.02,0.01,mortal_common,2,tank,high_def,탱커 몹
+mob_m_007,독아 거미,mortal,요수림,elite,poison,3,1.50,1.25,1.10,1.00,0.07,0.04,mortal_elite,3,dot,poison_stack,지속피해형
+mob_m_008,고목정령,mortal,요수림,boss,wood,4,3.20,1.35,1.60,0.75,0.05,0.00,mortal_boss,6,tank,root_bind,지역 보스
+mob_m_009,빙혼 망령,mortal,한야동굴,normal,ice,3,1.35,1.20,1.15,0.95,0.09,0.08,mortal_common,3,control,slow_aura,감속 오라
+mob_m_010,흑철 무사,mortal,한야동굴,elite,metal,4,1.90,1.55,1.40,0.90,0.10,0.03,mortal_elite,4,duelist,armor_break,강공형
+mob_m_011,뇌운 독수리,mortal,천뢰협곡,elite,thunder,4,1.70,1.50,1.05,1.25,0.14,0.10,mortal_elite,4,burst,chain_lightning,연쇄 번개
+mob_m_012,적천뇌수,mortal,천뢰협곡,boss,thunder,5,3.80,1.80,1.35,1.00,0.12,0.05,mortal_boss,8,burst,thunderstorm,도겁 관문 보스
+mob_i_001,청연 선학,immortal,운해선원,normal,wind,5,2.10,1.60,1.30,1.18,0.10,0.10,immortal_common,5,basic,none,신선계 일반몹
+mob_i_002,금우 수문장,immortal,운해선원,elite,metal,6,2.80,1.95,1.75,0.92,0.11,0.04,immortal_elite,7,tank,shield_cast,보호막 시전
+mob_i_003,진염 화령,immortal,적화비경,normal,fire,6,2.35,1.85,1.25,1.05,0.12,0.07,immortal_common,6,burst,burn_field,장판 피해
+mob_i_004,홍련마수,immortal,적화비경,elite,fire,7,3.00,2.10,1.45,1.02,0.14,0.08,immortal_elite,8,burst,burn_stack,화상 중첩
+mob_i_005,한옥 월영,immortal,월빙궁,normal,ice,6,2.50,1.75,1.40,0.98,0.10,0.12,immortal_common,6,control,slow_field,회피형 제어
+mob_i_006,현빙 거신,immortal,월빙궁,boss,ice,8,4.60,2.20,2.10,0.70,0.08,0.02,immortal_boss,12,tank,frozen_prison,빙결 구속
+mob_i_007,허공 포식자,immortal,허공균열,elite,void,8,3.40,2.35,1.70,1.10,0.18,0.12,immortal_elite,10,assassin,blink_strike,순간이동 돌진
+mob_i_008,성광 사도,immortal,천광성전,normal,light,7,2.70,1.95,1.55,1.00,0.13,0.09,immortal_common,7,support,heal_link,자힐 링크
+mob_i_009,도화 요희,immortal,천광성전,elite,charm,7,2.95,2.05,1.40,1.08,0.16,0.15,immortal_elite,9,control,charm_gaze,매혹 디버프
+mob_i_010,태을 수호령,immortal,태을천궁,boss,light,9,5.20,2.45,2.30,0.78,0.10,0.04,immortal_boss,14,tank,invuln_phase,무적 패턴 보유
+mob_i_011,천벌 감시자,immortal,도겁대,elite,thunder,9,3.60,2.60,1.75,1.05,0.17,0.10,immortal_elite,11,burst,judgment_mark,낙뢰 표식
+mob_i_012,구천뢰제,immortal,도겁대,boss,thunder,10,5.80,2.85,2.00,0.95,0.20,0.08,immortal_boss,16,burst,triple_tribulation,신선계 종결 보스
+mob_t_001,법칙 잔영,true,원초계단,normal,void,10,4.20,2.70,2.10,1.05,0.16,0.12,true_common,15,control,law_suppress,버프 약화
+mob_t_002,태허 감응체,true,원초계단,elite,void,11,4.90,3.10,2.35,1.00,0.19,0.14,true_elite,18,assassin,phase_shift,피해 회피
+mob_t_003,무극 선영,true,원초계단,boss,light,12,7.20,3.50,2.90,0.85,0.20,0.06,true_boss,24,tank,law_barrier,피해 상한 보유
+mob_t_004,혼돈 수인,true,무극연못,normal,chaos,11,4.50,3.00,2.20,1.02,0.18,0.10,true_common,16,basic,none,중반 일반몹
+mob_t_005,천도 파수자,true,무극연못,elite,light,12,5.40,3.35,2.55,0.95,0.20,0.11,true_elite,20,burst,execute_mark,체력비례 처형
+mob_t_006,귀허 군주,true,무극연못,boss,dark,13,8.00,3.90,3.10,0.80,0.22,0.07,true_boss,26,burst,soul_harvest,영혼 수확
+mob_t_007,원초 풍신,true,시공파편,normal,wind,12,4.80,3.25,2.30,1.20,0.21,0.16,true_common,17,assassin,multi_dash,다단 돌진
+mob_t_008,시공 절단자,true,시공파편,elite,space,13,5.90,3.60,2.70,1.10,0.23,0.18,true_elite,21,assassin,time_cut,시간 절단
+mob_t_009,대도 집행관,true,시공파편,boss,space,14,8.60,4.15,3.25,0.92,0.24,0.10,true_boss,28,control,time_stop,시간 정지 패턴
+mob_t_010,태초 망령,true,원조심연,normal,dark,13,5.20,3.40,2.55,1.00,0.20,0.13,true_common,18,dot,fear_aura,공포 오라
+mob_t_011,창세 인형,true,원조심연,elite,none,14,6.30,3.85,2.90,0.98,0.22,0.12,true_elite,22,tank,adaptive_armor,적응형 방어
+mob_t_012,원조천마,true,원조심연,boss,chaos,15,9.40,4.55,3.60,0.88,0.25,0.09,true_boss,32,burst,origin_tribulation,최종 보스

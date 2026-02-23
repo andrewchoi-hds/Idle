@@ -1,0 +1,9 @@
+currency,flow_type,source,value_weekly
+spirit_coin,inflow,quest,90620.0
+spirit_coin,inflow,drop,23162.44
+spirit_coin,outflow,shop,483229.0
+spirit_coin,outflow,sink,289000.0
+rebirth_essence,inflow,quest,522.4
+rebirth_essence,inflow,drop,1089.74
+rebirth_essence,outflow,shop,801.0
+rebirth_essence,outflow,sink,1240.0

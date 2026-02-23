@@ -1,0 +1,52 @@
+[
+  {
+    "key": "defense_constant_k",
+    "value": "180",
+    "note": "used in defense/(defense+K)"
+  },
+  {
+    "key": "accuracy_floor",
+    "value": "0.55",
+    "note": "minimum hit chance"
+  },
+  {
+    "key": "accuracy_ceiling",
+    "value": "0.98",
+    "note": "maximum hit chance"
+  },
+  {
+    "key": "crit_rate_cap",
+    "value": "0.75",
+    "note": "hard cap"
+  },
+  {
+    "key": "evasion_cap",
+    "value": "0.60",
+    "note": "hard cap"
+  },
+  {
+    "key": "damage_reduction_cap",
+    "value": "0.70",
+    "note": "hard cap"
+  },
+  {
+    "key": "element_advantage_bonus",
+    "value": "0.25",
+    "note": "max elemental damage bonus"
+  },
+  {
+    "key": "element_disadvantage_penalty",
+    "value": "-0.20",
+    "note": "max elemental damage penalty"
+  },
+  {
+    "key": "offline_reward_hours_cap",
+    "value": "12",
+    "note": "max offline accumulation"
+  },
+  {
+    "key": "auto_rebirth_unlock_stage",
+    "value": "mortal:4",
+    "note": "unlock requirement"
+  }
+]

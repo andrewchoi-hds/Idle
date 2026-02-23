@@ -1,0 +1,11 @@
+key,value,note
+defense_constant_k,180,used in defense/(defense+K)
+accuracy_floor,0.55,minimum hit chance
+accuracy_ceiling,0.98,maximum hit chance
+crit_rate_cap,0.75,hard cap
+evasion_cap,0.60,hard cap
+damage_reduction_cap,0.70,hard cap
+element_advantage_bonus,0.25,max elemental damage bonus
+element_disadvantage_penalty,-0.20,max elemental damage penalty
+offline_reward_hours_cap,12,max offline accumulation
+auto_rebirth_unlock_stage,mortal:4,unlock requirement

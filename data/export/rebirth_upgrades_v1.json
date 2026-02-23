@@ -1,0 +1,702 @@
+[
+  {
+    "branch": "cultivation_speed",
+    "level": 1,
+    "cost_rebirth_essence": 20,
+    "effect_type": "mul_pct",
+    "effect_value": 0.04
+  },
+  {
+    "branch": "cultivation_speed",
+    "level": 2,
+    "cost_rebirth_essence": 23,
+    "effect_type": "mul_pct",
+    "effect_value": 0.05
+  },
+  {
+    "branch": "cultivation_speed",
+    "level": 3,
+    "cost_rebirth_essence": 27,
+    "effect_type": "mul_pct",
+    "effect_value": 0.06
+  },
+  {
+    "branch": "cultivation_speed",
+    "level": 4,
+    "cost_rebirth_essence": 32,
+    "effect_type": "mul_pct",
+    "effect_value": 0.07
+  },
+  {
+    "branch": "cultivation_speed",
+    "level": 5,
+    "cost_rebirth_essence": 37,
+    "effect_type": "mul_pct",
+    "effect_value": 0.08
+  },
+  {
+    "branch": "cultivation_speed",
+    "level": 6,
+    "cost_rebirth_essence": 44,
+    "effect_type": "mul_pct",
+    "effect_value": 0.09
+  },
+  {
+    "branch": "cultivation_speed",
+    "level": 7,
+    "cost_rebirth_essence": 51,
+    "effect_type": "mul_pct",
+    "effect_value": 0.1
+  },
+  {
+    "branch": "cultivation_speed",
+    "level": 8,
+    "cost_rebirth_essence": 60,
+    "effect_type": "mul_pct",
+    "effect_value": 0.11
+  },
+  {
+    "branch": "cultivation_speed",
+    "level": 9,
+    "cost_rebirth_essence": 70,
+    "effect_type": "mul_pct",
+    "effect_value": 0.12
+  },
+  {
+    "branch": "cultivation_speed",
+    "level": 10,
+    "cost_rebirth_essence": 82,
+    "effect_type": "mul_pct",
+    "effect_value": 0.13
+  },
+  {
+    "branch": "cultivation_speed",
+    "level": 11,
+    "cost_rebirth_essence": 96,
+    "effect_type": "mul_pct",
+    "effect_value": 0.14
+  },
+  {
+    "branch": "cultivation_speed",
+    "level": 12,
+    "cost_rebirth_essence": 112,
+    "effect_type": "mul_pct",
+    "effect_value": 0.15
+  },
+  {
+    "branch": "cultivation_speed",
+    "level": 13,
+    "cost_rebirth_essence": 132,
+    "effect_type": "mul_pct",
+    "effect_value": 0.16
+  },
+  {
+    "branch": "cultivation_speed",
+    "level": 14,
+    "cost_rebirth_essence": 154,
+    "effect_type": "mul_pct",
+    "effect_value": 0.17
+  },
+  {
+    "branch": "cultivation_speed",
+    "level": 15,
+    "cost_rebirth_essence": 180,
+    "effect_type": "mul_pct",
+    "effect_value": 0.18
+  },
+  {
+    "branch": "cultivation_speed",
+    "level": 16,
+    "cost_rebirth_essence": 211,
+    "effect_type": "mul_pct",
+    "effect_value": 0.19
+  },
+  {
+    "branch": "cultivation_speed",
+    "level": 17,
+    "cost_rebirth_essence": 247,
+    "effect_type": "mul_pct",
+    "effect_value": 0.2
+  },
+  {
+    "branch": "cultivation_speed",
+    "level": 18,
+    "cost_rebirth_essence": 289,
+    "effect_type": "mul_pct",
+    "effect_value": 0.21
+  },
+  {
+    "branch": "cultivation_speed",
+    "level": 19,
+    "cost_rebirth_essence": 338,
+    "effect_type": "mul_pct",
+    "effect_value": 0.22
+  },
+  {
+    "branch": "cultivation_speed",
+    "level": 20,
+    "cost_rebirth_essence": 395,
+    "effect_type": "mul_pct",
+    "effect_value": 0.23
+  },
+  {
+    "branch": "breakthrough_bonus",
+    "level": 1,
+    "cost_rebirth_essence": 20,
+    "effect_type": "flat_pct",
+    "effect_value": 0.8
+  },
+  {
+    "branch": "breakthrough_bonus",
+    "level": 2,
+    "cost_rebirth_essence": 24,
+    "effect_type": "flat_pct",
+    "effect_value": 0.95
+  },
+  {
+    "branch": "breakthrough_bonus",
+    "level": 3,
+    "cost_rebirth_essence": 28,
+    "effect_type": "flat_pct",
+    "effect_value": 1.1
+  },
+  {
+    "branch": "breakthrough_bonus",
+    "level": 4,
+    "cost_rebirth_essence": 34,
+    "effect_type": "flat_pct",
+    "effect_value": 1.25
+  },
+  {
+    "branch": "breakthrough_bonus",
+    "level": 5,
+    "cost_rebirth_essence": 40,
+    "effect_type": "flat_pct",
+    "effect_value": 1.4
+  },
+  {
+    "branch": "breakthrough_bonus",
+    "level": 6,
+    "cost_rebirth_essence": 48,
+    "effect_type": "flat_pct",
+    "effect_value": 1.55
+  },
+  {
+    "branch": "breakthrough_bonus",
+    "level": 7,
+    "cost_rebirth_essence": 57,
+    "effect_type": "flat_pct",
+    "effect_value": 1.7
+  },
+  {
+    "branch": "breakthrough_bonus",
+    "level": 8,
+    "cost_rebirth_essence": 68,
+    "effect_type": "flat_pct",
+    "effect_value": 1.85
+  },
+  {
+    "branch": "breakthrough_bonus",
+    "level": 9,
+    "cost_rebirth_essence": 80,
+    "effect_type": "flat_pct",
+    "effect_value": 2.0
+  },
+  {
+    "branch": "breakthrough_bonus",
+    "level": 10,
+    "cost_rebirth_essence": 96,
+    "effect_type": "flat_pct",
+    "effect_value": 2.15
+  },
+  {
+    "branch": "breakthrough_bonus",
+    "level": 11,
+    "cost_rebirth_essence": 114,
+    "effect_type": "flat_pct",
+    "effect_value": 2.3
+  },
+  {
+    "branch": "breakthrough_bonus",
+    "level": 12,
+    "cost_rebirth_essence": 136,
+    "effect_type": "flat_pct",
+    "effect_value": 2.45
+  },
+  {
+    "branch": "breakthrough_bonus",
+    "level": 13,
+    "cost_rebirth_essence": 161,
+    "effect_type": "flat_pct",
+    "effect_value": 2.6
+  },
+  {
+    "branch": "breakthrough_bonus",
+    "level": 14,
+    "cost_rebirth_essence": 192,
+    "effect_type": "flat_pct",
+    "effect_value": 2.75
+  },
+  {
+    "branch": "breakthrough_bonus",
+    "level": 15,
+    "cost_rebirth_essence": 228,
+    "effect_type": "flat_pct",
+    "effect_value": 2.9
+  },
+  {
+    "branch": "breakthrough_bonus",
+    "level": 16,
+    "cost_rebirth_essence": 272,
+    "effect_type": "flat_pct",
+    "effect_value": 3.05
+  },
+  {
+    "branch": "breakthrough_bonus",
+    "level": 17,
+    "cost_rebirth_essence": 323,
+    "effect_type": "flat_pct",
+    "effect_value": 3.2
+  },
+  {
+    "branch": "breakthrough_bonus",
+    "level": 18,
+    "cost_rebirth_essence": 385,
+    "effect_type": "flat_pct",
+    "effect_value": 3.35
+  },
+  {
+    "branch": "breakthrough_bonus",
+    "level": 19,
+    "cost_rebirth_essence": 458,
+    "effect_type": "flat_pct",
+    "effect_value": 3.5
+  },
+  {
+    "branch": "breakthrough_bonus",
+    "level": 20,
+    "cost_rebirth_essence": 545,
+    "effect_type": "flat_pct",
+    "effect_value": 3.65
+  },
+  {
+    "branch": "tribulation_guard",
+    "level": 1,
+    "cost_rebirth_essence": 20,
+    "effect_type": "flat_pct",
+    "effect_value": 0.9
+  },
+  {
+    "branch": "tribulation_guard",
+    "level": 2,
+    "cost_rebirth_essence": 24,
+    "effect_type": "flat_pct",
+    "effect_value": 1.1
+  },
+  {
+    "branch": "tribulation_guard",
+    "level": 3,
+    "cost_rebirth_essence": 29,
+    "effect_type": "flat_pct",
+    "effect_value": 1.3
+  },
+  {
+    "branch": "tribulation_guard",
+    "level": 4,
+    "cost_rebirth_essence": 35,
+    "effect_type": "flat_pct",
+    "effect_value": 1.5
+  },
+  {
+    "branch": "tribulation_guard",
+    "level": 5,
+    "cost_rebirth_essence": 43,
+    "effect_type": "flat_pct",
+    "effect_value": 1.7
+  },
+  {
+    "branch": "tribulation_guard",
+    "level": 6,
+    "cost_rebirth_essence": 52,
+    "effect_type": "flat_pct",
+    "effect_value": 1.9
+  },
+  {
+    "branch": "tribulation_guard",
+    "level": 7,
+    "cost_rebirth_essence": 63,
+    "effect_type": "flat_pct",
+    "effect_value": 2.1
+  },
+  {
+    "branch": "tribulation_guard",
+    "level": 8,
+    "cost_rebirth_essence": 76,
+    "effect_type": "flat_pct",
+    "effect_value": 2.3
+  },
+  {
+    "branch": "tribulation_guard",
+    "level": 9,
+    "cost_rebirth_essence": 92,
+    "effect_type": "flat_pct",
+    "effect_value": 2.5
+  },
+  {
+    "branch": "tribulation_guard",
+    "level": 10,
+    "cost_rebirth_essence": 111,
+    "effect_type": "flat_pct",
+    "effect_value": 2.7
+  },
+  {
+    "branch": "tribulation_guard",
+    "level": 11,
+    "cost_rebirth_essence": 135,
+    "effect_type": "flat_pct",
+    "effect_value": 2.9
+  },
+  {
+    "branch": "tribulation_guard",
+    "level": 12,
+    "cost_rebirth_essence": 163,
+    "effect_type": "flat_pct",
+    "effect_value": 3.1
+  },
+  {
+    "branch": "tribulation_guard",
+    "level": 13,
+    "cost_rebirth_essence": 197,
+    "effect_type": "flat_pct",
+    "effect_value": 3.3
+  },
+  {
+    "branch": "tribulation_guard",
+    "level": 14,
+    "cost_rebirth_essence": 238,
+    "effect_type": "flat_pct",
+    "effect_value": 3.5
+  },
+  {
+    "branch": "tribulation_guard",
+    "level": 15,
+    "cost_rebirth_essence": 288,
+    "effect_type": "flat_pct",
+    "effect_value": 3.7
+  },
+  {
+    "branch": "tribulation_guard",
+    "level": 16,
+    "cost_rebirth_essence": 349,
+    "effect_type": "flat_pct",
+    "effect_value": 3.9
+  },
+  {
+    "branch": "tribulation_guard",
+    "level": 17,
+    "cost_rebirth_essence": 422,
+    "effect_type": "flat_pct",
+    "effect_value": 4.1
+  },
+  {
+    "branch": "tribulation_guard",
+    "level": 18,
+    "cost_rebirth_essence": 511,
+    "effect_type": "flat_pct",
+    "effect_value": 4.3
+  },
+  {
+    "branch": "tribulation_guard",
+    "level": 19,
+    "cost_rebirth_essence": 618,
+    "effect_type": "flat_pct",
+    "effect_value": 4.5
+  },
+  {
+    "branch": "tribulation_guard",
+    "level": 20,
+    "cost_rebirth_essence": 748,
+    "effect_type": "flat_pct",
+    "effect_value": 4.7
+  },
+  {
+    "branch": "potion_mastery",
+    "level": 1,
+    "cost_rebirth_essence": 20,
+    "effect_type": "mul_pct",
+    "effect_value": 0.03
+  },
+  {
+    "branch": "potion_mastery",
+    "level": 2,
+    "cost_rebirth_essence": 24,
+    "effect_type": "mul_pct",
+    "effect_value": 0.037
+  },
+  {
+    "branch": "potion_mastery",
+    "level": 3,
+    "cost_rebirth_essence": 28,
+    "effect_type": "mul_pct",
+    "effect_value": 0.044
+  },
+  {
+    "branch": "potion_mastery",
+    "level": 4,
+    "cost_rebirth_essence": 33,
+    "effect_type": "mul_pct",
+    "effect_value": 0.051
+  },
+  {
+    "branch": "potion_mastery",
+    "level": 5,
+    "cost_rebirth_essence": 39,
+    "effect_type": "mul_pct",
+    "effect_value": 0.058
+  },
+  {
+    "branch": "potion_mastery",
+    "level": 6,
+    "cost_rebirth_essence": 46,
+    "effect_type": "mul_pct",
+    "effect_value": 0.065
+  },
+  {
+    "branch": "potion_mastery",
+    "level": 7,
+    "cost_rebirth_essence": 54,
+    "effect_type": "mul_pct",
+    "effect_value": 0.072
+  },
+  {
+    "branch": "potion_mastery",
+    "level": 8,
+    "cost_rebirth_essence": 64,
+    "effect_type": "mul_pct",
+    "effect_value": 0.079
+  },
+  {
+    "branch": "potion_mastery",
+    "level": 9,
+    "cost_rebirth_essence": 75,
+    "effect_type": "mul_pct",
+    "effect_value": 0.086
+  },
+  {
+    "branch": "potion_mastery",
+    "level": 10,
+    "cost_rebirth_essence": 89,
+    "effect_type": "mul_pct",
+    "effect_value": 0.093
+  },
+  {
+    "branch": "potion_mastery",
+    "level": 11,
+    "cost_rebirth_essence": 105,
+    "effect_type": "mul_pct",
+    "effect_value": 0.1
+  },
+  {
+    "branch": "potion_mastery",
+    "level": 12,
+    "cost_rebirth_essence": 124,
+    "effect_type": "mul_pct",
+    "effect_value": 0.107
+  },
+  {
+    "branch": "potion_mastery",
+    "level": 13,
+    "cost_rebirth_essence": 146,
+    "effect_type": "mul_pct",
+    "effect_value": 0.114
+  },
+  {
+    "branch": "potion_mastery",
+    "level": 14,
+    "cost_rebirth_essence": 172,
+    "effect_type": "mul_pct",
+    "effect_value": 0.121
+  },
+  {
+    "branch": "potion_mastery",
+    "level": 15,
+    "cost_rebirth_essence": 203,
+    "effect_type": "mul_pct",
+    "effect_value": 0.128
+  },
+  {
+    "branch": "potion_mastery",
+    "level": 16,
+    "cost_rebirth_essence": 239,
+    "effect_type": "mul_pct",
+    "effect_value": 0.135
+  },
+  {
+    "branch": "potion_mastery",
+    "level": 17,
+    "cost_rebirth_essence": 283,
+    "effect_type": "mul_pct",
+    "effect_value": 0.142
+  },
+  {
+    "branch": "potion_mastery",
+    "level": 18,
+    "cost_rebirth_essence": 333,
+    "effect_type": "mul_pct",
+    "effect_value": 0.149
+  },
+  {
+    "branch": "potion_mastery",
+    "level": 19,
+    "cost_rebirth_essence": 393,
+    "effect_type": "mul_pct",
+    "effect_value": 0.156
+  },
+  {
+    "branch": "potion_mastery",
+    "level": 20,
+    "cost_rebirth_essence": 464,
+    "effect_type": "mul_pct",
+    "effect_value": 0.163
+  },
+  {
+    "branch": "offline_efficiency",
+    "level": 1,
+    "cost_rebirth_essence": 20,
+    "effect_type": "mul_pct",
+    "effect_value": 0.05
+  },
+  {
+    "branch": "offline_efficiency",
+    "level": 2,
+    "cost_rebirth_essence": 23,
+    "effect_type": "mul_pct",
+    "effect_value": 0.06
+  },
+  {
+    "branch": "offline_efficiency",
+    "level": 3,
+    "cost_rebirth_essence": 27,
+    "effect_type": "mul_pct",
+    "effect_value": 0.07
+  },
+  {
+    "branch": "offline_efficiency",
+    "level": 4,
+    "cost_rebirth_essence": 31,
+    "effect_type": "mul_pct",
+    "effect_value": 0.08
+  },
+  {
+    "branch": "offline_efficiency",
+    "level": 5,
+    "cost_rebirth_essence": 36,
+    "effect_type": "mul_pct",
+    "effect_value": 0.09
+  },
+  {
+    "branch": "offline_efficiency",
+    "level": 6,
+    "cost_rebirth_essence": 42,
+    "effect_type": "mul_pct",
+    "effect_value": 0.1
+  },
+  {
+    "branch": "offline_efficiency",
+    "level": 7,
+    "cost_rebirth_essence": 49,
+    "effect_type": "mul_pct",
+    "effect_value": 0.11
+  },
+  {
+    "branch": "offline_efficiency",
+    "level": 8,
+    "cost_rebirth_essence": 57,
+    "effect_type": "mul_pct",
+    "effect_value": 0.12
+  },
+  {
+    "branch": "offline_efficiency",
+    "level": 9,
+    "cost_rebirth_essence": 66,
+    "effect_type": "mul_pct",
+    "effect_value": 0.13
+  },
+  {
+    "branch": "offline_efficiency",
+    "level": 10,
+    "cost_rebirth_essence": 76,
+    "effect_type": "mul_pct",
+    "effect_value": 0.14
+  },
+  {
+    "branch": "offline_efficiency",
+    "level": 11,
+    "cost_rebirth_essence": 88,
+    "effect_type": "mul_pct",
+    "effect_value": 0.15
+  },
+  {
+    "branch": "offline_efficiency",
+    "level": 12,
+    "cost_rebirth_essence": 102,
+    "effect_type": "mul_pct",
+    "effect_value": 0.16
+  },
+  {
+    "branch": "offline_efficiency",
+    "level": 13,
+    "cost_rebirth_essence": 119,
+    "effect_type": "mul_pct",
+    "effect_value": 0.17
+  },
+  {
+    "branch": "offline_efficiency",
+    "level": 14,
+    "cost_rebirth_essence": 138,
+    "effect_type": "mul_pct",
+    "effect_value": 0.18
+  },
+  {
+    "branch": "offline_efficiency",
+    "level": 15,
+    "cost_rebirth_essence": 160,
+    "effect_type": "mul_pct",
+    "effect_value": 0.19
+  },
+  {
+    "branch": "offline_efficiency",
+    "level": 16,
+    "cost_rebirth_essence": 185,
+    "effect_type": "mul_pct",
+    "effect_value": 0.2
+  },
+  {
+    "branch": "offline_efficiency",
+    "level": 17,
+    "cost_rebirth_essence": 215,
+    "effect_type": "mul_pct",
+    "effect_value": 0.21
+  },
+  {
+    "branch": "offline_efficiency",
+    "level": 18,
+    "cost_rebirth_essence": 249,
+    "effect_type": "mul_pct",
+    "effect_value": 0.22
+  },
+  {
+    "branch": "offline_efficiency",
+    "level": 19,
+    "cost_rebirth_essence": 289,
+    "effect_type": "mul_pct",
+    "effect_value": 0.23
+  },
+  {
+    "branch": "offline_efficiency",
+    "level": 20,
+    "cost_rebirth_essence": 336,
+    "effect_type": "mul_pct",
+    "effect_value": 0.24
+  }
+]

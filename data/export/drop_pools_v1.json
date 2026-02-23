@@ -1,0 +1,1552 @@
+[
+  {
+    "drop_group": "dg_mortal_common_t1",
+    "item_ref": "mat_spirit_herb",
+    "item_type": "material",
+    "weight": "55",
+    "min_qty": "2",
+    "max_qty": "5",
+    "unlock_condition": "difficulty>=1",
+    "note": "초반 약초"
+  },
+  {
+    "drop_group": "dg_mortal_common_t1",
+    "item_ref": "mat_spirit_essence",
+    "item_type": "material",
+    "weight": "35",
+    "min_qty": "1",
+    "max_qty": "3",
+    "unlock_condition": "difficulty>=1",
+    "note": "초반 정수"
+  },
+  {
+    "drop_group": "dg_mortal_common_t1",
+    "item_ref": "coin_spirit",
+    "item_type": "currency",
+    "weight": "10",
+    "min_qty": "15",
+    "max_qty": "35",
+    "unlock_condition": "difficulty>=1",
+    "note": "영석"
+  },
+  {
+    "drop_group": "dg_mortal_elite_t1",
+    "item_ref": "mat_iron_powder",
+    "item_type": "material",
+    "weight": "45",
+    "min_qty": "2",
+    "max_qty": "4",
+    "unlock_condition": "difficulty>=6",
+    "note": "강화 재료"
+  },
+  {
+    "drop_group": "dg_mortal_elite_t1",
+    "item_ref": "pot_qi_01",
+    "item_type": "item",
+    "weight": "30",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=6",
+    "note": "수련 영약"
+  },
+  {
+    "drop_group": "dg_mortal_elite_t1",
+    "item_ref": "coin_spirit",
+    "item_type": "currency",
+    "weight": "25",
+    "min_qty": "35",
+    "max_qty": "60",
+    "unlock_condition": "difficulty>=6",
+    "note": "엘리트 영석"
+  },
+  {
+    "drop_group": "dg_mortal_event_t1",
+    "item_ref": "pot_brk_01",
+    "item_type": "item",
+    "weight": "35",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=8",
+    "note": "돌파 보조"
+  },
+  {
+    "drop_group": "dg_mortal_event_t1",
+    "item_ref": "tal_qi_01",
+    "item_type": "item",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=8",
+    "note": "방치 부적"
+  },
+  {
+    "drop_group": "dg_mortal_event_t1",
+    "item_ref": "mat_spirit_essence",
+    "item_type": "material",
+    "weight": "45",
+    "min_qty": "3",
+    "max_qty": "6",
+    "unlock_condition": "difficulty>=8",
+    "note": "이벤트 정수"
+  },
+  {
+    "drop_group": "dg_mortal_common_t2",
+    "item_ref": "mat_spirit_herb",
+    "item_type": "material",
+    "weight": "40",
+    "min_qty": "3",
+    "max_qty": "6",
+    "unlock_condition": "difficulty>=18",
+    "note": "약초 증가"
+  },
+  {
+    "drop_group": "dg_mortal_common_t2",
+    "item_ref": "mat_spirit_essence",
+    "item_type": "material",
+    "weight": "40",
+    "min_qty": "2",
+    "max_qty": "4",
+    "unlock_condition": "difficulty>=18",
+    "note": "정수 증가"
+  },
+  {
+    "drop_group": "dg_mortal_common_t2",
+    "item_ref": "mat_shadow_shard",
+    "item_type": "material",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "2",
+    "unlock_condition": "difficulty>=18",
+    "note": "암흑 파편"
+  },
+  {
+    "drop_group": "dg_mortal_elite_t2",
+    "item_ref": "mat_shadow_shard",
+    "item_type": "material",
+    "weight": "40",
+    "min_qty": "2",
+    "max_qty": "4",
+    "unlock_condition": "difficulty>=24",
+    "note": "암흑 재료"
+  },
+  {
+    "drop_group": "dg_mortal_elite_t2",
+    "item_ref": "pot_brk_02",
+    "item_type": "item",
+    "weight": "25",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=24",
+    "note": "돌파 영약"
+  },
+  {
+    "drop_group": "dg_mortal_elite_t2",
+    "item_ref": "tal_hit_01",
+    "item_type": "item",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=24",
+    "note": "명중 부적"
+  },
+  {
+    "drop_group": "dg_mortal_elite_t2",
+    "item_ref": "coin_spirit",
+    "item_type": "currency",
+    "weight": "15",
+    "min_qty": "60",
+    "max_qty": "90",
+    "unlock_condition": "difficulty>=24",
+    "note": "중반 영석"
+  },
+  {
+    "drop_group": "dg_mortal_event_t2",
+    "item_ref": "pot_qi_02",
+    "item_type": "item",
+    "weight": "30",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=26",
+    "note": "중반 수련 영약"
+  },
+  {
+    "drop_group": "dg_mortal_event_t2",
+    "item_ref": "tal_eva_01",
+    "item_type": "item",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=26",
+    "note": "회피 부적"
+  },
+  {
+    "drop_group": "dg_mortal_event_t2",
+    "item_ref": "mat_spirit_essence",
+    "item_type": "material",
+    "weight": "50",
+    "min_qty": "4",
+    "max_qty": "7",
+    "unlock_condition": "difficulty>=26",
+    "note": "이벤트 재료"
+  },
+  {
+    "drop_group": "dg_mortal_common_t3",
+    "item_ref": "mat_poison_gland",
+    "item_type": "material",
+    "weight": "35",
+    "min_qty": "2",
+    "max_qty": "4",
+    "unlock_condition": "difficulty>=32",
+    "note": "독 재료"
+  },
+  {
+    "drop_group": "dg_mortal_common_t3",
+    "item_ref": "mat_spirit_essence",
+    "item_type": "material",
+    "weight": "40",
+    "min_qty": "3",
+    "max_qty": "5",
+    "unlock_condition": "difficulty>=32",
+    "note": "정수"
+  },
+  {
+    "drop_group": "dg_mortal_common_t3",
+    "item_ref": "coin_spirit",
+    "item_type": "currency",
+    "weight": "25",
+    "min_qty": "80",
+    "max_qty": "120",
+    "unlock_condition": "difficulty>=32",
+    "note": "영석"
+  },
+  {
+    "drop_group": "dg_mortal_elite_t3",
+    "item_ref": "mat_poison_gland",
+    "item_type": "material",
+    "weight": "40",
+    "min_qty": "3",
+    "max_qty": "6",
+    "unlock_condition": "difficulty>=38",
+    "note": "독 재료 다량"
+  },
+  {
+    "drop_group": "dg_mortal_elite_t3",
+    "item_ref": "pot_def_01",
+    "item_type": "item",
+    "weight": "25",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=38",
+    "note": "초반 방어 영약"
+  },
+  {
+    "drop_group": "dg_mortal_elite_t3",
+    "item_ref": "tal_crit_01",
+    "item_type": "item",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=38",
+    "note": "치명 부적"
+  },
+  {
+    "drop_group": "dg_mortal_elite_t3",
+    "item_ref": "mat_thunder_stone",
+    "item_type": "material",
+    "weight": "15",
+    "min_qty": "1",
+    "max_qty": "2",
+    "unlock_condition": "difficulty>=38",
+    "note": "희귀 재료"
+  },
+  {
+    "drop_group": "dg_mortal_boss_t3",
+    "item_ref": "pot_tri_01",
+    "item_type": "item",
+    "weight": "30",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=44",
+    "note": "도겁 영약"
+  },
+  {
+    "drop_group": "dg_mortal_boss_t3",
+    "item_ref": "tal_guard_01",
+    "item_type": "item",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=44",
+    "note": "심마 저항 부적"
+  },
+  {
+    "drop_group": "dg_mortal_boss_t3",
+    "item_ref": "mat_boss_core_mortal",
+    "item_type": "material",
+    "weight": "50",
+    "min_qty": "1",
+    "max_qty": "2",
+    "unlock_condition": "difficulty>=44",
+    "note": "보스 핵심 재료"
+  },
+  {
+    "drop_group": "dg_mortal_common_t4",
+    "item_ref": "mat_frost_crystal",
+    "item_type": "material",
+    "weight": "35",
+    "min_qty": "2",
+    "max_qty": "5",
+    "unlock_condition": "difficulty>=48",
+    "note": "빙결 재료"
+  },
+  {
+    "drop_group": "dg_mortal_common_t4",
+    "item_ref": "mat_spirit_essence",
+    "item_type": "material",
+    "weight": "35",
+    "min_qty": "3",
+    "max_qty": "6",
+    "unlock_condition": "difficulty>=48",
+    "note": "정수"
+  },
+  {
+    "drop_group": "dg_mortal_common_t4",
+    "item_ref": "coin_spirit",
+    "item_type": "currency",
+    "weight": "30",
+    "min_qty": "120",
+    "max_qty": "180",
+    "unlock_condition": "difficulty>=48",
+    "note": "영석"
+  },
+  {
+    "drop_group": "dg_mortal_elite_t4",
+    "item_ref": "mat_frost_crystal",
+    "item_type": "material",
+    "weight": "40",
+    "min_qty": "3",
+    "max_qty": "6",
+    "unlock_condition": "difficulty>=56",
+    "note": "빙결 다량"
+  },
+  {
+    "drop_group": "dg_mortal_elite_t4",
+    "item_ref": "pot_def_02",
+    "item_type": "item",
+    "weight": "25",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=56",
+    "note": "중반 방어 영약"
+  },
+  {
+    "drop_group": "dg_mortal_elite_t4",
+    "item_ref": "tal_hit_02",
+    "item_type": "item",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=56",
+    "note": "명중 부적"
+  },
+  {
+    "drop_group": "dg_mortal_elite_t4",
+    "item_ref": "mat_thunder_stone",
+    "item_type": "material",
+    "weight": "15",
+    "min_qty": "2",
+    "max_qty": "3",
+    "unlock_condition": "difficulty>=56",
+    "note": "뇌정석 파편"
+  },
+  {
+    "drop_group": "dg_mortal_event_t4",
+    "item_ref": "pot_qi_03",
+    "item_type": "item",
+    "weight": "30",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=58",
+    "note": "후반 수련 영약"
+  },
+  {
+    "drop_group": "dg_mortal_event_t4",
+    "item_ref": "tal_crit_02",
+    "item_type": "item",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=58",
+    "note": "치피 부적"
+  },
+  {
+    "drop_group": "dg_mortal_event_t4",
+    "item_ref": "mat_frost_crystal",
+    "item_type": "material",
+    "weight": "50",
+    "min_qty": "3",
+    "max_qty": "6",
+    "unlock_condition": "difficulty>=58",
+    "note": "빙결 보상"
+  },
+  {
+    "drop_group": "dg_mortal_common_t5",
+    "item_ref": "mat_thunder_stone",
+    "item_type": "material",
+    "weight": "35",
+    "min_qty": "2",
+    "max_qty": "4",
+    "unlock_condition": "difficulty>=64",
+    "note": "뇌속 재료"
+  },
+  {
+    "drop_group": "dg_mortal_common_t5",
+    "item_ref": "mat_spirit_essence",
+    "item_type": "material",
+    "weight": "30",
+    "min_qty": "4",
+    "max_qty": "7",
+    "unlock_condition": "difficulty>=64",
+    "note": "정수"
+  },
+  {
+    "drop_group": "dg_mortal_common_t5",
+    "item_ref": "coin_spirit",
+    "item_type": "currency",
+    "weight": "35",
+    "min_qty": "180",
+    "max_qty": "260",
+    "unlock_condition": "difficulty>=64",
+    "note": "고레벨 영석"
+  },
+  {
+    "drop_group": "dg_mortal_elite_t5",
+    "item_ref": "mat_thunder_stone",
+    "item_type": "material",
+    "weight": "45",
+    "min_qty": "3",
+    "max_qty": "6",
+    "unlock_condition": "difficulty>=70",
+    "note": "뇌속 다량"
+  },
+  {
+    "drop_group": "dg_mortal_elite_t5",
+    "item_ref": "pot_tri_02",
+    "item_type": "item",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=70",
+    "note": "신선 대비 영약"
+  },
+  {
+    "drop_group": "dg_mortal_elite_t5",
+    "item_ref": "tal_guard_02",
+    "item_type": "item",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=70",
+    "note": "도겁 보호 부적"
+  },
+  {
+    "drop_group": "dg_mortal_elite_t5",
+    "item_ref": "mat_boss_core_mortal",
+    "item_type": "material",
+    "weight": "15",
+    "min_qty": "1",
+    "max_qty": "2",
+    "unlock_condition": "difficulty>=70",
+    "note": "보스 핵 재료"
+  },
+  {
+    "drop_group": "dg_mortal_boss_t5",
+    "item_ref": "pot_tri_02",
+    "item_type": "item",
+    "weight": "30",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=76",
+    "note": "도겁 핵심"
+  },
+  {
+    "drop_group": "dg_mortal_boss_t5",
+    "item_ref": "tal_luck_01",
+    "item_type": "item",
+    "weight": "15",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=76",
+    "note": "드롭 부적"
+  },
+  {
+    "drop_group": "dg_mortal_boss_t5",
+    "item_ref": "mat_boss_core_mortal",
+    "item_type": "material",
+    "weight": "55",
+    "min_qty": "2",
+    "max_qty": "3",
+    "unlock_condition": "difficulty>=76",
+    "note": "대승 재료"
+  },
+  {
+    "drop_group": "dg_mortal_event_t5",
+    "item_ref": "pot_brk_03",
+    "item_type": "item",
+    "weight": "25",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=64",
+    "note": "고급 돌파 영약"
+  },
+  {
+    "drop_group": "dg_mortal_event_t5",
+    "item_ref": "tal_qi_02",
+    "item_type": "item",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=64",
+    "note": "고급 방치 부적"
+  },
+  {
+    "drop_group": "dg_mortal_event_t5",
+    "item_ref": "mat_thunder_stone",
+    "item_type": "material",
+    "weight": "55",
+    "min_qty": "2",
+    "max_qty": "5",
+    "unlock_condition": "difficulty>=64",
+    "note": "이벤트 재료"
+  },
+  {
+    "drop_group": "dg_mortal_event_t6",
+    "item_ref": "pot_tri_02",
+    "item_type": "item",
+    "weight": "35",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=84",
+    "note": "대승 전 도겁 영약"
+  },
+  {
+    "drop_group": "dg_mortal_event_t6",
+    "item_ref": "tal_guard_02",
+    "item_type": "item",
+    "weight": "25",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=84",
+    "note": "대승 전 보호 부적"
+  },
+  {
+    "drop_group": "dg_mortal_event_t6",
+    "item_ref": "rebirth_essence",
+    "item_type": "currency",
+    "weight": "40",
+    "min_qty": "8",
+    "max_qty": "14",
+    "unlock_condition": "difficulty>=84",
+    "note": "환생 정수"
+  },
+  {
+    "drop_group": "dg_tribulation_mortal",
+    "item_ref": "pot_tri_02",
+    "item_type": "item",
+    "weight": "35",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=91",
+    "note": "인간계 도겁"
+  },
+  {
+    "drop_group": "dg_tribulation_mortal",
+    "item_ref": "tal_guard_02",
+    "item_type": "item",
+    "weight": "25",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=91",
+    "note": "보호 부적"
+  },
+  {
+    "drop_group": "dg_tribulation_mortal",
+    "item_ref": "rebirth_essence",
+    "item_type": "currency",
+    "weight": "40",
+    "min_qty": "16",
+    "max_qty": "26",
+    "unlock_condition": "difficulty>=91",
+    "note": "환생 정수 보상"
+  },
+  {
+    "drop_group": "dg_mortal_boss_t1",
+    "item_ref": "pot_brk_01",
+    "item_type": "item",
+    "weight": "35",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=12",
+    "note": "초반 보스 돌파 보조"
+  },
+  {
+    "drop_group": "dg_mortal_boss_t1",
+    "item_ref": "mat_boss_core_mortal",
+    "item_type": "material",
+    "weight": "45",
+    "min_qty": "1",
+    "max_qty": "2",
+    "unlock_condition": "difficulty>=12",
+    "note": "보스 코어"
+  },
+  {
+    "drop_group": "dg_mortal_boss_t1",
+    "item_ref": "coin_spirit",
+    "item_type": "currency",
+    "weight": "20",
+    "min_qty": "70",
+    "max_qty": "110",
+    "unlock_condition": "difficulty>=12",
+    "note": "보스 영석"
+  },
+  {
+    "drop_group": "dg_immortal_common_t1",
+    "item_ref": "mat_immortal_leaf",
+    "item_type": "material",
+    "weight": "45",
+    "min_qty": "2",
+    "max_qty": "5",
+    "unlock_condition": "difficulty>=105",
+    "note": "신선 약재"
+  },
+  {
+    "drop_group": "dg_immortal_common_t1",
+    "item_ref": "mat_spirit_essence",
+    "item_type": "material",
+    "weight": "30",
+    "min_qty": "5",
+    "max_qty": "8",
+    "unlock_condition": "difficulty>=105",
+    "note": "정수"
+  },
+  {
+    "drop_group": "dg_immortal_common_t1",
+    "item_ref": "coin_spirit",
+    "item_type": "currency",
+    "weight": "25",
+    "min_qty": "260",
+    "max_qty": "360",
+    "unlock_condition": "difficulty>=105",
+    "note": "상위 영석"
+  },
+  {
+    "drop_group": "dg_immortal_elite_t1",
+    "item_ref": "mat_immortal_leaf",
+    "item_type": "material",
+    "weight": "40",
+    "min_qty": "3",
+    "max_qty": "6",
+    "unlock_condition": "difficulty>=110",
+    "note": "약재 다량"
+  },
+  {
+    "drop_group": "dg_immortal_elite_t1",
+    "item_ref": "pot_def_03",
+    "item_type": "item",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=110",
+    "note": "상위 방어 영약"
+  },
+  {
+    "drop_group": "dg_immortal_elite_t1",
+    "item_ref": "pot_tri_02",
+    "item_type": "item",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=110",
+    "note": "도겁 영약"
+  },
+  {
+    "drop_group": "dg_immortal_elite_t1",
+    "item_ref": "mat_immortal_core",
+    "item_type": "material",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "2",
+    "unlock_condition": "difficulty>=110",
+    "note": "신선 코어"
+  },
+  {
+    "drop_group": "dg_immortal_event_t1",
+    "item_ref": "tal_luck_01",
+    "item_type": "item",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=112",
+    "note": "드롭 부적"
+  },
+  {
+    "drop_group": "dg_immortal_event_t1",
+    "item_ref": "pot_brk_03",
+    "item_type": "item",
+    "weight": "30",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=112",
+    "note": "돌파 영약"
+  },
+  {
+    "drop_group": "dg_immortal_event_t1",
+    "item_ref": "mat_immortal_leaf",
+    "item_type": "material",
+    "weight": "50",
+    "min_qty": "3",
+    "max_qty": "6",
+    "unlock_condition": "difficulty>=112",
+    "note": "이벤트 재료"
+  },
+  {
+    "drop_group": "dg_immortal_common_t2",
+    "item_ref": "mat_flame_core",
+    "item_type": "material",
+    "weight": "40",
+    "min_qty": "2",
+    "max_qty": "5",
+    "unlock_condition": "difficulty>=118",
+    "note": "화염 코어"
+  },
+  {
+    "drop_group": "dg_immortal_common_t2",
+    "item_ref": "mat_immortal_leaf",
+    "item_type": "material",
+    "weight": "35",
+    "min_qty": "3",
+    "max_qty": "6",
+    "unlock_condition": "difficulty>=118",
+    "note": "약재"
+  },
+  {
+    "drop_group": "dg_immortal_common_t2",
+    "item_ref": "coin_spirit",
+    "item_type": "currency",
+    "weight": "25",
+    "min_qty": "320",
+    "max_qty": "450",
+    "unlock_condition": "difficulty>=118",
+    "note": "영석"
+  },
+  {
+    "drop_group": "dg_immortal_elite_t2",
+    "item_ref": "mat_flame_core",
+    "item_type": "material",
+    "weight": "42",
+    "min_qty": "3",
+    "max_qty": "6",
+    "unlock_condition": "difficulty>=124",
+    "note": "화염 핵심"
+  },
+  {
+    "drop_group": "dg_immortal_elite_t2",
+    "item_ref": "pot_tri_03",
+    "item_type": "item",
+    "weight": "18",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=124",
+    "note": "전설 도겁 영약"
+  },
+  {
+    "drop_group": "dg_immortal_elite_t2",
+    "item_ref": "tal_guard_02",
+    "item_type": "item",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=124",
+    "note": "도겁 보호 부적"
+  },
+  {
+    "drop_group": "dg_immortal_elite_t2",
+    "item_ref": "mat_immortal_core",
+    "item_type": "material",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "2",
+    "unlock_condition": "difficulty>=124",
+    "note": "신선 코어"
+  },
+  {
+    "drop_group": "dg_immortal_boss_t2",
+    "item_ref": "pot_tri_03",
+    "item_type": "item",
+    "weight": "25",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=130",
+    "note": "보스 도겁 영약"
+  },
+  {
+    "drop_group": "dg_immortal_boss_t2",
+    "item_ref": "tal_luck_02",
+    "item_type": "item",
+    "weight": "10",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=130",
+    "note": "환생 부적"
+  },
+  {
+    "drop_group": "dg_immortal_boss_t2",
+    "item_ref": "mat_boss_core_immortal",
+    "item_type": "material",
+    "weight": "65",
+    "min_qty": "2",
+    "max_qty": "4",
+    "unlock_condition": "difficulty>=130",
+    "note": "신선 보스 코어"
+  },
+  {
+    "drop_group": "dg_immortal_common_t3",
+    "item_ref": "mat_frost_core",
+    "item_type": "material",
+    "weight": "40",
+    "min_qty": "2",
+    "max_qty": "5",
+    "unlock_condition": "difficulty>=134",
+    "note": "빙결 코어"
+  },
+  {
+    "drop_group": "dg_immortal_common_t3",
+    "item_ref": "mat_immortal_leaf",
+    "item_type": "material",
+    "weight": "35",
+    "min_qty": "4",
+    "max_qty": "7",
+    "unlock_condition": "difficulty>=134",
+    "note": "약재"
+  },
+  {
+    "drop_group": "dg_immortal_common_t3",
+    "item_ref": "coin_spirit",
+    "item_type": "currency",
+    "weight": "25",
+    "min_qty": "380",
+    "max_qty": "520",
+    "unlock_condition": "difficulty>=134",
+    "note": "영석"
+  },
+  {
+    "drop_group": "dg_immortal_boss_t3",
+    "item_ref": "pot_tri_03",
+    "item_type": "item",
+    "weight": "28",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=140",
+    "note": "도겁 영약"
+  },
+  {
+    "drop_group": "dg_immortal_boss_t3",
+    "item_ref": "tal_guard_02",
+    "item_type": "item",
+    "weight": "22",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=140",
+    "note": "보호 부적"
+  },
+  {
+    "drop_group": "dg_immortal_boss_t3",
+    "item_ref": "mat_boss_core_immortal",
+    "item_type": "material",
+    "weight": "50",
+    "min_qty": "2",
+    "max_qty": "4",
+    "unlock_condition": "difficulty>=140",
+    "note": "보스 코어"
+  },
+  {
+    "drop_group": "dg_immortal_event_t3",
+    "item_ref": "pot_def_03",
+    "item_type": "item",
+    "weight": "28",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=140",
+    "note": "방어 영약"
+  },
+  {
+    "drop_group": "dg_immortal_event_t3",
+    "item_ref": "tal_crit_02",
+    "item_type": "item",
+    "weight": "18",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=140",
+    "note": "치피 부적"
+  },
+  {
+    "drop_group": "dg_immortal_event_t3",
+    "item_ref": "mat_frost_core",
+    "item_type": "material",
+    "weight": "54",
+    "min_qty": "3",
+    "max_qty": "6",
+    "unlock_condition": "difficulty>=140",
+    "note": "이벤트 재료"
+  },
+  {
+    "drop_group": "dg_immortal_event_t2",
+    "item_ref": "pot_qi_03",
+    "item_type": "item",
+    "weight": "30",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=124",
+    "note": "수련 영약"
+  },
+  {
+    "drop_group": "dg_immortal_event_t2",
+    "item_ref": "tal_qi_02",
+    "item_type": "item",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=124",
+    "note": "방치 부적"
+  },
+  {
+    "drop_group": "dg_immortal_event_t2",
+    "item_ref": "mat_flame_core",
+    "item_type": "material",
+    "weight": "50",
+    "min_qty": "3",
+    "max_qty": "6",
+    "unlock_condition": "difficulty>=124",
+    "note": "화염 재료"
+  },
+  {
+    "drop_group": "dg_immortal_event_t4",
+    "item_ref": "tal_luck_02",
+    "item_type": "item",
+    "weight": "14",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=146",
+    "note": "환생 부적"
+  },
+  {
+    "drop_group": "dg_immortal_event_t4",
+    "item_ref": "pot_tri_03",
+    "item_type": "item",
+    "weight": "26",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=146",
+    "note": "전설 도겁 영약"
+  },
+  {
+    "drop_group": "dg_immortal_event_t4",
+    "item_ref": "mat_immortal_core",
+    "item_type": "material",
+    "weight": "60",
+    "min_qty": "2",
+    "max_qty": "5",
+    "unlock_condition": "difficulty>=146",
+    "note": "핵심 재료"
+  },
+  {
+    "drop_group": "dg_immortal_elite_t4",
+    "item_ref": "mat_immortal_core",
+    "item_type": "material",
+    "weight": "42",
+    "min_qty": "2",
+    "max_qty": "5",
+    "unlock_condition": "difficulty>=150",
+    "note": "고급 코어"
+  },
+  {
+    "drop_group": "dg_immortal_elite_t4",
+    "item_ref": "tal_guard_02",
+    "item_type": "item",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=150",
+    "note": "도겁 보호"
+  },
+  {
+    "drop_group": "dg_immortal_elite_t4",
+    "item_ref": "pot_tri_03",
+    "item_type": "item",
+    "weight": "18",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=150",
+    "note": "도겁 영약"
+  },
+  {
+    "drop_group": "dg_immortal_elite_t4",
+    "item_ref": "rebirth_essence",
+    "item_type": "currency",
+    "weight": "20",
+    "min_qty": "18",
+    "max_qty": "30",
+    "unlock_condition": "difficulty>=150",
+    "note": "환생 정수"
+  },
+  {
+    "drop_group": "dg_immortal_event_t5",
+    "item_ref": "pot_brk_03",
+    "item_type": "item",
+    "weight": "28",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=158",
+    "note": "돌파 영약"
+  },
+  {
+    "drop_group": "dg_immortal_event_t5",
+    "item_ref": "tal_luck_01",
+    "item_type": "item",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=158",
+    "note": "드롭 부적"
+  },
+  {
+    "drop_group": "dg_immortal_event_t5",
+    "item_ref": "mat_boss_core_immortal",
+    "item_type": "material",
+    "weight": "52",
+    "min_qty": "1",
+    "max_qty": "3",
+    "unlock_condition": "difficulty>=158",
+    "note": "보스 재료"
+  },
+  {
+    "drop_group": "dg_immortal_boss_t5",
+    "item_ref": "pot_tri_03",
+    "item_type": "item",
+    "weight": "24",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=158",
+    "note": "고급 도겁 영약"
+  },
+  {
+    "drop_group": "dg_immortal_boss_t5",
+    "item_ref": "tal_luck_02",
+    "item_type": "item",
+    "weight": "12",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=158",
+    "note": "환생 부적"
+  },
+  {
+    "drop_group": "dg_immortal_boss_t5",
+    "item_ref": "mat_boss_core_immortal",
+    "item_type": "material",
+    "weight": "64",
+    "min_qty": "2",
+    "max_qty": "4",
+    "unlock_condition": "difficulty>=158",
+    "note": "보스 코어"
+  },
+  {
+    "drop_group": "dg_tribulation_immortal",
+    "item_ref": "pot_tri_03",
+    "item_type": "item",
+    "weight": "30",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=168",
+    "note": "신선 도겁 영약"
+  },
+  {
+    "drop_group": "dg_tribulation_immortal",
+    "item_ref": "tal_guard_02",
+    "item_type": "item",
+    "weight": "25",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=168",
+    "note": "도겁 보호 부적"
+  },
+  {
+    "drop_group": "dg_tribulation_immortal",
+    "item_ref": "rebirth_essence",
+    "item_type": "currency",
+    "weight": "45",
+    "min_qty": "28",
+    "max_qty": "42",
+    "unlock_condition": "difficulty>=168",
+    "note": "고급 환생 정수"
+  },
+  {
+    "drop_group": "dg_true_common_t1",
+    "item_ref": "mat_void_crystal",
+    "item_type": "material",
+    "weight": "46",
+    "min_qty": "2",
+    "max_qty": "4",
+    "unlock_condition": "difficulty>=183",
+    "note": "진선 재료"
+  },
+  {
+    "drop_group": "dg_true_common_t1",
+    "item_ref": "mat_immortal_core",
+    "item_type": "material",
+    "weight": "24",
+    "min_qty": "3",
+    "max_qty": "5",
+    "unlock_condition": "difficulty>=183",
+    "note": "상위 코어"
+  },
+  {
+    "drop_group": "dg_true_common_t1",
+    "item_ref": "rebirth_essence",
+    "item_type": "currency",
+    "weight": "30",
+    "min_qty": "24",
+    "max_qty": "36",
+    "unlock_condition": "difficulty>=183",
+    "note": "환생 정수"
+  },
+  {
+    "drop_group": "dg_true_elite_t1",
+    "item_ref": "mat_void_crystal",
+    "item_type": "material",
+    "weight": "40",
+    "min_qty": "3",
+    "max_qty": "6",
+    "unlock_condition": "difficulty>=184",
+    "note": "공허 결정"
+  },
+  {
+    "drop_group": "dg_true_elite_t1",
+    "item_ref": "pot_tri_03",
+    "item_type": "item",
+    "weight": "18",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=184",
+    "note": "도겁 영약"
+  },
+  {
+    "drop_group": "dg_true_elite_t1",
+    "item_ref": "tal_luck_02",
+    "item_type": "item",
+    "weight": "12",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=184",
+    "note": "환생 부적"
+  },
+  {
+    "drop_group": "dg_true_elite_t1",
+    "item_ref": "mat_origin_shard",
+    "item_type": "material",
+    "weight": "30",
+    "min_qty": "1",
+    "max_qty": "2",
+    "unlock_condition": "difficulty>=184",
+    "note": "원초 파편"
+  },
+  {
+    "drop_group": "dg_true_boss_t1",
+    "item_ref": "pot_tri_03",
+    "item_type": "item",
+    "weight": "24",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=185",
+    "note": "도겁 대비"
+  },
+  {
+    "drop_group": "dg_true_boss_t1",
+    "item_ref": "tal_luck_02",
+    "item_type": "item",
+    "weight": "10",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=185",
+    "note": "환생 부적"
+  },
+  {
+    "drop_group": "dg_true_boss_t1",
+    "item_ref": "mat_origin_shard",
+    "item_type": "material",
+    "weight": "66",
+    "min_qty": "2",
+    "max_qty": "4",
+    "unlock_condition": "difficulty>=185",
+    "note": "원초 핵심 재료"
+  },
+  {
+    "drop_group": "dg_true_event_t1",
+    "item_ref": "pot_def_03",
+    "item_type": "item",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=183",
+    "note": "생존 영약"
+  },
+  {
+    "drop_group": "dg_true_event_t1",
+    "item_ref": "tal_guard_02",
+    "item_type": "item",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=183",
+    "note": "도겁 보호"
+  },
+  {
+    "drop_group": "dg_true_event_t1",
+    "item_ref": "mat_void_crystal",
+    "item_type": "material",
+    "weight": "60",
+    "min_qty": "3",
+    "max_qty": "6",
+    "unlock_condition": "difficulty>=183",
+    "note": "이벤트 결정"
+  },
+  {
+    "drop_group": "dg_true_event_t2",
+    "item_ref": "pot_tri_03",
+    "item_type": "item",
+    "weight": "24",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=186",
+    "note": "도겁 영약"
+  },
+  {
+    "drop_group": "dg_true_event_t2",
+    "item_ref": "tal_luck_02",
+    "item_type": "item",
+    "weight": "18",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=186",
+    "note": "환생 부적"
+  },
+  {
+    "drop_group": "dg_true_event_t2",
+    "item_ref": "rebirth_essence",
+    "item_type": "currency",
+    "weight": "58",
+    "min_qty": "40",
+    "max_qty": "60",
+    "unlock_condition": "difficulty>=186",
+    "note": "환생 정수"
+  },
+  {
+    "drop_group": "dg_true_elite_t2",
+    "item_ref": "mat_origin_shard",
+    "item_type": "material",
+    "weight": "42",
+    "min_qty": "2",
+    "max_qty": "4",
+    "unlock_condition": "difficulty>=187",
+    "note": "원초 파편"
+  },
+  {
+    "drop_group": "dg_true_elite_t2",
+    "item_ref": "pot_tri_03",
+    "item_type": "item",
+    "weight": "16",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=187",
+    "note": "도겁 영약"
+  },
+  {
+    "drop_group": "dg_true_elite_t2",
+    "item_ref": "tal_guard_02",
+    "item_type": "item",
+    "weight": "18",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=187",
+    "note": "도겁 보호"
+  },
+  {
+    "drop_group": "dg_true_elite_t2",
+    "item_ref": "rebirth_essence",
+    "item_type": "currency",
+    "weight": "24",
+    "min_qty": "34",
+    "max_qty": "50",
+    "unlock_condition": "difficulty>=187",
+    "note": "환생 정수"
+  },
+  {
+    "drop_group": "dg_true_boss_t2",
+    "item_ref": "pot_tri_03",
+    "item_type": "item",
+    "weight": "22",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=188",
+    "note": "도겁 대비"
+  },
+  {
+    "drop_group": "dg_true_boss_t2",
+    "item_ref": "tal_luck_02",
+    "item_type": "item",
+    "weight": "14",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=188",
+    "note": "환생 부적"
+  },
+  {
+    "drop_group": "dg_true_boss_t2",
+    "item_ref": "mat_origin_shard",
+    "item_type": "material",
+    "weight": "64",
+    "min_qty": "2",
+    "max_qty": "4",
+    "unlock_condition": "difficulty>=188",
+    "note": "원초 파편"
+  },
+  {
+    "drop_group": "dg_true_common_t3",
+    "item_ref": "mat_time_fragment",
+    "item_type": "material",
+    "weight": "45",
+    "min_qty": "2",
+    "max_qty": "4",
+    "unlock_condition": "difficulty>=189",
+    "note": "시공 파편"
+  },
+  {
+    "drop_group": "dg_true_common_t3",
+    "item_ref": "mat_void_crystal",
+    "item_type": "material",
+    "weight": "25",
+    "min_qty": "2",
+    "max_qty": "4",
+    "unlock_condition": "difficulty>=189",
+    "note": "공허 결정"
+  },
+  {
+    "drop_group": "dg_true_common_t3",
+    "item_ref": "rebirth_essence",
+    "item_type": "currency",
+    "weight": "30",
+    "min_qty": "30",
+    "max_qty": "46",
+    "unlock_condition": "difficulty>=189",
+    "note": "환생 정수"
+  },
+  {
+    "drop_group": "dg_true_elite_t3",
+    "item_ref": "mat_time_fragment",
+    "item_type": "material",
+    "weight": "40",
+    "min_qty": "3",
+    "max_qty": "6",
+    "unlock_condition": "difficulty>=190",
+    "note": "시공 파편 다량"
+  },
+  {
+    "drop_group": "dg_true_elite_t3",
+    "item_ref": "pot_tri_03",
+    "item_type": "item",
+    "weight": "16",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=190",
+    "note": "도겁 영약"
+  },
+  {
+    "drop_group": "dg_true_elite_t3",
+    "item_ref": "tal_luck_02",
+    "item_type": "item",
+    "weight": "14",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=190",
+    "note": "환생 부적"
+  },
+  {
+    "drop_group": "dg_true_elite_t3",
+    "item_ref": "mat_origin_shard",
+    "item_type": "material",
+    "weight": "30",
+    "min_qty": "1",
+    "max_qty": "2",
+    "unlock_condition": "difficulty>=190",
+    "note": "원초 파편"
+  },
+  {
+    "drop_group": "dg_true_boss_t3",
+    "item_ref": "pot_tri_03",
+    "item_type": "item",
+    "weight": "22",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=191",
+    "note": "도겁 대비"
+  },
+  {
+    "drop_group": "dg_true_boss_t3",
+    "item_ref": "tal_luck_02",
+    "item_type": "item",
+    "weight": "14",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=191",
+    "note": "환생 부적"
+  },
+  {
+    "drop_group": "dg_true_boss_t3",
+    "item_ref": "mat_origin_shard",
+    "item_type": "material",
+    "weight": "64",
+    "min_qty": "2",
+    "max_qty": "4",
+    "unlock_condition": "difficulty>=191",
+    "note": "원초 파편"
+  },
+  {
+    "drop_group": "dg_true_event_t3",
+    "item_ref": "pot_brk_03",
+    "item_type": "item",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=189",
+    "note": "돌파 보조"
+  },
+  {
+    "drop_group": "dg_true_event_t3",
+    "item_ref": "tal_guard_02",
+    "item_type": "item",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=189",
+    "note": "도겁 보호"
+  },
+  {
+    "drop_group": "dg_true_event_t3",
+    "item_ref": "mat_time_fragment",
+    "item_type": "material",
+    "weight": "60",
+    "min_qty": "3",
+    "max_qty": "6",
+    "unlock_condition": "difficulty>=189",
+    "note": "시공 재료"
+  },
+  {
+    "drop_group": "dg_true_event_t4",
+    "item_ref": "pot_tri_03",
+    "item_type": "item",
+    "weight": "24",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=192",
+    "note": "최종 도겁 대비"
+  },
+  {
+    "drop_group": "dg_true_event_t4",
+    "item_ref": "tal_luck_02",
+    "item_type": "item",
+    "weight": "18",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=192",
+    "note": "환생 부적"
+  },
+  {
+    "drop_group": "dg_true_event_t4",
+    "item_ref": "rebirth_essence",
+    "item_type": "currency",
+    "weight": "58",
+    "min_qty": "48",
+    "max_qty": "72",
+    "unlock_condition": "difficulty>=192",
+    "note": "최종 환생 정수"
+  },
+  {
+    "drop_group": "dg_true_boss_t4",
+    "item_ref": "pot_tri_03",
+    "item_type": "item",
+    "weight": "20",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=194",
+    "note": "도겁 대비"
+  },
+  {
+    "drop_group": "dg_true_boss_t4",
+    "item_ref": "tal_luck_02",
+    "item_type": "item",
+    "weight": "16",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=194",
+    "note": "환생 부적"
+  },
+  {
+    "drop_group": "dg_true_boss_t4",
+    "item_ref": "mat_origin_shard",
+    "item_type": "material",
+    "weight": "64",
+    "min_qty": "3",
+    "max_qty": "5",
+    "unlock_condition": "difficulty>=194",
+    "note": "최종 파편"
+  },
+  {
+    "drop_group": "dg_tribulation_true",
+    "item_ref": "pot_tri_03",
+    "item_type": "item",
+    "weight": "28",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=196",
+    "note": "진선계 도겁 영약"
+  },
+  {
+    "drop_group": "dg_tribulation_true",
+    "item_ref": "tal_guard_02",
+    "item_type": "item",
+    "weight": "22",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=196",
+    "note": "도겁 보호 부적"
+  },
+  {
+    "drop_group": "dg_tribulation_true",
+    "item_ref": "tal_luck_02",
+    "item_type": "item",
+    "weight": "10",
+    "min_qty": "1",
+    "max_qty": "1",
+    "unlock_condition": "difficulty>=196",
+    "note": "환생 부적"
+  },
+  {
+    "drop_group": "dg_tribulation_true",
+    "item_ref": "rebirth_essence",
+    "item_type": "currency",
+    "weight": "40",
+    "min_qty": "72",
+    "max_qty": "110",
+    "unlock_condition": "difficulty>=196",
+    "note": "최종 환생 보상"
+  }
+]

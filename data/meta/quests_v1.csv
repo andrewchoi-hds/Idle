@@ -1,0 +1,26 @@
+quest_id,quest_type,name_ko,world,recommended_difficulty_min,recommended_difficulty_max,objective_type,objective_value,reward_primary_type,reward_primary_value,reward_secondary_type,reward_secondary_value,reward_item_ref,repeatable,unlock_condition,note
+q_main_001,main,초심 수련의 길,mortal,1,6,clear_node,node_m_001,currency_spirit_coin,300,resource_qi,1200,pot_qi_01,no,difficulty>=1,튜토리얼 메인
+q_main_002,main,첫 정예 토벌,mortal,6,14,kill_elite,3,currency_spirit_coin,600,resource_qi,1800,pot_brk_01,no,difficulty>=6,정예 입문
+q_main_003,main,연기의 정점,mortal,10,18,reach_difficulty,13,currency_spirit_coin,900,currency_rebirth_essence,3,tal_qi_01,no,difficulty>=10,연기 대원만
+q_main_004,main,황혼 고도 정리,mortal,20,32,clear_zone,m_zone_02,currency_spirit_coin,1500,resource_qi,3200,pot_brk_02,no,difficulty>=20,중반 메인
+q_main_005,main,요수림 정화,mortal,34,48,kill_monster,mob_m_007:20,currency_spirit_coin,1800,currency_rebirth_essence,6,pot_def_01,no,difficulty>=34,독 몹 구간
+q_main_006,main,천뢰협곡 돌파,mortal,64,80,clear_zone,m_zone_05,currency_spirit_coin,2600,currency_rebirth_essence,10,pot_tri_02,no,difficulty>=64,후반 메인
+q_main_007,main,인간계 도겁 준비,mortal,84,96,consume_item,pot_tri_02:2,currency_spirit_coin,3000,currency_rebirth_essence,18,tal_guard_02,no,difficulty>=84,도겁 준비선
+q_main_008,main,운해선원 입문,immortal,105,116,clear_node,node_i_001,currency_spirit_coin,4200,resource_qi,6200,pot_def_03,no,difficulty>=105,신선계 진입
+q_main_009,main,적화비경 격파,immortal,120,136,kill_boss,node_i_006,currency_spirit_coin,5600,currency_rebirth_essence,30,pot_tri_03,no,difficulty>=120,신선계 중반
+q_main_010,main,신선계 도겁 관문,immortal,166,182,clear_node,node_i_012,currency_spirit_coin,8000,currency_rebirth_essence,55,tal_luck_02,no,difficulty>=166,신선계 종결
+q_main_011,main,원초계단 생환,true,183,190,clear_zone,t_zone_01,currency_spirit_coin,12000,currency_rebirth_essence,95,pot_tri_03,no,difficulty>=183,진선계 입문
+q_main_012,main,원조심연 최종전,true,194,198,kill_boss,node_t_012,currency_spirit_coin,18000,currency_rebirth_essence,180,tal_luck_02,no,difficulty>=194,최종 메인
+q_daily_001,daily,오늘의 수련,daily,1,198,gain_qi,15000,currency_spirit_coin,500,currency_rebirth_essence,2,none,yes,difficulty>=1,일일 기본
+q_daily_002,daily,일일 정예 토벌,daily,10,198,kill_elite,6,currency_spirit_coin,900,currency_rebirth_essence,4,pot_brk_01,yes,difficulty>=10,일일 전투
+q_daily_003,daily,일일 보스 도전,daily,32,198,kill_boss,2,currency_spirit_coin,1200,currency_rebirth_essence,7,pot_def_02,yes,difficulty>=32,일일 보스
+q_daily_004,daily,도겁 대비 훈련,daily,70,198,clear_tribulation_sim,1,currency_spirit_coin,1500,currency_rebirth_essence,10,pot_tri_02,yes,difficulty>=70,도겁 모의전
+q_daily_005,daily,연금 재료 수집,daily,18,198,collect_material,mat_spirit_essence:20,currency_spirit_coin,800,resource_qi,2400,none,yes,difficulty>=18,재료 파밍
+q_daily_006,daily,부적 숙련,daily,40,198,consume_item,tal_guard_02:1,currency_spirit_coin,1400,currency_rebirth_essence,8,tal_luck_01,yes,difficulty>=40,부적 소모형
+q_weekly_001,weekly,주간 도전자,weekly,32,198,kill_boss,8,currency_spirit_coin,6500,currency_rebirth_essence,32,pot_tri_03,yes,difficulty>=32,주간 핵심
+q_weekly_002,weekly,주간 도겁 생존자,weekly,84,198,survive_tribulation,3,currency_spirit_coin,7600,currency_rebirth_essence,46,tal_guard_02,yes,difficulty>=84,주간 도겁
+q_weekly_003,weekly,주간 균열 탐사,weekly,120,198,clear_zone,i_zone_04,currency_spirit_coin,8400,currency_rebirth_essence,52,tal_luck_02,yes,difficulty>=120,신선계 주간
+q_weekly_004,weekly,주간 원초 도전,weekly,183,198,clear_zone,t_zone_03,currency_spirit_coin,9800,currency_rebirth_essence,66,pot_tri_03,yes,difficulty>=183,진선계 주간
+q_side_001,side,영맥 복원,mortal,22,44,spend_spirit_coin,2000,currency_rebirth_essence,8,resource_qi,2600,pot_qi_02,no,difficulty>=22,서브 퀘스트
+q_side_002,side,심마 안정화,immortal,110,150,gain_mind_resist,0.08,currency_rebirth_essence,22,currency_spirit_coin,3600,tal_guard_01,no,difficulty>=110,저항 성장형
+q_side_003,side,윤회의 각인,true,186,198,rebirth_count,3,currency_rebirth_essence,120,currency_spirit_coin,9000,tal_luck_02,no,difficulty>=186,환생 목표형

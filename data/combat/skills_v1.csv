@@ -1,0 +1,27 @@
+skill_id,category,name_ko,grade,world_unlock,unlock_difficulty_index,cost_mp,cooldown_sec,targeting,damage_coeff,scaling_stat,element,status_effect,status_chance_pct,status_duration_sec,defense_ignore_pct,shield_coeff,heal_coeff,note
+sk_atk_001,active,청운참,common,mortal,1,12,3.0,single,1.35,atk,none,bleed,15,6,0,0,0,기본 단일 공격기
+sk_atk_002,active,화령장,common,mortal,6,16,4.0,single,1.55,atk,fire,burn,20,5,0,0,0,화상 부여형
+sk_atk_003,active,빙혼침,rare,mortal,12,20,5.0,single,1.75,atk,ice,slow,25,4,0,0,0,속도 저하형
+sk_atk_004,active,낙뢰결,rare,mortal,20,24,6.0,aoe,1.30,atk,thunder,stun,12,2,0,0,0,광역 견제기
+sk_atk_005,active,풍절검,rare,mortal,28,22,4.5,single,1.85,atk,wind,none,0,0,8,0,0,방어 관통형
+sk_atk_006,active,지맥붕,epic,mortal,40,30,8.0,aoe,1.90,atk,earth,armor_break,30,6,0,0,0,광역 방깎 핵심기
+sk_sup_001,active,영기순환,common,mortal,4,10,8.0,self,0,none,none,none,0,0,0,0,0.12,기본 회복기
+sk_sup_002,active,호체결,common,mortal,10,14,10.0,self,0,none,none,none,0,0,0,0.20,0,초반 보호막
+sk_sup_003,active,정신집중,rare,mortal,22,18,14.0,self,0,none,none,focus,100,8,0,0,0,명중/치명 보조 버프
+sk_sup_004,active,반격태세,rare,mortal,35,20,15.0,self,0,none,none,counter,100,6,0,0.12,0,피해 일부 반사
+sk_atk_007,active,선광일섬,epic,immortal,105,34,7.0,single,2.25,atk,light,none,0,0,10,0,0,신선계 단일 누커
+sk_atk_008,active,태허멸진,epic,immortal,118,38,11.0,aoe,2.05,atk,void,weaken,35,6,0,0,0,광역 약화 부여
+sk_atk_009,active,천뢰심판,legendary,immortal,130,44,12.0,aoe,2.30,atk,thunder,stun,18,3,0,0,0,도겁 보스 대응기
+sk_sup_005,active,환원비술,epic,immortal,110,26,16.0,self,0,none,none,cleanse,100,0,0,0,0.20,상태 해제+회복
+sk_sup_006,active,금신호법,epic,immortal,122,30,18.0,self,0,none,none,guard,100,8,0,0.28,0,도겁 직전 생존기
+sk_ult_001,ultimate,구천멸도,legendary,immortal,140,60,24.0,aoe,3.10,atk,void,none,0,0,20,0,0,궁극 광역기
+sk_ult_002,ultimate,만상귀원,legendary,true,183,70,26.0,self,0,none,none,none,0,0,0,0.40,0.30,보호막+회복 궁극기
+sk_pas_001,passive,응기심법,common,mortal,1,0,0,self,0,atk,none,none,0,0,0,0,0,기본 공격력 증가
+sk_pas_002,passive,연기호흡,common,mortal,5,0,0,self,0,none,none,none,0,0,0,0,0,수련 효율 증가
+sk_pas_003,passive,금강체,rare,mortal,25,0,0,self,0,none,none,none,0,0,0,0,0,피해감소 증가
+sk_pas_004,passive,천안통,rare,immortal,108,0,0,self,0,none,none,none,0,0,0,0,0,명중/치명 보정
+sk_pas_005,passive,도심불멸,epic,immortal,126,0,0,self,0,none,none,none,0,0,0,0,0,심마저항/도겁저항 증가
+sk_pas_006,passive,윤회각성,legendary,true,190,0,0,self,0,none,none,none,0,0,0,0,0,환생정수 획득량 증가
+sk_tri_001,tribulation,청심수호진,rare,mortal,13,20,0,self,0,none,none,tribulation_guard,100,0,0,0.18,0,도겁 전용 보호막
+sk_tri_002,tribulation,오뢰호체,epic,immortal,112,28,0,self,0,none,thunder,tribulation_guard,100,0,0,0.25,0,뇌속 도겁 대응
+sk_tri_003,tribulation,천명전환,legendary,true,186,36,0,self,0,none,void,death_avoid,100,0,0,0,0,치명 사망 1회 무효

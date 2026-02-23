@@ -1,0 +1,124 @@
+{
+  "config": {
+    "difficultyIndex": 132,
+    "playerLevel": 58,
+    "rebirthCount": 5,
+    "rngSeed": 20260224,
+    "skillIds": [
+      "sk_atk_007",
+      "sk_atk_008"
+    ],
+    "monsterIds": [
+      "mob_i_001",
+      "mob_i_002",
+      "mob_i_006"
+    ],
+    "maxTurnsPerBattle": 220,
+    "includeActionLogs": false
+  },
+  "context": {
+    "world": "immortal",
+    "majorStageName": "heavenly_immortal",
+    "subStageName": "layer_2",
+    "defenseConstantK": 180
+  },
+  "player": {
+    "stats": {
+      "hp": 2048.8,
+      "mp": 1043.7250000000001,
+      "atk": 373.52775,
+      "def": 295.98400000000004,
+      "speed": 1.6371949999999997,
+      "accuracy": 0.9736049999999999,
+      "evasion": 0.17473000000000002,
+      "critRate": 0.132965,
+      "critDamage": 1.1269125,
+      "penetration": 0.24341000000000002,
+      "damageReduction": 0.1245375
+    },
+    "skills": [
+      {
+        "skillId": "sk_atk_007",
+        "nameKo": "선광일섬",
+        "damageCoeff": 2.25,
+        "cooldownSec": 7,
+        "costMp": 34,
+        "element": "none",
+        "statusEffect": "none",
+        "statusChancePct": 0,
+        "statusDurationSec": 0
+      },
+      {
+        "skillId": "sk_atk_008",
+        "nameKo": "태허멸진",
+        "damageCoeff": 2.05,
+        "cooldownSec": 11,
+        "costMp": 38,
+        "element": "none",
+        "statusEffect": "weaken",
+        "statusChancePct": 35,
+        "statusDurationSec": 6
+      }
+    ]
+  },
+  "duels": [
+    {
+      "monsterId": "mob_i_001",
+      "monsterNameKo": "청연 선학",
+      "monsterType": "normal",
+      "winner": "monster",
+      "turns": 20,
+      "elapsedSec": 5.694,
+      "playerHpLeft": 0,
+      "monsterHpLeft": 2224.6,
+      "usedSkills": {
+        "sk_atk_007": 1,
+        "sk_atk_008": 1
+      },
+      "statusAppliedCounts": {},
+      "logs": []
+    },
+    {
+      "monsterId": "mob_i_002",
+      "monsterNameKo": "금우 수문장",
+      "monsterType": "elite",
+      "winner": "monster",
+      "turns": 20,
+      "elapsedSec": 6.639,
+      "playerHpLeft": 0,
+      "monsterHpLeft": 4545.47,
+      "usedSkills": {
+        "sk_atk_007": 1,
+        "sk_atk_008": 1
+      },
+      "statusAppliedCounts": {},
+      "logs": []
+    },
+    {
+      "monsterId": "mob_i_006",
+      "monsterNameKo": "현빙 거신",
+      "monsterType": "boss",
+      "winner": "monster",
+      "turns": 19,
+      "elapsedSec": 6.981,
+      "playerHpLeft": 0,
+      "monsterHpLeft": 9183.7,
+      "usedSkills": {
+        "sk_atk_007": 1,
+        "sk_atk_008": 1
+      },
+      "statusAppliedCounts": {
+        "stun": 3
+      },
+      "logs": []
+    }
+  ],
+  "summary": {
+    "total": 3,
+    "wins": 0,
+    "losses": 3,
+    "winRate": 0,
+    "avgTurns": 19.67,
+    "avgElapsedSec": 6.438
+  }
+}

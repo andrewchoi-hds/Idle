@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "player": {
+    "id": "player_001",
+    "name": "도심",
+    "created_at": "2026-02-23T12:00:00Z"
+  },
+  "progression": {
+    "difficulty_index": 42,
+    "world": "mortal",
+    "major_stage_name": "nascent_soul",
+    "sub_stage_name": "layer_3",
+    "rebirth_count": 4,
+    "unlocked_nodes": ["node_m_001", "node_m_002", "node_m_003"]
+  },
+  "currencies": {
+    "spirit_coin": 18450,
+    "rebirth_essence": 92,
+    "qi": 486000
+  },
+  "inventory": {
+    "items": [
+      { "item_id": "pot_brk_02", "quantity": 3, "locked": false },
+      { "item_id": "tal_guard_01", "quantity": 2, "locked": true }
+    ],
+    "materials": [
+      { "material_id": "mat_spirit_essence", "quantity": 126 },
+      { "material_id": "mat_thunder_stone", "quantity": 18 }
+    ]
+  },
+  "equipment": {
+    "slots": {
+      "weapon": {
+        "instance_id": "eq_inst_w_1001",
+        "base_id": "eq_weapon_m_03",
+        "level": 12,
+        "affixes": [
+          { "affix_id": "affix_prefix_atk_03", "value": 39.2 },
+          { "affix_id": "affix_suffix_acc_01", "value": 5.4 }
+        ],
+        "locked_affix_indexes": [0]
+      },
+      "armor": {
+        "instance_id": "eq_inst_a_1002",
+        "base_id": "eq_armor_m_03",
+        "level": 10,
+        "affixes": [
+          { "affix_id": "affix_prefix_hp_03", "value": 522.0 },
+          { "affix_id": "affix_suffix_dmgred_01", "value": 3.7 }
+        ],
+        "locked_affix_indexes": []
+      },
+      "accessory": null,
+      "relic": null
+    }
+  },
+  "settings": {
+    "auto_battle": true,
+    "auto_skill": true,
+    "auto_breakthrough": false,
+    "auto_tribulation": false,
+    "battle_speed": 2
+  },
+  "meta": {
+    "quests_completed": ["q_main_001", "q_main_002"],
+    "achievements_unlocked": ["ach_realm_001"],
+    "milestones_unlocked": ["ms_core_001"]
+  },
+  "timestamps": {
+    "last_login_epoch_ms": 1771848000000,
+    "save_epoch_ms": 1771848033000
+  }
+}

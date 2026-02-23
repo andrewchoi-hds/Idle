@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://idle.local/schema/save_v1.schema.json",
+  "title": "Idle Xianxia Save V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "player",
+    "progression",
+    "currencies",
+    "inventory",
+    "equipment",
+    "settings",
+    "meta",
+    "timestamps"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "const": 1
+    },
+    "player": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "created_at"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1, "maxLength": 24 },
+        "created_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "progression": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "difficulty_index",
+        "world",
+        "major_stage_name",
+        "sub_stage_name",
+        "rebirth_count",
+        "unlocked_nodes"
+      ],
+      "properties": {
+        "difficulty_index": { "type": "integer", "minimum": 1, "maximum": 198 },
+        "world": { "type": "string", "enum": ["mortal", "immortal", "true"] },
+        "major_stage_name": { "type": "string", "minLength": 1 },
+        "sub_stage_name": { "type": "string", "minLength": 1 },
+        "rebirth_count": { "type": "integer", "minimum": 0 },
+        "unlocked_nodes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      }
+    },
+    "currencies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["spirit_coin", "rebirth_essence", "qi"],
+      "properties": {
+        "spirit_coin": { "type": "number", "minimum": 0 },
+        "rebirth_essence": { "type": "number", "minimum": 0 },
+        "qi": { "type": "number", "minimum": 0 }
+      }
+    },
+    "inventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["items", "materials"],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["item_id", "quantity"],
+            "properties": {
+              "item_id": { "type": "string", "minLength": 1 },
+              "quantity": { "type": "integer", "minimum": 0 },
+              "locked": { "type": "boolean" }
+            }
+          }
+        },
+        "materials": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["material_id", "quantity"],
+            "properties": {
+              "material_id": { "type": "string", "minLength": 1 },
+              "quantity": { "type": "integer", "minimum": 0 }
+            }
+          }
+        }
+      }
+    },
+    "equipment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slots"],
+      "properties": {
+        "slots": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["weapon", "armor", "accessory", "relic"],
+          "properties": {
+            "weapon": { "$ref": "#/$defs/equipmentInstanceOrNull" },
+            "armor": { "$ref": "#/$defs/equipmentInstanceOrNull" },
+            "accessory": { "$ref": "#/$defs/equipmentInstanceOrNull" },
+            "relic": { "$ref": "#/$defs/equipmentInstanceOrNull" }
+          }
+        }
+      }
+    },
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["auto_battle", "auto_skill", "auto_breakthrough", "auto_tribulation", "battle_speed"],
+      "properties": {
+        "auto_battle": { "type": "boolean" },
+        "auto_skill": { "type": "boolean" },
+        "auto_breakthrough": { "type": "boolean" },
+        "auto_tribulation": { "type": "boolean" },
+        "battle_speed": { "type": "number", "enum": [1, 2, 3] }
+      }
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["quests_completed", "achievements_unlocked", "milestones_unlocked"],
+      "properties": {
+        "quests_completed": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "achievements_unlocked": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "milestones_unlocked": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      }
+    },
+    "timestamps": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["last_login_epoch_ms", "save_epoch_ms"],
+      "properties": {
+        "last_login_epoch_ms": { "type": "integer", "minimum": 0 },
+        "save_epoch_ms": { "type": "integer", "minimum": 0 }
+      }
+    }
+  },
+  "$defs": {
+    "equipmentAffix": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["affix_id", "value"],
+      "properties": {
+        "affix_id": { "type": "string", "minLength": 1 },
+        "value": { "type": "number" }
+      }
+    },
+    "equipmentInstance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["instance_id", "base_id", "level", "affixes", "locked_affix_indexes"],
+      "properties": {
+        "instance_id": { "type": "string", "minLength": 1 },
+        "base_id": { "type": "string", "minLength": 1 },
+        "level": { "type": "integer", "minimum": 1 },
+        "affixes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/equipmentAffix" },
+          "maxItems": 6
+        },
+        "locked_affix_indexes": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 0, "maximum": 5 },
+          "maxItems": 3,
+          "uniqueItems": true
+        }
+      }
+    },
+    "equipmentInstanceOrNull": {
+      "oneOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/equipmentInstance" }
+      ]
+    }
+  }
+}

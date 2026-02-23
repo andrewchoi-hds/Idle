@@ -1,0 +1,19 @@
+sink_id,sink_name_ko,feature,currency_type,base_cost,cost_growth_formula,max_level,expected_weekly_spend,unlock_condition,priority,note
+sink_upgrade_001,무기 강화,equipment_upgrade,spirit_coin,220,base*(1.18^level),60,48000,difficulty>=6,high,기본 재화 소모처
+sink_upgrade_002,방어구 강화,equipment_upgrade,spirit_coin,180,base*(1.17^level),60,42000,difficulty>=6,high,생존형 성장
+sink_refine_001,장비 제련,equipment_refine,spirit_coin,850,base*(1.22^tier),30,36000,difficulty>=24,medium,랜덤 옵션
+sink_refine_002,법보 각성,artifact_awaken,spirit_coin,2400,base*(1.25^level),20,28000,difficulty>=52,high,후반 소모처
+sink_alchemy_001,영약 연성,alchemy,spirit_coin,120,base*(1.10^recipe_tier),-1,26000,difficulty>=18,high,일일 재료 소모
+sink_talisman_001,부적 주입,talisman_upgrade,spirit_coin,420,base*(1.19^level),40,21000,difficulty>=40,medium,부적 강화
+sink_trib_001,도겁 준비 의식,tribulation_prep,spirit_coin,3200,base*(1.30^world_index),-1,18000,difficulty>=70,critical,도겁 보조 버프
+sink_market_001,경매장 즉시구매,market,spirit_coin,5000,manual,-1,24000,difficulty>=84,low,유저 선택 소모
+sink_slot_001,인벤토리 확장,inventory,spirit_coin,1500,base*(1.35^slot_page),10,9000,difficulty>=10,medium,QoL 소모
+sink_speed_001,3배속 해금,feature_unlock,spirit_coin,25000,fixed,1,25000,difficulty>=84,medium,옵션 해금
+sink_rebirth_001,환생 트리 강화,rebirth_upgrade,rebirth_essence,20,base*(1.18^level),100,320,difficulty>=1,critical,핵심 메타 소모
+sink_rebirth_002,환생 보호 인장,rebirth_protection,rebirth_essence,36,fixed,-1,140,difficulty>=70,high,도겁 사망 방지
+sink_rebirth_003,즉시 오프라인 정산,instant_claim,rebirth_essence,12,fixed,-1,80,difficulty>=40,low,QoL 소모
+sink_rebirth_004,윤회 비약 구매,potion_purchase,rebirth_essence,48,fixed,-1,120,difficulty>=124,medium,전설 영약 구매
+sink_rebirth_005,도문 공명 강화,dao_resonance,rebirth_essence,60,base*(1.22^level),25,210,difficulty>=145,high,후반 메타 투자
+sink_true_001,원초 시드 안정화,true_world_service,rebirth_essence,95,base*(1.24^level),15,190,difficulty>=183,high,진선계 고정 소모
+sink_true_002,최종 도겁 보험,true_tribulation_insurance,rebirth_essence,180,fixed,-1,180,difficulty>=196,critical,최종 리스크 완화
+sink_social_001,종문 기여 봉납,guild_donation,spirit_coin,2000,manual,-1,12000,difficulty>=32,low,소셜 컨텐츠 소모

@@ -1,0 +1,37 @@
+{
+  "scenarios": [
+    {
+      "name": "mortal_baseline",
+      "difficulty_index": 20,
+      "player_level": 30,
+      "rebirth_count": 2,
+      "seed": 20260223,
+      "max_turns": 180,
+      "skill_ids": ["sk_atk_001", "sk_atk_002"],
+      "monster_ids": ["mob_m_001", "mob_m_003", "mob_m_008"],
+      "include_action_log": false
+    },
+    {
+      "name": "immortal_midgame",
+      "difficulty_index": 132,
+      "player_level": 58,
+      "rebirth_count": 5,
+      "seed": 20260224,
+      "max_turns": 220,
+      "skill_ids": ["sk_atk_007", "sk_atk_008"],
+      "monster_ids": ["mob_i_001", "mob_i_002", "mob_i_006"],
+      "include_action_log": false
+    },
+    {
+      "name": "true_realm_entry",
+      "difficulty_index": 191,
+      "player_level": 72,
+      "rebirth_count": 8,
+      "seed": 20260225,
+      "max_turns": 260,
+      "skill_ids": ["sk_atk_007", "sk_atk_008"],
+      "monster_ids": ["mob_t_001", "mob_t_002", "mob_t_003"],
+      "include_action_log": false
+    }
+  ]
+}

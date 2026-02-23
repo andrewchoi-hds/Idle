@@ -1,0 +1,33 @@
+event_id,event_table,world,event_name_ko,rarity,trigger_weight,effect_type,effect_value,duration_sec,risk_type,risk_value,reward_group,note
+evt_m_001,evt_tbl_mortal_1,mortal,낡은 비급 발견,common,55,skill_exp_mul_pct,0.15,900,none,0,dg_mortal_event_t1,초반 성장 보너스
+evt_m_002,evt_tbl_mortal_1,mortal,심마의 속삭임,rare,25,atk_mul_pct,0.20,600,hp_loss_pct,0.12,dg_mortal_event_t1,공격력 상승 대신 체력 손실
+evt_m_003,evt_tbl_mortal_2,mortal,도적의 은닉 창고,common,50,loot_mul_pct,0.22,0,ambush,1,dg_mortal_event_t2,보상 후 매복전 발생
+evt_m_004,evt_tbl_mortal_2,mortal,영맥 불안정 구역,rare,20,qi_gain_mul_pct,0.28,600,breakthrough_penalty_pct,4,dg_mortal_event_t2,돌파 페널티 동반
+evt_m_005,evt_tbl_mortal_3,mortal,고목의 축복,common,52,damage_reduction_flat_pct,8,600,none,0,dg_mortal_event_t3,방어형 버프
+evt_m_006,evt_tbl_mortal_3,mortal,독무 지대 돌파,rare,18,crit_rate_flat_pct,6,600,poison_stack,3,dg_mortal_event_t3,치명 상승과 독 중첩
+evt_m_007,evt_tbl_mortal_4,mortal,빙혼 잔향 공명,common,48,evasion_flat_pct,8,600,slow_pct,12,dg_mortal_event_t4,회피 상승과 감속 리스크
+evt_m_008,evt_tbl_mortal_4,mortal,심연의 투영전,rare,16,drop_mul_pct,0.30,0,elite_chain,1,dg_mortal_event_t4,연속 정예 전투
+evt_m_009,evt_tbl_mortal_5,mortal,천뢰 결집점,common,44,thunder_damage_mul_pct,0.24,600,self_stun_sec,1,dg_mortal_event_t5,번개 강화 반작용
+evt_m_010,evt_tbl_mortal_5,mortal,뢰수의 유산,rare,14,tribulation_guard_flat_pct,4,0,hp_loss_pct,0.18,dg_mortal_event_t5,도겁 보조와 체력 손실
+evt_m_011,evt_tbl_mortal_6,mortal,대승 직전 각성,rare,30,breakthrough_bonus_flat_pct,5,0,none,0,dg_mortal_event_t6,돌파 성공률 보조
+evt_m_012,evt_tbl_mortal_6,mortal,윤회의 계약,epic,10,rebirth_essence_mul_pct,0.10,0,death_mark,1,dg_tribulation_mortal,환생 보상 증가와 사망 표식
+evt_i_001,evt_tbl_immortal_1,immortal,운해 선약 채집,common,50,potion_efficiency_mul_pct,0.20,1200,none,0,dg_immortal_event_t1,영약 효율 증가
+evt_i_002,evt_tbl_immortal_1,immortal,금우의 시험,rare,22,def_mul_pct,0.18,900,atk_mul_pct,-0.10,dg_immortal_event_t1,방어 증폭 대신 공격 감소
+evt_i_003,evt_tbl_immortal_2,immortal,홍련 기맥 개방,common,46,fire_damage_mul_pct,0.25,900,burn_stack,2,dg_immortal_event_t2,화염 강화와 자상
+evt_i_004,evt_tbl_immortal_2,immortal,심화 용심 반응,rare,18,atk_mul_pct,0.24,600,damage_taken_mul_pct,0.12,dg_immortal_event_t2,공격형 하이리스크
+evt_i_005,evt_tbl_immortal_3,immortal,한옥 정기 순환,common,44,heal_mul_pct,0.28,900,slow_pct,10,dg_immortal_event_t3,회복 강화
+evt_i_006,evt_tbl_immortal_3,immortal,빙결 진혼 의식,rare,15,tribulation_guard_flat_pct,6,0,mp_drain_pct,0.20,dg_immortal_event_t3,도겁 보호 보정
+evt_i_007,evt_tbl_immortal_4,immortal,광휘 정화진,common,40,cleanse_trigger,1,0,none,0,dg_immortal_event_t4,상태이상 해제형
+evt_i_008,evt_tbl_immortal_4,immortal,봉인 파쇄 도박,epic,10,legend_drop_bonus_pct,12,0,elite_chain,2,dg_immortal_event_t4,고등급 드롭 도박
+evt_i_009,evt_tbl_immortal_5,immortal,태을 율령 가호,common,38,damage_reduction_flat_pct,12,900,none,0,dg_immortal_event_t5,생존 특화 버프
+evt_i_010,evt_tbl_immortal_5,immortal,천궁 역류 파동,rare,14,crit_damage_flat_pct,18,600,hp_loss_pct,0.20,dg_immortal_event_t5,폭딜형 이벤트
+evt_i_011,evt_tbl_immortal_6,immortal,도겁 전개 예행연습,rare,28,tribulation_death_reduce_flat_pct,6,0,none,0,dg_tribulation_immortal,도겁 보호 핵심 이벤트
+evt_i_012,evt_tbl_immortal_6,immortal,천벌 표식 공명,epic,9,atk_mul_pct,0.30,450,death_mark,1,dg_tribulation_immortal,고위험 고화력
+evt_t_001,evt_tbl_true_1,true,법칙 편린 흡수,rare,34,all_damage_mul_pct,0.20,600,none,0,dg_true_event_t1,진선계 기본 강화
+evt_t_002,evt_tbl_true_1,true,원초 반동 충격,epic,12,crit_rate_flat_pct,10,450,damage_taken_mul_pct,0.15,dg_true_event_t1,치명 강화 대가
+evt_t_003,evt_tbl_true_2,true,무극 연못 도해,rare,30,rebirth_essence_mul_pct,0.14,0,none,0,dg_true_event_t2,환생 효율 상승
+evt_t_004,evt_tbl_true_2,true,역천 도전장,epic,10,boss_damage_mul_pct,0.22,600,hp_loss_pct,0.25,dg_true_event_t2,보스 특화 이벤트
+evt_t_005,evt_tbl_true_3,true,시공 틈새 공명,rare,28,speed_mul_pct,0.20,600,mp_drain_pct,0.18,dg_true_event_t3,공속/속도 강화
+evt_t_006,evt_tbl_true_3,true,시간 소거 폭주,epic,9,defense_ignore_flat_pct,16,450,self_stun_sec,1,dg_true_event_t3,관통 강화 리스크
+evt_t_007,evt_tbl_true_4,true,원조 심연 계시,epic,22,tribulation_death_reduce_flat_pct,9,0,none,0,dg_true_event_t4,최종 도겁 보호
+evt_t_008,evt_tbl_true_4,true,창세 잔향 융합,legendary,6,all_damage_mul_pct,0.32,450,death_mark,1,dg_true_event_t4,최고 리스크 최고 보상

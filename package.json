@@ -1,0 +1,25 @@
+{
+  "name": "idle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "combat:dump:ts": "tsx scripts/dump_minimal_combat_ts_v1.ts",
+    "combat:diff:py-ts": "python3 scripts/compare_minimal_combat_ts_py_v1.py",
+    "combat:diff:py-ts:suite": "python3 scripts/compare_minimal_combat_ts_py_v1.py --scenario-file data/sim/combat_diff_scenarios_v1.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/node": "^25.3.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}

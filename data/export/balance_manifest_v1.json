@@ -1,0 +1,10 @@
+{
+  "generator": "scripts/generate_balance_tables.py",
+  "version": "v1",
+  "generated_at_utc": "2026-02-23T04:39:52.406756Z",
+  "economy_profile": "tuned",
+  "economy_sources": {
+    "shop_catalog_csv": "data/economy/shop_catalog_tuned_v1.csv",
+    "currency_sinks_csv": "data/economy/currency_sinks_tuned_v1.csv"
+  }
+}

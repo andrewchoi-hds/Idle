@@ -1,0 +1,282 @@
+[
+  {
+    "pool_id": "base_pool_m_g1_weapon",
+    "world": "mortal",
+    "group_name": "g1",
+    "target_slot": "weapon",
+    "base_ids": "eq_weapon_m_01;eq_weapon_m_02",
+    "weight_mode": "weighted_progressive",
+    "unlock_condition": "difficulty>=1",
+    "note": "인간계 초중반 무기"
+  },
+  {
+    "pool_id": "base_pool_m_g1_armor",
+    "world": "mortal",
+    "group_name": "g1",
+    "target_slot": "armor",
+    "base_ids": "eq_armor_m_01;eq_armor_m_02",
+    "weight_mode": "weighted_progressive",
+    "unlock_condition": "difficulty>=1",
+    "note": "인간계 초중반 방어구"
+  },
+  {
+    "pool_id": "base_pool_m_g1_accessory",
+    "world": "mortal",
+    "group_name": "g1",
+    "target_slot": "accessory",
+    "base_ids": "eq_accessory_m_01;eq_accessory_m_02",
+    "weight_mode": "weighted_progressive",
+    "unlock_condition": "difficulty>=1",
+    "note": "인간계 초중반 장신구"
+  },
+  {
+    "pool_id": "base_pool_m_g1_relic",
+    "world": "mortal",
+    "group_name": "g1",
+    "target_slot": "relic",
+    "base_ids": "eq_relic_m_01;eq_relic_m_02",
+    "weight_mode": "weighted_progressive",
+    "unlock_condition": "difficulty>=6",
+    "note": "인간계 초중반 유물"
+  },
+  {
+    "pool_id": "base_pool_m_g2_weapon",
+    "world": "mortal",
+    "group_name": "g2",
+    "target_slot": "weapon",
+    "base_ids": "eq_weapon_m_02;eq_weapon_m_03;eq_weapon_m_04",
+    "weight_mode": "weighted_progressive",
+    "unlock_condition": "difficulty>=27",
+    "note": "인간계 중후반 무기"
+  },
+  {
+    "pool_id": "base_pool_m_g2_armor",
+    "world": "mortal",
+    "group_name": "g2",
+    "target_slot": "armor",
+    "base_ids": "eq_armor_m_02;eq_armor_m_03;eq_armor_m_04",
+    "weight_mode": "weighted_progressive",
+    "unlock_condition": "difficulty>=27",
+    "note": "인간계 중후반 방어구"
+  },
+  {
+    "pool_id": "base_pool_m_g2_accessory",
+    "world": "mortal",
+    "group_name": "g2",
+    "target_slot": "accessory",
+    "base_ids": "eq_accessory_m_02;eq_accessory_m_03;eq_accessory_m_04",
+    "weight_mode": "weighted_progressive",
+    "unlock_condition": "difficulty>=27",
+    "note": "인간계 중후반 장신구"
+  },
+  {
+    "pool_id": "base_pool_m_g2_relic",
+    "world": "mortal",
+    "group_name": "g2",
+    "target_slot": "relic",
+    "base_ids": "eq_relic_m_02;eq_relic_m_03;eq_relic_m_04",
+    "weight_mode": "weighted_progressive",
+    "unlock_condition": "difficulty>=27",
+    "note": "인간계 중후반 유물"
+  },
+  {
+    "pool_id": "base_pool_m_g3_weapon",
+    "world": "mortal",
+    "group_name": "g3",
+    "target_slot": "weapon",
+    "base_ids": "eq_weapon_m_03;eq_weapon_m_04",
+    "weight_mode": "weighted_high",
+    "unlock_condition": "difficulty>=69",
+    "note": "인간계 종결 무기"
+  },
+  {
+    "pool_id": "base_pool_m_g3_armor",
+    "world": "mortal",
+    "group_name": "g3",
+    "target_slot": "armor",
+    "base_ids": "eq_armor_m_03;eq_armor_m_04",
+    "weight_mode": "weighted_high",
+    "unlock_condition": "difficulty>=69",
+    "note": "인간계 종결 방어구"
+  },
+  {
+    "pool_id": "base_pool_m_g3_accessory",
+    "world": "mortal",
+    "group_name": "g3",
+    "target_slot": "accessory",
+    "base_ids": "eq_accessory_m_03;eq_accessory_m_04",
+    "weight_mode": "weighted_high",
+    "unlock_condition": "difficulty>=69",
+    "note": "인간계 종결 장신구"
+  },
+  {
+    "pool_id": "base_pool_m_g3_relic",
+    "world": "mortal",
+    "group_name": "g3",
+    "target_slot": "relic",
+    "base_ids": "eq_relic_m_03;eq_relic_m_04",
+    "weight_mode": "weighted_high",
+    "unlock_condition": "difficulty>=69",
+    "note": "인간계 종결 유물"
+  },
+  {
+    "pool_id": "base_pool_i_g1_weapon",
+    "world": "immortal",
+    "group_name": "g1",
+    "target_slot": "weapon",
+    "base_ids": "eq_weapon_m_04;eq_weapon_i_01",
+    "weight_mode": "weighted_progressive",
+    "unlock_condition": "difficulty>=105",
+    "note": "신선계 초중반 무기"
+  },
+  {
+    "pool_id": "base_pool_i_g1_armor",
+    "world": "immortal",
+    "group_name": "g1",
+    "target_slot": "armor",
+    "base_ids": "eq_armor_m_04;eq_armor_i_01",
+    "weight_mode": "weighted_progressive",
+    "unlock_condition": "difficulty>=105",
+    "note": "신선계 초중반 방어구"
+  },
+  {
+    "pool_id": "base_pool_i_g1_accessory",
+    "world": "immortal",
+    "group_name": "g1",
+    "target_slot": "accessory",
+    "base_ids": "eq_accessory_m_04;eq_accessory_i_01",
+    "weight_mode": "weighted_progressive",
+    "unlock_condition": "difficulty>=105",
+    "note": "신선계 초중반 장신구"
+  },
+  {
+    "pool_id": "base_pool_i_g1_relic",
+    "world": "immortal",
+    "group_name": "g1",
+    "target_slot": "relic",
+    "base_ids": "eq_relic_m_04;eq_relic_i_01",
+    "weight_mode": "weighted_progressive",
+    "unlock_condition": "difficulty>=105",
+    "note": "신선계 초중반 유물"
+  },
+  {
+    "pool_id": "base_pool_i_g2_weapon",
+    "world": "immortal",
+    "group_name": "g2",
+    "target_slot": "weapon",
+    "base_ids": "eq_weapon_i_01;eq_weapon_i_02",
+    "weight_mode": "weighted_high",
+    "unlock_condition": "difficulty>=141",
+    "note": "신선계 종결 무기"
+  },
+  {
+    "pool_id": "base_pool_i_g2_armor",
+    "world": "immortal",
+    "group_name": "g2",
+    "target_slot": "armor",
+    "base_ids": "eq_armor_i_01;eq_armor_i_02",
+    "weight_mode": "weighted_high",
+    "unlock_condition": "difficulty>=141",
+    "note": "신선계 종결 방어구"
+  },
+  {
+    "pool_id": "base_pool_i_g2_accessory",
+    "world": "immortal",
+    "group_name": "g2",
+    "target_slot": "accessory",
+    "base_ids": "eq_accessory_i_01;eq_accessory_i_02",
+    "weight_mode": "weighted_high",
+    "unlock_condition": "difficulty>=141",
+    "note": "신선계 종결 장신구"
+  },
+  {
+    "pool_id": "base_pool_i_g2_relic",
+    "world": "immortal",
+    "group_name": "g2",
+    "target_slot": "relic",
+    "base_ids": "eq_relic_i_01;eq_relic_i_02",
+    "weight_mode": "weighted_high",
+    "unlock_condition": "difficulty>=141",
+    "note": "신선계 종결 유물"
+  },
+  {
+    "pool_id": "base_pool_t_g1_weapon",
+    "world": "true",
+    "group_name": "g1",
+    "target_slot": "weapon",
+    "base_ids": "eq_weapon_i_02;eq_weapon_t_01",
+    "weight_mode": "weighted_high",
+    "unlock_condition": "difficulty>=183",
+    "note": "진선계 초반 무기"
+  },
+  {
+    "pool_id": "base_pool_t_g1_armor",
+    "world": "true",
+    "group_name": "g1",
+    "target_slot": "armor",
+    "base_ids": "eq_armor_i_02;eq_armor_t_01",
+    "weight_mode": "weighted_high",
+    "unlock_condition": "difficulty>=183",
+    "note": "진선계 초반 방어구"
+  },
+  {
+    "pool_id": "base_pool_t_g1_accessory",
+    "world": "true",
+    "group_name": "g1",
+    "target_slot": "accessory",
+    "base_ids": "eq_accessory_i_02;eq_accessory_t_01",
+    "weight_mode": "weighted_high",
+    "unlock_condition": "difficulty>=183",
+    "note": "진선계 초반 장신구"
+  },
+  {
+    "pool_id": "base_pool_t_g1_relic",
+    "world": "true",
+    "group_name": "g1",
+    "target_slot": "relic",
+    "base_ids": "eq_relic_i_02;eq_relic_t_01",
+    "weight_mode": "weighted_high",
+    "unlock_condition": "difficulty>=183",
+    "note": "진선계 초반 유물"
+  },
+  {
+    "pool_id": "base_pool_t_g2_weapon",
+    "world": "true",
+    "group_name": "g2",
+    "target_slot": "weapon",
+    "base_ids": "eq_weapon_t_01",
+    "weight_mode": "weighted_top",
+    "unlock_condition": "difficulty>=191",
+    "note": "진선계 최종 무기"
+  },
+  {
+    "pool_id": "base_pool_t_g2_armor",
+    "world": "true",
+    "group_name": "g2",
+    "target_slot": "armor",
+    "base_ids": "eq_armor_t_01",
+    "weight_mode": "weighted_top",
+    "unlock_condition": "difficulty>=191",
+    "note": "진선계 최종 방어구"
+  },
+  {
+    "pool_id": "base_pool_t_g2_accessory",
+    "world": "true",
+    "group_name": "g2",
+    "target_slot": "accessory",
+    "base_ids": "eq_accessory_t_01",
+    "weight_mode": "weighted_top",
+    "unlock_condition": "difficulty>=191",
+    "note": "진선계 최종 장신구"
+  },
+  {
+    "pool_id": "base_pool_t_g2_relic",
+    "world": "true",
+    "group_name": "g2",
+    "target_slot": "relic",
+    "base_ids": "eq_relic_t_01",
+    "weight_mode": "weighted_top",
+    "unlock_condition": "difficulty>=191",
+    "note": "진선계 최종 유물"
+  }
+]

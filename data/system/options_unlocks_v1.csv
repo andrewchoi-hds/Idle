@@ -1,0 +1,23 @@
+option_id,name_ko,category,default_state,unlock_condition_type,unlock_condition_value,requires_resource,cost_value,safe_guard,description
+opt_auto_battle,자동전투,automation,on,tutorial,clear_intro,no,0,low,튜토리얼 종료 시 활성
+opt_auto_skill,자동스킬,automation,off,difficulty,6,no,0,medium,경지 안정화 후 사용 권장
+opt_auto_loot,자동획득,automation,on,difficulty,4,no,0,low,전리품 자동 수집
+opt_auto_breakthrough,자동돌파,automation,off,difficulty,22,no,0,high,재료 충족 시 자동 돌파
+opt_auto_tribulation,자동도겁,automation,off,difficulty,70,no,0,critical,기본 비활성 유지
+opt_auto_potion,자동영약사용,automation,off,difficulty,32,no,0,medium,설정한 임계치에서 사용
+opt_auto_talisman,자동부적사용,automation,off,difficulty,40,no,0,medium,보스/도겁 전 자동 사용
+opt_offline_claim,오프라인 보상 자동수령,automation,on,difficulty,10,no,0,low,접속 시 자동 수령
+opt_speed_2x,전투속도 2배,qol,off,difficulty,18,no,0,low,전투 가속
+opt_speed_3x,전투속도 3배,qol,off,difficulty,84,yes,spirit_coin:25000,medium,인간계 후반 해금
+opt_low_fx,저사양 이펙트,qol,off,tutorial,clear_intro,no,0,low,연출 간소화
+opt_damage_numbers,피해량 표시,qol,on,tutorial,clear_intro,no,0,low,피해 숫자 표시
+opt_formula_view,확률/공식 공개,qol,off,difficulty,28,no,0,low,상세 수치 노출
+opt_big_font,큰 글씨 모드,accessibility,off,tutorial,clear_intro,no,0,low,UI 글자 확대
+opt_colorblind,색약 보정,accessibility,off,tutorial,clear_intro,no,0,low,색상 구분 보정
+opt_screen_shake,화면 흔들림,accessibility,on,tutorial,clear_intro,no,0,low,전투 연출 설정
+opt_warning_lock,희귀재료 소모 경고,safety,on,tutorial,clear_intro,no,0,critical,희귀 재료 사용 이중 확인
+opt_rebirth_confirm,환생 확인 팝업,safety,on,difficulty,1,no,0,critical,환생 시 확인창 표시
+opt_auto_save_cloud,클라우드 자동저장,qol,on,difficulty,12,no,0,high,세션 주기 저장
+opt_boss_alert,보스/도겁 알림,qol,on,difficulty,20,no,0,medium,관문 진입 시 알림
+opt_event_skip,이벤트 연출 스킵,qol,off,difficulty,48,no,0,medium,반복 이벤트 가속
+opt_battery_saver,배터리 절약 모드,qol,off,difficulty,8,no,0,low,백그라운드 프레임 제한

@@ -1,0 +1,127 @@
+{
+  "config": {
+    "difficultyIndex": 20,
+    "playerLevel": 30,
+    "rebirthCount": 2,
+    "rngSeed": 20260223,
+    "skillIds": [
+      "sk_atk_001",
+      "sk_atk_002"
+    ],
+    "monsterIds": [
+      "mob_m_001",
+      "mob_m_003",
+      "mob_m_008"
+    ],
+    "maxTurnsPerBattle": 180,
+    "includeActionLogs": false
+  },
+  "context": {
+    "world": "mortal",
+    "majorStageName": "foundation_establishment",
+    "subStageName": "layer_7",
+    "defenseConstantK": 180
+  },
+  "player": {
+    "stats": {
+      "hp": 1247.648,
+      "mp": 644.525,
+      "atk": 225.0621,
+      "def": 177.5968,
+      "speed": 1.335968,
+      "accuracy": 0.925056,
+      "evasion": 0.11847200000000002,
+      "critRate": 0.08953400000000002,
+      "critDamage": 0.83214,
+      "penetration": 0.12851200000000002,
+      "damageReduction": 0.06834
+    },
+    "skills": [
+      {
+        "skillId": "sk_atk_001",
+        "nameKo": "청운참",
+        "damageCoeff": 1.35,
+        "cooldownSec": 3,
+        "costMp": 12,
+        "element": "none",
+        "statusEffect": "bleed",
+        "statusChancePct": 15,
+        "statusDurationSec": 6
+      },
+      {
+        "skillId": "sk_atk_002",
+        "nameKo": "화령장",
+        "damageCoeff": 1.55,
+        "cooldownSec": 4,
+        "costMp": 16,
+        "element": "fire",
+        "statusEffect": "burn",
+        "statusChancePct": 20,
+        "statusDurationSec": 5
+      }
+    ]
+  },
+  "duels": [
+    {
+      "monsterId": "mob_m_001",
+      "monsterNameKo": "회색 들쥐",
+      "monsterType": "normal",
+      "winner": "player",
+      "turns": 15,
+      "elapsedSec": 5.988,
+      "playerHpLeft": 690.65,
+      "monsterHpLeft": 0,
+      "usedSkills": {
+        "sk_atk_002": 2,
+        "sk_atk_001": 2
+      },
+      "statusAppliedCounts": {},
+      "logs": []
+    },
+    {
+      "monsterId": "mob_m_003",
+      "monsterNameKo": "적안 들개",
+      "monsterType": "elite",
+      "winner": "monster",
+      "turns": 19,
+      "elapsedSec": 7.129,
+      "playerHpLeft": 0,
+      "monsterHpLeft": 552.54,
+      "usedSkills": {
+        "sk_atk_002": 2,
+        "sk_atk_001": 2
+      },
+      "statusAppliedCounts": {
+        "burn": 3
+      },
+      "logs": []
+    },
+    {
+      "monsterId": "mob_m_008",
+      "monsterNameKo": "고목정령",
+      "monsterType": "boss",
+      "winner": "monster",
+      "turns": 23,
+      "elapsedSec": 9.98,
+      "playerHpLeft": 0,
+      "monsterHpLeft": 3001.1,
+      "usedSkills": {
+        "sk_atk_002": 3,
+        "sk_atk_001": 2
+      },
+      "statusAppliedCounts": {
+        "burn": 1,
+        "stun": 2
+      },
+      "logs": []
+    }
+  ],
+  "summary": {
+    "total": 3,
+    "wins": 1,
+    "losses": 2,
+    "winRate": 0.3333333333333333,
+    "avgTurns": 19,
+    "avgElapsedSec": 7.699
+  }
+}

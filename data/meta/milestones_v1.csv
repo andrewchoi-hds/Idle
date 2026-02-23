@@ -1,0 +1,21 @@
+milestone_id,track,name_ko,trigger_type,trigger_value,reward_type,reward_value,reward_item_ref,persistent,unlock_condition,note
+ms_core_001,progress,인간계 1차 안정화,reach_difficulty,26,currency_spirit_coin,2200,pot_qi_02,yes,difficulty>=1,초중반 체크포인트
+ms_core_002,progress,인간계 후반 가속,reach_difficulty,52,currency_rebirth_essence,20,pot_def_02,yes,difficulty>=1,중반 성장 보정
+ms_core_003,progress,인간계 도겁 준비 완료,reach_difficulty,84,currency_rebirth_essence,36,pot_tri_02,yes,difficulty>=1,도겁 전 구간
+ms_core_004,progress,신선계 초기 정착,reach_difficulty,118,currency_rebirth_essence,58,pot_def_03,yes,difficulty>=105,신선계 시작
+ms_core_005,progress,신선계 중반 개화,reach_difficulty,145,currency_rebirth_essence,82,pot_tri_03,yes,difficulty>=118,신선계 확장
+ms_core_006,progress,신선계 종결 준비,reach_difficulty,174,currency_rebirth_essence,110,tal_luck_02,yes,difficulty>=145,도군 대비
+ms_core_007,progress,진선계 생존 단계,reach_difficulty,190,currency_rebirth_essence,160,pot_tri_03,yes,difficulty>=183,진선계 초중반
+ms_core_008,progress,원조 심연 돌입,reach_difficulty,198,currency_rebirth_essence,260,tal_luck_02,yes,difficulty>=190,최종 체크포인트
+ms_rebirth_001,rebirth,윤회 5회 달성,rebirth_count,5,currency_rebirth_essence,40,none,yes,difficulty>=1,환생 루프 유도
+ms_rebirth_002,rebirth,윤회 15회 달성,rebirth_count,15,currency_rebirth_essence,90,tal_luck_01,yes,difficulty>=1,환생 중기
+ms_rebirth_003,rebirth,윤회 30회 달성,rebirth_count,30,currency_rebirth_essence,170,tal_luck_02,yes,difficulty>=1,환생 후반
+ms_trib_001,tribulation,인간계 도겁 3회 생존,survive_tribulation_count,3,currency_rebirth_essence,36,tal_guard_02,yes,difficulty>=70,도겁 적응
+ms_trib_002,tribulation,신선계 도겁 5회 생존,survive_tribulation_count,5,currency_rebirth_essence,95,pot_tri_03,yes,difficulty>=130,고위 도겁
+ms_trib_003,tribulation,진선계 도겁 2회 생존,survive_tribulation_count,2,currency_rebirth_essence,180,pot_tri_03,yes,difficulty>=186,최종 도겁
+ms_collection_001,collection,부적 수집가 I,collect_item_count,talisman:8,currency_spirit_coin,4000,tal_qi_02,yes,difficulty>=40,부적 모으기
+ms_collection_002,collection,영약 수집가 I,collect_item_count,potion:12,currency_spirit_coin,4500,pot_brk_03,yes,difficulty>=32,영약 모으기
+ms_collection_003,collection,전설 비축,collect_item,pot_tri_03:10,currency_rebirth_essence,130,tal_luck_02,yes,difficulty>=124,전설 영약 비축
+ms_economy_001,economy,상점 단골 I,spend_spirit_coin,50000,currency_rebirth_essence,28,none,yes,difficulty>=18,재화 소모 유도
+ms_economy_002,economy,상점 단골 II,spend_spirit_coin,180000,currency_rebirth_essence,74,tal_luck_01,yes,difficulty>=84,후반 소모 유도
+ms_economy_003,economy,환생 투자자,spend_rebirth_essence,900,currency_spirit_coin,12000,pot_tri_03,yes,difficulty>=105,환생 투자 보상

@@ -1,0 +1,11 @@
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Generated simulation outputs
+data/sim/minimal_combat_report_v1.json
+data/sim/minimal_combat_report_ts_v1.json
+data/sim/minimal_combat_summary_v1.csv
+data/sim/minimal_combat_action_log_v1.csv
+data/sim/debug_ts_immortal_logs.json

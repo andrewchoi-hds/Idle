@@ -1,0 +1,15 @@
+asset_id,source_name,asset_name,url,category,resolution,license,status,commercial_use,attribution_required,style_fit_1_to_5,risk_level,notes,verified_on
+A001,Kenney,Kenney Asset Library,https://kenney.nl/assets,ui+tiles+icons+misc,mixed,CC0,recommended,yes,no,3,low,라이브러리 전체가 CC0이며 상업 사용 가능,2026-02-23
+A002,OpenGameArt,Oriental Roof Tiles,https://opengameart.org/content/oriental-roof-tiles,environment,32x32,CC0,recommended,yes,no,5,low,선협/동양풍 건축에 직접 적용 가능,2026-02-23
+A003,OpenGameArt,Mage City Arcanos,https://opengameart.org/content/mage-city-arcanos,environment+props,32x32,CC0,recommended,yes,no,4,low,탑다운 타일/오브젝트가 풍부해 확장성 높음,2026-02-23
+A004,OpenGameArt,Dungeon Crawl 32x32 tiles,https://opengameart.org/content/dungeon-crawl-32x32-tiles,environment+items+mobs,32x32,CC0,recommended,yes,no,4,low,로그라이크식 던전 콘텐츠와 궁합 좋음,2026-02-23
+A005,OpenGameArt,Dungeon Crawl 32x32 tiles supplemental,https://opengameart.org/content/dungeon-crawl-32x32-tiles-supplemental,environment+items+ui+mobs,32x32,CC0,recommended,yes,no,4,low,기본셋 보강용으로 효율 좋음,2026-02-23
+A006,OpenGameArt,Japanese buildings - isometric strategy game mockup,https://opengameart.org/content/japanese-buildings-isometric-strategy-game-mockup,environment,isometric,CC0,conditional,yes,no,3,low,아이소메트릭이라 탑다운으로 리터치 필요,2026-02-23
+A007,OpenGameArt,Pixel FX Pack,https://opengameart.org/content/pixel-fx-pack,vfx,mixed,CC0,recommended,yes,no,4,low,도겁/스킬 이펙트 연출용으로 적합,2026-02-23
+A008,OpenGameArt,2D Spell Effects,https://opengameart.org/content/2d-spell-effects,vfx,mixed,CC0,recommended,yes,no,4,low,원소 스킬 이펙트에 바로 적용 가능,2026-02-23
+A009,itch.io (0x72),16x16 Dungeon Tileset,https://0x72.itch.io/16x16-dungeon-tileset,environment+characters+items,16x16,CC0,recommended,yes,no,3,low,CC0 명시 및 상업/수정/배포 가능 명시,2026-02-23
+A010,itch.io (RGS_Dev),Free CC0 Top Down Tileset Template Pixel Art,https://rgsdev.itch.io/free-cc0-top-down-tileset-template-pixel-art,environment,16x16,CC0,recommended,yes,no,3,low,프로토타입 지형 제작 속도 높음,2026-02-23
+A011,itch.io (Pixel Creations),Pixel Creations Asset Catalog,https://pixelcreations.itch.io/,items+icons+props,16x16~30x30,custom license,conditional,yes,optional,4,medium,상업 사용 가능이나 재배포/AI 사용 금지 등 커스텀 조건 확인 필요,2026-02-23
+A012,itch.io (Noxeg),Noxeg Free Packs,https://noxeg.itch.io/,characters+mobs,mixed,custom license,conditional,yes,yes,3,medium,무료 버전은 visible credit 요구,2026-02-23
+A013,OpenGameArt,LPC Tile Atlas2,https://opengameart.org/content/lpc-tile-atlas2,environment+props,32x32,CC-BY-SA 3.0 or GPL 3.0,conditional,yes,yes,4,high,ShareAlike/GPL 의무를 빌드 정책과 함께 검토 필요,2026-02-23
+A014,OpenGameArt,[LPC] Roofs,https://opengameart.org/content/lpc-roofs,environment,32x32,CC-BY-SA 3.0 or GPL 3.0,conditional,yes,yes,5,high,루프 품질은 우수하나 라이선스 의무가 CC0 대비 무거움,2026-02-23

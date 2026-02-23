@@ -1,0 +1,13 @@
+rule_id,rule_name_ko,target_rarity,max_prefix,max_suffix,allow_duplicate_exclusive,roll_value_distribution,lock_cost_currency,lock_cost_base,reroll_cost_currency,reroll_cost_base,pity_rule,note
+roll_rule_common,일반 장비 롤링,common,1,1,no,uniform,spirit_coin,80,spirit_coin,120,none,초반 롤링
+roll_rule_rare,희귀 장비 롤링,rare,2,1,no,triangular_high,spirit_coin,220,spirit_coin,320,pity_after_8,희귀 롤링
+roll_rule_epic,영웅 장비 롤링,epic,2,2,no,triangular_high,spirit_coin,680,spirit_coin,920,pity_after_10,에픽 롤링
+roll_rule_legendary,전설 장비 롤링,legendary,3,2,no,triangular_high,spirit_coin,1800,spirit_coin,2400,pity_after_12,전설 롤링
+roll_rule_true_legend,진선 전설 롤링,true_legendary,3,3,no,weighted_top,spirit_coin,4200,spirit_coin,5600,pity_after_14,진선계 롤링
+roll_lock_01,옵션 잠금 1회,all,0,0,no,none,rebirth_essence,8,none,0,none,첫 잠금 비용
+roll_lock_02,옵션 잠금 2회,all,0,0,no,none,rebirth_essence,18,none,0,none,두번째 잠금 비용
+roll_lock_03,옵션 잠금 3회,all,0,0,no,none,rebirth_essence,34,none,0,none,세번째 잠금 비용
+roll_cleanse_01,저주 옵션 정화,all,0,0,no,none,rebirth_essence,24,none,0,none,부정 옵션 제거
+roll_transfer_01,옵션 전승,epic_plus,0,0,no,none,rebirth_essence,52,spirit_coin,2200,none,동일 슬롯 전승
+roll_awaken_01,각성 재감정,legendary_plus,0,0,no,weighted_top,rebirth_essence,80,spirit_coin,3600,pity_after_6,각성 등급 재감정
+roll_safe_01,안전 재감정,all,0,0,no,weighted_mid,rebirth_essence,20,spirit_coin,800,none,최대값 하락 방지
