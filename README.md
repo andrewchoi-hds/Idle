@@ -22,6 +22,8 @@ npm run save:regression:summary:md
 npm run pr:body:gen
 npm run pr:body:lint
 npm run pr:body:lint:regression:check
+npm run pr:body:lint:regression:check:report
+npm run pr:body:lint:regression:summary:md
 npm run pr:create:auto
 npm run pr:review:auto
 npm run pr:merge:auto
@@ -42,6 +44,7 @@ npm run pr:ship:auto
 - PR 본문 자동 생성기(PY): `/Users/hirediversity/Idle/scripts/generate_pr_body_v1.py`
 - PR 본문 품질 Lint(PY): `/Users/hirediversity/Idle/scripts/lint_pr_body_v1.py`
 - PR 본문 Lint 회귀 체크(PY): `/Users/hirediversity/Idle/scripts/check_pr_body_lint_regression_v1.py`
+- PR 본문 Lint 회귀 CI 요약(PY): `/Users/hirediversity/Idle/scripts/build_pr_body_lint_regression_ci_summary_v1.py`
 - PR 자동 생성/업데이트(PY): `/Users/hirediversity/Idle/scripts/create_pr_with_body_v1.py`
 - PR 자동 승인(PY): `/Users/hirediversity/Idle/scripts/review_pr_auto_v1.py`
 - PR 체크대기 자동 머지(PY): `/Users/hirediversity/Idle/scripts/merge_pr_when_ready_v1.py`

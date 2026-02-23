@@ -12,3 +12,5 @@ data/sim/debug_ts_immortal_logs.json
 data/sim/save_auto_progress_regression_report_v1.json
 data/sim/save_offline_catchup_regression_report_v1.json
 data/sim/save_regression_ci_summary_v1.md
+data/sim/pr_body_lint_regression_report_v1.json
+data/sim/pr_body_lint_regression_ci_summary_v1.md

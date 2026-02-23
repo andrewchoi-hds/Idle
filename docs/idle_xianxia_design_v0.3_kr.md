@@ -556,3 +556,11 @@
 
 ## 105) 추가 문서
 - PR 본문 Lint 회귀 체크 가이드: `/Users/hirediversity/Idle/docs/system/pr_body_lint_regression_v1_kr.md`
+
+## 106) 다음 순차 작업
+1. [완료] PR 본문 lint 회귀 체크 리포트 출력 명령(`pr:body:lint:regression:check:report`) 추가.
+2. [완료] 회귀 리포트 기반 Markdown 요약 생성 스크립트(`pr:body:lint:regression:summary:md`) 추가.
+3. [완료] Required Check workflow Step Summary/Artifacts에 PR 본문 lint 회귀 요약 연동.
+
+## 107) 추가 문서
+- PR 본문 Lint 회귀 체크 가이드(Step Summary 반영): `/Users/hirediversity/Idle/docs/system/pr_body_lint_regression_v1_kr.md`

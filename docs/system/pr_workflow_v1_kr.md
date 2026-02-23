@@ -72,6 +72,7 @@ npm run pr:ship:auto
 - PR 이벤트에서는 본문 품질 lint가 선행되며, 실패 시 나머지 검증 단계가 실행되지 않는다.
 - CI 요약 확인:
   - `PR Body Lint` 섹션(pass/fail, 에러 개수)
+  - `PR Body Lint Regression Summary` 섹션(케이스별 expected/result)
   - PR Checks의 Step Summary에서 저장 회귀 결과 테이블(`Auto Progress`/`Offline Catchup`) 확인
 - PR 본문 lint 규칙 자체의 회귀 여부는 `PR Body Lint Regression` step 성공 여부로 확인한다.
 - 리뷰:

@@ -13,6 +13,13 @@
 cd /Users/hirediversity/Idle
 npm run pr:body:lint:regression:check
 ```
+```bash
+# JSON 리포트 생성
+npm run pr:body:lint:regression:check:report
+
+# Markdown 요약 생성
+npm run pr:body:lint:regression:summary:md
+```
 
 ## 3) 점검 시나리오
 - `body_file_valid_strict_pass`: body 파일 입력 + strict path 통과
@@ -23,6 +30,7 @@ npm run pr:body:lint:regression:check
 ## 4) CI 연계
 - `verify-combat-diff` workflow에서 `PR Body Lint Regression` 단계를 실행한다.
 - 이 단계 실패 시 Required Check 전체가 실패 처리된다.
+- `PR Body Lint Regression Step Summary` 단계에서 케이스별 결과 테이블을 `GITHUB_STEP_SUMMARY`에 기록한다.
 
 ## 5) 선택 옵션
 - `--report-file <path>`: 케이스별 pass/fail JSON 리포트 출력
