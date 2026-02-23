@@ -427,3 +427,19 @@
 ## 73) 추가 문서
 - save_v2 자동 진행 루프 가이드: `/Users/hirediversity/Idle/docs/system/save_auto_progress_tick_runtime_v1_kr.md`
 - save_v2 자동 진행 샘플: `/Users/hirediversity/Idle/data/sim/save_v2_auto_progress_tick_ts_v1.json`
+
+## 74) 다음 순차 작업
+1. [완료] 자동 진행 루프 회귀 시나리오(JSON) 정의.
+2. [완료] 자동 진행 회귀 점검 스크립트(`save:auto:regression:check`) 추가.
+3. [완료] CI Required Check(`verify-combat-diff`)에 자동 진행 회귀 점검 연결.
+
+## 75) 추가 문서
+- 자동 진행 회귀 시나리오: `/Users/hirediversity/Idle/data/sim/save_auto_progress_regression_scenarios_v1.json`
+
+## 76) 다음 순차 작업
+1. [완료] 자동 진행 회귀 체크 출력 파일을 임시 경로로 격리해 샘플 JSON 오염 제거.
+2. [완료] 회귀 시나리오에서 고정 `output_path` 의존 제거.
+3. [완료] `typecheck`/회귀 체크/전투 diff 스위트 재검증.
+
+## 77) 추가 문서
+- 자동 진행 루프 회귀 체크 운영 보강: `/Users/hirediversity/Idle/docs/system/save_auto_progress_tick_runtime_v1_kr.md`
