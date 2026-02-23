@@ -516,3 +516,11 @@
 
 ## 95) 추가 문서
 - PR 자동 승인 가이드: `/Users/hirediversity/Idle/docs/system/pr_review_auto_v1_kr.md`
+
+## 96) 다음 순차 작업
+1. [완료] PR 본문 품질 lint 스크립트(`pr:body:lint`) 추가.
+2. [완료] PR 생성 자동화(`pr:create:auto`)에 본문 lint 단계 기본 연동.
+3. [완료] 원클릭 ship(`pr:ship:auto`)에서 본문 lint 옵션 전달 및 운영 문서 반영.
+
+## 97) 추가 문서
+- PR 본문 품질 Lint 가이드: `/Users/hirediversity/Idle/docs/system/pr_body_lint_v1_kr.md`

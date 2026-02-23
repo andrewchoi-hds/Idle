@@ -54,6 +54,11 @@ def parse_args() -> argparse.Namespace:
         help="Skip push in PR create step.",
     )
     parser.add_argument(
+        "--no-body-lint",
+        action="store_true",
+        help="Skip PR body lint in create step.",
+    )
+    parser.add_argument(
         "--no-review",
         action="store_true",
         help="Skip PR auto-approve step.",
@@ -130,6 +135,8 @@ def main() -> None:
         create_cmd.append("--allow-dirty")
     if args.no_push:
         create_cmd.append("--no-push")
+    if args.no_body_lint:
+        create_cmd.append("--no-body-lint")
     if args.dry_run:
         create_cmd.append("--dry-run")
 

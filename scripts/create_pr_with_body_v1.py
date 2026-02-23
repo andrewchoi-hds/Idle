@@ -56,6 +56,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Skip git push before creating/updating PR.",
     )
+    parser.add_argument(
+        "--no-body-lint",
+        action="store_true",
+        help="Skip PR body lint after generation.",
+    )
     return parser.parse_args()
 
 
@@ -134,6 +139,20 @@ def generate_body(base: str, head: str, body_file: Path, run_validation: bool) -
     if run_validation:
         cmd.append("--run-validation")
     run(cmd, check=True, capture=False)
+
+
+def lint_body(body_file: Path) -> None:
+    run(
+        [
+            "python3",
+            "scripts/lint_pr_body_v1.py",
+            "--body-file",
+            str(body_file),
+            "--strict-change-path",
+        ],
+        check=True,
+        capture=False,
+    )
 
 
 def push_head_branch(head: str) -> None:
@@ -255,12 +274,16 @@ def main() -> None:
         print(f"[dry-run] worktree_clean={clean}")
         print(f"[dry-run] push_before_pr={not args.no_push}")
         print("[dry-run] would run generate_pr_body_v1.py")
+        if not args.no_body_lint:
+            print("[dry-run] would run lint_pr_body_v1.py")
         if not args.no_push:
             print("[dry-run] would push branch to origin")
         print("[dry-run] would create or update PR via gh cli")
         return
 
     generate_body(base, head, body_file, args.run_validation)
+    if not args.no_body_lint:
+        lint_body(body_file)
     if not args.no_push:
         push_head_branch(head)
     existing = find_existing_open_pr(base, head)

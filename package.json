@@ -21,6 +21,7 @@
     "save:offline:regression:check:report": "python3 scripts/check_save_offline_catchup_regression_v1.py --scenario-file data/sim/save_offline_catchup_regression_scenarios_v1.json --report-file data/sim/save_offline_catchup_regression_report_v1.json",
     "save:regression:summary:md": "python3 scripts/build_save_regression_ci_summary_v1.py --auto-report data/sim/save_auto_progress_regression_report_v1.json --offline-report data/sim/save_offline_catchup_regression_report_v1.json --output-md data/sim/save_regression_ci_summary_v1.md",
     "pr:body:gen": "python3 scripts/generate_pr_body_v1.py --base-ref origin/main --head-ref HEAD --output-file /private/tmp/idle_pr_body_v1.md",
+    "pr:body:lint": "python3 scripts/lint_pr_body_v1.py --body-file /private/tmp/idle_pr_body_v1.md --strict-change-path",
     "pr:create:auto": "python3 scripts/create_pr_with_body_v1.py --base main --run-validation",
     "pr:review:auto": "python3 scripts/review_pr_auto_v1.py --base main",
     "pr:merge:auto": "python3 scripts/merge_pr_when_ready_v1.py --base main --method squash --delete-branch --poll-interval-seconds 6 --wait-seconds 900",
