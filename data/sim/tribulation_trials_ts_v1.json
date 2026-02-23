@@ -1,0 +1,127 @@
+{
+  "generated_at_utc": "2026-02-23T07:21:09.731Z",
+  "config": {
+    "outputPath": "/Users/hirediversity/Idle/data/sim/tribulation_trials_ts_v1.json",
+    "difficultyIndexes": [
+      13,
+      117,
+      190
+    ],
+    "trials": 3000,
+    "seed": 20260223,
+    "currentQi": null,
+    "failStreak": 0,
+    "statusPenaltyPct": 0,
+    "defensiveSkillGuardPct": 0,
+    "rebirthLevels": {
+      "breakthrough_bonus": 0,
+      "tribulation_guard": 0,
+      "potion_mastery": 0
+    },
+    "consumableItemIds": []
+  },
+  "reports": [
+    {
+      "difficultyIndex": 13,
+      "stageNameKo": "인간계 연기 대원만",
+      "world": "mortal",
+      "isTribulation": true,
+      "trials": 3000,
+      "runtimeRates": {
+        "successPct": 66,
+        "deathPctOnFailure": 3
+      },
+      "sampledRates": {
+        "blockedNoQi": 0,
+        "success": 0.6607,
+        "minorFail": 0.1797,
+        "retreatFail": 0.1477,
+        "deathFail": 0.012
+      },
+      "avgRetreatLayersWhenRetreat": 1.5079,
+      "avgQiDelta": -1123.4007,
+      "failureWeights": {
+        "source": "table",
+        "minorPct": 54,
+        "retreatPct": 43,
+        "deathPct": 3,
+        "retreatMinLayers": 1,
+        "retreatMaxLayers": 2
+      },
+      "consumables": {
+        "usedItemIds": [],
+        "contributions": [],
+        "ignoredItemIds": []
+      },
+      "warnings": []
+    },
+    {
+      "difficultyIndex": 117,
+      "stageNameKo": "신선계 지선 대원만",
+      "world": "immortal",
+      "isTribulation": true,
+      "trials": 3000,
+      "runtimeRates": {
+        "successPct": 42,
+        "deathPctOnFailure": 26
+      },
+      "sampledRates": {
+        "blockedNoQi": 0,
+        "success": 0.422,
+        "minorFail": 0.2123,
+        "retreatFail": 0.212,
+        "deathFail": 0.1537
+      },
+      "avgRetreatLayersWhenRetreat": 4.5267,
+      "avgQiDelta": -4731025.2327,
+      "failureWeights": {
+        "source": "table",
+        "minorPct": 36,
+        "retreatPct": 38,
+        "deathPct": 26,
+        "retreatMinLayers": 3,
+        "retreatMaxLayers": 6
+      },
+      "consumables": {
+        "usedItemIds": [],
+        "contributions": [],
+        "ignoredItemIds": []
+      },
+      "warnings": []
+    },
+    {
+      "difficultyIndex": 190,
+      "stageNameKo": "진선계 현선 원만",
+      "world": "true",
+      "isTribulation": true,
+      "trials": 3000,
+      "runtimeRates": {
+        "successPct": 28,
+        "deathPctOnFailure": 61
+      },
+      "sampledRates": {
+        "blockedNoQi": 0,
+        "success": 0.2807,
+        "minorFail": 0.092,
+        "retreatFail": 0.1903,
+        "deathFail": 0.437
+      },
+      "avgRetreatLayersWhenRetreat": 4.972,
+      "avgQiDelta": -545174175.318,
+      "failureWeights": {
+        "source": "table",
+        "minorPct": 13,
+        "retreatPct": 26,
+        "deathPct": 61,
+        "retreatMinLayers": 3,
+        "retreatMaxLayers": 7
+      },
+      "consumables": {
+        "usedItemIds": [],
+        "contributions": [],
+        "ignoredItemIds": []
+      },
+      "warnings": []
+    }
+  ]
+}

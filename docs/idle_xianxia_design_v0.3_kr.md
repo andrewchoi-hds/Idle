@@ -392,3 +392,12 @@
 ## 65) 추가 문서
 - PR 템플릿: `/Users/hirediversity/Idle/.github/pull_request_template.md`
 - PR 워크플로우 가이드: `/Users/hirediversity/Idle/docs/system/pr_workflow_v1_kr.md`
+
+## 66) 다음 순차 작업
+1. [완료] 돌파/도겁 런타임 판정 엔진(`evaluateBreakthroughAttempt`) 추가.
+2. [완료] 도겁 다회 시뮬레이션 덤프 스크립트(`tribulation:dump:ts`) 추가.
+3. [완료] 도겁 런타임 계산식/입출력 문서화.
+
+## 67) 추가 문서
+- 도겁 런타임 가이드: `/Users/hirediversity/Idle/docs/system/tribulation_runtime_v1_kr.md`
+- 도겁 샘플 결과: `/Users/hirediversity/Idle/data/sim/tribulation_trials_ts_v1.json`
