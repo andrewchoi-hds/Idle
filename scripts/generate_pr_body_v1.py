@@ -15,6 +15,7 @@ DEFAULT_VALIDATION_COMMANDS = [
     "npm run combat:diff:py-ts:suite",
     "npm run save:auto:regression:check",
     "npm run save:offline:regression:check",
+    "npm run pr:body:lint:regression:check",
 ]
 
 

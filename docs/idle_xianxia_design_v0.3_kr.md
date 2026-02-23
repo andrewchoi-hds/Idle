@@ -564,3 +564,11 @@
 
 ## 107) 추가 문서
 - PR 본문 Lint 회귀 체크 가이드(Step Summary 반영): `/Users/hirediversity/Idle/docs/system/pr_body_lint_regression_v1_kr.md`
+
+## 108) 다음 순차 작업
+1. [완료] PR 템플릿 `Validation` 체크리스트에 PR 본문 lint 회귀 명령 추가.
+2. [완료] PR 본문 생성기/본문 lint의 표준 검증 명령 목록을 5개 기준으로 동기화.
+3. [완료] PR 본문 lint 회귀 fixture를 동기화된 검증 체크리스트 기준으로 갱신.
+
+## 109) 추가 문서
+- PR 본문 자동 생성기 가이드(Validation 5개 커맨드 기준): `/Users/hirediversity/Idle/docs/system/pr_body_generator_v1_kr.md`

@@ -52,6 +52,7 @@ def make_cases() -> list[Case]:
             "- [x] `npm run combat:diff:py-ts:suite`",
             "- [x] `npm run save:auto:regression:check`",
             "- [x] `npm run save:offline:regression:check`",
+            "- [x] `npm run pr:body:lint:regression:check`",
             "",
             "## Docs",
             "- [x] Updated docs if behavior or workflow changed",
