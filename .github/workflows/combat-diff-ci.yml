@@ -33,6 +33,10 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: PR Body Lint
+        if: github.event_name == 'pull_request'
+        run: python3 scripts/lint_pr_body_v1.py --event-json "$GITHUB_EVENT_PATH"
+
       - name: Install dependencies
         run: npm ci
 

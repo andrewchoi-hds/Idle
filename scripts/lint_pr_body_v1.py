@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 from pathlib import Path
 
@@ -31,6 +32,16 @@ def parse_args() -> argparse.Namespace:
         "--strict-change-path",
         action="store_true",
         help="Require at least one absolute repository path in Changes.",
+    )
+    parser.add_argument(
+        "--event-json",
+        type=Path,
+        help="GitHub event JSON path. Lints pull_request.body from this payload.",
+    )
+    parser.add_argument(
+        "--body-text",
+        default="",
+        help="Inline markdown body text to lint.",
     )
     return parser.parse_args()
 
@@ -129,29 +140,63 @@ def lint_notes(lines: list[str]) -> list[str]:
     return errors
 
 
+def lint_text(text: str, strict_change_path: bool) -> list[str]:
+    sections = split_sections(text)
+    errors = ensure_required_sections(sections)
+    if errors:
+        return errors
+    errors.extend(lint_summary(sections["Summary"]))
+    errors.extend(lint_changes(sections["Changes"], strict_change_path))
+    errors.extend(lint_validation(sections["Validation"]))
+    errors.extend(lint_docs(sections["Docs"]))
+    errors.extend(lint_notes(sections["Notes"]))
+    return errors
+
+
+def load_event_body(event_json: Path) -> str:
+    path = event_json.resolve()
+    if not path.exists():
+        raise RuntimeError(f"event json not found: {path}")
+    parsed = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(parsed, dict):
+        raise RuntimeError(f"invalid event json format: {path}")
+    pr = parsed.get("pull_request")
+    if not isinstance(pr, dict):
+        raise RuntimeError(f"pull_request key not found in event json: {path}")
+    body = pr.get("body")
+    if body is None:
+        return ""
+    if not isinstance(body, str):
+        raise RuntimeError(f"pull_request.body is not a string: {path}")
+    return body
+
+
 def main() -> None:
     args = parse_args()
-    body_file = args.body_file.resolve()
-    if not body_file.exists():
-        raise RuntimeError(f"body file not found: {body_file}")
-    text = body_file.read_text(encoding="utf-8")
-    sections = split_sections(text)
+    source = ""
+    text = ""
+    if args.body_text.strip():
+        source = "inline-body-text"
+        text = args.body_text
+    elif args.event_json is not None:
+        source = f"event-json:{args.event_json.resolve()}"
+        text = load_event_body(args.event_json)
+    else:
+        body_file = args.body_file.resolve()
+        if not body_file.exists():
+            raise RuntimeError(f"body file not found: {body_file}")
+        source = str(body_file)
+        text = body_file.read_text(encoding="utf-8")
 
-    errors = ensure_required_sections(sections)
-    if not errors:
-        errors.extend(lint_summary(sections["Summary"]))
-        errors.extend(lint_changes(sections["Changes"], args.strict_change_path))
-        errors.extend(lint_validation(sections["Validation"]))
-        errors.extend(lint_docs(sections["Docs"]))
-        errors.extend(lint_notes(sections["Notes"]))
+    errors = lint_text(text, args.strict_change_path)
 
     if errors:
-        print(f"[pr-body-lint] FAIL file={body_file}")
+        print(f"[pr-body-lint] FAIL source={source}")
         for idx, err in enumerate(errors, start=1):
             print(f"{idx}. {err}")
         raise SystemExit(1)
 
-    print(f"[pr-body-lint] PASS file={body_file}")
+    print(f"[pr-body-lint] PASS source={source}")
 
 
 if __name__ == "__main__":
