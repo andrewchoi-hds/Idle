@@ -476,3 +476,11 @@
 
 ## 85) 추가 문서
 - PR 본문 자동 생성기 가이드: `/Users/hirediversity/Idle/docs/system/pr_body_generator_v1_kr.md`
+
+## 86) 다음 순차 작업
+1. [완료] PR 본문 생성 + PR 생성/업데이트를 묶은 자동화 스크립트(`pr:create:auto`) 추가.
+2. [완료] PR 본문 기본 경로를 `/private/tmp/idle_pr_body_v1.md`로 통일.
+3. [완료] PR 자동 생성 워크플로우 문서화.
+
+## 87) 추가 문서
+- PR 자동 생성/업데이트 가이드: `/Users/hirediversity/Idle/docs/system/pr_create_auto_v1_kr.md`
