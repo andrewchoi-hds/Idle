@@ -443,3 +443,12 @@
 
 ## 77) 추가 문서
 - 자동 진행 루프 회귀 체크 운영 보강: `/Users/hirediversity/Idle/docs/system/save_auto_progress_tick_runtime_v1_kr.md`
+
+## 78) 다음 순차 작업
+1. [완료] `save_v2` 오프라인 복귀 정산 런타임 API(`runSaveOfflineCatchupRuntime`) 추가.
+2. [완료] 오프라인 복귀 시뮬레이션 덤프 스크립트(`save:offline:catchup:ts`) 추가.
+3. [완료] 모바일 복귀 흐름(경과시간 계산/12시간 캡/타임스탬프 동기화) 문서화.
+
+## 79) 추가 문서
+- save_v2 오프라인 복귀 정산 가이드: `/Users/hirediversity/Idle/docs/system/save_offline_catchup_runtime_v1_kr.md`
+- save_v2 오프라인 복귀 샘플: `/Users/hirediversity/Idle/data/sim/save_v2_offline_catchup_ts_v1.json`
