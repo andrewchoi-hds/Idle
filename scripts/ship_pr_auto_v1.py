@@ -54,6 +54,21 @@ def parse_args() -> argparse.Namespace:
         help="Skip push in PR create step.",
     )
     parser.add_argument(
+        "--no-review",
+        action="store_true",
+        help="Skip PR auto-approve step.",
+    )
+    parser.add_argument(
+        "--review-body",
+        default="자동 승인: pr:ship:auto 워크플로우",
+        help="Approval comment body for PR auto-review.",
+    )
+    parser.add_argument(
+        "--require-review",
+        action="store_true",
+        help="Fail if PR approval cannot be posted.",
+    )
+    parser.add_argument(
         "--keep-branch",
         action="store_true",
         help="Do not delete head branch after merge.",
@@ -141,13 +156,36 @@ def main() -> None:
     if args.dry_run:
         merge_cmd.append("--dry-run")
 
+    review_cmd = [
+        "python3",
+        "scripts/review_pr_auto_v1.py",
+        "--base",
+        args.base,
+        "--head",
+        head,
+        "--body",
+        args.review_body,
+    ]
+    if args.require_review:
+        review_cmd.append("--require-success")
+    if args.dry_run:
+        review_cmd.append("--dry-run")
+
     print("[ship] step1: create/update PR")
     run(create_cmd, check=True)
     if args.dry_run:
+        print(f"[ship] dry-run next step (review): {'skip' if args.no_review else 'run'}")
+        print("[ship] dry-run next step (merge): run")
         print("[ship] dry-run done")
         return
 
-    print("[ship] step2: wait checks and merge PR")
+    if args.no_review:
+        print("[ship] step2: skip PR auto-approve")
+    else:
+        print("[ship] step2: auto-approve PR")
+        run(review_cmd, check=True)
+
+    print("[ship] step3: wait checks and merge PR")
     run(merge_cmd, check=True)
     print("[ship] done")
 

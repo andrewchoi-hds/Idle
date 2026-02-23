@@ -20,7 +20,9 @@ npm run pr:ship:auto
    - 검증 실행(`--run-validation`)
    - 브랜치 푸시
    - PR 생성/업데이트
-2. `merge_pr_when_ready_v1.py` 실행
+2. `review_pr_auto_v1.py` 실행(기본 활성화)
+   - 대상 PR 자동 승인 시도(best-effort)
+3. `merge_pr_when_ready_v1.py` 실행
    - Required Check 대기
    - squash 머지
    - 브랜치 삭제(기본)
@@ -28,6 +30,9 @@ npm run pr:ship:auto
 ## 4) 주요 옵션
 - `--no-run-validation`: 본문 생성 단계 검증 생략
 - `--no-push`: PR 생성 전 push 생략
+- `--no-review`: 자동 승인 단계 생략
+- `--require-review`: 자동 승인 실패 시 ship 즉시 실패
+- `--review-body "<text>"`: 승인 코멘트 커스터마이즈
 - `--keep-branch`: 머지 후 브랜치 삭제 생략
 - `--no-auto-on-blocked`: direct merge 실패 시 `--auto` 재시도 비활성화
 - `--dry-run`: 실행 계획만 출력
