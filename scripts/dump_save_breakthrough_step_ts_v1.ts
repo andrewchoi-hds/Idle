@@ -21,6 +21,8 @@ interface CliConfig {
     tribulation_guard?: number;
     potion_mastery?: number;
   };
+  overrideDifficultyIndex: number | null;
+  overrideQi: number | null;
   consumableItemIds: string[];
 }
 
@@ -46,6 +48,8 @@ function parseArgs(argv: string[]): CliConfig {
   let defensiveSkillGuardPct = 0;
   const consumableItemIds: string[] = [];
   const rebirthLevels: CliConfig["rebirthLevels"] = {};
+  let overrideDifficultyIndex: number | null = null;
+  let overrideQi: number | null = null;
 
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
@@ -95,6 +99,16 @@ function parseArgs(argv: string[]): CliConfig {
       i += 1;
       continue;
     }
+    if (arg === "--override-difficulty-index" && next) {
+      overrideDifficultyIndex = Math.max(1, parseIntArg(next, 1));
+      i += 1;
+      continue;
+    }
+    if (arg === "--override-qi" && next) {
+      overrideQi = Math.max(0, parseIntArg(next, 0));
+      i += 1;
+      continue;
+    }
     if (arg === "--consumable" && next) {
       consumableItemIds.push(next);
       i += 1;
@@ -110,6 +124,8 @@ function parseArgs(argv: string[]): CliConfig {
     statusPenaltyPct,
     defensiveSkillGuardPct,
     rebirthLevels,
+    overrideDifficultyIndex,
+    overrideQi,
     consumableItemIds,
   };
 }
@@ -128,7 +144,23 @@ async function main(): Promise<void> {
     const msg = saveValidation.errors.map((e) => `${e.path}: ${e.message}`).join("; ");
     throw new Error(`invalid input save_v2 payload: ${msg}`);
   }
-  const saveBefore = saveValidation.value;
+  const saveBefore = structuredClone(saveValidation.value);
+  if (cli.overrideDifficultyIndex !== null) {
+    const row = indexes.progressionByDifficulty.get(cli.overrideDifficultyIndex);
+    if (!row) {
+      throw new Error(`invalid --override-difficulty-index: ${cli.overrideDifficultyIndex}`);
+    }
+    saveBefore.progression.difficulty_index = row.difficulty_index;
+    saveBefore.progression.world = row.world;
+    saveBefore.progression.major_stage_name = row.major_stage_name;
+    saveBefore.progression.sub_stage_name = row.sub_stage_name;
+    if (cli.overrideQi === null) {
+      saveBefore.currencies.qi = row.qi_required * 2;
+    }
+  }
+  if (cli.overrideQi !== null) {
+    saveBefore.currencies.qi = cli.overrideQi;
+  }
 
   const result = applyBreakthroughStepToSaveV2(tables, indexes, saveBefore, {
     rngSeed: cli.seed,
@@ -155,12 +187,17 @@ async function main(): Promise<void> {
       stageAfter: result.stageAfter.stageNameKo,
       qiBefore: saveBefore.currencies.qi,
       qiAfter: result.save.currencies.qi,
+      spiritCoinBefore: saveBefore.currencies.spirit_coin,
+      spiritCoinAfter: result.save.currencies.spirit_coin,
+      rebirthEssenceBefore: saveBefore.currencies.rebirth_essence,
+      rebirthEssenceAfter: result.save.currencies.rebirth_essence,
       breakthroughFailStreakBefore: saveBefore.pity_counters.breakthrough_fail_streak,
       breakthroughFailStreakAfter: result.save.pity_counters.breakthrough_fail_streak,
       tribulationFailStreakBefore: saveBefore.pity_counters.tribulation_fail_streak,
       tribulationFailStreakAfter: result.save.pity_counters.tribulation_fail_streak,
       rebirthCountBefore: saveBefore.progression.rebirth_count,
       rebirthCountAfter: result.save.progression.rebirth_count,
+      rebirthReward: result.rebirthSettlement?.reward.finalEssence ?? 0,
     },
     runtime: result,
     save_after: result.save,

@@ -26,6 +26,43 @@ export interface SaveBreakthroughApplyOptions {
   consumeInventoryItems?: boolean;
   bumpSaveTimestamp?: boolean;
   nowEpochMs?: number;
+  rebirthOnDeath?: RebirthOnDeathConfig;
+}
+
+export interface RebirthOnDeathConfig {
+  enabled?: boolean;
+  resetDifficultyIndex?: number;
+  resetQi?: boolean;
+  resetSpiritCoin?: boolean;
+  clearUnlockedNodes?: boolean;
+  rewardWeightScale?: number;
+  rewardDifficultyScale?: number;
+  rewardRebirthCountScalePct?: number;
+  rewardMin?: number;
+  rewardMax?: number;
+}
+
+export interface RebirthSettlementResult {
+  triggered: boolean;
+  preRebirthCount: number;
+  postRebirthCount: number;
+  reward: {
+    baseEssence: number;
+    rebirthScaleMultiplier: number;
+    consumableMultiplier: number;
+    finalEssence: number;
+    appliedEffectSources: Array<{
+      itemId: string;
+      effectType: string;
+      appliedValue: number;
+    }>;
+  };
+  resets: {
+    difficultyIndex: number;
+    qiResetApplied: boolean;
+    spiritCoinResetApplied: boolean;
+    unlockedNodesCleared: boolean;
+  };
 }
 
 export interface SaveBreakthroughApplyResult {
@@ -49,11 +86,24 @@ export interface SaveBreakthroughApplyResult {
     tribulation_guard: number;
     potion_mastery: number;
   };
+  rebirthSettlement: RebirthSettlementResult | null;
   consumedItemCounts: Record<string, number>;
   warnings: string[];
 }
 
 const DEFAULT_STREAK_CAP = 9999;
+const DEFAULT_REBIRTH_ON_DEATH: Required<RebirthOnDeathConfig> = {
+  enabled: true,
+  resetDifficultyIndex: 1,
+  resetQi: true,
+  resetSpiritCoin: true,
+  clearUnlockedNodes: false,
+  rewardWeightScale: 12,
+  rewardDifficultyScale: 0.85,
+  rewardRebirthCountScalePct: 1.5,
+  rewardMin: 5,
+  rewardMax: 5000,
+};
 
 function clampCounter(value: number): number {
   if (!Number.isFinite(value)) {
@@ -68,6 +118,34 @@ function clampLevel(value: number): number {
     return 0;
   }
   return Math.max(0, Math.min(20, Math.floor(value)));
+}
+
+function clampNumber(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
+}
+
+function resolveRebirthOnDeathConfig(
+  config: RebirthOnDeathConfig | undefined,
+): Required<RebirthOnDeathConfig> {
+  return {
+    enabled: config?.enabled ?? DEFAULT_REBIRTH_ON_DEATH.enabled,
+    resetDifficultyIndex:
+      config?.resetDifficultyIndex ?? DEFAULT_REBIRTH_ON_DEATH.resetDifficultyIndex,
+    resetQi: config?.resetQi ?? DEFAULT_REBIRTH_ON_DEATH.resetQi,
+    resetSpiritCoin:
+      config?.resetSpiritCoin ?? DEFAULT_REBIRTH_ON_DEATH.resetSpiritCoin,
+    clearUnlockedNodes:
+      config?.clearUnlockedNodes ?? DEFAULT_REBIRTH_ON_DEATH.clearUnlockedNodes,
+    rewardWeightScale:
+      config?.rewardWeightScale ?? DEFAULT_REBIRTH_ON_DEATH.rewardWeightScale,
+    rewardDifficultyScale:
+      config?.rewardDifficultyScale ?? DEFAULT_REBIRTH_ON_DEATH.rewardDifficultyScale,
+    rewardRebirthCountScalePct:
+      config?.rewardRebirthCountScalePct ??
+      DEFAULT_REBIRTH_ON_DEATH.rewardRebirthCountScalePct,
+    rewardMin: config?.rewardMin ?? DEFAULT_REBIRTH_ON_DEATH.rewardMin,
+    rewardMax: config?.rewardMax ?? DEFAULT_REBIRTH_ON_DEATH.rewardMax,
+  };
 }
 
 function inferRebirthLevelsFromRebirthCount(rebirthCount: number): {
@@ -159,6 +237,45 @@ function buildConsumedItemCounts(itemIds: string[]): Record<string, number> {
   return Object.fromEntries(counts.entries());
 }
 
+function calcRebirthEssenceReward(
+  stage: BalanceTables["progression"][number],
+  preRebirthCount: number,
+  attemptResult: BreakthroughAttemptResult,
+  config: Required<RebirthOnDeathConfig>,
+): RebirthSettlementResult["reward"] {
+  const appliedEffectSources = attemptResult.consumables.contributions
+    .filter((row) => row.effectType === "rebirth_essence_mul_pct")
+    .map((row) => ({
+      itemId: row.itemId,
+      effectType: row.effectType,
+      appliedValue: Math.max(0, row.appliedValue),
+    }));
+
+  const consumableMul =
+    1 +
+    appliedEffectSources.reduce((acc, row) => acc + row.appliedValue, 0);
+  const baseEssence =
+    stage.rebirth_score_weight * config.rewardWeightScale +
+    Math.sqrt(stage.difficulty_index) * config.rewardDifficultyScale;
+  const rebirthScaleMultiplier =
+    1 + Math.max(0, preRebirthCount) * (config.rewardRebirthCountScalePct / 100);
+
+  const rawFinal = baseEssence * rebirthScaleMultiplier * consumableMul;
+  const boundedFinal = clampNumber(
+    Math.round(rawFinal),
+    Math.max(0, Math.floor(config.rewardMin)),
+    Math.max(Math.floor(config.rewardMin), Math.floor(config.rewardMax)),
+  );
+
+  return {
+    baseEssence: Number(baseEssence.toFixed(4)),
+    rebirthScaleMultiplier: Number(rebirthScaleMultiplier.toFixed(4)),
+    consumableMultiplier: Number(consumableMul.toFixed(4)),
+    finalEssence: boundedFinal,
+    appliedEffectSources,
+  };
+}
+
 function applyInventoryConsumption(save: SaveV2, consumedCounts: Record<string, number>): void {
   if (Object.keys(consumedCounts).length === 0) {
     return;
@@ -243,6 +360,7 @@ export function applyBreakthroughStepToSaveV2(
           tribulation_guard: 0,
           potion_mastery: 0,
         },
+        rebirthSettlement: null,
         consumedItemCounts: {},
         warnings: ["auto_breakthrough disabled; no progression step executed"],
       };
@@ -279,6 +397,7 @@ export function applyBreakthroughStepToSaveV2(
           tribulation_guard: 0,
           potion_mastery: 0,
         },
+        rebirthSettlement: null,
         consumedItemCounts: {},
         warnings: ["auto_tribulation disabled; no progression step executed"],
       };
@@ -318,6 +437,7 @@ export function applyBreakthroughStepToSaveV2(
   warnings.push(...attempt.warnings);
 
   const nextSave = structuredClone(save);
+  let rebirthSettlement: RebirthSettlementResult | null = null;
   const consumedItemCounts =
     attempt.attempted && consumeInventoryItems
       ? buildConsumedItemCounts(attempt.consumables.usedItemIds)
@@ -335,22 +455,98 @@ export function applyBreakthroughStepToSaveV2(
     updateProgressionFromDifficulty(nextSave, indexes, attempt.nextDifficultyIndex);
 
     if (attempt.outcome === "death_fail") {
-      nextSave.progression.rebirth_count = clampCounter(
-        nextSave.progression.rebirth_count + 1,
-      );
+      const rebirthConfig = resolveRebirthOnDeathConfig(options.rebirthOnDeath);
+      const preRebirthCount = clampCounter(nextSave.progression.rebirth_count);
+      const postRebirthCount = clampCounter(preRebirthCount + 1);
+      nextSave.progression.rebirth_count = postRebirthCount;
       nextSave.pity_counters.breakthrough_fail_streak = 0;
+      nextSave.pity_counters.tribulation_fail_streak = 0;
+
+      if (rebirthConfig.enabled) {
+        const reward = calcRebirthEssenceReward(
+          stageBefore,
+          preRebirthCount,
+          attempt,
+          rebirthConfig,
+        );
+        nextSave.currencies.rebirth_essence = clampCounter(
+          nextSave.currencies.rebirth_essence + reward.finalEssence,
+        );
+
+        const targetDifficulty = clampCounter(rebirthConfig.resetDifficultyIndex);
+        const safeDifficulty = indexes.progressionByDifficulty.has(targetDifficulty)
+          ? targetDifficulty
+          : 1;
+        if (safeDifficulty !== targetDifficulty) {
+          warnings.push(
+            `rebirth reset difficulty missing: ${targetDifficulty}; fallback to 1`,
+          );
+        }
+        updateProgressionFromDifficulty(nextSave, indexes, safeDifficulty);
+
+        if (rebirthConfig.resetQi) {
+          nextSave.currencies.qi = 0;
+        }
+        if (rebirthConfig.resetSpiritCoin) {
+          nextSave.currencies.spirit_coin = 0;
+        }
+        if (rebirthConfig.clearUnlockedNodes) {
+          nextSave.progression.unlocked_nodes = [];
+        }
+
+        rebirthSettlement = {
+          triggered: true,
+          preRebirthCount,
+          postRebirthCount,
+          reward,
+          resets: {
+            difficultyIndex: safeDifficulty,
+            qiResetApplied: rebirthConfig.resetQi,
+            spiritCoinResetApplied: rebirthConfig.resetSpiritCoin,
+            unlockedNodesCleared: rebirthConfig.clearUnlockedNodes,
+          },
+        };
+      } else {
+        rebirthSettlement = {
+          triggered: true,
+          preRebirthCount,
+          postRebirthCount,
+          reward: {
+            baseEssence: 0,
+            rebirthScaleMultiplier: 1,
+            consumableMultiplier: 1,
+            finalEssence: 0,
+            appliedEffectSources: [],
+          },
+          resets: {
+            difficultyIndex: nextSave.progression.difficulty_index,
+            qiResetApplied: false,
+            spiritCoinResetApplied: false,
+            unlockedNodesCleared: false,
+          },
+        };
+        warnings.push("rebirthOnDeath.enabled=false; death settlement reset/reward skipped");
+      }
     }
 
     if (isTribulation) {
+      if (attempt.outcome === "death_fail") {
+        nextSave.pity_counters.tribulation_fail_streak = 0;
+      } else {
       nextSave.pity_counters.tribulation_fail_streak =
         attempt.outcome === "success"
           ? 0
           : clampCounter(nextSave.pity_counters.tribulation_fail_streak + 1);
+      }
     } else {
+      if (attempt.outcome === "death_fail") {
+        nextSave.pity_counters.breakthrough_fail_streak = 0;
+      } else {
       nextSave.pity_counters.breakthrough_fail_streak =
         attempt.outcome === "success"
           ? 0
           : clampCounter(nextSave.pity_counters.breakthrough_fail_streak + 1);
+      }
     }
 
     if (options.bumpSaveTimestamp ?? true) {
@@ -398,6 +594,7 @@ export function applyBreakthroughStepToSaveV2(
       ),
     },
     resolvedRebirthLevels: rebirthResolved.levels,
+    rebirthSettlement,
     consumedItemCounts,
     warnings,
   };

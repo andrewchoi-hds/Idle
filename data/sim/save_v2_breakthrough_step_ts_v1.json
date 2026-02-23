@@ -1,34 +1,38 @@
 {
-  "generated_at_utc": "2026-02-23T07:30:09.155Z",
+  "generated_at_utc": "2026-02-23T07:42:36.425Z",
   "config": {
     "inputPath": "/Users/hirediversity/Idle/data/schema/save_v2.sample.json",
     "outputPath": "/Users/hirediversity/Idle/data/sim/save_v2_breakthrough_step_ts_v1.json",
-    "seed": 20260223,
+    "seed": 2688,
     "forceAttempt": true,
     "statusPenaltyPct": 0,
     "defensiveSkillGuardPct": 0,
     "rebirthLevels": {},
-    "consumableItemIds": [
-      "pot_brk_02",
-      "tal_guard_01"
-    ]
+    "overrideDifficultyIndex": 198,
+    "overrideQi": null,
+    "consumableItemIds": []
   },
   "summary": {
     "attempted": true,
     "skipReason": null,
-    "outcome": "success",
-    "difficultyBefore": 42,
-    "difficultyAfter": 43,
-    "stageBefore": "인간계 원영 3층",
-    "stageAfter": "인간계 원영 4층",
-    "qiBefore": 486000,
-    "qiAfter": 138661,
+    "outcome": "death_fail",
+    "difficultyBefore": 198,
+    "difficultyAfter": 1,
+    "stageBefore": "진선계 원조 원만",
+    "stageAfter": "인간계 연기 1층",
+    "qiBefore": 6142307162,
+    "qiAfter": 0,
+    "spiritCoinBefore": 18450,
+    "spiritCoinAfter": 0,
+    "rebirthEssenceBefore": 92,
+    "rebirthEssenceAfter": 271,
     "breakthroughFailStreakBefore": 1,
     "breakthroughFailStreakAfter": 0,
     "tribulationFailStreakBefore": 0,
     "tribulationFailStreakAfter": 0,
     "rebirthCountBefore": 4,
-    "rebirthCountAfter": 4
+    "rebirthCountAfter": 5,
+    "rebirthReward": 179
   },
   "runtime": {
     "save": {
@@ -39,11 +43,11 @@
         "created_at": "2026-02-23T12:00:00Z"
       },
       "progression": {
-        "difficulty_index": 43,
+        "difficulty_index": 1,
         "world": "mortal",
-        "major_stage_name": "nascent_soul",
-        "sub_stage_name": "layer_4",
-        "rebirth_count": 4,
+        "major_stage_name": "qi_refining",
+        "sub_stage_name": "layer_1",
+        "rebirth_count": 5,
         "unlocked_nodes": [
           "node_m_001",
           "node_m_002",
@@ -51,20 +55,20 @@
         ]
       },
       "currencies": {
-        "spirit_coin": 18450,
-        "rebirth_essence": 92,
-        "qi": 138661
+        "spirit_coin": 0,
+        "rebirth_essence": 271,
+        "qi": 0
       },
       "inventory": {
         "items": [
           {
             "item_id": "pot_brk_02",
-            "quantity": 2,
+            "quantity": 3,
             "locked": false
           },
           {
             "item_id": "tal_guard_01",
-            "quantity": 1,
+            "quantity": 2,
             "locked": true
           }
         ],
@@ -140,7 +144,7 @@
       },
       "timestamps": {
         "last_login_epoch_ms": 1771848000000,
-        "save_epoch_ms": 1771831809155
+        "save_epoch_ms": 1771832556425
       },
       "pity_counters": {
         "breakthrough_fail_streak": 0,
@@ -161,83 +165,91 @@
     "skipReason": null,
     "attemptResult": {
       "attempted": true,
-      "isTribulation": false,
-      "difficultyIndex": 42,
-      "world": "mortal",
-      "stageNameKo": "인간계 원영 3층",
-      "qiRequired": 347339,
+      "isTribulation": true,
+      "difficultyIndex": 198,
+      "world": "true",
+      "stageNameKo": "진선계 원조 원만",
+      "qiRequired": 3071153581,
       "rates": {
-        "successPct": 88.05,
-        "deathPct": 0,
-        "failureWeights": null
+        "successPct": 16.8,
+        "deathPct": 76.1,
+        "failureWeights": {
+          "source": "table",
+          "minorPct": 8.313043478260871,
+          "retreatPct": 15.586956521739134,
+          "deathPct": 76.1,
+          "retreatMinLayers": 3,
+          "retreatMaxLayers": 7
+        }
       },
       "breakdown": {
         "success": {
-          "basePct": 81,
+          "basePct": 16,
           "rebirthBonusPct": 0.8,
-          "consumableBonusPct": 5,
-          "failStreakBonusPct": 1.25,
+          "consumableBonusPct": 0,
+          "failStreakBonusPct": 0,
           "statusPenaltyPct": 0,
-          "finalPct": 88.05
+          "finalPct": 16.8
         },
-        "death": null
+        "death": {
+          "basePct": 77,
+          "rebirthGuardPct": 0.9,
+          "consumableGuardPct": 0,
+          "defensiveSkillGuardPct": 0,
+          "finalPct": 76.1
+        }
       },
       "consumables": {
-        "usedItemIds": [
-          "pot_brk_02",
-          "tal_guard_01"
-        ],
-        "contributions": [
-          {
-            "itemId": "pot_brk_02",
-            "nameKo": "응원단",
-            "itemType": "potion",
-            "effectType": "breakthrough_bonus_flat_pct",
-            "baseValue": 5,
-            "appliedValue": 5
-          },
-          {
-            "itemId": "tal_guard_01",
-            "nameKo": "진혼부",
-            "itemType": "talisman",
-            "effectType": "mind_resist_flat_pct",
-            "baseValue": 10,
-            "appliedValue": 10
-          }
-        ],
+        "usedItemIds": [],
+        "contributions": [],
         "ignoredItemIds": []
       },
       "rolls": {
-        "successRollPct": 8.899509580805898,
-        "failureRollPct": null
+        "successRollPct": 16.92094299942255,
+        "failureRollPct": 32.90634271688759
       },
       "warnings": [],
-      "outcome": "success",
-      "nextDifficultyIndex": 43,
-      "qiDelta": -347339,
+      "outcome": "death_fail",
+      "nextDifficultyIndex": 1,
+      "qiDelta": -6142307162,
       "materialLossPct": 0,
       "retreatLayers": 0
     },
     "stageBefore": {
-      "difficultyIndex": 42,
-      "world": "mortal",
-      "isTribulation": false,
-      "stageNameKo": "인간계 원영 3층"
+      "difficultyIndex": 198,
+      "world": "true",
+      "isTribulation": true,
+      "stageNameKo": "진선계 원조 원만"
     },
     "stageAfter": {
-      "difficultyIndex": 43,
+      "difficultyIndex": 1,
       "world": "mortal",
-      "stageNameKo": "인간계 원영 4층"
+      "stageNameKo": "인간계 연기 1층"
     },
     "resolvedRebirthLevels": {
       "breakthrough_bonus": 1,
       "tribulation_guard": 1,
       "potion_mastery": 0
     },
-    "consumedItemCounts": {
-      "pot_brk_02": 1,
-      "tal_guard_01": 1
+    "rebirthSettlement": {
+      "triggered": true,
+      "preRebirthCount": 4,
+      "postRebirthCount": 5,
+      "reward": {
+        "baseEssence": 169.1606,
+        "rebirthScaleMultiplier": 1.06,
+        "consumableMultiplier": 1,
+        "finalEssence": 179,
+        "appliedEffectSources": []
+      },
+      "resets": {
+        "difficultyIndex": 1,
+        "qiResetApplied": true,
+        "spiritCoinResetApplied": true,
+        "unlockedNodesCleared": false
+      }
     },
+    "consumedItemCounts": {},
     "warnings": [
       "rebirth levels inferred from progression.rebirth_count (override via options.rebirthLevels)"
     ]
@@ -250,11 +262,11 @@
       "created_at": "2026-02-23T12:00:00Z"
     },
     "progression": {
-      "difficulty_index": 43,
+      "difficulty_index": 1,
       "world": "mortal",
-      "major_stage_name": "nascent_soul",
-      "sub_stage_name": "layer_4",
-      "rebirth_count": 4,
+      "major_stage_name": "qi_refining",
+      "sub_stage_name": "layer_1",
+      "rebirth_count": 5,
       "unlocked_nodes": [
         "node_m_001",
         "node_m_002",
@@ -262,20 +274,20 @@
       ]
     },
     "currencies": {
-      "spirit_coin": 18450,
-      "rebirth_essence": 92,
-      "qi": 138661
+      "spirit_coin": 0,
+      "rebirth_essence": 271,
+      "qi": 0
     },
     "inventory": {
       "items": [
         {
           "item_id": "pot_brk_02",
-          "quantity": 2,
+          "quantity": 3,
           "locked": false
         },
         {
           "item_id": "tal_guard_01",
-          "quantity": 1,
+          "quantity": 2,
           "locked": true
         }
       ],
@@ -351,7 +363,7 @@
     },
     "timestamps": {
       "last_login_epoch_ms": 1771848000000,
-      "save_epoch_ms": 1771831809155
+      "save_epoch_ms": 1771832556425
     },
     "pity_counters": {
       "breakthrough_fail_streak": 0,
