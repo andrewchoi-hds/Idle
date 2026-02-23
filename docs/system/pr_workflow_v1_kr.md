@@ -33,12 +33,16 @@ git push -u origin codex/<task-name>
 
 ## 5) PR 생성 순서
 ```bash
+npm run pr:body:gen -- --run-validation
+
 gh pr create \
   --base main \
   --head codex/<task-name> \
   --title "<type>: <summary>" \
-  --body-file /Users/hirediversity/Idle/.github/pull_request_template.md
+  --body-file /tmp/idle_pr_body_v1.md
 ```
+- `pr:body:gen`은 변경 파일/커밋/검증 결과를 기반으로 `Summary/Changes/Validation/Docs/Notes`를 자동 작성한다.
+- 이미 검증을 끝낸 경우에는 `--run-validation` 대신 `--validated` 옵션으로 체크 상태만 반영할 수 있다.
 
 ## 6) 병합 체크
 - Required check:

@@ -468,3 +468,11 @@
 
 ## 83) 추가 문서
 - 저장 회귀 CI 요약 생성 스크립트: `/Users/hirediversity/Idle/scripts/build_save_regression_ci_summary_v1.py`
+
+## 84) 다음 순차 작업
+1. [완료] PR 본문 자동 생성 스크립트(`pr:body:gen`) 추가.
+2. [완료] PR 워크플로우를 자동 생성 본문(`--body-file /tmp/idle_pr_body_v1.md`) 기준으로 갱신.
+3. [완료] PR 본문 자동화 사용 가이드 문서 추가.
+
+## 85) 추가 문서
+- PR 본문 자동 생성기 가이드: `/Users/hirediversity/Idle/docs/system/pr_body_generator_v1_kr.md`
