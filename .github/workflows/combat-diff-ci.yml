@@ -55,6 +55,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: PR Body Lint Regression
+        run: npm run pr:body:lint:regression:check
+
       - name: Typecheck
         run: npm run typecheck
 

@@ -73,6 +73,7 @@ npm run pr:ship:auto
 - CI 요약 확인:
   - `PR Body Lint` 섹션(pass/fail, 에러 개수)
   - PR Checks의 Step Summary에서 저장 회귀 결과 테이블(`Auto Progress`/`Offline Catchup`) 확인
+- PR 본문 lint 규칙 자체의 회귀 여부는 `PR Body Lint Regression` step 성공 여부로 확인한다.
 - 리뷰:
   - 1명 이상 승인
 - 정책:
