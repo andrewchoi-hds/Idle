@@ -22,6 +22,7 @@
     "save:regression:summary:md": "python3 scripts/build_save_regression_ci_summary_v1.py --auto-report data/sim/save_auto_progress_regression_report_v1.json --offline-report data/sim/save_offline_catchup_regression_report_v1.json --output-md data/sim/save_regression_ci_summary_v1.md",
     "pr:body:gen": "python3 scripts/generate_pr_body_v1.py --base-ref origin/main --head-ref HEAD --output-file /private/tmp/idle_pr_body_v1.md",
     "pr:create:auto": "python3 scripts/create_pr_with_body_v1.py --base main --run-validation",
+    "pr:merge:auto": "python3 scripts/merge_pr_when_ready_v1.py --base main --method squash --delete-branch --poll-interval-seconds 6 --wait-seconds 900",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
