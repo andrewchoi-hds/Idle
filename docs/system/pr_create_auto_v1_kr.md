@@ -17,8 +17,9 @@ npm run pr:create:auto
   1. `origin/main` fetch
   2. 변경 범위(`origin/main..HEAD`) 확인
   3. `generate_pr_body_v1.py --run-validation` 실행
-  4. `git push -u origin <head>`
-  5. open PR 존재 시 `gh pr edit`, 없으면 `gh pr create`
+  4. `lint_pr_body_v1.py --strict-change-path` 실행
+  5. `git push -u origin <head>`
+  6. open PR 존재 시 `gh pr edit`, 없으면 `gh pr create`
 
 ## 3) 주요 옵션
 - `--title "<text>"`: PR 제목 강제 지정
@@ -27,7 +28,9 @@ npm run pr:create:auto
 - `--allow-dirty`: 워킹트리 dirty 상태 허용
 - `--dry-run`: 실제 생성 없이 실행 계획만 출력
 - `--no-push`: PR 생성 전 `git push` 생략
+- `--no-body-lint`: 본문 생성 후 품질 lint 생략
 
 ## 4) 비고
 - 기본 본문 경로: `/private/tmp/idle_pr_body_v1.md`
 - 현재 브랜치가 `main`이면 안전상 실패한다.
+- 본문 품질 점검 기준은 `/Users/hirediversity/Idle/docs/system/pr_body_lint_v1_kr.md`를 따른다.

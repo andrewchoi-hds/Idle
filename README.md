@@ -20,6 +20,7 @@ npm run save:auto:regression:check
 npm run save:offline:regression:check
 npm run save:regression:summary:md
 npm run pr:body:gen
+npm run pr:body:lint
 npm run pr:create:auto
 npm run pr:review:auto
 npm run pr:merge:auto
@@ -38,6 +39,7 @@ npm run pr:ship:auto
 - save_v2 오프라인 복귀 정산 덤프(TS): `/Users/hirediversity/Idle/scripts/dump_save_offline_catchup_ts_v1.ts`
 - 저장 회귀 CI 요약 빌더(PY): `/Users/hirediversity/Idle/scripts/build_save_regression_ci_summary_v1.py`
 - PR 본문 자동 생성기(PY): `/Users/hirediversity/Idle/scripts/generate_pr_body_v1.py`
+- PR 본문 품질 Lint(PY): `/Users/hirediversity/Idle/scripts/lint_pr_body_v1.py`
 - PR 자동 생성/업데이트(PY): `/Users/hirediversity/Idle/scripts/create_pr_with_body_v1.py`
 - PR 자동 승인(PY): `/Users/hirediversity/Idle/scripts/review_pr_auto_v1.py`
 - PR 체크대기 자동 머지(PY): `/Users/hirediversity/Idle/scripts/merge_pr_when_ready_v1.py`
@@ -49,6 +51,7 @@ npm run pr:ship:auto
 - Required Check 설정 가이드: `/Users/hirediversity/Idle/docs/system/github_required_checks_v1_kr.md`
 - PR 워크플로우 가이드: `/Users/hirediversity/Idle/docs/system/pr_workflow_v1_kr.md`
 - PR 본문 자동 생성 가이드: `/Users/hirediversity/Idle/docs/system/pr_body_generator_v1_kr.md`
+- PR 본문 품질 Lint 가이드: `/Users/hirediversity/Idle/docs/system/pr_body_lint_v1_kr.md`
 - PR 자동 생성/업데이트 가이드: `/Users/hirediversity/Idle/docs/system/pr_create_auto_v1_kr.md`
 - PR 자동 승인 가이드: `/Users/hirediversity/Idle/docs/system/pr_review_auto_v1_kr.md`
 - PR 자동 머지 가이드: `/Users/hirediversity/Idle/docs/system/pr_merge_auto_v1_kr.md`

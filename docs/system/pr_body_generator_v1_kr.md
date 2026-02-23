@@ -38,3 +38,4 @@ gh pr create \
 ## 5) 비고
 - `--run-validation` 미사용 시 Validation 체크박스는 기본 미체크 상태다.
 - 필요 시 `--validated "<command>"`를 반복 전달해 체크 상태를 수동 지정할 수 있다.
+- 본문 품질 점검은 `npm run pr:body:lint`로 별도 수행할 수 있다.

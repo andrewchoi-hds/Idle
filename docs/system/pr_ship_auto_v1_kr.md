@@ -18,6 +18,7 @@ npm run pr:ship:auto
 1. `create_pr_with_body_v1.py` 실행
    - PR 본문 자동 생성
    - 검증 실행(`--run-validation`)
+   - PR 본문 품질 lint 실행(기본)
    - 브랜치 푸시
    - PR 생성/업데이트
 2. `review_pr_auto_v1.py` 실행(기본 활성화)
@@ -30,6 +31,7 @@ npm run pr:ship:auto
 ## 4) 주요 옵션
 - `--no-run-validation`: 본문 생성 단계 검증 생략
 - `--no-push`: PR 생성 전 push 생략
+- `--no-body-lint`: 본문 생성 후 품질 lint 생략
 - `--no-review`: 자동 승인 단계 생략
 - `--require-review`: 자동 승인 실패 시 ship 즉시 실패
 - `--review-body "<text>"`: 승인 코멘트 커스터마이즈
