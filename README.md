@@ -15,6 +15,7 @@ npm run combat:diff:py-ts:suite
 npm run tribulation:dump:ts
 npm run save:breakthrough:dump:ts
 npm run save:auto:tick:ts
+npm run save:auto:regression:check
 ```
 
 ## 주요 파일

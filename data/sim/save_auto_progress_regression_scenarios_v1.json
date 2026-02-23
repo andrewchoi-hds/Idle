@@ -1,0 +1,72 @@
+[
+  {
+    "id": "auto_progress_10m_mortal",
+    "args": [
+      "--duration-sec",
+      "600",
+      "--enable-auto-breakthrough",
+      "--override-difficulty-index",
+      "42",
+      "--override-qi",
+      "700000",
+      "--seed",
+      "20260223"
+    ],
+    "expected": {
+      "summary.finalDifficultyIndex": 44,
+      "summary.qiDelta": -317829,
+      "summary.spiritCoinDelta": 71621,
+      "summary.rebirthEssenceDelta": 419,
+      "summary.rebirthCountDelta": 0,
+      "summary.battles.total": 65,
+      "summary.battles.wins": 65,
+      "summary.battles.losses": 0,
+      "summary.breakthroughs.attempts": 2,
+      "summary.breakthroughs.success": 2,
+      "summary.breakthroughs.deathFail": 0,
+      "summary.breakthroughs.rebirthTriggered": 0,
+      "warning_count": 1,
+      "event_count": 67
+    },
+    "expected_warning_substrings": [
+      "rebirth levels inferred from progression.rebirth_count"
+    ]
+  },
+  {
+    "id": "auto_progress_1m_true_death_rebirth",
+    "args": [
+      "--duration-sec",
+      "60",
+      "--enable-auto-breakthrough",
+      "--enable-auto-tribulation",
+      "--disable-auto-battle",
+      "--override-difficulty-index",
+      "198",
+      "--override-qi",
+      "3071153581",
+      "--seed",
+      "2649"
+    ],
+    "expected": {
+      "summary.finalDifficultyIndex": 1,
+      "summary.qiDelta": -3071153581,
+      "summary.spiritCoinDelta": -18450,
+      "summary.rebirthEssenceDelta": 179,
+      "summary.rebirthCountDelta": 1,
+      "summary.battles.total": 0,
+      "summary.breakthroughs.attempts": 1,
+      "summary.breakthroughs.success": 0,
+      "summary.breakthroughs.retreatFail": 0,
+      "summary.breakthroughs.deathFail": 1,
+      "summary.breakthroughs.rebirthTriggered": 1,
+      "warning_count": 1,
+      "event_count": 2,
+      "save_after.progression.difficulty_index": 1,
+      "save_after.progression.rebirth_count": 5,
+      "save_after.currencies.rebirth_essence": 271
+    },
+    "expected_warning_substrings": [
+      "rebirth levels inferred from progression.rebirth_count"
+    ]
+  }
+]

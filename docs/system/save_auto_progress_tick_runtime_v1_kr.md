@@ -72,3 +72,14 @@ npm run save:auto:tick:ts -- \
 - 전투는 `runMinimalCombatLoop`를 1전 단위로 호출하므로 규칙 정합성이 유지된다.
 - 로그는 `maxEventLogs` 제한을 넘기면 추가 저장하지 않는다.
 - 경고 문자열은 중복 제거 후 반환된다.
+
+## 7) 회귀 체크
+- 시나리오 파일: `/Users/hirediversity/Idle/data/sim/save_auto_progress_regression_scenarios_v1.json`
+- 점검 스크립트: `/Users/hirediversity/Idle/scripts/check_save_auto_progress_regression_v1.py`
+- 실행 명령:
+```bash
+cd /Users/hirediversity/Idle
+npm run save:auto:regression:check
+```
+- 회귀 점검은 시나리오별 임시 출력 파일을 사용하므로, 샘플 파일(`/Users/hirediversity/Idle/data/sim/save_v2_auto_progress_tick_ts_v1.json`)을 덮어쓰지 않는다.
+- CI(`verify-combat-diff`)에서도 동일 회귀 체크를 실행해 자동 진행 루프 수치 변경을 감지한다.
