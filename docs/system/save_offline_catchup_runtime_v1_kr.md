@@ -57,4 +57,12 @@ npm run save:offline:catchup:ts -- \
 cd /Users/hirediversity/Idle
 npm run save:offline:regression:check
 ```
+- JSON 리포트 생성:
+```bash
+npm run save:offline:regression:check:report
+```
+- 두 회귀 리포트 통합 Markdown 요약 생성:
+```bash
+npm run save:regression:summary:md
+```
 - CI(`verify-combat-diff`)에서도 동일 회귀 체크를 실행해 오프라인 정산 수치 변경을 감지한다.

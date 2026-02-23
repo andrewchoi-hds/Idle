@@ -18,6 +18,7 @@ npm run save:auto:tick:ts
 npm run save:offline:catchup:ts
 npm run save:auto:regression:check
 npm run save:offline:regression:check
+npm run save:regression:summary:md
 ```
 
 ## 주요 파일
@@ -30,6 +31,7 @@ npm run save:offline:regression:check
 - save_v2 돌파 스텝 덤프(TS): `/Users/hirediversity/Idle/scripts/dump_save_breakthrough_step_ts_v1.ts`
 - save_v2 자동 진행 틱 덤프(TS): `/Users/hirediversity/Idle/scripts/dump_save_auto_progress_tick_ts_v1.ts`
 - save_v2 오프라인 복귀 정산 덤프(TS): `/Users/hirediversity/Idle/scripts/dump_save_offline_catchup_ts_v1.ts`
+- 저장 회귀 CI 요약 빌더(PY): `/Users/hirediversity/Idle/scripts/build_save_regression_ci_summary_v1.py`
 - CI 워크플로우: `/Users/hirediversity/Idle/.github/workflows/combat-diff-ci.yml`
 
 ## 운영 문서

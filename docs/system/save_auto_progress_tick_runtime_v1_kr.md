@@ -81,5 +81,9 @@ npm run save:auto:tick:ts -- \
 cd /Users/hirediversity/Idle
 npm run save:auto:regression:check
 ```
+- JSON 리포트까지 함께 생성하려면:
+```bash
+npm run save:auto:regression:check:report
+```
 - 회귀 점검은 시나리오별 임시 출력 파일을 사용하므로, 샘플 파일(`/Users/hirediversity/Idle/data/sim/save_v2_auto_progress_tick_ts_v1.json`)을 덮어쓰지 않는다.
 - CI(`verify-combat-diff`)에서도 동일 회귀 체크를 실행해 자동 진행 루프 수치 변경을 감지한다.

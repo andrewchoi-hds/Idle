@@ -460,3 +460,11 @@
 
 ## 81) 추가 문서
 - 오프라인 정산 회귀 시나리오: `/Users/hirediversity/Idle/data/sim/save_offline_catchup_regression_scenarios_v1.json`
+
+## 82) 다음 순차 작업
+1. [완료] 저장 회귀 스크립트(`auto/offline`)에 JSON 리포트(`--report-file`) 출력 지원 추가.
+2. [완료] CI에서 회귀 리포트 기반 Step Summary Markdown 자동 생성 연결.
+3. [완료] PR 템플릿 `Summary/Changes` 작성 가이드 보강 및 검증 체크리스트 확장.
+
+## 83) 추가 문서
+- 저장 회귀 CI 요약 생성 스크립트: `/Users/hirediversity/Idle/scripts/build_save_regression_ci_summary_v1.py`
