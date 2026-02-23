@@ -383,3 +383,12 @@
 
 ## 63) 추가 문서
 - Required Check 적용 현황: `/Users/hirediversity/Idle/docs/system/github_required_checks_v1_kr.md`
+
+## 64) 다음 순차 작업
+1. [완료] 브랜치 보호 규칙 보강(`enforce_admins`, `required_conversation_resolution`).
+2. [완료] PR 템플릿 추가로 검증 체크리스트 표준화.
+3. [완료] PR 기반 협업 절차 문서(`pr_workflow_v1_kr.md`) 추가.
+
+## 65) 추가 문서
+- PR 템플릿: `/Users/hirediversity/Idle/.github/pull_request_template.md`
+- PR 워크플로우 가이드: `/Users/hirediversity/Idle/docs/system/pr_workflow_v1_kr.md`

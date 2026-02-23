@@ -46,6 +46,7 @@
 3. 완료: Branch Protection에서 `verify-combat-diff` Required Check 강제.
    - 가이드: `/Users/hirediversity/Idle/docs/system/github_required_checks_v1_kr.md`
    - 적용 대상: `main` 브랜치
+   - 보강: `enforce_admins=true`, `required_conversation_resolution=true`
 4. 완료: README 배지 URL 실제 저장소 경로 치환.
 5. 완료: CI 결과물(JSON/CSV) artifact 업로드 추가.
    - 목적: 실패 시 시나리오별 결과 비교를 웹 UI에서 즉시 확인.
