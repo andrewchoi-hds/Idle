@@ -1,0 +1,986 @@
+{
+  "generated_at_utc": "2026-02-23T07:55:12.128Z",
+  "config": {
+    "inputPath": "/Users/hirediversity/Idle/data/schema/save_v2.sample.json",
+    "outputPath": "/Users/hirediversity/Idle/data/sim/save_v2_auto_progress_tick_ts_v1.json",
+    "durationSec": 600,
+    "tickSec": 1,
+    "seed": 20260223,
+    "battleIntervalSec": 18,
+    "breakthroughCheckIntervalSec": 3,
+    "maxEventLogs": 500,
+    "statusPenaltyPct": 0,
+    "defensiveSkillGuardPct": 0,
+    "overrideDifficultyIndex": 42,
+    "overrideQi": 700000,
+    "enableAutoBreakthrough": true,
+    "enableAutoTribulation": false,
+    "disableAutoBattle": false,
+    "breakthroughConsumableItemIds": [],
+    "tribulationConsumableItemIds": []
+  },
+  "summary": {
+    "durationSec": 600,
+    "ticks": 600,
+    "finalDifficultyIndex": 44,
+    "finalStageNameKo": "인간계 원영 5층",
+    "qiDelta": -317829,
+    "spiritCoinDelta": 71621,
+    "rebirthEssenceDelta": 419,
+    "rebirthCountDelta": 0,
+    "battles": {
+      "total": 65,
+      "wins": 65,
+      "losses": 0,
+      "spiritCoinGain": 71621,
+      "rebirthEssenceGain": 419,
+      "qiGain": 248891
+    },
+    "breakthroughs": {
+      "attempts": 2,
+      "blockedByAutoSetting": 0,
+      "success": 2,
+      "minorFail": 0,
+      "retreatFail": 0,
+      "deathFail": 0,
+      "rebirthTriggered": 0
+    }
+  },
+  "warning_count": 1,
+  "warnings": [
+    "rebirth levels inferred from progression.rebirth_count (override via options.rebirthLevels)"
+  ],
+  "event_count": 67,
+  "event_logs": [
+    {
+      "atSec": 3,
+      "kind": "breakthrough",
+      "detail": {
+        "outcome": "success",
+        "difficultyBefore": 42,
+        "difficultyAfter": 43,
+        "stageBefore": "인간계 원영 3층",
+        "stageAfter": "인간계 원영 4층",
+        "qiAfter": 353444
+      }
+    },
+    {
+      "atSec": 18,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 608,
+        "rebirthEssence": 1,
+        "qi": 2020
+      }
+    },
+    {
+      "atSec": 27,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 666,
+        "rebirthEssence": 1,
+        "qi": 1887
+      }
+    },
+    {
+      "atSec": 36,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 584,
+        "rebirthEssence": 2,
+        "qi": 2001
+      }
+    },
+    {
+      "atSec": 45,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "elite",
+        "winner": "player",
+        "spiritCoin": 1302,
+        "rebirthEssence": 7,
+        "qi": 3909
+      }
+    },
+    {
+      "atSec": 54,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "boss",
+        "winner": "player",
+        "spiritCoin": 2980,
+        "rebirthEssence": 29,
+        "qi": 10041
+      }
+    },
+    {
+      "atSec": 63,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 612,
+        "rebirthEssence": 3,
+        "qi": 1954
+      }
+    },
+    {
+      "atSec": 72,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 695,
+        "rebirthEssence": 2,
+        "qi": 1803
+      }
+    },
+    {
+      "atSec": 81,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 660,
+        "rebirthEssence": 2,
+        "qi": 1920
+      }
+    },
+    {
+      "atSec": 90,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 664,
+        "rebirthEssence": 2,
+        "qi": 1871
+      }
+    },
+    {
+      "atSec": 99,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "boss",
+        "winner": "player",
+        "spiritCoin": 3021,
+        "rebirthEssence": 38,
+        "qi": 9786
+      }
+    },
+    {
+      "atSec": 108,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 681,
+        "rebirthEssence": 2,
+        "qi": 1832
+      }
+    },
+    {
+      "atSec": 108,
+      "kind": "breakthrough",
+      "detail": {
+        "outcome": "success",
+        "difficultyBefore": 43,
+        "difficultyAfter": 44,
+        "stageBefore": "인간계 원영 4층",
+        "stageAfter": "인간계 원영 5층",
+        "qiAfter": 1580
+      }
+    },
+    {
+      "atSec": 117,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "elite",
+        "winner": "player",
+        "spiritCoin": 1473,
+        "rebirthEssence": 9,
+        "qi": 5027
+      }
+    },
+    {
+      "atSec": 126,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 687,
+        "rebirthEssence": 2,
+        "qi": 2121
+      }
+    },
+    {
+      "atSec": 135,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 719,
+        "rebirthEssence": 2,
+        "qi": 2436
+      }
+    },
+    {
+      "atSec": 144,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "elite",
+        "winner": "player",
+        "spiritCoin": 1455,
+        "rebirthEssence": 9,
+        "qi": 5373
+      }
+    },
+    {
+      "atSec": 153,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 706,
+        "rebirthEssence": 1,
+        "qi": 2505
+      }
+    },
+    {
+      "atSec": 162,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 611,
+        "rebirthEssence": 2,
+        "qi": 2158
+      }
+    },
+    {
+      "atSec": 171,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "boss",
+        "winner": "player",
+        "spiritCoin": 3213,
+        "rebirthEssence": 38,
+        "qi": 10626
+      }
+    },
+    {
+      "atSec": 180,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 629,
+        "rebirthEssence": 3,
+        "qi": 2389
+      }
+    },
+    {
+      "atSec": 189,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "boss",
+        "winner": "player",
+        "spiritCoin": 3173,
+        "rebirthEssence": 38,
+        "qi": 11106
+      }
+    },
+    {
+      "atSec": 198,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 645,
+        "rebirthEssence": 2,
+        "qi": 2157
+      }
+    },
+    {
+      "atSec": 207,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 604,
+        "rebirthEssence": 1,
+        "qi": 2145
+      }
+    },
+    {
+      "atSec": 216,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "elite",
+        "winner": "player",
+        "spiritCoin": 1359,
+        "rebirthEssence": 4,
+        "qi": 5063
+      }
+    },
+    {
+      "atSec": 225,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 699,
+        "rebirthEssence": 2,
+        "qi": 2380
+      }
+    },
+    {
+      "atSec": 234,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 619,
+        "rebirthEssence": 1,
+        "qi": 2157
+      }
+    },
+    {
+      "atSec": 243,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 671,
+        "rebirthEssence": 1,
+        "qi": 2343
+      }
+    },
+    {
+      "atSec": 252,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 701,
+        "rebirthEssence": 2,
+        "qi": 2163
+      }
+    },
+    {
+      "atSec": 261,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 654,
+        "rebirthEssence": 1,
+        "qi": 2201
+      }
+    },
+    {
+      "atSec": 270,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "elite",
+        "winner": "player",
+        "spiritCoin": 1405,
+        "rebirthEssence": 4,
+        "qi": 5059
+      }
+    },
+    {
+      "atSec": 279,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 596,
+        "rebirthEssence": 1,
+        "qi": 2171
+      }
+    },
+    {
+      "atSec": 288,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 661,
+        "rebirthEssence": 2,
+        "qi": 2106
+      }
+    },
+    {
+      "atSec": 297,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "elite",
+        "winner": "player",
+        "spiritCoin": 1305,
+        "rebirthEssence": 9,
+        "qi": 5047
+      }
+    },
+    {
+      "atSec": 306,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 666,
+        "rebirthEssence": 2,
+        "qi": 2480
+      }
+    },
+    {
+      "atSec": 315,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 655,
+        "rebirthEssence": 2,
+        "qi": 2503
+      }
+    },
+    {
+      "atSec": 324,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 670,
+        "rebirthEssence": 1,
+        "qi": 2305
+      }
+    },
+    {
+      "atSec": 333,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "elite",
+        "winner": "player",
+        "spiritCoin": 1574,
+        "rebirthEssence": 7,
+        "qi": 5565
+      }
+    },
+    {
+      "atSec": 342,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 703,
+        "rebirthEssence": 3,
+        "qi": 2354
+      }
+    },
+    {
+      "atSec": 351,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 598,
+        "rebirthEssence": 2,
+        "qi": 2299
+      }
+    },
+    {
+      "atSec": 360,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 626,
+        "rebirthEssence": 2,
+        "qi": 2444
+      }
+    },
+    {
+      "atSec": 369,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 590,
+        "rebirthEssence": 1,
+        "qi": 2442
+      }
+    },
+    {
+      "atSec": 378,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 608,
+        "rebirthEssence": 2,
+        "qi": 2427
+      }
+    },
+    {
+      "atSec": 387,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "elite",
+        "winner": "player",
+        "spiritCoin": 1415,
+        "rebirthEssence": 9,
+        "qi": 5016
+      }
+    },
+    {
+      "atSec": 396,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "elite",
+        "winner": "player",
+        "spiritCoin": 1435,
+        "rebirthEssence": 7,
+        "qi": 5332
+      }
+    },
+    {
+      "atSec": 405,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "elite",
+        "winner": "player",
+        "spiritCoin": 1403,
+        "rebirthEssence": 9,
+        "qi": 4873
+      }
+    },
+    {
+      "atSec": 414,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 672,
+        "rebirthEssence": 1,
+        "qi": 2491
+      }
+    },
+    {
+      "atSec": 423,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "boss",
+        "winner": "player",
+        "spiritCoin": 3036,
+        "rebirthEssence": 38,
+        "qi": 11910
+      }
+    },
+    {
+      "atSec": 432,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 613,
+        "rebirthEssence": 1,
+        "qi": 2377
+      }
+    },
+    {
+      "atSec": 441,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 704,
+        "rebirthEssence": 1,
+        "qi": 2473
+      }
+    },
+    {
+      "atSec": 450,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "elite",
+        "winner": "player",
+        "spiritCoin": 1331,
+        "rebirthEssence": 9,
+        "qi": 4815
+      }
+    },
+    {
+      "atSec": 459,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 706,
+        "rebirthEssence": 2,
+        "qi": 2512
+      }
+    },
+    {
+      "atSec": 468,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 646,
+        "rebirthEssence": 1,
+        "qi": 2503
+      }
+    },
+    {
+      "atSec": 477,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 713,
+        "rebirthEssence": 2,
+        "qi": 2157
+      }
+    },
+    {
+      "atSec": 486,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 694,
+        "rebirthEssence": 2,
+        "qi": 2289
+      }
+    },
+    {
+      "atSec": 495,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "boss",
+        "winner": "player",
+        "spiritCoin": 3258,
+        "rebirthEssence": 29,
+        "qi": 10836
+      }
+    },
+    {
+      "atSec": 504,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 694,
+        "rebirthEssence": 1,
+        "qi": 2113
+      }
+    },
+    {
+      "atSec": 513,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 707,
+        "rebirthEssence": 2,
+        "qi": 2180
+      }
+    },
+    {
+      "atSec": 522,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 718,
+        "rebirthEssence": 2,
+        "qi": 2161
+      }
+    },
+    {
+      "atSec": 531,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "elite",
+        "winner": "player",
+        "spiritCoin": 1537,
+        "rebirthEssence": 4,
+        "qi": 5601
+      }
+    },
+    {
+      "atSec": 540,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "elite",
+        "winner": "player",
+        "spiritCoin": 1488,
+        "rebirthEssence": 9,
+        "qi": 5417
+      }
+    },
+    {
+      "atSec": 549,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 598,
+        "rebirthEssence": 2,
+        "qi": 2541
+      }
+    },
+    {
+      "atSec": 558,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "elite",
+        "winner": "player",
+        "spiritCoin": 1460,
+        "rebirthEssence": 7,
+        "qi": 5429
+      }
+    },
+    {
+      "atSec": 567,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 609,
+        "rebirthEssence": 2,
+        "qi": 2513
+      }
+    },
+    {
+      "atSec": 576,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "normal",
+        "winner": "player",
+        "spiritCoin": 606,
+        "rebirthEssence": 1,
+        "qi": 2549
+      }
+    },
+    {
+      "atSec": 585,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "boss",
+        "winner": "player",
+        "spiritCoin": 3408,
+        "rebirthEssence": 29,
+        "qi": 11433
+      }
+    },
+    {
+      "atSec": 594,
+      "kind": "battle",
+      "detail": {
+        "monsterId": "mob_m_001",
+        "monsterType": "elite",
+        "winner": "player",
+        "spiritCoin": 1422,
+        "rebirthEssence": 4,
+        "qi": 4794
+      }
+    }
+  ],
+  "save_after": {
+    "version": 2,
+    "player": {
+      "id": "player_001",
+      "name": "도심",
+      "created_at": "2026-02-23T12:00:00Z"
+    },
+    "progression": {
+      "difficulty_index": 44,
+      "world": "mortal",
+      "major_stage_name": "nascent_soul",
+      "sub_stage_name": "layer_5",
+      "rebirth_count": 4,
+      "unlocked_nodes": [
+        "node_m_001",
+        "node_m_002",
+        "node_m_003"
+      ]
+    },
+    "currencies": {
+      "spirit_coin": 90071,
+      "rebirth_essence": 511,
+      "qi": 382171
+    },
+    "inventory": {
+      "items": [
+        {
+          "item_id": "pot_brk_02",
+          "quantity": 3,
+          "locked": false
+        },
+        {
+          "item_id": "tal_guard_01",
+          "quantity": 2,
+          "locked": true
+        }
+      ],
+      "materials": [
+        {
+          "material_id": "mat_spirit_essence",
+          "quantity": 126
+        },
+        {
+          "material_id": "mat_thunder_stone",
+          "quantity": 18
+        }
+      ]
+    },
+    "equipment": {
+      "slots": {
+        "weapon": {
+          "instance_id": "eq_inst_w_1001",
+          "base_id": "eq_weapon_m_03",
+          "level": 12,
+          "affixes": [
+            {
+              "affix_id": "affix_prefix_atk_03",
+              "value": 39.2
+            },
+            {
+              "affix_id": "affix_suffix_acc_01",
+              "value": 5.4
+            }
+          ],
+          "locked_affix_indexes": [
+            0
+          ]
+        },
+        "armor": {
+          "instance_id": "eq_inst_a_1002",
+          "base_id": "eq_armor_m_03",
+          "level": 10,
+          "affixes": [
+            {
+              "affix_id": "affix_prefix_hp_03",
+              "value": 522
+            },
+            {
+              "affix_id": "affix_suffix_dmgred_01",
+              "value": 3.7
+            }
+          ],
+          "locked_affix_indexes": []
+        },
+        "accessory": null,
+        "relic": null
+      }
+    },
+    "settings": {
+      "auto_battle": true,
+      "auto_skill": true,
+      "auto_breakthrough": true,
+      "auto_tribulation": false,
+      "battle_speed": 2
+    },
+    "meta": {
+      "quests_completed": [
+        "q_main_001",
+        "q_main_002"
+      ],
+      "achievements_unlocked": [
+        "ach_realm_001"
+      ],
+      "milestones_unlocked": [
+        "ms_core_001"
+      ]
+    },
+    "timestamps": {
+      "last_login_epoch_ms": 1771848000000,
+      "save_epoch_ms": 1771848633000
+    },
+    "pity_counters": {
+      "breakthrough_fail_streak": 0,
+      "tribulation_fail_streak": 0,
+      "equipment_reroll_pity": 2
+    },
+    "economy_tracking": {
+      "weekly_spirit_coin_spent": 12450,
+      "weekly_rebirth_essence_spent": 68,
+      "last_week_reset_epoch_ms": 1771459200000
+    },
+    "migration": {
+      "migrated_from_version": 1,
+      "migrated_at": "2026-02-23T13:20:00Z"
+    }
+  }
+}
