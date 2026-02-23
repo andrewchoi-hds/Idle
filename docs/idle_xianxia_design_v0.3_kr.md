@@ -571,4 +571,12 @@
 3. [완료] PR 본문 lint 회귀 fixture를 동기화된 검증 체크리스트 기준으로 갱신.
 
 ## 109) 추가 문서
-- PR 본문 자동 생성기 가이드(Validation 5개 커맨드 기준): `/Users/hirediversity/Idle/docs/system/pr_body_generator_v1_kr.md`
+- PR 본문 자동 생성기 가이드(Validation 6개 커맨드 기준): `/Users/hirediversity/Idle/docs/system/pr_body_generator_v1_kr.md`
+
+## 110) 다음 순차 작업
+1. [완료] PR Validation 표준 명령 목록을 단일 소스 모듈(`pr_validation_commands_v1.py`)로 분리.
+2. [완료] PR 템플릿 Validation 섹션과 표준 명령 목록 동기화 점검 스크립트(`pr:validation:sync:check`) 추가.
+3. [완료] Required Check workflow에 `PR Validation Checklist Sync` 단계 연동 및 관련 문서 반영.
+
+## 111) 추가 문서
+- PR Validation 체크리스트 동기화 가이드: `/Users/hirediversity/Idle/docs/system/pr_validation_checklist_sync_v1_kr.md`

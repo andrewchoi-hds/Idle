@@ -21,6 +21,7 @@ npm run save:offline:regression:check
 npm run save:regression:summary:md
 npm run pr:body:gen
 npm run pr:body:lint
+npm run pr:validation:sync:check
 npm run pr:body:lint:regression:check
 npm run pr:body:lint:regression:check:report
 npm run pr:body:lint:regression:summary:md
@@ -43,6 +44,8 @@ npm run pr:ship:auto
 - 저장 회귀 CI 요약 빌더(PY): `/Users/hirediversity/Idle/scripts/build_save_regression_ci_summary_v1.py`
 - PR 본문 자동 생성기(PY): `/Users/hirediversity/Idle/scripts/generate_pr_body_v1.py`
 - PR 본문 품질 Lint(PY): `/Users/hirediversity/Idle/scripts/lint_pr_body_v1.py`
+- PR Validation 명령 단일 소스(PY): `/Users/hirediversity/Idle/scripts/pr_validation_commands_v1.py`
+- PR Validation 체크리스트 동기화 체크(PY): `/Users/hirediversity/Idle/scripts/check_pr_validation_template_sync_v1.py`
 - PR 본문 Lint 회귀 체크(PY): `/Users/hirediversity/Idle/scripts/check_pr_body_lint_regression_v1.py`
 - PR 본문 Lint 회귀 CI 요약(PY): `/Users/hirediversity/Idle/scripts/build_pr_body_lint_regression_ci_summary_v1.py`
 - PR 자동 생성/업데이트(PY): `/Users/hirediversity/Idle/scripts/create_pr_with_body_v1.py`
@@ -57,6 +60,7 @@ npm run pr:ship:auto
 - PR 워크플로우 가이드: `/Users/hirediversity/Idle/docs/system/pr_workflow_v1_kr.md`
 - PR 본문 자동 생성 가이드: `/Users/hirediversity/Idle/docs/system/pr_body_generator_v1_kr.md`
 - PR 본문 품질 Lint 가이드: `/Users/hirediversity/Idle/docs/system/pr_body_lint_v1_kr.md`
+- PR Validation 체크리스트 동기화 가이드: `/Users/hirediversity/Idle/docs/system/pr_validation_checklist_sync_v1_kr.md`
 - PR 본문 Lint 회귀 체크 가이드: `/Users/hirediversity/Idle/docs/system/pr_body_lint_regression_v1_kr.md`
 - PR 자동 생성/업데이트 가이드: `/Users/hirediversity/Idle/docs/system/pr_create_auto_v1_kr.md`
 - PR 자동 승인 가이드: `/Users/hirediversity/Idle/docs/system/pr_review_auto_v1_kr.md`

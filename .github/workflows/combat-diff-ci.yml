@@ -55,6 +55,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: PR Validation Checklist Sync
+        run: npm run pr:validation:sync:check
+
       - name: PR Body Lint Regression
         run: npm run pr:body:lint:regression:check:report
 

@@ -10,6 +10,8 @@ import subprocess
 import tempfile
 from typing import Any
 
+from pr_validation_commands_v1 import DEFAULT_VALIDATION_COMMANDS
+
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -37,6 +39,10 @@ def parse_args() -> argparse.Namespace:
 
 
 def make_cases() -> list[Case]:
+    validation_lines = [f"- [x] `{command}`" for command in DEFAULT_VALIDATION_COMMANDS]
+    first_validation_command = (
+        DEFAULT_VALIDATION_COMMANDS[0] if DEFAULT_VALIDATION_COMMANDS else "npm run typecheck"
+    )
     valid_body = "\n".join(
         [
             "## Summary",
@@ -48,11 +54,7 @@ def make_cases() -> list[Case]:
             "- `/Users/hirediversity/Idle/scripts/lint_pr_body_v1.py`: lint logic update",
             "",
             "## Validation",
-            "- [x] `npm run typecheck`",
-            "- [x] `npm run combat:diff:py-ts:suite`",
-            "- [x] `npm run save:auto:regression:check`",
-            "- [x] `npm run save:offline:regression:check`",
-            "- [x] `npm run pr:body:lint:regression:check`",
+            *validation_lines,
             "",
             "## Docs",
             "- [x] Updated docs if behavior or workflow changed",
@@ -77,7 +79,7 @@ def make_cases() -> list[Case]:
             "- -",
             "",
             "## Validation",
-            "- [x] `npm run typecheck`",
+            f"- [x] `{first_validation_command}`",
             "",
             "## Docs",
             "- [x] Updated docs if behavior or workflow changed",
