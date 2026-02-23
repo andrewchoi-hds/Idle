@@ -48,7 +48,16 @@
   - stale review 무효화: `true`
   - conversation 해결 필수: `true`
 
-## 8) 대응 옵션 (참고)
+## 8) CI 트리거 최적화(중복 실행 방지)
+- `verify-combat-diff` 워크플로우 트리거를 아래처럼 운영한다.
+  - `pull_request`: PR 검증 실행
+  - `push`는 `main`만 허용: 머지 후 기본 브랜치 검증
+- 목적:
+  - PR 브랜치 push 시 `push + pull_request` 이중 실행을 줄여 체크 가시성을 단순화
+  - 실행 큐/리소스 낭비 감소
+- 추가로 workflow `concurrency`를 적용해 동일 ref의 중복 실행을 자동 취소한다.
+
+## 9) 대응 옵션 (참고)
 1. 저장소를 `public`으로 전환 후 Required Check 적용
 2. GitHub Pro(또는 Team/Enterprise) 플랜으로 전환 후 `private` 유지 상태에서 적용
 3. 플랜 전환 전까지는 CI 결과를 참고해 수동 게이트로 운영

@@ -60,6 +60,9 @@ npm run pr:ship:auto
 ## 6) 병합 체크
 - Required check:
   - `verify-combat-diff`
+- 체크 표시 기준:
+  - PR 화면에서는 `pull_request` 트리거 실행 1건이 주 체크로 표시된다.
+  - `main` 머지 후에는 `push(main)` 기반 검증이 별도로 실행된다.
 - CI 요약 확인:
   - PR Checks의 Step Summary에서 저장 회귀 결과 테이블(`Auto Progress`/`Offline Catchup`) 확인
 - 리뷰:

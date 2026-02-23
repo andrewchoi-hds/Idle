@@ -500,3 +500,11 @@
 
 ## 91) 추가 문서
 - PR 원클릭 ship 가이드: `/Users/hirediversity/Idle/docs/system/pr_ship_auto_v1_kr.md`
+
+## 92) 다음 순차 작업
+1. [완료] `verify-combat-diff` workflow의 `push` 트리거를 `main` 브랜치로 한정.
+2. [완료] workflow `concurrency` 설정으로 동일 ref 중복 실행 취소 적용.
+3. [완료] Required Check/PR 워크플로우 문서에 트리거 최적화 기준 반영.
+
+## 93) 추가 문서
+- Required Check 운영 가이드(트리거 최적화 반영): `/Users/hirediversity/Idle/docs/system/github_required_checks_v1_kr.md`
