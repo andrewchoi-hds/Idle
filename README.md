@@ -17,6 +17,7 @@ npm run save:breakthrough:dump:ts
 npm run save:auto:tick:ts
 npm run save:offline:catchup:ts
 npm run save:auto:regression:check
+npm run save:offline:regression:check
 ```
 
 ## 주요 파일

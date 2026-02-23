@@ -48,3 +48,13 @@ npm run save:offline:catchup:ts -- \
 - 오프라인 시간이 캡을 초과하면 경고 문자열에 캡 정보가 기록된다.
 - 디바이스 시계 역행이 감지되면 타임스탬프는 역행하지 않도록 큰 값 기준으로 동기화하고 경고를 남긴다.
 - `--keep-timestamps`를 주면 정산 후 타임스탬프 동기화를 생략할 수 있다(디버그 용도).
+
+## 6) 회귀 체크
+- 시나리오 파일: `/Users/hirediversity/Idle/data/sim/save_offline_catchup_regression_scenarios_v1.json`
+- 점검 스크립트: `/Users/hirediversity/Idle/scripts/check_save_offline_catchup_regression_v1.py`
+- 실행 명령:
+```bash
+cd /Users/hirediversity/Idle
+npm run save:offline:regression:check
+```
+- CI(`verify-combat-diff`)에서도 동일 회귀 체크를 실행해 오프라인 정산 수치 변경을 감지한다.
