@@ -33,14 +33,29 @@
 - 도겁 구간:
   - 성공: `tribulation_fail_streak = 0`
   - 실패(경미/퇴보/사망): `tribulation_fail_streak += 1`
-  - 사망 시 `rebirth_count += 1`, `breakthrough_fail_streak = 0`
+  - 사망 시 환생 정산 이후 `breakthrough/tribulation` streak를 모두 0으로 리셋
 
-## 4) 자동 옵션 적용 규칙
+## 4) death_fail 환생 정산
+- 기본 동작(`rebirthOnDeath.enabled=true`)
+  1. `rebirth_count += 1`
+  2. `rebirth_essence` 보상 지급
+  3. 경지 리셋(`difficulty_index=1`, 인간계 연기 1층)
+  4. `qi=0`, `spirit_coin=0` 리셋
+- 보상 공식(기본 계수):
+```text
+base = rebirth_score_weight * 12 + sqrt(difficulty_index) * 0.85
+rebirth_scale = 1 + pre_rebirth_count * 0.015
+consumable_mul = 1 + sum(rebirth_essence_mul_pct consumables)
+reward = clamp(round(base * rebirth_scale * consumable_mul), 5, 5000)
+```
+- `rebirth_essence_mul_pct` 소모품(예: `tal_luck_02`)은 환생 보상 배율에 반영된다.
+
+## 5) 자동 옵션 적용 규칙
 - 도겁이 아닌 구간에서 `auto_breakthrough=false`면 스킵.
 - 도겁 구간에서 `auto_tribulation=false`면 스킵.
 - `forceAttempt=true`면 옵션 무시하고 강제 시도.
 
-## 5) 실행 스크립트
+## 6) 실행 스크립트
 기본:
 ```bash
 cd /Users/hirediversity/Idle
@@ -55,9 +70,18 @@ npm run save:breakthrough:dump:ts -- \
   --consumable tal_guard_01
 ```
 
+도겁 사망 환생 정산 샘플(진선계 최종 단계에서 강제 시도):
+```bash
+npm run save:breakthrough:dump:ts -- \
+  --force-attempt \
+  --override-difficulty-index 198 \
+  --seed 2688
+```
+
 출력:
 - `/Users/hirediversity/Idle/data/sim/save_v2_breakthrough_step_ts_v1.json`
 
-## 6) 비고
+## 7) 비고
 - rebirth 업그레이드 레벨은 기본적으로 `rebirth_count`에서 추정해 사용한다.
 - 정확한 업그레이드 상태가 서버/메타 저장소에 있으면 `options.rebirthLevels`로 덮어쓰는 것을 권장한다.
+- 환생 리셋 정책/보상 계수는 `rebirthOnDeath` 옵션으로 조정할 수 있다.

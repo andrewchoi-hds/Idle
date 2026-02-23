@@ -410,3 +410,11 @@
 ## 69) 추가 문서
 - save_v2 돌파 런타임 가이드: `/Users/hirediversity/Idle/docs/system/save_breakthrough_runtime_v1_kr.md`
 - save_v2 돌파 스텝 샘플: `/Users/hirediversity/Idle/data/sim/save_v2_breakthrough_step_ts_v1.json`
+
+## 70) 다음 순차 작업
+1. [완료] `death_fail` 시 환생 정산(경지/재화 리셋 + 윤회정수 지급) 로직 추가.
+2. [완료] 환생 보상에 `rebirth_essence_mul_pct` 소모품 배율 반영.
+3. [완료] 환생 정산 검증을 위한 덤프 스크립트 옵션(`--override-difficulty-index`) 추가.
+
+## 71) 추가 문서
+- save_v2 환생 정산(도겁 사망) 반영: `/Users/hirediversity/Idle/docs/system/save_breakthrough_runtime_v1_kr.md`
