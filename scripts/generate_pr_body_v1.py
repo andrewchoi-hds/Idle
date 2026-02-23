@@ -26,6 +26,14 @@ class ValidationResult:
     executed: bool = False
 
 
+@dataclass
+class FileDiffStat:
+    path: str
+    added: int
+    deleted: int
+    is_binary: bool = False
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Generate a filled PR body markdown from git diff and validation results."
@@ -90,11 +98,55 @@ def get_changed_files(base_ref: str, head_ref: str) -> list[str]:
     return [line.strip() for line in output.splitlines() if line.strip()]
 
 
-def get_commit_subjects(base_ref: str, head_ref: str) -> list[str]:
-    output = run_git(["log", "--no-merges", "--pretty=format:%s", f"{base_ref}..{head_ref}"])
+def get_commit_entries(base_ref: str, head_ref: str) -> list[tuple[str, str]]:
+    output = run_git(["log", "--no-merges", "--pretty=format:%h%x09%s", f"{base_ref}..{head_ref}"])
     if not output:
         return []
-    return [line.strip() for line in output.splitlines() if line.strip()]
+    entries: list[tuple[str, str]] = []
+    for line in output.splitlines():
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if "\t" in stripped:
+            short_hash, subject = stripped.split("\t", 1)
+            entries.append((short_hash.strip(), subject.strip()))
+            continue
+        entries.append(("", stripped))
+    return entries
+
+
+def parse_numstat_value(raw: str) -> tuple[int, bool]:
+    normalized = raw.strip()
+    if normalized == "-":
+        return 0, True
+    try:
+        return int(normalized), False
+    except ValueError:
+        return 0, True
+
+
+def get_changed_file_stats(base_ref: str, head_ref: str) -> dict[str, FileDiffStat]:
+    output = run_git(["diff", "--numstat", f"{base_ref}..{head_ref}"])
+    if not output:
+        return {}
+    stats: dict[str, FileDiffStat] = {}
+    for line in output.splitlines():
+        parts = line.split("\t")
+        if len(parts) < 3:
+            continue
+        added_raw, deleted_raw = parts[0], parts[1]
+        path = parts[-1].strip()
+        if not path:
+            continue
+        added, added_binary = parse_numstat_value(added_raw)
+        deleted, deleted_binary = parse_numstat_value(deleted_raw)
+        stats[path] = FileDiffStat(
+            path=path,
+            added=added,
+            deleted=deleted,
+            is_binary=(added_binary or deleted_binary),
+        )
+    return stats
 
 
 def infer_file_reason(path: str) -> str:
@@ -144,6 +196,29 @@ def category_counts(paths: list[str]) -> list[tuple[str, int]]:
     return sorted(counts.items(), key=lambda row: (-row[1], row[0]))
 
 
+def get_diff_totals(changed_files: list[str], file_stats: dict[str, FileDiffStat]) -> tuple[int, int, int]:
+    total_added = 0
+    total_deleted = 0
+    binary_count = 0
+    for path in changed_files:
+        stat = file_stats.get(path)
+        if stat is None:
+            continue
+        total_added += stat.added
+        total_deleted += stat.deleted
+        if stat.is_binary:
+            binary_count += 1
+    return total_added, total_deleted, binary_count
+
+
+def format_file_stat_suffix(stat: FileDiffStat | None) -> str:
+    if stat is None:
+        return ""
+    if stat.is_binary:
+        return f" (+{stat.added}/-{stat.deleted}, binary)"
+    return f" (+{stat.added}/-{stat.deleted})"
+
+
 def run_validation_commands(commands: list[str]) -> list[ValidationResult]:
     results: list[ValidationResult] = []
     for command in commands:
@@ -175,16 +250,24 @@ def build_markdown(
     base_ref: str,
     head_ref: str,
     changed_files: list[str],
-    commit_subjects: list[str],
+    commit_entries: list[tuple[str, str]],
+    file_stats: dict[str, FileDiffStat],
     validation_results: list[ValidationResult],
     include_commits: int,
     max_changes: int,
 ) -> str:
     changed_count = len(changed_files)
-    commit_count = len(commit_subjects)
+    commit_count = len(commit_entries)
+    commit_subjects = [subject for _, subject in commit_entries if subject]
     top_categories = category_counts(changed_files)[:3]
     category_text = ", ".join(f"{name} {count}건" for name, count in top_categories) or "변경 없음"
     lead_topic = title_hint.strip() or (commit_subjects[0] if commit_subjects else "작업 브랜치 변경")
+    total_added, total_deleted, binary_count = get_diff_totals(changed_files, file_stats)
+    diff_size_text = (
+        f"{changed_count} files, {commit_count} commits, +{total_added}/-{total_deleted} lines"
+    )
+    if binary_count > 0:
+        diff_size_text += f", binary {binary_count}건"
 
     lines: list[str] = []
     lines.append("## Summary")
@@ -192,6 +275,7 @@ def build_markdown(
         f"- 문제/배경: `{base_ref}..{head_ref}` 범위 변경({commit_count} commits, {changed_count} files)을 PR에서 빠르게 파악하기 어려운 상태."
     )
     lines.append(f"- 해결 내용: `{lead_topic}` 중심으로 `{category_text}`를 정리해 반영.")
+    lines.append(f"- 변경 규모: `{diff_size_text}` (git numstat 기준).")
     lines.append("- 기대 효과: 리뷰어가 핵심 변경/검증 상태를 PR 본문만으로 즉시 확인 가능.")
     lines.append("")
 
@@ -199,7 +283,8 @@ def build_markdown(
     if changed_files:
         for path in changed_files[: max(1, max_changes)]:
             abs_path = (ROOT / path).resolve()
-            lines.append(f"- `{abs_path}`: {infer_file_reason(path)}")
+            stat_suffix = format_file_stat_suffix(file_stats.get(path))
+            lines.append(f"- `{abs_path}`{stat_suffix}: {infer_file_reason(path)}")
         if len(changed_files) > max_changes:
             lines.append(f"- 추가 파일 {len(changed_files) - max_changes}건은 `git diff --name-only` 기준으로 포함됨.")
     else:
@@ -229,11 +314,14 @@ def build_markdown(
     lines.append("## Notes")
     lines.append(f"- Generated at: `{datetime.now(timezone.utc).isoformat()}`")
     lines.append(f"- Diff range: `{base_ref}..{head_ref}`")
-    if commit_subjects:
-        for subject in commit_subjects[: max(1, include_commits)]:
-            lines.append(f"- commit: `{subject}`")
-        if len(commit_subjects) > include_commits:
-            lines.append(f"- ...and {len(commit_subjects) - include_commits} more commits")
+    if commit_entries:
+        for short_hash, subject in commit_entries[: max(1, include_commits)]:
+            if short_hash:
+                lines.append(f"- commit: `{short_hash} {subject}`")
+            else:
+                lines.append(f"- commit: `{subject}`")
+        if len(commit_entries) > include_commits:
+            lines.append(f"- ...and {len(commit_entries) - include_commits} more commits")
     else:
         lines.append("- commit: (no new commit found in diff range)")
 
@@ -249,7 +337,8 @@ def build_markdown(
 def main() -> None:
     args = parse_args()
     changed_files = get_changed_files(args.base_ref, args.head_ref)
-    commit_subjects = get_commit_subjects(args.base_ref, args.head_ref)
+    file_stats = get_changed_file_stats(args.base_ref, args.head_ref)
+    commit_entries = get_commit_entries(args.base_ref, args.head_ref)
 
     if args.run_validation:
         validation_results = run_validation_commands(DEFAULT_VALIDATION_COMMANDS)
@@ -265,7 +354,8 @@ def main() -> None:
         base_ref=args.base_ref,
         head_ref=args.head_ref,
         changed_files=changed_files,
-        commit_subjects=commit_subjects,
+        commit_entries=commit_entries,
+        file_stats=file_stats,
         validation_results=validation_results,
         include_commits=max(1, args.include_commits),
         max_changes=max(1, args.max_changes),

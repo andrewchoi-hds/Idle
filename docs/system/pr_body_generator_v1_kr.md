@@ -7,6 +7,8 @@
 ## 1) 목적
 - PR 작성 시 템플릿 빈칸(`-`)이 그대로 올라가는 문제를 줄인다.
 - `git diff`/커밋/검증 결과를 이용해 `Summary/Changes/Validation/Docs/Notes`를 자동으로 채운다.
+- Summary에 변경 규모(`files/commits/+add/-del`)를 추가해 리뷰 스코프를 빠르게 파악한다.
+- Changes/Notes에 파일별 변경량 및 커밋 해시를 포함해 추적성을 높인다.
 
 ## 2) 기본 실행
 ```bash
@@ -39,3 +41,4 @@ gh pr create \
 - `--run-validation` 미사용 시 Validation 체크박스는 기본 미체크 상태다.
 - 필요 시 `--validated "<command>"`를 반복 전달해 체크 상태를 수동 지정할 수 있다.
 - 본문 품질 점검은 `npm run pr:body:lint`로 별도 수행할 수 있다.
+- `Changes` 항목은 `git diff --numstat` 기준의 `(+add/-del)` 정보를 함께 출력한다.
