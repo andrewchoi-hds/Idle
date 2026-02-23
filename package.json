@@ -11,6 +11,7 @@
     "combat:dump:ts": "tsx scripts/dump_minimal_combat_ts_v1.ts",
     "combat:diff:py-ts": "python3 scripts/compare_minimal_combat_ts_py_v1.py",
     "combat:diff:py-ts:suite": "python3 scripts/compare_minimal_combat_ts_py_v1.py --scenario-file data/sim/combat_diff_scenarios_v1.json",
+    "tribulation:dump:ts": "tsx scripts/dump_tribulation_trials_ts_v1.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -12,16 +12,20 @@ cd /Users/hirediversity/Idle
 npm run typecheck
 npm run combat:diff:py-ts
 npm run combat:diff:py-ts:suite
+npm run tribulation:dump:ts
 ```
 
 ## 주요 파일
 - 전투 루프(TS): `/Users/hirediversity/Idle/src/combat/minimalCombatLoop.ts`
+- 돌파/도겁 엔진(TS): `/Users/hirediversity/Idle/src/progression/tribulationEngine.ts`
 - 전투 시뮬레이터(PY): `/Users/hirediversity/Idle/scripts/simulate_minimal_combat_v1.py`
 - TS/PY diff 스크립트: `/Users/hirediversity/Idle/scripts/compare_minimal_combat_ts_py_v1.py`
 - 다중 시나리오 세트: `/Users/hirediversity/Idle/data/sim/combat_diff_scenarios_v1.json`
+- 도겁 시뮬레이션 덤프(TS): `/Users/hirediversity/Idle/scripts/dump_tribulation_trials_ts_v1.ts`
 - CI 워크플로우: `/Users/hirediversity/Idle/.github/workflows/combat-diff-ci.yml`
 
 ## 운영 문서
 - 전투 diff 가이드: `/Users/hirediversity/Idle/docs/sim/minimal_combat_ts_py_diff_v1_kr.md`
 - Required Check 설정 가이드: `/Users/hirediversity/Idle/docs/system/github_required_checks_v1_kr.md`
 - PR 워크플로우 가이드: `/Users/hirediversity/Idle/docs/system/pr_workflow_v1_kr.md`
+- 도겁 런타임 가이드: `/Users/hirediversity/Idle/docs/system/tribulation_runtime_v1_kr.md`
