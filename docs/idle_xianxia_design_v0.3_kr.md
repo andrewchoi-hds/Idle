@@ -532,3 +532,11 @@
 
 ## 99) 추가 문서
 - Required Check 가이드(PR 본문 품질 게이트 반영): `/Users/hirediversity/Idle/docs/system/github_required_checks_v1_kr.md`
+
+## 100) 다음 순차 작업
+1. [완료] PR 본문 lint 스크립트에 요약 Markdown 출력(`--summary-file`) 기능 추가.
+2. [완료] `verify-combat-diff` workflow에서 PR 본문 lint 결과를 Step Summary에 항상 기록하도록 보강.
+3. [완료] Required Check/PR 워크플로우 문서에 본문 lint 요약 확인 절차 반영.
+
+## 101) 추가 문서
+- PR 본문 품질 Lint 가이드(Step Summary 반영): `/Users/hirediversity/Idle/docs/system/pr_body_lint_v1_kr.md`

@@ -64,9 +64,12 @@
   - `Summary/Changes/Validation/Docs/Notes` 섹션 존재
   - 템플릿 placeholder 제거 여부
   - Validation 체크리스트 표준 명령 포함 여부
+- 결과 가시성:
+  - lint 성공/실패 모두 GitHub Step Summary에 `PR Body Lint` 섹션으로 기록
 - 목적:
   - 빈/부실한 PR 본문을 Required Check 단계에서 직접 차단
   - 로컬 `pr:create:auto`와 서버 CI 품질 기준 일치
+
 ## 10) 대응 옵션 (참고)
 1. 저장소를 `public`으로 전환 후 Required Check 적용
 2. GitHub Pro(또는 Team/Enterprise) 플랜으로 전환 후 `private` 유지 상태에서 적용
