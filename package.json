@@ -20,7 +20,8 @@
     "save:auto:regression:check:report": "python3 scripts/check_save_auto_progress_regression_v1.py --scenario-file data/sim/save_auto_progress_regression_scenarios_v1.json --report-file data/sim/save_auto_progress_regression_report_v1.json",
     "save:offline:regression:check:report": "python3 scripts/check_save_offline_catchup_regression_v1.py --scenario-file data/sim/save_offline_catchup_regression_scenarios_v1.json --report-file data/sim/save_offline_catchup_regression_report_v1.json",
     "save:regression:summary:md": "python3 scripts/build_save_regression_ci_summary_v1.py --auto-report data/sim/save_auto_progress_regression_report_v1.json --offline-report data/sim/save_offline_catchup_regression_report_v1.json --output-md data/sim/save_regression_ci_summary_v1.md",
-    "pr:body:gen": "python3 scripts/generate_pr_body_v1.py --base-ref origin/main --head-ref HEAD --output-file /tmp/idle_pr_body_v1.md",
+    "pr:body:gen": "python3 scripts/generate_pr_body_v1.py --base-ref origin/main --head-ref HEAD --output-file /private/tmp/idle_pr_body_v1.md",
+    "pr:create:auto": "python3 scripts/create_pr_with_body_v1.py --base main --run-validation",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

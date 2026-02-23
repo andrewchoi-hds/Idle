@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_OUTPUT = Path("/tmp/idle_pr_body_v1.md")
+DEFAULT_OUTPUT = Path("/private/tmp/idle_pr_body_v1.md")
 DEFAULT_VALIDATION_COMMANDS = [
     "npm run typecheck",
     "npm run combat:diff:py-ts:suite",

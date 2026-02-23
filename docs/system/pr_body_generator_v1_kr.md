@@ -13,7 +13,7 @@
 cd /Users/hirediversity/Idle
 npm run pr:body:gen
 ```
-- 출력: `/tmp/idle_pr_body_v1.md`
+- 출력: `/private/tmp/idle_pr_body_v1.md`
 - 기본 비교 범위: `origin/main..HEAD`
 
 ## 3) 검증까지 같이 실행
@@ -32,7 +32,7 @@ gh pr create \
   --base main \
   --head codex/<task-name> \
   --title "<type>: <summary>" \
-  --body-file /tmp/idle_pr_body_v1.md
+  --body-file /private/tmp/idle_pr_body_v1.md
 ```
 
 ## 5) 비고

@@ -39,10 +39,15 @@ gh pr create \
   --base main \
   --head codex/<task-name> \
   --title "<type>: <summary>" \
-  --body-file /tmp/idle_pr_body_v1.md
+  --body-file /private/tmp/idle_pr_body_v1.md
 ```
 - `pr:body:gen`은 변경 파일/커밋/검증 결과를 기반으로 `Summary/Changes/Validation/Docs/Notes`를 자동 작성한다.
 - 이미 검증을 끝낸 경우에는 `--run-validation` 대신 `--validated` 옵션으로 체크 상태만 반영할 수 있다.
+- 원클릭 흐름(본문 생성 + PR 생성/업데이트):
+```bash
+npm run pr:create:auto
+```
+- 기본값으로 `git push -u origin <head>`까지 포함해 원격 동기화 후 PR을 생성/업데이트한다.
 
 ## 6) 병합 체크
 - Required check:
