@@ -43,3 +43,4 @@ python3 scripts/lint_pr_body_v1.py \
 - `verify-combat-diff` workflow는 `pull_request` 이벤트에서 PR 본문 lint를 먼저 실행한다.
 - lint 결과는 GitHub Step Summary에 `PR Body Lint` 섹션으로 항상 남긴다(성공/실패 공통).
 - 이 단계가 실패하면 typecheck/회귀 체크 이전에 PR이 차단된다.
+- lint 로직 회귀는 `npm run pr:body:lint:regression:check`로 별도 점검한다.

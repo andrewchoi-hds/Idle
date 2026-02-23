@@ -548,3 +548,11 @@
 
 ## 103) 추가 문서
 - PR 본문 자동 생성기 가이드(변경량/커밋 해시 반영): `/Users/hirediversity/Idle/docs/system/pr_body_generator_v1_kr.md`
+
+## 104) 다음 순차 작업
+1. [완료] PR 본문 lint 회귀 체크 스크립트(`pr:body:lint:regression:check`) 추가.
+2. [완료] Required Check workflow(`verify-combat-diff`)에 PR 본문 lint 회귀 단계 연동.
+3. [완료] README/운영 문서에 PR 본문 lint 회귀 점검 절차 반영.
+
+## 105) 추가 문서
+- PR 본문 Lint 회귀 체크 가이드: `/Users/hirediversity/Idle/docs/system/pr_body_lint_regression_v1_kr.md`
