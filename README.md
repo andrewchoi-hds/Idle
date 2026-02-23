@@ -21,6 +21,7 @@ npm run save:offline:regression:check
 npm run save:regression:summary:md
 npm run pr:body:gen
 npm run pr:create:auto
+npm run pr:review:auto
 npm run pr:merge:auto
 npm run pr:ship:auto
 ```
@@ -38,6 +39,7 @@ npm run pr:ship:auto
 - 저장 회귀 CI 요약 빌더(PY): `/Users/hirediversity/Idle/scripts/build_save_regression_ci_summary_v1.py`
 - PR 본문 자동 생성기(PY): `/Users/hirediversity/Idle/scripts/generate_pr_body_v1.py`
 - PR 자동 생성/업데이트(PY): `/Users/hirediversity/Idle/scripts/create_pr_with_body_v1.py`
+- PR 자동 승인(PY): `/Users/hirediversity/Idle/scripts/review_pr_auto_v1.py`
 - PR 체크대기 자동 머지(PY): `/Users/hirediversity/Idle/scripts/merge_pr_when_ready_v1.py`
 - PR 원클릭 ship 자동화(PY): `/Users/hirediversity/Idle/scripts/ship_pr_auto_v1.py`
 - CI 워크플로우: `/Users/hirediversity/Idle/.github/workflows/combat-diff-ci.yml`
@@ -48,6 +50,7 @@ npm run pr:ship:auto
 - PR 워크플로우 가이드: `/Users/hirediversity/Idle/docs/system/pr_workflow_v1_kr.md`
 - PR 본문 자동 생성 가이드: `/Users/hirediversity/Idle/docs/system/pr_body_generator_v1_kr.md`
 - PR 자동 생성/업데이트 가이드: `/Users/hirediversity/Idle/docs/system/pr_create_auto_v1_kr.md`
+- PR 자동 승인 가이드: `/Users/hirediversity/Idle/docs/system/pr_review_auto_v1_kr.md`
 - PR 자동 머지 가이드: `/Users/hirediversity/Idle/docs/system/pr_merge_auto_v1_kr.md`
 - PR 원클릭 ship 가이드: `/Users/hirediversity/Idle/docs/system/pr_ship_auto_v1_kr.md`
 - 도겁 런타임 가이드: `/Users/hirediversity/Idle/docs/system/tribulation_runtime_v1_kr.md`

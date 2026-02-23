@@ -52,10 +52,15 @@ npm run pr:create:auto
 ```bash
 npm run pr:merge:auto
 ```
+- 승인 자동화(현재 브랜치 기준 PR approve 시도):
+```bash
+npm run pr:review:auto
+```
 - End-to-end 원클릭(본문 생성 + PR 생성/업데이트 + 체크 대기 + 머지):
 ```bash
 npm run pr:ship:auto
 ```
+- `pr:ship:auto`는 기본적으로 `생성/업데이트 -> 자동 승인(best-effort) -> 체크 대기/머지` 순서로 동작한다.
 
 ## 6) 병합 체크
 - Required check:
@@ -74,4 +79,5 @@ npm run pr:ship:auto
 ## 7) 관련 파일
 - PR 템플릿: `/Users/hirediversity/Idle/.github/pull_request_template.md`
 - 브랜치 보호 가이드: `/Users/hirediversity/Idle/docs/system/github_required_checks_v1_kr.md`
+- PR 자동 승인 가이드: `/Users/hirediversity/Idle/docs/system/pr_review_auto_v1_kr.md`
 - PR 자동 머지 가이드: `/Users/hirediversity/Idle/docs/system/pr_merge_auto_v1_kr.md`

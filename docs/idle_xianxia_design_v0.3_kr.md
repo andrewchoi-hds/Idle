@@ -508,3 +508,11 @@
 
 ## 93) 추가 문서
 - Required Check 운영 가이드(트리거 최적화 반영): `/Users/hirediversity/Idle/docs/system/github_required_checks_v1_kr.md`
+
+## 94) 다음 순차 작업
+1. [완료] PR 자동 승인 스크립트(`pr:review:auto`) 추가.
+2. [완료] 원클릭 ship(`pr:ship:auto`)에 자동 승인 단계를 기본 삽입.
+3. [완료] PR 워크플로우/README에 자동 승인 운영 가이드 반영.
+
+## 95) 추가 문서
+- PR 자동 승인 가이드: `/Users/hirediversity/Idle/docs/system/pr_review_auto_v1_kr.md`
