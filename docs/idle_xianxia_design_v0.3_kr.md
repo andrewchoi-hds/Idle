@@ -452,3 +452,11 @@
 ## 79) 추가 문서
 - save_v2 오프라인 복귀 정산 가이드: `/Users/hirediversity/Idle/docs/system/save_offline_catchup_runtime_v1_kr.md`
 - save_v2 오프라인 복귀 샘플: `/Users/hirediversity/Idle/data/sim/save_v2_offline_catchup_ts_v1.json`
+
+## 80) 다음 순차 작업
+1. [완료] 오프라인 정산 회귀 시나리오(JSON) 정의.
+2. [완료] 오프라인 정산 회귀 점검 스크립트(`save:offline:regression:check`) 추가.
+3. [완료] CI Required Check(`verify-combat-diff`)에 오프라인 회귀 점검 연결.
+
+## 81) 추가 문서
+- 오프라인 정산 회귀 시나리오: `/Users/hirediversity/Idle/data/sim/save_offline_catchup_regression_scenarios_v1.json`

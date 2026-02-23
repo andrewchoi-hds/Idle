@@ -1,0 +1,63 @@
+[
+  {
+    "id": "offline_catchup_capped_12h_progress",
+    "args": [
+      "--now-epoch-ms",
+      "1771894800000",
+      "--max-event-logs",
+      "80",
+      "--enable-auto-breakthrough",
+      "--seed",
+      "20260223"
+    ],
+    "expected": {
+      "summary.nowEpochMs": 1771894800000,
+      "summary.anchorEpochMs": 1771848033000,
+      "summary.rawOfflineSec": 46767,
+      "summary.maxOfflineSec": 43200,
+      "summary.appliedOfflineSec": 43200,
+      "summary.cappedByMaxOffline": true,
+      "summary.skipReason": "none",
+      "summary.autoProgressSummary.finalDifficultyIndex": 52,
+      "summary.autoProgressSummary.rebirthCountDelta": 0,
+      "summary.autoProgressSummary.battles.total": 4799,
+      "summary.autoProgressSummary.breakthroughs.attempts": 14,
+      "warning_count": 2,
+      "event_count": 80,
+      "save_after.progression.difficulty_index": 52,
+      "save_after.timestamps.last_login_epoch_ms": 1771894800000,
+      "save_after.timestamps.save_epoch_ms": 1771894800000
+    },
+    "expected_warning_substrings": [
+      "rebirth levels inferred from progression.rebirth_count",
+      "offline catchup capped: raw=46767s applied=43200s max=43200s"
+    ]
+  },
+  {
+    "id": "offline_catchup_clock_skew_guard",
+    "args": [
+      "--now-epoch-ms",
+      "1771847000000",
+      "--anchor-epoch-ms",
+      "1771848033000"
+    ],
+    "expected": {
+      "summary.nowEpochMs": 1771847000000,
+      "summary.anchorEpochMs": 1771848033000,
+      "summary.rawOfflineSec": 0,
+      "summary.maxOfflineSec": 43200,
+      "summary.appliedOfflineSec": 0,
+      "summary.cappedByMaxOffline": false,
+      "summary.skipReason": "time_not_elapsed",
+      "summary.autoProgressSummary": null,
+      "warning_count": 1,
+      "event_count": 0,
+      "save_after.progression.difficulty_index": 42,
+      "save_after.timestamps.last_login_epoch_ms": 1771848033000,
+      "save_after.timestamps.save_epoch_ms": 1771848033000
+    },
+    "expected_warning_substrings": [
+      "device clock skew detected: now=1771847000000ms, synced=1771848033000ms"
+    ]
+  }
+]

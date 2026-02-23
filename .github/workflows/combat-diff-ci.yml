@@ -39,6 +39,9 @@ jobs:
       - name: Save Auto Progress Regression
         run: npm run save:auto:regression:check
 
+      - name: Save Offline Catchup Regression
+        run: npm run save:offline:regression:check
+
       - name: Upload Combat Diff Artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -51,3 +54,4 @@ jobs:
             data/sim/minimal_combat_summary_v1.csv
             data/sim/minimal_combat_action_log_v1.csv
             data/sim/save_v2_auto_progress_tick_ts_v1.json
+            data/sim/save_v2_offline_catchup_ts_v1.json
