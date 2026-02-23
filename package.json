@@ -13,6 +13,7 @@
     "combat:diff:py-ts:suite": "python3 scripts/compare_minimal_combat_ts_py_v1.py --scenario-file data/sim/combat_diff_scenarios_v1.json",
     "tribulation:dump:ts": "tsx scripts/dump_tribulation_trials_ts_v1.ts",
     "save:breakthrough:dump:ts": "tsx scripts/dump_save_breakthrough_step_ts_v1.ts",
+    "save:auto:tick:ts": "tsx scripts/dump_save_auto_progress_tick_ts_v1.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

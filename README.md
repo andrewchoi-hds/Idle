@@ -14,6 +14,7 @@ npm run combat:diff:py-ts
 npm run combat:diff:py-ts:suite
 npm run tribulation:dump:ts
 npm run save:breakthrough:dump:ts
+npm run save:auto:tick:ts
 ```
 
 ## 주요 파일
@@ -24,6 +25,7 @@ npm run save:breakthrough:dump:ts
 - 다중 시나리오 세트: `/Users/hirediversity/Idle/data/sim/combat_diff_scenarios_v1.json`
 - 도겁 시뮬레이션 덤프(TS): `/Users/hirediversity/Idle/scripts/dump_tribulation_trials_ts_v1.ts`
 - save_v2 돌파 스텝 덤프(TS): `/Users/hirediversity/Idle/scripts/dump_save_breakthrough_step_ts_v1.ts`
+- save_v2 자동 진행 틱 덤프(TS): `/Users/hirediversity/Idle/scripts/dump_save_auto_progress_tick_ts_v1.ts`
 - CI 워크플로우: `/Users/hirediversity/Idle/.github/workflows/combat-diff-ci.yml`
 
 ## 운영 문서
@@ -32,3 +34,4 @@ npm run save:breakthrough:dump:ts
 - PR 워크플로우 가이드: `/Users/hirediversity/Idle/docs/system/pr_workflow_v1_kr.md`
 - 도겁 런타임 가이드: `/Users/hirediversity/Idle/docs/system/tribulation_runtime_v1_kr.md`
 - save_v2 돌파 런타임 가이드: `/Users/hirediversity/Idle/docs/system/save_breakthrough_runtime_v1_kr.md`
+- save_v2 자동 진행 루프 가이드: `/Users/hirediversity/Idle/docs/system/save_auto_progress_tick_runtime_v1_kr.md`

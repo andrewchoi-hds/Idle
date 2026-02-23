@@ -418,3 +418,12 @@
 
 ## 71) 추가 문서
 - save_v2 환생 정산(도겁 사망) 반영: `/Users/hirediversity/Idle/docs/system/save_breakthrough_runtime_v1_kr.md`
+
+## 72) 다음 순차 작업
+1. [완료] `save_v2` 자동 진행 틱 루프(`수련/전투/돌파/도겁`) 런타임 API 추가.
+2. [완료] 1분/10분 시뮬레이션용 덤프 스크립트(`save:auto:tick:ts`) 추가.
+3. [완료] 자동 진행 결과 요약/이벤트 로그(JSON) 출력 포맷 정의.
+
+## 73) 추가 문서
+- save_v2 자동 진행 루프 가이드: `/Users/hirediversity/Idle/docs/system/save_auto_progress_tick_runtime_v1_kr.md`
+- save_v2 자동 진행 샘플: `/Users/hirediversity/Idle/data/sim/save_v2_auto_progress_tick_ts_v1.json`
