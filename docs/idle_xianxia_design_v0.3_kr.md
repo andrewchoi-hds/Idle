@@ -401,3 +401,12 @@
 ## 67) 추가 문서
 - 도겁 런타임 가이드: `/Users/hirediversity/Idle/docs/system/tribulation_runtime_v1_kr.md`
 - 도겁 샘플 결과: `/Users/hirediversity/Idle/data/sim/tribulation_trials_ts_v1.json`
+
+## 68) 다음 순차 작업
+1. [완료] `save_v2` 기준 자동 돌파/자동 도겁 1스텝 적용 API 추가.
+2. [완료] 돌파 결과를 `pity_counters`/경지/기력/인벤토리에 반영.
+3. [완료] `save_v2` 샘플 입력 기반 런타임 덤프 스크립트 추가.
+
+## 69) 추가 문서
+- save_v2 돌파 런타임 가이드: `/Users/hirediversity/Idle/docs/system/save_breakthrough_runtime_v1_kr.md`
+- save_v2 돌파 스텝 샘플: `/Users/hirediversity/Idle/data/sim/save_v2_breakthrough_step_ts_v1.json`

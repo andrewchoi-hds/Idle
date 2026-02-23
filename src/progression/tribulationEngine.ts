@@ -485,11 +485,16 @@ export function evaluateBreakthroughAttempt(
 
   const successRollPct = rng.next() * 100;
   if (successRollPct < successPct) {
+    const candidateNextDifficulty = stage.difficulty_index + 1;
+    const hasNextDifficulty = indexes.progressionByDifficulty.has(candidateNextDifficulty);
+    const nextDifficultyIndex = hasNextDifficulty
+      ? candidateNextDifficulty
+      : stage.difficulty_index;
     return {
       ...baseResult,
       outcome: "success",
       attempted: true,
-      nextDifficultyIndex: stage.difficulty_index + 1,
+      nextDifficultyIndex,
       qiDelta: -stage.qi_required,
       materialLossPct: 0,
       retreatLayers: 0,
@@ -497,6 +502,9 @@ export function evaluateBreakthroughAttempt(
         ...baseResult.rolls,
         successRollPct,
       },
+      warnings: hasNextDifficulty
+        ? baseResult.warnings
+        : [...baseResult.warnings, "already at max difficulty; stage progression capped"],
     };
   }
 
