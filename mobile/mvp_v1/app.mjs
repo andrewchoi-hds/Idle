@@ -14,6 +14,7 @@ import {
   normalizeSlotSummaryState,
   parseSliceState,
   previewBreakthroughChance,
+  resolveBreakthroughManualAttemptPolicy,
   resolveBreakthroughExpectedDelta,
   resolveBreakthroughMitigationSummary,
   resolveBreakthroughRecommendation,
@@ -1492,6 +1493,27 @@ function bindEvents() {
   });
 
   dom.btnBreakthrough.addEventListener("click", () => {
+    const preview = previewBreakthroughChance(context, state, {
+      useBreakthroughElixir: dom.useBreakthroughElixir.checked,
+      useTribulationTalisman: dom.useTribulationTalisman.checked,
+    });
+    const expectedDelta = resolveBreakthroughExpectedDelta(context, state, preview);
+    const attemptPolicy = resolveBreakthroughManualAttemptPolicy(preview, expectedDelta);
+    if (attemptPolicy.requiresConfirm) {
+      const confirmed = window.confirm(
+        buildSlotActionConfirmMessage("도겁 돌파 확인", [
+          `위험도: ${attemptPolicy.riskTier.labelKo}`,
+          `사망 실패 확률: ${preview.deathFailPct.toFixed(1)}%`,
+          `기대값(1회): 기 ${fmtSignedInteger(expectedDelta.expectedQiDelta)}, 환생정수 ${fmtSignedFixed(expectedDelta.expectedRebirthEssenceDelta, 1)}, 경지 ${fmtSignedFixed(expectedDelta.expectedDifficultyDelta, 1)}`,
+          "계속할까요?",
+        ]),
+      );
+      if (!confirmed) {
+        setStatus("돌파 시도 취소(고위험 확인)", true);
+        render();
+        return;
+      }
+    }
     const outcome = runBreakthroughAttempt(context, state, rng, {
       useBreakthroughElixir: dom.useBreakthroughElixir.checked,
       useTribulationTalisman: dom.useTribulationTalisman.checked,

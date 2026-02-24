@@ -14,6 +14,7 @@ import {
   parseSliceState,
   previewBreakthroughChance,
   resolveBreakthroughExpectedDelta,
+  resolveBreakthroughManualAttemptPolicy,
   resolveBreakthroughMitigationSummary,
   resolveBreakthroughRecommendation,
   resolveBreakthroughRecommendationToggles,
@@ -337,6 +338,53 @@ async function main() {
       expectedMortal.expectedQiDelta < 0 &&
       expectedMortal.expectedRebirthEssenceDelta === 0 &&
       expectedMortal.expectedDifficultyDelta > 0,
+  });
+
+  const manualPolicyExtreme = resolveBreakthroughManualAttemptPolicy(
+    {
+      stage: { is_tribulation: 1 },
+      successPct: 34,
+      deathFailPct: 14,
+    },
+    { expectedQiLossRatio: 0.71 },
+  );
+  const manualPolicyHigh = resolveBreakthroughManualAttemptPolicy(
+    {
+      stage: { is_tribulation: 1 },
+      successPct: 47,
+      deathFailPct: 9,
+    },
+    { expectedQiLossRatio: 0.42 },
+  );
+  const manualPolicyHighCost = resolveBreakthroughManualAttemptPolicy(
+    {
+      stage: { is_tribulation: 0 },
+      successPct: 84,
+      deathFailPct: 0,
+    },
+    { expectedQiLossRatio: 0.72 },
+  );
+  const manualPolicySafe = resolveBreakthroughManualAttemptPolicy(
+    {
+      stage: { is_tribulation: 0 },
+      successPct: 86,
+      deathFailPct: 0,
+    },
+    { expectedQiLossRatio: 0.18 },
+  );
+  checks.push({
+    id: "breakthrough_manual_attempt_policy_requires_confirm_on_high_risk_or_cost",
+    passed:
+      manualPolicyExtreme.requiresConfirm === true &&
+      manualPolicyExtreme.reason === "extreme_risk" &&
+      manualPolicyExtreme.tone === "error" &&
+      manualPolicyHigh.requiresConfirm === true &&
+      manualPolicyHigh.reason === "high_risk" &&
+      manualPolicyHigh.tone === "warn" &&
+      manualPolicyHighCost.requiresConfirm === true &&
+      manualPolicyHighCost.reason === "high_qi_cost" &&
+      manualPolicySafe.requiresConfirm === false &&
+      manualPolicySafe.reason === "safe",
   });
 
   const recommendationNeedGuard = resolveBreakthroughRecommendation(

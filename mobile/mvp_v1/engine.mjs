@@ -774,6 +774,49 @@ export function resolveBreakthroughExpectedDelta(context, state, previewInput) {
   };
 }
 
+export function resolveBreakthroughManualAttemptPolicy(previewInput, expectedDeltaInput) {
+  const preview =
+    previewInput && typeof previewInput === "object" ? previewInput : {};
+  const expectedDelta =
+    expectedDeltaInput && typeof expectedDeltaInput === "object"
+      ? expectedDeltaInput
+      : {};
+  const riskTier = resolveBreakthroughRiskTier(preview);
+  const deathFailPct = clamp(Number(preview.deathFailPct) || 0, 0, 100);
+  const expectedQiLossRatio = clamp(Number(expectedDelta.expectedQiLossRatio) || 0, 0, 1);
+
+  let reason = "safe";
+  let requiresConfirm = false;
+  let tone = "info";
+  let messageKo = "돌파 진행 가능";
+  if (riskTier.tier === "extreme" || deathFailPct >= 12) {
+    reason = "extreme_risk";
+    requiresConfirm = true;
+    tone = "error";
+    messageKo = "고위험 도겁 구간입니다. 확인 후 진행하세요.";
+  } else if (riskTier.tier === "high" || deathFailPct >= 8) {
+    reason = "high_risk";
+    requiresConfirm = true;
+    tone = "warn";
+    messageKo = "도겁 사망 위험이 높아 확인이 필요합니다.";
+  } else if (expectedQiLossRatio >= 0.65) {
+    reason = "high_qi_cost";
+    requiresConfirm = true;
+    tone = "warn";
+    messageKo = "기 소모 기대값이 높아 확인이 필요합니다.";
+  }
+
+  return {
+    reason,
+    requiresConfirm,
+    tone,
+    riskTier,
+    deathFailPct,
+    expectedQiLossRatio,
+    messageKo,
+  };
+}
+
 function evaluateBreakthroughOutcome(stage, successPct, deathPct, rng, debugForcedOutcome) {
   if (debugForcedOutcome) {
     return debugForcedOutcome;
