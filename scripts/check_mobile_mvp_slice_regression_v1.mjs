@@ -13,6 +13,7 @@ import {
   normalizeSlotSummaryState,
   parseSliceState,
   previewBreakthroughChance,
+  resolveBreakthroughRecommendation,
   resolveBreakthroughRiskTier,
   resolveDebouncedAction,
   resolveSlotCopyHint,
@@ -308,6 +309,59 @@ async function main() {
       previewMortal.deathInFailurePct === 0 &&
       previewMortal.deathFailPct === 0 &&
       previewMortal.retreatFailPct === 0,
+  });
+
+  const recommendationNeedGuard = resolveBreakthroughRecommendation(
+    {
+      stage: { is_tribulation: 1 },
+      successPct: 38,
+      deathFailPct: 19,
+    },
+    {
+      hasBreakthroughElixir: true,
+      hasTribulationTalisman: true,
+      usingBreakthroughElixir: false,
+      usingTribulationTalisman: false,
+      mitigatedPreview: {
+        stage: { is_tribulation: 1 },
+        successPct: 52,
+        deathFailPct: 9,
+      },
+    },
+  );
+  const recommendationPrepared = resolveBreakthroughRecommendation(
+    {
+      stage: { is_tribulation: 1 },
+      successPct: 52,
+      deathFailPct: 9,
+    },
+    {
+      hasBreakthroughElixir: true,
+      hasTribulationTalisman: true,
+      usingBreakthroughElixir: true,
+      usingTribulationTalisman: true,
+      mitigatedPreview: {
+        stage: { is_tribulation: 1 },
+        successPct: 52,
+        deathFailPct: 9,
+      },
+    },
+  );
+  const recommendationSafe = resolveBreakthroughRecommendation({
+    stage: { is_tribulation: 0 },
+    successPct: 77,
+    deathFailPct: 0,
+  });
+  checks.push({
+    id: "breakthrough_recommendation_matches_context_and_inventory",
+    passed:
+      recommendationNeedGuard.labelKo === "수호부 권장" &&
+      recommendationNeedGuard.tone === "warn" &&
+      recommendationNeedGuard.messageKo.includes("수호부") &&
+      recommendationPrepared.labelKo === "준비 완료" &&
+      recommendationPrepared.tone === "info" &&
+      recommendationSafe.labelKo === "자원 비축" &&
+      recommendationSafe.tone === "info",
   });
 
   state.progression.difficultyIndex = 198;

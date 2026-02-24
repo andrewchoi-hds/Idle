@@ -14,6 +14,7 @@ import {
   normalizeSlotSummaryState,
   parseSliceState,
   previewBreakthroughChance,
+  resolveBreakthroughRecommendation,
   resolveBreakthroughRiskTier,
   resolveDebouncedAction,
   resolveSlotCopyHint,
@@ -53,6 +54,8 @@ const dom = {
   previewRetreatFailPct: document.getElementById("previewRetreatFailPct"),
   previewRiskLabel: document.getElementById("previewRiskLabel"),
   previewDeathInFailPct: document.getElementById("previewDeathInFailPct"),
+  previewRecommendationLabel: document.getElementById("previewRecommendationLabel"),
+  previewRecommendationHint: document.getElementById("previewRecommendationHint"),
   optAutoBattle: document.getElementById("optAutoBattle"),
   optAutoBreakthrough: document.getElementById("optAutoBreakthrough"),
   optAutoTribulation: document.getElementById("optAutoTribulation"),
@@ -989,7 +992,18 @@ function render() {
     useBreakthroughElixir: dom.useBreakthroughElixir.checked,
     useTribulationTalisman: dom.useTribulationTalisman.checked,
   });
+  const mitigatedPreview = previewBreakthroughChance(context, state, {
+    useBreakthroughElixir: true,
+    useTribulationTalisman: true,
+  });
   const riskTier = resolveBreakthroughRiskTier(preview);
+  const recommendation = resolveBreakthroughRecommendation(preview, {
+    hasBreakthroughElixir: state.inventory.breakthroughElixir > 0,
+    hasTribulationTalisman: state.inventory.tribulationTalisman > 0,
+    usingBreakthroughElixir: preview.useBreakthroughElixir,
+    usingTribulationTalisman: preview.useTribulationTalisman,
+    mitigatedPreview,
+  });
 
   dom.stageDisplay.textContent = displayName;
   dom.worldTag.textContent = worldKo(stage.world);
@@ -1009,6 +1023,11 @@ function render() {
   dom.previewRiskLabel.textContent = riskTier.labelKo;
   dom.previewRiskLabel.title = riskTier.descriptionKo;
   applyRiskTone(dom.previewRiskLabel, riskTier.tone);
+  dom.previewRecommendationLabel.textContent = recommendation.labelKo;
+  dom.previewRecommendationLabel.title = recommendation.messageKo;
+  dom.previewRecommendationHint.textContent = recommendation.messageKo;
+  applyRiskTone(dom.previewRecommendationLabel, recommendation.tone);
+  applyRiskTone(dom.previewRecommendationHint, recommendation.tone);
   dom.playerNameInput.value = state.playerName;
   dom.optSaveSlot.value = String(activeSaveSlot);
   dom.lastSavedAt.textContent = fmtDateTimeFromIso(state.lastSavedAtIso);

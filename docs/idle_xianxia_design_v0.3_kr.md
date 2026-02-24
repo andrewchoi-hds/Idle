@@ -890,3 +890,11 @@
 
 ## 187) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(도겁 위험도 배지 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 188) 다음 순차 작업
+1. [완료] 엔진에 돌파 권장 정책 함수(`resolveBreakthroughRecommendation`)를 추가해 위험도/보유 자원/사용 설정 기반 액션 가이드를 생성.
+2. [완료] 모바일 UI에 돌파 권장 배지/설명(`previewRecommendationLabel`, `previewRecommendationHint`)을 추가.
+3. [완료] 모바일 회귀 체크에 돌파 권장 정책 시나리오(수호부 권장/준비 완료/자원 비축) 검증을 추가.
+
+## 189) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(도겁 돌파 권장 정책 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

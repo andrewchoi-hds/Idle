@@ -407,6 +407,30 @@ textarea:focus-visible,
   color: #ffb4ac;
 }
 
+.recommendation-line {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+}
+
+.recommendation-text {
+  font-size: 12px;
+  color: #9eb8af;
+}
+
+.recommendation-text.tone-info {
+  color: #bfe6d9;
+}
+
+.recommendation-text.tone-warn {
+  color: #ffdca0;
+}
+
+.recommendation-text.tone-error {
+  color: #ffb4ac;
+}
+
 .logs ul {
   max-height: 220px;
   overflow: auto;
