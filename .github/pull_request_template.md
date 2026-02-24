@@ -14,10 +14,12 @@
 - [ ] `npm run save:offline:regression:check`
 - [ ] `npm run pr:validation:sync:check`
 - [ ] `npm run pr:body:lint:regression:check`
+- [ ] `npm run pr:body:gen:regression:check`
+- [ ] `npm run pr:validation:sync:regression:check`
 
 ## Docs
 - [ ] Updated docs if behavior or workflow changed
 - [ ] Updated `/Users/hirediversity/Idle/docs/idle_xianxia_design_v0.3_kr.md` checklist section
 
 ## Notes
-- 
+-

@@ -614,3 +614,12 @@
 ## 119) 추가 문서
 - PR 본문 생성기 가이드(회귀 체크 반영): `/Users/hirediversity/Idle/docs/system/pr_body_generator_v1_kr.md`
 - PR 본문 생성기 회귀 체크 가이드: `/Users/hirediversity/Idle/docs/system/pr_body_generator_regression_v1_kr.md`
+
+## 120) 다음 순차 작업
+1. [완료] PR Validation 표준 명령 목록에 회귀 체크 2종(`pr:body:gen:regression:check`, `pr:validation:sync:regression:check`) 추가.
+2. [완료] PR 템플릿 Validation 체크리스트를 8개 표준 명령 기준으로 자동 동기화.
+3. [완료] PR 본문 lint/본문 생성기 문서에 8개 표준 검증 명령 기준 반영.
+
+## 121) 추가 문서
+- PR 본문 품질 Lint 가이드(Validation 8개 커맨드 기준): `/Users/hirediversity/Idle/docs/system/pr_body_lint_v1_kr.md`
+- PR 본문 자동 생성기 가이드(Validation 8개 커맨드 기준): `/Users/hirediversity/Idle/docs/system/pr_body_generator_v1_kr.md`
