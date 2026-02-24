@@ -17,6 +17,7 @@ import {
   createInitialSliceState,
   createSeededRng,
   extractOfflineDetailCompareCode,
+  extractOfflineDetailCompareCodeFromPayloadText,
   filterOfflineDetailEventsByMode,
   isCopyTargetSlotDisabled,
   isOfflineDetailCompareCode,
@@ -507,6 +508,32 @@ async function main() {
         `{"detailReportSnapshot":{"compareCode":"${offlineDetailCompareCodeAll}"}}`,
       ) === offlineDetailCompareCodeAll &&
       extractOfflineDetailCompareCode("compare code missing") === "",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_extracts_from_payload_text",
+    passed:
+      extractOfflineDetailCompareCodeFromPayloadText(
+        JSON.stringify({
+          detailViewSnapshotAtExport: {
+            compareCode: offlineDetailCompareCodeCritical,
+          },
+          detailReportSnapshot: {
+            compareCode: offlineDetailCompareCodeAll,
+          },
+        }),
+      ) === offlineDetailCompareCodeCritical &&
+      extractOfflineDetailCompareCodeFromPayloadText(
+        JSON.stringify({
+          detailReportSnapshot: {
+            compareCode: offlineDetailCompareCodeAll,
+          },
+        }),
+      ) === offlineDetailCompareCodeAll &&
+      extractOfflineDetailCompareCodeFromPayloadText(
+        `report => ${offlineDetailCompareCodeAll}`,
+      ) === offlineDetailCompareCodeAll &&
+      extractOfflineDetailCompareCodeFromPayloadText("payload missing compare code") === "",
   });
 
   const parsedOfflineCompareCode = parseOfflineDetailCompareCode(offlineDetailCompareCodeAll);

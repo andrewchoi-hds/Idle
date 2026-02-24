@@ -323,6 +323,31 @@ export function extractOfflineDetailCompareCode(textInput) {
   return matched ? matched[0] : "";
 }
 
+export function extractOfflineDetailCompareCodeFromPayloadText(payloadInput) {
+  const text = typeof payloadInput === "string" ? payloadInput.trim() : "";
+  if (!text) {
+    return "";
+  }
+  try {
+    const parsed = JSON.parse(text);
+    const fromDetailView = extractOfflineDetailCompareCode(
+      parsed?.detailViewSnapshotAtExport?.compareCode,
+    );
+    if (fromDetailView) {
+      return fromDetailView;
+    }
+    const fromDetailReport = extractOfflineDetailCompareCode(
+      parsed?.detailReportSnapshot?.compareCode,
+    );
+    if (fromDetailReport) {
+      return fromDetailReport;
+    }
+  } catch {
+    // Ignore JSON parse failures and fall back to first detected token.
+  }
+  return extractOfflineDetailCompareCode(text);
+}
+
 export function parseOfflineDetailCompareCode(codeInput) {
   const raw = extractOfflineDetailCompareCode(codeInput);
   const matched = /^ODR1-T(\d+)-C(\d+)-H(\d+)-V([AC])-A(\d{6})-S(\d{6})$/.exec(raw);

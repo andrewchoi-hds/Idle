@@ -15,6 +15,7 @@ import {
   buildOfflineDetailHiddenSummaryLabelKo,
   buildOfflineDetailFilterSummaryLabelKo,
   extractOfflineDetailCompareCode,
+  extractOfflineDetailCompareCodeFromPayloadText,
   getStage,
   getStageDisplayNameKo,
   isCopyTargetSlotDisabled,
@@ -131,6 +132,7 @@ const dom = {
   btnToggleOfflineCriticalOnly: document.getElementById("btnToggleOfflineCriticalOnly"),
   btnCompareOfflineCode: document.getElementById("btnCompareOfflineCode"),
   btnPasteOfflineCompareCode: document.getElementById("btnPasteOfflineCompareCode"),
+  btnLoadOfflineCompareCodeFromPayload: document.getElementById("btnLoadOfflineCompareCodeFromPayload"),
   btnCopyOfflineCompareCode: document.getElementById("btnCopyOfflineCompareCode"),
   btnExportOfflineReport: document.getElementById("btnExportOfflineReport"),
   offlineDetailList: document.getElementById("offlineDetailList"),
@@ -939,6 +941,22 @@ async function pasteOfflineCompareCodeFromClipboard() {
   runOfflineCompareCodeCheck();
 }
 
+function loadOfflineCompareCodeFromPayload() {
+  const payloadText = String(dom.savePayload.value || "").trim();
+  if (!payloadText) {
+    setStatus("savePayload 입력 필요", true);
+    return;
+  }
+  const extractedCode = extractOfflineDetailCompareCodeFromPayloadText(payloadText);
+  if (!extractedCode) {
+    dom.offlineCompareCodeResult.textContent = "입력 비교 코드 형식 오류";
+    setStatus("savePayload에서 비교 코드 인식 실패", true);
+    return;
+  }
+  dom.offlineCompareCodeInput.value = extractedCode;
+  runOfflineCompareCodeCheck();
+}
+
 async function exportRealtimeReportToPayload() {
   const stats = getRealtimeStats();
   if (!stats.sessionStartedAtIso || stats.elapsedSec <= 0) {
@@ -1550,6 +1568,9 @@ function bindEvents() {
   });
   dom.btnPasteOfflineCompareCode.addEventListener("click", () => {
     pasteOfflineCompareCodeFromClipboard();
+  });
+  dom.btnLoadOfflineCompareCodeFromPayload.addEventListener("click", () => {
+    loadOfflineCompareCodeFromPayload();
   });
   dom.offlineCompareCodeInput.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {

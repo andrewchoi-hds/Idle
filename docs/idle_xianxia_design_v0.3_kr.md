@@ -1154,3 +1154,11 @@
 
 ## 253) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 붙여넣기 액션 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 254) 다음 순차 작업
+1. [완료] payload 전용 비교 코드 추출 헬퍼(`extractOfflineDetailCompareCodeFromPayloadText`)를 추가해 `detailViewSnapshotAtExport`/`detailReportSnapshot` 우선순위를 표준화.
+2. [완료] 오프라인 모달에 `savePayload` 기반 비교 코드 대조 버튼(`btnLoadOfflineCompareCodeFromPayload`)을 추가하고 즉시 비교 흐름을 연동.
+3. [완료] 모바일 회귀/DOM 체크에 payload 추출 헬퍼 및 신규 버튼 ID 계약 시나리오를 추가.
+
+## 255) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(`savePayload` 기반 오프라인 비교 코드 대조 액션 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
