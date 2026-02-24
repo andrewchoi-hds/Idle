@@ -14,6 +14,7 @@ import {
   parseSliceState,
   previewBreakthroughChance,
   resolveBreakthroughRecommendation,
+  resolveBreakthroughRecommendationToggles,
   resolveBreakthroughRiskTier,
   resolveDebouncedAction,
   resolveSlotCopyHint,
@@ -362,6 +363,57 @@ async function main() {
       recommendationPrepared.tone === "info" &&
       recommendationSafe.labelKo === "자원 비축" &&
       recommendationSafe.tone === "info",
+  });
+
+  const toggleHighRisk = resolveBreakthroughRecommendationToggles(
+    {
+      stage: { is_tribulation: 1 },
+      deathFailPct: 19,
+    },
+    {
+      hasBreakthroughElixir: true,
+      hasTribulationTalisman: true,
+      currentUseBreakthroughElixir: false,
+      currentUseTribulationTalisman: false,
+    },
+  );
+  const toggleMediumRiskNoElixir = resolveBreakthroughRecommendationToggles(
+    {
+      stage: { is_tribulation: 1 },
+      deathFailPct: 6,
+    },
+    {
+      hasBreakthroughElixir: false,
+      hasTribulationTalisman: true,
+      currentUseBreakthroughElixir: false,
+      currentUseTribulationTalisman: false,
+    },
+  );
+  const toggleNonTribulation = resolveBreakthroughRecommendationToggles(
+    {
+      stage: { is_tribulation: 0 },
+      deathFailPct: 0,
+    },
+    {
+      hasBreakthroughElixir: true,
+      hasTribulationTalisman: true,
+      currentUseBreakthroughElixir: true,
+      currentUseTribulationTalisman: true,
+    },
+  );
+  checks.push({
+    id: "breakthrough_recommendation_toggles_apply_expected_settings",
+    passed:
+      toggleHighRisk.changed === true &&
+      toggleHighRisk.reason === "high_risk_enable_all" &&
+      toggleHighRisk.nextUseBreakthroughElixir === true &&
+      toggleHighRisk.nextUseTribulationTalisman === true &&
+      toggleMediumRiskNoElixir.missingBreakthroughElixir === true &&
+      toggleMediumRiskNoElixir.nextUseBreakthroughElixir === false &&
+      toggleNonTribulation.changed === true &&
+      toggleNonTribulation.reason === "disable_non_tribulation" &&
+      toggleNonTribulation.nextUseBreakthroughElixir === false &&
+      toggleNonTribulation.nextUseTribulationTalisman === false,
   });
 
   state.progression.difficultyIndex = 198;

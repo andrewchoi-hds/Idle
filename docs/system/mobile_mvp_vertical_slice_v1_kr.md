@@ -33,6 +33,7 @@ npm run mobile:mvp:serve
   - 화면에 4분기 확률 프리뷰(`성공/경상/후퇴/사망`)를 표시
   - 도겁 위험도 배지(`비도겁/경미/주의/위험/치명`)와 실패 내 사망 비율을 표시
   - 현재 설정/보유 자원 기준 `돌파 권장` 배지(`자원 비축/수호부 권장/영약 권장/준비 완료/재정비 권장`)를 표시
+  - `권장 설정 적용` 버튼으로 영약/수호부 토글을 현재 위험도 기준으로 즉시 동기화
 - 자동 10초 진행:
   - 기 자동 축적 + 자동 전투 + 자동 돌파 루프
   - 도겁 자동 허용 옵션 연동
@@ -138,6 +139,7 @@ npm run mobile:mvp:check
   - 돌파 확률 프리뷰 4분기 분포(`성공+경상+후퇴+사망=100%`) 일관성 검증
   - 도겁 위험도 판정(`resolveBreakthroughRiskTier`) 및 보정 적용 시 위험도 하향 검증
   - 돌파 권장 정책(`resolveBreakthroughRecommendation`)이 보유 자원/사용 상태에 맞는 문구를 반환하는지 검증
+  - 돌파 권장 토글 정책(`resolveBreakthroughRecommendationToggles`)이 고위험/중위험/비도겁 구간에서 올바른 토글 상태를 반환하는지 검증
   - 슬롯 요약 퀵 액션 분기(`ok/empty/corrupt`) 결정 로직 검증
   - 슬롯 요약 퀵 로드 디바운스(0.7초) 중복 입력 차단 검증
   - 슬롯 복제/삭제 정책(`same_slot/target_empty/target_has_data/corrupt_slot`) 검증

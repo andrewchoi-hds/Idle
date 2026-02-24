@@ -409,7 +409,7 @@ textarea:focus-visible,
 
 .recommendation-line {
   display: grid;
-  grid-template-columns: auto auto minmax(0, 1fr);
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
   gap: 8px;
   align-items: center;
 }
@@ -417,6 +417,13 @@ textarea:focus-visible,
 .recommendation-text {
   font-size: 12px;
   color: #9eb8af;
+}
+
+.recommendation-btn {
+  min-height: 32px;
+  padding: 6px 10px;
+  font-size: 12px;
+  white-space: nowrap;
 }
 
 .recommendation-text.tone-info {
@@ -598,6 +605,15 @@ textarea:focus-visible,
 
   .slot-copy-row {
     grid-template-columns: 1fr;
+  }
+
+  .recommendation-line {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .recommendation-btn {
+    width: 100%;
   }
 }
 

@@ -552,6 +552,75 @@ export function resolveBreakthroughRecommendation(currentPreview, options = {}) 
   };
 }
 
+export function resolveBreakthroughRecommendationToggles(currentPreview, options = {}) {
+  const preview =
+    currentPreview && typeof currentPreview === "object" ? currentPreview : {};
+  const riskTier = resolveBreakthroughRiskTier(preview);
+  const tribulationStage = preview?.stage?.is_tribulation === 1;
+  const hasBreakthroughElixir = options.hasBreakthroughElixir === true;
+  const hasTribulationTalisman = options.hasTribulationTalisman === true;
+  const currentUseBreakthroughElixir = options.currentUseBreakthroughElixir === true;
+  const currentUseTribulationTalisman = options.currentUseTribulationTalisman === true;
+
+  let nextUseBreakthroughElixir = currentUseBreakthroughElixir && hasBreakthroughElixir;
+  let nextUseTribulationTalisman = currentUseTribulationTalisman && hasTribulationTalisman;
+  let reason = "keep_current";
+
+  if (!tribulationStage || riskTier.tier === "safe") {
+    nextUseBreakthroughElixir = false;
+    nextUseTribulationTalisman = false;
+    reason = "disable_non_tribulation";
+  } else if (riskTier.tier === "extreme" || riskTier.tier === "high") {
+    nextUseBreakthroughElixir = hasBreakthroughElixir;
+    nextUseTribulationTalisman = hasTribulationTalisman;
+    reason = "high_risk_enable_all";
+  } else if (riskTier.tier === "medium") {
+    nextUseBreakthroughElixir = hasBreakthroughElixir;
+    reason = "medium_risk_enable_elixir";
+  } else if (riskTier.tier === "low") {
+    reason = "low_risk_keep_optional";
+  }
+
+  const needsBreakthroughElixir =
+    tribulationStage &&
+    (riskTier.tier === "medium" || riskTier.tier === "high" || riskTier.tier === "extreme");
+  const needsTribulationTalisman =
+    tribulationStage && (riskTier.tier === "high" || riskTier.tier === "extreme");
+  const missingBreakthroughElixir = needsBreakthroughElixir && !hasBreakthroughElixir;
+  const missingTribulationTalisman = needsTribulationTalisman && !hasTribulationTalisman;
+  const changed =
+    nextUseBreakthroughElixir !== currentUseBreakthroughElixir ||
+    nextUseTribulationTalisman !== currentUseTribulationTalisman;
+
+  let messageKo = "현재 설정이 이미 권장 상태입니다.";
+  if (reason === "disable_non_tribulation") {
+    messageKo = "비도겁 구간이므로 영약/수호부 사용을 해제합니다.";
+  } else if (reason === "high_risk_enable_all") {
+    messageKo = "고위험 도겁 구간으로 영약/수호부 사용을 권장합니다.";
+  } else if (reason === "medium_risk_enable_elixir") {
+    messageKo = "중위험 도겁 구간으로 영약 사용을 권장합니다.";
+  } else if (reason === "low_risk_keep_optional") {
+    messageKo = "저위험 구간으로 현재 설정을 유지합니다.";
+  }
+  if (missingBreakthroughElixir || missingTribulationTalisman) {
+    const missingLabels = [];
+    if (missingBreakthroughElixir) missingLabels.push("영약");
+    if (missingTribulationTalisman) missingLabels.push("수호부");
+    messageKo += ` (보유 없음: ${missingLabels.join(", ")})`;
+  }
+
+  return {
+    reason,
+    changed,
+    riskTier,
+    nextUseBreakthroughElixir,
+    nextUseTribulationTalisman,
+    missingBreakthroughElixir,
+    missingTribulationTalisman,
+    messageKo,
+  };
+}
+
 function evaluateBreakthroughOutcome(stage, successPct, deathPct, rng, debugForcedOutcome) {
   if (debugForcedOutcome) {
     return debugForcedOutcome;

@@ -898,3 +898,11 @@
 
 ## 189) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(도겁 돌파 권장 정책 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 190) 다음 순차 작업
+1. [완료] 엔진에 권장 토글 정책 함수(`resolveBreakthroughRecommendationToggles`)를 추가해 위험도/보유 자원 기준 영약·수호부 on/off 값을 계산.
+2. [완료] 모바일 UI에 `권장 설정 적용` 버튼(`btnApplyRecommendation`)을 추가해 권장 토글을 즉시 반영.
+3. [완료] 회귀 체크에 권장 토글 정책 시나리오(고위험/중위험 자원 부족/비도겁 해제)를 추가.
+
+## 191) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(도겁 권장 설정 적용 버튼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
