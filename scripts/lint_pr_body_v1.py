@@ -5,6 +5,7 @@ import argparse
 import json
 import re
 from pathlib import Path
+from collections import Counter
 
 from pr_validation_commands_v1 import DEFAULT_VALIDATION_COMMANDS
 
@@ -12,6 +13,7 @@ from pr_validation_commands_v1 import DEFAULT_VALIDATION_COMMANDS
 DEFAULT_BODY_FILE = Path("/private/tmp/idle_pr_body_v1.md")
 SECTION_HEADERS = ["Summary", "Changes", "Validation", "Docs", "Notes"]
 CHANGE_PATH_RE = re.compile(r"`/Users/hirediversity/Idle/[^`]+`")
+VALIDATION_CHECKBOX_RE = re.compile(r"^- \[[ xX]\] `([^`]+)`\s*$")
 
 
 def parse_args() -> argparse.Namespace:
@@ -114,12 +116,32 @@ def lint_changes(lines: list[str], strict_change_path: bool) -> list[str]:
 
 
 def lint_validation(lines: list[str]) -> list[str]:
-    text = "\n".join(lines)
+    actual_commands: list[str] = []
+    for line in lines:
+        matched = VALIDATION_CHECKBOX_RE.match(line.strip())
+        if matched is None:
+            continue
+        actual_commands.append(matched.group(1).strip())
+
+    expected_commands = list(DEFAULT_VALIDATION_COMMANDS)
     errors: list[str] = []
-    for command in DEFAULT_VALIDATION_COMMANDS:
-        pattern = f"`{command}`"
-        if pattern not in text:
-            errors.append(f"Validation is missing checkbox entry for `{command}`.")
+    if not actual_commands:
+        errors.append("Validation must contain checkbox command lines.")
+        return errors
+
+    missing = [command for command in expected_commands if command not in actual_commands]
+    unexpected = [command for command in actual_commands if command not in expected_commands]
+    duplicates = [command for command, count in Counter(actual_commands).items() if count > 1]
+
+    for command in missing:
+        errors.append(f"Validation is missing checkbox entry for `{command}`.")
+    for command in unexpected:
+        errors.append(f"Validation has unexpected checkbox command `{command}`.")
+    for command in sorted(duplicates):
+        errors.append(f"Validation has duplicate checkbox command `{command}`.")
+
+    if not missing and not unexpected and actual_commands != expected_commands:
+        errors.append("Validation checkbox order must match standard command order.")
     return errors
 
 

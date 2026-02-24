@@ -66,6 +66,22 @@ def make_cases() -> list[Case]:
             "",
         ]
     )
+    order_mismatch_validation_lines = list(validation_lines)
+    if len(order_mismatch_validation_lines) > 1:
+        order_mismatch_validation_lines[0], order_mismatch_validation_lines[1] = (
+            order_mismatch_validation_lines[1],
+            order_mismatch_validation_lines[0],
+        )
+    order_mismatch_body = valid_body.replace(
+        "\n".join(validation_lines),
+        "\n".join(order_mismatch_validation_lines),
+    )
+    unexpected_command = "npm run custom:unexpected:command"
+    validation_with_unexpected = [validation_lines[0], f"- [x] `{unexpected_command}`", *validation_lines[1:]]
+    unexpected_validation_body = valid_body.replace(
+        "\n".join(validation_lines),
+        "\n".join(validation_with_unexpected),
+    )
     relative_change_body = valid_body.replace(
         "`/Users/hirediversity/Idle/scripts/lint_pr_body_v1.py`",
         "`scripts/lint_pr_body_v1.py`",
@@ -123,6 +139,24 @@ def make_cases() -> list[Case]:
             expect_pass=False,
             markdown_body=invalid_body,
             expected_contains=["Summary must contain at least 3 meaningful bullet lines."],
+        ),
+        Case(
+            case_id="body_file_validation_order_mismatch_fail",
+            input_type="body-file",
+            strict_change_path=True,
+            expect_pass=False,
+            markdown_body=order_mismatch_body,
+            expected_contains=[
+                "Validation checkbox order must match standard command order."
+            ],
+        ),
+        Case(
+            case_id="body_file_validation_unexpected_fail",
+            input_type="body-file",
+            strict_change_path=True,
+            expect_pass=False,
+            markdown_body=unexpected_validation_body,
+            expected_contains=[f"Validation has unexpected checkbox command `{unexpected_command}`."],
         ),
     ]
 

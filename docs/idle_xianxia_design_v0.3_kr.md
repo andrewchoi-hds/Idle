@@ -596,3 +596,12 @@
 
 ## 115) 추가 문서
 - PR Validation 동기화 회귀 체크 가이드: `/Users/hirediversity/Idle/docs/system/pr_validation_sync_regression_v1_kr.md`
+
+## 116) 다음 순차 작업
+1. [완료] PR 본문 lint의 Validation 섹션 점검을 존재 여부에서 항목/순서 정확 일치 검증으로 강화.
+2. [완료] PR 본문 lint 회귀 체크에 Validation 순서/비표준 커맨드 실패 케이스 추가.
+3. [완료] PR 본문 lint/회귀 체크 운영 문서에 강화된 Validation 기준 반영.
+
+## 117) 추가 문서
+- PR 본문 품질 Lint 가이드(Validation 순서 검증 반영): `/Users/hirediversity/Idle/docs/system/pr_body_lint_v1_kr.md`
+- PR 본문 Lint 회귀 체크 가이드(Validation 실패 케이스 반영): `/Users/hirediversity/Idle/docs/system/pr_body_lint_regression_v1_kr.md`
