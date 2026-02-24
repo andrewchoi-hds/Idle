@@ -302,8 +302,26 @@ textarea:focus-visible,
 }
 
 .slot-action-hint {
-  margin-top: 8px;
+  margin-top: 0;
   color: #9eb8af;
+}
+
+.slot-action-hint-box {
+  margin-top: 8px;
+  display: grid;
+  gap: 4px;
+}
+
+.slot-action-hint.tone-info {
+  color: #9eb8af;
+}
+
+.slot-action-hint.tone-warn {
+  color: #f3bd4d;
+}
+
+.slot-action-hint.tone-error {
+  color: #f27167;
 }
 
 .slot-summary-item {

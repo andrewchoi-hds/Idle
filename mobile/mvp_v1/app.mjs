@@ -14,7 +14,9 @@ import {
   previewBreakthroughChance,
   resolveDebouncedAction,
   resolveSlotCopyHint,
+  resolveSlotCopyHintTone,
   resolveSlotDeleteHint,
+  resolveSlotDeleteHintTone,
   resolveSlotCopyPolicy,
   resolveSlotDeletePolicy,
   resolveSlotSummaryQuickAction,
@@ -53,7 +55,9 @@ const dom = {
   playerNameInput: document.getElementById("playerNameInput"),
   optSaveSlot: document.getElementById("optSaveSlot"),
   optCopySlotTarget: document.getElementById("optCopySlotTarget"),
-  slotActionHint: document.getElementById("slotActionHint"),
+  slotActionHintBox: document.getElementById("slotActionHintBox"),
+  slotCopyHint: document.getElementById("slotCopyHint"),
+  slotDeleteHint: document.getElementById("slotDeleteHint"),
   lastSavedAt: document.getElementById("lastSavedAt"),
   lastActiveAt: document.getElementById("lastActiveAt"),
   savePayload: document.getElementById("savePayload"),
@@ -367,6 +371,22 @@ function tryConsumeSlotQuickLoadDebounce() {
   return true;
 }
 
+function applySlotHintTone(node, tone) {
+  if (!node) {
+    return;
+  }
+  node.classList.remove("tone-info", "tone-warn", "tone-error");
+  if (tone === "error") {
+    node.classList.add("tone-error");
+    return;
+  }
+  if (tone === "warn") {
+    node.classList.add("tone-warn");
+    return;
+  }
+  node.classList.add("tone-info");
+}
+
 function syncSlotActionButtons() {
   const sourceSummary = summarizeSaveSlot(activeSaveSlot);
   const targetSlot = normalizeSaveSlot(dom.optCopySlotTarget.value, activeSaveSlot);
@@ -392,10 +412,13 @@ function syncSlotActionButtons() {
   dom.btnDeleteSlot.disabled = !deletePolicy.allowed;
   dom.btnDeleteSlot.title = deletePolicy.allowed ? "" : "삭제할 저장 데이터가 없음";
 
-  if (dom.slotActionHint) {
-    dom.slotActionHint.textContent =
-      `복제: ${resolveSlotCopyHint(copyPolicy)} / ` +
-      `삭제: ${resolveSlotDeleteHint(deletePolicy)}`;
+  if (dom.slotCopyHint) {
+    dom.slotCopyHint.textContent = `복제: ${resolveSlotCopyHint(copyPolicy)}`;
+    applySlotHintTone(dom.slotCopyHint, resolveSlotCopyHintTone(copyPolicy));
+  }
+  if (dom.slotDeleteHint) {
+    dom.slotDeleteHint.textContent = `삭제: ${resolveSlotDeleteHint(deletePolicy)}`;
+    applySlotHintTone(dom.slotDeleteHint, resolveSlotDeleteHintTone(deletePolicy));
   }
 }
 

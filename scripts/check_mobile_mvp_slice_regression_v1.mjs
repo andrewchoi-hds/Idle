@@ -13,9 +13,11 @@ import {
   parseSliceState,
   resolveDebouncedAction,
   resolveSlotCopyHint,
+  resolveSlotCopyHintTone,
   resolveLoopTuningFromBattleSpeed,
   resolveSlotCopyPolicy,
   resolveSlotDeleteHint,
+  resolveSlotDeleteHintTone,
   resolveSlotDeletePolicy,
   resolveSlotSummaryQuickAction,
   runAutoSliceSeconds,
@@ -181,6 +183,18 @@ async function main() {
       deleteHintEmpty.includes("삭제할 데이터가 없습니다") &&
       deleteHintOk.includes("메모리 상태는 유지") &&
       deleteHintCorrupt.includes("손상된 저장 데이터"),
+  });
+
+  checks.push({
+    id: "slot_action_hint_tones_match_policy_reasons",
+    passed:
+      resolveSlotCopyHintTone(copyToEmpty) === "info" &&
+      resolveSlotCopyHintTone(copyToData) === "warn" &&
+      resolveSlotCopyHintTone(copyFromCorrupt) === "error" &&
+      resolveSlotCopyHintTone(copySameSlot) === "warn" &&
+      resolveSlotDeleteHintTone(deleteOk) === "info" &&
+      resolveSlotDeleteHintTone(deleteCorrupt) === "warn" &&
+      resolveSlotDeleteHintTone(deleteEmpty) === "warn",
   });
 
   const initWithResume = createInitialSliceState(context, {

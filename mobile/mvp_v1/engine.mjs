@@ -213,6 +213,31 @@ export function resolveSlotDeleteHint(deletePolicy) {
   return "삭제 조건을 확인하세요.";
 }
 
+export function resolveSlotCopyHintTone(copyPolicy) {
+  const policy = copyPolicy && typeof copyPolicy === "object" ? copyPolicy : {};
+  if (policy.allowed) {
+    return policy.requiresConfirm ? "warn" : "info";
+  }
+  if (policy.reason === "source_empty" || policy.reason === "source_corrupt") {
+    return "error";
+  }
+  if (policy.reason === "same_slot") {
+    return "warn";
+  }
+  return "warn";
+}
+
+export function resolveSlotDeleteHintTone(deletePolicy) {
+  const policy = deletePolicy && typeof deletePolicy === "object" ? deletePolicy : {};
+  if (policy.allowed) {
+    return policy.reason === "corrupt_slot" ? "warn" : "info";
+  }
+  if (policy.reason === "empty_slot") {
+    return "warn";
+  }
+  return "warn";
+}
+
 function parseIsoEpochMs(value) {
   const parsed = Date.parse(typeof value === "string" ? value : "");
   if (!Number.isFinite(parsed)) {

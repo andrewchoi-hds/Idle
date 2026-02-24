@@ -826,3 +826,11 @@
 
 ## 171) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(슬롯 액션 힌트 정책 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 172) 다음 순차 작업
+1. [완료] 슬롯 액션 힌트를 복제/삭제 2개 라인(`slotCopyHint`, `slotDeleteHint`)으로 분리.
+2. [완료] 엔진에 힌트 톤 함수(`resolveSlotCopyHintTone`, `resolveSlotDeleteHintTone`)를 추가해 정책 기반 색상 분기 공용화.
+3. [완료] 모바일 회귀 체크에 힌트 톤-정책 매핑 검증 시나리오 추가.
+
+## 173) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(슬롯 액션 힌트 톤 분기 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
