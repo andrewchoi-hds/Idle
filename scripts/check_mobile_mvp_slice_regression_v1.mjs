@@ -13,6 +13,7 @@ import {
   normalizeSlotSummaryState,
   parseSliceState,
   previewBreakthroughChance,
+  resolveBreakthroughAutoAttemptPolicy,
   resolveBreakthroughExpectedDelta,
   resolveBreakthroughManualAttemptPolicy,
   resolveBreakthroughMitigationSummary,
@@ -387,6 +388,32 @@ async function main() {
       manualPolicySafe.reason === "safe",
   });
 
+  const autoPolicyBlocked = resolveBreakthroughAutoAttemptPolicy(
+    {
+      stage: { is_tribulation: 1 },
+      successPct: 45,
+      deathFailPct: 11,
+    },
+    { expectedQiLossRatio: 0.41 },
+  );
+  const autoPolicySafe = resolveBreakthroughAutoAttemptPolicy(
+    {
+      stage: { is_tribulation: 0 },
+      successPct: 86,
+      deathFailPct: 0,
+    },
+    { expectedQiLossRatio: 0.2 },
+  );
+  checks.push({
+    id: "breakthrough_auto_attempt_policy_blocks_high_risk_paths",
+    passed:
+      autoPolicyBlocked.allowed === false &&
+      autoPolicyBlocked.reason === "blocked_high_risk" &&
+      autoPolicyBlocked.tone === "warn" &&
+      autoPolicySafe.allowed === true &&
+      autoPolicySafe.reason === "safe",
+  });
+
   const recommendationNeedGuard = resolveBreakthroughRecommendation(
     {
       stage: { is_tribulation: 1 },
@@ -625,6 +652,42 @@ async function main() {
   checks.push({
     id: "timeline_offset_keeps_realtime_cadence_across_chunks",
     passed: chunkA.battles === 0 && chunkB.battles === 0 && chunkC.battles === 1,
+  });
+
+  const autoRiskState = createInitialSliceState(context, { playerName: "auto-risk" });
+  autoRiskState.settings.autoBattle = false;
+  autoRiskState.settings.autoBreakthrough = true;
+  autoRiskState.settings.autoTribulation = true;
+  autoRiskState.progression.difficultyIndex = 198;
+  autoRiskState.inventory.breakthroughElixir = 0;
+  autoRiskState.inventory.tribulationTalisman = 0;
+  autoRiskState.currencies.qi = Math.max(
+    1,
+    (context.stageByDifficulty.get(198)?.qi_required ?? 1) * 6,
+  );
+  const autoRiskSummary = runAutoSliceSeconds(
+    context,
+    autoRiskState,
+    createSeededRng(77),
+    {
+      seconds: 4,
+      battleEverySec: 2,
+      breakthroughEverySec: 1,
+      passiveQiRatio: 0.012,
+      collectEvents: true,
+      maxCollectedEvents: 10,
+      suppressLogs: true,
+    },
+  );
+  checks.push({
+    id: "auto_breakthrough_blocks_high_risk_tribulation_attempts",
+    passed:
+      autoRiskSummary.seconds === 4 &&
+      autoRiskSummary.breakthroughs === 0 &&
+      autoRiskSummary.breakthroughPolicyBlocks > 0 &&
+      autoRiskSummary.collectedEvents.some(
+        (event) => event.kind === "breakthrough_blocked_auto_policy",
+      ),
   });
 
   state.settings.autoBattle = true;

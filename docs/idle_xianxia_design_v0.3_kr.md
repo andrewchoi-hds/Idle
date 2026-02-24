@@ -930,3 +930,11 @@
 
 ## 197) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(수동 도겁 시도 확인 정책 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 198) 다음 순차 작업
+1. [완료] 엔진에 자동 돌파 차단 정책 함수(`resolveBreakthroughAutoAttemptPolicy`)를 추가해 고위험/고기소모 도겁의 자동 시도를 차단.
+2. [완료] 자동 루프(`runAutoSliceSeconds`)에 정책 적용 및 차단 카운트(`breakthroughPolicyBlocks`) 집계를 추가.
+3. [완료] 모바일 회귀 체크에 자동 돌파 차단 시나리오(고위험 도겁 구간 block + 이벤트 기록)를 추가.
+
+## 199) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(자동 도겁 위험 차단 정책 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

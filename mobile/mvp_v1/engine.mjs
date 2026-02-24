@@ -817,6 +817,60 @@ export function resolveBreakthroughManualAttemptPolicy(previewInput, expectedDel
   };
 }
 
+export function resolveBreakthroughAutoAttemptPolicy(previewInput, expectedDeltaInput) {
+  const manualPolicy = resolveBreakthroughManualAttemptPolicy(
+    previewInput,
+    expectedDeltaInput,
+  );
+  const isTribulationStage = previewInput?.stage?.is_tribulation === 1;
+
+  if (!isTribulationStage || manualPolicy.reason === "safe") {
+    return {
+      allowed: true,
+      reason: "safe",
+      tone: "info",
+      messageKo: "자동 돌파 진행 가능",
+      manualPolicy,
+    };
+  }
+
+  if (manualPolicy.reason === "extreme_risk") {
+    return {
+      allowed: false,
+      reason: "blocked_extreme_risk",
+      tone: "error",
+      messageKo: "자동 돌파 중단: 치명 도겁 구간은 수동 확인이 필요합니다.",
+      manualPolicy,
+    };
+  }
+  if (manualPolicy.reason === "high_risk") {
+    return {
+      allowed: false,
+      reason: "blocked_high_risk",
+      tone: "warn",
+      messageKo: "자동 돌파 중단: 위험 도겁 구간은 수동 확인이 필요합니다.",
+      manualPolicy,
+    };
+  }
+  if (manualPolicy.reason === "high_qi_cost") {
+    return {
+      allowed: false,
+      reason: "blocked_high_qi_cost",
+      tone: "warn",
+      messageKo: "자동 돌파 중단: 기대 기 소모가 높아 수동 확인이 필요합니다.",
+      manualPolicy,
+    };
+  }
+
+  return {
+    allowed: true,
+    reason: "safe",
+    tone: "info",
+    messageKo: "자동 돌파 진행 가능",
+    manualPolicy,
+  };
+}
+
 function evaluateBreakthroughOutcome(stage, successPct, deathPct, rng, debugForcedOutcome) {
   if (debugForcedOutcome) {
     return debugForcedOutcome;
@@ -1112,6 +1166,7 @@ export function runBreakthroughAttempt(context, state, rng, options = {}) {
     typeof options.eventCollector === "function" ? options.eventCollector : null;
   const stage = getStage(context, state.progression.difficultyIndex);
   const respectAutoTribulation = pickBoolean(options.respectAutoTribulation, false);
+  const enforceAutoRiskPolicy = pickBoolean(options.enforceAutoRiskPolicy, false);
   if (respectAutoTribulation && stage.is_tribulation === 1 && !state.settings.autoTribulation) {
     return {
       attempted: false,
@@ -1130,6 +1185,21 @@ export function runBreakthroughAttempt(context, state, rng, options = {}) {
   }
 
   const preview = previewBreakthroughChance(context, state, options);
+  if (respectAutoTribulation && enforceAutoRiskPolicy) {
+    const expectedDelta = resolveBreakthroughExpectedDelta(context, state, preview);
+    const autoPolicy = resolveBreakthroughAutoAttemptPolicy(preview, expectedDelta);
+    if (!autoPolicy.allowed) {
+      return {
+        attempted: false,
+        outcome: "blocked_auto_risk_policy",
+        stage,
+        preview,
+        expectedDelta,
+        autoPolicy,
+        message: autoPolicy.messageKo,
+      };
+    }
+  }
   if (preview.useBreakthroughElixir) {
     state.inventory.breakthroughElixir = Math.max(0, state.inventory.breakthroughElixir - 1);
   }
@@ -1286,6 +1356,7 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
     battles: 0,
     battleWins: 0,
     breakthroughs: 0,
+    breakthroughPolicyBlocks: 0,
     rebirths: 0,
   };
   const collectedEvents = [];
@@ -1320,6 +1391,7 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
     if (state.settings.autoBreakthrough && timelineSec % breakthroughEverySec === 0) {
       const breakthrough = runBreakthroughAttempt(context, state, rng, {
         respectAutoTribulation: true,
+        enforceAutoRiskPolicy: true,
         useBreakthroughElixir: true,
         useTribulationTalisman: true,
         suppressLogs,
@@ -1341,6 +1413,20 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
         if (breakthrough.outcome === "death_fail") {
           summary.rebirths += 1;
         }
+      } else if (breakthrough.outcome === "blocked_auto_risk_policy") {
+        summary.breakthroughPolicyBlocks += 1;
+        if (collectEvents) {
+          pushLimited(
+            collectedEvents,
+            {
+              sec: timelineSec,
+              kind: "breakthrough_blocked_auto_policy",
+              reason: breakthrough.autoPolicy?.reason || "blocked_auto_risk_policy",
+              message: breakthrough.message || "",
+            },
+            maxCollectedEvents,
+          );
+        }
       }
     }
   }
@@ -1349,7 +1435,7 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
     addLog(
       state,
       "auto",
-      `자동 ${seconds}초 진행 완료 (전투 ${summary.battles}회, 돌파 ${summary.breakthroughs}회, 환생 ${summary.rebirths}회)`,
+      `자동 ${seconds}초 진행 완료 (전투 ${summary.battles}회, 돌파 ${summary.breakthroughs}회, 위험 차단 ${summary.breakthroughPolicyBlocks}회, 환생 ${summary.rebirths}회)`,
     );
   }
   return {
