@@ -688,6 +688,13 @@ function formatOfflineEventLine(event) {
     const threshold = Math.max(1, Number(event.threshold) || 1);
     return `${secLabel}: 자동 돌파 일시정지 (${reasonLabel}, 연속 ${threshold}회 차단)`;
   }
+  if (event.kind === "offline_warmup_summary") {
+    const label = String(
+      event.labelKo ||
+        `워밍업 ${Math.max(0, Number(event.beforeSec) || 0)}초 → ${Math.max(0, Number(event.afterSec) || 0)}초`,
+    );
+    return `${secLabel}: 오프라인 워밍업 요약 (${label})`;
+  }
   return `${secLabel}: ${String(event.kind || "unknown")}`;
 }
 

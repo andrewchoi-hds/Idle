@@ -1034,3 +1034,11 @@
 
 ## 223) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 워밍업 요약 라벨/모달 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 224) 다음 순차 작업
+1. [완료] 오프라인 정산 수집 이벤트에 워밍업 요약 이벤트(`offline_warmup_summary`)를 추가.
+2. [완료] 앱 오프라인 세부 로그 렌더러가 워밍업 요약 이벤트를 한국어 라벨로 표시하도록 확장.
+3. [완료] 모바일 회귀 체크에 워밍업 요약 이벤트 생성/비생성 조건 시나리오를 추가.
+
+## 225) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 워밍업 요약 이벤트 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

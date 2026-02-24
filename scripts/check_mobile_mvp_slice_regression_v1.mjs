@@ -1216,12 +1216,27 @@ async function main() {
       offlineWarmup.summary.autoSummary.collectedEvents.some(
         (event) => event.kind === "auto_breakthrough_warmup_skip",
       ) &&
+      offlineWarmup.summary.autoSummary.collectedEvents.some(
+        (event) =>
+          event.kind === "offline_warmup_summary" &&
+          event.beforeSec === 3 &&
+          event.afterSec === 0 &&
+          event.exhausted === true &&
+          String(event.labelKo || "").includes("워밍업 3초"),
+      ) &&
       offlineWarmupRemain.summary.autoSummary !== null &&
       offlineWarmupRemain.summary.autoBreakthroughWarmupRemainingSecBefore === 3 &&
       offlineWarmupRemain.summary.autoBreakthroughWarmupRemainingSecAfter === 1 &&
       offlineWarmupRemain.summary.autoSummary.seconds === 2 &&
       offlineWarmupRemain.summary.autoSummary.autoBreakthroughWarmupSkips === 2 &&
-      offlineWarmupRemain.summary.autoSummary.autoBreakthroughWarmupRemainingSec === 1,
+      offlineWarmupRemain.summary.autoSummary.autoBreakthroughWarmupRemainingSec === 1 &&
+      offlineWarmupRemain.summary.autoSummary.collectedEvents.some(
+        (event) =>
+          event.kind === "offline_warmup_summary" &&
+          event.beforeSec === 3 &&
+          event.afterSec === 1 &&
+          event.exhausted === false,
+      ),
   });
 
   const offlineWarmupNoElapsedState = createInitialSliceState(context, {
@@ -1273,6 +1288,9 @@ async function main() {
       Array.isArray(offline.summary.autoSummary.collectedEvents) &&
       offline.summary.autoSummary.collectedEvents.length > 0 &&
       offline.summary.autoSummary.collectedEvents.length <= 40 &&
+      offline.summary.autoSummary.collectedEvents.every(
+        (event) => event.kind !== "offline_warmup_summary",
+      ) &&
       state.lastActiveEpochMs === offlineNowEpochMs &&
       state.logs.some((row) => row.kind === "offline"),
   });
