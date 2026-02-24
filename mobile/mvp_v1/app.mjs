@@ -15,6 +15,7 @@ import {
   normalizeSlotSummaryState,
   parseSliceState,
   buildOfflineWarmupTelemetryLabelKo,
+  prioritizeOfflineDetailEvents,
   resolveAutoBreakthroughWarmupRemainingSec,
   resolveAutoBreakthroughResumeConfirmPolicy,
   resolveAutoBreakthroughResumeRecommendationPlan,
@@ -699,7 +700,7 @@ function formatOfflineEventLine(event) {
 }
 
 function renderOfflineDetailList(events) {
-  const rows = Array.isArray(events) ? events : [];
+  const rows = prioritizeOfflineDetailEvents(events);
   if (rows.length === 0) {
     dom.offlineDetailList.innerHTML = '<li class="delta-neutral">세부 로그 없음</li>';
     return;

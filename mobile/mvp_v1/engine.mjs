@@ -95,6 +95,20 @@ export function buildOfflineWarmupTelemetryLabelKo(offlineSummaryInput) {
   return `워밍업 ${telemetry.before}초 → ${telemetry.after}초 (차단 ${telemetry.skippedAttempts}회${exhaustedText})`;
 }
 
+export function prioritizeOfflineDetailEvents(eventsInput) {
+  const rows = Array.isArray(eventsInput) ? eventsInput.slice() : [];
+  const warmupRows = [];
+  const otherRows = [];
+  for (const row of rows) {
+    if (row && row.kind === "offline_warmup_summary") {
+      warmupRows.push(row);
+    } else {
+      otherRows.push(row);
+    }
+  }
+  return warmupRows.concat(otherRows);
+}
+
 export function normalizeSaveSlot(slot, fallback = 1) {
   const normalizedFallback = clamp(toNonNegativeInt(fallback, 1), 1, 3);
   const parsed = Number(slot);
