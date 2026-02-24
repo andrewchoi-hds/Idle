@@ -1058,3 +1058,11 @@
 
 ## 229) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 상세 로그 핵심 이벤트 우선순위 확장 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 230) 다음 순차 작업
+1. [완료] 오프라인 세부 로그 핵심 이벤트 카운트 헬퍼(`summarizeOfflineDetailCriticalEvents`)와 요약 라벨 헬퍼(`buildOfflineDetailCriticalSummaryLabelKo`)를 추가.
+2. [완료] 오프라인 모달에 핵심 이벤트 요약 라인(`offlineCriticalSummary`)을 추가해 워밍업/일시정지/사망 건수를 즉시 노출.
+3. [완료] 모바일 회귀/DOM 체크에 핵심 이벤트 요약 헬퍼 및 신규 모달 ID 계약 시나리오를 추가.
+
+## 231) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 핵심 이벤트 요약 라벨/모달 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

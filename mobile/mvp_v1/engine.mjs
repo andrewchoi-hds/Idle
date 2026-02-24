@@ -113,6 +113,46 @@ export function prioritizeOfflineDetailEvents(eventsInput) {
   return buckets[0].concat(buckets[1], buckets[2], buckets[3]);
 }
 
+export function summarizeOfflineDetailCriticalEvents(eventsInput) {
+  const rows = Array.isArray(eventsInput) ? eventsInput : [];
+  const summary = {
+    warmup: 0,
+    paused: 0,
+    death: 0,
+    total: 0,
+  };
+  for (const row of rows) {
+    const kind = row && typeof row.kind === "string" ? row.kind : "";
+    if (kind === "offline_warmup_summary") {
+      summary.warmup += 1;
+    } else if (kind === "auto_breakthrough_paused_by_policy") {
+      summary.paused += 1;
+    } else if (kind === "breakthrough_death_fail") {
+      summary.death += 1;
+    }
+  }
+  summary.total = summary.warmup + summary.paused + summary.death;
+  return summary;
+}
+
+export function buildOfflineDetailCriticalSummaryLabelKo(eventsInput) {
+  const summary = summarizeOfflineDetailCriticalEvents(eventsInput);
+  if (summary.total <= 0) {
+    return "핵심 이벤트 없음";
+  }
+  const parts = [];
+  if (summary.warmup > 0) {
+    parts.push(`워밍업 ${summary.warmup}`);
+  }
+  if (summary.paused > 0) {
+    parts.push(`일시정지 ${summary.paused}`);
+  }
+  if (summary.death > 0) {
+    parts.push(`사망 ${summary.death}`);
+  }
+  return `총 ${summary.total}건 (${parts.join(" · ")})`;
+}
+
 export function normalizeSaveSlot(slot, fallback = 1) {
   const normalizedFallback = clamp(toNonNegativeInt(fallback, 1), 1, 3);
   const parsed = Number(slot);
