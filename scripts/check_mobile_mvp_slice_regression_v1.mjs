@@ -853,6 +853,113 @@ async function main() {
     passed: chunkA.battles === 0 && chunkB.battles === 0 && chunkC.battles === 1,
   });
 
+  const warmupBaseState = createInitialSliceState(context, { playerName: "warmup-base" });
+  warmupBaseState.settings.autoBattle = false;
+  warmupBaseState.settings.autoBreakthrough = true;
+  warmupBaseState.settings.autoTribulation = false;
+  warmupBaseState.progression.difficultyIndex = 1;
+  warmupBaseState.currencies.qi = 500000;
+  const warmupBaseSummary = runAutoSliceSeconds(
+    context,
+    warmupBaseState,
+    createSeededRng(311),
+    {
+      seconds: 6,
+      battleEverySec: 2,
+      breakthroughEverySec: 1,
+      passiveQiRatio: 0.012,
+      suppressLogs: true,
+    },
+  );
+  const warmupGuardState = createInitialSliceState(context, { playerName: "warmup-guard" });
+  warmupGuardState.settings.autoBattle = false;
+  warmupGuardState.settings.autoBreakthrough = true;
+  warmupGuardState.settings.autoTribulation = false;
+  warmupGuardState.progression.difficultyIndex = 1;
+  warmupGuardState.currencies.qi = 500000;
+  const warmupGuardSummary = runAutoSliceSeconds(
+    context,
+    warmupGuardState,
+    createSeededRng(311),
+    {
+      seconds: 6,
+      battleEverySec: 2,
+      breakthroughEverySec: 1,
+      passiveQiRatio: 0.012,
+      autoBreakthroughWarmupUntilSec: 3,
+      collectEvents: true,
+      maxCollectedEvents: 10,
+      suppressLogs: true,
+    },
+  );
+  checks.push({
+    id: "auto_breakthrough_resume_warmup_guard_skips_until_threshold",
+    passed:
+      warmupBaseSummary.breakthroughs === 6 &&
+      warmupGuardSummary.breakthroughs === 3 &&
+      warmupGuardSummary.autoBreakthroughWarmupSkips === 3 &&
+      warmupGuardSummary.autoBreakthroughWarmupRemainingSec === 0 &&
+      warmupGuardSummary.collectedEvents.some(
+        (event) =>
+          event.kind === "auto_breakthrough_warmup_skip" &&
+          event.warmupUntilSec === 3,
+      ),
+  });
+
+  const warmupChunkState = createInitialSliceState(context, { playerName: "warmup-chunk" });
+  warmupChunkState.settings.autoBattle = false;
+  warmupChunkState.settings.autoBreakthrough = true;
+  warmupChunkState.settings.autoTribulation = false;
+  warmupChunkState.progression.difficultyIndex = 1;
+  warmupChunkState.currencies.qi = 500000;
+  const warmupChunkA = runAutoSliceSeconds(context, warmupChunkState, createSeededRng(13), {
+    seconds: 1,
+    battleEverySec: 2,
+    breakthroughEverySec: 1,
+    passiveQiRatio: 0.012,
+    timelineOffsetSec: 0,
+    autoBreakthroughWarmupUntilSec: 3,
+    suppressLogs: true,
+  });
+  const warmupChunkB = runAutoSliceSeconds(context, warmupChunkState, createSeededRng(13), {
+    seconds: 1,
+    battleEverySec: 2,
+    breakthroughEverySec: 1,
+    passiveQiRatio: 0.012,
+    timelineOffsetSec: 1,
+    autoBreakthroughWarmupUntilSec: 3,
+    suppressLogs: true,
+  });
+  const warmupChunkC = runAutoSliceSeconds(context, warmupChunkState, createSeededRng(13), {
+    seconds: 1,
+    battleEverySec: 2,
+    breakthroughEverySec: 1,
+    passiveQiRatio: 0.012,
+    timelineOffsetSec: 2,
+    autoBreakthroughWarmupUntilSec: 3,
+    suppressLogs: true,
+  });
+  const warmupChunkD = runAutoSliceSeconds(context, warmupChunkState, createSeededRng(13), {
+    seconds: 1,
+    battleEverySec: 2,
+    breakthroughEverySec: 1,
+    passiveQiRatio: 0.012,
+    timelineOffsetSec: 3,
+    autoBreakthroughWarmupUntilSec: 3,
+    suppressLogs: true,
+  });
+  checks.push({
+    id: "auto_breakthrough_warmup_guard_tracks_timeline_offset",
+    passed:
+      warmupChunkA.autoBreakthroughWarmupSkips === 1 &&
+      warmupChunkA.autoBreakthroughWarmupRemainingSec === 2 &&
+      warmupChunkB.autoBreakthroughWarmupSkips === 1 &&
+      warmupChunkB.autoBreakthroughWarmupRemainingSec === 1 &&
+      warmupChunkC.autoBreakthroughWarmupSkips === 1 &&
+      warmupChunkC.autoBreakthroughWarmupRemainingSec === 0 &&
+      warmupChunkD.autoBreakthroughWarmupSkips === 0,
+  });
+
   const autoRiskState = createInitialSliceState(context, { playerName: "auto-risk" });
   autoRiskState.settings.autoBattle = false;
   autoRiskState.settings.autoBreakthrough = true;

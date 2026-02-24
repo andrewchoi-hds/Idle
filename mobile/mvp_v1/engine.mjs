@@ -1260,6 +1260,7 @@ export function createInitialSliceState(context, options = {}) {
     realtimeStats: {
       sessionStartedAtIso: "",
       timelineSec: 0,
+      autoBreakthroughWarmupUntilTimelineSec: 0,
       elapsedSec: 0,
       battles: 0,
       breakthroughs: 0,
@@ -1558,6 +1559,10 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
   const breakthroughEverySec = Math.max(1, toNonNegativeInt(options.breakthroughEverySec, 3));
   const passiveQiRatio = clamp(Number(options.passiveQiRatio) || 0.012, 0.001, 0.2);
   const timelineOffsetSec = Math.max(0, toNonNegativeInt(options.timelineOffsetSec, 0));
+  const autoBreakthroughWarmupUntilSec = Math.max(
+    0,
+    toNonNegativeInt(options.autoBreakthroughWarmupUntilSec, 0),
+  );
   const pauseAutoBreakthroughOnPolicyBlocks = pickBoolean(
     options.pauseAutoBreakthroughOnPolicyBlocks,
     true,
@@ -1581,6 +1586,8 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
     battles: 0,
     battleWins: 0,
     breakthroughs: 0,
+    autoBreakthroughWarmupSkips: 0,
+    autoBreakthroughWarmupRemainingSec: 0,
     breakthroughPolicyBlocks: 0,
     breakthroughPolicyBlockReasons: {
       extremeRisk: 0,
@@ -1624,6 +1631,30 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
     }
 
     if (state.settings.autoBreakthrough && timelineSec % breakthroughEverySec === 0) {
+      if (timelineSec <= autoBreakthroughWarmupUntilSec) {
+        summary.autoBreakthroughWarmupSkips += 1;
+        summary.autoBreakthroughWarmupRemainingSec = Math.max(
+          summary.autoBreakthroughWarmupRemainingSec,
+          autoBreakthroughWarmupUntilSec - timelineSec + 1,
+        );
+        consecutivePolicyBlocks = 0;
+        if (collectEvents) {
+          pushLimited(
+            collectedEvents,
+            {
+              sec: timelineSec,
+              kind: "auto_breakthrough_warmup_skip",
+              warmupUntilSec: autoBreakthroughWarmupUntilSec,
+              warmupRemainingSec: Math.max(
+                0,
+                autoBreakthroughWarmupUntilSec - timelineSec + 1,
+              ),
+            },
+            maxCollectedEvents,
+          );
+        }
+        continue;
+      }
       const breakthrough = runBreakthroughAttempt(context, state, rng, {
         respectAutoTribulation: true,
         enforceAutoRiskPolicy: true,
@@ -1714,15 +1745,25 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
   }
 
   if (!suppressLogs) {
+    const warmupText =
+      summary.autoBreakthroughWarmupSkips > 0
+        ? ` · 돌파 워밍업 차단 ${summary.autoBreakthroughWarmupSkips}회`
+        : "";
     const pauseText = summary.autoBreakthroughPaused
       ? ` · 자동돌파 일시정지(${summary.autoBreakthroughPauseReasonLabelKo})`
       : "";
     addLog(
       state,
       "auto",
-      `자동 ${seconds}초 진행 완료 (전투 ${summary.battles}회, 돌파 ${summary.breakthroughs}회, 위험 차단 ${summary.breakthroughPolicyBlocks}회, 환생 ${summary.rebirths}회${pauseText})`,
+      `자동 ${seconds}초 진행 완료 (전투 ${summary.battles}회, 돌파 ${summary.breakthroughs}회${warmupText}, 위험 차단 ${summary.breakthroughPolicyBlocks}회, 환생 ${summary.rebirths}회${pauseText})`,
     );
   }
+
+  const finalTimelineSec = timelineOffsetSec + seconds;
+  summary.autoBreakthroughWarmupRemainingSec = Math.max(
+    0,
+    autoBreakthroughWarmupUntilSec - finalTimelineSec,
+  );
   return {
     ...summary,
     collectedEvents,
@@ -1884,6 +1925,10 @@ export function parseSliceState(raw, context) {
           ? parsed.realtimeStats.sessionStartedAtIso
           : "",
       timelineSec: toNonNegativeInt(parsed.realtimeStats?.timelineSec, 0),
+      autoBreakthroughWarmupUntilTimelineSec: toNonNegativeInt(
+        parsed.realtimeStats?.autoBreakthroughWarmupUntilTimelineSec,
+        0,
+      ),
       elapsedSec: toNonNegativeInt(parsed.realtimeStats?.elapsedSec, 0),
       battles: toNonNegativeInt(parsed.realtimeStats?.battles, 0),
       breakthroughs: toNonNegativeInt(parsed.realtimeStats?.breakthroughs, 0),

@@ -186,6 +186,7 @@ let slotSummaryDirty = true;
 let slotSummaryLastRenderedAtMs = 0;
 let slotQuickLoadLastAcceptedAtMs = 0;
 const SLOT_QUICK_LOAD_DEBOUNCE_MS = 700;
+const AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC = 6;
 
 function setStatus(message, isError = false) {
   dom.appStatus.textContent = message;
@@ -719,6 +720,7 @@ function ensureRealtimeStatsShape() {
     state.realtimeStats = {
       sessionStartedAtIso: "",
       timelineSec: 0,
+      autoBreakthroughWarmupUntilTimelineSec: 0,
       elapsedSec: 0,
       battles: 0,
       breakthroughs: 0,
@@ -727,7 +729,38 @@ function ensureRealtimeStatsShape() {
       anchorSpiritCoin: currency.spiritCoin,
       anchorRebirthEssence: currency.rebirthEssence,
     };
+    return;
   }
+  if (!Number.isFinite(state.realtimeStats.autoBreakthroughWarmupUntilTimelineSec)) {
+    state.realtimeStats.autoBreakthroughWarmupUntilTimelineSec = 0;
+  }
+}
+
+function getAutoBreakthroughWarmupRemainingSec(statsInput = getRealtimeStats()) {
+  const stats =
+    statsInput && typeof statsInput === "object" ? statsInput : getRealtimeStats();
+  const warmupUntilSec = Math.max(
+    0,
+    Math.floor(Number(stats.autoBreakthroughWarmupUntilTimelineSec) || 0),
+  );
+  const timelineSec = Math.max(0, Math.floor(Number(stats.timelineSec) || 0));
+  return Math.max(0, warmupUntilSec - timelineSec);
+}
+
+function armAutoBreakthroughResumeWarmup(durationSec = AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC) {
+  const stats = getRealtimeStats();
+  const warmupDurationSec = Math.max(0, Math.floor(Number(durationSec) || 0));
+  const timelineSec = Math.max(0, Math.floor(Number(stats.timelineSec) || 0));
+  const currentWarmupUntilSec = Math.max(
+    0,
+    Math.floor(Number(stats.autoBreakthroughWarmupUntilTimelineSec) || 0),
+  );
+  const nextWarmupUntilSec = timelineSec + warmupDurationSec;
+  stats.autoBreakthroughWarmupUntilTimelineSec = Math.max(
+    currentWarmupUntilSec,
+    nextWarmupUntilSec,
+  );
+  return getAutoBreakthroughWarmupRemainingSec(stats);
 }
 
 function ensureRealtimeAnchor() {
@@ -840,6 +873,7 @@ function resetRealtimeAutoSession() {
   const stats = getRealtimeStats();
   stats.sessionStartedAtIso = "";
   stats.timelineSec = 0;
+  stats.autoBreakthroughWarmupUntilTimelineSec = 0;
   stats.elapsedSec = 0;
   stats.battles = 0;
   stats.breakthroughs = 0;
@@ -855,9 +889,14 @@ function resetRealtimeAutoSession() {
 function syncRealtimeAutoControls() {
   const stats = getRealtimeStats();
   const running = isRealtimeAutoRunning();
+  const warmupRemainingSec = getAutoBreakthroughWarmupRemainingSec(stats);
+  const warmupText =
+    running && warmupRemainingSec > 0
+      ? ` · 돌파 워밍업 ${warmupRemainingSec}s`
+      : "";
   dom.btnRealtimeAuto.textContent = running ? "실시간 자동 중지" : "실시간 자동 시작";
   dom.realtimeAutoStatus.textContent = running
-    ? `진행 중 · ${fmtDurationSec(stats.elapsedSec)}`
+    ? `진행 중 · ${fmtDurationSec(stats.elapsedSec)}${warmupText}`
     : "중지";
 }
 
@@ -894,6 +933,7 @@ function stopRealtimeAuto(reason = "중지") {
 function runRealtimeAutoTick() {
   const tuning = getCurrentSpeedTuning();
   const stats = getRealtimeStats();
+  const warmupRemainingSecBefore = getAutoBreakthroughWarmupRemainingSec(stats);
   const summary = runAutoSliceSeconds(context, state, rng, {
     seconds: 1,
     battleEverySec: tuning.battleEverySec,
@@ -901,6 +941,10 @@ function runRealtimeAutoTick() {
     passiveQiRatio: tuning.passiveQiRatio,
     suppressLogs: true,
     timelineOffsetSec: stats.timelineSec,
+    autoBreakthroughWarmupUntilSec: Math.max(
+      0,
+      Math.floor(Number(stats.autoBreakthroughWarmupUntilTimelineSec) || 0),
+    ),
   });
   stats.timelineSec += 1;
   realtimePersistTicks += 1;
@@ -933,6 +977,15 @@ function runRealtimeAutoTick() {
       `실시간 자동: 자동 돌파 일시정지 (${reasonLabel})`,
     );
     setStatus(`실시간 자동: 자동 돌파 일시정지 (${reasonLabel})`, true);
+  }
+
+  const warmupRemainingSecAfter = getAutoBreakthroughWarmupRemainingSec(stats);
+  if (
+    warmupRemainingSecBefore > 0 &&
+    warmupRemainingSecAfter === 0 &&
+    state.settings.autoBreakthrough
+  ) {
+    addClientLog("auto", "실시간 자동: 돌파 워밍업 종료");
   }
 
   if (realtimePersistTicks >= 3) {
@@ -1496,11 +1549,16 @@ function bindEvents() {
     if (resumePolicy.shouldEnableAutoTribulation) {
       state.settings.autoTribulation = true;
     }
+    const warmupRemainingSec = armAutoBreakthroughResumeWarmup();
     persistLocal();
     const recommendationText = recommendationPlan.shouldApplyRecommendation
       ? " · 권장 설정 자동 적용"
       : "";
-    setStatus(`자동 돌파 재개: ${resumePolicy.actionLabelKo}${recommendationText}`);
+    const warmupText =
+      warmupRemainingSec > 0 ? ` · 워밍업 ${warmupRemainingSec}초` : "";
+    setStatus(
+      `자동 돌파 재개: ${resumePolicy.actionLabelKo}${recommendationText}${warmupText}`,
+    );
     render();
   });
 

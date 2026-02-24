@@ -978,3 +978,11 @@
 
 ## 209) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(자동 도겁 재개 권장 설정 원클릭 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 210) 다음 순차 작업
+1. [완료] 자동 루프에 워밍업 가드 옵션(`autoBreakthroughWarmupUntilSec`)을 추가해 재개 직후 지정 구간의 자동 돌파 시도를 지연.
+2. [완료] 모바일 UI `자동 돌파 재개` 경로에서 워밍업 타이머(기본 6초)를 설정하고 실시간 상태 라인에 잔여 시간을 노출.
+3. [완료] 모바일 회귀 체크에 워밍업 가드 시나리오(초기 구간 skip/타임라인 오프셋 잔여시간 계산) 검증을 추가.
+
+## 211) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(자동 도겁 재개 워밍업 가드 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
