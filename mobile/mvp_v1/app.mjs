@@ -16,6 +16,7 @@ import {
   normalizeSlotSummaryState,
   parseSliceState,
   buildOfflineWarmupTelemetryLabelKo,
+  filterOfflineDetailEventsByMode,
   prioritizeOfflineDetailEvents,
   resolveAutoBreakthroughWarmupRemainingSec,
   resolveAutoBreakthroughResumeConfirmPolicy,
@@ -113,6 +114,7 @@ const dom = {
   offlineSpiritDelta: document.getElementById("offlineSpiritDelta"),
   offlineEssenceDelta: document.getElementById("offlineEssenceDelta"),
   btnToggleOfflineDetail: document.getElementById("btnToggleOfflineDetail"),
+  btnToggleOfflineCriticalOnly: document.getElementById("btnToggleOfflineCriticalOnly"),
   btnExportOfflineReport: document.getElementById("btnExportOfflineReport"),
   offlineDetailList: document.getElementById("offlineDetailList"),
   btnCloseOfflineModal: document.getElementById("btnCloseOfflineModal"),
@@ -187,6 +189,7 @@ let activeSaveSlot = 1;
 let slotLocks = createDefaultSlotLockMap();
 let lastOfflineReport = null;
 let offlineDetailExpanded = false;
+let offlineDetailCriticalOnly = false;
 let realtimeAutoTimer = null;
 let realtimePersistTicks = 0;
 let realtimePolicyBlockAccum = 0;
@@ -702,14 +705,27 @@ function formatOfflineEventLine(event) {
 }
 
 function renderOfflineDetailList(events) {
-  const rows = prioritizeOfflineDetailEvents(events);
+  const prioritizedRows = prioritizeOfflineDetailEvents(events);
+  const rows = filterOfflineDetailEventsByMode(
+    prioritizedRows,
+    offlineDetailCriticalOnly ? "critical" : "all",
+  );
   if (rows.length === 0) {
-    dom.offlineDetailList.innerHTML = '<li class="delta-neutral">세부 로그 없음</li>';
+    dom.offlineDetailList.innerHTML = offlineDetailCriticalOnly
+      ? '<li class="delta-neutral">핵심 이벤트 없음</li>'
+      : '<li class="delta-neutral">세부 로그 없음</li>';
     return;
   }
   dom.offlineDetailList.innerHTML = rows
     .map((event) => `<li>${formatOfflineEventLine(event)}</li>`)
     .join("");
+}
+
+function setOfflineDetailCriticalOnly(enabled) {
+  offlineDetailCriticalOnly = Boolean(enabled);
+  dom.btnToggleOfflineCriticalOnly.textContent = offlineDetailCriticalOnly
+    ? "전체 로그 보기"
+    : "핵심 로그만 보기";
 }
 
 function setOfflineDetailExpanded(expanded) {
@@ -1129,6 +1145,7 @@ function setDeltaNode(node, value) {
 function hideOfflineModal() {
   dom.offlineModal.classList.add("hidden");
   dom.offlineModal.setAttribute("aria-hidden", "true");
+  setOfflineDetailCriticalOnly(false);
   setOfflineDetailExpanded(false);
 }
 
@@ -1166,6 +1183,7 @@ function showOfflineModal(offline) {
     delta,
     events,
   };
+  setOfflineDetailCriticalOnly(false);
   renderOfflineDetailList(events);
   setOfflineDetailExpanded(false);
   dom.offlineModal.classList.remove("hidden");
@@ -1409,6 +1427,10 @@ function bindEvents() {
   dom.btnCloseOfflineModal.addEventListener("click", hideOfflineModal);
   dom.btnToggleOfflineDetail.addEventListener("click", () => {
     setOfflineDetailExpanded(!offlineDetailExpanded);
+  });
+  dom.btnToggleOfflineCriticalOnly.addEventListener("click", () => {
+    setOfflineDetailCriticalOnly(!offlineDetailCriticalOnly);
+    renderOfflineDetailList(lastOfflineReport?.events ?? []);
   });
   dom.btnExportOfflineReport.addEventListener("click", () => {
     exportOfflineReportToPayload();

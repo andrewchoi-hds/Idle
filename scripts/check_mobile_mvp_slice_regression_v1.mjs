@@ -9,6 +9,7 @@ import {
   buildSliceContext,
   createInitialSliceState,
   createSeededRng,
+  filterOfflineDetailEventsByMode,
   isCopyTargetSlotDisabled,
   normalizeSaveSlot,
   normalizeSlotSummaryState,
@@ -356,6 +357,30 @@ async function main() {
       prioritizedOfflineEvents[4].kind === "battle_win" &&
       prioritizedOfflineEvents[5].kind === "battle_loss" &&
       prioritizeOfflineDetailEvents(null).length === 0,
+  });
+
+  const filteredCriticalOfflineEvents = filterOfflineDetailEventsByMode(
+    prioritizedOfflineEvents,
+    "critical",
+  );
+  const filteredAllOfflineEvents = filterOfflineDetailEventsByMode(
+    prioritizedOfflineEvents,
+    "all",
+  );
+  checks.push({
+    id: "offline_detail_events_filter_mode_critical_only",
+    passed:
+      Array.isArray(filteredCriticalOfflineEvents) &&
+      filteredCriticalOfflineEvents.length === 4 &&
+      filteredCriticalOfflineEvents[0].kind === "offline_warmup_summary" &&
+      filteredCriticalOfflineEvents[1].kind === "auto_breakthrough_paused_by_policy" &&
+      filteredCriticalOfflineEvents[2].kind === "auto_breakthrough_paused_by_policy" &&
+      filteredCriticalOfflineEvents[3].kind === "breakthrough_death_fail" &&
+      Array.isArray(filteredAllOfflineEvents) &&
+      filteredAllOfflineEvents.length === prioritizedOfflineEvents.length &&
+      filterOfflineDetailEventsByMode(prioritizedOfflineEvents, "unknown").length ===
+        prioritizedOfflineEvents.length &&
+      filterOfflineDetailEventsByMode(null, "critical").length === 0,
   });
 
   const offlineCriticalSummary = summarizeOfflineDetailCriticalEvents([
