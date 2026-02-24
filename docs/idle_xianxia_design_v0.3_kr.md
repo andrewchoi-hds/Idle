@@ -866,3 +866,11 @@
 
 ## 181) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(메모리 스냅샷 기반 슬롯 복제 정책 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 182) 다음 순차 작업
+1. [완료] 슬롯 잠금 상태(`slot_locks`)를 localStorage에 저장하고 활성 슬롯 잠금/해제 버튼(`btnToggleSlotLock`)을 추가.
+2. [완료] 슬롯 복제/삭제 정책 함수가 잠금 상태(`target_locked`, `slot_locked`)를 인지하도록 확장.
+3. [완료] 슬롯 요약/복제 대상 옵션/액션 힌트에서 잠금 상태 배지 및 안내 문구를 표시하고 회귀 체크에 잠금 시나리오를 추가.
+
+## 183) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(슬롯 잠금 보호 정책 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
