@@ -16,6 +16,7 @@ import {
   getStage,
   getStageDisplayNameKo,
   isCopyTargetSlotDisabled,
+  isOfflineDetailCompareCode,
   normalizeAutoBreakthroughResumeWarmupSec,
   normalizeSaveSlot,
   normalizeSlotSummaryState,
@@ -124,6 +125,7 @@ const dom = {
   offlineEssenceDelta: document.getElementById("offlineEssenceDelta"),
   btnToggleOfflineDetail: document.getElementById("btnToggleOfflineDetail"),
   btnToggleOfflineCriticalOnly: document.getElementById("btnToggleOfflineCriticalOnly"),
+  btnCopyOfflineCompareCode: document.getElementById("btnCopyOfflineCompareCode"),
   btnExportOfflineReport: document.getElementById("btnExportOfflineReport"),
   offlineDetailList: document.getElementById("offlineDetailList"),
   btnCloseOfflineModal: document.getElementById("btnCloseOfflineModal"),
@@ -870,6 +872,27 @@ async function exportOfflineReportToPayload() {
   setStatus(copied ? "오프라인 정산 리포트 JSON 복사 완료" : "오프라인 정산 리포트 JSON 생성 완료");
 }
 
+async function copyOfflineCompareCodeToClipboard() {
+  const code = String(dom.offlineDetailCompareCode.textContent || "").trim();
+  if (!isOfflineDetailCompareCode(code)) {
+    setStatus("복사할 비교 코드가 없음", true);
+    return;
+  }
+  let copied = false;
+  if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+    try {
+      await navigator.clipboard.writeText(code);
+      copied = true;
+    } catch {
+      copied = false;
+    }
+  }
+  if (!copied) {
+    dom.savePayload.value = `${code}\n`;
+  }
+  setStatus(copied ? "오프라인 비교 코드 복사 완료" : "오프라인 비교 코드 생성 완료");
+}
+
 async function exportRealtimeReportToPayload() {
   const stats = getRealtimeStats();
   if (!stats.sessionStartedAtIso || stats.elapsedSec <= 0) {
@@ -1471,6 +1494,9 @@ function bindEvents() {
   dom.btnToggleOfflineCriticalOnly.addEventListener("click", () => {
     setOfflineDetailCriticalOnly(!offlineDetailCriticalOnly);
     renderOfflineDetailList(lastOfflineReport?.events ?? []);
+  });
+  dom.btnCopyOfflineCompareCode.addEventListener("click", () => {
+    copyOfflineCompareCodeToClipboard();
   });
   dom.btnExportOfflineReport.addEventListener("click", () => {
     exportOfflineReportToPayload();

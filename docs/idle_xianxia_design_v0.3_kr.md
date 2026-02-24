@@ -1130,3 +1130,11 @@
 
 ## 247) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 상세 로그 비교 코드 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 248) 다음 순차 작업
+1. [완료] 오프라인 비교 코드 검증 헬퍼(`isOfflineDetailCompareCode`)를 추가해 코드 포맷을 표준 검증.
+2. [완료] 오프라인 모달 액션에 비교 코드 복사 버튼(`btnCopyOfflineCompareCode`)을 추가하고 상태 메시지/클립보드 fallback을 연동.
+3. [완료] 모바일 회귀/DOM 체크에 비교 코드 검증 헬퍼와 신규 버튼 ID 계약 시나리오를 추가.
+
+## 249) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 복사 액션 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

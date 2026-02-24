@@ -305,6 +305,13 @@ export function buildOfflineDetailCompareCode(eventsInput, viewModeInput = "all"
   return `ODR1-T${allSummary.total}-C${criticalSummary.visible}-H${criticalSummary.hidden}-V${viewCode}-A${allDigest.checksum}-S${viewDigest.checksum}`;
 }
 
+export function isOfflineDetailCompareCode(codeInput) {
+  if (typeof codeInput !== "string") {
+    return false;
+  }
+  return /^ODR1-T\d+-C\d+-H\d+-V[AC]-A\d{6}-S\d{6}$/.test(codeInput);
+}
+
 export function buildOfflineDetailReportSnapshot(
   eventsInput,
   maxKindsInput = 3,

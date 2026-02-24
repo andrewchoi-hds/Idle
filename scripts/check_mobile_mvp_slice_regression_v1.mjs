@@ -17,6 +17,7 @@ import {
   createSeededRng,
   filterOfflineDetailEventsByMode,
   isCopyTargetSlotDisabled,
+  isOfflineDetailCompareCode,
   normalizeSaveSlot,
   normalizeSlotSummaryState,
   parseSliceState,
@@ -482,6 +483,11 @@ async function main() {
       typeof offlineDetailCompareCodeCritical === "string" &&
       offlineDetailCompareCodeAll.startsWith("ODR1-T6-C4-H2-VA-") &&
       offlineDetailCompareCodeCritical.startsWith("ODR1-T6-C4-H2-VC-") &&
+      isOfflineDetailCompareCode(offlineDetailCompareCodeAll) &&
+      isOfflineDetailCompareCode(offlineDetailCompareCodeCritical) &&
+      isOfflineDetailCompareCode("ODR1-T6-C4-H2-VA-A123456-S654321") &&
+      !isOfflineDetailCompareCode("ODR1-T6-C4-H2-VX-A123456-S654321") &&
+      !isOfflineDetailCompareCode("ODR1-T6-C4-H2-VA-A12345-S654321") &&
       offlineDetailCompareCodeAll !== offlineDetailCompareCodeCritical,
   });
 
