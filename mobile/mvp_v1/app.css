@@ -421,6 +421,13 @@ textarea:focus-visible,
   align-items: center;
 }
 
+.expected-line {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 .recommendation-text {
   font-size: 12px;
   color: #9eb8af;
@@ -622,6 +629,13 @@ textarea:focus-visible,
   .mitigation-line {
     grid-template-columns: 1fr;
     align-items: stretch;
+  }
+
+  .expected-line {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    gap: 4px;
   }
 
   .recommendation-btn {
