@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 
 import {
   buildOfflineDetailCriticalSummaryLabelKo,
+  buildOfflineDetailKindDigest,
   buildOfflineDetailHiddenKindsSummaryLabelKo,
   buildOfflineDetailReportSnapshot,
   buildOfflineDetailHiddenSummaryLabelKo,
@@ -445,6 +446,24 @@ async function main() {
       buildOfflineDetailHiddenKindsSummaryLabelKo([], "critical") === "숨김 상세 없음",
   });
 
+  const detailKindDigest = buildOfflineDetailKindDigest(prioritizedOfflineEvents, 3);
+  checks.push({
+    id: "offline_detail_kind_digest_signature_is_stable",
+    passed:
+      detailKindDigest.totalEvents === 6 &&
+      detailKindDigest.uniqueKinds === 5 &&
+      detailKindDigest.signature ===
+        "auto_breakthrough_paused_by_policy:2|offline_warmup_summary:1|breakthrough_death_fail:1|battle_win:1|battle_loss:1" &&
+      Array.isArray(detailKindDigest.topKinds) &&
+      detailKindDigest.topKinds.length === 3 &&
+      detailKindDigest.topKinds[0].kind === "auto_breakthrough_paused_by_policy" &&
+      detailKindDigest.topKinds[0].count === 2 &&
+      detailKindDigest.topKinds[1].kind === "offline_warmup_summary" &&
+      detailKindDigest.topKinds[1].count === 1 &&
+      detailKindDigest.topKinds[2].kind === "breakthrough_death_fail" &&
+      detailKindDigest.topKinds[2].count === 1,
+  });
+
   const detailReportSnapshot = buildOfflineDetailReportSnapshot(prioritizedOfflineEvents, 1);
   const detailReportSnapshotCriticalView = buildOfflineDetailReportSnapshot(
     prioritizedOfflineEvents,
@@ -472,13 +491,19 @@ async function main() {
       detailReportSnapshot.hiddenKindsTop.length === 1 &&
       detailReportSnapshot.hiddenKindsTop[0].kind === "battle_win" &&
       detailReportSnapshot.hiddenKindsTop[0].count === 1 &&
+      detailReportSnapshot.kindDigest.all.signature ===
+        "auto_breakthrough_paused_by_policy:2|offline_warmup_summary:1|breakthrough_death_fail:1|battle_win:1|battle_loss:1" &&
+      detailReportSnapshot.kindDigest.view.signature ===
+        "auto_breakthrough_paused_by_policy:2|offline_warmup_summary:1|breakthrough_death_fail:1|battle_win:1|battle_loss:1" &&
       detailReportSnapshotCriticalView.viewMode === "critical" &&
       detailReportSnapshotCriticalView.viewVisibleEvents === 4 &&
       detailReportSnapshotCriticalView.viewHiddenEvents === 2 &&
       detailReportSnapshotCriticalView.labelsKo.view === "세부 로그 4/6건 (핵심)" &&
       detailReportSnapshotCriticalView.labelsKo.viewHidden === "비핵심 2건 숨김" &&
       detailReportSnapshotCriticalView.labelsKo.viewHiddenKinds ===
-        "숨김 상세 전투 승리 1건 · 외 1건",
+        "숨김 상세 전투 승리 1건 · 외 1건" &&
+      detailReportSnapshotCriticalView.kindDigest.view.signature ===
+        "auto_breakthrough_paused_by_policy:2|offline_warmup_summary:1|breakthrough_death_fail:1",
   });
 
   const offlineCriticalSummary = summarizeOfflineDetailCriticalEvents([

@@ -248,6 +248,40 @@ export function buildOfflineDetailHiddenKindsSummaryLabelKo(
   return `숨김 상세 ${parts.join(" · ")}${remainingText}`;
 }
 
+export function buildOfflineDetailKindDigest(eventsInput, maxKindsInput = 8) {
+  const rows = Array.isArray(eventsInput) ? eventsInput.slice() : [];
+  const maxKinds = clamp(toNonNegativeInt(maxKindsInput, 8), 1, 20);
+  const countsByKind = new Map();
+  rows.forEach((row, index) => {
+    const kind = row && typeof row.kind === "string" ? row.kind : "unknown";
+    const prev = countsByKind.get(kind);
+    if (prev) {
+      prev.count += 1;
+      return;
+    }
+    countsByKind.set(kind, {
+      kind,
+      count: 1,
+      firstIndex: index,
+    });
+  });
+  const items = Array.from(countsByKind.values()).sort((a, b) => {
+    if (b.count !== a.count) {
+      return b.count - a.count;
+    }
+    return a.firstIndex - b.firstIndex;
+  });
+  return {
+    totalEvents: rows.length,
+    uniqueKinds: items.length,
+    signature: items.map((item) => `${item.kind}:${item.count}`).join("|"),
+    topKinds: items.slice(0, maxKinds).map((item) => ({
+      kind: item.kind,
+      count: item.count,
+    })),
+  };
+}
+
 export function buildOfflineDetailReportSnapshot(
   eventsInput,
   maxKindsInput = 3,
@@ -260,6 +294,9 @@ export function buildOfflineDetailReportSnapshot(
   const criticalSummary = summarizeOfflineDetailFilterResult(rows, "critical");
   const hiddenKindsSummary = summarizeOfflineDetailHiddenKinds(rows, "critical");
   const viewSummary = summarizeOfflineDetailFilterResult(rows, viewMode);
+  const viewRows = filterOfflineDetailEventsByMode(rows, viewMode);
+  const allKindDigest = buildOfflineDetailKindDigest(rows);
+  const viewKindDigest = buildOfflineDetailKindDigest(viewRows);
   return {
     totalEvents: allSummary.total,
     visibleAllEvents: allSummary.visible,
@@ -286,6 +323,11 @@ export function buildOfflineDetailReportSnapshot(
       ),
     },
     hiddenKindsTop: hiddenKindsSummary.items.slice(0, maxKinds),
+    kindDigest: {
+      all: allKindDigest,
+      viewMode,
+      view: viewKindDigest,
+    },
   };
 }
 
