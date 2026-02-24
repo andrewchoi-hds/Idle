@@ -55,6 +55,22 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: PR Validation Command Registry
+        run: |
+          set +e
+          npm run pr:validation:registry:check -- --summary-file /tmp/pr_validation_registry_summary_v1.md
+          status=$?
+          if [ -f /tmp/pr_validation_registry_summary_v1.md ]; then
+            cat /tmp/pr_validation_registry_summary_v1.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            {
+              echo "### PR Validation Command Registry"
+              echo "- Result: \`ERROR\`"
+              echo "- Detail: summary file missing"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          exit $status
+
       - name: PR Required Check Coverage
         run: |
           set +e
