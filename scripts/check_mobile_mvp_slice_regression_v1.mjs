@@ -12,6 +12,7 @@ import {
   normalizeSaveSlot,
   normalizeSlotSummaryState,
   parseSliceState,
+  previewBreakthroughChance,
   resolveDebouncedAction,
   resolveSlotCopyHint,
   resolveSlotCopyHintTone,
@@ -253,6 +254,46 @@ async function main() {
   checks.push({
     id: "breakthrough_blocked_when_qi_insufficient",
     passed: blocked.attempted === false && blocked.outcome === "blocked_no_qi",
+  });
+
+  const previewTribulationState = createInitialSliceState(context, { playerName: "preview-trib" });
+  previewTribulationState.progression.difficultyIndex = 198;
+  const previewTribulationBase = previewBreakthroughChance(context, previewTribulationState, {
+    useBreakthroughElixir: false,
+    useTribulationTalisman: false,
+  });
+  const previewTribulationBoosted = previewBreakthroughChance(context, previewTribulationState, {
+    useBreakthroughElixir: true,
+    useTribulationTalisman: true,
+  });
+  const previewMortalState = createInitialSliceState(context, { playerName: "preview-mortal" });
+  const previewMortal = previewBreakthroughChance(context, previewMortalState, {
+    useBreakthroughElixir: false,
+    useTribulationTalisman: false,
+  });
+  const triTotal =
+    previewTribulationBase.successPct +
+    previewTribulationBase.minorFailPct +
+    previewTribulationBase.retreatFailPct +
+    previewTribulationBase.deathFailPct;
+  const mortalTotal =
+    previewMortal.successPct +
+    previewMortal.minorFailPct +
+    previewMortal.retreatFailPct +
+    previewMortal.deathFailPct;
+  checks.push({
+    id: "breakthrough_preview_distribution_is_consistent",
+    passed:
+      Math.abs(triTotal - 100) < 0.000001 &&
+      previewTribulationBase.minorFailPct >= 0 &&
+      previewTribulationBase.retreatFailPct >= 0 &&
+      previewTribulationBase.deathFailPct >= 0 &&
+      previewTribulationBoosted.successPct >= previewTribulationBase.successPct &&
+      previewTribulationBoosted.deathPct <= previewTribulationBase.deathPct &&
+      previewTribulationBoosted.deathFailPct <= previewTribulationBase.deathFailPct &&
+      Math.abs(mortalTotal - 100) < 0.000001 &&
+      previewMortal.deathFailPct === 0 &&
+      previewMortal.retreatFailPct === 0,
   });
 
   state.progression.difficultyIndex = 198;

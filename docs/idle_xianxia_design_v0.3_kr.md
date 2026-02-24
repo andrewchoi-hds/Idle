@@ -874,3 +874,11 @@
 
 ## 183) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(슬롯 잠금 보호 정책 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 184) 다음 순차 작업
+1. [완료] 돌파 확률 프리뷰를 `성공/사망` 2지표에서 `성공/경상/후퇴/사망` 4지표로 확장.
+2. [완료] 엔진 확률 프리뷰(`previewBreakthroughChance`)가 분기별 실효 확률(`minorFailPct/retreatFailPct/deathFailPct`)을 계산해 반환하도록 개선.
+3. [완료] 모바일 회귀 체크에 돌파 분기 확률 합(100%) 및 영약/수호부 적용 시 분포 변화 일관성 시나리오 추가.
+
+## 185) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(도겁 4분기 확률 프리뷰 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

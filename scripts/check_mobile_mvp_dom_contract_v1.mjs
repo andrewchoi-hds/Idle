@@ -20,6 +20,8 @@ const REQUIRED_HTML_IDS = [
   "invTribulationTalisman",
   "previewSuccessPct",
   "previewDeathPct",
+  "previewMinorFailPct",
+  "previewRetreatFailPct",
   "optAutoBattle",
   "optAutoBreakthrough",
   "optAutoTribulation",
@@ -84,6 +86,8 @@ const REQUIRED_HTML_IDS = [
 ];
 
 const REQUIRED_DOM_KEYS = [
+  "previewMinorFailPct",
+  "previewRetreatFailPct",
   "optAutoResumeRealtime",
   "optBattleSpeed",
   "optOfflineCapHours",

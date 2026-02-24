@@ -354,6 +354,54 @@ function applyRebirthByDeath(context, state, stage, options = {}) {
   };
 }
 
+function calcRetreatWeightPct(stage) {
+  if (!stage || stage.is_tribulation !== 1) {
+    return 0;
+  }
+  return clamp(28 + stage.fail_retreat_max * 11, 20, 78);
+}
+
+function calcBreakthroughOutcomeDistribution(stage, successPct, deathPct) {
+  const normalizedSuccessPct = clamp(Number(successPct) || 0, 0, 100);
+  const failChancePct = Math.max(0, 100 - normalizedSuccessPct);
+  if (!stage || stage.is_tribulation !== 1) {
+    return {
+      successPct: normalizedSuccessPct,
+      failChancePct,
+      deathFailPct: 0,
+      retreatFailPct: 0,
+      minorFailPct: failChancePct,
+      retreatWeightPct: 0,
+      deathInFailurePct: 0,
+      retreatInFailurePct: 0,
+      minorInFailurePct: 100,
+    };
+  }
+
+  const normalizedDeathPct = clamp(Number(deathPct) || 0, 0, 100);
+  const retreatWeightPct = calcRetreatWeightPct(stage);
+  const retreatInFailurePct = clamp(
+    retreatWeightPct,
+    0,
+    Math.max(0, 100 - normalizedDeathPct),
+  );
+  const minorInFailurePct = Math.max(0, 100 - normalizedDeathPct - retreatInFailurePct);
+  const deathFailPct = (failChancePct * normalizedDeathPct) / 100;
+  const retreatFailPct = (failChancePct * retreatInFailurePct) / 100;
+  const minorFailPct = (failChancePct * minorInFailurePct) / 100;
+  return {
+    successPct: normalizedSuccessPct,
+    failChancePct,
+    deathFailPct,
+    retreatFailPct,
+    minorFailPct,
+    retreatWeightPct,
+    deathInFailurePct: normalizedDeathPct,
+    retreatInFailurePct,
+    minorInFailurePct,
+  };
+}
+
 function evaluateBreakthroughOutcome(stage, successPct, deathPct, rng, debugForcedOutcome) {
   if (debugForcedOutcome) {
     return debugForcedOutcome;
@@ -370,7 +418,7 @@ function evaluateBreakthroughOutcome(stage, successPct, deathPct, rng, debugForc
   if (failRoll < deathPct) {
     return "death_fail";
   }
-  const retreatWeight = clamp(28 + stage.fail_retreat_max * 11, 20, 78);
+  const retreatWeight = calcRetreatWeightPct(stage);
   if (failRoll < deathPct + retreatWeight) {
     return "retreat_fail";
   }
@@ -559,11 +607,17 @@ export function previewBreakthroughChance(context, state, options = {}) {
   const rebirthGuard = clamp(state.progression.rebirthCount * 0.7, 0, 35);
   const talismanGuard = useTribulationTalisman ? 9 : 0;
   const deathPct = clamp(baseDeath - rebirthGuard - talismanGuard, 0, 95);
+  const distribution = calcBreakthroughOutcomeDistribution(stage, successPct, deathPct);
 
   return {
     stage,
     successPct,
     deathPct,
+    minorFailPct: distribution.minorFailPct,
+    retreatFailPct: distribution.retreatFailPct,
+    deathFailPct: distribution.deathFailPct,
+    failChancePct: distribution.failChancePct,
+    retreatWeightPct: distribution.retreatWeightPct,
     rebirthBonus,
     potionBonus,
     rebirthGuard,

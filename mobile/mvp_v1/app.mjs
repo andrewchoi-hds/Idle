@@ -48,6 +48,8 @@ const dom = {
   invTribulationTalisman: document.getElementById("invTribulationTalisman"),
   previewSuccessPct: document.getElementById("previewSuccessPct"),
   previewDeathPct: document.getElementById("previewDeathPct"),
+  previewMinorFailPct: document.getElementById("previewMinorFailPct"),
+  previewRetreatFailPct: document.getElementById("previewRetreatFailPct"),
   optAutoBattle: document.getElementById("optAutoBattle"),
   optAutoBreakthrough: document.getElementById("optAutoBreakthrough"),
   optAutoTribulation: document.getElementById("optAutoTribulation"),
@@ -981,6 +983,8 @@ function render() {
   dom.invTribulationTalisman.textContent = fmtNumber(state.inventory.tribulationTalisman);
   dom.previewSuccessPct.textContent = preview.successPct.toFixed(1);
   dom.previewDeathPct.textContent = preview.deathPct.toFixed(1);
+  dom.previewMinorFailPct.textContent = preview.minorFailPct.toFixed(1);
+  dom.previewRetreatFailPct.textContent = preview.retreatFailPct.toFixed(1);
   dom.playerNameInput.value = state.playerName;
   dom.optSaveSlot.value = String(activeSaveSlot);
   dom.lastSavedAt.textContent = fmtDateTimeFromIso(state.lastSavedAtIso);
