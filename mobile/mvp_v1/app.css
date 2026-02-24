@@ -378,6 +378,11 @@ textarea:focus-visible,
   color: #ffd59a;
 }
 
+.slot-source.locked {
+  border-color: #9b637f;
+  color: #ffc4e0;
+}
+
 .logs ul {
   max-height: 220px;
   overflow: auto;

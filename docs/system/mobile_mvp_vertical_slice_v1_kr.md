@@ -49,11 +49,16 @@ npm run mobile:mvp:serve
   - 활성 슬롯 -> 대상 슬롯 복제(`optCopySlotTarget`, `btnCopySlot`)
     - 복제 대상 선택에서 활성 슬롯 옵션은 비활성화
     - 복제 대상 옵션 라벨에 슬롯 상태(`저장됨/비어있음/손상`)를 함께 표시
+    - 잠긴 슬롯은 복제 대상으로 선택할 수는 있지만 실제 복제는 정책에서 차단
     - 복제는 localStorage 원본이 아니라 현재 메모리 상태 스냅샷을 기준으로 수행
     - 대상 슬롯에 데이터가 있으면 overwrite 확인 모달 후 진행
-    - 복제 버튼은 대상 슬롯이 활성 슬롯과 동일할 때만 비활성화
+    - 복제 버튼은 대상 슬롯이 활성 슬롯과 동일하거나 잠금 상태일 때 비활성화
+  - 활성 슬롯 잠금/해제(`btnToggleSlotLock`)
+    - 잠금 시 해당 슬롯 대상 복제(덮어쓰기)와 슬롯 삭제를 차단
+    - 슬롯 요약/복제 대상 옵션/힌트 라인에서 잠금 상태를 즉시 표시
   - 활성 슬롯 삭제(메모리 상태 유지)
     - 활성 슬롯이 비어 있으면 삭제를 skip하고 상태 메시지만 표시
+    - 활성 슬롯이 잠겨 있으면 삭제를 차단하고 잠금 해제를 안내
     - 활성 슬롯이 비어 있으면 삭제 버튼 비활성화
   - 슬롯 복제/삭제 확인 규칙은 엔진 정책 함수로 공통 관리
   - 슬롯 액션 힌트(`slotCopyHint`, `slotDeleteHint`)에 현재 정책 기반 안내 문구를 분리 표시
@@ -83,6 +88,7 @@ npm run mobile:mvp:serve
 - localStorage key:
   - 슬롯 save: `idle_xianxia_mobile_mvp_v1_save_slot_{1|2|3}`
   - 슬롯 선호값: `idle_xianxia_mobile_mvp_v1_slot_pref`
+  - 슬롯 잠금값: `idle_xianxia_mobile_mvp_v1_slot_locks`
   - 레거시 fallback: `idle_xianxia_mobile_mvp_v1_save` (slot1 비어있을 때만 자동 참조)
 - 포함 항목:
   - 경지/환생 횟수
@@ -129,6 +135,7 @@ npm run mobile:mvp:check
   - 슬롯 요약 퀵 액션 분기(`ok/empty/corrupt`) 결정 로직 검증
   - 슬롯 요약 퀵 로드 디바운스(0.7초) 중복 입력 차단 검증
   - 슬롯 복제/삭제 정책(`same_slot/target_empty/target_has_data/corrupt_slot`) 검증
+  - 슬롯 잠금 정책(`target_locked/slot_locked`) 차단 및 힌트/톤 매핑 검증
   - 슬롯 액션 힌트 문구가 정책 결과와 일치하는지 검증
   - 슬롯 액션 힌트 톤(`info/warn/error`)이 정책 결과와 일치하는지 검증
   - 복제 대상 슬롯 상태 라벨/톤(`resolveSlotSummaryStateLabelKo`, `resolveSlotSummaryStateTone`) 검증

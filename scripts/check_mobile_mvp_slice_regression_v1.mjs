@@ -136,8 +136,9 @@ async function main() {
   const copyToEmpty = resolveSlotCopyPolicy(2, 3, "empty");
   const copyToData = resolveSlotCopyPolicy(2, 1, "ok");
   const copyToCorrupt = resolveSlotCopyPolicy(2, 1, "corrupt");
+  const copyToLocked = resolveSlotCopyPolicy(2, 3, "ok", true);
   checks.push({
-    id: "slot_copy_policy_requires_confirm_only_on_non_empty_target",
+    id: "slot_copy_policy_handles_empty_overwrite_and_locked_target",
     passed:
       copySameSlot.allowed === false &&
       copySameSlot.reason === "same_slot" &&
@@ -149,14 +150,18 @@ async function main() {
       copyToData.reason === "target_has_data" &&
       copyToCorrupt.allowed === true &&
       copyToCorrupt.requiresConfirm === true &&
-      copyToCorrupt.reason === "target_corrupt",
+      copyToCorrupt.reason === "target_corrupt" &&
+      copyToLocked.allowed === false &&
+      copyToLocked.requiresConfirm === false &&
+      copyToLocked.reason === "target_locked",
   });
 
   const deleteEmpty = resolveSlotDeletePolicy(1, "empty");
   const deleteOk = resolveSlotDeletePolicy(2, "ok");
   const deleteCorrupt = resolveSlotDeletePolicy(3, "corrupt");
+  const deleteLocked = resolveSlotDeletePolicy(2, "ok", true);
   checks.push({
-    id: "slot_delete_policy_skips_empty_and_confirms_non_empty",
+    id: "slot_delete_policy_skips_empty_confirms_non_empty_and_blocks_locked",
     passed:
       deleteEmpty.allowed === false &&
       deleteEmpty.requiresConfirm === false &&
@@ -166,24 +171,31 @@ async function main() {
       deleteOk.reason === "has_data" &&
       deleteCorrupt.allowed === true &&
       deleteCorrupt.requiresConfirm === true &&
-      deleteCorrupt.reason === "corrupt_slot",
+      deleteCorrupt.reason === "corrupt_slot" &&
+      deleteLocked.allowed === false &&
+      deleteLocked.requiresConfirm === false &&
+      deleteLocked.reason === "slot_locked",
   });
 
   const copyHintEmptyTarget = resolveSlotCopyHint(copyToEmpty);
   const copyHintConfirm = resolveSlotCopyHint(copyToData);
   const copyHintBlocked = resolveSlotCopyHint(copySameSlot);
+  const copyHintLocked = resolveSlotCopyHint(copyToLocked);
   const deleteHintEmpty = resolveSlotDeleteHint(deleteEmpty);
   const deleteHintOk = resolveSlotDeleteHint(deleteOk);
   const deleteHintCorrupt = resolveSlotDeleteHint(deleteCorrupt);
+  const deleteHintLocked = resolveSlotDeleteHint(deleteLocked);
   checks.push({
     id: "slot_action_hints_match_policy_reasons",
     passed:
       copyHintEmptyTarget.includes("복제 가능") &&
       copyHintConfirm.includes("덮어써") &&
       copyHintBlocked.includes("달라야") &&
+      copyHintLocked.includes("잠겨") &&
       deleteHintEmpty.includes("삭제할 데이터가 없습니다") &&
       deleteHintOk.includes("메모리 상태는 유지") &&
-      deleteHintCorrupt.includes("손상된 저장 데이터"),
+      deleteHintCorrupt.includes("손상된 저장 데이터") &&
+      deleteHintLocked.includes("잠겨"),
   });
 
   checks.push({
@@ -192,9 +204,11 @@ async function main() {
       resolveSlotCopyHintTone(copyToEmpty) === "info" &&
       resolveSlotCopyHintTone(copyToData) === "warn" &&
       resolveSlotCopyHintTone(copySameSlot) === "warn" &&
+      resolveSlotCopyHintTone(copyToLocked) === "error" &&
       resolveSlotDeleteHintTone(deleteOk) === "info" &&
       resolveSlotDeleteHintTone(deleteCorrupt) === "warn" &&
-      resolveSlotDeleteHintTone(deleteEmpty) === "warn",
+      resolveSlotDeleteHintTone(deleteEmpty) === "warn" &&
+      resolveSlotDeleteHintTone(deleteLocked) === "error",
   });
 
   checks.push({
