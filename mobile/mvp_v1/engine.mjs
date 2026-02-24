@@ -248,6 +248,15 @@ export function buildOfflineDetailHiddenKindsSummaryLabelKo(
   return `숨김 상세 ${parts.join(" · ")}${remainingText}`;
 }
 
+function buildOfflineDetailSignatureChecksum(signatureInput) {
+  const signature = typeof signatureInput === "string" ? signatureInput : "";
+  let value = 0;
+  for (let i = 0; i < signature.length; i += 1) {
+    value = (value * 131 + signature.charCodeAt(i)) % 1000000;
+  }
+  return String(value).padStart(6, "0");
+}
+
 export function buildOfflineDetailKindDigest(eventsInput, maxKindsInput = 8) {
   const rows = Array.isArray(eventsInput) ? eventsInput.slice() : [];
   const maxKinds = clamp(toNonNegativeInt(maxKindsInput, 8), 1, 20);
@@ -271,15 +280,29 @@ export function buildOfflineDetailKindDigest(eventsInput, maxKindsInput = 8) {
     }
     return a.firstIndex - b.firstIndex;
   });
+  const signature = items.map((item) => `${item.kind}:${item.count}`).join("|");
   return {
     totalEvents: rows.length,
     uniqueKinds: items.length,
-    signature: items.map((item) => `${item.kind}:${item.count}`).join("|"),
+    signature,
+    checksum: buildOfflineDetailSignatureChecksum(signature),
     topKinds: items.slice(0, maxKinds).map((item) => ({
       kind: item.kind,
       count: item.count,
     })),
   };
+}
+
+export function buildOfflineDetailCompareCode(eventsInput, viewModeInput = "all") {
+  const rows = Array.isArray(eventsInput) ? eventsInput.slice() : [];
+  const viewMode = viewModeInput === "critical" ? "critical" : "all";
+  const allSummary = summarizeOfflineDetailFilterResult(rows, "all");
+  const criticalSummary = summarizeOfflineDetailFilterResult(rows, "critical");
+  const viewRows = filterOfflineDetailEventsByMode(rows, viewMode);
+  const allDigest = buildOfflineDetailKindDigest(rows, 20);
+  const viewDigest = buildOfflineDetailKindDigest(viewRows, 20);
+  const viewCode = viewMode === "critical" ? "C" : "A";
+  return `ODR1-T${allSummary.total}-C${criticalSummary.visible}-H${criticalSummary.hidden}-V${viewCode}-A${allDigest.checksum}-S${viewDigest.checksum}`;
 }
 
 export function buildOfflineDetailReportSnapshot(
@@ -297,6 +320,7 @@ export function buildOfflineDetailReportSnapshot(
   const viewRows = filterOfflineDetailEventsByMode(rows, viewMode);
   const allKindDigest = buildOfflineDetailKindDigest(rows);
   const viewKindDigest = buildOfflineDetailKindDigest(viewRows);
+  const compareCode = buildOfflineDetailCompareCode(rows, viewMode);
   return {
     totalEvents: allSummary.total,
     visibleAllEvents: allSummary.visible,
@@ -323,6 +347,7 @@ export function buildOfflineDetailReportSnapshot(
       ),
     },
     hiddenKindsTop: hiddenKindsSummary.items.slice(0, maxKinds),
+    compareCode,
     kindDigest: {
       all: allKindDigest,
       viewMode,

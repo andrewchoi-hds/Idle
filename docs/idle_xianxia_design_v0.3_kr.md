@@ -1122,3 +1122,11 @@
 
 ## 245) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 상세 로그 종류 digest 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 246) 다음 순차 작업
+1. [완료] 오프라인 비교 코드 헬퍼(`buildOfflineDetailCompareCode`)를 추가해 모드/핵심 집계/checksum 기반 비교 코드를 표준화.
+2. [완료] 오프라인 모달에 비교 코드 라인(`offlineDetailCompareCode`)을 추가하고 필터 모드 전환 시 즉시 갱신되도록 연동.
+3. [완료] 오프라인 리포트 스냅샷(`detailReportSnapshot`, `detailViewSnapshotAtExport`)에 `compareCode`를 포함하고 회귀/DOM 체크를 확장.
+
+## 247) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 상세 로그 비교 코드 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
