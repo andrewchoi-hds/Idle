@@ -97,16 +97,20 @@ export function buildOfflineWarmupTelemetryLabelKo(offlineSummaryInput) {
 
 export function prioritizeOfflineDetailEvents(eventsInput) {
   const rows = Array.isArray(eventsInput) ? eventsInput.slice() : [];
-  const warmupRows = [];
-  const otherRows = [];
+  const buckets = [[], [], [], []];
   for (const row of rows) {
-    if (row && row.kind === "offline_warmup_summary") {
-      warmupRows.push(row);
-    } else {
-      otherRows.push(row);
+    const kind = row && typeof row.kind === "string" ? row.kind : "";
+    let priority = 3;
+    if (kind === "offline_warmup_summary") {
+      priority = 0;
+    } else if (kind === "auto_breakthrough_paused_by_policy") {
+      priority = 1;
+    } else if (kind === "breakthrough_death_fail") {
+      priority = 2;
     }
+    buckets[priority].push(row);
   }
-  return warmupRows.concat(otherRows);
+  return buckets[0].concat(buckets[1], buckets[2], buckets[3]);
 }
 
 export function normalizeSaveSlot(slot, fallback = 1) {

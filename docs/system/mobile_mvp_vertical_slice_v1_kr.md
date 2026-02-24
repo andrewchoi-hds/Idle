@@ -92,7 +92,7 @@ npm run mobile:mvp:serve
     - 정산 발생 시 팝업 카드로 시간/전투/돌파/환생/재화 순변화 노출
     - 팝업 카드에 워밍업 요약(`offlineWarmupSummary`)을 표시해 before/after/차단 횟수를 즉시 확인
     - 세부 로그에 워밍업 요약 이벤트(`offline_warmup_summary`)를 남겨 리포트 내 추적성을 확보
-    - 세부 로그 렌더링 시 워밍업 요약 이벤트를 상단에 우선 배치해 핵심 정보를 먼저 노출
+    - 세부 로그 렌더링 시 핵심 이벤트를 우선순위(`워밍업 요약 > 자동 돌파 일시정지 > 도겁 사망 > 기타`)로 상단 배치
     - 팝업에서 세부 로그 토글(최근 이벤트) + 정산 리포트 JSON 내보내기 지원
 - 옵션:
   - `앱 복귀 시 실시간 자동 재개` (`autoResumeRealtime`, on/off)
@@ -172,7 +172,7 @@ npm run mobile:mvp:check
   - 오프라인 워밍업 텔레메트리(`resolveOfflineWarmupTelemetry`)가 before/after/consumed를 일관되게 정규화하는지 검증
   - 오프라인 워밍업 라벨(`buildOfflineWarmupTelemetryLabelKo`)이 `워밍업 없음/부분 소모/소진` 케이스를 일관된 문구로 반환하는지 검증
   - 오프라인 워밍업 요약 이벤트(`offline_warmup_summary`)가 워밍업 존재 시 기록되고 비워밍업 케이스에서는 생성되지 않는지 검증
-  - 오프라인 상세 로그 정렬(`prioritizeOfflineDetailEvents`)이 워밍업 요약 이벤트를 선두에 배치하는지 검증
+  - 오프라인 상세 로그 정렬(`prioritizeOfflineDetailEvents`)이 핵심 이벤트 우선순위를 유지하고 동일 우선순위 내 입력 순서를 보존하는지 검증
   - 자동 재개 워밍업 가드(`autoBreakthroughWarmupUntilSec`)가 지정 구간에서 자동 돌파를 지연하고 타임라인 오프셋 기준 잔여 시간을 일관되게 계산하는지 검증
   - 오프라인 정산(`runOfflineCatchup`)이 워밍업 가드와 잔여시간을 일관되게 반영하는지 검증
   - 오프라인 정산 summary 워밍업 메타(`autoBreakthroughWarmupRemainingSecBefore/After`)가 경과시간 0초/부분 경과/완전 소진 케이스에서 일관되게 기록되는지 검증

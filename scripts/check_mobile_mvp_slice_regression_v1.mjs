@@ -334,17 +334,25 @@ async function main() {
 
   const prioritizedOfflineEvents = prioritizeOfflineDetailEvents([
     { sec: 2, kind: "battle_win" },
+    { sec: 7, kind: "auto_breakthrough_paused_by_policy" },
     { sec: 5, kind: "offline_warmup_summary" },
-    { sec: 4, kind: "breakthrough_success" },
+    { sec: 9, kind: "battle_loss" },
+    { sec: 8, kind: "breakthrough_death_fail" },
+    { sec: 10, kind: "auto_breakthrough_paused_by_policy" },
   ]);
   checks.push({
-    id: "offline_detail_events_prioritize_warmup_summary_first",
+    id: "offline_detail_events_prioritize_critical_kinds",
     passed:
       Array.isArray(prioritizedOfflineEvents) &&
-      prioritizedOfflineEvents.length === 3 &&
+      prioritizedOfflineEvents.length === 6 &&
       prioritizedOfflineEvents[0].kind === "offline_warmup_summary" &&
-      prioritizedOfflineEvents[1].kind === "battle_win" &&
-      prioritizedOfflineEvents[2].kind === "breakthrough_success" &&
+      prioritizedOfflineEvents[1].kind === "auto_breakthrough_paused_by_policy" &&
+      prioritizedOfflineEvents[1].sec === 7 &&
+      prioritizedOfflineEvents[2].kind === "auto_breakthrough_paused_by_policy" &&
+      prioritizedOfflineEvents[2].sec === 10 &&
+      prioritizedOfflineEvents[3].kind === "breakthrough_death_fail" &&
+      prioritizedOfflineEvents[4].kind === "battle_win" &&
+      prioritizedOfflineEvents[5].kind === "battle_loss" &&
       prioritizeOfflineDetailEvents(null).length === 0,
   });
 
