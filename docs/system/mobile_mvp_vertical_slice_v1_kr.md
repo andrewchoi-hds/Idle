@@ -54,6 +54,7 @@ npm run mobile:mvp:serve
   - 백그라운드 진입 시 실시간 자동 중지 + 포그라운드 복귀 시 오프라인 정산 자동 시도
   - `autoResumeRealtime`가 켜져 있으면 포그라운드 복귀/앱 진입/세이브 불러오기 후 실시간 자동 재개
   - `자동 돌파 재개` 버튼으로 복구한 직후 6초 워밍업 동안 자동 돌파 시도를 지연해 재개 직후 급격한 소모를 방지
+  - 워밍업 길이는 옵션(`optAutoBreakthroughResumeWarmupSec`, 0~30초)으로 조정 가능하며 0초면 즉시 돌파 시도 허용
   - 실시간 상태 라인에 돌파 워밍업 잔여 시간(`돌파 워밍업 Ns`)을 노출
   - 실시간 통계 카드(`누적 시간/전투/돌파/환생`)를 화면에 상시 표시
   - `실시간 리포트 JSON` 버튼으로 누적 세션 리포트를 `savePayload`로 내보내기
@@ -90,13 +91,14 @@ npm run mobile:mvp:serve
     - 팝업에서 세부 로그 토글(최근 이벤트) + 정산 리포트 JSON 내보내기 지원
 - 옵션:
   - `앱 복귀 시 실시간 자동 재개` (`autoResumeRealtime`, on/off)
+  - `자동 재개 돌파 워밍업(초)` (`autoBreakthroughResumeWarmupSec`, `0~30`, 기본 6)
   - `전투 속도` (`1=저속, 2=표준, 3=고속`)
     - 저속: `battleEverySec=3`, `breakthroughEverySec=4`, `passiveQiRatio=0.01`
     - 표준: `battleEverySec=2`, `breakthroughEverySec=3`, `passiveQiRatio=0.012`
     - 고속: `battleEverySec=1`, `breakthroughEverySec=2`, `passiveQiRatio=0.014`
   - `오프라인 정산 시간(시간)` (`1~168`)
   - `오프라인 세부 로그 개수` (`5~120`)
-  - 위 4개는 저장 데이터(`settings`)에 영속화되어 다음 접속에도 유지
+  - 위 5개는 저장 데이터(`settings`)에 영속화되어 다음 접속에도 유지
   - `세이브 슬롯` 선택(`optSaveSlot`, 1~3): 저장/불러오기 대상 슬롯 지정
 
 ## 4) 저장 포맷
@@ -157,6 +159,7 @@ npm run mobile:mvp:check
   - 자동 재개 정책(`resolveAutoBreakthroughResumePolicy`)이 상태별(이미 진행 중/재개 가능/도겁 허용 필요/재개 보류)로 일관된 액션 가능 여부를 반환하는지 검증
   - 자동 재개 확인 정책(`resolveAutoBreakthroughResumeConfirmPolicy`)이 도겁 단계에서 확인 필요 여부를 일관되게 반환하는지 검증
   - 자동 재개 권장 적용 정책(`resolveAutoBreakthroughResumeRecommendationPlan`)이 확인 모달 경로에서만 자동 적용 플랜을 활성화하는지 검증
+  - 자동 재개 워밍업 설정(`autoBreakthroughResumeWarmupSec`)이 초기 옵션 적용/저장 복원/범위 clamp(`0~30`)에서 일관되게 동작하는지 검증
   - 자동 재개 워밍업 가드(`autoBreakthroughWarmupUntilSec`)가 지정 구간에서 자동 돌파를 지연하고 타임라인 오프셋 기준 잔여 시간을 일관되게 계산하는지 검증
   - 보정 효과 요약(`resolveBreakthroughMitigationSummary`)이 위험도 변화/확률 델타를 일관되게 반환하는지 검증
   - 돌파 권장 정책(`resolveBreakthroughRecommendation`)이 보유 자원/사용 상태에 맞는 문구를 반환하는지 검증

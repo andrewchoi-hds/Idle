@@ -10,6 +10,7 @@ import {
   getStage,
   getStageDisplayNameKo,
   isCopyTargetSlotDisabled,
+  normalizeAutoBreakthroughResumeWarmupSec,
   normalizeSaveSlot,
   normalizeSlotSummaryState,
   parseSliceState,
@@ -77,6 +78,7 @@ const dom = {
   optAutoBreakthrough: document.getElementById("optAutoBreakthrough"),
   optAutoTribulation: document.getElementById("optAutoTribulation"),
   optAutoResumeRealtime: document.getElementById("optAutoResumeRealtime"),
+  optAutoBreakthroughResumeWarmupSec: document.getElementById("optAutoBreakthroughResumeWarmupSec"),
   optBattleSpeed: document.getElementById("optBattleSpeed"),
   optOfflineCapHours: document.getElementById("optOfflineCapHours"),
   optOfflineEventLimit: document.getElementById("optOfflineEventLimit"),
@@ -186,7 +188,7 @@ let slotSummaryDirty = true;
 let slotSummaryLastRenderedAtMs = 0;
 let slotQuickLoadLastAcceptedAtMs = 0;
 const SLOT_QUICK_LOAD_DEBOUNCE_MS = 700;
-const AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC = 6;
+const DEFAULT_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC = 6;
 
 function setStatus(message, isError = false) {
   dom.appStatus.textContent = message;
@@ -714,6 +716,13 @@ function getRealtimeStats() {
   return state.realtimeStats;
 }
 
+function getConfiguredAutoBreakthroughResumeWarmupSec() {
+  return normalizeAutoBreakthroughResumeWarmupSec(
+    state?.settings?.autoBreakthroughResumeWarmupSec,
+    DEFAULT_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC,
+  );
+}
+
 function ensureRealtimeStatsShape() {
   if (!state.realtimeStats || typeof state.realtimeStats !== "object") {
     const currency = captureCurrentCurrencies();
@@ -747,9 +756,12 @@ function getAutoBreakthroughWarmupRemainingSec(statsInput = getRealtimeStats()) 
   return Math.max(0, warmupUntilSec - timelineSec);
 }
 
-function armAutoBreakthroughResumeWarmup(durationSec = AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC) {
+function armAutoBreakthroughResumeWarmup(durationSecInput) {
   const stats = getRealtimeStats();
-  const warmupDurationSec = Math.max(0, Math.floor(Number(durationSec) || 0));
+  const warmupDurationSec = normalizeAutoBreakthroughResumeWarmupSec(
+    durationSecInput,
+    getConfiguredAutoBreakthroughResumeWarmupSec(),
+  );
   const timelineSec = Math.max(0, Math.floor(Number(stats.timelineSec) || 0));
   const currentWarmupUntilSec = Math.max(
     0,
@@ -1239,6 +1251,9 @@ function render() {
   dom.optAutoBreakthrough.checked = state.settings.autoBreakthrough;
   dom.optAutoTribulation.checked = state.settings.autoTribulation;
   dom.optAutoResumeRealtime.checked = state.settings.autoResumeRealtime;
+  dom.optAutoBreakthroughResumeWarmupSec.value = String(
+    getConfiguredAutoBreakthroughResumeWarmupSec(),
+  );
   dom.optBattleSpeed.value = String(state.settings.battleSpeed);
   dom.optOfflineCapHours.value = String(state.settings.offlineCapHours);
   dom.optOfflineEventLimit.value = String(state.settings.offlineEventLimit);
@@ -1426,6 +1441,15 @@ function bindEvents() {
     if (state.settings.autoResumeRealtime) {
       maybeAutoStartRealtime("옵션 변경");
     }
+    render();
+  });
+  dom.optAutoBreakthroughResumeWarmupSec.addEventListener("change", () => {
+    state.settings.autoBreakthroughResumeWarmupSec =
+      normalizeAutoBreakthroughResumeWarmupSec(
+        dom.optAutoBreakthroughResumeWarmupSec.value,
+        getConfiguredAutoBreakthroughResumeWarmupSec(),
+      );
+    persistLocal();
     render();
   });
   dom.optBattleSpeed.addEventListener("change", () => {
@@ -1794,6 +1818,8 @@ function bindEvents() {
     state = createInitialSliceState(context, {
       playerName: state.playerName,
       autoResumeRealtime: state.settings.autoResumeRealtime,
+      autoBreakthroughResumeWarmupSec:
+        state.settings.autoBreakthroughResumeWarmupSec,
       battleSpeed: state.settings.battleSpeed,
       offlineCapHours: state.settings.offlineCapHours,
       offlineEventLimit: state.settings.offlineEventLimit,

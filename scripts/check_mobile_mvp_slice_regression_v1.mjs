@@ -239,10 +239,38 @@ async function main() {
   const initWithResume = createInitialSliceState(context, {
     playerName: "resume",
     autoResumeRealtime: true,
+    autoBreakthroughResumeWarmupSec: 9,
   });
+  const warmupClampBase = createInitialSliceState(context, {
+    playerName: "warmup-clamp",
+  });
+  const warmupClampHigh = parseSliceState(
+    JSON.stringify({
+      ...warmupClampBase,
+      settings: {
+        ...warmupClampBase.settings,
+        autoBreakthroughResumeWarmupSec: 99,
+      },
+    }),
+    context,
+  );
+  const warmupClampLow = parseSliceState(
+    JSON.stringify({
+      ...warmupClampBase,
+      settings: {
+        ...warmupClampBase.settings,
+        autoBreakthroughResumeWarmupSec: -4,
+      },
+    }),
+    context,
+  );
   checks.push({
-    id: "initial_state_applies_auto_resume_option",
-    passed: initWithResume.settings.autoResumeRealtime === true,
+    id: "initial_state_applies_auto_resume_and_warmup_option",
+    passed:
+      initWithResume.settings.autoResumeRealtime === true &&
+      initWithResume.settings.autoBreakthroughResumeWarmupSec === 9 &&
+      warmupClampHigh.settings.autoBreakthroughResumeWarmupSec === 30 &&
+      warmupClampLow.settings.autoBreakthroughResumeWarmupSec === 0,
   });
 
   const beforeBattle = {
@@ -1048,6 +1076,7 @@ async function main() {
   state.settings.autoBreakthrough = true;
   state.settings.autoTribulation = true;
   state.settings.autoResumeRealtime = true;
+  state.settings.autoBreakthroughResumeWarmupSec = 9;
   state.settings.battleSpeed = 3;
   state.settings.offlineCapHours = 18;
   state.settings.offlineEventLimit = 40;
@@ -1119,6 +1148,8 @@ async function main() {
       restored.playerName === state.playerName &&
       restored.lastActiveEpochMs === state.lastActiveEpochMs &&
       restored.settings.autoResumeRealtime === state.settings.autoResumeRealtime &&
+      restored.settings.autoBreakthroughResumeWarmupSec ===
+        state.settings.autoBreakthroughResumeWarmupSec &&
       restored.settings.battleSpeed === state.settings.battleSpeed &&
       restored.settings.offlineCapHours === state.settings.offlineCapHours &&
       restored.settings.offlineEventLimit === state.settings.offlineEventLimit &&
