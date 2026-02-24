@@ -881,6 +881,73 @@ export function resolveBreakthroughAutoAttemptPolicy(previewInput, expectedDelta
   };
 }
 
+export function resolveAutoBreakthroughResumePolicy(context, state) {
+  const stage = getStage(context, state?.progression?.difficultyIndex || 1);
+  const autoBreakthroughEnabled = state?.settings?.autoBreakthrough === true;
+  const autoTribulationEnabled = state?.settings?.autoTribulation === true;
+  const isTribulationStage = stage.is_tribulation === 1;
+  const preview = previewBreakthroughChance(context, state, {
+    useBreakthroughElixir: true,
+    useTribulationTalisman: true,
+  });
+  const expectedDelta = resolveBreakthroughExpectedDelta(context, state, preview);
+  const autoPolicy = resolveBreakthroughAutoAttemptPolicy(preview, expectedDelta);
+
+  if (autoBreakthroughEnabled) {
+    return {
+      reason: "already_enabled",
+      tone: "info",
+      labelKo: "진행 중",
+      messageKo: "자동 돌파가 이미 켜져 있습니다.",
+      actionLabelKo: "자동 돌파 진행 중",
+      actionable: false,
+      shouldEnableAutoBreakthrough: true,
+      shouldEnableAutoTribulation: false,
+      autoPolicy,
+    };
+  }
+
+  if (!autoPolicy.allowed) {
+    return {
+      reason: autoPolicy.reason,
+      tone: autoPolicy.tone,
+      labelKo: "재개 보류",
+      messageKo: autoPolicy.nextActionKo || autoPolicy.messageKo,
+      actionLabelKo: "재개 조건 미충족",
+      actionable: false,
+      shouldEnableAutoBreakthrough: false,
+      shouldEnableAutoTribulation: false,
+      autoPolicy,
+    };
+  }
+
+  if (isTribulationStage && !autoTribulationEnabled) {
+    return {
+      reason: "tribulation_disabled",
+      tone: "warn",
+      labelKo: "도겁 허용 필요",
+      messageKo: "현재 도겁 단계입니다. 자동 도겁 허용을 켜야 자동 돌파가 재개됩니다.",
+      actionLabelKo: "도겁 허용 후 재개",
+      actionable: true,
+      shouldEnableAutoBreakthrough: true,
+      shouldEnableAutoTribulation: true,
+      autoPolicy,
+    };
+  }
+
+  return {
+    reason: "resume_ready",
+    tone: "info",
+    labelKo: "재개 가능",
+    messageKo: "현재 조건에서 자동 돌파를 재개할 수 있습니다.",
+    actionLabelKo: "자동 돌파 재개",
+    actionable: true,
+    shouldEnableAutoBreakthrough: true,
+    shouldEnableAutoTribulation: false,
+    autoPolicy,
+  };
+}
+
 function evaluateBreakthroughOutcome(stage, successPct, deathPct, rng, debugForcedOutcome) {
   if (debugForcedOutcome) {
     return debugForcedOutcome;
