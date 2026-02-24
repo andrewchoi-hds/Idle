@@ -86,6 +86,15 @@ export function resolveOfflineWarmupTelemetry(offlineSummaryInput) {
   };
 }
 
+export function buildOfflineWarmupTelemetryLabelKo(offlineSummaryInput) {
+  const telemetry = resolveOfflineWarmupTelemetry(offlineSummaryInput);
+  if (!telemetry.hadWarmup) {
+    return "워밍업 없음";
+  }
+  const exhaustedText = telemetry.exhausted ? " · 소진" : "";
+  return `워밍업 ${telemetry.before}초 → ${telemetry.after}초 (차단 ${telemetry.skippedAttempts}회${exhaustedText})`;
+}
+
 export function normalizeSaveSlot(slot, fallback = 1) {
   const normalizedFallback = clamp(toNonNegativeInt(fallback, 1), 1, 3);
   const parsed = Number(slot);

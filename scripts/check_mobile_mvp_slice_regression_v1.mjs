@@ -16,6 +16,7 @@ import {
   resolveAutoBreakthroughResumePolicy,
   resolveAutoBreakthroughResumeRecommendationPlan,
   resolveAutoBreakthroughWarmupRemainingSec,
+  buildOfflineWarmupTelemetryLabelKo,
   resolveOfflineWarmupTelemetry,
   previewBreakthroughChance,
   resolveBreakthroughAutoAttemptPolicy,
@@ -303,6 +304,31 @@ async function main() {
         appliedOfflineSec: 0,
         autoBreakthroughWarmupRemainingSecBefore: 0,
       }).hadWarmup === false,
+  });
+
+  checks.push({
+    id: "offline_warmup_telemetry_label_formats_consistently",
+    passed:
+      buildOfflineWarmupTelemetryLabelKo({
+        appliedOfflineSec: 2,
+        autoBreakthroughWarmupRemainingSecBefore: 5,
+        autoBreakthroughWarmupRemainingSecAfter: 3,
+        autoSummary: {
+          autoBreakthroughWarmupSkips: 2,
+        },
+      }).includes("워밍업 5초 → 3초") &&
+      buildOfflineWarmupTelemetryLabelKo({
+        appliedOfflineSec: 3,
+        autoBreakthroughWarmupRemainingSecBefore: 3,
+        autoBreakthroughWarmupRemainingSecAfter: 0,
+        autoSummary: {
+          autoBreakthroughWarmupSkips: 3,
+        },
+      }).includes("소진") &&
+      buildOfflineWarmupTelemetryLabelKo({
+        appliedOfflineSec: 0,
+        autoBreakthroughWarmupRemainingSecBefore: 0,
+      }) === "워밍업 없음",
   });
 
   const beforeBattle = {

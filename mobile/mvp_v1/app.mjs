@@ -14,6 +14,7 @@ import {
   normalizeSaveSlot,
   normalizeSlotSummaryState,
   parseSliceState,
+  buildOfflineWarmupTelemetryLabelKo,
   resolveAutoBreakthroughWarmupRemainingSec,
   resolveAutoBreakthroughResumeConfirmPolicy,
   resolveAutoBreakthroughResumeRecommendationPlan,
@@ -100,6 +101,7 @@ const dom = {
   offlineModal: document.getElementById("offlineModal"),
   offlineAppliedDuration: document.getElementById("offlineAppliedDuration"),
   offlineRawDuration: document.getElementById("offlineRawDuration"),
+  offlineWarmupSummary: document.getElementById("offlineWarmupSummary"),
   offlineCapState: document.getElementById("offlineCapState"),
   offlineBattleCount: document.getElementById("offlineBattleCount"),
   offlineBreakthroughCount: document.getElementById("offlineBreakthroughCount"),
@@ -859,15 +861,9 @@ function buildOfflineStatus(prefix, summary) {
     return `${prefix}: 오프라인 정산 없음`;
   }
   const auto = summary.autoSummary;
-  const warmup = resolveOfflineWarmupTelemetry(summary);
-  const warmupSkipText =
-    warmup.skippedAttempts > 0
-      ? ` · 워밍업 차단 ${warmup.skippedAttempts}회`
-      : "";
-  const warmupRemainingText =
-    warmup.after > 0
-      ? ` · 워밍업 잔여 ${warmup.after}초`
-      : "";
+  const warmupLabelKo = buildOfflineWarmupTelemetryLabelKo(summary);
+  const warmupText =
+    warmupLabelKo === "워밍업 없음" ? "" : ` · ${warmupLabelKo}`;
   const maxOfflineHours = Math.floor((summary.maxOfflineSec || 0) / 3600);
   const capText = summary.cappedByMaxOffline ? ` · ${maxOfflineHours}시간 cap 적용` : "";
   const reasonText = formatPolicyBlockReasonSummary(auto?.breakthroughPolicyBlockReasons);
@@ -880,7 +876,7 @@ function buildOfflineStatus(prefix, summary) {
   const pausedText = auto?.autoBreakthroughPaused
     ? ` · 자동돌파 일시정지(${String(auto.autoBreakthroughPauseReasonLabelKo || "정책")})`
     : "";
-  return `${prefix}: ${fmtDurationSec(summary.appliedOfflineSec)} 정산 (전투 ${auto?.battles ?? 0}회 · 돌파 ${auto?.breakthroughs ?? 0}회${warmupSkipText}${blockedText}${pausedText}${warmupRemainingText} · 환생 ${auto?.rebirths ?? 0}회${capText})`;
+  return `${prefix}: ${fmtDurationSec(summary.appliedOfflineSec)} 정산 (전투 ${auto?.battles ?? 0}회 · 돌파 ${auto?.breakthroughs ?? 0}회${warmupText}${blockedText}${pausedText} · 환생 ${auto?.rebirths ?? 0}회${capText})`;
 }
 
 function getCurrentSpeedTuning() {
@@ -1135,8 +1131,10 @@ function showOfflineModal(offline) {
   const { summary, delta, events } = offline;
   const auto = summary.autoSummary;
   const warmup = resolveOfflineWarmupTelemetry(summary);
+  const warmupLabelKo = buildOfflineWarmupTelemetryLabelKo(summary);
   dom.offlineAppliedDuration.textContent = fmtDurationSec(summary.appliedOfflineSec);
   dom.offlineRawDuration.textContent = fmtDurationSec(summary.rawOfflineSec);
+  dom.offlineWarmupSummary.textContent = warmupLabelKo;
   dom.offlineCapState.textContent = summary.cappedByMaxOffline
     ? `${state.settings.offlineCapHours}시간 적용`
     : "미적용";
@@ -1151,6 +1149,7 @@ function showOfflineModal(offline) {
     playerName: state.playerName,
     stageDifficultyIndex: state.progression.difficultyIndex,
     warmup,
+    warmupLabelKo,
     summary,
     delta,
     events,

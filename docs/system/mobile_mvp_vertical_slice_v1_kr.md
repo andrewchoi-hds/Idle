@@ -90,6 +90,7 @@ npm run mobile:mvp:serve
     - 로컬 불러오기/JSON 가져오기 직후에도 동일 로직 적용
     - 자동 재개 워밍업이 남아 있으면 오프라인 정산에서도 해당 구간 자동 돌파를 skip하고 잔여 시간을 동기화
     - 정산 발생 시 팝업 카드로 시간/전투/돌파/환생/재화 순변화 노출
+    - 팝업 카드에 워밍업 요약(`offlineWarmupSummary`)을 표시해 before/after/차단 횟수를 즉시 확인
     - 팝업에서 세부 로그 토글(최근 이벤트) + 정산 리포트 JSON 내보내기 지원
 - 옵션:
   - `앱 복귀 시 실시간 자동 재개` (`autoResumeRealtime`, on/off)
@@ -131,6 +132,7 @@ npm run mobile:mvp:serve
   - 정산 후 단일 `offline` 로그를 남기고 `lastActiveEpochMs`를 현재 시각으로 동기화
 - UI:
   - `offlineModal` 카드에서 정산 결과를 즉시 확인 후 닫기 가능
+  - `offlineWarmupSummary`에 워밍업 요약 라벨(`buildOfflineWarmupTelemetryLabelKo`) 표시
   - `btnToggleOfflineDetail`로 상세 이벤트 목록 확장/축소
   - `btnExportOfflineReport`로 정산 리포트를 JSON 형태로 `savePayload`에 주입(클립보드 복사 시도)
     - 리포트에 워밍업 텔레메트리(`warmup.before/after/consumed/skippedAttempts`)를 함께 기록
@@ -166,6 +168,7 @@ npm run mobile:mvp:check
   - 자동 재개 워밍업 설정(`autoBreakthroughResumeWarmupSec`)이 초기 옵션 적용/저장 복원/범위 clamp(`0~30`)에서 일관되게 동작하는지 검증
   - 워밍업 잔여시간 계산(`resolveAutoBreakthroughWarmupRemainingSec`)이 경과 시간에 따라 0 이하로 내려가지 않도록 clamp되는지 검증
   - 오프라인 워밍업 텔레메트리(`resolveOfflineWarmupTelemetry`)가 before/after/consumed를 일관되게 정규화하는지 검증
+  - 오프라인 워밍업 라벨(`buildOfflineWarmupTelemetryLabelKo`)이 `워밍업 없음/부분 소모/소진` 케이스를 일관된 문구로 반환하는지 검증
   - 자동 재개 워밍업 가드(`autoBreakthroughWarmupUntilSec`)가 지정 구간에서 자동 돌파를 지연하고 타임라인 오프셋 기준 잔여 시간을 일관되게 계산하는지 검증
   - 오프라인 정산(`runOfflineCatchup`)이 워밍업 가드와 잔여시간을 일관되게 반영하는지 검증
   - 오프라인 정산 summary 워밍업 메타(`autoBreakthroughWarmupRemainingSecBefore/After`)가 경과시간 0초/부분 경과/완전 소진 케이스에서 일관되게 기록되는지 검증
