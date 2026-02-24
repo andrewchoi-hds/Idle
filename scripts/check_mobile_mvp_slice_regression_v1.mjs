@@ -125,11 +125,17 @@ async function main() {
   const copyToEmpty = resolveSlotCopyPolicy(2, 3, "empty");
   const copyToData = resolveSlotCopyPolicy(2, 1, "ok");
   const copyToCorrupt = resolveSlotCopyPolicy(2, 1, "corrupt");
+  const copyFromEmpty = resolveSlotCopyPolicy(2, 3, "empty", "empty");
+  const copyFromCorrupt = resolveSlotCopyPolicy(2, 3, "empty", "corrupt");
   checks.push({
     id: "slot_copy_policy_requires_confirm_only_on_non_empty_target",
     passed:
       copySameSlot.allowed === false &&
       copySameSlot.reason === "same_slot" &&
+      copyFromEmpty.allowed === false &&
+      copyFromEmpty.reason === "source_empty" &&
+      copyFromCorrupt.allowed === false &&
+      copyFromCorrupt.reason === "source_corrupt" &&
       copyToEmpty.allowed === true &&
       copyToEmpty.requiresConfirm === false &&
       copyToEmpty.reason === "target_empty" &&

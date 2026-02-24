@@ -238,6 +238,16 @@ button:active {
   transform: translateY(1px);
 }
 
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  filter: none;
+}
+
+button:disabled:hover {
+  filter: none;
+}
+
 textarea,
 input[type="text"],
 input[type="number"],

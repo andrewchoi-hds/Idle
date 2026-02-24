@@ -810,3 +810,11 @@
 
 ## 167) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(슬롯 복제/삭제 정책 회귀 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 168) 다음 순차 작업
+1. [완료] 슬롯 복제 정책에 소스 슬롯 상태(`source_empty/source_corrupt`)를 포함하도록 확장.
+2. [완료] 저장 패널 렌더에서 복제/삭제 버튼 활성 상태를 정책 기반으로 동기화.
+3. [완료] 모바일 회귀 체크에 소스 슬롯 상태 기반 복제 차단 시나리오 추가.
+
+## 169) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(슬롯 액션 버튼 비활성화 규칙 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

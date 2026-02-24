@@ -98,14 +98,38 @@ export function resolveDebouncedAction(lastAcceptedEpochMs, nowEpochMs, debounce
   };
 }
 
-export function resolveSlotCopyPolicy(sourceSlot, targetSlot, targetState) {
+export function resolveSlotCopyPolicy(sourceSlot, targetSlot, targetState, sourceState = "ok") {
   const normalizedSourceSlot = normalizeSaveSlot(sourceSlot, 1);
   const normalizedTargetSlot = normalizeSaveSlot(targetSlot, normalizedSourceSlot);
+  const normalizedSourceState = normalizeSlotSummaryState(sourceState, "empty");
   const normalizedTargetState = normalizeSlotSummaryState(targetState, "empty");
+  if (normalizedSourceState === "empty") {
+    return {
+      sourceSlot: normalizedSourceSlot,
+      sourceState: normalizedSourceState,
+      targetSlot: normalizedTargetSlot,
+      targetState: normalizedTargetState,
+      allowed: false,
+      requiresConfirm: false,
+      reason: "source_empty",
+    };
+  }
+  if (normalizedSourceState === "corrupt") {
+    return {
+      sourceSlot: normalizedSourceSlot,
+      sourceState: normalizedSourceState,
+      targetSlot: normalizedTargetSlot,
+      targetState: normalizedTargetState,
+      allowed: false,
+      requiresConfirm: false,
+      reason: "source_corrupt",
+    };
+  }
   const sameSlot = normalizedSourceSlot === normalizedTargetSlot;
   if (sameSlot) {
     return {
       sourceSlot: normalizedSourceSlot,
+      sourceState: normalizedSourceState,
       targetSlot: normalizedTargetSlot,
       targetState: normalizedTargetState,
       allowed: false,
@@ -116,6 +140,7 @@ export function resolveSlotCopyPolicy(sourceSlot, targetSlot, targetState) {
   if (normalizedTargetState === "empty") {
     return {
       sourceSlot: normalizedSourceSlot,
+      sourceState: normalizedSourceState,
       targetSlot: normalizedTargetSlot,
       targetState: normalizedTargetState,
       allowed: true,
@@ -125,6 +150,7 @@ export function resolveSlotCopyPolicy(sourceSlot, targetSlot, targetState) {
   }
   return {
     sourceSlot: normalizedSourceSlot,
+    sourceState: normalizedSourceState,
     targetSlot: normalizedTargetSlot,
     targetState: normalizedTargetState,
     allowed: true,

@@ -48,8 +48,10 @@ npm run mobile:mvp:serve
   - JSON 내보내기/가져오기
   - 활성 슬롯 -> 대상 슬롯 복제(`optCopySlotTarget`, `btnCopySlot`)
     - 대상 슬롯에 데이터가 있으면 overwrite 확인 모달 후 진행
+    - 활성 슬롯이 비어있거나 손상 상태면 복제 버튼 비활성화
   - 활성 슬롯 삭제(메모리 상태 유지)
     - 활성 슬롯이 비어 있으면 삭제를 skip하고 상태 메시지만 표시
+    - 활성 슬롯이 비어 있으면 삭제 버튼 비활성화
   - 슬롯 복제/삭제 확인 규칙은 엔진 정책 함수로 공통 관리
   - 슬롯 요약 목록(슬롯별 플레이어/경지/저장시각/상태) 표시
   - 슬롯 요약 항목 탭/Enter로 해당 슬롯 즉시 활성화 + 저장 데이터가 있으면 즉시 불러오기
@@ -120,7 +122,7 @@ npm run mobile:mvp:check
   - 사망 실패 → 환생 루프 발동
   - 슬롯 요약 퀵 액션 분기(`ok/empty/corrupt`) 결정 로직 검증
   - 슬롯 요약 퀵 로드 디바운스(0.7초) 중복 입력 차단 검증
-  - 슬롯 복제/삭제 정책(`same_slot/target_empty/target_has_data/corrupt_slot`) 검증
+  - 슬롯 복제/삭제 정책(`source_empty/source_corrupt/same_slot/target_empty/target_has_data/corrupt_slot`) 검증
   - 전투 속도 설정에 따른 자동 루프 cadence 차이 검증
   - 타임라인 오프셋 기반 1초 chunk 연속 실행 시 cadence 유지 검증(실시간 루프 기반)
   - 자동 10초 루프 실행
