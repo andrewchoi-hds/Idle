@@ -26,6 +26,8 @@ npm run pr:body:lint:regression:summary:md
 - `body_file_relative_change_strict_fail`: 상대 경로 변경 항목 strict 실패
 - `event_json_valid_pass`: GitHub event JSON 입력 통과
 - `event_json_invalid_fail`: 부실 본문(placeholder/누락) 실패
+- `body_file_validation_order_mismatch_fail`: Validation 체크리스트 순서 불일치 실패
+- `body_file_validation_unexpected_fail`: Validation 비표준 커맨드 포함 실패
 - 정상 케이스의 `Validation` 체크리스트는 `pr_validation_commands_v1.py` 표준 명령 목록을 기준으로 생성된다.
 
 ## 4) CI 연계
