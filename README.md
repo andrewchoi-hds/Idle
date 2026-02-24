@@ -22,6 +22,7 @@ npm run save:regression:summary:md
 npm run pr:body:gen
 npm run pr:body:lint
 npm run pr:validation:sync:check
+npm run pr:validation:sync:apply
 npm run pr:body:lint:regression:check
 npm run pr:body:lint:regression:check:report
 npm run pr:body:lint:regression:summary:md

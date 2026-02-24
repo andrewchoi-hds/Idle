@@ -580,3 +580,11 @@
 
 ## 111) 추가 문서
 - PR Validation 체크리스트 동기화 가이드: `/Users/hirediversity/Idle/docs/system/pr_validation_checklist_sync_v1_kr.md`
+
+## 112) 다음 순차 작업
+1. [완료] PR Validation 동기화 체크 스크립트에 자동 보정 모드(`--write`) 추가.
+2. [완료] 동기화 체크 결과를 Step Summary로 출력하는 옵션(`--summary-file`) 추가 및 workflow 연동.
+3. [완료] npm 명령(`pr:validation:sync:apply`)과 운영 문서에 자동 보정/요약 절차 반영.
+
+## 113) 추가 문서
+- PR Validation 체크리스트 동기화 가이드(자동 보정/요약 반영): `/Users/hirediversity/Idle/docs/system/pr_validation_checklist_sync_v1_kr.md`
