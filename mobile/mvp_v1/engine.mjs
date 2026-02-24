@@ -248,6 +248,31 @@ export function buildOfflineDetailHiddenKindsSummaryLabelKo(
   return `숨김 상세 ${parts.join(" · ")}${remainingText}`;
 }
 
+export function buildOfflineDetailReportSnapshot(eventsInput, maxKindsInput = 3) {
+  const rows = Array.isArray(eventsInput) ? eventsInput.slice() : [];
+  const maxKinds = clamp(toNonNegativeInt(maxKindsInput, 3), 1, 5);
+  const allSummary = summarizeOfflineDetailFilterResult(rows, "all");
+  const criticalSummary = summarizeOfflineDetailFilterResult(rows, "critical");
+  const hiddenKindsSummary = summarizeOfflineDetailHiddenKinds(rows, "critical");
+  return {
+    totalEvents: allSummary.total,
+    visibleAllEvents: allSummary.visible,
+    visibleCriticalEvents: criticalSummary.visible,
+    hiddenCriticalEvents: criticalSummary.hidden,
+    labelsKo: {
+      all: buildOfflineDetailFilterSummaryLabelKo(rows, "all"),
+      critical: buildOfflineDetailFilterSummaryLabelKo(rows, "critical"),
+      hidden: buildOfflineDetailHiddenSummaryLabelKo(rows, "critical"),
+      hiddenKinds: buildOfflineDetailHiddenKindsSummaryLabelKo(
+        rows,
+        "critical",
+        maxKinds,
+      ),
+    },
+    hiddenKindsTop: hiddenKindsSummary.items.slice(0, maxKinds),
+  };
+}
+
 export function summarizeOfflineDetailCriticalEvents(eventsInput) {
   const rows = Array.isArray(eventsInput) ? eventsInput : [];
   const summary = {
