@@ -173,6 +173,81 @@ export function buildOfflineDetailHiddenSummaryLabelKo(eventsInput, modeInput = 
   return `숨김 이벤트 ${summary.hidden}건`;
 }
 
+function resolveOfflineDetailKindLabelKo(kindInput) {
+  if (kindInput === "battle_win") return "전투 승리";
+  if (kindInput === "battle_loss") return "전투 패배";
+  if (kindInput === "breakthrough_success") return "돌파 성공";
+  if (kindInput === "breakthrough_minor_fail") return "돌파 경상 실패";
+  if (kindInput === "breakthrough_retreat_fail") return "돌파 후퇴 실패";
+  if (kindInput === "breakthrough_blocked_auto_policy") return "자동 돌파 차단";
+  if (kindInput === "offline_warmup_summary") return "워밍업 요약";
+  if (kindInput === "auto_breakthrough_paused_by_policy") return "자동 돌파 일시정지";
+  if (kindInput === "breakthrough_death_fail") return "도겁 사망";
+  return "기타";
+}
+
+export function summarizeOfflineDetailHiddenKinds(eventsInput, modeInput = "all") {
+  const rows = Array.isArray(eventsInput) ? eventsInput.slice() : [];
+  const mode = modeInput === "critical" ? "critical" : "all";
+  const hiddenRows =
+    mode === "critical"
+      ? rows.filter(
+          (row) =>
+            !isCriticalOfflineDetailEventKind(
+              row && typeof row.kind === "string" ? row.kind : "",
+            ),
+        )
+      : [];
+  const countsByKind = new Map();
+  hiddenRows.forEach((row, index) => {
+    const kind = row && typeof row.kind === "string" ? row.kind : "unknown";
+    const prev = countsByKind.get(kind);
+    if (prev) {
+      prev.count += 1;
+      return;
+    }
+    countsByKind.set(kind, {
+      kind,
+      labelKo: resolveOfflineDetailKindLabelKo(kind),
+      count: 1,
+      firstIndex: index,
+    });
+  });
+  const items = Array.from(countsByKind.values()).sort((a, b) => {
+    if (b.count !== a.count) {
+      return b.count - a.count;
+    }
+    return a.firstIndex - b.firstIndex;
+  });
+  return {
+    mode,
+    hidden: hiddenRows.length,
+    items: items.map((item) => ({
+      kind: item.kind,
+      labelKo: item.labelKo,
+      count: item.count,
+    })),
+  };
+}
+
+export function buildOfflineDetailHiddenKindsSummaryLabelKo(
+  eventsInput,
+  modeInput = "all",
+  maxKindsInput = 3,
+) {
+  const summary = summarizeOfflineDetailHiddenKinds(eventsInput, modeInput);
+  if (summary.hidden <= 0) {
+    return "숨김 상세 없음";
+  }
+  const maxKinds = clamp(toNonNegativeInt(maxKindsInput, 3), 1, 5);
+  const topItems = summary.items.slice(0, maxKinds);
+  const shownCount = topItems.reduce((acc, item) => acc + item.count, 0);
+  const parts = topItems.map((item) => `${item.labelKo} ${item.count}건`);
+  const remaining = Math.max(0, summary.hidden - shownCount);
+  const remainingText = remaining > 0 ? ` · 외 ${remaining}건` : "";
+  return `숨김 상세 ${parts.join(" · ")}${remainingText}`;
+}
+
 export function summarizeOfflineDetailCriticalEvents(eventsInput) {
   const rows = Array.isArray(eventsInput) ? eventsInput : [];
   const summary = {

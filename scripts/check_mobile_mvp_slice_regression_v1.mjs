@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 
 import {
   buildOfflineDetailCriticalSummaryLabelKo,
+  buildOfflineDetailHiddenKindsSummaryLabelKo,
   buildOfflineDetailHiddenSummaryLabelKo,
   buildOfflineDetailFilterSummaryLabelKo,
   buildStorageKeyForSlot,
@@ -19,6 +20,7 @@ import {
   prioritizeOfflineDetailEvents,
   summarizeOfflineDetailCriticalEvents,
   summarizeOfflineDetailFilterResult,
+  summarizeOfflineDetailHiddenKinds,
   resolveAutoBreakthroughResumeConfirmPolicy,
   resolveAutoBreakthroughResumePolicy,
   resolveAutoBreakthroughResumeRecommendationPlan,
@@ -419,6 +421,27 @@ async function main() {
       buildOfflineDetailHiddenSummaryLabelKo(prioritizedOfflineEvents, "critical") ===
         "비핵심 2건 숨김" &&
       buildOfflineDetailHiddenSummaryLabelKo([], "critical") === "숨김 이벤트 없음",
+  });
+
+  const hiddenKindsSummary = summarizeOfflineDetailHiddenKinds(
+    prioritizedOfflineEvents,
+    "critical",
+  );
+  checks.push({
+    id: "offline_detail_hidden_kinds_summary_label_matches_breakdown",
+    passed:
+      hiddenKindsSummary.mode === "critical" &&
+      hiddenKindsSummary.hidden === 2 &&
+      hiddenKindsSummary.items.length === 2 &&
+      hiddenKindsSummary.items[0].kind === "battle_win" &&
+      hiddenKindsSummary.items[0].count === 1 &&
+      hiddenKindsSummary.items[1].kind === "battle_loss" &&
+      hiddenKindsSummary.items[1].count === 1 &&
+      buildOfflineDetailHiddenKindsSummaryLabelKo(prioritizedOfflineEvents, "all") ===
+        "숨김 상세 없음" &&
+      buildOfflineDetailHiddenKindsSummaryLabelKo(prioritizedOfflineEvents, "critical") ===
+        "숨김 상세 전투 승리 1건 · 전투 패배 1건" &&
+      buildOfflineDetailHiddenKindsSummaryLabelKo([], "critical") === "숨김 상세 없음",
   });
 
   const offlineCriticalSummary = summarizeOfflineDetailCriticalEvents([
