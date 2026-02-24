@@ -588,3 +588,11 @@
 
 ## 113) 추가 문서
 - PR Validation 체크리스트 동기화 가이드(자동 보정/요약 반영): `/Users/hirediversity/Idle/docs/system/pr_validation_checklist_sync_v1_kr.md`
+
+## 114) 다음 순차 작업
+1. [완료] PR Validation 동기화 스크립트 회귀 체크 스크립트(`pr:validation:sync:regression:check`) 추가.
+2. [완료] 회귀 리포트/CI 요약 생성 명령(`pr:validation:sync:regression:check:report`, `pr:validation:sync:regression:summary:md`) 추가.
+3. [완료] Required Check workflow Step Summary/Artifacts에 PR Validation 동기화 회귀 결과 연동.
+
+## 115) 추가 문서
+- PR Validation 동기화 회귀 체크 가이드: `/Users/hirediversity/Idle/docs/system/pr_validation_sync_regression_v1_kr.md`
