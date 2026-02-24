@@ -88,6 +88,7 @@ npm run mobile:mvp:serve
   - 오프라인 복귀 정산(최대 12시간 cap)
     - 앱 진입 시 기존 세이브 자동 로드 후 1회 적용
     - 로컬 불러오기/JSON 가져오기 직후에도 동일 로직 적용
+    - 자동 재개 워밍업이 남아 있으면 오프라인 정산에서도 해당 구간 자동 돌파를 skip하고 잔여 시간을 동기화
     - 정산 발생 시 팝업 카드로 시간/전투/돌파/환생/재화 순변화 노출
     - 팝업에서 세부 로그 토글(최근 이벤트) + 정산 리포트 JSON 내보내기 지원
 - 옵션:
@@ -125,7 +126,7 @@ npm run mobile:mvp:serve
   - `lastActiveEpochMs`
   - `lastSavedAtIso`(파싱 가능 시)
 - 적용 방식:
-  - `battleSpeed` 기반 cadence를 적용한 `runAutoSliceSeconds(..., { seconds: appliedOfflineSec, suppressLogs: true })`로 압축 정산
+  - `battleSpeed` 기반 cadence를 적용한 `runAutoSliceSeconds(..., { seconds: appliedOfflineSec, suppressLogs: true, autoBreakthroughWarmupUntilSec })`로 압축 정산
   - 정산 후 단일 `offline` 로그를 남기고 `lastActiveEpochMs`를 현재 시각으로 동기화
 - UI:
   - `offlineModal` 카드에서 정산 결과를 즉시 확인 후 닫기 가능
@@ -163,6 +164,7 @@ npm run mobile:mvp:check
   - 자동 재개 워밍업 설정(`autoBreakthroughResumeWarmupSec`)이 초기 옵션 적용/저장 복원/범위 clamp(`0~30`)에서 일관되게 동작하는지 검증
   - 워밍업 잔여시간 계산(`resolveAutoBreakthroughWarmupRemainingSec`)이 경과 시간에 따라 0 이하로 내려가지 않도록 clamp되는지 검증
   - 자동 재개 워밍업 가드(`autoBreakthroughWarmupUntilSec`)가 지정 구간에서 자동 돌파를 지연하고 타임라인 오프셋 기준 잔여 시간을 일관되게 계산하는지 검증
+  - 오프라인 정산(`runOfflineCatchup`)이 워밍업 가드와 잔여시간을 일관되게 반영하는지 검증
   - 보정 효과 요약(`resolveBreakthroughMitigationSummary`)이 위험도 변화/확률 델타를 일관되게 반환하는지 검증
   - 돌파 권장 정책(`resolveBreakthroughRecommendation`)이 보유 자원/사용 상태에 맞는 문구를 반환하는지 검증
   - 돌파 권장 토글 정책(`resolveBreakthroughRecommendationToggles`)이 고위험/중위험/비도겁 구간에서 올바른 토글 상태를 반환하는지 검증

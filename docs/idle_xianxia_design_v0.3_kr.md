@@ -1002,3 +1002,11 @@
 
 ## 215) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(자동 10초 진행 워밍업 정렬 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 216) 다음 순차 작업
+1. [완료] 엔진 오프라인 정산(`runOfflineCatchup`)에 워밍업 가드 입력(`autoBreakthroughWarmupUntilSec`)을 연동.
+2. [완료] 앱 오프라인 정산 경로(`applyOfflineCatchupNow`)가 워밍업 잔여를 정산 전/후 동기화하도록 개선.
+3. [완료] 모바일 회귀 체크에 오프라인 정산 워밍업 가드/잔여시간 시나리오를 추가.
+
+## 217) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 정산 워밍업 동기화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
