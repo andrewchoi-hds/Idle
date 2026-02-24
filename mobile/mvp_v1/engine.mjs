@@ -460,6 +460,98 @@ export function resolveBreakthroughRiskTier(preview = {}) {
   };
 }
 
+export function resolveBreakthroughRecommendation(currentPreview, options = {}) {
+  const preview =
+    currentPreview && typeof currentPreview === "object" ? currentPreview : {};
+  const currentRisk = resolveBreakthroughRiskTier(preview);
+  const hasBreakthroughElixir = options.hasBreakthroughElixir === true;
+  const hasTribulationTalisman = options.hasTribulationTalisman === true;
+  const usingBreakthroughElixir = options.usingBreakthroughElixir === true;
+  const usingTribulationTalisman = options.usingTribulationTalisman === true;
+  const mitigatedPreview =
+    options.mitigatedPreview && typeof options.mitigatedPreview === "object"
+      ? options.mitigatedPreview
+      : preview;
+  const mitigatedRisk = resolveBreakthroughRiskTier(mitigatedPreview);
+  const currentSuccessPct = clamp(Number(preview.successPct) || 0, 0, 100);
+  const mitigatedSuccessPct = clamp(Number(mitigatedPreview.successPct) || 0, 0, 100);
+  const currentDeathFailPct = clamp(Number(preview.deathFailPct) || 0, 0, 100);
+  const mitigatedDeathFailPct = clamp(
+    Number(mitigatedPreview.deathFailPct) || 0,
+    0,
+    100,
+  );
+  const successGainPct = Math.max(0, mitigatedSuccessPct - currentSuccessPct);
+  const deathFailDropPct = Math.max(0, currentDeathFailPct - mitigatedDeathFailPct);
+  const riskReduced =
+    mitigatedRisk.rank < currentRisk.rank ||
+    deathFailDropPct >= 0.1 ||
+    successGainPct >= 0.1;
+  const tribulationStage = preview?.stage?.is_tribulation === 1;
+
+  if (!tribulationStage || currentRisk.tier === "safe") {
+    return {
+      tone: "info",
+      labelKo: "자원 비축",
+      messageKo: "비도겁 구간입니다. 영약/수호부를 비축하세요.",
+    };
+  }
+
+  if (
+    (currentRisk.tier === "high" || currentRisk.tier === "extreme") &&
+    hasTribulationTalisman &&
+    !usingTribulationTalisman
+  ) {
+    const dropText =
+      deathFailDropPct > 0
+        ? ` (예상 사망 위험 ${deathFailDropPct.toFixed(1)}%p 감소)`
+        : "";
+    return {
+      tone: "warn",
+      labelKo: "수호부 권장",
+      messageKo: `도겁 구간 위험도가 높습니다. 수호부 사용을 권장합니다.${dropText}`,
+    };
+  }
+
+  if (
+    (currentRisk.tier === "medium" || currentRisk.tier === "high" || currentRisk.tier === "extreme") &&
+    hasBreakthroughElixir &&
+    !usingBreakthroughElixir
+  ) {
+    const gainText =
+      successGainPct > 0
+        ? ` (예상 성공률 +${successGainPct.toFixed(1)}%p)`
+        : "";
+    return {
+      tone: "warn",
+      labelKo: "영약 권장",
+      messageKo: `돌파 성공률이 낮습니다. 영약 사용을 권장합니다.${gainText}`,
+    };
+  }
+
+  if (currentRisk.tier === "extreme" && !riskReduced) {
+    return {
+      tone: "error",
+      labelKo: "재정비 권장",
+      messageKo: "사망 위험이 매우 높습니다. 환생 보정과 자원 확보 후 재도전하세요.",
+    };
+  }
+
+  if (usingTribulationTalisman || usingBreakthroughElixir) {
+    return {
+      tone: "info",
+      labelKo: "준비 완료",
+      messageKo: `현재 위험도 ${currentRisk.labelKo}. 설정 유지 후 돌파를 진행하세요.`,
+    };
+  }
+
+  return {
+    tone: currentRisk.tone === "error" ? "warn" : currentRisk.tone,
+    labelKo: "주의 진행",
+    messageKo: `현재 위험도 ${currentRisk.labelKo}. 필요 시 수동으로 자원을 보강하세요.`,
+  };
+}
+
 function evaluateBreakthroughOutcome(stage, successPct, deathPct, rng, debugForcedOutcome) {
   if (debugForcedOutcome) {
     return debugForcedOutcome;
