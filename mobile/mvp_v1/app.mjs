@@ -1067,15 +1067,12 @@ function applyOfflineCatchupNow() {
     autoBreakthroughWarmupUntilSec: warmupRemainingSecBefore,
     syncAnchorToNow: true,
   });
-  const warmupRemainingSecAfter = result.summary.autoSummary
-    ? Math.max(
-        0,
-        Math.floor(Number(result.summary.autoSummary.autoBreakthroughWarmupRemainingSec) || 0),
-      )
-    : resolveAutoBreakthroughWarmupRemainingSec(
-        warmupRemainingSecBefore,
-        result.summary.appliedOfflineSec,
-      );
+  const warmupRemainingSecAfter = Math.max(
+    0,
+    Math.floor(
+      Number(result.summary.autoBreakthroughWarmupRemainingSecAfter) || 0,
+    ),
+  );
   stats.autoBreakthroughWarmupUntilTimelineSec = Math.max(
     0,
     Math.floor(Number(stats.timelineSec) || 0) + warmupRemainingSecAfter,

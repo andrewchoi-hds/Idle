@@ -1159,6 +1159,8 @@ async function main() {
     id: "offline_catchup_respects_auto_breakthrough_warmup_guard",
     passed:
       offlineWarmup.summary.autoSummary !== null &&
+      offlineWarmup.summary.autoBreakthroughWarmupRemainingSecBefore === 3 &&
+      offlineWarmup.summary.autoBreakthroughWarmupRemainingSecAfter === 0 &&
       offlineWarmup.summary.autoSummary.seconds === 5 &&
       offlineWarmup.summary.autoSummary.breakthroughs === 2 &&
       offlineWarmup.summary.autoSummary.autoBreakthroughWarmupSkips === 3 &&
@@ -1167,9 +1169,36 @@ async function main() {
         (event) => event.kind === "auto_breakthrough_warmup_skip",
       ) &&
       offlineWarmupRemain.summary.autoSummary !== null &&
+      offlineWarmupRemain.summary.autoBreakthroughWarmupRemainingSecBefore === 3 &&
+      offlineWarmupRemain.summary.autoBreakthroughWarmupRemainingSecAfter === 1 &&
       offlineWarmupRemain.summary.autoSummary.seconds === 2 &&
       offlineWarmupRemain.summary.autoSummary.autoBreakthroughWarmupSkips === 2 &&
       offlineWarmupRemain.summary.autoSummary.autoBreakthroughWarmupRemainingSec === 1,
+  });
+
+  const offlineWarmupNoElapsedState = createInitialSliceState(context, {
+    playerName: "offline-warmup-no-elapsed",
+  });
+  offlineWarmupNoElapsedState.lastActiveEpochMs = 2000000020000;
+  const offlineWarmupNoElapsed = runOfflineCatchup(
+    context,
+    offlineWarmupNoElapsedState,
+    createSeededRng(303),
+    {
+      nowEpochMs: offlineWarmupNoElapsedState.lastActiveEpochMs,
+      maxOfflineHours: 12,
+      maxCollectedEvents: 20,
+      autoBreakthroughWarmupUntilSec: 4,
+      syncAnchorToNow: true,
+    },
+  );
+  checks.push({
+    id: "offline_catchup_keeps_warmup_when_no_time_elapsed",
+    passed:
+      offlineWarmupNoElapsed.summary.skipReason === "time_not_elapsed" &&
+      offlineWarmupNoElapsed.summary.autoSummary === null &&
+      offlineWarmupNoElapsed.summary.autoBreakthroughWarmupRemainingSecBefore === 4 &&
+      offlineWarmupNoElapsed.summary.autoBreakthroughWarmupRemainingSecAfter === 4,
   });
 
   const offlineNowEpochMs = 1771894800000;
@@ -1189,6 +1218,8 @@ async function main() {
       offline.summary.rawOfflineSec === 72000 &&
       offline.summary.appliedOfflineSec === 64800 &&
       offline.summary.cappedByMaxOffline === true &&
+      offline.summary.autoBreakthroughWarmupRemainingSecBefore === 0 &&
+      offline.summary.autoBreakthroughWarmupRemainingSecAfter === 0 &&
       offline.summary.autoSummary !== null &&
       offline.summary.autoSummary.seconds === 64800 &&
       Array.isArray(offline.summary.autoSummary.collectedEvents) &&
@@ -1210,7 +1241,9 @@ async function main() {
       noElapsed.summary.rawOfflineSec === 0 &&
       noElapsed.summary.appliedOfflineSec === 0 &&
       noElapsed.summary.skipReason === "time_not_elapsed" &&
-      noElapsed.summary.autoSummary === null,
+      noElapsed.summary.autoSummary === null &&
+      noElapsed.summary.autoBreakthroughWarmupRemainingSecBefore === 0 &&
+      noElapsed.summary.autoBreakthroughWarmupRemainingSecAfter === 0,
   });
 
   const serialized = serializeSliceState(state);

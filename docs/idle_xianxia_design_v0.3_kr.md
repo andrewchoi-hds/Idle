@@ -1010,3 +1010,11 @@
 
 ## 217) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 정산 워밍업 동기화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 218) 다음 순차 작업
+1. [완료] 오프라인 정산 summary에 워밍업 메타(`autoBreakthroughWarmupRemainingSecBefore/After`)를 추가.
+2. [완료] 앱 오프라인 정산 동기화 경로가 summary 메타를 단일 소스로 사용하도록 정리.
+3. [완료] 모바일 회귀 체크에 오프라인 워밍업 메타(0초/부분 경과/소진) 시나리오를 추가.
+
+## 219) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 워밍업 summary 메타 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
