@@ -20,6 +20,7 @@ npm run save:auto:regression:check
 npm run save:offline:regression:check
 npm run save:regression:summary:md
 npm run mobile:mvp:serve
+npm run mobile:mvp:dom:check
 npm run mobile:mvp:check
 npm run pr:body:gen
 npm run pr:body:gen:regression:check
@@ -60,6 +61,7 @@ npm run pr:ship:auto
 - PR Validation 명령 레지스트리 체크(PY): `/Users/hirediversity/Idle/scripts/check_pr_validation_command_registry_v1.py`
 - PR Required Check 커버리지 체크(PY): `/Users/hirediversity/Idle/scripts/check_required_check_coverage_v1.py`
 - 모바일 MVP 수직슬라이스 회귀 체크(JS): `/Users/hirediversity/Idle/scripts/check_mobile_mvp_slice_regression_v1.mjs`
+- 모바일 MVP DOM 계약 체크(JS): `/Users/hirediversity/Idle/scripts/check_mobile_mvp_dom_contract_v1.mjs`
 - PR 본문 Lint 회귀 체크(PY): `/Users/hirediversity/Idle/scripts/check_pr_body_lint_regression_v1.py`
 - PR 본문 Lint 회귀 CI 요약(PY): `/Users/hirediversity/Idle/scripts/build_pr_body_lint_regression_ci_summary_v1.py`
 - PR 자동 생성/업데이트(PY): `/Users/hirediversity/Idle/scripts/create_pr_with_body_v1.py`
