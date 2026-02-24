@@ -842,3 +842,11 @@
 
 ## 175) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(복제 대상 활성 슬롯 옵션 비활성화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 176) 다음 순차 작업
+1. [완료] 저장 패널에 복제 대상 슬롯 상태 프리뷰(`slotTargetHint`) 라인 추가.
+2. [완료] 슬롯 상태 라벨/톤 함수를 엔진 순수 함수(`resolveSlotSummaryStateLabelKo`, `resolveSlotSummaryStateTone`)로 분리해 UI/회귀 공용화.
+3. [완료] 모바일 회귀 체크에 복제 대상 상태 라벨/톤 매핑 시나리오 추가.
+
+## 177) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(복제 대상 슬롯 상태 프리뷰 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

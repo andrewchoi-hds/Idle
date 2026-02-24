@@ -20,6 +20,8 @@ import {
   resolveSlotDeleteHintTone,
   resolveSlotCopyPolicy,
   resolveSlotDeletePolicy,
+  resolveSlotSummaryStateLabelKo,
+  resolveSlotSummaryStateTone,
   resolveSlotSummaryQuickAction,
   resolveLoopTuningFromBattleSpeed,
   runAutoSliceSeconds,
@@ -57,6 +59,7 @@ const dom = {
   optSaveSlot: document.getElementById("optSaveSlot"),
   optCopySlotTarget: document.getElementById("optCopySlotTarget"),
   slotActionHintBox: document.getElementById("slotActionHintBox"),
+  slotTargetHint: document.getElementById("slotTargetHint"),
   slotCopyHint: document.getElementById("slotCopyHint"),
   slotDeleteHint: document.getElementById("slotDeleteHint"),
   lastSavedAt: document.getElementById("lastSavedAt"),
@@ -355,16 +358,6 @@ function summarizeSaveSlot(slot) {
   }
 }
 
-function slotStateLabelKo(state) {
-  if (state === "ok") {
-    return "저장 데이터 있음";
-  }
-  if (state === "corrupt") {
-    return "손상된 저장 데이터";
-  }
-  return "비어 있음";
-}
-
 function buildSlotActionConfirmMessage(title, lines) {
   return [`[${title}]`, ...lines].join("\n");
 }
@@ -425,6 +418,11 @@ function syncSlotActionButtons() {
   dom.btnDeleteSlot.disabled = !deletePolicy.allowed;
   dom.btnDeleteSlot.title = deletePolicy.allowed ? "" : "삭제할 저장 데이터가 없음";
 
+  if (dom.slotTargetHint) {
+    dom.slotTargetHint.textContent =
+      `대상 슬롯 ${targetSlot}: ${resolveSlotSummaryStateLabelKo(targetSummary.state)}`;
+    applySlotHintTone(dom.slotTargetHint, resolveSlotSummaryStateTone(targetSummary.state));
+  }
   if (dom.slotCopyHint) {
     dom.slotCopyHint.textContent = `복제: ${resolveSlotCopyHint(copyPolicy)}`;
     applySlotHintTone(dom.slotCopyHint, resolveSlotCopyHintTone(copyPolicy));
@@ -968,7 +966,7 @@ function handleSlotSummaryQuickAction(event, triggerLabel) {
     if (action.changedSlot) {
       const confirmed = window.confirm(
         buildSlotActionConfirmMessage("슬롯 불러오기", [
-          `대상: 슬롯 ${action.nextActiveSlot} (${slotStateLabelKo(action.selectedState)})`,
+          `대상: 슬롯 ${action.nextActiveSlot} (${resolveSlotSummaryStateLabelKo(action.selectedState)})`,
           "현재 메모리 상태를 대체하여 불러옵니다.",
           "계속할까요?",
         ]),
@@ -1185,7 +1183,7 @@ function bindEvents() {
       const confirmed = window.confirm(
         buildSlotActionConfirmMessage("슬롯 복제", [
           `소스: 슬롯 ${copyPolicy.sourceSlot}`,
-          `대상: 슬롯 ${copyPolicy.targetSlot} (${slotStateLabelKo(copyPolicy.targetState)})`,
+          `대상: 슬롯 ${copyPolicy.targetSlot} (${resolveSlotSummaryStateLabelKo(copyPolicy.targetState)})`,
           "대상 슬롯 데이터가 덮어써집니다.",
           "계속할까요?",
         ]),
@@ -1219,7 +1217,7 @@ function bindEvents() {
     }
     const confirmed = window.confirm(
       buildSlotActionConfirmMessage("슬롯 삭제", [
-        `대상: 슬롯 ${deletePolicy.slot} (${slotStateLabelKo(deletePolicy.slotState)})`,
+        `대상: 슬롯 ${deletePolicy.slot} (${resolveSlotSummaryStateLabelKo(deletePolicy.slotState)})`,
         "현재 메모리 상태는 유지됩니다.",
         "계속할까요?",
       ]),

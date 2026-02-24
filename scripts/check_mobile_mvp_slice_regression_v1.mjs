@@ -20,6 +20,8 @@ import {
   resolveSlotDeleteHint,
   resolveSlotDeleteHintTone,
   resolveSlotDeletePolicy,
+  resolveSlotSummaryStateLabelKo,
+  resolveSlotSummaryStateTone,
   resolveSlotSummaryQuickAction,
   runAutoSliceSeconds,
   runBattleOnce,
@@ -199,6 +201,17 @@ async function main() {
       resolveSlotDeleteHintTone(deleteOk) === "info" &&
       resolveSlotDeleteHintTone(deleteCorrupt) === "warn" &&
       resolveSlotDeleteHintTone(deleteEmpty) === "warn",
+  });
+
+  checks.push({
+    id: "slot_target_state_label_and_tone_match",
+    passed:
+      resolveSlotSummaryStateLabelKo("empty") === "비어 있음" &&
+      resolveSlotSummaryStateLabelKo("ok") === "저장 데이터 있음" &&
+      resolveSlotSummaryStateLabelKo("corrupt") === "손상된 저장 데이터" &&
+      resolveSlotSummaryStateTone("empty") === "info" &&
+      resolveSlotSummaryStateTone("ok") === "warn" &&
+      resolveSlotSummaryStateTone("corrupt") === "error",
   });
 
   const initWithResume = createInitialSliceState(context, {

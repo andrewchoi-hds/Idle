@@ -46,6 +46,28 @@ export function normalizeSlotSummaryState(state, fallback = "empty") {
   return SLOT_SUMMARY_STATES.has(state) ? state : normalizedFallback;
 }
 
+export function resolveSlotSummaryStateLabelKo(state) {
+  const normalizedState = normalizeSlotSummaryState(state, "empty");
+  if (normalizedState === "ok") {
+    return "저장 데이터 있음";
+  }
+  if (normalizedState === "corrupt") {
+    return "손상된 저장 데이터";
+  }
+  return "비어 있음";
+}
+
+export function resolveSlotSummaryStateTone(state) {
+  const normalizedState = normalizeSlotSummaryState(state, "empty");
+  if (normalizedState === "corrupt") {
+    return "error";
+  }
+  if (normalizedState === "ok") {
+    return "warn";
+  }
+  return "info";
+}
+
 export function resolveSlotSummaryQuickAction(activeSlot, selectedSlot, selectedState) {
   const normalizedActiveSlot = normalizeSaveSlot(activeSlot, 1);
   const normalizedSelectedSlot = normalizeSaveSlot(selectedSlot, normalizedActiveSlot);
