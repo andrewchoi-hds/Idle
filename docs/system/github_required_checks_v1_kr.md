@@ -69,6 +69,8 @@
 - 회귀 안정성:
   - `PR Body Lint Regression` 단계에서 고정 fixture 기반 회귀 체크 실행
   - 결과는 `PR Body Lint Regression Summary` 섹션으로 Step Summary에 기록
+  - `PR Body Generator Regression` 단계에서 본문 생성 포맷 회귀 체크 실행
+  - 결과는 `PR Body Generator Regression Summary` 섹션으로 Step Summary에 기록
 - 체크리스트 동기화:
   - `PR Validation Checklist Sync` 단계에서 PR 템플릿 Validation 섹션과 표준 명령 목록 동기화 여부 확인
   - 결과는 Step Summary의 `PR Validation Checklist Sync` 섹션으로 기록

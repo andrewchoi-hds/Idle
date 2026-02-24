@@ -605,3 +605,12 @@
 ## 117) 추가 문서
 - PR 본문 품질 Lint 가이드(Validation 순서 검증 반영): `/Users/hirediversity/Idle/docs/system/pr_body_lint_v1_kr.md`
 - PR 본문 Lint 회귀 체크 가이드(Validation 실패 케이스 반영): `/Users/hirediversity/Idle/docs/system/pr_body_lint_regression_v1_kr.md`
+
+## 118) 다음 순차 작업
+1. [완료] PR 본문 생성기 회귀 체크 스크립트(`pr:body:gen:regression:check`) 추가.
+2. [완료] 회귀 리포트/CI 요약 생성 명령(`pr:body:gen:regression:check:report`, `pr:body:gen:regression:summary:md`) 추가.
+3. [완료] Required Check workflow Step Summary/Artifacts에 PR 본문 생성기 회귀 결과 연동.
+
+## 119) 추가 문서
+- PR 본문 생성기 가이드(회귀 체크 반영): `/Users/hirediversity/Idle/docs/system/pr_body_generator_v1_kr.md`
+- PR 본문 생성기 회귀 체크 가이드: `/Users/hirediversity/Idle/docs/system/pr_body_generator_regression_v1_kr.md`
