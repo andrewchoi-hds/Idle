@@ -1867,6 +1867,11 @@ export function runOfflineCatchup(context, state, rng, options = {}) {
   const appliedOfflineSec = Math.min(rawOfflineSec, maxOfflineSec);
   const cappedByMaxOffline = rawOfflineSec > appliedOfflineSec;
   const syncAnchorToNow = pickBoolean(options.syncAnchorToNow, true);
+  const maxCollectedEvents = clamp(
+    toNonNegativeInt(options.maxCollectedEvents, 24),
+    0,
+    120,
+  );
 
   let autoSummary = null;
   let autoBreakthroughWarmupRemainingSecAfter =
@@ -1888,11 +1893,7 @@ export function runOfflineCatchup(context, state, rng, options = {}) {
       autoBreakthroughWarmupUntilSec,
       suppressLogs: true,
       collectEvents: true,
-      maxCollectedEvents: clamp(
-        toNonNegativeInt(options.maxCollectedEvents, 24),
-        0,
-        120,
-      ),
+      maxCollectedEvents,
     });
     autoBreakthroughWarmupRemainingSecAfter = Math.max(
       0,
@@ -1901,6 +1902,33 @@ export function runOfflineCatchup(context, state, rng, options = {}) {
         autoBreakthroughWarmupRemainingSecBefore,
       ),
     );
+    const warmupTelemetry = resolveOfflineWarmupTelemetry({
+      appliedOfflineSec,
+      autoBreakthroughWarmupRemainingSecBefore,
+      autoBreakthroughWarmupRemainingSecAfter,
+      autoSummary,
+    });
+    if (warmupTelemetry.hadWarmup && Array.isArray(autoSummary.collectedEvents)) {
+      pushLimited(
+        autoSummary.collectedEvents,
+        {
+          sec: appliedOfflineSec,
+          kind: "offline_warmup_summary",
+          beforeSec: warmupTelemetry.before,
+          afterSec: warmupTelemetry.after,
+          consumedSec: warmupTelemetry.consumed,
+          skippedAttempts: warmupTelemetry.skippedAttempts,
+          exhausted: warmupTelemetry.exhausted,
+          labelKo: buildOfflineWarmupTelemetryLabelKo({
+            appliedOfflineSec,
+            autoBreakthroughWarmupRemainingSecBefore,
+            autoBreakthroughWarmupRemainingSecAfter,
+            autoSummary,
+          }),
+        },
+        maxCollectedEvents,
+      );
+    }
     addLog(
       state,
       "offline",
