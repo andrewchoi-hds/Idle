@@ -21,6 +21,7 @@ import {
   resolveSlotDeleteHintTone,
   resolveSlotDeletePolicy,
   resolveSlotSummaryStateLabelKo,
+  resolveSlotSummaryStateShortKo,
   resolveSlotSummaryStateTone,
   resolveSlotSummaryQuickAction,
   runAutoSliceSeconds,
@@ -209,6 +210,9 @@ async function main() {
       resolveSlotSummaryStateLabelKo("empty") === "비어 있음" &&
       resolveSlotSummaryStateLabelKo("ok") === "저장 데이터 있음" &&
       resolveSlotSummaryStateLabelKo("corrupt") === "손상된 저장 데이터" &&
+      resolveSlotSummaryStateShortKo("empty") === "비어있음" &&
+      resolveSlotSummaryStateShortKo("ok") === "저장됨" &&
+      resolveSlotSummaryStateShortKo("corrupt") === "손상" &&
       resolveSlotSummaryStateTone("empty") === "info" &&
       resolveSlotSummaryStateTone("ok") === "warn" &&
       resolveSlotSummaryStateTone("corrupt") === "error",

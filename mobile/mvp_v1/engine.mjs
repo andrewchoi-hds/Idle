@@ -57,6 +57,17 @@ export function resolveSlotSummaryStateLabelKo(state) {
   return "비어 있음";
 }
 
+export function resolveSlotSummaryStateShortKo(state) {
+  const normalizedState = normalizeSlotSummaryState(state, "empty");
+  if (normalizedState === "ok") {
+    return "저장됨";
+  }
+  if (normalizedState === "corrupt") {
+    return "손상";
+  }
+  return "비어있음";
+}
+
 export function resolveSlotSummaryStateTone(state) {
   const normalizedState = normalizeSlotSummaryState(state, "empty");
   if (normalizedState === "corrupt") {

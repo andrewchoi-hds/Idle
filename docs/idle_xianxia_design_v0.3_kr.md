@@ -850,3 +850,11 @@
 
 ## 177) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(복제 대상 슬롯 상태 프리뷰 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 178) 다음 순차 작업
+1. [완료] 복제 대상 셀렉트 옵션 라벨에 슬롯 상태(`저장됨/비어있음/손상`) 표시를 추가.
+2. [완료] 슬롯 상태 short 라벨 함수를 엔진 순수 함수(`resolveSlotSummaryStateShortKo`)로 분리해 UI/회귀 공용화.
+3. [완료] 모바일 회귀 체크에 슬롯 상태 short 라벨 매핑 검증 시나리오 추가.
+
+## 179) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(복제 대상 옵션 상태 라벨 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

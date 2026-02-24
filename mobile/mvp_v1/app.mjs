@@ -21,6 +21,7 @@ import {
   resolveSlotCopyPolicy,
   resolveSlotDeletePolicy,
   resolveSlotSummaryStateLabelKo,
+  resolveSlotSummaryStateShortKo,
   resolveSlotSummaryStateTone,
   resolveSlotSummaryQuickAction,
   resolveLoopTuningFromBattleSpeed,
@@ -240,10 +241,17 @@ function syncCopySlotTargetOptions() {
   if (!dom.optCopySlotTarget) {
     return;
   }
+  const summaryBySlot = new Map(
+    [1, 2, 3].map((slot) => [slot, summarizeSaveSlot(slot)]),
+  );
   const options = Array.from(dom.optCopySlotTarget.options || []);
   for (const option of options) {
     const optionSlot = normalizeSaveSlot(option.value, 1);
+    const slotSummary = summaryBySlot.get(optionSlot);
     option.disabled = isCopyTargetSlotDisabled(activeSaveSlot, optionSlot);
+    option.textContent =
+      `슬롯 ${optionSlot} · ${resolveSlotSummaryStateShortKo(slotSummary?.state || "empty")}`;
+    option.title = slotSummary?.summary || `슬롯 ${optionSlot}`;
   }
 }
 
