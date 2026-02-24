@@ -14,6 +14,7 @@ import {
   parseSliceState,
   resolveAutoBreakthroughResumeConfirmPolicy,
   resolveAutoBreakthroughResumePolicy,
+  resolveAutoBreakthroughResumeRecommendationPlan,
   previewBreakthroughChance,
   resolveBreakthroughAutoAttemptPolicy,
   resolveBreakthroughExpectedDelta,
@@ -504,6 +505,80 @@ async function main() {
       resumeConfirmNeedTribulation.enableTribulation === true &&
       resumeConfirmBlocked.requiresConfirm === false &&
       resumeConfirmBlocked.reason === "not_actionable",
+  });
+
+  const resumeRecommendationToggle = resolveBreakthroughRecommendationToggles(
+    {
+      stage: { is_tribulation: 1 },
+      successPct: 45,
+      deathFailPct: 11,
+    },
+    {
+      hasBreakthroughElixir: true,
+      hasTribulationTalisman: true,
+      currentUseBreakthroughElixir: false,
+      currentUseTribulationTalisman: false,
+    },
+  );
+  const resumeRecommendationPlan = resolveAutoBreakthroughResumeRecommendationPlan(
+    resumeConfirmNeedTribulation,
+    resumeRecommendationToggle,
+  );
+  const resumeRecommendationPlanNoConfirm =
+    resolveAutoBreakthroughResumeRecommendationPlan(
+      resumeConfirmReady,
+      resumeRecommendationToggle,
+    );
+  const resumeRecommendationToggleMissing = resolveBreakthroughRecommendationToggles(
+    {
+      stage: { is_tribulation: 1 },
+      successPct: 45,
+      deathFailPct: 11,
+    },
+    {
+      hasBreakthroughElixir: false,
+      hasTribulationTalisman: false,
+      currentUseBreakthroughElixir: true,
+      currentUseTribulationTalisman: true,
+    },
+  );
+  const resumeRecommendationPlanMissing =
+    resolveAutoBreakthroughResumeRecommendationPlan(
+      resumeConfirmNeedTribulation,
+      resumeRecommendationToggleMissing,
+    );
+  const resumeRecommendationToggleNoChange = resolveBreakthroughRecommendationToggles(
+    {
+      stage: { is_tribulation: 1 },
+      successPct: 74,
+      deathFailPct: 3,
+    },
+    {
+      hasBreakthroughElixir: true,
+      hasTribulationTalisman: true,
+      currentUseBreakthroughElixir: false,
+      currentUseTribulationTalisman: false,
+    },
+  );
+  const resumeRecommendationPlanNoChange =
+    resolveAutoBreakthroughResumeRecommendationPlan(
+      resumeConfirmTribulationReady,
+      resumeRecommendationToggleNoChange,
+    );
+  checks.push({
+    id: "auto_breakthrough_resume_recommendation_plan_applies_only_on_confirm",
+    passed:
+      resumeRecommendationPlan.shouldApplyRecommendation === true &&
+      resumeRecommendationPlan.nextUseBreakthroughElixir === true &&
+      resumeRecommendationPlan.nextUseTribulationTalisman === true &&
+      resumeRecommendationPlan.messageKo.includes("권장 설정 자동 적용") &&
+      resumeRecommendationPlanNoConfirm.shouldApplyRecommendation === false &&
+      resumeRecommendationPlanMissing.shouldApplyRecommendation === true &&
+      resumeRecommendationPlanMissing.hasMissing === true &&
+      resumeRecommendationPlanMissing.tone === "warn" &&
+      resumeRecommendationPlanMissing.messageKo.includes("보유 없음") &&
+      resumeRecommendationPlanNoChange.shouldApplyRecommendation === false &&
+      resumeRecommendationPlanNoChange.messageKo === "권장 설정 변경 없음",
   });
 
   const autoPolicyBlockedState = createInitialSliceState(context, { playerName: "auto-blocked" });

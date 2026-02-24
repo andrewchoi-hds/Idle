@@ -14,6 +14,7 @@ import {
   normalizeSlotSummaryState,
   parseSliceState,
   resolveAutoBreakthroughResumeConfirmPolicy,
+  resolveAutoBreakthroughResumeRecommendationPlan,
   previewBreakthroughChance,
   resolveAutoBreakthroughResumePolicy,
   resolveBreakthroughManualAttemptPolicy,
@@ -1449,12 +1450,30 @@ function bindEvents() {
       return;
     }
     const confirmPolicy = resolveAutoBreakthroughResumeConfirmPolicy(resumePolicy);
+    const recommendationPreview = previewBreakthroughChance(context, state, {
+      useBreakthroughElixir: dom.useBreakthroughElixir.checked,
+      useTribulationTalisman: dom.useTribulationTalisman.checked,
+    });
+    const recommendationToggle = resolveBreakthroughRecommendationToggles(
+      recommendationPreview,
+      {
+        hasBreakthroughElixir: state.inventory.breakthroughElixir > 0,
+        hasTribulationTalisman: state.inventory.tribulationTalisman > 0,
+        currentUseBreakthroughElixir: dom.useBreakthroughElixir.checked,
+        currentUseTribulationTalisman: dom.useTribulationTalisman.checked,
+      },
+    );
+    const recommendationPlan = resolveAutoBreakthroughResumeRecommendationPlan(
+      confirmPolicy,
+      recommendationToggle,
+    );
     if (confirmPolicy.requiresConfirm) {
       const confirmed = window.confirm(
         buildSlotActionConfirmMessage("자동 돌파 재개 확인", [
           `위험도: ${confirmPolicy.riskTier.labelKo}`,
           `사망 실패 확률: ${Number(confirmPolicy.preview?.deathFailPct || 0).toFixed(1)}%`,
           `기대값(1회): 기 ${fmtSignedInteger(confirmPolicy.expectedDelta?.expectedQiDelta)}, 환생정수 ${fmtSignedFixed(confirmPolicy.expectedDelta?.expectedRebirthEssenceDelta, 1)}, 경지 ${fmtSignedFixed(confirmPolicy.expectedDelta?.expectedDifficultyDelta, 1)}`,
+          recommendationPlan.messageKo,
           confirmPolicy.enableTribulation
             ? "자동 도겁 허용이 함께 켜집니다."
             : "자동 돌파만 재개됩니다.",
@@ -1467,12 +1486,21 @@ function bindEvents() {
         return;
       }
     }
+    if (recommendationPlan.shouldApplyRecommendation) {
+      dom.useBreakthroughElixir.checked =
+        recommendationPlan.nextUseBreakthroughElixir;
+      dom.useTribulationTalisman.checked =
+        recommendationPlan.nextUseTribulationTalisman;
+    }
     state.settings.autoBreakthrough = resumePolicy.shouldEnableAutoBreakthrough;
     if (resumePolicy.shouldEnableAutoTribulation) {
       state.settings.autoTribulation = true;
     }
     persistLocal();
-    setStatus(`자동 돌파 재개: ${resumePolicy.actionLabelKo}`);
+    const recommendationText = recommendationPlan.shouldApplyRecommendation
+      ? " · 권장 설정 자동 적용"
+      : "";
+    setStatus(`자동 돌파 재개: ${resumePolicy.actionLabelKo}${recommendationText}`);
     render();
   });
 

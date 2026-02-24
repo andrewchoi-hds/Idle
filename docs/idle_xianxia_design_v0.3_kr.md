@@ -970,3 +970,11 @@
 
 ## 207) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(자동 도겁 재개 확인 모달 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 208) 다음 순차 작업
+1. [완료] 자동 재개 확인 모달용 권장 적용 계획 함수(`resolveAutoBreakthroughResumeRecommendationPlan`)를 추가해 적용 여부/대상 토글/결손 자원을 표준화.
+2. [완료] 모바일 UI `자동 돌파 재개` 경로에서 확인 시 권장 설정(영약/수호부)을 원클릭으로 자동 반영하도록 연동.
+3. [완료] 모바일 회귀 체크에 자동 재개 권장 적용 정책 시나리오(확인 필요 경로만 자동 적용, 보유 없음 경고, 변경 없음) 검증을 추가.
+
+## 209) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(자동 도겁 재개 권장 설정 원클릭 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
