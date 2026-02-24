@@ -828,8 +828,10 @@ export function resolveBreakthroughAutoAttemptPolicy(previewInput, expectedDelta
     return {
       allowed: true,
       reason: "safe",
+      reasonLabelKo: "안전",
       tone: "info",
       messageKo: "자동 돌파 진행 가능",
+      nextActionKo: "",
       manualPolicy,
     };
   }
@@ -838,8 +840,10 @@ export function resolveBreakthroughAutoAttemptPolicy(previewInput, expectedDelta
     return {
       allowed: false,
       reason: "blocked_extreme_risk",
+      reasonLabelKo: "치명 위험",
       tone: "error",
       messageKo: "자동 돌파 중단: 치명 도겁 구간은 수동 확인이 필요합니다.",
+      nextActionKo: "환생 보정/영약/수호부를 확보한 뒤 수동으로 재시도하세요.",
       manualPolicy,
     };
   }
@@ -847,8 +851,10 @@ export function resolveBreakthroughAutoAttemptPolicy(previewInput, expectedDelta
     return {
       allowed: false,
       reason: "blocked_high_risk",
+      reasonLabelKo: "고위험",
       tone: "warn",
       messageKo: "자동 돌파 중단: 위험 도겁 구간은 수동 확인이 필요합니다.",
+      nextActionKo: "수호부/영약 보정 후 수동으로 재시도하세요.",
       manualPolicy,
     };
   }
@@ -856,8 +862,10 @@ export function resolveBreakthroughAutoAttemptPolicy(previewInput, expectedDelta
     return {
       allowed: false,
       reason: "blocked_high_qi_cost",
+      reasonLabelKo: "고기 소모",
       tone: "warn",
       messageKo: "자동 돌파 중단: 기대 기 소모가 높아 수동 확인이 필요합니다.",
+      nextActionKo: "기(氣)를 더 모은 뒤 수동으로 재시도하세요.",
       manualPolicy,
     };
   }
@@ -865,8 +873,10 @@ export function resolveBreakthroughAutoAttemptPolicy(previewInput, expectedDelta
   return {
     allowed: true,
     reason: "safe",
+    reasonLabelKo: "안전",
     tone: "info",
     messageKo: "자동 돌파 진행 가능",
+    nextActionKo: "",
     manualPolicy,
   };
 }
@@ -1357,6 +1367,11 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
     battleWins: 0,
     breakthroughs: 0,
     breakthroughPolicyBlocks: 0,
+    breakthroughPolicyBlockReasons: {
+      extremeRisk: 0,
+      highRisk: 0,
+      highQiCost: 0,
+    },
     rebirths: 0,
   };
   const collectedEvents = [];
@@ -1415,6 +1430,13 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
         }
       } else if (breakthrough.outcome === "blocked_auto_risk_policy") {
         summary.breakthroughPolicyBlocks += 1;
+        if (breakthrough.autoPolicy?.reason === "blocked_extreme_risk") {
+          summary.breakthroughPolicyBlockReasons.extremeRisk += 1;
+        } else if (breakthrough.autoPolicy?.reason === "blocked_high_risk") {
+          summary.breakthroughPolicyBlockReasons.highRisk += 1;
+        } else if (breakthrough.autoPolicy?.reason === "blocked_high_qi_cost") {
+          summary.breakthroughPolicyBlockReasons.highQiCost += 1;
+        }
         if (collectEvents) {
           pushLimited(
             collectedEvents,
@@ -1422,7 +1444,9 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
               sec: timelineSec,
               kind: "breakthrough_blocked_auto_policy",
               reason: breakthrough.autoPolicy?.reason || "blocked_auto_risk_policy",
+              reasonLabelKo: breakthrough.autoPolicy?.reasonLabelKo || "",
               message: breakthrough.message || "",
+              nextActionKo: breakthrough.autoPolicy?.nextActionKo || "",
             },
             maxCollectedEvents,
           );
