@@ -301,6 +301,11 @@ textarea:focus-visible,
   align-items: center;
 }
 
+.slot-action-hint {
+  margin-top: 8px;
+  color: #9eb8af;
+}
+
 .slot-summary-item {
   display: flex;
   justify-content: space-between;

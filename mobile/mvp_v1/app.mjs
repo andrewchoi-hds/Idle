@@ -13,6 +13,8 @@ import {
   parseSliceState,
   previewBreakthroughChance,
   resolveDebouncedAction,
+  resolveSlotCopyHint,
+  resolveSlotDeleteHint,
   resolveSlotCopyPolicy,
   resolveSlotDeletePolicy,
   resolveSlotSummaryQuickAction,
@@ -51,6 +53,7 @@ const dom = {
   playerNameInput: document.getElementById("playerNameInput"),
   optSaveSlot: document.getElementById("optSaveSlot"),
   optCopySlotTarget: document.getElementById("optCopySlotTarget"),
+  slotActionHint: document.getElementById("slotActionHint"),
   lastSavedAt: document.getElementById("lastSavedAt"),
   lastActiveAt: document.getElementById("lastActiveAt"),
   savePayload: document.getElementById("savePayload"),
@@ -388,6 +391,12 @@ function syncSlotActionButtons() {
   const deletePolicy = resolveSlotDeletePolicy(activeSaveSlot, sourceSummary.state);
   dom.btnDeleteSlot.disabled = !deletePolicy.allowed;
   dom.btnDeleteSlot.title = deletePolicy.allowed ? "" : "삭제할 저장 데이터가 없음";
+
+  if (dom.slotActionHint) {
+    dom.slotActionHint.textContent =
+      `복제: ${resolveSlotCopyHint(copyPolicy)} / ` +
+      `삭제: ${resolveSlotDeleteHint(deletePolicy)}`;
+  }
 }
 
 function renderSaveSlotSummary(force = false) {

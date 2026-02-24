@@ -12,8 +12,10 @@ import {
   normalizeSlotSummaryState,
   parseSliceState,
   resolveDebouncedAction,
+  resolveSlotCopyHint,
   resolveLoopTuningFromBattleSpeed,
   resolveSlotCopyPolicy,
+  resolveSlotDeleteHint,
   resolveSlotDeletePolicy,
   resolveSlotSummaryQuickAction,
   runAutoSliceSeconds,
@@ -162,6 +164,23 @@ async function main() {
       deleteCorrupt.allowed === true &&
       deleteCorrupt.requiresConfirm === true &&
       deleteCorrupt.reason === "corrupt_slot",
+  });
+
+  const copyHintEmptyTarget = resolveSlotCopyHint(copyToEmpty);
+  const copyHintConfirm = resolveSlotCopyHint(copyToData);
+  const copyHintBlocked = resolveSlotCopyHint(copyFromCorrupt);
+  const deleteHintEmpty = resolveSlotDeleteHint(deleteEmpty);
+  const deleteHintOk = resolveSlotDeleteHint(deleteOk);
+  const deleteHintCorrupt = resolveSlotDeleteHint(deleteCorrupt);
+  checks.push({
+    id: "slot_action_hints_match_policy_reasons",
+    passed:
+      copyHintEmptyTarget.includes("복제 가능") &&
+      copyHintConfirm.includes("덮어써") &&
+      copyHintBlocked.includes("손상") &&
+      deleteHintEmpty.includes("삭제할 데이터가 없습니다") &&
+      deleteHintOk.includes("메모리 상태는 유지") &&
+      deleteHintCorrupt.includes("손상된 저장 데이터"),
   });
 
   const initWithResume = createInitialSliceState(context, {

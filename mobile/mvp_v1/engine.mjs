@@ -180,6 +180,39 @@ export function resolveSlotDeletePolicy(slot, slotState) {
   };
 }
 
+export function resolveSlotCopyHint(copyPolicy) {
+  const policy = copyPolicy && typeof copyPolicy === "object" ? copyPolicy : {};
+  if (policy.allowed) {
+    return policy.requiresConfirm
+      ? "복제 시 대상 슬롯 저장 데이터가 덮어써집니다."
+      : "복제 가능: 현재 슬롯 데이터를 대상 슬롯으로 복제합니다.";
+  }
+  if (policy.reason === "source_empty") {
+    return "활성 슬롯이 비어 있어 복제할 수 없습니다.";
+  }
+  if (policy.reason === "source_corrupt") {
+    return "활성 슬롯 저장 데이터가 손상되어 복제할 수 없습니다.";
+  }
+  if (policy.reason === "same_slot") {
+    return "복제 대상은 활성 슬롯과 달라야 합니다.";
+  }
+  return "복제 조건을 확인하세요.";
+}
+
+export function resolveSlotDeleteHint(deletePolicy) {
+  const policy = deletePolicy && typeof deletePolicy === "object" ? deletePolicy : {};
+  if (policy.allowed) {
+    if (policy.reason === "corrupt_slot") {
+      return "손상된 저장 데이터도 삭제 가능합니다.";
+    }
+    return "삭제 시 슬롯 저장 데이터만 제거되고 현재 메모리 상태는 유지됩니다.";
+  }
+  if (policy.reason === "empty_slot") {
+    return "활성 슬롯이 비어 있어 삭제할 데이터가 없습니다.";
+  }
+  return "삭제 조건을 확인하세요.";
+}
+
 function parseIsoEpochMs(value) {
   const parsed = Date.parse(typeof value === "string" ? value : "");
   if (!Number.isFinite(parsed)) {
