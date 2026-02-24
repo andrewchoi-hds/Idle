@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 
 import {
   buildOfflineDetailCompareCode,
+  buildOfflineDetailCompareResultLabelKo,
   buildOfflineDetailCriticalSummaryLabelKo,
   buildOfflineDetailKindDigest,
   buildOfflineDetailHiddenKindsSummaryLabelKo,
@@ -20,8 +21,10 @@ import {
   isOfflineDetailCompareCode,
   normalizeSaveSlot,
   normalizeSlotSummaryState,
+  parseOfflineDetailCompareCode,
   parseSliceState,
   prioritizeOfflineDetailEvents,
+  resolveOfflineDetailCompareCodeDiff,
   summarizeOfflineDetailCriticalEvents,
   summarizeOfflineDetailFilterResult,
   summarizeOfflineDetailHiddenKinds,
@@ -489,6 +492,40 @@ async function main() {
       !isOfflineDetailCompareCode("ODR1-T6-C4-H2-VX-A123456-S654321") &&
       !isOfflineDetailCompareCode("ODR1-T6-C4-H2-VA-A12345-S654321") &&
       offlineDetailCompareCodeAll !== offlineDetailCompareCodeCritical,
+  });
+
+  const parsedOfflineCompareCode = parseOfflineDetailCompareCode(offlineDetailCompareCodeAll);
+  const compareCodeDiff = resolveOfflineDetailCompareCodeDiff(
+    offlineDetailCompareCodeAll,
+    offlineDetailCompareCodeCritical,
+  );
+  checks.push({
+    id: "offline_detail_compare_code_parse_and_diff_are_consistent",
+    passed:
+      !!parsedOfflineCompareCode &&
+      parsedOfflineCompareCode.version === "ODR1" &&
+      parsedOfflineCompareCode.totalEvents === 6 &&
+      parsedOfflineCompareCode.criticalVisibleEvents === 4 &&
+      parsedOfflineCompareCode.hiddenCriticalEvents === 2 &&
+      parsedOfflineCompareCode.viewMode === "all" &&
+      parsedOfflineCompareCode.allChecksum.length === 6 &&
+      parsedOfflineCompareCode.viewChecksum.length === 6 &&
+      compareCodeDiff.comparable === true &&
+      compareCodeDiff.reason === "ok" &&
+      compareCodeDiff.identical === false &&
+      compareCodeDiff.sameTotalEvents === true &&
+      compareCodeDiff.sameCriticalVisibleEvents === true &&
+      compareCodeDiff.sameHiddenCriticalEvents === true &&
+      compareCodeDiff.sameViewMode === false &&
+      resolveOfflineDetailCompareCodeDiff(offlineDetailCompareCodeAll, "BAD").reason ===
+        "target_invalid" &&
+      buildOfflineDetailCompareResultLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ) === "비교 결과: 완전 일치" &&
+      buildOfflineDetailCompareResultLabelKo(offlineDetailCompareCodeAll, "BAD").includes(
+        "형식 오류",
+      ),
   });
 
   const detailReportSnapshot = buildOfflineDetailReportSnapshot(prioritizedOfflineEvents, 1);

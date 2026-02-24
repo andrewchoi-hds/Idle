@@ -565,6 +565,13 @@ textarea:focus-visible,
   margin-top: 2px;
 }
 
+.offline-compare-row {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
 .offline-detail-list {
   margin: 10px 0 0;
   padding-left: 16px;
@@ -613,6 +620,10 @@ textarea:focus-visible,
   }
 
   .offline-detail-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .offline-compare-row {
     grid-template-columns: 1fr;
   }
 

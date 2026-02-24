@@ -312,6 +312,107 @@ export function isOfflineDetailCompareCode(codeInput) {
   return /^ODR1-T\d+-C\d+-H\d+-V[AC]-A\d{6}-S\d{6}$/.test(codeInput);
 }
 
+export function parseOfflineDetailCompareCode(codeInput) {
+  const raw = typeof codeInput === "string" ? codeInput.trim() : "";
+  const matched = /^ODR1-T(\d+)-C(\d+)-H(\d+)-V([AC])-A(\d{6})-S(\d{6})$/.exec(raw);
+  if (!matched) {
+    return null;
+  }
+  const viewMode = matched[4] === "C" ? "critical" : "all";
+  return {
+    raw,
+    version: "ODR1",
+    totalEvents: toNonNegativeInt(matched[1], 0),
+    criticalVisibleEvents: toNonNegativeInt(matched[2], 0),
+    hiddenCriticalEvents: toNonNegativeInt(matched[3], 0),
+    viewMode,
+    allChecksum: matched[5],
+    viewChecksum: matched[6],
+  };
+}
+
+export function resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput) {
+  const current = parseOfflineDetailCompareCode(currentCodeInput);
+  const target = parseOfflineDetailCompareCode(targetCodeInput);
+  if (!current || !target) {
+    return {
+      comparable: false,
+      reason: !current ? "current_invalid" : "target_invalid",
+      current,
+      target,
+    };
+  }
+  return {
+    comparable: true,
+    reason: "ok",
+    current,
+    target,
+    identical: current.raw === target.raw,
+    sameTotalEvents: current.totalEvents === target.totalEvents,
+    sameCriticalVisibleEvents:
+      current.criticalVisibleEvents === target.criticalVisibleEvents,
+    sameHiddenCriticalEvents:
+      current.hiddenCriticalEvents === target.hiddenCriticalEvents,
+    sameViewMode: current.viewMode === target.viewMode,
+    sameAllChecksum: current.allChecksum === target.allChecksum,
+    sameViewChecksum: current.viewChecksum === target.viewChecksum,
+  };
+}
+
+export function buildOfflineDetailCompareResultLabelKo(
+  currentCodeInput,
+  targetCodeInput,
+) {
+  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
+  if (!diff.comparable) {
+    return diff.reason === "current_invalid"
+      ? "현재 비교 코드가 없어 대조 불가"
+      : "입력 비교 코드 형식 오류";
+  }
+  if (diff.identical) {
+    return "비교 결과: 완전 일치";
+  }
+  if (
+    diff.sameTotalEvents &&
+    diff.sameCriticalVisibleEvents &&
+    diff.sameHiddenCriticalEvents &&
+    diff.sameAllChecksum &&
+    !diff.sameViewChecksum
+  ) {
+    return "비교 결과: 전체 분포 동일, view 분포 차이";
+  }
+  if (
+    diff.sameTotalEvents &&
+    diff.sameCriticalVisibleEvents &&
+    diff.sameHiddenCriticalEvents &&
+    !diff.sameAllChecksum
+  ) {
+    return "비교 결과: 집계 동일, 구성 분포 차이";
+  }
+  const parts = [];
+  if (!diff.sameTotalEvents) {
+    parts.push(`총 ${diff.current.totalEvents}→${diff.target.totalEvents}`);
+  }
+  if (!diff.sameCriticalVisibleEvents) {
+    parts.push(
+      `핵심 ${diff.current.criticalVisibleEvents}→${diff.target.criticalVisibleEvents}`,
+    );
+  }
+  if (!diff.sameHiddenCriticalEvents) {
+    parts.push(
+      `숨김 ${diff.current.hiddenCriticalEvents}→${diff.target.hiddenCriticalEvents}`,
+    );
+  }
+  if (!diff.sameViewMode) {
+    const currentMode = diff.current.viewMode === "critical" ? "핵심" : "전체";
+    const targetMode = diff.target.viewMode === "critical" ? "핵심" : "전체";
+    parts.push(`view ${currentMode}→${targetMode}`);
+  }
+  return parts.length > 0
+    ? `비교 결과: ${parts.join(", ")}`
+    : "비교 결과: 코드 차이 감지";
+}
+
 export function buildOfflineDetailReportSnapshot(
   eventsInput,
   maxKindsInput = 3,

@@ -8,6 +8,7 @@ import {
   createInitialSliceState,
   createSeededRng,
   buildOfflineDetailCompareCode,
+  buildOfflineDetailCompareResultLabelKo,
   buildOfflineDetailCriticalSummaryLabelKo,
   buildOfflineDetailReportSnapshot,
   buildOfflineDetailHiddenKindsSummaryLabelKo,
@@ -113,6 +114,8 @@ const dom = {
   offlineWarmupSummary: document.getElementById("offlineWarmupSummary"),
   offlineCriticalSummary: document.getElementById("offlineCriticalSummary"),
   offlineDetailCompareCode: document.getElementById("offlineDetailCompareCode"),
+  offlineCompareCodeInput: document.getElementById("offlineCompareCodeInput"),
+  offlineCompareCodeResult: document.getElementById("offlineCompareCodeResult"),
   offlineDetailFilterSummary: document.getElementById("offlineDetailFilterSummary"),
   offlineDetailHiddenSummary: document.getElementById("offlineDetailHiddenSummary"),
   offlineDetailHiddenKindsSummary: document.getElementById("offlineDetailHiddenKindsSummary"),
@@ -125,6 +128,7 @@ const dom = {
   offlineEssenceDelta: document.getElementById("offlineEssenceDelta"),
   btnToggleOfflineDetail: document.getElementById("btnToggleOfflineDetail"),
   btnToggleOfflineCriticalOnly: document.getElementById("btnToggleOfflineCriticalOnly"),
+  btnCompareOfflineCode: document.getElementById("btnCompareOfflineCode"),
   btnCopyOfflineCompareCode: document.getElementById("btnCopyOfflineCompareCode"),
   btnExportOfflineReport: document.getElementById("btnExportOfflineReport"),
   offlineDetailList: document.getElementById("offlineDetailList"),
@@ -893,6 +897,20 @@ async function copyOfflineCompareCodeToClipboard() {
   setStatus(copied ? "오프라인 비교 코드 복사 완료" : "오프라인 비교 코드 생성 완료");
 }
 
+function runOfflineCompareCodeCheck() {
+  const currentCode = String(dom.offlineDetailCompareCode.textContent || "").trim();
+  const targetCode = String(dom.offlineCompareCodeInput.value || "").trim();
+  if (!targetCode) {
+    dom.offlineCompareCodeResult.textContent = "비교 코드를 입력하세요";
+    setStatus("비교 코드 입력 필요", true);
+    return;
+  }
+  const resultLabel = buildOfflineDetailCompareResultLabelKo(currentCode, targetCode);
+  dom.offlineCompareCodeResult.textContent = resultLabel;
+  const isError = resultLabel.includes("오류") || resultLabel.includes("불가");
+  setStatus(resultLabel, isError);
+}
+
 async function exportRealtimeReportToPayload() {
   const stats = getRealtimeStats();
   if (!stats.sessionStartedAtIso || stats.elapsedSec <= 0) {
@@ -1203,6 +1221,8 @@ function hideOfflineModal() {
   dom.offlineModal.classList.add("hidden");
   dom.offlineModal.setAttribute("aria-hidden", "true");
   dom.offlineDetailCompareCode.textContent = "비교 코드 없음";
+  dom.offlineCompareCodeInput.value = "";
+  dom.offlineCompareCodeResult.textContent = "비교 대기 중";
   dom.offlineDetailFilterSummary.textContent = "세부 로그 0건 (전체)";
   dom.offlineDetailHiddenSummary.textContent = "숨김 이벤트 없음";
   dom.offlineDetailHiddenKindsSummary.textContent = "숨김 상세 없음";
@@ -1246,6 +1266,8 @@ function showOfflineModal(offline) {
     delta,
     events,
   };
+  dom.offlineCompareCodeInput.value = "";
+  dom.offlineCompareCodeResult.textContent = "비교 대기 중";
   setOfflineDetailCriticalOnly(false);
   renderOfflineDetailList(events);
   setOfflineDetailExpanded(false);
@@ -1494,6 +1516,15 @@ function bindEvents() {
   dom.btnToggleOfflineCriticalOnly.addEventListener("click", () => {
     setOfflineDetailCriticalOnly(!offlineDetailCriticalOnly);
     renderOfflineDetailList(lastOfflineReport?.events ?? []);
+  });
+  dom.btnCompareOfflineCode.addEventListener("click", () => {
+    runOfflineCompareCodeCheck();
+  });
+  dom.offlineCompareCodeInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      runOfflineCompareCodeCheck();
+    }
   });
   dom.btnCopyOfflineCompareCode.addEventListener("click", () => {
     copyOfflineCompareCodeToClipboard();
