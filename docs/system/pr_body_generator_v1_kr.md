@@ -29,6 +29,8 @@ npm run pr:body:gen -- --run-validation
   - `npm run save:offline:regression:check`
   - `npm run pr:validation:sync:check`
   - `npm run pr:body:lint:regression:check`
+  - `npm run pr:body:gen:regression:check`
+  - `npm run pr:validation:sync:regression:check`
 
 ## 4) PR 생성 연계
 ```bash
