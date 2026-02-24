@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
+  buildOfflineDetailCriticalSummaryLabelKo,
   buildStorageKeyForSlot,
   buildSliceContext,
   createInitialSliceState,
@@ -13,6 +14,7 @@ import {
   normalizeSlotSummaryState,
   parseSliceState,
   prioritizeOfflineDetailEvents,
+  summarizeOfflineDetailCriticalEvents,
   resolveAutoBreakthroughResumeConfirmPolicy,
   resolveAutoBreakthroughResumePolicy,
   resolveAutoBreakthroughResumeRecommendationPlan,
@@ -354,6 +356,26 @@ async function main() {
       prioritizedOfflineEvents[4].kind === "battle_win" &&
       prioritizedOfflineEvents[5].kind === "battle_loss" &&
       prioritizeOfflineDetailEvents(null).length === 0,
+  });
+
+  const offlineCriticalSummary = summarizeOfflineDetailCriticalEvents([
+    { sec: 5, kind: "offline_warmup_summary" },
+    { sec: 7, kind: "auto_breakthrough_paused_by_policy" },
+    { sec: 8, kind: "breakthrough_death_fail" },
+    { sec: 9, kind: "battle_win" },
+  ]);
+  checks.push({
+    id: "offline_detail_critical_summary_counts_and_label",
+    passed:
+      offlineCriticalSummary.warmup === 1 &&
+      offlineCriticalSummary.paused === 1 &&
+      offlineCriticalSummary.death === 1 &&
+      offlineCriticalSummary.total === 3 &&
+      buildOfflineDetailCriticalSummaryLabelKo([
+        { kind: "offline_warmup_summary" },
+        { kind: "auto_breakthrough_paused_by_policy" },
+      ]) === "총 2건 (워밍업 1 · 일시정지 1)" &&
+      buildOfflineDetailCriticalSummaryLabelKo([]) === "핵심 이벤트 없음",
   });
 
   const beforeBattle = {

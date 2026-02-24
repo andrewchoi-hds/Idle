@@ -7,6 +7,7 @@ import {
   cloneSliceState,
   createInitialSliceState,
   createSeededRng,
+  buildOfflineDetailCriticalSummaryLabelKo,
   getStage,
   getStageDisplayNameKo,
   isCopyTargetSlotDisabled,
@@ -103,6 +104,7 @@ const dom = {
   offlineAppliedDuration: document.getElementById("offlineAppliedDuration"),
   offlineRawDuration: document.getElementById("offlineRawDuration"),
   offlineWarmupSummary: document.getElementById("offlineWarmupSummary"),
+  offlineCriticalSummary: document.getElementById("offlineCriticalSummary"),
   offlineCapState: document.getElementById("offlineCapState"),
   offlineBattleCount: document.getElementById("offlineBattleCount"),
   offlineBreakthroughCount: document.getElementById("offlineBreakthroughCount"),
@@ -1140,9 +1142,11 @@ function showOfflineModal(offline) {
   const auto = summary.autoSummary;
   const warmup = resolveOfflineWarmupTelemetry(summary);
   const warmupLabelKo = buildOfflineWarmupTelemetryLabelKo(summary);
+  const criticalSummaryLabelKo = buildOfflineDetailCriticalSummaryLabelKo(events);
   dom.offlineAppliedDuration.textContent = fmtDurationSec(summary.appliedOfflineSec);
   dom.offlineRawDuration.textContent = fmtDurationSec(summary.rawOfflineSec);
   dom.offlineWarmupSummary.textContent = warmupLabelKo;
+  dom.offlineCriticalSummary.textContent = criticalSummaryLabelKo;
   dom.offlineCapState.textContent = summary.cappedByMaxOffline
     ? `${state.settings.offlineCapHours}시간 적용`
     : "미적용";
