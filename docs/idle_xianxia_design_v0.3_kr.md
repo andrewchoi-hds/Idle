@@ -938,3 +938,11 @@
 
 ## 199) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(자동 도겁 위험 차단 정책 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 200) 다음 순차 작업
+1. [완료] 자동 도겁 차단 정책 결과에 사유 라벨/후속 액션(`reasonLabelKo`, `nextActionKo`)을 포함해 복구 가이드를 표준화.
+2. [완료] 자동 10초/실시간/오프라인 정산 상태 문구에 차단 사유 집계(`치명/고위험/고기소모`)를 함께 노출.
+3. [완료] 모바일 회귀 체크에 자동 차단 결과 가이드 필드 및 사유 카운트 합 일치 검증을 추가.
+
+## 201) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(자동 도겁 차단 사유 집계/가이드 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

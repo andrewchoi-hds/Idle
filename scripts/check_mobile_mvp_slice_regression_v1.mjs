@@ -409,9 +409,44 @@ async function main() {
     passed:
       autoPolicyBlocked.allowed === false &&
       autoPolicyBlocked.reason === "blocked_high_risk" &&
+      autoPolicyBlocked.reasonLabelKo === "고위험" &&
       autoPolicyBlocked.tone === "warn" &&
+      typeof autoPolicyBlocked.nextActionKo === "string" &&
+      autoPolicyBlocked.nextActionKo.length > 0 &&
       autoPolicySafe.allowed === true &&
       autoPolicySafe.reason === "safe",
+  });
+
+  const autoPolicyBlockedState = createInitialSliceState(context, { playerName: "auto-blocked" });
+  autoPolicyBlockedState.settings.autoTribulation = true;
+  autoPolicyBlockedState.progression.difficultyIndex = 198;
+  autoPolicyBlockedState.inventory.breakthroughElixir = 0;
+  autoPolicyBlockedState.inventory.tribulationTalisman = 0;
+  autoPolicyBlockedState.currencies.qi = Math.max(
+    1,
+    (context.stageByDifficulty.get(198)?.qi_required ?? 1) * 6,
+  );
+  const autoPolicyBlockedAttempt = runBreakthroughAttempt(
+    context,
+    autoPolicyBlockedState,
+    createSeededRng(902),
+    {
+      respectAutoTribulation: true,
+      enforceAutoRiskPolicy: true,
+      useBreakthroughElixir: true,
+      useTribulationTalisman: true,
+      suppressLogs: true,
+    },
+  );
+  checks.push({
+    id: "auto_breakthrough_block_result_contains_guidance",
+    passed:
+      autoPolicyBlockedAttempt.attempted === false &&
+      autoPolicyBlockedAttempt.outcome === "blocked_auto_risk_policy" &&
+      typeof autoPolicyBlockedAttempt.autoPolicy?.reasonLabelKo === "string" &&
+      autoPolicyBlockedAttempt.autoPolicy.reasonLabelKo.length > 0 &&
+      typeof autoPolicyBlockedAttempt.autoPolicy?.nextActionKo === "string" &&
+      autoPolicyBlockedAttempt.autoPolicy.nextActionKo.length > 0,
   });
 
   const recommendationNeedGuard = resolveBreakthroughRecommendation(
@@ -685,8 +720,16 @@ async function main() {
       autoRiskSummary.seconds === 4 &&
       autoRiskSummary.breakthroughs === 0 &&
       autoRiskSummary.breakthroughPolicyBlocks > 0 &&
+      autoRiskSummary.breakthroughPolicyBlocks ===
+        ((autoRiskSummary.breakthroughPolicyBlockReasons?.extremeRisk || 0) +
+          (autoRiskSummary.breakthroughPolicyBlockReasons?.highRisk || 0) +
+          (autoRiskSummary.breakthroughPolicyBlockReasons?.highQiCost || 0)) &&
       autoRiskSummary.collectedEvents.some(
-        (event) => event.kind === "breakthrough_blocked_auto_policy",
+        (event) =>
+          event.kind === "breakthrough_blocked_auto_policy" &&
+          typeof event.reasonLabelKo === "string" &&
+          event.reasonLabelKo.length > 0 &&
+          typeof event.nextActionKo === "string",
       ),
   });
 

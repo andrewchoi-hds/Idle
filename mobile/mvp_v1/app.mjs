@@ -132,6 +132,39 @@ function createDefaultSlotLockMap() {
   };
 }
 
+function createEmptyPolicyBlockReasonSummary() {
+  return {
+    extremeRisk: 0,
+    highRisk: 0,
+    highQiCost: 0,
+  };
+}
+
+function accumulatePolicyBlockReasonSummary(target, source) {
+  if (!target || typeof target !== "object") return;
+  if (!source || typeof source !== "object") return;
+  target.extremeRisk += Math.max(0, Number(source.extremeRisk) || 0);
+  target.highRisk += Math.max(0, Number(source.highRisk) || 0);
+  target.highQiCost += Math.max(0, Number(source.highQiCost) || 0);
+}
+
+function formatPolicyBlockReasonSummary(summary) {
+  if (!summary || typeof summary !== "object") {
+    return "";
+  }
+  const parts = [];
+  if ((Number(summary.extremeRisk) || 0) > 0) {
+    parts.push(`치명 ${Math.floor(summary.extremeRisk)}회`);
+  }
+  if ((Number(summary.highRisk) || 0) > 0) {
+    parts.push(`고위험 ${Math.floor(summary.highRisk)}회`);
+  }
+  if ((Number(summary.highQiCost) || 0) > 0) {
+    parts.push(`고기소모 ${Math.floor(summary.highQiCost)}회`);
+  }
+  return parts.join(", ");
+}
+
 let context = null;
 let state = null;
 let rng = createSeededRng(Date.now());
@@ -142,6 +175,7 @@ let offlineDetailExpanded = false;
 let realtimeAutoTimer = null;
 let realtimePersistTicks = 0;
 let realtimePolicyBlockAccum = 0;
+let realtimePolicyReasonAccum = createEmptyPolicyBlockReasonSummary();
 let slotSummaryDirty = true;
 let slotSummaryLastRenderedAtMs = 0;
 let slotQuickLoadLastAcceptedAtMs = 0;
@@ -629,7 +663,12 @@ function formatOfflineEventLine(event) {
     return `${secLabel}: 도겁 사망 → 환생 (환생정수 +${fmtNumber(event.rebirthReward)})`;
   }
   if (event.kind === "breakthrough_blocked_auto_policy") {
-    return `${secLabel}: 자동 돌파 차단 (${String(event.reason || "policy")})`;
+    const reasonLabel = String(event.reasonLabelKo || event.reason || "policy");
+    const actionText =
+      typeof event.nextActionKo === "string" && event.nextActionKo
+        ? ` · ${event.nextActionKo}`
+        : "";
+    return `${secLabel}: 자동 돌파 차단 (${reasonLabel})${actionText}`;
   }
   return `${secLabel}: ${String(event.kind || "unknown")}`;
 }
@@ -764,9 +803,12 @@ function buildOfflineStatus(prefix, summary) {
   const auto = summary.autoSummary;
   const maxOfflineHours = Math.floor((summary.maxOfflineSec || 0) / 3600);
   const capText = summary.cappedByMaxOffline ? ` · ${maxOfflineHours}시간 cap 적용` : "";
+  const reasonText = formatPolicyBlockReasonSummary(auto?.breakthroughPolicyBlockReasons);
   const blockedText =
     (auto?.breakthroughPolicyBlocks ?? 0) > 0
-      ? ` · 위험 차단 ${auto.breakthroughPolicyBlocks}회`
+      ? ` · 위험 차단 ${auto.breakthroughPolicyBlocks}회${
+          reasonText ? `(${reasonText})` : ""
+        }`
       : "";
   return `${prefix}: ${fmtDurationSec(summary.appliedOfflineSec)} 정산 (전투 ${auto?.battles ?? 0}회 · 돌파 ${auto?.breakthroughs ?? 0}회${blockedText} · 환생 ${auto?.rebirths ?? 0}회${capText})`;
 }
@@ -793,6 +835,7 @@ function resetRealtimeAutoSession() {
   stats.anchorRebirthEssence = currency.rebirthEssence;
   realtimePersistTicks = 0;
   realtimePolicyBlockAccum = 0;
+  realtimePolicyReasonAccum = createEmptyPolicyBlockReasonSummary();
 }
 
 function syncRealtimeAutoControls() {
@@ -852,13 +895,21 @@ function runRealtimeAutoTick() {
   stats.breakthroughs += summary.breakthroughs;
   stats.rebirths += summary.rebirths;
   realtimePolicyBlockAccum += summary.breakthroughPolicyBlocks;
+  accumulatePolicyBlockReasonSummary(
+    realtimePolicyReasonAccum,
+    summary.breakthroughPolicyBlockReasons,
+  );
 
   if (stats.elapsedSec % 10 === 0) {
+    const reasonText = formatPolicyBlockReasonSummary(realtimePolicyReasonAccum);
     addClientLog(
       "auto",
-      `실시간 자동 ${fmtDurationSec(stats.elapsedSec)} 누적 (전투 ${stats.battles}회 · 돌파 ${stats.breakthroughs}회 · 위험 차단 ${realtimePolicyBlockAccum}회 · 환생 ${stats.rebirths}회)`,
+      `실시간 자동 ${fmtDurationSec(stats.elapsedSec)} 누적 (전투 ${stats.battles}회 · 돌파 ${stats.breakthroughs}회 · 위험 차단 ${realtimePolicyBlockAccum}회${
+        reasonText ? `(${reasonText})` : ""
+      } · 환생 ${stats.rebirths}회)`,
     );
     realtimePolicyBlockAccum = 0;
+    realtimePolicyReasonAccum = createEmptyPolicyBlockReasonSummary();
   }
 
   if (realtimePersistTicks >= 3) {
@@ -874,6 +925,8 @@ function startRealtimeAuto() {
     return;
   }
   ensureRealtimeAnchor();
+  realtimePolicyBlockAccum = 0;
+  realtimePolicyReasonAccum = createEmptyPolicyBlockReasonSummary();
   const tuning = getCurrentSpeedTuning();
   realtimeAutoTimer = window.setInterval(runRealtimeAutoTick, 1000);
   addClientLog("auto", `실시간 자동 시작(${tuning.labelKo})`);
@@ -889,6 +942,8 @@ function maybeAutoStartRealtime(sourceLabel = "자동 재개") {
     return false;
   }
   ensureRealtimeAnchor();
+  realtimePolicyBlockAccum = 0;
+  realtimePolicyReasonAccum = createEmptyPolicyBlockReasonSummary();
   const tuning = getCurrentSpeedTuning();
   realtimeAutoTimer = window.setInterval(runRealtimeAutoTick, 1000);
   addClientLog("auto", `실시간 자동 시작(${tuning.labelKo}, ${sourceLabel})`);
@@ -1547,9 +1602,14 @@ function bindEvents() {
       breakthroughEverySec: tuning.breakthroughEverySec,
       passiveQiRatio: tuning.passiveQiRatio,
     });
+    const blockedReasonText = formatPolicyBlockReasonSummary(
+      summary.breakthroughPolicyBlockReasons,
+    );
     const blockedText =
       summary.breakthroughPolicyBlocks > 0
-        ? ` · 위험 차단 ${summary.breakthroughPolicyBlocks}회`
+        ? ` · 위험 차단 ${summary.breakthroughPolicyBlocks}회${
+            blockedReasonText ? `(${blockedReasonText})` : ""
+          }`
         : "";
     setStatus(
       `자동 10초(${tuning.labelKo}): 전투 ${summary.battles}회 · 돌파 ${summary.breakthroughs}회${blockedText} · 환생 ${summary.rebirths}회`,
