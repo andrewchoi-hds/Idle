@@ -922,3 +922,11 @@
 
 ## 195) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(도겁 기대값 요약 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 196) 다음 순차 작업
+1. [완료] 엔진에 수동 돌파 시도 확인 정책 함수(`resolveBreakthroughManualAttemptPolicy`)를 추가해 위험도/기대 기소모 기준 확인 필요 여부를 표준화.
+2. [완료] 모바일 UI 수동 돌파 버튼 경로에 고위험/고기소모 확인 모달을 연동해 취소 시 시도를 중단하도록 개선.
+3. [완료] 모바일 회귀 체크에 수동 시도 확인 정책 시나리오(치명/위험/고기소모/안전) 검증을 추가.
+
+## 197) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(수동 도겁 시도 확인 정책 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
