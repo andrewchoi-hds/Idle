@@ -446,6 +446,11 @@ async function main() {
   });
 
   const detailReportSnapshot = buildOfflineDetailReportSnapshot(prioritizedOfflineEvents, 1);
+  const detailReportSnapshotCriticalView = buildOfflineDetailReportSnapshot(
+    prioritizedOfflineEvents,
+    1,
+    "critical",
+  );
   checks.push({
     id: "offline_detail_report_snapshot_contains_filter_breakdown",
     passed:
@@ -453,14 +458,27 @@ async function main() {
       detailReportSnapshot.visibleAllEvents === 6 &&
       detailReportSnapshot.visibleCriticalEvents === 4 &&
       detailReportSnapshot.hiddenCriticalEvents === 2 &&
+      detailReportSnapshot.viewMode === "all" &&
+      detailReportSnapshot.viewVisibleEvents === 6 &&
+      detailReportSnapshot.viewHiddenEvents === 0 &&
       detailReportSnapshot.labelsKo.all === "세부 로그 6건 (전체)" &&
       detailReportSnapshot.labelsKo.critical === "세부 로그 4/6건 (핵심)" &&
       detailReportSnapshot.labelsKo.hidden === "비핵심 2건 숨김" &&
       detailReportSnapshot.labelsKo.hiddenKinds === "숨김 상세 전투 승리 1건 · 외 1건" &&
+      detailReportSnapshot.labelsKo.view === "세부 로그 6건 (전체)" &&
+      detailReportSnapshot.labelsKo.viewHidden === "숨김 이벤트 없음" &&
+      detailReportSnapshot.labelsKo.viewHiddenKinds === "숨김 상세 없음" &&
       Array.isArray(detailReportSnapshot.hiddenKindsTop) &&
       detailReportSnapshot.hiddenKindsTop.length === 1 &&
       detailReportSnapshot.hiddenKindsTop[0].kind === "battle_win" &&
-      detailReportSnapshot.hiddenKindsTop[0].count === 1,
+      detailReportSnapshot.hiddenKindsTop[0].count === 1 &&
+      detailReportSnapshotCriticalView.viewMode === "critical" &&
+      detailReportSnapshotCriticalView.viewVisibleEvents === 4 &&
+      detailReportSnapshotCriticalView.viewHiddenEvents === 2 &&
+      detailReportSnapshotCriticalView.labelsKo.view === "세부 로그 4/6건 (핵심)" &&
+      detailReportSnapshotCriticalView.labelsKo.viewHidden === "비핵심 2건 숨김" &&
+      detailReportSnapshotCriticalView.labelsKo.viewHiddenKinds ===
+        "숨김 상세 전투 승리 1건 · 외 1건",
   });
 
   const offlineCriticalSummary = summarizeOfflineDetailCriticalEvents([

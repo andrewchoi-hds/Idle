@@ -248,17 +248,26 @@ export function buildOfflineDetailHiddenKindsSummaryLabelKo(
   return `숨김 상세 ${parts.join(" · ")}${remainingText}`;
 }
 
-export function buildOfflineDetailReportSnapshot(eventsInput, maxKindsInput = 3) {
+export function buildOfflineDetailReportSnapshot(
+  eventsInput,
+  maxKindsInput = 3,
+  viewModeInput = "all",
+) {
   const rows = Array.isArray(eventsInput) ? eventsInput.slice() : [];
   const maxKinds = clamp(toNonNegativeInt(maxKindsInput, 3), 1, 5);
+  const viewMode = viewModeInput === "critical" ? "critical" : "all";
   const allSummary = summarizeOfflineDetailFilterResult(rows, "all");
   const criticalSummary = summarizeOfflineDetailFilterResult(rows, "critical");
   const hiddenKindsSummary = summarizeOfflineDetailHiddenKinds(rows, "critical");
+  const viewSummary = summarizeOfflineDetailFilterResult(rows, viewMode);
   return {
     totalEvents: allSummary.total,
     visibleAllEvents: allSummary.visible,
     visibleCriticalEvents: criticalSummary.visible,
     hiddenCriticalEvents: criticalSummary.hidden,
+    viewMode,
+    viewVisibleEvents: viewSummary.visible,
+    viewHiddenEvents: viewSummary.hidden,
     labelsKo: {
       all: buildOfflineDetailFilterSummaryLabelKo(rows, "all"),
       critical: buildOfflineDetailFilterSummaryLabelKo(rows, "critical"),
@@ -266,6 +275,13 @@ export function buildOfflineDetailReportSnapshot(eventsInput, maxKindsInput = 3)
       hiddenKinds: buildOfflineDetailHiddenKindsSummaryLabelKo(
         rows,
         "critical",
+        maxKinds,
+      ),
+      view: buildOfflineDetailFilterSummaryLabelKo(rows, viewMode),
+      viewHidden: buildOfflineDetailHiddenSummaryLabelKo(rows, viewMode),
+      viewHiddenKinds: buildOfflineDetailHiddenKindsSummaryLabelKo(
+        rows,
+        viewMode,
         maxKinds,
       ),
     },
