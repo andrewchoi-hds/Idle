@@ -45,3 +45,20 @@ gh pr create \
 - 본문 품질 점검은 `npm run pr:body:lint`로 별도 수행할 수 있다.
 - `Changes` 항목은 `git diff --numstat` 기준의 `(+add/-del)` 정보를 함께 출력한다.
 - Validation 표준 명령 목록은 `/Users/hirediversity/Idle/scripts/pr_validation_commands_v1.py`를 단일 소스로 사용한다.
+
+## 6) 회귀 체크
+```bash
+cd /Users/hirediversity/Idle
+npm run pr:body:gen:regression:check
+```
+```bash
+# JSON 리포트 생성
+npm run pr:body:gen:regression:check:report
+
+# Markdown 요약 생성
+npm run pr:body:gen:regression:summary:md
+```
+- 목적:
+  - PR 본문 생성 포맷(`Summary/Changes/Validation/Docs/Notes`)이 변경으로 깨지지 않았는지 확인
+  - Validation 체크박스 순서/체크 상태 렌더링 회귀 감지
+  - validation failure note 출력 회귀 감지
