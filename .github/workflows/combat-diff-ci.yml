@@ -71,6 +71,9 @@ jobs:
           fi
           exit $status
 
+      - name: Mobile MVP Slice Regression
+        run: npm run mobile:mvp:check
+
       - name: PR Required Check Coverage
         run: |
           set +e

@@ -641,3 +641,12 @@
 ## 125) 추가 문서
 - PR Validation 명령 레지스트리 가이드: `/Users/hirediversity/Idle/docs/system/pr_validation_registry_v1_kr.md`
 - PR 본문 품질 Lint 가이드(Validation 10개 커맨드 기준): `/Users/hirediversity/Idle/docs/system/pr_body_lint_v1_kr.md`
+
+## 126) 다음 순차 작업
+1. [완료] 모바일 MVP 수직슬라이스 UI(`mobile/mvp_v1`)에 전투/돌파/환생/저장복구 플로우 구현.
+2. [완료] 모바일 MVP 수직슬라이스 회귀 체크(`mobile:mvp:check`) 추가 및 Required Check workflow 연동.
+3. [완료] PR Validation 표준 명령/템플릿/문서를 11개 커맨드 기준으로 동기화.
+
+## 127) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드: `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+- PR 본문 품질 Lint 가이드(Validation 11개 커맨드 기준): `/Users/hirediversity/Idle/docs/system/pr_body_lint_v1_kr.md`

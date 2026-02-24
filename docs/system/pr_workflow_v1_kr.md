@@ -82,6 +82,7 @@ npm run pr:ship:auto
 - PR 템플릿 Validation 항목 동기화는 `PR Validation Checklist Sync` step 성공 여부로 확인한다.
 - 표준 Validation 명령의 package scripts 등록 상태는 `PR Validation Command Registry` step 성공 여부로 확인한다.
 - Required Check가 표준 Validation 명령을 모두 포함하는지는 `PR Required Check Coverage` step 성공 여부로 확인한다.
+- 모바일 수직슬라이스 동작 회귀 여부는 `Mobile MVP Slice Regression` step 성공 여부로 확인한다.
 - PR 본문 lint 규칙 자체의 회귀 여부는 `PR Body Lint Regression` step 성공 여부로 확인한다.
 - PR 본문 생성기 포맷 회귀 여부는 `PR Body Generator Regression` step 성공 여부로 확인한다.
 - PR Validation 동기화 스크립트의 회귀 여부는 `PR Validation Sync Regression` step 성공 여부로 확인한다.
@@ -100,5 +101,6 @@ npm run pr:ship:auto
 - PR Validation 체크리스트 동기화 가이드: `/Users/hirediversity/Idle/docs/system/pr_validation_checklist_sync_v1_kr.md`
 - PR Validation 명령 레지스트리 가이드: `/Users/hirediversity/Idle/docs/system/pr_validation_registry_v1_kr.md`
 - PR Required Check 커버리지 가이드: `/Users/hirediversity/Idle/docs/system/pr_required_check_coverage_v1_kr.md`
+- 모바일 MVP 수직슬라이스 가이드: `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
 - PR Validation 동기화 회귀 체크 가이드: `/Users/hirediversity/Idle/docs/system/pr_validation_sync_regression_v1_kr.md`
 - PR 본문 생성기 회귀 체크 가이드: `/Users/hirediversity/Idle/docs/system/pr_body_generator_regression_v1_kr.md`

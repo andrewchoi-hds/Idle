@@ -71,6 +71,7 @@
   - 결과는 `PR Validation Command Registry` 섹션으로 Step Summary에 기록
   - `PR Required Check Coverage` 단계에서 표준 Validation 명령이 Required Check workflow에 모두 포함되는지 점검
   - 결과는 `PR Required Check Coverage` 섹션으로 Step Summary에 기록
+  - `Mobile MVP Slice Regression` 단계에서 모바일 수직슬라이스 핵심 루프 회귀 점검
   - `PR Body Lint Regression` 단계에서 고정 fixture 기반 회귀 체크 실행
   - 결과는 `PR Body Lint Regression Summary` 섹션으로 Step Summary에 기록
   - `PR Body Generator Regression` 단계에서 본문 생성 포맷 회귀 체크 실행

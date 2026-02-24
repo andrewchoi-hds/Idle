@@ -6,6 +6,7 @@
 - `/Users/hirediversity/Idle/scripts/check_pr_validation_template_sync_v1.py`
 - `/Users/hirediversity/Idle/scripts/check_pr_validation_sync_regression_v1.py`
 - `/Users/hirediversity/Idle/scripts/check_pr_validation_command_registry_v1.py`
+- `/Users/hirediversity/Idle/scripts/check_mobile_mvp_slice_regression_v1.mjs`
 
 ## 1) 목적
 - PR 템플릿의 `Validation` 체크리스트와 자동화 스크립트의 표준 검증 명령 목록 불일치를 사전에 차단한다.
@@ -20,6 +21,7 @@
   - `check_pr_body_generator_regression_v1.py`
   - `check_required_check_coverage_v1.py`
   - `check_pr_validation_command_registry_v1.py`
+  - `check_mobile_mvp_slice_regression_v1.mjs`
 
 ## 3) 동기화 점검 실행
 ```bash
