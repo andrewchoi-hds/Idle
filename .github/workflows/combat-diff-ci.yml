@@ -80,6 +80,15 @@ jobs:
           npm run pr:body:lint:regression:summary:md
           cat data/sim/pr_body_lint_regression_ci_summary_v1.md >> "$GITHUB_STEP_SUMMARY"
 
+      - name: PR Validation Sync Regression
+        run: npm run pr:validation:sync:regression:check:report
+
+      - name: PR Validation Sync Regression Step Summary
+        if: always()
+        run: |
+          npm run pr:validation:sync:regression:summary:md
+          cat data/sim/pr_validation_sync_regression_ci_summary_v1.md >> "$GITHUB_STEP_SUMMARY"
+
       - name: Typecheck
         run: npm run typecheck
 
@@ -116,3 +125,5 @@ jobs:
             data/sim/save_regression_ci_summary_v1.md
             data/sim/pr_body_lint_regression_report_v1.json
             data/sim/pr_body_lint_regression_ci_summary_v1.md
+            data/sim/pr_validation_sync_regression_report_v1.json
+            data/sim/pr_validation_sync_regression_ci_summary_v1.md

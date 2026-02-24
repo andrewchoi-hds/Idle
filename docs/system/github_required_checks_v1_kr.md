@@ -72,6 +72,8 @@
 - 체크리스트 동기화:
   - `PR Validation Checklist Sync` 단계에서 PR 템플릿 Validation 섹션과 표준 명령 목록 동기화 여부 확인
   - 결과는 Step Summary의 `PR Validation Checklist Sync` 섹션으로 기록
+  - `PR Validation Sync Regression` 단계에서 동기화 스크립트 고정 fixture 회귀 점검 실행
+  - 결과는 Step Summary의 `PR Validation Sync Regression Summary` 섹션으로 기록
 - 목적:
   - 빈/부실한 PR 본문을 Required Check 단계에서 직접 차단
   - 로컬 `pr:create:auto`와 서버 CI 품질 기준 일치
