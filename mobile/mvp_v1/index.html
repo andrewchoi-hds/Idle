@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a1110" />
     <title>Idle Xianxia Mobile MVP v1</title>
     <link rel="stylesheet" href="./app.css" />
   </head>
@@ -13,7 +14,7 @@
           <p class="eyebrow">Mobile Vertical Slice v1</p>
           <h1>선협 방치형 MVP</h1>
         </div>
-        <p id="appStatus" class="status">로딩 중...</p>
+        <p id="appStatus" class="status" aria-live="polite">로딩 중...</p>
       </header>
 
       <section class="panel stage">
@@ -54,6 +55,25 @@
         <label><input id="optAutoBattle" type="checkbox" /> 자동 전투</label>
         <label><input id="optAutoBreakthrough" type="checkbox" /> 자동 돌파</label>
         <label><input id="optAutoTribulation" type="checkbox" /> 자동 도겁 허용</label>
+        <label><input id="optAutoResumeRealtime" type="checkbox" /> 앱 복귀 시 실시간 자동 재개</label>
+        <div class="settings-grid">
+          <label>
+            전투 속도
+            <select id="optBattleSpeed">
+              <option value="1">저속</option>
+              <option value="2">표준</option>
+              <option value="3">고속</option>
+            </select>
+          </label>
+          <label>
+            오프라인 정산 시간(시간)
+            <input id="optOfflineCapHours" type="number" min="1" max="168" step="1" />
+          </label>
+          <label>
+            오프라인 세부 로그 개수
+            <input id="optOfflineEventLimit" type="number" min="5" max="120" step="1" />
+          </label>
+        </div>
       </section>
 
       <section class="panel consumables">
@@ -80,7 +100,34 @@
           <button id="btnBattle" type="button">전투 1회</button>
           <button id="btnBreakthrough" type="button">돌파 시도</button>
           <button id="btnAuto10s" type="button">자동 10초 진행</button>
+          <button id="btnRealtimeAuto" type="button">실시간 자동 시작</button>
           <button id="btnResetRun" type="button">런 초기화</button>
+        </div>
+        <p class="sub">
+          실시간 자동 상태:
+          <strong id="realtimeAutoStatus">중지</strong>
+        </p>
+        <div class="realtime-grid">
+          <article>
+            <h3>누적 시간</h3>
+            <p id="realtimeElapsed">0초</p>
+          </article>
+          <article>
+            <h3>누적 전투</h3>
+            <p id="realtimeBattles">0회</p>
+          </article>
+          <article>
+            <h3>누적 돌파</h3>
+            <p id="realtimeBreakthroughs">0회</p>
+          </article>
+          <article>
+            <h3>누적 환생</h3>
+            <p id="realtimeRebirths">0회</p>
+          </article>
+        </div>
+        <div class="offline-detail-actions">
+          <button id="btnExportRealtimeReport" type="button" class="ghost-btn">실시간 리포트 JSON</button>
+          <button id="btnResetRealtimeStats" type="button" class="ghost-btn">실시간 통계 초기화</button>
         </div>
       </section>
 
@@ -88,16 +135,38 @@
         <h2>저장 / 복구</h2>
         <p class="sub">플레이어명</p>
         <input id="playerNameInput" type="text" maxlength="20" />
+        <p class="sub">세이브 슬롯</p>
+        <select id="optSaveSlot">
+          <option value="1">슬롯 1</option>
+          <option value="2">슬롯 2</option>
+          <option value="3">슬롯 3</option>
+        </select>
+        <p class="sub">슬롯 복제 대상</p>
+        <div class="slot-copy-row">
+          <select id="optCopySlotTarget">
+            <option value="1">슬롯 1</option>
+            <option value="2">슬롯 2</option>
+            <option value="3">슬롯 3</option>
+          </select>
+          <button id="btnCopySlot" type="button">활성 슬롯 복제</button>
+        </div>
         <p class="sub">
           마지막 저장:
           <strong id="lastSavedAt">없음</strong>
+        </p>
+        <p class="sub">
+          마지막 활동:
+          <strong id="lastActiveAt">없음</strong>
         </p>
         <div class="button-grid">
           <button id="btnSaveLocal" type="button">로컬 저장</button>
           <button id="btnLoadLocal" type="button">로컬 불러오기</button>
           <button id="btnExportState" type="button">JSON 내보내기</button>
           <button id="btnImportState" type="button">JSON 가져오기</button>
+          <button id="btnDeleteSlot" type="button">활성 슬롯 삭제</button>
         </div>
+        <p class="sub">슬롯 요약</p>
+        <ul id="saveSlotSummaryList" class="slot-summary-list"></ul>
         <textarea
           id="savePayload"
           rows="8"
@@ -119,6 +188,59 @@
         <ul id="eventLogList"></ul>
       </section>
     </main>
+
+    <aside id="offlineModal" class="offline-modal hidden" aria-hidden="true">
+      <section
+        class="offline-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="offlineModalTitle"
+      >
+        <header class="offline-card-head">
+          <div>
+            <p class="eyebrow">Offline Catch-up</p>
+            <h2 id="offlineModalTitle">복귀 정산 결과</h2>
+          </div>
+          <button id="btnCloseOfflineModal" type="button" class="ghost-btn">닫기</button>
+        </header>
+        <p class="sub">
+          적용 시간 <strong id="offlineAppliedDuration">0초</strong>
+          · 원본 경과 <strong id="offlineRawDuration">0초</strong>
+          · cap <strong id="offlineCapState">미적용</strong>
+        </p>
+        <div class="offline-grid">
+          <article>
+            <h3>전투</h3>
+            <p id="offlineBattleCount">0회</p>
+          </article>
+          <article>
+            <h3>돌파</h3>
+            <p id="offlineBreakthroughCount">0회</p>
+          </article>
+          <article>
+            <h3>환생</h3>
+            <p id="offlineRebirthCount">0회</p>
+          </article>
+          <article>
+            <h3>기 순변화</h3>
+            <p id="offlineQiDelta">+0</p>
+          </article>
+          <article>
+            <h3>영석 순변화</h3>
+            <p id="offlineSpiritDelta">+0</p>
+          </article>
+          <article>
+            <h3>환생정수 순변화</h3>
+            <p id="offlineEssenceDelta">+0</p>
+          </article>
+        </div>
+        <div class="offline-detail-actions">
+          <button id="btnToggleOfflineDetail" type="button" class="ghost-btn">세부 로그 보기</button>
+          <button id="btnExportOfflineReport" type="button" class="ghost-btn">정산 리포트 JSON</button>
+        </div>
+        <ul id="offlineDetailList" class="offline-detail-list hidden"></ul>
+      </section>
+    </aside>
 
     <script type="module" src="./app.mjs"></script>
   </body>

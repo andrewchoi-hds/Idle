@@ -1,16 +1,23 @@
 import {
   MOBILE_MVP_STORAGE_KEY,
+  MOBILE_MVP_SLOT_PREFS_KEY,
   buildSliceContext,
+  buildStorageKeyForSlot,
   cloneSliceState,
   createInitialSliceState,
   createSeededRng,
   getStage,
   getStageDisplayNameKo,
+  normalizeSaveSlot,
+  normalizeSlotSummaryState,
   parseSliceState,
   previewBreakthroughChance,
+  resolveSlotSummaryQuickAction,
+  resolveLoopTuningFromBattleSpeed,
   runAutoSliceSeconds,
   runBattleOnce,
   runBreakthroughAttempt,
+  runOfflineCatchup,
   serializeSliceState,
 } from "./engine.mjs";
 
@@ -32,25 +39,64 @@ const dom = {
   optAutoBattle: document.getElementById("optAutoBattle"),
   optAutoBreakthrough: document.getElementById("optAutoBreakthrough"),
   optAutoTribulation: document.getElementById("optAutoTribulation"),
+  optAutoResumeRealtime: document.getElementById("optAutoResumeRealtime"),
+  optBattleSpeed: document.getElementById("optBattleSpeed"),
+  optOfflineCapHours: document.getElementById("optOfflineCapHours"),
+  optOfflineEventLimit: document.getElementById("optOfflineEventLimit"),
   useBreakthroughElixir: document.getElementById("useBreakthroughElixir"),
   useTribulationTalisman: document.getElementById("useTribulationTalisman"),
   playerNameInput: document.getElementById("playerNameInput"),
+  optSaveSlot: document.getElementById("optSaveSlot"),
+  optCopySlotTarget: document.getElementById("optCopySlotTarget"),
   lastSavedAt: document.getElementById("lastSavedAt"),
+  lastActiveAt: document.getElementById("lastActiveAt"),
   savePayload: document.getElementById("savePayload"),
+  offlineModal: document.getElementById("offlineModal"),
+  offlineAppliedDuration: document.getElementById("offlineAppliedDuration"),
+  offlineRawDuration: document.getElementById("offlineRawDuration"),
+  offlineCapState: document.getElementById("offlineCapState"),
+  offlineBattleCount: document.getElementById("offlineBattleCount"),
+  offlineBreakthroughCount: document.getElementById("offlineBreakthroughCount"),
+  offlineRebirthCount: document.getElementById("offlineRebirthCount"),
+  offlineQiDelta: document.getElementById("offlineQiDelta"),
+  offlineSpiritDelta: document.getElementById("offlineSpiritDelta"),
+  offlineEssenceDelta: document.getElementById("offlineEssenceDelta"),
+  btnToggleOfflineDetail: document.getElementById("btnToggleOfflineDetail"),
+  btnExportOfflineReport: document.getElementById("btnExportOfflineReport"),
+  offlineDetailList: document.getElementById("offlineDetailList"),
+  btnCloseOfflineModal: document.getElementById("btnCloseOfflineModal"),
   btnBattle: document.getElementById("btnBattle"),
   btnBreakthrough: document.getElementById("btnBreakthrough"),
   btnAuto10s: document.getElementById("btnAuto10s"),
+  btnRealtimeAuto: document.getElementById("btnRealtimeAuto"),
   btnResetRun: document.getElementById("btnResetRun"),
+  realtimeAutoStatus: document.getElementById("realtimeAutoStatus"),
+  realtimeElapsed: document.getElementById("realtimeElapsed"),
+  realtimeBattles: document.getElementById("realtimeBattles"),
+  realtimeBreakthroughs: document.getElementById("realtimeBreakthroughs"),
+  realtimeRebirths: document.getElementById("realtimeRebirths"),
+  btnExportRealtimeReport: document.getElementById("btnExportRealtimeReport"),
+  btnResetRealtimeStats: document.getElementById("btnResetRealtimeStats"),
   btnSaveLocal: document.getElementById("btnSaveLocal"),
   btnLoadLocal: document.getElementById("btnLoadLocal"),
   btnExportState: document.getElementById("btnExportState"),
   btnImportState: document.getElementById("btnImportState"),
+  btnCopySlot: document.getElementById("btnCopySlot"),
+  btnDeleteSlot: document.getElementById("btnDeleteSlot"),
+  saveSlotSummaryList: document.getElementById("saveSlotSummaryList"),
   eventLogList: document.getElementById("eventLogList"),
 };
 
 let context = null;
 let state = null;
 let rng = createSeededRng(Date.now());
+let activeSaveSlot = 1;
+let lastOfflineReport = null;
+let offlineDetailExpanded = false;
+let realtimeAutoTimer = null;
+let realtimePersistTicks = 0;
+let slotSummaryDirty = true;
+let slotSummaryLastRenderedAtMs = 0;
 
 function setStatus(message, isError = false) {
   dom.appStatus.textContent = message;
@@ -67,9 +113,648 @@ function worldKo(world) {
   return "진선계";
 }
 
+function fmtDateTimeFromEpochMs(epochMs) {
+  if (!Number.isFinite(epochMs) || epochMs <= 0) {
+    return "없음";
+  }
+  return new Date(epochMs).toLocaleString("ko-KR", {
+    hour12: false,
+  });
+}
+
+function fmtDateTimeFromIso(iso) {
+  const parsed = Date.parse(typeof iso === "string" ? iso : "");
+  if (!Number.isFinite(parsed)) {
+    return "없음";
+  }
+  return fmtDateTimeFromEpochMs(parsed);
+}
+
+function fmtDurationSec(totalSec) {
+  const sec = Math.max(0, Math.floor(totalSec));
+  const hours = Math.floor(sec / 3600);
+  const minutes = Math.floor((sec % 3600) / 60);
+  const seconds = sec % 60;
+  if (hours > 0) {
+    return `${hours}시간 ${minutes}분`;
+  }
+  if (minutes > 0) {
+    return `${minutes}분 ${seconds}초`;
+  }
+  return `${seconds}초`;
+}
+
+function fmtSignedInteger(value) {
+  const amount = Number.isFinite(value) ? Math.floor(value) : 0;
+  if (amount > 0) {
+    return `+${fmtNumber(amount)}`;
+  }
+  if (amount < 0) {
+    return `-${fmtNumber(Math.abs(amount))}`;
+  }
+  return "+0";
+}
+
+function clampInteger(value, fallback, min, max) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) {
+    return fallback;
+  }
+  const normalized = Math.floor(parsed);
+  return Math.max(min, Math.min(max, normalized));
+}
+
+function escapeHtml(value) {
+  return String(value).replace(
+    /[&<>"']/g,
+    (ch) =>
+      ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+      })[ch] || ch,
+  );
+}
+
+function markSlotSummaryDirty() {
+  slotSummaryDirty = true;
+}
+
+function safeLocalGetItem(key) {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function safeLocalRemoveItem(key) {
+  try {
+    window.localStorage.removeItem(key);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function safeLocalSetItem(key, value) {
+  try {
+    window.localStorage.setItem(key, value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function getActiveStorageKey() {
+  return buildStorageKeyForSlot(activeSaveSlot);
+}
+
+function resolvePreferredCopyTargetSlot() {
+  const currentTarget = normalizeSaveSlot(dom.optCopySlotTarget?.value, 1);
+  if (currentTarget !== activeSaveSlot) {
+    return currentTarget;
+  }
+  return activeSaveSlot === 1 ? 2 : 1;
+}
+
+function syncCopySlotTargetSelection() {
+  if (!dom.optCopySlotTarget) {
+    return;
+  }
+  dom.optCopySlotTarget.value = String(resolvePreferredCopyTargetSlot());
+}
+
+function setActiveSaveSlot(slot, options = {}) {
+  const persistPref = options.persistPref !== false;
+  activeSaveSlot = normalizeSaveSlot(slot, activeSaveSlot || 1);
+  if (dom.optSaveSlot) {
+    dom.optSaveSlot.value = String(activeSaveSlot);
+  }
+  syncCopySlotTargetSelection();
+  if (persistPref) {
+    try {
+      window.localStorage.setItem(MOBILE_MVP_SLOT_PREFS_KEY, String(activeSaveSlot));
+    } catch {
+      // ignore preference persistence failures
+    }
+  }
+  markSlotSummaryDirty();
+}
+
+function restoreSaveSlotPreference() {
+  let preferred = 1;
+  try {
+    preferred = normalizeSaveSlot(
+      window.localStorage.getItem(MOBILE_MVP_SLOT_PREFS_KEY),
+      1,
+    );
+  } catch {
+    preferred = 1;
+  }
+  setActiveSaveSlot(preferred, { persistPref: false });
+}
+
+function readSlotPayload(slot, options = {}) {
+  const includeLegacyForSlot1 =
+    options.includeLegacyForSlot1 === undefined ? true : options.includeLegacyForSlot1;
+  const normalized = normalizeSaveSlot(slot, 1);
+  const slotKey = buildStorageKeyForSlot(normalized);
+  const raw = safeLocalGetItem(slotKey);
+  if (raw) {
+    return { slot: normalized, raw, source: "slot" };
+  }
+  if (includeLegacyForSlot1 && normalized === 1) {
+    const legacyRaw = safeLocalGetItem(MOBILE_MVP_STORAGE_KEY);
+    if (legacyRaw) {
+      return { slot: normalized, raw: legacyRaw, source: "legacy" };
+    }
+  }
+  return { slot: normalized, raw: null, source: "none" };
+}
+
+function readActiveSlotPayload() {
+  return readSlotPayload(activeSaveSlot, { includeLegacyForSlot1: true });
+}
+
+function summarizeSaveSlot(slot) {
+  const payload = readSlotPayload(slot, { includeLegacyForSlot1: true });
+  if (!payload.raw) {
+    return {
+      slot,
+      state: "empty",
+      source: payload.source,
+      summary: `슬롯 ${slot}: 비어 있음`,
+    };
+  }
+
+  try {
+    const parsed = JSON.parse(payload.raw);
+    if (!parsed || typeof parsed !== "object") {
+      throw new Error("invalid object");
+    }
+    const playerName =
+      typeof parsed.playerName === "string" && parsed.playerName.trim()
+        ? parsed.playerName.trim()
+        : "도심";
+    const parsedDifficulty = Number(parsed.progression?.difficultyIndex);
+    const difficultyIndex =
+      Number.isFinite(parsedDifficulty) && parsedDifficulty >= 1
+        ? Math.floor(parsedDifficulty)
+        : 1;
+    let stageLabel = `난이도 ${difficultyIndex}`;
+    if (context) {
+      try {
+        const stage = getStage(context, difficultyIndex);
+        stageLabel = getStageDisplayNameKo(context, stage);
+      } catch {
+        stageLabel = `난이도 ${difficultyIndex}`;
+      }
+    }
+    const savedAt = fmtDateTimeFromIso(parsed.lastSavedAtIso);
+    return {
+      slot,
+      state: "ok",
+      source: payload.source,
+      summary: `슬롯 ${slot}: ${playerName} · ${stageLabel} · 저장 ${savedAt}`,
+    };
+  } catch {
+    return {
+      slot,
+      state: "corrupt",
+      source: payload.source,
+      summary: `슬롯 ${slot}: 손상된 저장 데이터`,
+    };
+  }
+}
+
+function slotStateLabelKo(state) {
+  if (state === "ok") {
+    return "저장 데이터 있음";
+  }
+  if (state === "corrupt") {
+    return "손상된 저장 데이터";
+  }
+  return "비어 있음";
+}
+
+function buildSlotActionConfirmMessage(title, lines) {
+  return [`[${title}]`, ...lines].join("\n");
+}
+
+function renderSaveSlotSummary(force = false) {
+  const now = Date.now();
+  if (!force && !slotSummaryDirty && now - slotSummaryLastRenderedAtMs < 1500) {
+    return;
+  }
+  const rows = [1, 2, 3].map((slot) => summarizeSaveSlot(slot));
+  dom.saveSlotSummaryList.innerHTML = rows
+    .map((row) => {
+      const classes = ["slot-summary-item"];
+      if (row.slot === activeSaveSlot) {
+        classes.push("active");
+      }
+      if (row.state === "corrupt") {
+        classes.push("corrupt");
+      }
+      const sourceBadge =
+        row.source === "legacy"
+          ? '<span class="slot-source legacy">legacy</span>'
+          : row.state === "ok"
+            ? '<span class="slot-source">slot</span>'
+            : "";
+      const activeBadge =
+        row.slot === activeSaveSlot
+          ? '<span class="slot-source active">active</span>'
+          : "";
+      return `<li class="${classes.join(" ")}" data-slot="${row.slot}" data-state="${row.state}" tabindex="0" role="button" aria-label="${escapeHtml(row.summary)}">
+        <span>${escapeHtml(row.summary)}</span>
+        <span class="slot-badges">${activeBadge}${sourceBadge}</span>
+      </li>`;
+    })
+    .join("");
+  slotSummaryDirty = false;
+  slotSummaryLastRenderedAtMs = now;
+}
+
+function formatOfflineEventLine(event) {
+  const secLabel = `${fmtDurationSec(event.sec || 0)} 시점`;
+  if (event.kind === "battle_win") {
+    return `${secLabel}: 전투 승리 (기 ${fmtSignedInteger(event.qiDelta)}, 영석 ${fmtSignedInteger(event.spiritCoinDelta)})`;
+  }
+  if (event.kind === "battle_loss") {
+    return `${secLabel}: 전투 패배 (기 ${fmtSignedInteger(event.qiDelta)})`;
+  }
+  if (event.kind === "breakthrough_success") {
+    return `${secLabel}: 돌파 성공 (난이도 ${event.fromDifficultyIndex} → ${event.toDifficultyIndex})`;
+  }
+  if (event.kind === "breakthrough_minor_fail") {
+    return `${secLabel}: 돌파 경상 실패 (기 ${fmtSignedInteger(event.qiDelta)})`;
+  }
+  if (event.kind === "breakthrough_retreat_fail") {
+    return `${secLabel}: 돌파 후퇴 실패 (${event.retreatLayers}단계 하락)`;
+  }
+  if (event.kind === "breakthrough_death_fail") {
+    return `${secLabel}: 도겁 사망 → 환생 (환생정수 +${fmtNumber(event.rebirthReward)})`;
+  }
+  return `${secLabel}: ${String(event.kind || "unknown")}`;
+}
+
+function renderOfflineDetailList(events) {
+  const rows = Array.isArray(events) ? events : [];
+  if (rows.length === 0) {
+    dom.offlineDetailList.innerHTML = '<li class="delta-neutral">세부 로그 없음</li>';
+    return;
+  }
+  dom.offlineDetailList.innerHTML = rows
+    .map((event) => `<li>${formatOfflineEventLine(event)}</li>`)
+    .join("");
+}
+
+function setOfflineDetailExpanded(expanded) {
+  offlineDetailExpanded = expanded;
+  dom.offlineDetailList.classList.toggle("hidden", !expanded);
+  dom.btnToggleOfflineDetail.textContent = expanded ? "세부 로그 숨기기" : "세부 로그 보기";
+}
+
+function captureCurrentCurrencies() {
+  return {
+    qi: state.currencies.qi,
+    spiritCoin: state.currencies.spiritCoin,
+    rebirthEssence: state.currencies.rebirthEssence,
+  };
+}
+
+function getRealtimeStats() {
+  return state.realtimeStats;
+}
+
+function ensureRealtimeStatsShape() {
+  if (!state.realtimeStats || typeof state.realtimeStats !== "object") {
+    const currency = captureCurrentCurrencies();
+    state.realtimeStats = {
+      sessionStartedAtIso: "",
+      timelineSec: 0,
+      elapsedSec: 0,
+      battles: 0,
+      breakthroughs: 0,
+      rebirths: 0,
+      anchorQi: currency.qi,
+      anchorSpiritCoin: currency.spiritCoin,
+      anchorRebirthEssence: currency.rebirthEssence,
+    };
+  }
+}
+
+function ensureRealtimeAnchor() {
+  const stats = getRealtimeStats();
+  if (stats.sessionStartedAtIso) {
+    return;
+  }
+  const currency = captureCurrentCurrencies();
+  stats.sessionStartedAtIso = new Date().toISOString();
+  stats.anchorQi = currency.qi;
+  stats.anchorSpiritCoin = currency.spiritCoin;
+  stats.anchorRebirthEssence = currency.rebirthEssence;
+}
+
+async function exportOfflineReportToPayload() {
+  if (!lastOfflineReport) {
+    setStatus("내보낼 오프라인 정산 리포트가 없음", true);
+    return;
+  }
+  const payload = `${JSON.stringify(lastOfflineReport, null, 2)}\n`;
+  dom.savePayload.value = payload;
+  let copied = false;
+  if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+    try {
+      await navigator.clipboard.writeText(payload);
+      copied = true;
+    } catch {
+      copied = false;
+    }
+  }
+  setStatus(copied ? "오프라인 정산 리포트 JSON 복사 완료" : "오프라인 정산 리포트 JSON 생성 완료");
+}
+
+async function exportRealtimeReportToPayload() {
+  const stats = getRealtimeStats();
+  if (!stats.sessionStartedAtIso || stats.elapsedSec <= 0) {
+    setStatus("내보낼 실시간 리포트가 없음", true);
+    return;
+  }
+  const nowCurrencies = captureCurrentCurrencies();
+  const payloadObj = {
+    generatedAtIso: new Date().toISOString(),
+    sessionStartedAtIso: stats.sessionStartedAtIso,
+    elapsedSec: stats.elapsedSec,
+    summary: {
+      elapsedSec: stats.elapsedSec,
+      battles: stats.battles,
+      breakthroughs: stats.breakthroughs,
+      rebirths: stats.rebirths,
+      timelineSec: stats.timelineSec,
+    },
+    settings: {
+      battleSpeed: state.settings.battleSpeed,
+      autoBattle: state.settings.autoBattle,
+      autoBreakthrough: state.settings.autoBreakthrough,
+      autoTribulation: state.settings.autoTribulation,
+    },
+    delta: {
+      qi: nowCurrencies.qi - stats.anchorQi,
+      spiritCoin: nowCurrencies.spiritCoin - stats.anchorSpiritCoin,
+      rebirthEssence: nowCurrencies.rebirthEssence - stats.anchorRebirthEssence,
+    },
+    stageDifficultyIndex: state.progression.difficultyIndex,
+    rebirthCount: state.progression.rebirthCount,
+  };
+  const payload = `${JSON.stringify(payloadObj, null, 2)}\n`;
+  dom.savePayload.value = payload;
+  let copied = false;
+  if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+    try {
+      await navigator.clipboard.writeText(payload);
+      copied = true;
+    } catch {
+      copied = false;
+    }
+  }
+  setStatus(copied ? "실시간 리포트 JSON 복사 완료" : "실시간 리포트 JSON 생성 완료");
+}
+
+function buildOfflineStatus(prefix, summary) {
+  if (!summary || summary.appliedOfflineSec <= 0) {
+    return `${prefix}: 오프라인 정산 없음`;
+  }
+  const auto = summary.autoSummary;
+  const maxOfflineHours = Math.floor((summary.maxOfflineSec || 0) / 3600);
+  const capText = summary.cappedByMaxOffline ? ` · ${maxOfflineHours}시간 cap 적용` : "";
+  return `${prefix}: ${fmtDurationSec(summary.appliedOfflineSec)} 정산 (전투 ${auto?.battles ?? 0}회 · 돌파 ${auto?.breakthroughs ?? 0}회 · 환생 ${auto?.rebirths ?? 0}회${capText})`;
+}
+
+function getCurrentSpeedTuning() {
+  return resolveLoopTuningFromBattleSpeed(state.settings.battleSpeed);
+}
+
+function isRealtimeAutoRunning() {
+  return realtimeAutoTimer !== null;
+}
+
+function resetRealtimeAutoSession() {
+  const currency = captureCurrentCurrencies();
+  const stats = getRealtimeStats();
+  stats.sessionStartedAtIso = "";
+  stats.timelineSec = 0;
+  stats.elapsedSec = 0;
+  stats.battles = 0;
+  stats.breakthroughs = 0;
+  stats.rebirths = 0;
+  stats.anchorQi = currency.qi;
+  stats.anchorSpiritCoin = currency.spiritCoin;
+  stats.anchorRebirthEssence = currency.rebirthEssence;
+  realtimePersistTicks = 0;
+}
+
+function syncRealtimeAutoControls() {
+  const stats = getRealtimeStats();
+  const running = isRealtimeAutoRunning();
+  dom.btnRealtimeAuto.textContent = running ? "실시간 자동 중지" : "실시간 자동 시작";
+  dom.realtimeAutoStatus.textContent = running
+    ? `진행 중 · ${fmtDurationSec(stats.elapsedSec)}`
+    : "중지";
+}
+
+function renderRealtimeSummary() {
+  const stats = getRealtimeStats();
+  dom.realtimeElapsed.textContent = fmtDurationSec(stats.elapsedSec);
+  dom.realtimeBattles.textContent = `${fmtNumber(stats.battles)}회`;
+  dom.realtimeBreakthroughs.textContent = `${fmtNumber(stats.breakthroughs)}회`;
+  dom.realtimeRebirths.textContent = `${fmtNumber(stats.rebirths)}회`;
+}
+
+function stopRealtimeAuto(reason = "중지") {
+  if (!isRealtimeAutoRunning()) {
+    syncRealtimeAutoControls();
+    return;
+  }
+  window.clearInterval(realtimeAutoTimer);
+  realtimeAutoTimer = null;
+  if (realtimePersistTicks > 0) {
+    persistLocal();
+    realtimePersistTicks = 0;
+  }
+  const stats = getRealtimeStats();
+  addClientLog(
+    "auto",
+    `실시간 자동 종료(${reason}): ${fmtDurationSec(stats.elapsedSec)} · 전투 ${stats.battles}회 · 돌파 ${stats.breakthroughs}회 · 환생 ${stats.rebirths}회`,
+  );
+  setStatus(
+    `실시간 자동 종료: ${fmtDurationSec(stats.elapsedSec)} 진행`,
+  );
+  syncRealtimeAutoControls();
+}
+
+function runRealtimeAutoTick() {
+  const tuning = getCurrentSpeedTuning();
+  const stats = getRealtimeStats();
+  const summary = runAutoSliceSeconds(context, state, rng, {
+    seconds: 1,
+    battleEverySec: tuning.battleEverySec,
+    breakthroughEverySec: tuning.breakthroughEverySec,
+    passiveQiRatio: tuning.passiveQiRatio,
+    suppressLogs: true,
+    timelineOffsetSec: stats.timelineSec,
+  });
+  stats.timelineSec += 1;
+  realtimePersistTicks += 1;
+  stats.elapsedSec += 1;
+  stats.battles += summary.battles;
+  stats.breakthroughs += summary.breakthroughs;
+  stats.rebirths += summary.rebirths;
+
+  if (stats.elapsedSec % 10 === 0) {
+    addClientLog(
+      "auto",
+      `실시간 자동 ${fmtDurationSec(stats.elapsedSec)} 누적 (전투 ${stats.battles}회 · 돌파 ${stats.breakthroughs}회 · 환생 ${stats.rebirths}회)`,
+    );
+  }
+
+  if (realtimePersistTicks >= 3) {
+    persistLocal();
+    realtimePersistTicks = 0;
+  }
+
+  render();
+}
+
+function startRealtimeAuto() {
+  if (isRealtimeAutoRunning()) {
+    return;
+  }
+  ensureRealtimeAnchor();
+  const tuning = getCurrentSpeedTuning();
+  realtimeAutoTimer = window.setInterval(runRealtimeAutoTick, 1000);
+  addClientLog("auto", `실시간 자동 시작(${tuning.labelKo})`);
+  setStatus(`실시간 자동 시작(${tuning.labelKo})`);
+  syncRealtimeAutoControls();
+}
+
+function maybeAutoStartRealtime(sourceLabel = "자동 재개") {
+  if (!state?.settings?.autoResumeRealtime || document.hidden) {
+    return false;
+  }
+  if (isRealtimeAutoRunning()) {
+    return false;
+  }
+  ensureRealtimeAnchor();
+  const tuning = getCurrentSpeedTuning();
+  realtimeAutoTimer = window.setInterval(runRealtimeAutoTick, 1000);
+  addClientLog("auto", `실시간 자동 시작(${tuning.labelKo}, ${sourceLabel})`);
+  syncRealtimeAutoControls();
+  return true;
+}
+
+function applyOfflineCatchupNow() {
+  const tuning = getCurrentSpeedTuning();
+  const before = {
+    qi: state.currencies.qi,
+    spiritCoin: state.currencies.spiritCoin,
+    rebirthEssence: state.currencies.rebirthEssence,
+  };
+  const result = runOfflineCatchup(context, state, rng, {
+    nowEpochMs: Date.now(),
+    maxOfflineHours: state.settings.offlineCapHours,
+    maxCollectedEvents: state.settings.offlineEventLimit,
+    battleEverySec: tuning.battleEverySec,
+    breakthroughEverySec: tuning.breakthroughEverySec,
+    passiveQiRatio: tuning.passiveQiRatio,
+    syncAnchorToNow: true,
+  });
+  return {
+    summary: result.summary,
+    delta: {
+      qi: state.currencies.qi - before.qi,
+      spiritCoin: state.currencies.spiritCoin - before.spiritCoin,
+      rebirthEssence: state.currencies.rebirthEssence - before.rebirthEssence,
+    },
+    events: Array.isArray(result.summary.autoSummary?.collectedEvents)
+      ? result.summary.autoSummary.collectedEvents
+      : [],
+  };
+}
+
+function applyResumeCatchupIfNeeded(prefix = "백그라운드 복귀") {
+  const offline = applyOfflineCatchupNow();
+  if (!offline.summary || offline.summary.appliedOfflineSec <= 0) {
+    return false;
+  }
+  showOfflineModal(offline);
+  setStatus(buildOfflineStatus(prefix, offline.summary));
+  persistLocal();
+  render();
+  return true;
+}
+
+function setDeltaNode(node, value) {
+  const amount = Number.isFinite(value) ? Math.floor(value) : 0;
+  node.textContent = fmtSignedInteger(amount);
+  node.classList.remove("delta-gain", "delta-loss", "delta-neutral");
+  if (amount > 0) {
+    node.classList.add("delta-gain");
+  } else if (amount < 0) {
+    node.classList.add("delta-loss");
+  } else {
+    node.classList.add("delta-neutral");
+  }
+}
+
+function hideOfflineModal() {
+  dom.offlineModal.classList.add("hidden");
+  dom.offlineModal.setAttribute("aria-hidden", "true");
+  setOfflineDetailExpanded(false);
+}
+
+function showOfflineModal(offline) {
+  if (!offline || offline.summary.appliedOfflineSec <= 0) {
+    lastOfflineReport = null;
+    hideOfflineModal();
+    return;
+  }
+  const { summary, delta, events } = offline;
+  const auto = summary.autoSummary;
+  dom.offlineAppliedDuration.textContent = fmtDurationSec(summary.appliedOfflineSec);
+  dom.offlineRawDuration.textContent = fmtDurationSec(summary.rawOfflineSec);
+  dom.offlineCapState.textContent = summary.cappedByMaxOffline
+    ? `${state.settings.offlineCapHours}시간 적용`
+    : "미적용";
+  dom.offlineBattleCount.textContent = `${auto?.battles ?? 0}회`;
+  dom.offlineBreakthroughCount.textContent = `${auto?.breakthroughs ?? 0}회`;
+  dom.offlineRebirthCount.textContent = `${auto?.rebirths ?? 0}회`;
+  setDeltaNode(dom.offlineQiDelta, delta.qi);
+  setDeltaNode(dom.offlineSpiritDelta, delta.spiritCoin);
+  setDeltaNode(dom.offlineEssenceDelta, delta.rebirthEssence);
+  lastOfflineReport = {
+    generatedAtIso: new Date().toISOString(),
+    playerName: state.playerName,
+    stageDifficultyIndex: state.progression.difficultyIndex,
+    summary,
+    delta,
+    events,
+  };
+  renderOfflineDetailList(events);
+  setOfflineDetailExpanded(false);
+  dom.offlineModal.classList.remove("hidden");
+  dom.offlineModal.setAttribute("aria-hidden", "false");
+}
+
 function persistLocal() {
   try {
-    window.localStorage.setItem(MOBILE_MVP_STORAGE_KEY, serializeSliceState(state));
+    state.lastActiveEpochMs = Date.now();
+    window.localStorage.setItem(getActiveStorageKey(), serializeSliceState(state));
+    markSlotSummaryDirty();
   } catch (err) {
     setStatus("로컬 저장 실패(브라우저 저장소 제한)", true);
   }
@@ -94,6 +779,7 @@ function renderLogs() {
 }
 
 function render() {
+  ensureRealtimeStatsShape();
   const stage = getStage(context, state.progression.difficultyIndex);
   const displayName = getStageDisplayNameKo(context, stage);
   const preview = previewBreakthroughChance(context, state, {
@@ -114,7 +800,9 @@ function render() {
   dom.previewSuccessPct.textContent = preview.successPct.toFixed(1);
   dom.previewDeathPct.textContent = preview.deathPct.toFixed(1);
   dom.playerNameInput.value = state.playerName;
-  dom.lastSavedAt.textContent = state.lastSavedAtIso || "없음";
+  dom.optSaveSlot.value = String(activeSaveSlot);
+  dom.lastSavedAt.textContent = fmtDateTimeFromIso(state.lastSavedAtIso);
+  dom.lastActiveAt.textContent = fmtDateTimeFromEpochMs(state.lastActiveEpochMs);
 
   const qiRatio = clampPercent((state.currencies.qi / stage.qi_required) * 100);
   dom.qiProgressBar.style.width = `${qiRatio}%`;
@@ -122,7 +810,105 @@ function render() {
   dom.optAutoBattle.checked = state.settings.autoBattle;
   dom.optAutoBreakthrough.checked = state.settings.autoBreakthrough;
   dom.optAutoTribulation.checked = state.settings.autoTribulation;
+  dom.optAutoResumeRealtime.checked = state.settings.autoResumeRealtime;
+  dom.optBattleSpeed.value = String(state.settings.battleSpeed);
+  dom.optOfflineCapHours.value = String(state.settings.offlineCapHours);
+  dom.optOfflineEventLimit.value = String(state.settings.offlineEventLimit);
+  syncCopySlotTargetSelection();
   renderLogs();
+  renderSaveSlotSummary();
+  renderRealtimeSummary();
+  syncRealtimeAutoControls();
+}
+
+function tryLoadActiveSlot(sourceLabel = "로컬 불러오기") {
+  const payload = readActiveSlotPayload();
+  const raw = payload.raw;
+  if (!raw) {
+    setStatus(`슬롯 ${activeSaveSlot} 저장 데이터가 없음`, true);
+    return false;
+  }
+  try {
+    stopRealtimeAuto(sourceLabel);
+    resetRealtimeAutoSession();
+    state = parseSliceState(raw, context);
+    ensureRealtimeStatsShape();
+    addClientLog(
+      "save",
+      `${sourceLabel}: 슬롯 ${activeSaveSlot} 불러오기 완료${payload.source === "legacy" ? " (legacy)" : ""}`,
+    );
+    const offline = applyOfflineCatchupNow();
+    setStatus(
+      buildOfflineStatus(
+        `${sourceLabel}(슬롯 ${activeSaveSlot})`,
+        offline.summary,
+      ),
+    );
+    showOfflineModal(offline);
+    persistLocal();
+    render();
+    maybeAutoStartRealtime(sourceLabel);
+    return true;
+  } catch (err) {
+    setStatus(err instanceof Error ? err.message : "불러오기 실패", true);
+    return false;
+  }
+}
+
+function handleSlotSummaryQuickAction(event, triggerLabel) {
+  const element = event.target;
+  if (!(element instanceof Element)) {
+    return;
+  }
+  const row = element.closest("li[data-slot]");
+  if (!row) {
+    return;
+  }
+  const selectedSlot = normalizeSaveSlot(row.getAttribute("data-slot"), activeSaveSlot);
+  const selectedState = normalizeSlotSummaryState(row.getAttribute("data-state"), "empty");
+  const action = resolveSlotSummaryQuickAction(
+    activeSaveSlot,
+    selectedSlot,
+    selectedState,
+  );
+
+  if (action.shouldLoad) {
+    if (action.changedSlot) {
+      const confirmed = window.confirm(
+        buildSlotActionConfirmMessage("슬롯 불러오기", [
+          `대상: 슬롯 ${action.nextActiveSlot} (${slotStateLabelKo(action.selectedState)})`,
+          "현재 메모리 상태를 대체하여 불러옵니다.",
+          "계속할까요?",
+        ]),
+      );
+      if (!confirmed) {
+        setStatus(`슬롯 ${action.nextActiveSlot} 불러오기 취소`);
+        render();
+        return;
+      }
+      setActiveSaveSlot(action.nextActiveSlot, { persistPref: true });
+    }
+    tryLoadActiveSlot(`슬롯 요약 ${triggerLabel}`);
+    return;
+  }
+
+  if (action.changedSlot) {
+    setActiveSaveSlot(action.nextActiveSlot, { persistPref: true });
+  }
+
+  if (action.actionKind === "switch_corrupt") {
+    setStatus(`슬롯 ${activeSaveSlot} 저장 데이터가 손상되어 불러오기 불가`, true);
+    render();
+    return;
+  }
+
+  if (action.actionKind === "switch_empty") {
+    setStatus(`세이브 슬롯 변경: 슬롯 ${activeSaveSlot} (저장 데이터 없음)`);
+    render();
+    return;
+  }
+
+  setStatus(`슬롯 ${activeSaveSlot} 저장 데이터가 없음`, true);
 }
 
 function clampPercent(value) {
@@ -130,6 +916,60 @@ function clampPercent(value) {
 }
 
 function bindEvents() {
+  dom.btnCloseOfflineModal.addEventListener("click", hideOfflineModal);
+  dom.btnToggleOfflineDetail.addEventListener("click", () => {
+    setOfflineDetailExpanded(!offlineDetailExpanded);
+  });
+  dom.btnExportOfflineReport.addEventListener("click", () => {
+    exportOfflineReportToPayload();
+  });
+  dom.btnExportRealtimeReport.addEventListener("click", () => {
+    exportRealtimeReportToPayload();
+  });
+  dom.btnResetRealtimeStats.addEventListener("click", () => {
+    resetRealtimeAutoSession();
+    persistLocal();
+    setStatus("실시간 통계 초기화 완료");
+    render();
+  });
+  dom.offlineModal.addEventListener("click", (event) => {
+    if (event.target === dom.offlineModal) {
+      hideOfflineModal();
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !dom.offlineModal.classList.contains("hidden")) {
+      hideOfflineModal();
+    }
+  });
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      if (isRealtimeAutoRunning()) {
+        stopRealtimeAuto("백그라운드 진입");
+      }
+      persistLocal();
+      render();
+      return;
+    }
+
+    if (!document.hidden && state && context) {
+      const resumed = applyResumeCatchupIfNeeded();
+      const restarted = maybeAutoStartRealtime("포그라운드 복귀");
+      if (!resumed) {
+        if (restarted) {
+          setStatus("포그라운드 복귀: 실시간 자동 재개");
+        }
+        render();
+      }
+    }
+  });
+  window.addEventListener("pagehide", () => {
+    if (isRealtimeAutoRunning()) {
+      stopRealtimeAuto("페이지 종료");
+    }
+    persistLocal();
+  });
+
   dom.optAutoBattle.addEventListener("change", () => {
     state.settings.autoBattle = dom.optAutoBattle.checked;
     persistLocal();
@@ -143,6 +983,154 @@ function bindEvents() {
   dom.optAutoTribulation.addEventListener("change", () => {
     state.settings.autoTribulation = dom.optAutoTribulation.checked;
     persistLocal();
+    render();
+  });
+  dom.optAutoResumeRealtime.addEventListener("change", () => {
+    state.settings.autoResumeRealtime = dom.optAutoResumeRealtime.checked;
+    persistLocal();
+    if (state.settings.autoResumeRealtime) {
+      maybeAutoStartRealtime("옵션 변경");
+    }
+    render();
+  });
+  dom.optBattleSpeed.addEventListener("change", () => {
+    state.settings.battleSpeed = clampInteger(
+      dom.optBattleSpeed.value,
+      state.settings.battleSpeed,
+      1,
+      3,
+    );
+    persistLocal();
+    render();
+  });
+  dom.optOfflineCapHours.addEventListener("change", () => {
+    state.settings.offlineCapHours = clampInteger(
+      dom.optOfflineCapHours.value,
+      state.settings.offlineCapHours,
+      1,
+      168,
+    );
+    persistLocal();
+    render();
+  });
+  dom.optOfflineEventLimit.addEventListener("change", () => {
+    state.settings.offlineEventLimit = clampInteger(
+      dom.optOfflineEventLimit.value,
+      state.settings.offlineEventLimit,
+      5,
+      120,
+    );
+    persistLocal();
+    render();
+  });
+
+  dom.optSaveSlot.addEventListener("change", () => {
+    const prevSlot = activeSaveSlot;
+    setActiveSaveSlot(dom.optSaveSlot.value, { persistPref: true });
+    if (prevSlot !== activeSaveSlot) {
+      setStatus(`세이브 슬롯 변경: 슬롯 ${activeSaveSlot}`);
+    }
+    render();
+  });
+
+  dom.saveSlotSummaryList.addEventListener("click", (event) => {
+    handleSlotSummaryQuickAction(event, "터치");
+  });
+  dom.saveSlotSummaryList.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+    event.preventDefault();
+    handleSlotSummaryQuickAction(event, "키보드");
+  });
+
+  dom.optCopySlotTarget.addEventListener("change", () => {
+    const targetSlot = normalizeSaveSlot(dom.optCopySlotTarget.value, 1);
+    if (targetSlot === activeSaveSlot) {
+      syncCopySlotTargetSelection();
+      setStatus("복제 대상은 활성 슬롯과 달라야 함", true);
+      render();
+      return;
+    }
+    dom.optCopySlotTarget.value = String(targetSlot);
+    render();
+  });
+
+  dom.btnCopySlot.addEventListener("click", () => {
+    const sourceSlot = activeSaveSlot;
+    const payload = readActiveSlotPayload();
+    const raw = payload.raw;
+    if (!raw) {
+      setStatus(`슬롯 ${sourceSlot} 저장 데이터가 없어 복제할 수 없음`, true);
+      return;
+    }
+    const targetSlot = normalizeSaveSlot(dom.optCopySlotTarget.value, sourceSlot);
+    if (targetSlot === sourceSlot) {
+      setStatus("복제 대상은 활성 슬롯과 달라야 함", true);
+      return;
+    }
+    const targetSummary = summarizeSaveSlot(targetSlot);
+    if (targetSummary.state !== "empty") {
+      const confirmed = window.confirm(
+        buildSlotActionConfirmMessage("슬롯 복제", [
+          `소스: 슬롯 ${sourceSlot}`,
+          `대상: 슬롯 ${targetSlot} (${slotStateLabelKo(targetSummary.state)})`,
+          "대상 슬롯 데이터가 덮어써집니다.",
+          "계속할까요?",
+        ]),
+      );
+      if (!confirmed) {
+        setStatus(`슬롯 ${sourceSlot} → 슬롯 ${targetSlot} 복제 취소`);
+        return;
+      }
+    }
+    const targetKey = buildStorageKeyForSlot(targetSlot);
+    const copied = safeLocalSetItem(targetKey, raw);
+    if (!copied) {
+      setStatus("슬롯 복제 실패(브라우저 저장소 제한)", true);
+      return;
+    }
+    markSlotSummaryDirty();
+    addClientLog(
+      "save",
+      `슬롯 ${sourceSlot} → 슬롯 ${targetSlot} 복제 완료${payload.source === "legacy" ? " (legacy 원본)" : ""}`,
+    );
+    setStatus(`슬롯 ${sourceSlot} → 슬롯 ${targetSlot} 복제 완료`);
+    render();
+  });
+
+  dom.btnDeleteSlot.addEventListener("click", () => {
+    const activeSummary = summarizeSaveSlot(activeSaveSlot);
+    if (activeSummary.state === "empty") {
+      setStatus(`슬롯 ${activeSaveSlot} 삭제할 데이터가 없음`);
+      return;
+    }
+    const confirmed = window.confirm(
+      buildSlotActionConfirmMessage("슬롯 삭제", [
+        `대상: 슬롯 ${activeSaveSlot} (${slotStateLabelKo(activeSummary.state)})`,
+        "현재 메모리 상태는 유지됩니다.",
+        "계속할까요?",
+      ]),
+    );
+    if (!confirmed) {
+      setStatus(`슬롯 ${activeSaveSlot} 삭제 취소`);
+      return;
+    }
+    if (isRealtimeAutoRunning()) {
+      stopRealtimeAuto("슬롯 삭제");
+    }
+    const slotKey = getActiveStorageKey();
+    const deletedSlot = safeLocalRemoveItem(slotKey);
+    const deletedLegacy =
+      activeSaveSlot === 1 ? safeLocalRemoveItem(MOBILE_MVP_STORAGE_KEY) : false;
+    markSlotSummaryDirty();
+    addClientLog(
+      "save",
+      `슬롯 ${activeSaveSlot} 삭제 완료${deletedLegacy ? " (legacy 포함)" : ""}`,
+    );
+    setStatus(
+      `슬롯 ${activeSaveSlot} 삭제 완료${deletedSlot ? "" : " (저장소 접근 제한 가능)"}`,
+    );
     render();
   });
 
@@ -174,23 +1162,44 @@ function bindEvents() {
   });
 
   dom.btnAuto10s.addEventListener("click", () => {
+    const tuning = getCurrentSpeedTuning();
     const summary = runAutoSliceSeconds(context, state, rng, {
       seconds: 10,
-      battleEverySec: 2,
-      breakthroughEverySec: 3,
-      passiveQiRatio: 0.012,
+      battleEverySec: tuning.battleEverySec,
+      breakthroughEverySec: tuning.breakthroughEverySec,
+      passiveQiRatio: tuning.passiveQiRatio,
     });
     setStatus(
-      `자동 10초: 전투 ${summary.battles}회 · 돌파 ${summary.breakthroughs}회 · 환생 ${summary.rebirths}회`,
+      `자동 10초(${tuning.labelKo}): 전투 ${summary.battles}회 · 돌파 ${summary.breakthroughs}회 · 환생 ${summary.rebirths}회`,
     );
     persistLocal();
+    render();
+  });
+
+  dom.btnRealtimeAuto.addEventListener("click", () => {
+    if (isRealtimeAutoRunning()) {
+      stopRealtimeAuto("사용자 중지");
+      render();
+      return;
+    }
+    startRealtimeAuto();
     render();
   });
 
   dom.btnResetRun.addEventListener("click", () => {
     const confirmed = window.confirm("런을 초기화할까요? 현재 상태가 덮어써집니다.");
     if (!confirmed) return;
-    state = createInitialSliceState(context, { playerName: state.playerName });
+    stopRealtimeAuto("런 초기화");
+    resetRealtimeAutoSession();
+    state = createInitialSliceState(context, {
+      playerName: state.playerName,
+      autoResumeRealtime: state.settings.autoResumeRealtime,
+      battleSpeed: state.settings.battleSpeed,
+      offlineCapHours: state.settings.offlineCapHours,
+      offlineEventLimit: state.settings.offlineEventLimit,
+    });
+    lastOfflineReport = null;
+    hideOfflineModal();
     setStatus("런 초기화 완료");
     persistLocal();
     render();
@@ -200,23 +1209,11 @@ function bindEvents() {
     updateLastSavedNow();
     persistLocal();
     render();
-    setStatus("로컬 저장 완료");
+    setStatus(`로컬 저장 완료(슬롯 ${activeSaveSlot})`);
   });
 
   dom.btnLoadLocal.addEventListener("click", () => {
-    const raw = window.localStorage.getItem(MOBILE_MVP_STORAGE_KEY);
-    if (!raw) {
-      setStatus("로컬 저장 데이터가 없음", true);
-      return;
-    }
-    try {
-      state = parseSliceState(raw, context);
-      addClientLog("save", "로컬 저장 데이터 불러오기 완료");
-      render();
-      setStatus("로컬 불러오기 완료");
-    } catch (err) {
-      setStatus(err instanceof Error ? err.message : "불러오기 실패", true);
-    }
+    tryLoadActiveSlot("로컬 불러오기");
   });
 
   dom.btnExportState.addEventListener("click", () => {
@@ -231,12 +1228,18 @@ function bindEvents() {
       return;
     }
     try {
+      stopRealtimeAuto("JSON 가져오기");
+      resetRealtimeAutoSession();
       const imported = parseSliceState(raw, context);
       state = cloneSliceState(imported);
+      ensureRealtimeStatsShape();
       addClientLog("save", "JSON 가져오기 완료");
+      const offline = applyOfflineCatchupNow();
+      setStatus(buildOfflineStatus("JSON 가져오기 완료", offline.summary));
+      showOfflineModal(offline);
       persistLocal();
       render();
-      setStatus("JSON 가져오기 완료");
+      maybeAutoStartRealtime("JSON 가져오기");
     } catch (err) {
       setStatus(err instanceof Error ? err.message : "JSON 가져오기 실패", true);
     }
@@ -271,20 +1274,45 @@ async function bootstrap() {
     ]);
     context = buildSliceContext(progressionRows, localeRows);
     state = createInitialSliceState(context, { playerName: "도심" });
+    ensureRealtimeStatsShape();
+    resetRealtimeAutoSession();
+    restoreSaveSlotPreference();
+    let bootstrapStatus = "준비 완료";
 
-    const raw = window.localStorage.getItem(MOBILE_MVP_STORAGE_KEY);
+    const payload = readActiveSlotPayload();
+    const raw = payload.raw;
     if (raw) {
       try {
         state = parseSliceState(raw, context);
-        addClientLog("save", "기존 로컬 세이브 자동 로드");
+        ensureRealtimeStatsShape();
+        addClientLog(
+          "save",
+          `기존 로컬 세이브 자동 로드(슬롯 ${activeSaveSlot}${payload.source === "legacy" ? ", legacy" : ""})`,
+        );
+        const offline = applyOfflineCatchupNow();
+        bootstrapStatus = buildOfflineStatus(
+          `오프라인 복귀(슬롯 ${activeSaveSlot})`,
+          offline.summary,
+        );
+        showOfflineModal(offline);
+        persistLocal();
       } catch {
         addClientLog("error", "기존 로컬 세이브가 손상되어 새 상태로 시작");
+        bootstrapStatus = "손상된 저장 데이터를 건너뛰고 새 런으로 시작";
+        hideOfflineModal();
       }
+    } else {
+      hideOfflineModal();
     }
 
     bindEvents();
     render();
-    setStatus("준비 완료");
+    setStatus(bootstrapStatus);
+    const resumedRealtime = maybeAutoStartRealtime("앱 진입");
+    if (resumedRealtime) {
+      setStatus(`${bootstrapStatus} · 실시간 자동 재개`);
+      render();
+    }
   } catch (err) {
     setStatus(err instanceof Error ? err.message : "초기화 실패", true);
   }

@@ -650,3 +650,147 @@
 ## 127) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드: `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
 - PR 본문 품질 Lint 가이드(Validation 11개 커맨드 기준): `/Users/hirediversity/Idle/docs/system/pr_body_lint_v1_kr.md`
+
+## 128) 다음 순차 작업
+1. [완료] 모바일 MVP 저장 상태에 마지막 활동 시각(`lastActiveEpochMs`) 추가.
+2. [완료] 모바일 MVP 부트스트랩/불러오기 경로에 오프라인 복귀 정산(12시간 cap) 연동.
+3. [완료] 모바일 MVP 회귀 체크에 오프라인 정산 cap/타임스탬프 동기화 시나리오 추가.
+
+## 129) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 복귀 정산 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 130) 다음 순차 작업
+1. [완료] 모바일 MVP 오프라인 복귀 결과를 표시하는 팝업 카드(`offlineModal`) UI 추가.
+2. [완료] 부트스트랩/불러오기 경로에서 정산 발생 시 팝업 자동 오픈 및 닫기 동작(버튼/배경/ESC) 연동.
+3. [완료] 팝업 카드에 정산 시간, cap 적용 여부, 전투/돌파/환생, 재화 순변화(±) 표시 추가.
+
+## 131) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 정산 팝업 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 132) 다음 순차 작업
+1. [완료] 오프라인 정산 팝업에 세부 로그 토글(`btnToggleOfflineDetail`) 추가.
+2. [완료] 오프라인 자동 정산 루프에서 최근 이벤트 수집(`collectedEvents`) 지원.
+3. [완료] 오프라인 정산 리포트 JSON 내보내기(`btnExportOfflineReport`) 기능 추가.
+
+## 133) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 정산 세부 로그/리포트 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 134) 다음 순차 작업
+1. [완료] 모바일 MVP에 safe-area(inset) 대응 패딩 적용(`app`/`offlineModal`).
+2. [완료] 모바일 터치 타겟 개선(버튼/입력 최소 높이 44px + focus-visible 스타일).
+3. [완료] 소형 뷰포트에서 액션 패널 sticky, 로그 스크롤 영역 적용으로 조작성 보강.
+
+## 135) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(모바일 뷰포트 최적화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 136) 다음 순차 작업
+1. [완료] 모바일 옵션 패널에 오프라인 정산 cap 시간(`offlineCapHours`) 설정 추가.
+2. [완료] 오프라인 세부 로그 수집 개수(`offlineEventLimit`) 설정 추가 및 정산 엔진 연동.
+3. [완료] 저장 roundtrip/오프라인 정산 회귀 체크에 신규 옵션 영속화 검증 반영.
+
+## 137) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 옵션 설정 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 138) 다음 순차 작업
+1. [완료] 모바일 MVP UI 계약(필수 id/모달/safe-area) 점검 스크립트(`mobile:mvp:dom:check`) 추가.
+2. [완료] `mobile:mvp:check`에 DOM 계약 체크를 포함해 기능+UI 계약을 단일 명령으로 검증.
+3. [완료] README/모바일 MVP 가이드에 DOM 계약 체크 절차 반영.
+
+## 139) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(DOM 계약 체크 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 140) 다음 순차 작업
+1. [완료] 모바일 옵션 패널에 전투 속도(`battleSpeed`) 선택 UI(저속/표준/고속) 추가.
+2. [완료] 자동 10초/오프라인 정산에서 전투 속도 기반 루프 cadence(전투/돌파 주기, 패시브 기 비율) 공통 적용.
+3. [완료] 모바일 회귀 체크에 전투 속도 설정별 cadence 차이 검증 시나리오 추가.
+
+## 141) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(전투 속도 옵션 연동 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 142) 다음 순차 작업
+1. [완료] 모바일 액션 패널에 실시간 자동 진행 토글(`btnRealtimeAuto`) 및 상태 표시(`realtimeAutoStatus`) 추가.
+2. [완료] 엔진 자동 루프에 타임라인 오프셋(`timelineOffsetSec`) 지원을 추가해 1초 chunk 연속 실행에서도 cadence 유지.
+3. [완료] 실시간 자동 루프 운영 규칙(10초 요약 로그, 3틱 저장 동기화, 백그라운드 진입 시 중지) 반영.
+
+## 143) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(실시간 자동 진행 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 144) 다음 순차 작업
+1. [완료] 문서 가시성 라이프사이클에서 백그라운드 진입 시 실시간 자동 루프 중지 처리 추가.
+2. [완료] 포그라운드 복귀 시 오프라인 정산 자동 적용(`applyResumeCatchupIfNeeded`) 추가.
+3. [완료] 모바일 회귀 체크에 오프라인 무경과(skipReason=`time_not_elapsed`) 시나리오 추가.
+
+## 145) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(백그라운드/복귀 정산 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 146) 다음 순차 작업
+1. [완료] 설정에 실시간 자동 재개 옵션(`autoResumeRealtime`) 추가 및 저장 영속화 반영.
+2. [완료] 앱 진입/포그라운드 복귀/세이브 불러오기 경로에서 옵션 활성 시 실시간 자동 루프 자동 재개.
+3. [완료] 회귀 체크에 `autoResumeRealtime` 저장 roundtrip 검증 포함.
+
+## 147) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(실시간 자동 재개 옵션 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 148) 다음 순차 작업
+1. [완료] 액션 패널에 실시간 누적 통계 카드(시간/전투/돌파/환생) 추가.
+2. [완료] 실시간 세션 리포트 JSON 내보내기(`btnExportRealtimeReport`) 기능 추가.
+3. [완료] DOM 계약 체크에 실시간 통계/리포트 관련 필수 요소 검증 추가.
+
+## 149) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(실시간 통계/리포트 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 150) 다음 순차 작업
+1. [완료] 실시간 누적 통계(`realtimeStats`)를 save 상태에 포함해 앱 재진입 시 유지되도록 확장.
+2. [완료] 액션 패널에 `실시간 통계 초기화` 버튼을 추가하고 세션 앵커/누적값 리셋 처리.
+3. [완료] 실시간 리포트 JSON 내보내기를 저장된 `realtimeStats` 기반으로 재구성.
+
+## 151) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(실시간 통계 영속화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 152) 다음 순차 작업
+1. [완료] 모바일 MVP 저장/불러오기를 슬롯(1~3) 기반 localStorage 키로 확장.
+2. [완료] 슬롯 선호값(`slot_pref`) 저장 및 bootstrap 자동 로드 경로 연동.
+3. [완료] 회귀 체크에 슬롯 정규화/키 생성 유틸 검증 추가.
+
+## 153) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(세이브 슬롯 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 154) 다음 순차 작업
+1. [완료] 저장 패널에 활성 슬롯 삭제 버튼(`btnDeleteSlot`) 추가.
+2. [완료] 슬롯 요약 목록(`saveSlotSummaryList`)을 추가해 슬롯별 저장 상태를 시각화.
+3. [완료] DOM 계약 체크에 슬롯 삭제/요약 관련 필수 요소 검증 추가.
+
+## 155) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(슬롯 요약/삭제 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 156) 다음 순차 작업
+1. [완료] 저장 패널에 슬롯 복제 대상 선택(`optCopySlotTarget`) 및 복제 버튼(`btnCopySlot`) 연동.
+2. [완료] 활성 슬롯 데이터가 있을 때 대상 슬롯으로 raw payload를 복제하는 저장 유틸(`safeLocalSetItem`) 경로 추가.
+3. [완료] DOM 계약 체크에 슬롯 복제 관련 필수 요소 검증 추가.
+
+## 157) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(슬롯 복제 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 158) 다음 순차 작업
+1. [완료] 슬롯 요약 목록 항목에 `data-slot/data-state` 메타를 추가해 클릭 액션 기준 슬롯/상태를 판별하도록 확장.
+2. [완료] 슬롯 요약 항목 클릭/Enter 입력 시 즉시 슬롯 활성화 + 저장 데이터 존재 시 즉시 불러오기(퀵 액션) 연동.
+3. [완료] `btnLoadLocal` 불러오기 흐름을 공통 함수(`tryLoadActiveSlot`)로 통합해 중복 제거.
+
+## 159) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(슬롯 요약 퀵 로드 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 160) 다음 순차 작업
+1. [완료] 슬롯 요약 퀵 액션 분기 로직을 엔진 순수 함수(`resolveSlotSummaryQuickAction`)로 분리.
+2. [완료] 모바일 회귀 체크(`mobile:mvp:check`)에 슬롯 요약 `ok/empty/corrupt` 분기 시나리오 추가.
+3. [완료] 앱 슬롯 요약 클릭 핸들러가 순수 분기 함수 결과를 사용하도록 연동.
+
+## 161) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(슬롯 요약 퀵 액션 회귀 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 162) 다음 순차 작업
+1. [완료] 슬롯 액션 확인 문구 포맷을 공통 함수(`buildSlotActionConfirmMessage`)로 통일.
+2. [완료] 슬롯 복제 시 대상 슬롯이 비어있지 않으면 overwrite 확인 후 진행하도록 규칙화.
+3. [완료] 슬롯 삭제/요약 퀵 로드에서 빈 슬롯 skip, 타 슬롯 퀵로드 확인 모달 규칙 추가.
+
+## 163) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(슬롯 액션 확인 규칙 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

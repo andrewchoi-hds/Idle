@@ -1,5 +1,8 @@
 const MAX_LOG_ENTRIES = 120;
 export const MOBILE_MVP_STORAGE_KEY = "idle_xianxia_mobile_mvp_v1_save";
+export const MOBILE_MVP_STORAGE_KEY_PREFIX = "idle_xianxia_mobile_mvp_v1_save_slot_";
+export const MOBILE_MVP_SLOT_PREFS_KEY = "idle_xianxia_mobile_mvp_v1_slot_pref";
+const SLOT_SUMMARY_STATES = new Set(["ok", "empty", "corrupt"]);
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -15,6 +18,68 @@ function toNonNegativeInt(value, fallback = 0) {
 
 function pickBoolean(value, fallback) {
   return typeof value === "boolean" ? value : fallback;
+}
+
+export function normalizeSaveSlot(slot, fallback = 1) {
+  const normalizedFallback = clamp(toNonNegativeInt(fallback, 1), 1, 3);
+  const parsed = Number(slot);
+  if (!Number.isFinite(parsed)) {
+    return normalizedFallback;
+  }
+  return clamp(Math.floor(parsed), 1, 3);
+}
+
+export function buildStorageKeyForSlot(slot) {
+  const normalized = normalizeSaveSlot(slot, 1);
+  return `${MOBILE_MVP_STORAGE_KEY_PREFIX}${normalized}`;
+}
+
+export function normalizeSlotSummaryState(state, fallback = "empty") {
+  const normalizedFallback = SLOT_SUMMARY_STATES.has(fallback) ? fallback : "empty";
+  if (typeof state !== "string") {
+    return normalizedFallback;
+  }
+  return SLOT_SUMMARY_STATES.has(state) ? state : normalizedFallback;
+}
+
+export function resolveSlotSummaryQuickAction(activeSlot, selectedSlot, selectedState) {
+  const normalizedActiveSlot = normalizeSaveSlot(activeSlot, 1);
+  const normalizedSelectedSlot = normalizeSaveSlot(selectedSlot, normalizedActiveSlot);
+  const normalizedState = normalizeSlotSummaryState(selectedState, "empty");
+  const changedSlot = normalizedSelectedSlot !== normalizedActiveSlot;
+  if (normalizedState === "ok") {
+    return {
+      nextActiveSlot: normalizedSelectedSlot,
+      selectedState: normalizedState,
+      changedSlot,
+      shouldLoad: true,
+      actionKind: "switch_and_load",
+    };
+  }
+  if (normalizedState === "corrupt") {
+    return {
+      nextActiveSlot: normalizedSelectedSlot,
+      selectedState: normalizedState,
+      changedSlot,
+      shouldLoad: false,
+      actionKind: "switch_corrupt",
+    };
+  }
+  return {
+    nextActiveSlot: normalizedSelectedSlot,
+    selectedState: normalizedState,
+    changedSlot,
+    shouldLoad: false,
+    actionKind: changedSlot ? "switch_empty" : "empty",
+  };
+}
+
+function parseIsoEpochMs(value) {
+  const parsed = Date.parse(typeof value === "string" ? value : "");
+  if (!Number.isFinite(parsed)) {
+    return 0;
+  }
+  return Math.max(0, Math.floor(parsed));
 }
 
 function localeKey(stage) {
@@ -46,6 +111,13 @@ function addLog(state, kind, message) {
   }
 }
 
+function pushLimited(list, item, maxItems) {
+  list.push(item);
+  if (list.length > maxItems) {
+    list.splice(0, list.length - maxItems);
+  }
+}
+
 function calcRebirthReward(stage, rebirthCount) {
   const base = stage.rebirth_score_weight * 12;
   const difficultyScale = Math.sqrt(Math.max(1, stage.difficulty_index)) * 0.85;
@@ -53,18 +125,21 @@ function calcRebirthReward(stage, rebirthCount) {
   return Math.max(5, Math.round((base + difficultyScale) * rebirthScale));
 }
 
-function applyRebirthByDeath(context, state, stage) {
+function applyRebirthByDeath(context, state, stage, options = {}) {
+  const suppressLogs = pickBoolean(options.suppressLogs, false);
   const reward = calcRebirthReward(stage, state.progression.rebirthCount);
   state.progression.rebirthCount += 1;
   state.currencies.rebirthEssence += reward;
   state.progression.difficultyIndex = 1;
   state.currencies.qi = 0;
   state.currencies.spiritCoin = Math.floor(state.currencies.spiritCoin * 0.2);
-  addLog(
-    state,
-    "rebirth",
-    `도겁 중 사망 → 환생 발동, 환생정수 +${reward}, 경지 1로 초기화`,
-  );
+  if (!suppressLogs) {
+    addLog(
+      state,
+      "rebirth",
+      `도겁 중 사망 → 환생 발동, 환생정수 +${reward}, 경지 1로 초기화`,
+    );
+  }
   const resetStage = getStage(context, state.progression.difficultyIndex);
   return {
     reward,
@@ -179,8 +254,41 @@ export function getStageDisplayNameKo(context, stage) {
   return stageFallbackLabel(stage);
 }
 
+export function resolveLoopTuningFromBattleSpeed(battleSpeed) {
+  const speed = clamp(toNonNegativeInt(battleSpeed, 2), 1, 3);
+  if (speed === 1) {
+    return {
+      battleSpeed: speed,
+      labelKo: "저속",
+      battleEverySec: 3,
+      breakthroughEverySec: 4,
+      passiveQiRatio: 0.01,
+    };
+  }
+  if (speed === 3) {
+    return {
+      battleSpeed: speed,
+      labelKo: "고속",
+      battleEverySec: 1,
+      breakthroughEverySec: 2,
+      passiveQiRatio: 0.014,
+    };
+  }
+  return {
+    battleSpeed: speed,
+    labelKo: "표준",
+    battleEverySec: 2,
+    breakthroughEverySec: 3,
+    passiveQiRatio: 0.012,
+  };
+}
+
 export function createInitialSliceState(context, options = {}) {
   const firstStage = getStage(context, options.startDifficultyIndex ?? 1);
+  const speedTuning = resolveLoopTuningFromBattleSpeed(options.battleSpeed);
+  const initialQi = Math.floor(firstStage.qi_required * 0.92);
+  const initialSpiritCoin = 120;
+  const initialRebirthEssence = 0;
   return {
     version: 1,
     playerName: options.playerName || "도심",
@@ -189,9 +297,9 @@ export function createInitialSliceState(context, options = {}) {
       rebirthCount: 0,
     },
     currencies: {
-      qi: Math.floor(firstStage.qi_required * 0.92),
-      spiritCoin: 120,
-      rebirthEssence: 0,
+      qi: initialQi,
+      spiritCoin: initialSpiritCoin,
+      rebirthEssence: initialRebirthEssence,
     },
     inventory: {
       breakthroughElixir: 3,
@@ -201,10 +309,25 @@ export function createInitialSliceState(context, options = {}) {
       autoBattle: true,
       autoBreakthrough: false,
       autoTribulation: false,
-      battleSpeed: 2,
+      autoResumeRealtime: pickBoolean(options.autoResumeRealtime, false),
+      battleSpeed: speedTuning.battleSpeed,
+      offlineCapHours: clamp(toNonNegativeInt(options.offlineCapHours, 12), 1, 168),
+      offlineEventLimit: clamp(toNonNegativeInt(options.offlineEventLimit, 24), 5, 120),
     },
     logs: [],
     lastSavedAtIso: "",
+    lastActiveEpochMs: toNonNegativeInt(options.nowEpochMs, Date.now()),
+    realtimeStats: {
+      sessionStartedAtIso: "",
+      timelineSec: 0,
+      elapsedSec: 0,
+      battles: 0,
+      breakthroughs: 0,
+      rebirths: 0,
+      anchorQi: initialQi,
+      anchorSpiritCoin: initialSpiritCoin,
+      anchorRebirthEssence: initialRebirthEssence,
+    },
   };
 }
 
@@ -243,7 +366,10 @@ export function previewBreakthroughChance(context, state, options = {}) {
   };
 }
 
-export function runBattleOnce(context, state, rng) {
+export function runBattleOnce(context, state, rng, options = {}) {
+  const suppressLogs = pickBoolean(options.suppressLogs, false);
+  const eventCollector =
+    typeof options.eventCollector === "function" ? options.eventCollector : null;
   const stage = getStage(context, state.progression.difficultyIndex);
   const worldPenalty = stage.world === "mortal" ? 0 : stage.world === "immortal" ? 0.08 : 0.16;
   const rebirthBonus = state.progression.rebirthCount * 0.008;
@@ -263,23 +389,48 @@ export function runBattleOnce(context, state, rng) {
     state.currencies.qi += qiGain;
     state.currencies.spiritCoin += spiritGain;
     state.currencies.rebirthEssence += essenceGain;
-    addLog(
-      state,
-      "battle",
-      `전투 승리: 기 +${qiGain}, 영석 +${spiritGain}${
-        essenceGain > 0 ? `, 환생정수 +${essenceGain}` : ""
-      }`,
-    );
+    if (!suppressLogs) {
+      addLog(
+        state,
+        "battle",
+        `전투 승리: 기 +${qiGain}, 영석 +${spiritGain}${
+          essenceGain > 0 ? `, 환생정수 +${essenceGain}` : ""
+        }`,
+      );
+    }
+    if (eventCollector) {
+      eventCollector({
+        kind: "battle_win",
+        difficultyIndex: stage.difficulty_index,
+        qiDelta: qiGain,
+        spiritCoinDelta: spiritGain,
+        rebirthEssenceDelta: essenceGain,
+      });
+    }
     return { won: true, qiDelta: qiGain, spiritCoinDelta: spiritGain, rebirthEssenceDelta: essenceGain };
   }
 
   const qiLoss = Math.max(1, Math.round(stage.qi_required * 0.035));
   state.currencies.qi = Math.max(0, state.currencies.qi - qiLoss);
-  addLog(state, "battle", `전투 패배: 기 -${qiLoss}`);
+  if (!suppressLogs) {
+    addLog(state, "battle", `전투 패배: 기 -${qiLoss}`);
+  }
+  if (eventCollector) {
+    eventCollector({
+      kind: "battle_loss",
+      difficultyIndex: stage.difficulty_index,
+      qiDelta: -qiLoss,
+      spiritCoinDelta: 0,
+      rebirthEssenceDelta: 0,
+    });
+  }
   return { won: false, qiDelta: -qiLoss, spiritCoinDelta: 0, rebirthEssenceDelta: 0 };
 }
 
 export function runBreakthroughAttempt(context, state, rng, options = {}) {
+  const suppressLogs = pickBoolean(options.suppressLogs, false);
+  const eventCollector =
+    typeof options.eventCollector === "function" ? options.eventCollector : null;
   const stage = getStage(context, state.progression.difficultyIndex);
   const respectAutoTribulation = pickBoolean(options.respectAutoTribulation, false);
   if (respectAutoTribulation && stage.is_tribulation === 1 && !state.settings.autoTribulation) {
@@ -326,11 +477,21 @@ export function runBreakthroughAttempt(context, state, rng, options = {}) {
     state.currencies.qi = Math.max(0, state.currencies.qi - qiConsume);
     const nextStage = getStage(context, state.progression.difficultyIndex);
     const label = getStageDisplayNameKo(context, nextStage);
-    addLog(
-      state,
-      "breakthrough",
-      `돌파 성공: ${label} 진입 (성공률 ${preview.successPct.toFixed(1)}%)`,
-    );
+    if (!suppressLogs) {
+      addLog(
+        state,
+        "breakthrough",
+        `돌파 성공: ${label} 진입 (성공률 ${preview.successPct.toFixed(1)}%)`,
+      );
+    }
+    if (eventCollector) {
+      eventCollector({
+        kind: "breakthrough_success",
+        fromDifficultyIndex: stage.difficulty_index,
+        toDifficultyIndex: nextStage.difficulty_index,
+        successPct: preview.successPct,
+      });
+    }
     return {
       attempted: true,
       outcome,
@@ -345,11 +506,21 @@ export function runBreakthroughAttempt(context, state, rng, options = {}) {
   if (outcome === "minor_fail") {
     const qiLoss = Math.max(1, Math.round(stage.qi_required * 0.22));
     state.currencies.qi = Math.max(0, state.currencies.qi - qiLoss);
-    addLog(
-      state,
-      "breakthrough",
-      `돌파 실패(경상): 기 -${qiLoss} (성공률 ${preview.successPct.toFixed(1)}%)`,
-    );
+    if (!suppressLogs) {
+      addLog(
+        state,
+        "breakthrough",
+        `돌파 실패(경상): 기 -${qiLoss} (성공률 ${preview.successPct.toFixed(1)}%)`,
+      );
+    }
+    if (eventCollector) {
+      eventCollector({
+        kind: "breakthrough_minor_fail",
+        difficultyIndex: stage.difficulty_index,
+        qiDelta: -qiLoss,
+        successPct: preview.successPct,
+      });
+    }
     return {
       attempted: true,
       outcome,
@@ -368,11 +539,21 @@ export function runBreakthroughAttempt(context, state, rng, options = {}) {
     state.currencies.qi = Math.max(0, state.currencies.qi - qiLoss);
     const nextStage = getStage(context, state.progression.difficultyIndex);
     const label = getStageDisplayNameKo(context, nextStage);
-    addLog(
-      state,
-      "breakthrough",
-      `돌파 실패(경지 후퇴): ${retreat}단계 하락 → ${label}`,
-    );
+    if (!suppressLogs) {
+      addLog(
+        state,
+        "breakthrough",
+        `돌파 실패(경지 후퇴): ${retreat}단계 하락 → ${label}`,
+      );
+    }
+    if (eventCollector) {
+      eventCollector({
+        kind: "breakthrough_retreat_fail",
+        fromDifficultyIndex: stage.difficulty_index,
+        toDifficultyIndex: nextStage.difficulty_index,
+        retreatLayers: retreat,
+      });
+    }
     return {
       attempted: true,
       outcome,
@@ -385,7 +566,16 @@ export function runBreakthroughAttempt(context, state, rng, options = {}) {
     };
   }
 
-  const rebirth = applyRebirthByDeath(context, state, stage);
+  const rebirth = applyRebirthByDeath(context, state, stage, {
+    suppressLogs,
+  });
+  if (eventCollector) {
+    eventCollector({
+      kind: "breakthrough_death_fail",
+      difficultyIndex: stage.difficulty_index,
+      rebirthReward: rebirth.reward,
+    });
+  }
   return {
     attempted: true,
     outcome: "death_fail",
@@ -402,6 +592,14 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
   const battleEverySec = Math.max(1, toNonNegativeInt(options.battleEverySec, 2));
   const breakthroughEverySec = Math.max(1, toNonNegativeInt(options.breakthroughEverySec, 3));
   const passiveQiRatio = clamp(Number(options.passiveQiRatio) || 0.012, 0.001, 0.2);
+  const timelineOffsetSec = Math.max(0, toNonNegativeInt(options.timelineOffsetSec, 0));
+  const suppressLogs = pickBoolean(options.suppressLogs, false);
+  const collectEvents = pickBoolean(options.collectEvents, false);
+  const maxCollectedEvents = clamp(
+    toNonNegativeInt(options.maxCollectedEvents, 20),
+    0,
+    120,
+  );
 
   const summary = {
     seconds,
@@ -411,24 +609,53 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
     breakthroughs: 0,
     rebirths: 0,
   };
+  const collectedEvents = [];
 
   for (let sec = 1; sec <= seconds; sec += 1) {
+    const timelineSec = timelineOffsetSec + sec;
     const stage = getStage(context, state.progression.difficultyIndex);
     const passive = Math.max(1, Math.round(stage.qi_required * passiveQiRatio));
     state.currencies.qi += passive;
     summary.passiveQiGain += passive;
 
-    if (state.settings.autoBattle && sec % battleEverySec === 0) {
-      const battle = runBattleOnce(context, state, rng);
+    if (state.settings.autoBattle && timelineSec % battleEverySec === 0) {
+      const battle = runBattleOnce(context, state, rng, {
+        suppressLogs,
+        eventCollector: collectEvents
+          ? (event) => {
+              pushLimited(
+                collectedEvents,
+                {
+                  sec: timelineSec,
+                  ...event,
+                },
+                maxCollectedEvents,
+              );
+            }
+          : undefined,
+      });
       summary.battles += 1;
       if (battle.won) summary.battleWins += 1;
     }
 
-    if (state.settings.autoBreakthrough && sec % breakthroughEverySec === 0) {
+    if (state.settings.autoBreakthrough && timelineSec % breakthroughEverySec === 0) {
       const breakthrough = runBreakthroughAttempt(context, state, rng, {
         respectAutoTribulation: true,
         useBreakthroughElixir: true,
         useTribulationTalisman: true,
+        suppressLogs,
+        eventCollector: collectEvents
+          ? (event) => {
+              pushLimited(
+                collectedEvents,
+                {
+                  sec: timelineSec,
+                  ...event,
+                },
+                maxCollectedEvents,
+              );
+            }
+          : undefined,
       });
       if (breakthrough.attempted) {
         summary.breakthroughs += 1;
@@ -439,12 +666,80 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
     }
   }
 
-  addLog(
-    state,
-    "auto",
-    `자동 ${seconds}초 진행 완료 (전투 ${summary.battles}회, 돌파 ${summary.breakthroughs}회, 환생 ${summary.rebirths}회)`,
+  if (!suppressLogs) {
+    addLog(
+      state,
+      "auto",
+      `자동 ${seconds}초 진행 완료 (전투 ${summary.battles}회, 돌파 ${summary.breakthroughs}회, 환생 ${summary.rebirths}회)`,
+    );
+  }
+  return {
+    ...summary,
+    collectedEvents,
+  };
+}
+
+export function runOfflineCatchup(context, state, rng, options = {}) {
+  const nowEpochMs = toNonNegativeInt(options.nowEpochMs, Date.now());
+  const savedAtEpochMs = parseIsoEpochMs(state.lastSavedAtIso);
+  const defaultAnchorEpochMs = Math.max(
+    toNonNegativeInt(state.lastActiveEpochMs, 0),
+    savedAtEpochMs,
   );
-  return summary;
+  const anchorEpochMs = toNonNegativeInt(options.anchorEpochMs, defaultAnchorEpochMs);
+  const rawOfflineSec = Math.max(0, Math.floor((nowEpochMs - anchorEpochMs) / 1000));
+  const maxOfflineHours = clamp(Number(options.maxOfflineHours) || 12, 0, 168);
+  const maxOfflineSec = Math.floor(maxOfflineHours * 3600);
+  const appliedOfflineSec = Math.min(rawOfflineSec, maxOfflineSec);
+  const cappedByMaxOffline = rawOfflineSec > appliedOfflineSec;
+  const syncAnchorToNow = pickBoolean(options.syncAnchorToNow, true);
+
+  let autoSummary = null;
+  let skipReason = "none";
+  if (rawOfflineSec <= 0) {
+    skipReason = "time_not_elapsed";
+  } else if (appliedOfflineSec <= 0) {
+    skipReason = "applied_duration_zero";
+  } else {
+    autoSummary = runAutoSliceSeconds(context, state, rng, {
+      seconds: appliedOfflineSec,
+      battleEverySec: Math.max(1, toNonNegativeInt(options.battleEverySec, 2)),
+      breakthroughEverySec: Math.max(
+        1,
+        toNonNegativeInt(options.breakthroughEverySec, 3),
+      ),
+      passiveQiRatio: clamp(Number(options.passiveQiRatio) || 0.012, 0.001, 0.2),
+      suppressLogs: true,
+      collectEvents: true,
+      maxCollectedEvents: clamp(
+        toNonNegativeInt(options.maxCollectedEvents, 24),
+        0,
+        120,
+      ),
+    });
+    addLog(
+      state,
+      "offline",
+      `오프라인 복귀 정산: ${appliedOfflineSec}초 적용 (raw ${rawOfflineSec}초${cappedByMaxOffline ? `, cap ${maxOfflineSec}초` : ""})`,
+    );
+  }
+
+  if (syncAnchorToNow) {
+    state.lastActiveEpochMs = nowEpochMs;
+  }
+
+  return {
+    summary: {
+      nowEpochMs,
+      anchorEpochMs,
+      rawOfflineSec,
+      maxOfflineSec,
+      appliedOfflineSec,
+      cappedByMaxOffline,
+      skipReason,
+      autoSummary,
+    },
+  };
 }
 
 export function serializeSliceState(state) {
@@ -462,7 +757,19 @@ export function parseSliceState(raw, context) {
     throw new Error("저장 데이터 형식이 올바르지 않음");
   }
 
+  const parsedLastSavedAtIso =
+    typeof parsed.lastSavedAtIso === "string" ? parsed.lastSavedAtIso : "";
+  const parsedLastSavedAtEpochMs = parseIsoEpochMs(parsedLastSavedAtIso);
+  const fallbackLastActiveEpochMs =
+    parsedLastSavedAtEpochMs > 0 ? parsedLastSavedAtEpochMs : Date.now();
+
   const stage = getStage(context, toNonNegativeInt(parsed.progression?.difficultyIndex, 1));
+  const parsedQi = toNonNegativeInt(
+    parsed.currencies?.qi,
+    Math.floor(stage.qi_required * 0.92),
+  );
+  const parsedSpiritCoin = toNonNegativeInt(parsed.currencies?.spiritCoin, 0);
+  const parsedRebirthEssence = toNonNegativeInt(parsed.currencies?.rebirthEssence, 0);
   const state = {
     version: 1,
     playerName:
@@ -474,9 +781,9 @@ export function parseSliceState(raw, context) {
       rebirthCount: toNonNegativeInt(parsed.progression?.rebirthCount, 0),
     },
     currencies: {
-      qi: toNonNegativeInt(parsed.currencies?.qi, Math.floor(stage.qi_required * 0.92)),
-      spiritCoin: toNonNegativeInt(parsed.currencies?.spiritCoin, 0),
-      rebirthEssence: toNonNegativeInt(parsed.currencies?.rebirthEssence, 0),
+      qi: parsedQi,
+      spiritCoin: parsedSpiritCoin,
+      rebirthEssence: parsedRebirthEssence,
     },
     inventory: {
       breakthroughElixir: toNonNegativeInt(parsed.inventory?.breakthroughElixir, 0),
@@ -486,7 +793,18 @@ export function parseSliceState(raw, context) {
       autoBattle: pickBoolean(parsed.settings?.autoBattle, true),
       autoBreakthrough: pickBoolean(parsed.settings?.autoBreakthrough, false),
       autoTribulation: pickBoolean(parsed.settings?.autoTribulation, false),
+      autoResumeRealtime: pickBoolean(parsed.settings?.autoResumeRealtime, false),
       battleSpeed: clamp(toNonNegativeInt(parsed.settings?.battleSpeed, 2), 1, 3),
+      offlineCapHours: clamp(
+        toNonNegativeInt(parsed.settings?.offlineCapHours, 12),
+        1,
+        168,
+      ),
+      offlineEventLimit: clamp(
+        toNonNegativeInt(parsed.settings?.offlineEventLimit, 24),
+        5,
+        120,
+      ),
     },
     logs: Array.isArray(parsed.logs)
       ? parsed.logs
@@ -505,8 +823,31 @@ export function parseSliceState(raw, context) {
           }))
           .filter((row) => row.message)
       : [],
-    lastSavedAtIso:
-      typeof parsed.lastSavedAtIso === "string" ? parsed.lastSavedAtIso : "",
+    lastSavedAtIso: parsedLastSavedAtIso,
+    lastActiveEpochMs: toNonNegativeInt(
+      parsed.lastActiveEpochMs,
+      fallbackLastActiveEpochMs,
+    ),
+    realtimeStats: {
+      sessionStartedAtIso:
+        typeof parsed.realtimeStats?.sessionStartedAtIso === "string"
+          ? parsed.realtimeStats.sessionStartedAtIso
+          : "",
+      timelineSec: toNonNegativeInt(parsed.realtimeStats?.timelineSec, 0),
+      elapsedSec: toNonNegativeInt(parsed.realtimeStats?.elapsedSec, 0),
+      battles: toNonNegativeInt(parsed.realtimeStats?.battles, 0),
+      breakthroughs: toNonNegativeInt(parsed.realtimeStats?.breakthroughs, 0),
+      rebirths: toNonNegativeInt(parsed.realtimeStats?.rebirths, 0),
+      anchorQi: toNonNegativeInt(parsed.realtimeStats?.anchorQi, parsedQi),
+      anchorSpiritCoin: toNonNegativeInt(
+        parsed.realtimeStats?.anchorSpiritCoin,
+        parsedSpiritCoin,
+      ),
+      anchorRebirthEssence: toNonNegativeInt(
+        parsed.realtimeStats?.anchorRebirthEssence,
+        parsedRebirthEssence,
+      ),
+    },
   };
   return state;
 }
