@@ -27,6 +27,7 @@
     "pr:body:lint": "python3 scripts/lint_pr_body_v1.py --body-file /private/tmp/idle_pr_body_v1.md --strict-change-path",
     "pr:validation:sync:check": "python3 scripts/check_pr_validation_template_sync_v1.py",
     "pr:validation:sync:apply": "python3 scripts/check_pr_validation_template_sync_v1.py --write",
+    "pr:required-check:coverage:check": "python3 scripts/check_required_check_coverage_v1.py",
     "pr:validation:sync:regression:check": "python3 scripts/check_pr_validation_sync_regression_v1.py",
     "pr:validation:sync:regression:check:report": "python3 scripts/check_pr_validation_sync_regression_v1.py --report-file data/sim/pr_validation_sync_regression_report_v1.json",
     "pr:validation:sync:regression:summary:md": "python3 scripts/build_pr_validation_sync_regression_ci_summary_v1.py --report-file data/sim/pr_validation_sync_regression_report_v1.json --output-md data/sim/pr_validation_sync_regression_ci_summary_v1.md",

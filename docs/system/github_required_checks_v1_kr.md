@@ -67,6 +67,8 @@
 - 결과 가시성:
   - lint 성공/실패 모두 GitHub Step Summary에 `PR Body Lint` 섹션으로 기록
 - 회귀 안정성:
+  - `PR Required Check Coverage` 단계에서 표준 Validation 명령이 Required Check workflow에 모두 포함되는지 점검
+  - 결과는 `PR Required Check Coverage` 섹션으로 Step Summary에 기록
   - `PR Body Lint Regression` 단계에서 고정 fixture 기반 회귀 체크 실행
   - 결과는 `PR Body Lint Regression Summary` 섹션으로 Step Summary에 기록
   - `PR Body Generator Regression` 단계에서 본문 생성 포맷 회귀 체크 실행

@@ -11,4 +11,5 @@ DEFAULT_VALIDATION_COMMANDS: tuple[str, ...] = (
     "npm run pr:body:lint:regression:check",
     "npm run pr:body:gen:regression:check",
     "npm run pr:validation:sync:regression:check",
+    "npm run pr:required-check:coverage:check",
 )

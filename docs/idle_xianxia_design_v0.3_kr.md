@@ -623,3 +623,12 @@
 ## 121) 추가 문서
 - PR 본문 품질 Lint 가이드(Validation 8개 커맨드 기준): `/Users/hirediversity/Idle/docs/system/pr_body_lint_v1_kr.md`
 - PR 본문 자동 생성기 가이드(Validation 8개 커맨드 기준): `/Users/hirediversity/Idle/docs/system/pr_body_generator_v1_kr.md`
+
+## 122) 다음 순차 작업
+1. [완료] Required Check workflow 커버리지 점검 스크립트(`pr:required-check:coverage:check`) 추가.
+2. [완료] `verify-combat-diff`에 `PR Required Check Coverage` 단계/Step Summary 연동.
+3. [완료] PR Validation 표준 명령/템플릿/문서를 9개 커맨드 기준으로 동기화.
+
+## 123) 추가 문서
+- PR Required Check 커버리지 가이드: `/Users/hirediversity/Idle/docs/system/pr_required_check_coverage_v1_kr.md`
+- PR 본문 품질 Lint 가이드(Validation 9개 커맨드 기준): `/Users/hirediversity/Idle/docs/system/pr_body_lint_v1_kr.md`
