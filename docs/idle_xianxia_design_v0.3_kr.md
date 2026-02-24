@@ -858,3 +858,11 @@
 
 ## 179) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(복제 대상 옵션 상태 라벨 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 180) 다음 순차 작업
+1. [완료] 슬롯 복제 소스를 localStorage payload에서 현재 메모리 상태 스냅샷으로 전환.
+2. [완료] 슬롯 복제 정책에서 소스 슬롯 저장상태 의존(`source_empty/source_corrupt`)을 제거.
+3. [완료] 모바일 회귀 체크/힌트 규칙을 새로운 복제 정책(`same_slot` 중심) 기준으로 갱신.
+
+## 181) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(메모리 스냅샷 기반 슬롯 복제 정책 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

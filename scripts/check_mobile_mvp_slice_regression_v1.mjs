@@ -136,17 +136,11 @@ async function main() {
   const copyToEmpty = resolveSlotCopyPolicy(2, 3, "empty");
   const copyToData = resolveSlotCopyPolicy(2, 1, "ok");
   const copyToCorrupt = resolveSlotCopyPolicy(2, 1, "corrupt");
-  const copyFromEmpty = resolveSlotCopyPolicy(2, 3, "empty", "empty");
-  const copyFromCorrupt = resolveSlotCopyPolicy(2, 3, "empty", "corrupt");
   checks.push({
     id: "slot_copy_policy_requires_confirm_only_on_non_empty_target",
     passed:
       copySameSlot.allowed === false &&
       copySameSlot.reason === "same_slot" &&
-      copyFromEmpty.allowed === false &&
-      copyFromEmpty.reason === "source_empty" &&
-      copyFromCorrupt.allowed === false &&
-      copyFromCorrupt.reason === "source_corrupt" &&
       copyToEmpty.allowed === true &&
       copyToEmpty.requiresConfirm === false &&
       copyToEmpty.reason === "target_empty" &&
@@ -177,7 +171,7 @@ async function main() {
 
   const copyHintEmptyTarget = resolveSlotCopyHint(copyToEmpty);
   const copyHintConfirm = resolveSlotCopyHint(copyToData);
-  const copyHintBlocked = resolveSlotCopyHint(copyFromCorrupt);
+  const copyHintBlocked = resolveSlotCopyHint(copySameSlot);
   const deleteHintEmpty = resolveSlotDeleteHint(deleteEmpty);
   const deleteHintOk = resolveSlotDeleteHint(deleteOk);
   const deleteHintCorrupt = resolveSlotDeleteHint(deleteCorrupt);
@@ -186,7 +180,7 @@ async function main() {
     passed:
       copyHintEmptyTarget.includes("복제 가능") &&
       copyHintConfirm.includes("덮어써") &&
-      copyHintBlocked.includes("손상") &&
+      copyHintBlocked.includes("달라야") &&
       deleteHintEmpty.includes("삭제할 데이터가 없습니다") &&
       deleteHintOk.includes("메모리 상태는 유지") &&
       deleteHintCorrupt.includes("손상된 저장 데이터"),
@@ -197,7 +191,6 @@ async function main() {
     passed:
       resolveSlotCopyHintTone(copyToEmpty) === "info" &&
       resolveSlotCopyHintTone(copyToData) === "warn" &&
-      resolveSlotCopyHintTone(copyFromCorrupt) === "error" &&
       resolveSlotCopyHintTone(copySameSlot) === "warn" &&
       resolveSlotDeleteHintTone(deleteOk) === "info" &&
       resolveSlotDeleteHintTone(deleteCorrupt) === "warn" &&

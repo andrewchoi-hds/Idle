@@ -135,38 +135,14 @@ export function resolveDebouncedAction(lastAcceptedEpochMs, nowEpochMs, debounce
   };
 }
 
-export function resolveSlotCopyPolicy(sourceSlot, targetSlot, targetState, sourceState = "ok") {
+export function resolveSlotCopyPolicy(sourceSlot, targetSlot, targetState) {
   const normalizedSourceSlot = normalizeSaveSlot(sourceSlot, 1);
   const normalizedTargetSlot = normalizeSaveSlot(targetSlot, normalizedSourceSlot);
-  const normalizedSourceState = normalizeSlotSummaryState(sourceState, "empty");
   const normalizedTargetState = normalizeSlotSummaryState(targetState, "empty");
-  if (normalizedSourceState === "empty") {
-    return {
-      sourceSlot: normalizedSourceSlot,
-      sourceState: normalizedSourceState,
-      targetSlot: normalizedTargetSlot,
-      targetState: normalizedTargetState,
-      allowed: false,
-      requiresConfirm: false,
-      reason: "source_empty",
-    };
-  }
-  if (normalizedSourceState === "corrupt") {
-    return {
-      sourceSlot: normalizedSourceSlot,
-      sourceState: normalizedSourceState,
-      targetSlot: normalizedTargetSlot,
-      targetState: normalizedTargetState,
-      allowed: false,
-      requiresConfirm: false,
-      reason: "source_corrupt",
-    };
-  }
   const sameSlot = normalizedSourceSlot === normalizedTargetSlot;
   if (sameSlot) {
     return {
       sourceSlot: normalizedSourceSlot,
-      sourceState: normalizedSourceState,
       targetSlot: normalizedTargetSlot,
       targetState: normalizedTargetState,
       allowed: false,
@@ -177,7 +153,6 @@ export function resolveSlotCopyPolicy(sourceSlot, targetSlot, targetState, sourc
   if (normalizedTargetState === "empty") {
     return {
       sourceSlot: normalizedSourceSlot,
-      sourceState: normalizedSourceState,
       targetSlot: normalizedTargetSlot,
       targetState: normalizedTargetState,
       allowed: true,
@@ -187,7 +162,6 @@ export function resolveSlotCopyPolicy(sourceSlot, targetSlot, targetState, sourc
   }
   return {
     sourceSlot: normalizedSourceSlot,
-    sourceState: normalizedSourceState,
     targetSlot: normalizedTargetSlot,
     targetState: normalizedTargetState,
     allowed: true,
@@ -224,12 +198,6 @@ export function resolveSlotCopyHint(copyPolicy) {
       ? "복제 시 대상 슬롯 저장 데이터가 덮어써집니다."
       : "복제 가능: 현재 슬롯 데이터를 대상 슬롯으로 복제합니다.";
   }
-  if (policy.reason === "source_empty") {
-    return "활성 슬롯이 비어 있어 복제할 수 없습니다.";
-  }
-  if (policy.reason === "source_corrupt") {
-    return "활성 슬롯 저장 데이터가 손상되어 복제할 수 없습니다.";
-  }
   if (policy.reason === "same_slot") {
     return "복제 대상은 활성 슬롯과 달라야 합니다.";
   }
@@ -254,9 +222,6 @@ export function resolveSlotCopyHintTone(copyPolicy) {
   const policy = copyPolicy && typeof copyPolicy === "object" ? copyPolicy : {};
   if (policy.allowed) {
     return policy.requiresConfirm ? "warn" : "info";
-  }
-  if (policy.reason === "source_empty" || policy.reason === "source_corrupt") {
-    return "error";
   }
   if (policy.reason === "same_slot") {
     return "warn";
