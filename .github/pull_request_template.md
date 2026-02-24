@@ -18,6 +18,7 @@
 - [ ] `npm run pr:validation:sync:regression:check`
 - [ ] `npm run pr:required-check:coverage:check`
 - [ ] `npm run pr:validation:registry:check`
+- [ ] `npm run mobile:mvp:check`
 
 ## Docs
 - [ ] Updated docs if behavior or workflow changed

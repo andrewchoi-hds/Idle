@@ -19,6 +19,8 @@ npm run save:offline:catchup:ts
 npm run save:auto:regression:check
 npm run save:offline:regression:check
 npm run save:regression:summary:md
+npm run mobile:mvp:serve
+npm run mobile:mvp:check
 npm run pr:body:gen
 npm run pr:body:gen:regression:check
 npm run pr:body:gen:regression:check:report
@@ -57,6 +59,7 @@ npm run pr:ship:auto
 - PR Validation 체크리스트 동기화 체크(PY): `/Users/hirediversity/Idle/scripts/check_pr_validation_template_sync_v1.py`
 - PR Validation 명령 레지스트리 체크(PY): `/Users/hirediversity/Idle/scripts/check_pr_validation_command_registry_v1.py`
 - PR Required Check 커버리지 체크(PY): `/Users/hirediversity/Idle/scripts/check_required_check_coverage_v1.py`
+- 모바일 MVP 수직슬라이스 회귀 체크(JS): `/Users/hirediversity/Idle/scripts/check_mobile_mvp_slice_regression_v1.mjs`
 - PR 본문 Lint 회귀 체크(PY): `/Users/hirediversity/Idle/scripts/check_pr_body_lint_regression_v1.py`
 - PR 본문 Lint 회귀 CI 요약(PY): `/Users/hirediversity/Idle/scripts/build_pr_body_lint_regression_ci_summary_v1.py`
 - PR 자동 생성/업데이트(PY): `/Users/hirediversity/Idle/scripts/create_pr_with_body_v1.py`
@@ -64,6 +67,8 @@ npm run pr:ship:auto
 - PR 체크대기 자동 머지(PY): `/Users/hirediversity/Idle/scripts/merge_pr_when_ready_v1.py`
 - PR 원클릭 ship 자동화(PY): `/Users/hirediversity/Idle/scripts/ship_pr_auto_v1.py`
 - CI 워크플로우: `/Users/hirediversity/Idle/.github/workflows/combat-diff-ci.yml`
+- 모바일 MVP UI: `/Users/hirediversity/Idle/mobile/mvp_v1/index.html`
+- 모바일 MVP 엔진: `/Users/hirediversity/Idle/mobile/mvp_v1/engine.mjs`
 
 ## 운영 문서
 - 전투 diff 가이드: `/Users/hirediversity/Idle/docs/sim/minimal_combat_ts_py_diff_v1_kr.md`
@@ -74,6 +79,7 @@ npm run pr:ship:auto
 - PR Validation 체크리스트 동기화 가이드: `/Users/hirediversity/Idle/docs/system/pr_validation_checklist_sync_v1_kr.md`
 - PR Validation 명령 레지스트리 가이드: `/Users/hirediversity/Idle/docs/system/pr_validation_registry_v1_kr.md`
 - PR Required Check 커버리지 가이드: `/Users/hirediversity/Idle/docs/system/pr_required_check_coverage_v1_kr.md`
+- 모바일 MVP 수직슬라이스 가이드: `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
 - PR 본문 Lint 회귀 체크 가이드: `/Users/hirediversity/Idle/docs/system/pr_body_lint_regression_v1_kr.md`
 - PR 자동 생성/업데이트 가이드: `/Users/hirediversity/Idle/docs/system/pr_create_auto_v1_kr.md`
 - PR 자동 승인 가이드: `/Users/hirediversity/Idle/docs/system/pr_review_auto_v1_kr.md`

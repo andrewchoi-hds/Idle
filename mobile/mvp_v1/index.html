@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Idle Xianxia Mobile MVP v1</title>
+    <link rel="stylesheet" href="./app.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="panel header">
+        <div>
+          <p class="eyebrow">Mobile Vertical Slice v1</p>
+          <h1>선협 방치형 MVP</h1>
+        </div>
+        <p id="appStatus" class="status">로딩 중...</p>
+      </header>
+
+      <section class="panel stage">
+        <div class="stage-head">
+          <h2 id="stageDisplay">-</h2>
+          <span id="worldTag" class="world-tag">-</span>
+        </div>
+        <p class="sub">
+          난이도 <strong id="difficultyIndex">-</strong> · 다음 돌파 필요 기
+          <strong id="qiRequired">-</strong>
+        </p>
+        <div class="progress-wrap">
+          <div id="qiProgressBar" class="progress-bar"></div>
+        </div>
+      </section>
+
+      <section class="panel stats">
+        <article>
+          <h3>기(氣)</h3>
+          <p id="statQi">0</p>
+        </article>
+        <article>
+          <h3>영석</h3>
+          <p id="statSpiritCoin">0</p>
+        </article>
+        <article>
+          <h3>환생정수</h3>
+          <p id="statRebirthEssence">0</p>
+        </article>
+        <article>
+          <h3>환생 횟수</h3>
+          <p id="statRebirthCount">0</p>
+        </article>
+      </section>
+
+      <section class="panel settings">
+        <h2>자동 옵션</h2>
+        <label><input id="optAutoBattle" type="checkbox" /> 자동 전투</label>
+        <label><input id="optAutoBreakthrough" type="checkbox" /> 자동 돌파</label>
+        <label><input id="optAutoTribulation" type="checkbox" /> 자동 도겁 허용</label>
+      </section>
+
+      <section class="panel consumables">
+        <h2>영약 / 부적</h2>
+        <p>
+          돌파 영약:
+          <strong id="invBreakthroughElixir">0</strong>
+          · 도겁 수호부:
+          <strong id="invTribulationTalisman">0</strong>
+        </p>
+        <div class="consumable-toggles">
+          <label><input id="useBreakthroughElixir" type="checkbox" checked /> 이번 돌파에 영약 사용</label>
+          <label><input id="useTribulationTalisman" type="checkbox" checked /> 이번 돌파에 수호부 사용</label>
+        </div>
+        <p class="sub">
+          돌파 성공률 <strong id="previewSuccessPct">-</strong>% · 도겁 사망률
+          <strong id="previewDeathPct">-</strong>%
+        </p>
+      </section>
+
+      <section class="panel actions">
+        <h2>액션</h2>
+        <div class="button-grid">
+          <button id="btnBattle" type="button">전투 1회</button>
+          <button id="btnBreakthrough" type="button">돌파 시도</button>
+          <button id="btnAuto10s" type="button">자동 10초 진행</button>
+          <button id="btnResetRun" type="button">런 초기화</button>
+        </div>
+      </section>
+
+      <section class="panel save">
+        <h2>저장 / 복구</h2>
+        <p class="sub">플레이어명</p>
+        <input id="playerNameInput" type="text" maxlength="20" />
+        <p class="sub">
+          마지막 저장:
+          <strong id="lastSavedAt">없음</strong>
+        </p>
+        <div class="button-grid">
+          <button id="btnSaveLocal" type="button">로컬 저장</button>
+          <button id="btnLoadLocal" type="button">로컬 불러오기</button>
+          <button id="btnExportState" type="button">JSON 내보내기</button>
+          <button id="btnImportState" type="button">JSON 가져오기</button>
+        </div>
+        <textarea
+          id="savePayload"
+          rows="8"
+          placeholder="내보내기/가져오기 JSON"
+        ></textarea>
+      </section>
+
+      <section class="panel assets">
+        <h2>무료 에셋 바로가기</h2>
+        <ul>
+          <li><a href="https://kenney.nl/assets" target="_blank" rel="noreferrer">Kenney Asset Library (CC0)</a></li>
+          <li><a href="https://opengameart.org/content/oriental-roof-tiles" target="_blank" rel="noreferrer">Oriental Roof Tiles (CC0)</a></li>
+          <li><a href="https://opengameart.org/content/pixel-fx-pack" target="_blank" rel="noreferrer">Pixel FX Pack (CC0)</a></li>
+        </ul>
+      </section>
+
+      <section class="panel logs">
+        <h2>이벤트 로그</h2>
+        <ul id="eventLogList"></ul>
+      </section>
+    </main>
+
+    <script type="module" src="./app.mjs"></script>
+  </body>
+</html>

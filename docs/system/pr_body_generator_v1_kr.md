@@ -33,6 +33,7 @@ npm run pr:body:gen -- --run-validation
   - `npm run pr:validation:sync:regression:check`
   - `npm run pr:required-check:coverage:check`
   - `npm run pr:validation:registry:check`
+  - `npm run mobile:mvp:check`
 
 ## 4) PR 생성 연계
 ```bash
