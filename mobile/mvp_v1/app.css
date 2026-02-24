@@ -561,6 +561,10 @@ textarea:focus-visible,
   margin-top: 8px;
 }
 
+.offline-detail-summary + .offline-detail-summary {
+  margin-top: 2px;
+}
+
 .offline-detail-list {
   margin: 10px 0 0;
   padding-left: 16px;

@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 
 import {
   buildOfflineDetailCriticalSummaryLabelKo,
+  buildOfflineDetailHiddenSummaryLabelKo,
   buildOfflineDetailFilterSummaryLabelKo,
   buildStorageKeyForSlot,
   buildSliceContext,
@@ -408,6 +409,16 @@ async function main() {
       buildOfflineDetailFilterSummaryLabelKo(prioritizedOfflineEvents, "critical") ===
         "세부 로그 4/6건 (핵심)" &&
       buildOfflineDetailFilterSummaryLabelKo([], "critical") === "세부 로그 0/0건 (핵심)",
+  });
+
+  checks.push({
+    id: "offline_detail_hidden_summary_label_matches_mode_and_hidden",
+    passed:
+      buildOfflineDetailHiddenSummaryLabelKo(prioritizedOfflineEvents, "all") ===
+        "숨김 이벤트 없음" &&
+      buildOfflineDetailHiddenSummaryLabelKo(prioritizedOfflineEvents, "critical") ===
+        "비핵심 2건 숨김" &&
+      buildOfflineDetailHiddenSummaryLabelKo([], "critical") === "숨김 이벤트 없음",
   });
 
   const offlineCriticalSummary = summarizeOfflineDetailCriticalEvents([

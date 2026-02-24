@@ -8,6 +8,7 @@ import {
   createInitialSliceState,
   createSeededRng,
   buildOfflineDetailCriticalSummaryLabelKo,
+  buildOfflineDetailHiddenSummaryLabelKo,
   buildOfflineDetailFilterSummaryLabelKo,
   getStage,
   getStageDisplayNameKo,
@@ -108,6 +109,7 @@ const dom = {
   offlineWarmupSummary: document.getElementById("offlineWarmupSummary"),
   offlineCriticalSummary: document.getElementById("offlineCriticalSummary"),
   offlineDetailFilterSummary: document.getElementById("offlineDetailFilterSummary"),
+  offlineDetailHiddenSummary: document.getElementById("offlineDetailHiddenSummary"),
   offlineCapState: document.getElementById("offlineCapState"),
   offlineBattleCount: document.getElementById("offlineBattleCount"),
   offlineBreakthroughCount: document.getElementById("offlineBreakthroughCount"),
@@ -714,6 +716,10 @@ function renderOfflineDetailList(events) {
     prioritizedRows,
     mode,
   );
+  dom.offlineDetailHiddenSummary.textContent = buildOfflineDetailHiddenSummaryLabelKo(
+    prioritizedRows,
+    mode,
+  );
   if (rows.length === 0) {
     dom.offlineDetailList.innerHTML = offlineDetailCriticalOnly
       ? '<li class="delta-neutral">핵심 이벤트 없음</li>'
@@ -1150,6 +1156,7 @@ function hideOfflineModal() {
   dom.offlineModal.classList.add("hidden");
   dom.offlineModal.setAttribute("aria-hidden", "true");
   dom.offlineDetailFilterSummary.textContent = "세부 로그 0건 (전체)";
+  dom.offlineDetailHiddenSummary.textContent = "숨김 이벤트 없음";
   setOfflineDetailCriticalOnly(false);
   setOfflineDetailExpanded(false);
 }
