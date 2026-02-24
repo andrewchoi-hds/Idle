@@ -97,6 +97,7 @@ npm run mobile:mvp:serve
     - `btnToggleOfflineCriticalOnly`로 세부 로그를 `전체/핵심만` 모드로 즉시 전환
     - `offlineDetailFilterSummary`에 현재 필터의 표시 건수(`전체 N건` 또는 `핵심 V/T건`)를 노출
     - `offlineDetailHiddenSummary`에 숨김 건수(`숨김 없음` 또는 `비핵심 N건 숨김`)를 노출
+    - `offlineDetailHiddenKindsSummary`에 숨김 상세 구성(예: `전투 승리 1건 · 전투 패배 1건`)을 노출
     - 팝업에서 세부 로그 토글(최근 이벤트) + 정산 리포트 JSON 내보내기 지원
 - 옵션:
   - `앱 복귀 시 실시간 자동 재개` (`autoResumeRealtime`, on/off)
@@ -143,6 +144,7 @@ npm run mobile:mvp:serve
   - `btnToggleOfflineCriticalOnly` 토글 상태에 따라 세부 로그 소스를 `filterOfflineDetailEventsByMode(..., \"all|critical\")`로 전환
   - `offlineDetailFilterSummary`에 필터 결과 요약 라벨(`buildOfflineDetailFilterSummaryLabelKo`) 표시
   - `offlineDetailHiddenSummary`에 숨김 이벤트 요약 라벨(`buildOfflineDetailHiddenSummaryLabelKo`) 표시
+  - `offlineDetailHiddenKindsSummary`에 숨김 상세 요약 라벨(`buildOfflineDetailHiddenKindsSummaryLabelKo`) 표시
   - `btnToggleOfflineDetail`로 상세 이벤트 목록 확장/축소
   - `btnExportOfflineReport`로 정산 리포트를 JSON 형태로 `savePayload`에 주입(클립보드 복사 시도)
     - 리포트에 워밍업 텔레메트리(`warmup.before/after/consumed/skippedAttempts`)를 함께 기록
@@ -184,6 +186,7 @@ npm run mobile:mvp:check
   - 오프라인 상세 로그 필터(`filterOfflineDetailEventsByMode`)가 `critical` 모드에서 핵심 이벤트만 남기고 순서를 보존하는지 검증
   - 오프라인 상세 로그 필터 요약(`summarizeOfflineDetailFilterResult`, `buildOfflineDetailFilterSummaryLabelKo`)이 모드별 표시/숨김 건수와 라벨을 일관되게 반환하는지 검증
   - 오프라인 상세 로그 숨김 요약(`buildOfflineDetailHiddenSummaryLabelKo`)이 모드/숨김 건수에 맞는 라벨을 반환하는지 검증
+  - 오프라인 상세 로그 숨김 구성 요약(`summarizeOfflineDetailHiddenKinds`, `buildOfflineDetailHiddenKindsSummaryLabelKo`)이 숨김 종류/건수와 라벨을 일관되게 반환하는지 검증
   - 오프라인 핵심 이벤트 요약(`summarizeOfflineDetailCriticalEvents`, `buildOfflineDetailCriticalSummaryLabelKo`)이 카운트/라벨을 일관되게 반환하는지 검증
   - 자동 재개 워밍업 가드(`autoBreakthroughWarmupUntilSec`)가 지정 구간에서 자동 돌파를 지연하고 타임라인 오프셋 기준 잔여 시간을 일관되게 계산하는지 검증
   - 오프라인 정산(`runOfflineCatchup`)이 워밍업 가드와 잔여시간을 일관되게 반영하는지 검증
