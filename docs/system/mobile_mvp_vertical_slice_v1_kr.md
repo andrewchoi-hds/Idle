@@ -40,6 +40,7 @@ npm run mobile:mvp:serve
 - 자동 10초 진행:
   - 기 자동 축적 + 자동 전투 + 자동 돌파 루프
   - 도겁 자동 허용 옵션 연동
+  - 자동 돌파 경로에서 고위험/고기소모 도겁은 정책으로 차단하고 수동 확인을 유도
   - `전투 속도` 옵션(저속/표준/고속)에 따라 루프 cadence 변경
 - 실시간 자동 진행:
   - `실시간 자동 시작/중지` 버튼으로 1초 단위 루프 실행
@@ -143,6 +144,7 @@ npm run mobile:mvp:check
   - 도겁 위험도 판정(`resolveBreakthroughRiskTier`) 및 보정 적용 시 위험도 하향 검증
   - 기대값 요약(`resolveBreakthroughExpectedDelta`)이 도겁/비도겁 구간의 기대 재화·경지 변화를 일관되게 반환하는지 검증
   - 수동 시도 확인 정책(`resolveBreakthroughManualAttemptPolicy`)이 고위험/고기소모 구간에서 확인 필요 여부를 일관되게 반환하는지 검증
+  - 자동 시도 차단 정책(`resolveBreakthroughAutoAttemptPolicy`)이 고위험 도겁 구간을 건너뛰고 차단 카운트를 누적하는지 검증
   - 보정 효과 요약(`resolveBreakthroughMitigationSummary`)이 위험도 변화/확률 델타를 일관되게 반환하는지 검증
   - 돌파 권장 정책(`resolveBreakthroughRecommendation`)이 보유 자원/사용 상태에 맞는 문구를 반환하는지 검증
   - 돌파 권장 토글 정책(`resolveBreakthroughRecommendationToggles`)이 고위험/중위험/비도겁 구간에서 올바른 토글 상태를 반환하는지 검증

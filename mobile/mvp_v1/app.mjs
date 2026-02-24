@@ -141,6 +141,7 @@ let lastOfflineReport = null;
 let offlineDetailExpanded = false;
 let realtimeAutoTimer = null;
 let realtimePersistTicks = 0;
+let realtimePolicyBlockAccum = 0;
 let slotSummaryDirty = true;
 let slotSummaryLastRenderedAtMs = 0;
 let slotQuickLoadLastAcceptedAtMs = 0;
@@ -627,6 +628,9 @@ function formatOfflineEventLine(event) {
   if (event.kind === "breakthrough_death_fail") {
     return `${secLabel}: 도겁 사망 → 환생 (환생정수 +${fmtNumber(event.rebirthReward)})`;
   }
+  if (event.kind === "breakthrough_blocked_auto_policy") {
+    return `${secLabel}: 자동 돌파 차단 (${String(event.reason || "policy")})`;
+  }
   return `${secLabel}: ${String(event.kind || "unknown")}`;
 }
 
@@ -760,7 +764,11 @@ function buildOfflineStatus(prefix, summary) {
   const auto = summary.autoSummary;
   const maxOfflineHours = Math.floor((summary.maxOfflineSec || 0) / 3600);
   const capText = summary.cappedByMaxOffline ? ` · ${maxOfflineHours}시간 cap 적용` : "";
-  return `${prefix}: ${fmtDurationSec(summary.appliedOfflineSec)} 정산 (전투 ${auto?.battles ?? 0}회 · 돌파 ${auto?.breakthroughs ?? 0}회 · 환생 ${auto?.rebirths ?? 0}회${capText})`;
+  const blockedText =
+    (auto?.breakthroughPolicyBlocks ?? 0) > 0
+      ? ` · 위험 차단 ${auto.breakthroughPolicyBlocks}회`
+      : "";
+  return `${prefix}: ${fmtDurationSec(summary.appliedOfflineSec)} 정산 (전투 ${auto?.battles ?? 0}회 · 돌파 ${auto?.breakthroughs ?? 0}회${blockedText} · 환생 ${auto?.rebirths ?? 0}회${capText})`;
 }
 
 function getCurrentSpeedTuning() {
@@ -784,6 +792,7 @@ function resetRealtimeAutoSession() {
   stats.anchorSpiritCoin = currency.spiritCoin;
   stats.anchorRebirthEssence = currency.rebirthEssence;
   realtimePersistTicks = 0;
+  realtimePolicyBlockAccum = 0;
 }
 
 function syncRealtimeAutoControls() {
@@ -842,12 +851,14 @@ function runRealtimeAutoTick() {
   stats.battles += summary.battles;
   stats.breakthroughs += summary.breakthroughs;
   stats.rebirths += summary.rebirths;
+  realtimePolicyBlockAccum += summary.breakthroughPolicyBlocks;
 
   if (stats.elapsedSec % 10 === 0) {
     addClientLog(
       "auto",
-      `실시간 자동 ${fmtDurationSec(stats.elapsedSec)} 누적 (전투 ${stats.battles}회 · 돌파 ${stats.breakthroughs}회 · 환생 ${stats.rebirths}회)`,
+      `실시간 자동 ${fmtDurationSec(stats.elapsedSec)} 누적 (전투 ${stats.battles}회 · 돌파 ${stats.breakthroughs}회 · 위험 차단 ${realtimePolicyBlockAccum}회 · 환생 ${stats.rebirths}회)`,
     );
+    realtimePolicyBlockAccum = 0;
   }
 
   if (realtimePersistTicks >= 3) {
@@ -1536,8 +1547,12 @@ function bindEvents() {
       breakthroughEverySec: tuning.breakthroughEverySec,
       passiveQiRatio: tuning.passiveQiRatio,
     });
+    const blockedText =
+      summary.breakthroughPolicyBlocks > 0
+        ? ` · 위험 차단 ${summary.breakthroughPolicyBlocks}회`
+        : "";
     setStatus(
-      `자동 10초(${tuning.labelKo}): 전투 ${summary.battles}회 · 돌파 ${summary.breakthroughs}회 · 환생 ${summary.rebirths}회`,
+      `자동 10초(${tuning.labelKo}): 전투 ${summary.battles}회 · 돌파 ${summary.breakthroughs}회${blockedText} · 환생 ${summary.rebirths}회`,
     );
     persistLocal();
     render();
