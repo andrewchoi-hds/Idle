@@ -40,6 +40,18 @@ export function normalizeAutoBreakthroughResumeWarmupSec(value, fallback) {
   );
 }
 
+export function resolveAutoBreakthroughWarmupRemainingSec(
+  currentRemainingSecInput,
+  elapsedSecInput,
+) {
+  const currentRemainingSec = Math.max(
+    0,
+    toNonNegativeInt(currentRemainingSecInput, 0),
+  );
+  const elapsedSec = Math.max(0, toNonNegativeInt(elapsedSecInput, 0));
+  return Math.max(0, currentRemainingSec - elapsedSec);
+}
+
 export function normalizeSaveSlot(slot, fallback = 1) {
   const normalizedFallback = clamp(toNonNegativeInt(fallback, 1), 1, 3);
   const parsed = Number(slot);
