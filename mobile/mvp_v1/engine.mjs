@@ -98,6 +98,62 @@ export function resolveDebouncedAction(lastAcceptedEpochMs, nowEpochMs, debounce
   };
 }
 
+export function resolveSlotCopyPolicy(sourceSlot, targetSlot, targetState) {
+  const normalizedSourceSlot = normalizeSaveSlot(sourceSlot, 1);
+  const normalizedTargetSlot = normalizeSaveSlot(targetSlot, normalizedSourceSlot);
+  const normalizedTargetState = normalizeSlotSummaryState(targetState, "empty");
+  const sameSlot = normalizedSourceSlot === normalizedTargetSlot;
+  if (sameSlot) {
+    return {
+      sourceSlot: normalizedSourceSlot,
+      targetSlot: normalizedTargetSlot,
+      targetState: normalizedTargetState,
+      allowed: false,
+      requiresConfirm: false,
+      reason: "same_slot",
+    };
+  }
+  if (normalizedTargetState === "empty") {
+    return {
+      sourceSlot: normalizedSourceSlot,
+      targetSlot: normalizedTargetSlot,
+      targetState: normalizedTargetState,
+      allowed: true,
+      requiresConfirm: false,
+      reason: "target_empty",
+    };
+  }
+  return {
+    sourceSlot: normalizedSourceSlot,
+    targetSlot: normalizedTargetSlot,
+    targetState: normalizedTargetState,
+    allowed: true,
+    requiresConfirm: true,
+    reason: normalizedTargetState === "corrupt" ? "target_corrupt" : "target_has_data",
+  };
+}
+
+export function resolveSlotDeletePolicy(slot, slotState) {
+  const normalizedSlot = normalizeSaveSlot(slot, 1);
+  const normalizedState = normalizeSlotSummaryState(slotState, "empty");
+  if (normalizedState === "empty") {
+    return {
+      slot: normalizedSlot,
+      slotState: normalizedState,
+      allowed: false,
+      requiresConfirm: false,
+      reason: "empty_slot",
+    };
+  }
+  return {
+    slot: normalizedSlot,
+    slotState: normalizedState,
+    allowed: true,
+    requiresConfirm: true,
+    reason: normalizedState === "corrupt" ? "corrupt_slot" : "has_data",
+  };
+}
+
 function parseIsoEpochMs(value) {
   const parsed = Date.parse(typeof value === "string" ? value : "");
   if (!Number.isFinite(parsed)) {

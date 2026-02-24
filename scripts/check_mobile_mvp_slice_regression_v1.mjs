@@ -13,6 +13,8 @@ import {
   parseSliceState,
   resolveDebouncedAction,
   resolveLoopTuningFromBattleSpeed,
+  resolveSlotCopyPolicy,
+  resolveSlotDeletePolicy,
   resolveSlotSummaryQuickAction,
   runAutoSliceSeconds,
   runBattleOnce,
@@ -117,6 +119,43 @@ async function main() {
       debounceThird.accepted === true &&
       debounceThird.lastAcceptedEpochMs === 1700 &&
       debounceThird.nextAllowedEpochMs === 2400,
+  });
+
+  const copySameSlot = resolveSlotCopyPolicy(2, 2, "ok");
+  const copyToEmpty = resolveSlotCopyPolicy(2, 3, "empty");
+  const copyToData = resolveSlotCopyPolicy(2, 1, "ok");
+  const copyToCorrupt = resolveSlotCopyPolicy(2, 1, "corrupt");
+  checks.push({
+    id: "slot_copy_policy_requires_confirm_only_on_non_empty_target",
+    passed:
+      copySameSlot.allowed === false &&
+      copySameSlot.reason === "same_slot" &&
+      copyToEmpty.allowed === true &&
+      copyToEmpty.requiresConfirm === false &&
+      copyToEmpty.reason === "target_empty" &&
+      copyToData.allowed === true &&
+      copyToData.requiresConfirm === true &&
+      copyToData.reason === "target_has_data" &&
+      copyToCorrupt.allowed === true &&
+      copyToCorrupt.requiresConfirm === true &&
+      copyToCorrupt.reason === "target_corrupt",
+  });
+
+  const deleteEmpty = resolveSlotDeletePolicy(1, "empty");
+  const deleteOk = resolveSlotDeletePolicy(2, "ok");
+  const deleteCorrupt = resolveSlotDeletePolicy(3, "corrupt");
+  checks.push({
+    id: "slot_delete_policy_skips_empty_and_confirms_non_empty",
+    passed:
+      deleteEmpty.allowed === false &&
+      deleteEmpty.requiresConfirm === false &&
+      deleteEmpty.reason === "empty_slot" &&
+      deleteOk.allowed === true &&
+      deleteOk.requiresConfirm === true &&
+      deleteOk.reason === "has_data" &&
+      deleteCorrupt.allowed === true &&
+      deleteCorrupt.requiresConfirm === true &&
+      deleteCorrupt.reason === "corrupt_slot",
   });
 
   const initWithResume = createInitialSliceState(context, {

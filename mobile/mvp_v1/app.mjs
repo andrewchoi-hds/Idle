@@ -13,6 +13,8 @@ import {
   parseSliceState,
   previewBreakthroughChance,
   resolveDebouncedAction,
+  resolveSlotCopyPolicy,
+  resolveSlotDeletePolicy,
   resolveSlotSummaryQuickAction,
   resolveLoopTuningFromBattleSpeed,
   runAutoSliceSeconds,
@@ -1089,26 +1091,31 @@ function bindEvents() {
       return;
     }
     const targetSlot = normalizeSaveSlot(dom.optCopySlotTarget.value, sourceSlot);
-    if (targetSlot === sourceSlot) {
+    const targetSummary = summarizeSaveSlot(targetSlot);
+    const copyPolicy = resolveSlotCopyPolicy(
+      sourceSlot,
+      targetSlot,
+      targetSummary.state,
+    );
+    if (!copyPolicy.allowed) {
       setStatus("복제 대상은 활성 슬롯과 달라야 함", true);
       return;
     }
-    const targetSummary = summarizeSaveSlot(targetSlot);
-    if (targetSummary.state !== "empty") {
+    if (copyPolicy.requiresConfirm) {
       const confirmed = window.confirm(
         buildSlotActionConfirmMessage("슬롯 복제", [
-          `소스: 슬롯 ${sourceSlot}`,
-          `대상: 슬롯 ${targetSlot} (${slotStateLabelKo(targetSummary.state)})`,
+          `소스: 슬롯 ${copyPolicy.sourceSlot}`,
+          `대상: 슬롯 ${copyPolicy.targetSlot} (${slotStateLabelKo(copyPolicy.targetState)})`,
           "대상 슬롯 데이터가 덮어써집니다.",
           "계속할까요?",
         ]),
       );
       if (!confirmed) {
-        setStatus(`슬롯 ${sourceSlot} → 슬롯 ${targetSlot} 복제 취소`);
+        setStatus(`슬롯 ${copyPolicy.sourceSlot} → 슬롯 ${copyPolicy.targetSlot} 복제 취소`);
         return;
       }
     }
-    const targetKey = buildStorageKeyForSlot(targetSlot);
+    const targetKey = buildStorageKeyForSlot(copyPolicy.targetSlot);
     const copied = safeLocalSetItem(targetKey, raw);
     if (!copied) {
       setStatus("슬롯 복제 실패(브라우저 저장소 제한)", true);
@@ -1117,27 +1124,28 @@ function bindEvents() {
     markSlotSummaryDirty();
     addClientLog(
       "save",
-      `슬롯 ${sourceSlot} → 슬롯 ${targetSlot} 복제 완료${payload.source === "legacy" ? " (legacy 원본)" : ""}`,
+      `슬롯 ${copyPolicy.sourceSlot} → 슬롯 ${copyPolicy.targetSlot} 복제 완료${payload.source === "legacy" ? " (legacy 원본)" : ""}`,
     );
-    setStatus(`슬롯 ${sourceSlot} → 슬롯 ${targetSlot} 복제 완료`);
+    setStatus(`슬롯 ${copyPolicy.sourceSlot} → 슬롯 ${copyPolicy.targetSlot} 복제 완료`);
     render();
   });
 
   dom.btnDeleteSlot.addEventListener("click", () => {
     const activeSummary = summarizeSaveSlot(activeSaveSlot);
-    if (activeSummary.state === "empty") {
-      setStatus(`슬롯 ${activeSaveSlot} 삭제할 데이터가 없음`);
+    const deletePolicy = resolveSlotDeletePolicy(activeSaveSlot, activeSummary.state);
+    if (!deletePolicy.allowed) {
+      setStatus(`슬롯 ${deletePolicy.slot} 삭제할 데이터가 없음`);
       return;
     }
     const confirmed = window.confirm(
       buildSlotActionConfirmMessage("슬롯 삭제", [
-        `대상: 슬롯 ${activeSaveSlot} (${slotStateLabelKo(activeSummary.state)})`,
+        `대상: 슬롯 ${deletePolicy.slot} (${slotStateLabelKo(deletePolicy.slotState)})`,
         "현재 메모리 상태는 유지됩니다.",
         "계속할까요?",
       ]),
     );
     if (!confirmed) {
-      setStatus(`슬롯 ${activeSaveSlot} 삭제 취소`);
+      setStatus(`슬롯 ${deletePolicy.slot} 삭제 취소`);
       return;
     }
     if (isRealtimeAutoRunning()) {

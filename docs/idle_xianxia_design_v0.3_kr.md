@@ -802,3 +802,11 @@
 
 ## 165) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(슬롯 퀵 로드 디바운스 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 166) 다음 순차 작업
+1. [완료] 슬롯 복제/삭제 확인 규칙을 엔진 정책 함수(`resolveSlotCopyPolicy`, `resolveSlotDeletePolicy`)로 분리.
+2. [완료] 앱 슬롯 복제/삭제 핸들러가 정책 함수 결과(`allowed/requiresConfirm/reason`)를 사용하도록 연동.
+3. [완료] 모바일 회귀 체크에 슬롯 복제/삭제 정책 시나리오 추가.
+
+## 167) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(슬롯 복제/삭제 정책 회귀 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
