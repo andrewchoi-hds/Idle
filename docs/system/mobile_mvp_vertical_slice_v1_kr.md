@@ -133,6 +133,7 @@ npm run mobile:mvp:serve
   - `offlineModal` 카드에서 정산 결과를 즉시 확인 후 닫기 가능
   - `btnToggleOfflineDetail`로 상세 이벤트 목록 확장/축소
   - `btnExportOfflineReport`로 정산 리포트를 JSON 형태로 `savePayload`에 주입(클립보드 복사 시도)
+    - 리포트에 워밍업 텔레메트리(`warmup.before/after/consumed/skippedAttempts`)를 함께 기록
   - 상세 로그 수집 개수는 `offlineEventLimit` 설정값을 따른다
 
 ## 6) 모바일 뷰포트 최적화
@@ -164,6 +165,7 @@ npm run mobile:mvp:check
   - 자동 재개 권장 적용 정책(`resolveAutoBreakthroughResumeRecommendationPlan`)이 확인 모달 경로에서만 자동 적용 플랜을 활성화하는지 검증
   - 자동 재개 워밍업 설정(`autoBreakthroughResumeWarmupSec`)이 초기 옵션 적용/저장 복원/범위 clamp(`0~30`)에서 일관되게 동작하는지 검증
   - 워밍업 잔여시간 계산(`resolveAutoBreakthroughWarmupRemainingSec`)이 경과 시간에 따라 0 이하로 내려가지 않도록 clamp되는지 검증
+  - 오프라인 워밍업 텔레메트리(`resolveOfflineWarmupTelemetry`)가 before/after/consumed를 일관되게 정규화하는지 검증
   - 자동 재개 워밍업 가드(`autoBreakthroughWarmupUntilSec`)가 지정 구간에서 자동 돌파를 지연하고 타임라인 오프셋 기준 잔여 시간을 일관되게 계산하는지 검증
   - 오프라인 정산(`runOfflineCatchup`)이 워밍업 가드와 잔여시간을 일관되게 반영하는지 검증
   - 오프라인 정산 summary 워밍업 메타(`autoBreakthroughWarmupRemainingSecBefore/After`)가 경과시간 0초/부분 경과/완전 소진 케이스에서 일관되게 기록되는지 검증
