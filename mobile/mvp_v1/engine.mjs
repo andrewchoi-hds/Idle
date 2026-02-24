@@ -34,6 +34,10 @@ export function buildStorageKeyForSlot(slot) {
   return `${MOBILE_MVP_STORAGE_KEY_PREFIX}${normalized}`;
 }
 
+export function isCopyTargetSlotDisabled(activeSlot, optionSlot) {
+  return normalizeSaveSlot(activeSlot, 1) === normalizeSaveSlot(optionSlot, 1);
+}
+
 export function normalizeSlotSummaryState(state, fallback = "empty") {
   const normalizedFallback = SLOT_SUMMARY_STATES.has(fallback) ? fallback : "empty";
   if (typeof state !== "string") {

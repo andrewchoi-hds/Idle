@@ -834,3 +834,11 @@
 
 ## 173) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(슬롯 액션 힌트 톤 분기 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 174) 다음 순차 작업
+1. [완료] 복제 대상 슬롯 선택에서 활성 슬롯 옵션을 비활성화하는 동기화 로직 추가.
+2. [완료] 옵션 비활성 판정을 엔진 순수 함수(`isCopyTargetSlotDisabled`)로 분리해 앱/회귀 공용화.
+3. [완료] 모바일 회귀 체크에 복제 대상 옵션 비활성 판정 시나리오 추가.
+
+## 175) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(복제 대상 활성 슬롯 옵션 비활성화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

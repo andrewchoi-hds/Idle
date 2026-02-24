@@ -8,6 +8,7 @@ import {
   createSeededRng,
   getStage,
   getStageDisplayNameKo,
+  isCopyTargetSlotDisabled,
   normalizeSaveSlot,
   normalizeSlotSummaryState,
   parseSliceState,
@@ -232,10 +233,22 @@ function resolvePreferredCopyTargetSlot() {
   return activeSaveSlot === 1 ? 2 : 1;
 }
 
+function syncCopySlotTargetOptions() {
+  if (!dom.optCopySlotTarget) {
+    return;
+  }
+  const options = Array.from(dom.optCopySlotTarget.options || []);
+  for (const option of options) {
+    const optionSlot = normalizeSaveSlot(option.value, 1);
+    option.disabled = isCopyTargetSlotDisabled(activeSaveSlot, optionSlot);
+  }
+}
+
 function syncCopySlotTargetSelection() {
   if (!dom.optCopySlotTarget) {
     return;
   }
+  syncCopySlotTargetOptions();
   dom.optCopySlotTarget.value = String(resolvePreferredCopyTargetSlot());
 }
 

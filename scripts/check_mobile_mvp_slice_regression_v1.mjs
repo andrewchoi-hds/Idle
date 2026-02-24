@@ -8,6 +8,7 @@ import {
   buildSliceContext,
   createInitialSliceState,
   createSeededRng,
+  isCopyTargetSlotDisabled,
   normalizeSaveSlot,
   normalizeSlotSummaryState,
   parseSliceState,
@@ -64,6 +65,9 @@ async function main() {
       normalizeSaveSlot("2", 1) === 2 &&
       normalizeSaveSlot("9", 1) === 3 &&
       normalizeSaveSlot("0", 1) === 1 &&
+      isCopyTargetSlotDisabled(1, 1) === true &&
+      isCopyTargetSlotDisabled(1, 2) === false &&
+      isCopyTargetSlotDisabled(3, 3) === true &&
       buildStorageKeyForSlot(3) === "idle_xianxia_mobile_mvp_v1_save_slot_3",
   });
 

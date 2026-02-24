@@ -47,6 +47,7 @@ npm run mobile:mvp:serve
   - 로컬 저장(localStorage, 슬롯 1~3)
   - JSON 내보내기/가져오기
   - 활성 슬롯 -> 대상 슬롯 복제(`optCopySlotTarget`, `btnCopySlot`)
+    - 복제 대상 선택에서 활성 슬롯 옵션은 비활성화
     - 대상 슬롯에 데이터가 있으면 overwrite 확인 모달 후 진행
     - 활성 슬롯이 비어있거나 손상 상태면 복제 버튼 비활성화
   - 활성 슬롯 삭제(메모리 상태 유지)
