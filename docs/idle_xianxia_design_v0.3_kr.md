@@ -794,3 +794,11 @@
 
 ## 163) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(슬롯 액션 확인 규칙 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 164) 다음 순차 작업
+1. [완료] 슬롯 요약 퀵 로드 연속 탭 방지를 위한 디바운스 가드(0.7초) 추가.
+2. [완료] 디바운스 판정을 엔진 순수 함수(`resolveDebouncedAction`)로 분리해 앱/회귀 스크립트 공용화.
+3. [완료] 모바일 회귀 체크에 퀵 로드 더블탭 차단 시나리오 추가.
+
+## 165) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(슬롯 퀵 로드 디바운스 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

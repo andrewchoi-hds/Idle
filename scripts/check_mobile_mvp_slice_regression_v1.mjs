@@ -11,6 +11,7 @@ import {
   normalizeSaveSlot,
   normalizeSlotSummaryState,
   parseSliceState,
+  resolveDebouncedAction,
   resolveLoopTuningFromBattleSpeed,
   resolveSlotSummaryQuickAction,
   runAutoSliceSeconds,
@@ -92,6 +93,30 @@ async function main() {
       quickEmptySame.nextActiveSlot === 2 &&
       quickEmptySame.shouldLoad === false &&
       quickEmptySame.actionKind === "empty",
+  });
+
+  const debounceFirst = resolveDebouncedAction(0, 1000, 700);
+  const debounceSecond = resolveDebouncedAction(
+    debounceFirst.lastAcceptedEpochMs,
+    1300,
+    700,
+  );
+  const debounceThird = resolveDebouncedAction(
+    debounceFirst.lastAcceptedEpochMs,
+    1700,
+    700,
+  );
+  checks.push({
+    id: "slot_summary_quick_action_debounce_blocks_double_tap",
+    passed:
+      debounceFirst.accepted === true &&
+      debounceFirst.lastAcceptedEpochMs === 1000 &&
+      debounceSecond.accepted === false &&
+      debounceSecond.remainingMs === 400 &&
+      debounceSecond.nextAllowedEpochMs === 1700 &&
+      debounceThird.accepted === true &&
+      debounceThird.lastAcceptedEpochMs === 1700 &&
+      debounceThird.nextAllowedEpochMs === 2400,
   });
 
   const initWithResume = createInitialSliceState(context, {

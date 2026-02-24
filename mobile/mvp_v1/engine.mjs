@@ -74,6 +74,30 @@ export function resolveSlotSummaryQuickAction(activeSlot, selectedSlot, selected
   };
 }
 
+export function resolveDebouncedAction(lastAcceptedEpochMs, nowEpochMs, debounceMs = 700) {
+  const normalizedLastAccepted = toNonNegativeInt(lastAcceptedEpochMs, 0);
+  const normalizedNowEpochMs = toNonNegativeInt(nowEpochMs, normalizedLastAccepted);
+  const normalizedDebounceMs = clamp(toNonNegativeInt(debounceMs, 700), 0, 5000);
+  const nextAllowedEpochMs = normalizedLastAccepted + normalizedDebounceMs;
+  const accepted = normalizedNowEpochMs >= nextAllowedEpochMs;
+  if (accepted) {
+    return {
+      accepted: true,
+      lastAcceptedEpochMs: normalizedNowEpochMs,
+      nextAllowedEpochMs: normalizedNowEpochMs + normalizedDebounceMs,
+      remainingMs: 0,
+      debounceMs: normalizedDebounceMs,
+    };
+  }
+  return {
+    accepted: false,
+    lastAcceptedEpochMs: normalizedLastAccepted,
+    nextAllowedEpochMs,
+    remainingMs: nextAllowedEpochMs - normalizedNowEpochMs,
+    debounceMs: normalizedDebounceMs,
+  };
+}
+
 function parseIsoEpochMs(value) {
   const parsed = Date.parse(typeof value === "string" ? value : "");
   if (!Number.isFinite(parsed)) {

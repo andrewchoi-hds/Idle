@@ -12,6 +12,7 @@ import {
   normalizeSlotSummaryState,
   parseSliceState,
   previewBreakthroughChance,
+  resolveDebouncedAction,
   resolveSlotSummaryQuickAction,
   resolveLoopTuningFromBattleSpeed,
   runAutoSliceSeconds,
@@ -97,6 +98,8 @@ let realtimeAutoTimer = null;
 let realtimePersistTicks = 0;
 let slotSummaryDirty = true;
 let slotSummaryLastRenderedAtMs = 0;
+let slotQuickLoadLastAcceptedAtMs = 0;
+const SLOT_QUICK_LOAD_DEBOUNCE_MS = 700;
 
 function setStatus(message, isError = false) {
   dom.appStatus.textContent = message;
@@ -342,6 +345,21 @@ function slotStateLabelKo(state) {
 
 function buildSlotActionConfirmMessage(title, lines) {
   return [`[${title}]`, ...lines].join("\n");
+}
+
+function tryConsumeSlotQuickLoadDebounce() {
+  const result = resolveDebouncedAction(
+    slotQuickLoadLastAcceptedAtMs,
+    Date.now(),
+    SLOT_QUICK_LOAD_DEBOUNCE_MS,
+  );
+  if (!result.accepted) {
+    const waitSec = Math.max(0.1, result.remainingMs / 1000);
+    setStatus(`슬롯 불러오기 연속 입력 대기 중 (${waitSec.toFixed(1)}초)`, true);
+    return false;
+  }
+  slotQuickLoadLastAcceptedAtMs = result.lastAcceptedEpochMs;
+  return true;
 }
 
 function renderSaveSlotSummary(force = false) {
@@ -886,6 +904,12 @@ function handleSlotSummaryQuickAction(event, triggerLabel) {
         render();
         return;
       }
+    }
+    if (!tryConsumeSlotQuickLoadDebounce()) {
+      render();
+      return;
+    }
+    if (action.changedSlot) {
       setActiveSaveSlot(action.nextActiveSlot, { persistPref: true });
     }
     tryLoadActiveSlot(`슬롯 요약 ${triggerLabel}`);
