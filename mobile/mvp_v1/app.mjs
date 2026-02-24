@@ -14,6 +14,7 @@ import {
   buildOfflineDetailHiddenKindsSummaryLabelKo,
   buildOfflineDetailHiddenSummaryLabelKo,
   buildOfflineDetailFilterSummaryLabelKo,
+  extractOfflineDetailCompareCode,
   getStage,
   getStageDisplayNameKo,
   isCopyTargetSlotDisabled,
@@ -129,6 +130,7 @@ const dom = {
   btnToggleOfflineDetail: document.getElementById("btnToggleOfflineDetail"),
   btnToggleOfflineCriticalOnly: document.getElementById("btnToggleOfflineCriticalOnly"),
   btnCompareOfflineCode: document.getElementById("btnCompareOfflineCode"),
+  btnPasteOfflineCompareCode: document.getElementById("btnPasteOfflineCompareCode"),
   btnCopyOfflineCompareCode: document.getElementById("btnCopyOfflineCompareCode"),
   btnExportOfflineReport: document.getElementById("btnExportOfflineReport"),
   offlineDetailList: document.getElementById("offlineDetailList"),
@@ -899,16 +901,42 @@ async function copyOfflineCompareCodeToClipboard() {
 
 function runOfflineCompareCodeCheck() {
   const currentCode = String(dom.offlineDetailCompareCode.textContent || "").trim();
-  const targetCode = String(dom.offlineCompareCodeInput.value || "").trim();
+  const targetText = String(dom.offlineCompareCodeInput.value || "").trim();
+  const targetCode = extractOfflineDetailCompareCode(targetText);
   if (!targetCode) {
     dom.offlineCompareCodeResult.textContent = "비교 코드를 입력하세요";
     setStatus("비교 코드 입력 필요", true);
     return;
   }
+  if (targetText !== targetCode) {
+    dom.offlineCompareCodeInput.value = targetCode;
+  }
   const resultLabel = buildOfflineDetailCompareResultLabelKo(currentCode, targetCode);
   dom.offlineCompareCodeResult.textContent = resultLabel;
   const isError = resultLabel.includes("오류") || resultLabel.includes("불가");
   setStatus(resultLabel, isError);
+}
+
+async function pasteOfflineCompareCodeFromClipboard() {
+  if (!(navigator.clipboard && typeof navigator.clipboard.readText === "function")) {
+    setStatus("클립보드 읽기 미지원 환경", true);
+    return;
+  }
+  let text = "";
+  try {
+    text = await navigator.clipboard.readText();
+  } catch {
+    setStatus("클립보드 읽기 실패", true);
+    return;
+  }
+  const extractedCode = extractOfflineDetailCompareCode(text);
+  if (!extractedCode) {
+    dom.offlineCompareCodeResult.textContent = "입력 비교 코드 형식 오류";
+    setStatus("클립보드에서 비교 코드 인식 실패", true);
+    return;
+  }
+  dom.offlineCompareCodeInput.value = extractedCode;
+  runOfflineCompareCodeCheck();
 }
 
 async function exportRealtimeReportToPayload() {
@@ -1519,6 +1547,9 @@ function bindEvents() {
   });
   dom.btnCompareOfflineCode.addEventListener("click", () => {
     runOfflineCompareCodeCheck();
+  });
+  dom.btnPasteOfflineCompareCode.addEventListener("click", () => {
+    pasteOfflineCompareCodeFromClipboard();
   });
   dom.offlineCompareCodeInput.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {

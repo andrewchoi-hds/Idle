@@ -1146,3 +1146,11 @@
 
 ## 251) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 대조 액션 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 252) 다음 순차 작업
+1. [완료] 비교 코드 추출 헬퍼(`extractOfflineDetailCompareCode`)를 추가해 문장/JSON 텍스트에서도 ODR1 코드를 인식.
+2. [완료] 오프라인 모달에 비교 코드 붙여넣기 버튼(`btnPasteOfflineCompareCode`)을 추가하고 클립보드 읽기 후 즉시 대조 흐름을 연동.
+3. [완료] 모바일 회귀/DOM 체크에 비교 코드 추출 헬퍼 및 신규 붙여넣기 버튼 ID 계약 시나리오를 추가.
+
+## 253) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 붙여넣기 액션 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

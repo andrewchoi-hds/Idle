@@ -16,6 +16,7 @@ import {
   buildSliceContext,
   createInitialSliceState,
   createSeededRng,
+  extractOfflineDetailCompareCode,
   filterOfflineDetailEventsByMode,
   isCopyTargetSlotDisabled,
   isOfflineDetailCompareCode,
@@ -492,6 +493,20 @@ async function main() {
       !isOfflineDetailCompareCode("ODR1-T6-C4-H2-VX-A123456-S654321") &&
       !isOfflineDetailCompareCode("ODR1-T6-C4-H2-VA-A12345-S654321") &&
       offlineDetailCompareCodeAll !== offlineDetailCompareCodeCritical,
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_extracts_from_text_or_json",
+    passed:
+      extractOfflineDetailCompareCode(offlineDetailCompareCodeAll) ===
+        offlineDetailCompareCodeAll &&
+      extractOfflineDetailCompareCode(
+        `debug payload => ${offlineDetailCompareCodeCritical} end`,
+      ) === offlineDetailCompareCodeCritical &&
+      extractOfflineDetailCompareCode(
+        `{"detailReportSnapshot":{"compareCode":"${offlineDetailCompareCodeAll}"}}`,
+      ) === offlineDetailCompareCodeAll &&
+      extractOfflineDetailCompareCode("compare code missing") === "",
   });
 
   const parsedOfflineCompareCode = parseOfflineDetailCompareCode(offlineDetailCompareCodeAll);
