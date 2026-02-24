@@ -139,6 +139,29 @@ export function filterOfflineDetailEventsByMode(eventsInput, modeInput = "all") 
   );
 }
 
+export function summarizeOfflineDetailFilterResult(eventsInput, modeInput = "all") {
+  const rows = Array.isArray(eventsInput) ? eventsInput.slice() : [];
+  const mode = modeInput === "critical" ? "critical" : "all";
+  const visibleRows = filterOfflineDetailEventsByMode(rows, mode);
+  const total = rows.length;
+  const visible = visibleRows.length;
+  return {
+    mode,
+    total,
+    visible,
+    hidden: Math.max(0, total - visible),
+    hasHidden: total > visible,
+  };
+}
+
+export function buildOfflineDetailFilterSummaryLabelKo(eventsInput, modeInput = "all") {
+  const summary = summarizeOfflineDetailFilterResult(eventsInput, modeInput);
+  if (summary.mode === "critical") {
+    return `세부 로그 ${summary.visible}/${summary.total}건 (핵심)`;
+  }
+  return `세부 로그 ${summary.visible}건 (전체)`;
+}
+
 export function summarizeOfflineDetailCriticalEvents(eventsInput) {
   const rows = Array.isArray(eventsInput) ? eventsInput : [];
   const summary = {
