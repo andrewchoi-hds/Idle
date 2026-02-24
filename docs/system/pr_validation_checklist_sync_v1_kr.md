@@ -16,6 +16,8 @@
   - `generate_pr_body_v1.py`
   - `lint_pr_body_v1.py`
   - `check_pr_body_lint_regression_v1.py`
+  - `check_pr_body_generator_regression_v1.py`
+  - `check_required_check_coverage_v1.py`
 
 ## 3) 동기화 점검 실행
 ```bash

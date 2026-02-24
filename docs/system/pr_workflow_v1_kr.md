@@ -72,12 +72,14 @@ npm run pr:ship:auto
 - PR 이벤트에서는 본문 품질 lint가 선행되며, 실패 시 나머지 검증 단계가 실행되지 않는다.
 - CI 요약 확인:
   - `PR Body Lint` 섹션(pass/fail, 에러 개수)
+  - `PR Required Check Coverage` 섹션(표준 Validation 명령과 Required Check 커버리지 결과)
   - `PR Validation Checklist Sync` 섹션(템플릿 Validation 동기화 결과)
   - `PR Body Lint Regression Summary` 섹션(케이스별 expected/result)
   - `PR Body Generator Regression Summary` 섹션(본문 생성기 회귀 케이스 결과)
   - `PR Validation Sync Regression Summary` 섹션(동기화 회귀 케이스 결과)
   - PR Checks의 Step Summary에서 저장 회귀 결과 테이블(`Auto Progress`/`Offline Catchup`) 확인
 - PR 템플릿 Validation 항목 동기화는 `PR Validation Checklist Sync` step 성공 여부로 확인한다.
+- Required Check가 표준 Validation 명령을 모두 포함하는지는 `PR Required Check Coverage` step 성공 여부로 확인한다.
 - PR 본문 lint 규칙 자체의 회귀 여부는 `PR Body Lint Regression` step 성공 여부로 확인한다.
 - PR 본문 생성기 포맷 회귀 여부는 `PR Body Generator Regression` step 성공 여부로 확인한다.
 - PR Validation 동기화 스크립트의 회귀 여부는 `PR Validation Sync Regression` step 성공 여부로 확인한다.
@@ -94,5 +96,6 @@ npm run pr:ship:auto
 - PR 자동 승인 가이드: `/Users/hirediversity/Idle/docs/system/pr_review_auto_v1_kr.md`
 - PR 자동 머지 가이드: `/Users/hirediversity/Idle/docs/system/pr_merge_auto_v1_kr.md`
 - PR Validation 체크리스트 동기화 가이드: `/Users/hirediversity/Idle/docs/system/pr_validation_checklist_sync_v1_kr.md`
+- PR Required Check 커버리지 가이드: `/Users/hirediversity/Idle/docs/system/pr_required_check_coverage_v1_kr.md`
 - PR Validation 동기화 회귀 체크 가이드: `/Users/hirediversity/Idle/docs/system/pr_validation_sync_regression_v1_kr.md`
 - PR 본문 생성기 회귀 체크 가이드: `/Users/hirediversity/Idle/docs/system/pr_body_generator_regression_v1_kr.md`
