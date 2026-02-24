@@ -14,6 +14,7 @@ import {
   normalizeSlotSummaryState,
   parseSliceState,
   previewBreakthroughChance,
+  resolveBreakthroughMitigationSummary,
   resolveBreakthroughRecommendation,
   resolveBreakthroughRecommendationToggles,
   resolveBreakthroughRiskTier,
@@ -55,6 +56,8 @@ const dom = {
   previewRetreatFailPct: document.getElementById("previewRetreatFailPct"),
   previewRiskLabel: document.getElementById("previewRiskLabel"),
   previewDeathInFailPct: document.getElementById("previewDeathInFailPct"),
+  previewMitigationLabel: document.getElementById("previewMitigationLabel"),
+  previewMitigationHint: document.getElementById("previewMitigationHint"),
   previewRecommendationLabel: document.getElementById("previewRecommendationLabel"),
   previewRecommendationHint: document.getElementById("previewRecommendationHint"),
   btnApplyRecommendation: document.getElementById("btnApplyRecommendation"),
@@ -999,6 +1002,7 @@ function render() {
     useTribulationTalisman: true,
   });
   const riskTier = resolveBreakthroughRiskTier(preview);
+  const mitigation = resolveBreakthroughMitigationSummary(preview, mitigatedPreview);
   const recommendation = resolveBreakthroughRecommendation(preview, {
     hasBreakthroughElixir: state.inventory.breakthroughElixir > 0,
     hasTribulationTalisman: state.inventory.tribulationTalisman > 0,
@@ -1031,6 +1035,11 @@ function render() {
   dom.previewRiskLabel.textContent = riskTier.labelKo;
   dom.previewRiskLabel.title = riskTier.descriptionKo;
   applyRiskTone(dom.previewRiskLabel, riskTier.tone);
+  dom.previewMitigationLabel.textContent = mitigation.labelKo;
+  dom.previewMitigationLabel.title = mitigation.messageKo;
+  dom.previewMitigationHint.textContent = mitigation.messageKo;
+  applyRiskTone(dom.previewMitigationLabel, mitigation.tone);
+  applyRiskTone(dom.previewMitigationHint, mitigation.tone);
   dom.previewRecommendationLabel.textContent = recommendation.labelKo;
   dom.previewRecommendationLabel.title = recommendation.messageKo;
   dom.previewRecommendationHint.textContent = recommendation.messageKo;

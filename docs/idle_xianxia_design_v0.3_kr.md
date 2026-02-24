@@ -906,3 +906,11 @@
 
 ## 191) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(도겁 권장 설정 적용 버튼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 192) 다음 순차 작업
+1. [완료] 엔진에 보정 효과 요약 함수(`resolveBreakthroughMitigationSummary`)를 추가해 보정 전/후 성공률·사망위험·위험도 변화를 표준화.
+2. [완료] 모바일 UI에 보정 효과 라인(`previewMitigationLabel`, `previewMitigationHint`)을 추가해 효과를 수치로 표시.
+3. [완료] 회귀 체크에 보정 효과 요약 시나리오(개선 큼/개선 없음/비도겁)를 추가.
+
+## 193) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(도겁 보정 효과 요약 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
