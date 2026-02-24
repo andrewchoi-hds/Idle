@@ -15,6 +15,7 @@ import {
   resolveAutoBreakthroughResumeConfirmPolicy,
   resolveAutoBreakthroughResumePolicy,
   resolveAutoBreakthroughResumeRecommendationPlan,
+  resolveAutoBreakthroughWarmupRemainingSec,
   previewBreakthroughChance,
   resolveBreakthroughAutoAttemptPolicy,
   resolveBreakthroughExpectedDelta,
@@ -271,6 +272,15 @@ async function main() {
       initWithResume.settings.autoBreakthroughResumeWarmupSec === 9 &&
       warmupClampHigh.settings.autoBreakthroughResumeWarmupSec === 30 &&
       warmupClampLow.settings.autoBreakthroughResumeWarmupSec === 0,
+  });
+
+  checks.push({
+    id: "auto_breakthrough_warmup_remaining_progress_clamps_to_zero",
+    passed:
+      resolveAutoBreakthroughWarmupRemainingSec(8, 3) === 5 &&
+      resolveAutoBreakthroughWarmupRemainingSec(8, 8) === 0 &&
+      resolveAutoBreakthroughWarmupRemainingSec(8, 99) === 0 &&
+      resolveAutoBreakthroughWarmupRemainingSec(-2, 2) === 0,
   });
 
   const beforeBattle = {

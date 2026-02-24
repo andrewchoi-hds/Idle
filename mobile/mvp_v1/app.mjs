@@ -14,6 +14,7 @@ import {
   normalizeSaveSlot,
   normalizeSlotSummaryState,
   parseSliceState,
+  resolveAutoBreakthroughWarmupRemainingSec,
   resolveAutoBreakthroughResumeConfirmPolicy,
   resolveAutoBreakthroughResumeRecommendationPlan,
   previewBreakthroughChance,
@@ -1775,12 +1776,27 @@ function bindEvents() {
 
   dom.btnAuto10s.addEventListener("click", () => {
     const tuning = getCurrentSpeedTuning();
+    const stats = getRealtimeStats();
+    const warmupRemainingSecBefore = getAutoBreakthroughWarmupRemainingSec(stats);
     const summary = runAutoSliceSeconds(context, state, rng, {
       seconds: 10,
       battleEverySec: tuning.battleEverySec,
       breakthroughEverySec: tuning.breakthroughEverySec,
       passiveQiRatio: tuning.passiveQiRatio,
+      autoBreakthroughWarmupUntilSec: warmupRemainingSecBefore,
     });
+    const warmupRemainingSecAfter = resolveAutoBreakthroughWarmupRemainingSec(
+      warmupRemainingSecBefore,
+      summary.seconds,
+    );
+    stats.autoBreakthroughWarmupUntilTimelineSec = Math.max(
+      0,
+      Math.floor(Number(stats.timelineSec) || 0) + warmupRemainingSecAfter,
+    );
+    const warmupSkipText =
+      summary.autoBreakthroughWarmupSkips > 0
+        ? ` · 워밍업 차단 ${summary.autoBreakthroughWarmupSkips}회`
+        : "";
     const blockedReasonText = formatPolicyBlockReasonSummary(
       summary.breakthroughPolicyBlockReasons,
     );
@@ -1793,8 +1809,19 @@ function bindEvents() {
     const pausedText = summary.autoBreakthroughPaused
       ? ` · 자동돌파 일시정지(${String(summary.autoBreakthroughPauseReasonLabelKo || "정책")})`
       : "";
+    const warmupRemainingText =
+      warmupRemainingSecAfter > 0
+        ? ` · 워밍업 잔여 ${warmupRemainingSecAfter}초`
+        : "";
+    if (
+      warmupRemainingSecBefore > 0 &&
+      warmupRemainingSecAfter === 0 &&
+      state.settings.autoBreakthrough
+    ) {
+      addClientLog("auto", "자동 10초: 돌파 워밍업 종료");
+    }
     setStatus(
-      `자동 10초(${tuning.labelKo}): 전투 ${summary.battles}회 · 돌파 ${summary.breakthroughs}회${blockedText}${pausedText} · 환생 ${summary.rebirths}회`,
+      `자동 10초(${tuning.labelKo}): 전투 ${summary.battles}회 · 돌파 ${summary.breakthroughs}회${warmupSkipText}${blockedText}${pausedText}${warmupRemainingText} · 환생 ${summary.rebirths}회`,
     );
     persistLocal();
     render();

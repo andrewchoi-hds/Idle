@@ -39,6 +39,7 @@ npm run mobile:mvp:serve
   - `권장 설정 적용` 버튼으로 영약/수호부 토글을 현재 위험도 기준으로 즉시 동기화
 - 자동 10초 진행:
   - 기 자동 축적 + 자동 전투 + 자동 돌파 루프
+  - 자동 재개 워밍업이 남아 있으면 해당 구간의 자동 돌파를 skip하고 잔여 시간을 차감
   - 도겁 자동 허용 옵션 연동
   - 자동 돌파 경로에서 고위험/고기소모 도겁은 정책으로 차단하고 수동 확인을 유도
   - 차단 발생 시 `치명/고위험/고기소모` 사유를 집계해 상태 문구/로그/오프라인 정산 결과에 표시
@@ -160,6 +161,7 @@ npm run mobile:mvp:check
   - 자동 재개 확인 정책(`resolveAutoBreakthroughResumeConfirmPolicy`)이 도겁 단계에서 확인 필요 여부를 일관되게 반환하는지 검증
   - 자동 재개 권장 적용 정책(`resolveAutoBreakthroughResumeRecommendationPlan`)이 확인 모달 경로에서만 자동 적용 플랜을 활성화하는지 검증
   - 자동 재개 워밍업 설정(`autoBreakthroughResumeWarmupSec`)이 초기 옵션 적용/저장 복원/범위 clamp(`0~30`)에서 일관되게 동작하는지 검증
+  - 워밍업 잔여시간 계산(`resolveAutoBreakthroughWarmupRemainingSec`)이 경과 시간에 따라 0 이하로 내려가지 않도록 clamp되는지 검증
   - 자동 재개 워밍업 가드(`autoBreakthroughWarmupUntilSec`)가 지정 구간에서 자동 돌파를 지연하고 타임라인 오프셋 기준 잔여 시간을 일관되게 계산하는지 검증
   - 보정 효과 요약(`resolveBreakthroughMitigationSummary`)이 위험도 변화/확률 델타를 일관되게 반환하는지 검증
   - 돌파 권장 정책(`resolveBreakthroughRecommendation`)이 보유 자원/사용 상태에 맞는 문구를 반환하는지 검증
