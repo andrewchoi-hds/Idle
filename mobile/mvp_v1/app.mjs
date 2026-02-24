@@ -670,6 +670,11 @@ function formatOfflineEventLine(event) {
         : "";
     return `${secLabel}: 자동 돌파 차단 (${reasonLabel})${actionText}`;
   }
+  if (event.kind === "auto_breakthrough_paused_by_policy") {
+    const reasonLabel = String(event.reasonLabelKo || event.reason || "policy");
+    const threshold = Math.max(1, Number(event.threshold) || 1);
+    return `${secLabel}: 자동 돌파 일시정지 (${reasonLabel}, 연속 ${threshold}회 차단)`;
+  }
   return `${secLabel}: ${String(event.kind || "unknown")}`;
 }
 
@@ -810,7 +815,10 @@ function buildOfflineStatus(prefix, summary) {
           reasonText ? `(${reasonText})` : ""
         }`
       : "";
-  return `${prefix}: ${fmtDurationSec(summary.appliedOfflineSec)} 정산 (전투 ${auto?.battles ?? 0}회 · 돌파 ${auto?.breakthroughs ?? 0}회${blockedText} · 환생 ${auto?.rebirths ?? 0}회${capText})`;
+  const pausedText = auto?.autoBreakthroughPaused
+    ? ` · 자동돌파 일시정지(${String(auto.autoBreakthroughPauseReasonLabelKo || "정책")})`
+    : "";
+  return `${prefix}: ${fmtDurationSec(summary.appliedOfflineSec)} 정산 (전투 ${auto?.battles ?? 0}회 · 돌파 ${auto?.breakthroughs ?? 0}회${blockedText}${pausedText} · 환생 ${auto?.rebirths ?? 0}회${capText})`;
 }
 
 function getCurrentSpeedTuning() {
@@ -910,6 +918,15 @@ function runRealtimeAutoTick() {
     );
     realtimePolicyBlockAccum = 0;
     realtimePolicyReasonAccum = createEmptyPolicyBlockReasonSummary();
+  }
+
+  if (summary.autoBreakthroughPaused) {
+    const reasonLabel = String(summary.autoBreakthroughPauseReasonLabelKo || "정책");
+    addClientLog(
+      "auto",
+      `실시간 자동: 자동 돌파 일시정지 (${reasonLabel})`,
+    );
+    setStatus(`실시간 자동: 자동 돌파 일시정지 (${reasonLabel})`, true);
   }
 
   if (realtimePersistTicks >= 3) {
@@ -1611,8 +1628,11 @@ function bindEvents() {
             blockedReasonText ? `(${blockedReasonText})` : ""
           }`
         : "";
+    const pausedText = summary.autoBreakthroughPaused
+      ? ` · 자동돌파 일시정지(${String(summary.autoBreakthroughPauseReasonLabelKo || "정책")})`
+      : "";
     setStatus(
-      `자동 10초(${tuning.labelKo}): 전투 ${summary.battles}회 · 돌파 ${summary.breakthroughs}회${blockedText} · 환생 ${summary.rebirths}회`,
+      `자동 10초(${tuning.labelKo}): 전투 ${summary.battles}회 · 돌파 ${summary.breakthroughs}회${blockedText}${pausedText} · 환생 ${summary.rebirths}회`,
     );
     persistLocal();
     render();

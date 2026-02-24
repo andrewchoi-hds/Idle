@@ -946,3 +946,11 @@
 
 ## 201) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(자동 도겁 차단 사유 집계/가이드 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 202) 다음 순차 작업
+1. [완료] 자동 루프에 연속 정책 차단 임계치(`autoBreakthroughPausePolicyBlockThreshold`, 기본 3회) 기반 안전 정지 래치를 추가.
+2. [완료] 임계치 도달 시 `autoBreakthrough=false`로 전환하고 요약/이벤트(`auto_breakthrough_paused_by_policy`)에 중단 사유를 기록.
+3. [완료] 모바일 회귀 체크에 연속 차단 후 자동 돌파 일시정지 발동 시나리오를 추가.
+
+## 203) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(자동 도겁 안전 정지 래치 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
