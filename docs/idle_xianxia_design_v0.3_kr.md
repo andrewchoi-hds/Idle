@@ -1114,3 +1114,11 @@
 
 ## 243) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 상세 로그 내보내기 view 스냅샷 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 244) 다음 순차 작업
+1. [완료] 오프라인 이벤트 종류 digest 헬퍼(`buildOfflineDetailKindDigest`)를 추가해 `kind:count` signature와 상위 종류 집계를 표준화.
+2. [완료] 오프라인 리포트 스냅샷(`buildOfflineDetailReportSnapshot`)에 종류 digest(`all/view`)를 포함해 내보내기 비교 가능성을 강화.
+3. [완료] 모바일 회귀 체크에 종류 digest signature 안정성 및 리포트 스냅샷 digest(view 포함) 검증 시나리오를 추가.
+
+## 245) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 상세 로그 종류 digest 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
