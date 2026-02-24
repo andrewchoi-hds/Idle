@@ -12,6 +12,7 @@ import {
   normalizeSaveSlot,
   normalizeSlotSummaryState,
   parseSliceState,
+  prioritizeOfflineDetailEvents,
   resolveAutoBreakthroughResumeConfirmPolicy,
   resolveAutoBreakthroughResumePolicy,
   resolveAutoBreakthroughResumeRecommendationPlan,
@@ -329,6 +330,22 @@ async function main() {
         appliedOfflineSec: 0,
         autoBreakthroughWarmupRemainingSecBefore: 0,
       }) === "워밍업 없음",
+  });
+
+  const prioritizedOfflineEvents = prioritizeOfflineDetailEvents([
+    { sec: 2, kind: "battle_win" },
+    { sec: 5, kind: "offline_warmup_summary" },
+    { sec: 4, kind: "breakthrough_success" },
+  ]);
+  checks.push({
+    id: "offline_detail_events_prioritize_warmup_summary_first",
+    passed:
+      Array.isArray(prioritizedOfflineEvents) &&
+      prioritizedOfflineEvents.length === 3 &&
+      prioritizedOfflineEvents[0].kind === "offline_warmup_summary" &&
+      prioritizedOfflineEvents[1].kind === "battle_win" &&
+      prioritizedOfflineEvents[2].kind === "breakthrough_success" &&
+      prioritizeOfflineDetailEvents(null).length === 0,
   });
 
   const beforeBattle = {
