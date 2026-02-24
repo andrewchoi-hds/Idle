@@ -43,6 +43,7 @@ npm run mobile:mvp:serve
   - 자동 돌파 경로에서 고위험/고기소모 도겁은 정책으로 차단하고 수동 확인을 유도
   - 차단 발생 시 `치명/고위험/고기소모` 사유를 집계해 상태 문구/로그/오프라인 정산 결과에 표시
   - 정책 차단이 연속 임계치(기본 3회)를 넘으면 자동 돌파를 일시정지해 무한 소모 루프를 차단
+  - `자동 재개` 가이드/버튼으로 현재 조건 기준 재개 가능 여부를 안내하고, 가능 시 자동 돌파(필요 시 자동 도겁 허용 포함)를 원클릭 복구
   - `전투 속도` 옵션(저속/표준/고속)에 따라 루프 cadence 변경
 - 실시간 자동 진행:
   - `실시간 자동 시작/중지` 버튼으로 1초 단위 루프 실행
@@ -149,6 +150,7 @@ npm run mobile:mvp:check
   - 자동 시도 차단 정책(`resolveBreakthroughAutoAttemptPolicy`)이 고위험 도겁 구간을 건너뛰고 차단 카운트를 누적하는지 검증
   - 자동 차단 이벤트가 사유 라벨/후속 액션 문구를 포함하고 사유별 카운트 합이 총 차단 횟수와 일치하는지 검증
   - 자동 차단 연속 발생 시 자동 돌파 일시정지(`autoBreakthroughPaused`)가 발동하고 설정이 `autoBreakthrough=false`로 전환되는지 검증
+  - 자동 재개 정책(`resolveAutoBreakthroughResumePolicy`)이 상태별(이미 진행 중/재개 가능/도겁 허용 필요/재개 보류)로 일관된 액션 가능 여부를 반환하는지 검증
   - 보정 효과 요약(`resolveBreakthroughMitigationSummary`)이 위험도 변화/확률 델타를 일관되게 반환하는지 검증
   - 돌파 권장 정책(`resolveBreakthroughRecommendation`)이 보유 자원/사용 상태에 맞는 문구를 반환하는지 검증
   - 돌파 권장 토글 정책(`resolveBreakthroughRecommendationToggles`)이 고위험/중위험/비도겁 구간에서 올바른 토글 상태를 반환하는지 검증

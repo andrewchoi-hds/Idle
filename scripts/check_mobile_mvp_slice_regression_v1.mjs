@@ -12,6 +12,7 @@ import {
   normalizeSaveSlot,
   normalizeSlotSummaryState,
   parseSliceState,
+  resolveAutoBreakthroughResumePolicy,
   previewBreakthroughChance,
   resolveBreakthroughAutoAttemptPolicy,
   resolveBreakthroughExpectedDelta,
@@ -415,6 +416,53 @@ async function main() {
       autoPolicyBlocked.nextActionKo.length > 0 &&
       autoPolicySafe.allowed === true &&
       autoPolicySafe.reason === "safe",
+  });
+
+  const resumeReadyState = createInitialSliceState(context, { playerName: "resume-ready" });
+  resumeReadyState.settings.autoBreakthrough = false;
+  const resumeReadyPolicy = resolveAutoBreakthroughResumePolicy(context, resumeReadyState);
+  const resumeOnState = createInitialSliceState(context, { playerName: "resume-on" });
+  resumeOnState.settings.autoBreakthrough = true;
+  const resumeOnPolicy = resolveAutoBreakthroughResumePolicy(context, resumeOnState);
+  const resumeBlockedState = createInitialSliceState(context, { playerName: "resume-blocked" });
+  resumeBlockedState.settings.autoBreakthrough = false;
+  resumeBlockedState.settings.autoTribulation = true;
+  resumeBlockedState.progression.difficultyIndex = 198;
+  resumeBlockedState.inventory.breakthroughElixir = 0;
+  resumeBlockedState.inventory.tribulationTalisman = 0;
+  resumeBlockedState.currencies.qi = Math.max(
+    1,
+    (context.stageByDifficulty.get(198)?.qi_required ?? 1) * 6,
+  );
+  const resumeBlockedPolicy = resolveAutoBreakthroughResumePolicy(context, resumeBlockedState);
+  const resumeNeedTribulationState = createInitialSliceState(context, {
+    playerName: "resume-tribulation-toggle",
+  });
+  resumeNeedTribulationState.settings.autoBreakthrough = false;
+  resumeNeedTribulationState.settings.autoTribulation = false;
+  resumeNeedTribulationState.progression.difficultyIndex = 13;
+  resumeNeedTribulationState.currencies.qi = Math.max(
+    1,
+    (context.stageByDifficulty.get(13)?.qi_required ?? 1) * 4,
+  );
+  const resumeNeedTribulationPolicy = resolveAutoBreakthroughResumePolicy(
+    context,
+    resumeNeedTribulationState,
+  );
+  checks.push({
+    id: "auto_breakthrough_resume_policy_matches_state_and_risk",
+    passed:
+      resumeReadyPolicy.reason === "resume_ready" &&
+      resumeReadyPolicy.actionable === true &&
+      resumeReadyPolicy.shouldEnableAutoBreakthrough === true &&
+      resumeOnPolicy.reason === "already_enabled" &&
+      resumeOnPolicy.actionable === false &&
+      resumeBlockedPolicy.actionable === false &&
+      resumeBlockedPolicy.reason !== "resume_ready" &&
+      resumeNeedTribulationPolicy.reason === "tribulation_disabled" &&
+      resumeNeedTribulationPolicy.actionable === true &&
+      resumeNeedTribulationPolicy.shouldEnableAutoBreakthrough === true &&
+      resumeNeedTribulationPolicy.shouldEnableAutoTribulation === true,
   });
 
   const autoPolicyBlockedState = createInitialSliceState(context, { playerName: "auto-blocked" });

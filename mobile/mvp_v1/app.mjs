@@ -14,6 +14,7 @@ import {
   normalizeSlotSummaryState,
   parseSliceState,
   previewBreakthroughChance,
+  resolveAutoBreakthroughResumePolicy,
   resolveBreakthroughManualAttemptPolicy,
   resolveBreakthroughExpectedDelta,
   resolveBreakthroughMitigationSummary,
@@ -67,6 +68,9 @@ const dom = {
   previewRecommendationLabel: document.getElementById("previewRecommendationLabel"),
   previewRecommendationHint: document.getElementById("previewRecommendationHint"),
   btnApplyRecommendation: document.getElementById("btnApplyRecommendation"),
+  autoBreakthroughResumeLabel: document.getElementById("autoBreakthroughResumeLabel"),
+  autoBreakthroughResumeHint: document.getElementById("autoBreakthroughResumeHint"),
+  btnResumeAutoBreakthrough: document.getElementById("btnResumeAutoBreakthrough"),
   optAutoBattle: document.getElementById("optAutoBattle"),
   optAutoBreakthrough: document.getElementById("optAutoBreakthrough"),
   optAutoTribulation: document.getElementById("optAutoTribulation"),
@@ -1117,6 +1121,7 @@ function render() {
     currentUseBreakthroughElixir: dom.useBreakthroughElixir.checked,
     currentUseTribulationTalisman: dom.useTribulationTalisman.checked,
   });
+  const autoResumePolicy = resolveAutoBreakthroughResumePolicy(context, state);
 
   dom.stageDisplay.textContent = displayName;
   dom.worldTag.textContent = worldKo(stage.world);
@@ -1159,6 +1164,14 @@ function render() {
   applyRiskTone(dom.previewRecommendationHint, recommendation.tone);
   dom.btnApplyRecommendation.disabled = !recommendationToggle.changed;
   dom.btnApplyRecommendation.title = recommendationToggle.messageKo;
+  dom.autoBreakthroughResumeLabel.textContent = autoResumePolicy.labelKo;
+  dom.autoBreakthroughResumeLabel.title = autoResumePolicy.messageKo;
+  dom.autoBreakthroughResumeHint.textContent = autoResumePolicy.messageKo;
+  applyRiskTone(dom.autoBreakthroughResumeLabel, autoResumePolicy.tone);
+  applyRiskTone(dom.autoBreakthroughResumeHint, autoResumePolicy.tone);
+  dom.btnResumeAutoBreakthrough.disabled = !autoResumePolicy.actionable;
+  dom.btnResumeAutoBreakthrough.title = autoResumePolicy.messageKo;
+  dom.btnResumeAutoBreakthrough.textContent = autoResumePolicy.actionLabelKo;
   dom.playerNameInput.value = state.playerName;
   dom.optSaveSlot.value = String(activeSaveSlot);
   dom.lastSavedAt.textContent = fmtDateTimeFromIso(state.lastSavedAtIso);
@@ -1421,6 +1434,25 @@ function bindEvents() {
     dom.useBreakthroughElixir.checked = recommendationToggle.nextUseBreakthroughElixir;
     dom.useTribulationTalisman.checked = recommendationToggle.nextUseTribulationTalisman;
     setStatus(`권장 설정 반영: ${recommendationToggle.messageKo}`);
+    render();
+  });
+
+  dom.btnResumeAutoBreakthrough.addEventListener("click", () => {
+    const resumePolicy = resolveAutoBreakthroughResumePolicy(context, state);
+    if (!resumePolicy.actionable) {
+      setStatus(
+        `자동 돌파 재개: ${resumePolicy.messageKo}`,
+        resumePolicy.tone !== "info",
+      );
+      render();
+      return;
+    }
+    state.settings.autoBreakthrough = resumePolicy.shouldEnableAutoBreakthrough;
+    if (resumePolicy.shouldEnableAutoTribulation) {
+      state.settings.autoTribulation = true;
+    }
+    persistLocal();
+    setStatus(`자동 돌파 재개: ${resumePolicy.actionLabelKo}`);
     render();
   });
 
