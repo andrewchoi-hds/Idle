@@ -56,7 +56,20 @@ jobs:
         run: npm ci
 
       - name: PR Validation Checklist Sync
-        run: npm run pr:validation:sync:check
+        run: |
+          set +e
+          npm run pr:validation:sync:check -- --summary-file /tmp/pr_validation_sync_summary_v1.md
+          status=$?
+          if [ -f /tmp/pr_validation_sync_summary_v1.md ]; then
+            cat /tmp/pr_validation_sync_summary_v1.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            {
+              echo "### PR Validation Checklist Sync"
+              echo "- Result: \`ERROR\`"
+              echo "- Detail: summary file missing"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          exit $status
 
       - name: PR Body Lint Regression
         run: npm run pr:body:lint:regression:check:report

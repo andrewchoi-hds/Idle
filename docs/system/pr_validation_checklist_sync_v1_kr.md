@@ -21,6 +21,14 @@
 cd /Users/hirediversity/Idle
 npm run pr:validation:sync:check
 ```
+- 자동 보정(템플릿 Validation 섹션 재작성):
+```bash
+npm run pr:validation:sync:apply
+```
+- 요약 파일 출력:
+```bash
+npm run pr:validation:sync:check -- --summary-file /tmp/pr_validation_sync_summary_v1.md
+```
 - 점검 내용:
   - `.github/pull_request_template.md`의 `## Validation` 섹션 체크박스 명령
   - `DEFAULT_VALIDATION_COMMANDS`와 항목/순서 완전 일치 여부
@@ -28,3 +36,4 @@ npm run pr:validation:sync:check
 ## 4) CI 연계
 - `verify-combat-diff` workflow에서 `PR Validation Checklist Sync` 단계를 실행한다.
 - 불일치가 발견되면 Required Check를 실패시켜 merge를 차단한다.
+- 동기화 점검 결과는 Step Summary의 `PR Validation Checklist Sync` 섹션에 기록된다.
