@@ -839,7 +839,18 @@ async function exportOfflineReportToPayload() {
     setStatus("내보낼 오프라인 정산 리포트가 없음", true);
     return;
   }
-  const payload = `${JSON.stringify(lastOfflineReport, null, 2)}\n`;
+  const exportMode = offlineDetailCriticalOnly ? "critical" : "all";
+  const detailViewSnapshotAtExport = buildOfflineDetailReportSnapshot(
+    lastOfflineReport.events,
+    3,
+    exportMode,
+  );
+  const payloadObj = {
+    ...lastOfflineReport,
+    exportedAtIso: new Date().toISOString(),
+    detailViewSnapshotAtExport,
+  };
+  const payload = `${JSON.stringify(payloadObj, null, 2)}\n`;
   dom.savePayload.value = payload;
   let copied = false;
   if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
