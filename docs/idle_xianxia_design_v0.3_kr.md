@@ -914,3 +914,11 @@
 
 ## 193) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(도겁 보정 효과 요약 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 194) 다음 순차 작업
+1. [완료] 엔진에 기대값 요약 함수(`resolveBreakthroughExpectedDelta`)를 추가해 1회 돌파 기준 기대 `기/환생정수/경지` 변화를 계산.
+2. [완료] 모바일 UI에 기대값 라인(`previewExpectedLabel`, `previewExpectedQiDelta`, `previewExpectedEssenceDelta`, `previewExpectedDifficultyDelta`)을 추가.
+3. [완료] 회귀 체크에 기대값 시나리오(도겁 vs 비도겁 구간 기대 재화/경지 변화) 검증을 추가.
+
+## 195) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(도겁 기대값 요약 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

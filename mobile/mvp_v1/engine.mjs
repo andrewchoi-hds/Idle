@@ -696,6 +696,84 @@ export function resolveBreakthroughMitigationSummary(currentPreview, mitigatedPr
   };
 }
 
+function calcAverageRetreatLayers(stage) {
+  const min = Math.max(0, toNonNegativeInt(stage?.fail_retreat_min, 0));
+  const max = Math.max(min, toNonNegativeInt(stage?.fail_retreat_max, min));
+  return (min + max) / 2;
+}
+
+export function resolveBreakthroughExpectedDelta(context, state, previewInput) {
+  const preview =
+    previewInput && typeof previewInput === "object"
+      ? previewInput
+      : previewBreakthroughChance(context, state, {
+          useBreakthroughElixir: false,
+          useTribulationTalisman: false,
+        });
+  const stage = preview?.stage || getStage(context, state?.progression?.difficultyIndex || 1);
+  const successProb = clamp(Number(preview.successPct) || 0, 0, 100) / 100;
+  const minorFailProb = clamp(Number(preview.minorFailPct) || 0, 0, 100) / 100;
+  const retreatFailProb = clamp(Number(preview.retreatFailPct) || 0, 0, 100) / 100;
+  const deathFailProb = clamp(Number(preview.deathFailPct) || 0, 0, 100) / 100;
+  const qiRequired = Math.max(1, Number(stage.qi_required) || 1);
+  const currentQi = Math.max(0, toNonNegativeInt(state?.currencies?.qi, qiRequired));
+  const currentDifficultyIndex = Math.max(
+    1,
+    toNonNegativeInt(state?.progression?.difficultyIndex, stage.difficulty_index || 1),
+  );
+
+  const qiLossSuccess = Math.round(qiRequired * 0.85);
+  const qiLossMinorFail = Math.max(1, Math.round(qiRequired * 0.22));
+  const qiLossRetreatFail = Math.max(1, Math.round(qiRequired * 0.28));
+  const qiLossDeathFail = currentQi;
+  const expectedQiLoss =
+    successProb * qiLossSuccess +
+    minorFailProb * qiLossMinorFail +
+    retreatFailProb * qiLossRetreatFail +
+    deathFailProb * qiLossDeathFail;
+  const expectedQiDelta = -expectedQiLoss;
+
+  const rebirthReward = calcRebirthReward(
+    stage,
+    toNonNegativeInt(state?.progression?.rebirthCount, 0),
+  );
+  const expectedRebirthEssenceDelta = deathFailProb * rebirthReward;
+  const avgRetreatLayers = calcAverageRetreatLayers(stage);
+  const deathResetDelta = -(currentDifficultyIndex - 1);
+  const expectedDifficultyDelta =
+    successProb * 1 +
+    retreatFailProb * -avgRetreatLayers +
+    deathFailProb * deathResetDelta;
+
+  const expectedQiLossRatio = expectedQiLoss / Math.max(1, currentQi);
+  let tone = "info";
+  let labelKo = "부담 낮음";
+  if (expectedQiLossRatio >= 0.6 || deathFailProb >= 0.12) {
+    tone = "error";
+    labelKo = "부담 큼";
+  } else if (expectedQiLossRatio >= 0.35 || deathFailProb >= 0.05) {
+    tone = "warn";
+    labelKo = "부담 보통";
+  }
+
+  return {
+    tone,
+    labelKo,
+    expectedQiDelta,
+    expectedQiLoss,
+    expectedQiLossRatio,
+    expectedRebirthEssenceDelta,
+    expectedDifficultyDelta,
+    rebirthReward,
+    probabilities: {
+      successProb,
+      minorFailProb,
+      retreatFailProb,
+      deathFailProb,
+    },
+  };
+}
+
 function evaluateBreakthroughOutcome(stage, successPct, deathPct, rng, debugForcedOutcome) {
   if (debugForcedOutcome) {
     return debugForcedOutcome;

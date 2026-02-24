@@ -32,6 +32,7 @@ npm run mobile:mvp:serve
   - 영약/수호부 사용 반영
   - 화면에 4분기 확률 프리뷰(`성공/경상/후퇴/사망`)를 표시
   - 도겁 위험도 배지(`비도겁/경미/주의/위험/치명`)와 실패 내 사망 비율을 표시
+  - 1회 돌파 시도 기대값(`기/환생정수/경지`)을 표시해 리스크를 수치로 확인
   - 보정 효과 요약(`previewMitigationLabel`, `previewMitigationHint`)으로 보정 전/후 성공·사망 변화와 위험도 변화 표시
   - 현재 설정/보유 자원 기준 `돌파 권장` 배지(`자원 비축/수호부 권장/영약 권장/준비 완료/재정비 권장`)를 표시
   - `권장 설정 적용` 버튼으로 영약/수호부 토글을 현재 위험도 기준으로 즉시 동기화
@@ -139,6 +140,7 @@ npm run mobile:mvp:check
   - 사망 실패 → 환생 루프 발동
   - 돌파 확률 프리뷰 4분기 분포(`성공+경상+후퇴+사망=100%`) 일관성 검증
   - 도겁 위험도 판정(`resolveBreakthroughRiskTier`) 및 보정 적용 시 위험도 하향 검증
+  - 기대값 요약(`resolveBreakthroughExpectedDelta`)이 도겁/비도겁 구간의 기대 재화·경지 변화를 일관되게 반환하는지 검증
   - 보정 효과 요약(`resolveBreakthroughMitigationSummary`)이 위험도 변화/확률 델타를 일관되게 반환하는지 검증
   - 돌파 권장 정책(`resolveBreakthroughRecommendation`)이 보유 자원/사용 상태에 맞는 문구를 반환하는지 검증
   - 돌파 권장 토글 정책(`resolveBreakthroughRecommendationToggles`)이 고위험/중위험/비도겁 구간에서 올바른 토글 상태를 반환하는지 검증

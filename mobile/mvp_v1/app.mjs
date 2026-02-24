@@ -14,6 +14,7 @@ import {
   normalizeSlotSummaryState,
   parseSliceState,
   previewBreakthroughChance,
+  resolveBreakthroughExpectedDelta,
   resolveBreakthroughMitigationSummary,
   resolveBreakthroughRecommendation,
   resolveBreakthroughRecommendationToggles,
@@ -56,6 +57,10 @@ const dom = {
   previewRetreatFailPct: document.getElementById("previewRetreatFailPct"),
   previewRiskLabel: document.getElementById("previewRiskLabel"),
   previewDeathInFailPct: document.getElementById("previewDeathInFailPct"),
+  previewExpectedLabel: document.getElementById("previewExpectedLabel"),
+  previewExpectedQiDelta: document.getElementById("previewExpectedQiDelta"),
+  previewExpectedEssenceDelta: document.getElementById("previewExpectedEssenceDelta"),
+  previewExpectedDifficultyDelta: document.getElementById("previewExpectedDifficultyDelta"),
   previewMitigationLabel: document.getElementById("previewMitigationLabel"),
   previewMitigationHint: document.getElementById("previewMitigationHint"),
   previewRecommendationLabel: document.getElementById("previewRecommendationLabel"),
@@ -195,6 +200,17 @@ function fmtSignedInteger(value) {
     return `-${fmtNumber(Math.abs(amount))}`;
   }
   return "+0";
+}
+
+function fmtSignedFixed(value, digits = 1) {
+  const amount = Number.isFinite(value) ? value : 0;
+  if (amount > 0) {
+    return `+${amount.toFixed(digits)}`;
+  }
+  if (amount < 0) {
+    return `-${Math.abs(amount).toFixed(digits)}`;
+  }
+  return `+${(0).toFixed(digits)}`;
 }
 
 function clampInteger(value, fallback, min, max) {
@@ -1001,6 +1017,7 @@ function render() {
     useBreakthroughElixir: true,
     useTribulationTalisman: true,
   });
+  const expectedDelta = resolveBreakthroughExpectedDelta(context, state, preview);
   const riskTier = resolveBreakthroughRiskTier(preview);
   const mitigation = resolveBreakthroughMitigationSummary(preview, mitigatedPreview);
   const recommendation = resolveBreakthroughRecommendation(preview, {
@@ -1032,6 +1049,17 @@ function render() {
   dom.previewMinorFailPct.textContent = preview.minorFailPct.toFixed(1);
   dom.previewRetreatFailPct.textContent = preview.retreatFailPct.toFixed(1);
   dom.previewDeathInFailPct.textContent = preview.deathInFailurePct.toFixed(1);
+  dom.previewExpectedLabel.textContent = expectedDelta.labelKo;
+  dom.previewExpectedLabel.title = "1회 돌파 시도 기준 기대값";
+  dom.previewExpectedQiDelta.textContent = fmtSignedInteger(expectedDelta.expectedQiDelta);
+  dom.previewExpectedEssenceDelta.textContent = fmtSignedFixed(
+    expectedDelta.expectedRebirthEssenceDelta,
+    1,
+  );
+  dom.previewExpectedDifficultyDelta.textContent = fmtSignedFixed(
+    expectedDelta.expectedDifficultyDelta,
+  );
+  applyRiskTone(dom.previewExpectedLabel, expectedDelta.tone);
   dom.previewRiskLabel.textContent = riskTier.labelKo;
   dom.previewRiskLabel.title = riskTier.descriptionKo;
   applyRiskTone(dom.previewRiskLabel, riskTier.tone);

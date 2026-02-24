@@ -13,6 +13,7 @@ import {
   normalizeSlotSummaryState,
   parseSliceState,
   previewBreakthroughChance,
+  resolveBreakthroughExpectedDelta,
   resolveBreakthroughMitigationSummary,
   resolveBreakthroughRecommendation,
   resolveBreakthroughRecommendationToggles,
@@ -311,6 +312,31 @@ async function main() {
       previewMortal.deathInFailurePct === 0 &&
       previewMortal.deathFailPct === 0 &&
       previewMortal.retreatFailPct === 0,
+  });
+
+  previewTribulationState.currencies.qi = Math.max(
+    previewTribulationState.currencies.qi,
+    (context.stageByDifficulty.get(198)?.qi_required ?? 1) * 3,
+  );
+  const expectedTribulation = resolveBreakthroughExpectedDelta(
+    context,
+    previewTribulationState,
+    previewTribulationBase,
+  );
+  const expectedMortal = resolveBreakthroughExpectedDelta(
+    context,
+    previewMortalState,
+    previewMortal,
+  );
+  checks.push({
+    id: "breakthrough_expected_delta_matches_stage_risk_profile",
+    passed:
+      expectedTribulation.expectedQiDelta < 0 &&
+      expectedTribulation.expectedRebirthEssenceDelta > 0 &&
+      Number.isFinite(expectedTribulation.expectedDifficultyDelta) &&
+      expectedMortal.expectedQiDelta < 0 &&
+      expectedMortal.expectedRebirthEssenceDelta === 0 &&
+      expectedMortal.expectedDifficultyDelta > 0,
   });
 
   const recommendationNeedGuard = resolveBreakthroughRecommendation(
