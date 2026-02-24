@@ -1817,6 +1817,7 @@ export function runOfflineCatchup(context, state, rng, options = {}) {
     0,
     toNonNegativeInt(options.autoBreakthroughWarmupUntilSec, 0),
   );
+  const autoBreakthroughWarmupRemainingSecBefore = autoBreakthroughWarmupUntilSec;
   const rawOfflineSec = Math.max(0, Math.floor((nowEpochMs - anchorEpochMs) / 1000));
   const maxOfflineHours = clamp(Number(options.maxOfflineHours) || 12, 0, 168);
   const maxOfflineSec = Math.floor(maxOfflineHours * 3600);
@@ -1825,6 +1826,8 @@ export function runOfflineCatchup(context, state, rng, options = {}) {
   const syncAnchorToNow = pickBoolean(options.syncAnchorToNow, true);
 
   let autoSummary = null;
+  let autoBreakthroughWarmupRemainingSecAfter =
+    autoBreakthroughWarmupRemainingSecBefore;
   let skipReason = "none";
   if (rawOfflineSec <= 0) {
     skipReason = "time_not_elapsed";
@@ -1848,6 +1851,13 @@ export function runOfflineCatchup(context, state, rng, options = {}) {
         120,
       ),
     });
+    autoBreakthroughWarmupRemainingSecAfter = Math.max(
+      0,
+      toNonNegativeInt(
+        autoSummary.autoBreakthroughWarmupRemainingSec,
+        autoBreakthroughWarmupRemainingSecBefore,
+      ),
+    );
     addLog(
       state,
       "offline",
@@ -1868,6 +1878,8 @@ export function runOfflineCatchup(context, state, rng, options = {}) {
       appliedOfflineSec,
       cappedByMaxOffline,
       skipReason,
+      autoBreakthroughWarmupRemainingSecBefore,
+      autoBreakthroughWarmupRemainingSecAfter,
       autoSummary,
     },
   };
