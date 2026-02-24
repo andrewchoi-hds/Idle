@@ -8,6 +8,7 @@ import {
   createInitialSliceState,
   createSeededRng,
   buildOfflineDetailCriticalSummaryLabelKo,
+  buildOfflineDetailFilterSummaryLabelKo,
   getStage,
   getStageDisplayNameKo,
   isCopyTargetSlotDisabled,
@@ -106,6 +107,7 @@ const dom = {
   offlineRawDuration: document.getElementById("offlineRawDuration"),
   offlineWarmupSummary: document.getElementById("offlineWarmupSummary"),
   offlineCriticalSummary: document.getElementById("offlineCriticalSummary"),
+  offlineDetailFilterSummary: document.getElementById("offlineDetailFilterSummary"),
   offlineCapState: document.getElementById("offlineCapState"),
   offlineBattleCount: document.getElementById("offlineBattleCount"),
   offlineBreakthroughCount: document.getElementById("offlineBreakthroughCount"),
@@ -706,9 +708,11 @@ function formatOfflineEventLine(event) {
 
 function renderOfflineDetailList(events) {
   const prioritizedRows = prioritizeOfflineDetailEvents(events);
-  const rows = filterOfflineDetailEventsByMode(
+  const mode = offlineDetailCriticalOnly ? "critical" : "all";
+  const rows = filterOfflineDetailEventsByMode(prioritizedRows, mode);
+  dom.offlineDetailFilterSummary.textContent = buildOfflineDetailFilterSummaryLabelKo(
     prioritizedRows,
-    offlineDetailCriticalOnly ? "critical" : "all",
+    mode,
   );
   if (rows.length === 0) {
     dom.offlineDetailList.innerHTML = offlineDetailCriticalOnly
@@ -1145,6 +1149,7 @@ function setDeltaNode(node, value) {
 function hideOfflineModal() {
   dom.offlineModal.classList.add("hidden");
   dom.offlineModal.setAttribute("aria-hidden", "true");
+  dom.offlineDetailFilterSummary.textContent = "세부 로그 0건 (전체)";
   setOfflineDetailCriticalOnly(false);
   setOfflineDetailExpanded(false);
 }

@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 
 import {
   buildOfflineDetailCriticalSummaryLabelKo,
+  buildOfflineDetailFilterSummaryLabelKo,
   buildStorageKeyForSlot,
   buildSliceContext,
   createInitialSliceState,
@@ -16,6 +17,7 @@ import {
   parseSliceState,
   prioritizeOfflineDetailEvents,
   summarizeOfflineDetailCriticalEvents,
+  summarizeOfflineDetailFilterResult,
   resolveAutoBreakthroughResumeConfirmPolicy,
   resolveAutoBreakthroughResumePolicy,
   resolveAutoBreakthroughResumeRecommendationPlan,
@@ -381,6 +383,31 @@ async function main() {
       filterOfflineDetailEventsByMode(prioritizedOfflineEvents, "unknown").length ===
         prioritizedOfflineEvents.length &&
       filterOfflineDetailEventsByMode(null, "critical").length === 0,
+  });
+
+  const allModeSummary = summarizeOfflineDetailFilterResult(prioritizedOfflineEvents, "all");
+  const criticalModeSummary = summarizeOfflineDetailFilterResult(
+    prioritizedOfflineEvents,
+    "critical",
+  );
+  checks.push({
+    id: "offline_detail_filter_summary_result_and_label",
+    passed:
+      allModeSummary.mode === "all" &&
+      allModeSummary.visible === 6 &&
+      allModeSummary.total === 6 &&
+      allModeSummary.hidden === 0 &&
+      allModeSummary.hasHidden === false &&
+      criticalModeSummary.mode === "critical" &&
+      criticalModeSummary.visible === 4 &&
+      criticalModeSummary.total === 6 &&
+      criticalModeSummary.hidden === 2 &&
+      criticalModeSummary.hasHidden === true &&
+      buildOfflineDetailFilterSummaryLabelKo(prioritizedOfflineEvents, "all") ===
+        "세부 로그 6건 (전체)" &&
+      buildOfflineDetailFilterSummaryLabelKo(prioritizedOfflineEvents, "critical") ===
+        "세부 로그 4/6건 (핵심)" &&
+      buildOfflineDetailFilterSummaryLabelKo([], "critical") === "세부 로그 0/0건 (핵심)",
   });
 
   const offlineCriticalSummary = summarizeOfflineDetailCriticalEvents([
