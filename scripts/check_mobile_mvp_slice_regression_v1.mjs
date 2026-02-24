@@ -16,6 +16,7 @@ import {
   resolveAutoBreakthroughResumePolicy,
   resolveAutoBreakthroughResumeRecommendationPlan,
   resolveAutoBreakthroughWarmupRemainingSec,
+  resolveOfflineWarmupTelemetry,
   previewBreakthroughChance,
   resolveBreakthroughAutoAttemptPolicy,
   resolveBreakthroughExpectedDelta,
@@ -281,6 +282,27 @@ async function main() {
       resolveAutoBreakthroughWarmupRemainingSec(8, 8) === 0 &&
       resolveAutoBreakthroughWarmupRemainingSec(8, 99) === 0 &&
       resolveAutoBreakthroughWarmupRemainingSec(-2, 2) === 0,
+  });
+
+  checks.push({
+    id: "offline_warmup_telemetry_normalizes_before_after_consumed",
+    passed:
+      resolveOfflineWarmupTelemetry({
+        appliedOfflineSec: 2,
+        autoBreakthroughWarmupRemainingSecBefore: 5,
+        autoBreakthroughWarmupRemainingSecAfter: 3,
+        autoSummary: {
+          autoBreakthroughWarmupSkips: 2,
+        },
+      }).consumed === 2 &&
+      resolveOfflineWarmupTelemetry({
+        appliedOfflineSec: 3,
+        autoBreakthroughWarmupRemainingSecBefore: 5,
+      }).after === 2 &&
+      resolveOfflineWarmupTelemetry({
+        appliedOfflineSec: 0,
+        autoBreakthroughWarmupRemainingSecBefore: 0,
+      }).hadWarmup === false,
   });
 
   const beforeBattle = {

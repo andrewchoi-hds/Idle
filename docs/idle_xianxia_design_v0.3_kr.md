@@ -1018,3 +1018,11 @@
 
 ## 219) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 워밍업 summary 메타 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 220) 다음 순차 작업
+1. [완료] 엔진에 오프라인 워밍업 텔레메트리 헬퍼(`resolveOfflineWarmupTelemetry`)를 추가해 before/after/consumed/skippedAttempts를 표준화.
+2. [완료] 앱 오프라인 정산 경로/상태 문구/리포트가 텔레메트리 헬퍼를 공통 사용하도록 정리.
+3. [완료] 모바일 회귀 체크에 오프라인 워밍업 텔레메트리 정규화 시나리오를 추가.
+
+## 221) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 워밍업 텔레메트리 표준화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

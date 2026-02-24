@@ -52,6 +52,40 @@ export function resolveAutoBreakthroughWarmupRemainingSec(
   return Math.max(0, currentRemainingSec - elapsedSec);
 }
 
+export function resolveOfflineWarmupTelemetry(offlineSummaryInput) {
+  const summary =
+    offlineSummaryInput && typeof offlineSummaryInput === "object"
+      ? offlineSummaryInput
+      : {};
+  const before = Math.max(
+    0,
+    toNonNegativeInt(summary.autoBreakthroughWarmupRemainingSecBefore, 0),
+  );
+  const appliedOfflineSec = Math.max(0, toNonNegativeInt(summary.appliedOfflineSec, 0));
+  const afterFallback = resolveAutoBreakthroughWarmupRemainingSec(before, appliedOfflineSec);
+  const after = Math.max(
+    0,
+    toNonNegativeInt(summary.autoBreakthroughWarmupRemainingSecAfter, afterFallback),
+  );
+  const autoSummary =
+    summary.autoSummary && typeof summary.autoSummary === "object"
+      ? summary.autoSummary
+      : {};
+  const skippedAttempts = Math.max(
+    0,
+    toNonNegativeInt(autoSummary.autoBreakthroughWarmupSkips, 0),
+  );
+  const consumed = Math.max(0, before - after);
+  return {
+    before,
+    after,
+    consumed,
+    skippedAttempts,
+    hadWarmup: before > 0,
+    exhausted: before > 0 && after === 0,
+  };
+}
+
 export function normalizeSaveSlot(slot, fallback = 1) {
   const normalizedFallback = clamp(toNonNegativeInt(fallback, 1), 1, 3);
   const parsed = Number(slot);

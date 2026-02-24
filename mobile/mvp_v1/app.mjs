@@ -17,6 +17,7 @@ import {
   resolveAutoBreakthroughWarmupRemainingSec,
   resolveAutoBreakthroughResumeConfirmPolicy,
   resolveAutoBreakthroughResumeRecommendationPlan,
+  resolveOfflineWarmupTelemetry,
   previewBreakthroughChance,
   resolveAutoBreakthroughResumePolicy,
   resolveBreakthroughManualAttemptPolicy,
@@ -858,13 +859,14 @@ function buildOfflineStatus(prefix, summary) {
     return `${prefix}: 오프라인 정산 없음`;
   }
   const auto = summary.autoSummary;
+  const warmup = resolveOfflineWarmupTelemetry(summary);
   const warmupSkipText =
-    (auto?.autoBreakthroughWarmupSkips ?? 0) > 0
-      ? ` · 워밍업 차단 ${auto.autoBreakthroughWarmupSkips}회`
+    warmup.skippedAttempts > 0
+      ? ` · 워밍업 차단 ${warmup.skippedAttempts}회`
       : "";
   const warmupRemainingText =
-    (auto?.autoBreakthroughWarmupRemainingSec ?? 0) > 0
-      ? ` · 워밍업 잔여 ${auto.autoBreakthroughWarmupRemainingSec}초`
+    warmup.after > 0
+      ? ` · 워밍업 잔여 ${warmup.after}초`
       : "";
   const maxOfflineHours = Math.floor((summary.maxOfflineSec || 0) / 3600);
   const capText = summary.cappedByMaxOffline ? ` · ${maxOfflineHours}시간 cap 적용` : "";
@@ -1067,12 +1069,8 @@ function applyOfflineCatchupNow() {
     autoBreakthroughWarmupUntilSec: warmupRemainingSecBefore,
     syncAnchorToNow: true,
   });
-  const warmupRemainingSecAfter = Math.max(
-    0,
-    Math.floor(
-      Number(result.summary.autoBreakthroughWarmupRemainingSecAfter) || 0,
-    ),
-  );
+  const warmupTelemetry = resolveOfflineWarmupTelemetry(result.summary);
+  const warmupRemainingSecAfter = warmupTelemetry.after;
   stats.autoBreakthroughWarmupUntilTimelineSec = Math.max(
     0,
     Math.floor(Number(stats.timelineSec) || 0) + warmupRemainingSecAfter,
@@ -1136,6 +1134,7 @@ function showOfflineModal(offline) {
   }
   const { summary, delta, events } = offline;
   const auto = summary.autoSummary;
+  const warmup = resolveOfflineWarmupTelemetry(summary);
   dom.offlineAppliedDuration.textContent = fmtDurationSec(summary.appliedOfflineSec);
   dom.offlineRawDuration.textContent = fmtDurationSec(summary.rawOfflineSec);
   dom.offlineCapState.textContent = summary.cappedByMaxOffline
@@ -1151,6 +1150,7 @@ function showOfflineModal(offline) {
     generatedAtIso: new Date().toISOString(),
     playerName: state.playerName,
     stageDifficultyIndex: state.progression.difficultyIndex,
+    warmup,
     summary,
     delta,
     events,
