@@ -986,3 +986,11 @@
 
 ## 211) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(자동 도겁 재개 워밍업 가드 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 212) 다음 순차 작업
+1. [완료] 자동 재개 워밍업 시간을 설정값(`autoBreakthroughResumeWarmupSec`, 0~30, 기본 6)으로 승격하고 초기 상태/파싱 경로에 공통 반영.
+2. [완료] 모바일 UI 자동 옵션 패널에 워밍업 시간 입력(`optAutoBreakthroughResumeWarmupSec`)을 추가하고 변경 시 즉시 저장/렌더 연동.
+3. [완료] 모바일 회귀/DOM 체크에 워밍업 옵션 초기 적용·범위 clamp·저장 roundtrip 시나리오를 추가.
+
+## 213) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(자동 재개 워밍업 옵션화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

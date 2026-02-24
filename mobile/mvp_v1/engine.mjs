@@ -3,6 +3,9 @@ export const MOBILE_MVP_STORAGE_KEY = "idle_xianxia_mobile_mvp_v1_save";
 export const MOBILE_MVP_STORAGE_KEY_PREFIX = "idle_xianxia_mobile_mvp_v1_save_slot_";
 export const MOBILE_MVP_SLOT_PREFS_KEY = "idle_xianxia_mobile_mvp_v1_slot_pref";
 export const MOBILE_MVP_SLOT_LOCKS_KEY = "idle_xianxia_mobile_mvp_v1_slot_locks";
+const DEFAULT_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC = 6;
+const MIN_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC = 0;
+const MAX_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC = 30;
 const SLOT_SUMMARY_STATES = new Set(["ok", "empty", "corrupt"]);
 
 function clamp(value, min, max) {
@@ -19,6 +22,22 @@ function toNonNegativeInt(value, fallback = 0) {
 
 function pickBoolean(value, fallback) {
   return typeof value === "boolean" ? value : fallback;
+}
+
+export function normalizeAutoBreakthroughResumeWarmupSec(value, fallback) {
+  const normalizedFallback = clamp(
+    toNonNegativeInt(
+      fallback,
+      DEFAULT_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC,
+    ),
+    MIN_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC,
+    MAX_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC,
+  );
+  return clamp(
+    toNonNegativeInt(value, normalizedFallback),
+    MIN_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC,
+    MAX_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC,
+  );
 }
 
 export function normalizeSaveSlot(slot, fallback = 1) {
@@ -1250,6 +1269,10 @@ export function createInitialSliceState(context, options = {}) {
       autoBreakthrough: false,
       autoTribulation: false,
       autoResumeRealtime: pickBoolean(options.autoResumeRealtime, false),
+      autoBreakthroughResumeWarmupSec: normalizeAutoBreakthroughResumeWarmupSec(
+        options.autoBreakthroughResumeWarmupSec,
+        DEFAULT_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC,
+      ),
       battleSpeed: speedTuning.battleSpeed,
       offlineCapHours: clamp(toNonNegativeInt(options.offlineCapHours, 12), 1, 168),
       offlineEventLimit: clamp(toNonNegativeInt(options.offlineEventLimit, 24), 5, 120),
@@ -1885,6 +1908,10 @@ export function parseSliceState(raw, context) {
       autoBreakthrough: pickBoolean(parsed.settings?.autoBreakthrough, false),
       autoTribulation: pickBoolean(parsed.settings?.autoTribulation, false),
       autoResumeRealtime: pickBoolean(parsed.settings?.autoResumeRealtime, false),
+      autoBreakthroughResumeWarmupSec: normalizeAutoBreakthroughResumeWarmupSec(
+        parsed.settings?.autoBreakthroughResumeWarmupSec,
+        DEFAULT_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC,
+      ),
       battleSpeed: clamp(toNonNegativeInt(parsed.settings?.battleSpeed, 2), 1, 3),
       offlineCapHours: clamp(
         toNonNegativeInt(parsed.settings?.offlineCapHours, 12),

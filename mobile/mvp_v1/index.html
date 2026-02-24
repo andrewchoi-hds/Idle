@@ -58,6 +58,16 @@
         <label><input id="optAutoResumeRealtime" type="checkbox" /> 앱 복귀 시 실시간 자동 재개</label>
         <div class="settings-grid">
           <label>
+            자동 재개 돌파 워밍업(초)
+            <input
+              id="optAutoBreakthroughResumeWarmupSec"
+              type="number"
+              min="0"
+              max="30"
+              step="1"
+            />
+          </label>
+          <label>
             전투 속도
             <select id="optBattleSpeed">
               <option value="1">저속</option>
