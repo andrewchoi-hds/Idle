@@ -962,3 +962,11 @@
 
 ## 205) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(자동 도겁 재개 UX 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 206) 다음 순차 작업
+1. [완료] 자동 재개 정책 결과 기반 확인 정책 함수(`resolveAutoBreakthroughResumeConfirmPolicy`)를 추가해 도겁 단계 재개 전 확인 필요 여부를 표준화.
+2. [완료] 모바일 UI `자동 돌파 재개` 버튼 경로에 확인 모달(위험도/사망률/기대값/도겁 허용 전환 안내)을 연동.
+3. [완료] 모바일 회귀 체크에 자동 재개 확인 정책 시나리오(비도겁/도겁 재개/도겁 허용 동반/비액션) 검증을 추가.
+
+## 207) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(자동 도겁 재개 확인 모달 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

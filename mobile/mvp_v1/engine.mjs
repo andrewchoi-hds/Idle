@@ -903,6 +903,11 @@ export function resolveAutoBreakthroughResumePolicy(context, state) {
       actionable: false,
       shouldEnableAutoBreakthrough: true,
       shouldEnableAutoTribulation: false,
+      stage,
+      isTribulationStage,
+      preview,
+      expectedDelta,
+      riskTier: resolveBreakthroughRiskTier(preview),
       autoPolicy,
     };
   }
@@ -917,6 +922,11 @@ export function resolveAutoBreakthroughResumePolicy(context, state) {
       actionable: false,
       shouldEnableAutoBreakthrough: false,
       shouldEnableAutoTribulation: false,
+      stage,
+      isTribulationStage,
+      preview,
+      expectedDelta,
+      riskTier: resolveBreakthroughRiskTier(preview),
       autoPolicy,
     };
   }
@@ -931,6 +941,11 @@ export function resolveAutoBreakthroughResumePolicy(context, state) {
       actionable: true,
       shouldEnableAutoBreakthrough: true,
       shouldEnableAutoTribulation: true,
+      stage,
+      isTribulationStage,
+      preview,
+      expectedDelta,
+      riskTier: resolveBreakthroughRiskTier(preview),
       autoPolicy,
     };
   }
@@ -944,7 +959,77 @@ export function resolveAutoBreakthroughResumePolicy(context, state) {
     actionable: true,
     shouldEnableAutoBreakthrough: true,
     shouldEnableAutoTribulation: false,
+    stage,
+    isTribulationStage,
+    preview,
+    expectedDelta,
+    riskTier: resolveBreakthroughRiskTier(preview),
     autoPolicy,
+  };
+}
+
+export function resolveAutoBreakthroughResumeConfirmPolicy(resumePolicyInput) {
+  const resumePolicy =
+    resumePolicyInput && typeof resumePolicyInput === "object"
+      ? resumePolicyInput
+      : {};
+  const actionable = resumePolicy.actionable === true;
+  const shouldEnableAutoBreakthrough =
+    resumePolicy.shouldEnableAutoBreakthrough === true;
+  const isTribulationStage = resumePolicy.isTribulationStage === true;
+  const riskTier =
+    resumePolicy.riskTier && typeof resumePolicy.riskTier === "object"
+      ? resumePolicy.riskTier
+      : { labelKo: "비도겁 구간", tone: "info" };
+  const preview =
+    resumePolicy.preview && typeof resumePolicy.preview === "object"
+      ? resumePolicy.preview
+      : {};
+  const expectedDelta =
+    resumePolicy.expectedDelta && typeof resumePolicy.expectedDelta === "object"
+      ? resumePolicy.expectedDelta
+      : {};
+
+  if (!actionable || !shouldEnableAutoBreakthrough) {
+    return {
+      requiresConfirm: false,
+      reason: "not_actionable",
+      tone: "info",
+      messageKo: "자동 돌파 재개 확인이 필요하지 않습니다.",
+      riskTier,
+      preview,
+      expectedDelta,
+      enableTribulation: false,
+    };
+  }
+
+  if (!isTribulationStage) {
+    return {
+      requiresConfirm: false,
+      reason: "non_tribulation",
+      tone: "info",
+      messageKo: "비도겁 구간은 즉시 재개할 수 있습니다.",
+      riskTier,
+      preview,
+      expectedDelta,
+      enableTribulation: false,
+    };
+  }
+
+  const enableTribulation = resumePolicy.shouldEnableAutoTribulation === true;
+  return {
+    requiresConfirm: true,
+    reason: enableTribulation
+      ? "enable_tribulation_auto_resume"
+      : "tribulation_auto_resume",
+    tone: "warn",
+    messageKo: enableTribulation
+      ? "도겁 자동 허용과 자동 돌파가 함께 재개됩니다. 확인 후 진행하세요."
+      : "도겁 단계 자동 돌파를 재개합니다. 확인 후 진행하세요.",
+    riskTier,
+    preview,
+    expectedDelta,
+    enableTribulation,
   };
 }
 
