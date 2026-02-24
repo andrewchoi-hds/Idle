@@ -7,6 +7,7 @@ import {
   cloneSliceState,
   createInitialSliceState,
   createSeededRng,
+  buildOfflineDetailCompareCode,
   buildOfflineDetailCriticalSummaryLabelKo,
   buildOfflineDetailReportSnapshot,
   buildOfflineDetailHiddenKindsSummaryLabelKo,
@@ -110,6 +111,7 @@ const dom = {
   offlineRawDuration: document.getElementById("offlineRawDuration"),
   offlineWarmupSummary: document.getElementById("offlineWarmupSummary"),
   offlineCriticalSummary: document.getElementById("offlineCriticalSummary"),
+  offlineDetailCompareCode: document.getElementById("offlineDetailCompareCode"),
   offlineDetailFilterSummary: document.getElementById("offlineDetailFilterSummary"),
   offlineDetailHiddenSummary: document.getElementById("offlineDetailHiddenSummary"),
   offlineDetailHiddenKindsSummary: document.getElementById("offlineDetailHiddenKindsSummary"),
@@ -715,6 +717,10 @@ function renderOfflineDetailList(events) {
   const prioritizedRows = prioritizeOfflineDetailEvents(events);
   const mode = offlineDetailCriticalOnly ? "critical" : "all";
   const rows = filterOfflineDetailEventsByMode(prioritizedRows, mode);
+  dom.offlineDetailCompareCode.textContent = buildOfflineDetailCompareCode(
+    prioritizedRows,
+    mode,
+  );
   dom.offlineDetailFilterSummary.textContent = buildOfflineDetailFilterSummaryLabelKo(
     prioritizedRows,
     mode,
@@ -1173,6 +1179,7 @@ function setDeltaNode(node, value) {
 function hideOfflineModal() {
   dom.offlineModal.classList.add("hidden");
   dom.offlineModal.setAttribute("aria-hidden", "true");
+  dom.offlineDetailCompareCode.textContent = "비교 코드 없음";
   dom.offlineDetailFilterSummary.textContent = "세부 로그 0건 (전체)";
   dom.offlineDetailHiddenSummary.textContent = "숨김 이벤트 없음";
   dom.offlineDetailHiddenKindsSummary.textContent = "숨김 상세 없음";

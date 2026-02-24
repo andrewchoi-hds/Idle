@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
+  buildOfflineDetailCompareCode,
   buildOfflineDetailCriticalSummaryLabelKo,
   buildOfflineDetailKindDigest,
   buildOfflineDetailHiddenKindsSummaryLabelKo,
@@ -452,6 +453,8 @@ async function main() {
     passed:
       detailKindDigest.totalEvents === 6 &&
       detailKindDigest.uniqueKinds === 5 &&
+      typeof detailKindDigest.checksum === "string" &&
+      /^\d{6}$/.test(detailKindDigest.checksum) &&
       detailKindDigest.signature ===
         "auto_breakthrough_paused_by_policy:2|offline_warmup_summary:1|breakthrough_death_fail:1|battle_win:1|battle_loss:1" &&
       Array.isArray(detailKindDigest.topKinds) &&
@@ -462,6 +465,24 @@ async function main() {
       detailKindDigest.topKinds[1].count === 1 &&
       detailKindDigest.topKinds[2].kind === "breakthrough_death_fail" &&
       detailKindDigest.topKinds[2].count === 1,
+  });
+
+  const offlineDetailCompareCodeAll = buildOfflineDetailCompareCode(
+    prioritizedOfflineEvents,
+    "all",
+  );
+  const offlineDetailCompareCodeCritical = buildOfflineDetailCompareCode(
+    prioritizedOfflineEvents,
+    "critical",
+  );
+  checks.push({
+    id: "offline_detail_compare_code_has_mode_and_checksum",
+    passed:
+      typeof offlineDetailCompareCodeAll === "string" &&
+      typeof offlineDetailCompareCodeCritical === "string" &&
+      offlineDetailCompareCodeAll.startsWith("ODR1-T6-C4-H2-VA-") &&
+      offlineDetailCompareCodeCritical.startsWith("ODR1-T6-C4-H2-VC-") &&
+      offlineDetailCompareCodeAll !== offlineDetailCompareCodeCritical,
   });
 
   const detailReportSnapshot = buildOfflineDetailReportSnapshot(prioritizedOfflineEvents, 1);
@@ -491,6 +512,11 @@ async function main() {
       detailReportSnapshot.hiddenKindsTop.length === 1 &&
       detailReportSnapshot.hiddenKindsTop[0].kind === "battle_win" &&
       detailReportSnapshot.hiddenKindsTop[0].count === 1 &&
+      detailReportSnapshot.compareCode === offlineDetailCompareCodeAll &&
+      typeof detailReportSnapshot.kindDigest.all.checksum === "string" &&
+      /^\d{6}$/.test(detailReportSnapshot.kindDigest.all.checksum) &&
+      typeof detailReportSnapshot.kindDigest.view.checksum === "string" &&
+      /^\d{6}$/.test(detailReportSnapshot.kindDigest.view.checksum) &&
       detailReportSnapshot.kindDigest.all.signature ===
         "auto_breakthrough_paused_by_policy:2|offline_warmup_summary:1|breakthrough_death_fail:1|battle_win:1|battle_loss:1" &&
       detailReportSnapshot.kindDigest.view.signature ===
@@ -502,6 +528,7 @@ async function main() {
       detailReportSnapshotCriticalView.labelsKo.viewHidden === "비핵심 2건 숨김" &&
       detailReportSnapshotCriticalView.labelsKo.viewHiddenKinds ===
         "숨김 상세 전투 승리 1건 · 외 1건" &&
+      detailReportSnapshotCriticalView.compareCode === offlineDetailCompareCodeCritical &&
       detailReportSnapshotCriticalView.kindDigest.view.signature ===
         "auto_breakthrough_paused_by_policy:2|offline_warmup_summary:1|breakthrough_death_fail:1",
   });
