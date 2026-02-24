@@ -34,12 +34,49 @@ export function buildStorageKeyForSlot(slot) {
   return `${MOBILE_MVP_STORAGE_KEY_PREFIX}${normalized}`;
 }
 
+export function isCopyTargetSlotDisabled(activeSlot, optionSlot) {
+  return normalizeSaveSlot(activeSlot, 1) === normalizeSaveSlot(optionSlot, 1);
+}
+
 export function normalizeSlotSummaryState(state, fallback = "empty") {
   const normalizedFallback = SLOT_SUMMARY_STATES.has(fallback) ? fallback : "empty";
   if (typeof state !== "string") {
     return normalizedFallback;
   }
   return SLOT_SUMMARY_STATES.has(state) ? state : normalizedFallback;
+}
+
+export function resolveSlotSummaryStateLabelKo(state) {
+  const normalizedState = normalizeSlotSummaryState(state, "empty");
+  if (normalizedState === "ok") {
+    return "저장 데이터 있음";
+  }
+  if (normalizedState === "corrupt") {
+    return "손상된 저장 데이터";
+  }
+  return "비어 있음";
+}
+
+export function resolveSlotSummaryStateShortKo(state) {
+  const normalizedState = normalizeSlotSummaryState(state, "empty");
+  if (normalizedState === "ok") {
+    return "저장됨";
+  }
+  if (normalizedState === "corrupt") {
+    return "손상";
+  }
+  return "비어있음";
+}
+
+export function resolveSlotSummaryStateTone(state) {
+  const normalizedState = normalizeSlotSummaryState(state, "empty");
+  if (normalizedState === "corrupt") {
+    return "error";
+  }
+  if (normalizedState === "ok") {
+    return "warn";
+  }
+  return "info";
 }
 
 export function resolveSlotSummaryQuickAction(activeSlot, selectedSlot, selectedState) {
@@ -98,38 +135,14 @@ export function resolveDebouncedAction(lastAcceptedEpochMs, nowEpochMs, debounce
   };
 }
 
-export function resolveSlotCopyPolicy(sourceSlot, targetSlot, targetState, sourceState = "ok") {
+export function resolveSlotCopyPolicy(sourceSlot, targetSlot, targetState) {
   const normalizedSourceSlot = normalizeSaveSlot(sourceSlot, 1);
   const normalizedTargetSlot = normalizeSaveSlot(targetSlot, normalizedSourceSlot);
-  const normalizedSourceState = normalizeSlotSummaryState(sourceState, "empty");
   const normalizedTargetState = normalizeSlotSummaryState(targetState, "empty");
-  if (normalizedSourceState === "empty") {
-    return {
-      sourceSlot: normalizedSourceSlot,
-      sourceState: normalizedSourceState,
-      targetSlot: normalizedTargetSlot,
-      targetState: normalizedTargetState,
-      allowed: false,
-      requiresConfirm: false,
-      reason: "source_empty",
-    };
-  }
-  if (normalizedSourceState === "corrupt") {
-    return {
-      sourceSlot: normalizedSourceSlot,
-      sourceState: normalizedSourceState,
-      targetSlot: normalizedTargetSlot,
-      targetState: normalizedTargetState,
-      allowed: false,
-      requiresConfirm: false,
-      reason: "source_corrupt",
-    };
-  }
   const sameSlot = normalizedSourceSlot === normalizedTargetSlot;
   if (sameSlot) {
     return {
       sourceSlot: normalizedSourceSlot,
-      sourceState: normalizedSourceState,
       targetSlot: normalizedTargetSlot,
       targetState: normalizedTargetState,
       allowed: false,
@@ -140,7 +153,6 @@ export function resolveSlotCopyPolicy(sourceSlot, targetSlot, targetState, sourc
   if (normalizedTargetState === "empty") {
     return {
       sourceSlot: normalizedSourceSlot,
-      sourceState: normalizedSourceState,
       targetSlot: normalizedTargetSlot,
       targetState: normalizedTargetState,
       allowed: true,
@@ -150,7 +162,6 @@ export function resolveSlotCopyPolicy(sourceSlot, targetSlot, targetState, sourc
   }
   return {
     sourceSlot: normalizedSourceSlot,
-    sourceState: normalizedSourceState,
     targetSlot: normalizedTargetSlot,
     targetState: normalizedTargetState,
     allowed: true,
@@ -178,6 +189,55 @@ export function resolveSlotDeletePolicy(slot, slotState) {
     requiresConfirm: true,
     reason: normalizedState === "corrupt" ? "corrupt_slot" : "has_data",
   };
+}
+
+export function resolveSlotCopyHint(copyPolicy) {
+  const policy = copyPolicy && typeof copyPolicy === "object" ? copyPolicy : {};
+  if (policy.allowed) {
+    return policy.requiresConfirm
+      ? "복제 시 대상 슬롯 저장 데이터가 덮어써집니다."
+      : "복제 가능: 현재 슬롯 데이터를 대상 슬롯으로 복제합니다.";
+  }
+  if (policy.reason === "same_slot") {
+    return "복제 대상은 활성 슬롯과 달라야 합니다.";
+  }
+  return "복제 조건을 확인하세요.";
+}
+
+export function resolveSlotDeleteHint(deletePolicy) {
+  const policy = deletePolicy && typeof deletePolicy === "object" ? deletePolicy : {};
+  if (policy.allowed) {
+    if (policy.reason === "corrupt_slot") {
+      return "손상된 저장 데이터도 삭제 가능합니다.";
+    }
+    return "삭제 시 슬롯 저장 데이터만 제거되고 현재 메모리 상태는 유지됩니다.";
+  }
+  if (policy.reason === "empty_slot") {
+    return "활성 슬롯이 비어 있어 삭제할 데이터가 없습니다.";
+  }
+  return "삭제 조건을 확인하세요.";
+}
+
+export function resolveSlotCopyHintTone(copyPolicy) {
+  const policy = copyPolicy && typeof copyPolicy === "object" ? copyPolicy : {};
+  if (policy.allowed) {
+    return policy.requiresConfirm ? "warn" : "info";
+  }
+  if (policy.reason === "same_slot") {
+    return "warn";
+  }
+  return "warn";
+}
+
+export function resolveSlotDeleteHintTone(deletePolicy) {
+  const policy = deletePolicy && typeof deletePolicy === "object" ? deletePolicy : {};
+  if (policy.allowed) {
+    return policy.reason === "corrupt_slot" ? "warn" : "info";
+  }
+  if (policy.reason === "empty_slot") {
+    return "warn";
+  }
+  return "warn";
 }
 
 function parseIsoEpochMs(value) {

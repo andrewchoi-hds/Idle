@@ -47,12 +47,18 @@ npm run mobile:mvp:serve
   - 로컬 저장(localStorage, 슬롯 1~3)
   - JSON 내보내기/가져오기
   - 활성 슬롯 -> 대상 슬롯 복제(`optCopySlotTarget`, `btnCopySlot`)
+    - 복제 대상 선택에서 활성 슬롯 옵션은 비활성화
+    - 복제 대상 옵션 라벨에 슬롯 상태(`저장됨/비어있음/손상`)를 함께 표시
+    - 복제는 localStorage 원본이 아니라 현재 메모리 상태 스냅샷을 기준으로 수행
     - 대상 슬롯에 데이터가 있으면 overwrite 확인 모달 후 진행
-    - 활성 슬롯이 비어있거나 손상 상태면 복제 버튼 비활성화
+    - 복제 버튼은 대상 슬롯이 활성 슬롯과 동일할 때만 비활성화
   - 활성 슬롯 삭제(메모리 상태 유지)
     - 활성 슬롯이 비어 있으면 삭제를 skip하고 상태 메시지만 표시
     - 활성 슬롯이 비어 있으면 삭제 버튼 비활성화
   - 슬롯 복제/삭제 확인 규칙은 엔진 정책 함수로 공통 관리
+  - 슬롯 액션 힌트(`slotCopyHint`, `slotDeleteHint`)에 현재 정책 기반 안내 문구를 분리 표시
+  - 슬롯 액션 힌트 톤(`info/warn/error`)을 정책 결과에 맞춰 색상으로 표시
+  - 복제 대상 슬롯 상태 프리뷰(`slotTargetHint`)를 표시해 비어있음/데이터 있음/손상 상태를 즉시 확인
   - 슬롯 요약 목록(슬롯별 플레이어/경지/저장시각/상태) 표시
   - 슬롯 요약 항목 탭/Enter로 해당 슬롯 즉시 활성화 + 저장 데이터가 있으면 즉시 불러오기
     - 다른 슬롯에서 퀵 로드 시 확인 모달 후 진행
@@ -122,7 +128,10 @@ npm run mobile:mvp:check
   - 사망 실패 → 환생 루프 발동
   - 슬롯 요약 퀵 액션 분기(`ok/empty/corrupt`) 결정 로직 검증
   - 슬롯 요약 퀵 로드 디바운스(0.7초) 중복 입력 차단 검증
-  - 슬롯 복제/삭제 정책(`source_empty/source_corrupt/same_slot/target_empty/target_has_data/corrupt_slot`) 검증
+  - 슬롯 복제/삭제 정책(`same_slot/target_empty/target_has_data/corrupt_slot`) 검증
+  - 슬롯 액션 힌트 문구가 정책 결과와 일치하는지 검증
+  - 슬롯 액션 힌트 톤(`info/warn/error`)이 정책 결과와 일치하는지 검증
+  - 복제 대상 슬롯 상태 라벨/톤(`resolveSlotSummaryStateLabelKo`, `resolveSlotSummaryStateTone`) 검증
   - 전투 속도 설정에 따른 자동 루프 cadence 차이 검증
   - 타임라인 오프셋 기반 1초 chunk 연속 실행 시 cadence 유지 검증(실시간 루프 기반)
   - 자동 10초 루프 실행

@@ -818,3 +818,51 @@
 
 ## 169) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(슬롯 액션 버튼 비활성화 규칙 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 170) 다음 순차 작업
+1. [완료] 슬롯 정책 결과를 사용자에게 노출하는 액션 힌트 영역(`slotActionHint`) 추가.
+2. [완료] 엔진에 정책 기반 힌트 함수(`resolveSlotCopyHint`, `resolveSlotDeleteHint`)를 추가해 앱/UI 공용화.
+3. [완료] 모바일 회귀 체크에 슬롯 액션 힌트-정책 매핑 검증 시나리오 추가.
+
+## 171) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(슬롯 액션 힌트 정책 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 172) 다음 순차 작업
+1. [완료] 슬롯 액션 힌트를 복제/삭제 2개 라인(`slotCopyHint`, `slotDeleteHint`)으로 분리.
+2. [완료] 엔진에 힌트 톤 함수(`resolveSlotCopyHintTone`, `resolveSlotDeleteHintTone`)를 추가해 정책 기반 색상 분기 공용화.
+3. [완료] 모바일 회귀 체크에 힌트 톤-정책 매핑 검증 시나리오 추가.
+
+## 173) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(슬롯 액션 힌트 톤 분기 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 174) 다음 순차 작업
+1. [완료] 복제 대상 슬롯 선택에서 활성 슬롯 옵션을 비활성화하는 동기화 로직 추가.
+2. [완료] 옵션 비활성 판정을 엔진 순수 함수(`isCopyTargetSlotDisabled`)로 분리해 앱/회귀 공용화.
+3. [완료] 모바일 회귀 체크에 복제 대상 옵션 비활성 판정 시나리오 추가.
+
+## 175) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(복제 대상 활성 슬롯 옵션 비활성화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 176) 다음 순차 작업
+1. [완료] 저장 패널에 복제 대상 슬롯 상태 프리뷰(`slotTargetHint`) 라인 추가.
+2. [완료] 슬롯 상태 라벨/톤 함수를 엔진 순수 함수(`resolveSlotSummaryStateLabelKo`, `resolveSlotSummaryStateTone`)로 분리해 UI/회귀 공용화.
+3. [완료] 모바일 회귀 체크에 복제 대상 상태 라벨/톤 매핑 시나리오 추가.
+
+## 177) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(복제 대상 슬롯 상태 프리뷰 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 178) 다음 순차 작업
+1. [완료] 복제 대상 셀렉트 옵션 라벨에 슬롯 상태(`저장됨/비어있음/손상`) 표시를 추가.
+2. [완료] 슬롯 상태 short 라벨 함수를 엔진 순수 함수(`resolveSlotSummaryStateShortKo`)로 분리해 UI/회귀 공용화.
+3. [완료] 모바일 회귀 체크에 슬롯 상태 short 라벨 매핑 검증 시나리오 추가.
+
+## 179) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(복제 대상 옵션 상태 라벨 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 180) 다음 순차 작업
+1. [완료] 슬롯 복제 소스를 localStorage payload에서 현재 메모리 상태 스냅샷으로 전환.
+2. [완료] 슬롯 복제 정책에서 소스 슬롯 저장상태 의존(`source_empty/source_corrupt`)을 제거.
+3. [완료] 모바일 회귀 체크/힌트 규칙을 새로운 복제 정책(`same_slot` 중심) 기준으로 갱신.
+
+## 181) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(메모리 스냅샷 기반 슬롯 복제 정책 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

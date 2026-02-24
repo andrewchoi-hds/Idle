@@ -8,13 +8,21 @@ import {
   buildSliceContext,
   createInitialSliceState,
   createSeededRng,
+  isCopyTargetSlotDisabled,
   normalizeSaveSlot,
   normalizeSlotSummaryState,
   parseSliceState,
   resolveDebouncedAction,
+  resolveSlotCopyHint,
+  resolveSlotCopyHintTone,
   resolveLoopTuningFromBattleSpeed,
   resolveSlotCopyPolicy,
+  resolveSlotDeleteHint,
+  resolveSlotDeleteHintTone,
   resolveSlotDeletePolicy,
+  resolveSlotSummaryStateLabelKo,
+  resolveSlotSummaryStateShortKo,
+  resolveSlotSummaryStateTone,
   resolveSlotSummaryQuickAction,
   runAutoSliceSeconds,
   runBattleOnce,
@@ -60,6 +68,9 @@ async function main() {
       normalizeSaveSlot("2", 1) === 2 &&
       normalizeSaveSlot("9", 1) === 3 &&
       normalizeSaveSlot("0", 1) === 1 &&
+      isCopyTargetSlotDisabled(1, 1) === true &&
+      isCopyTargetSlotDisabled(1, 2) === false &&
+      isCopyTargetSlotDisabled(3, 3) === true &&
       buildStorageKeyForSlot(3) === "idle_xianxia_mobile_mvp_v1_save_slot_3",
   });
 
@@ -125,17 +136,11 @@ async function main() {
   const copyToEmpty = resolveSlotCopyPolicy(2, 3, "empty");
   const copyToData = resolveSlotCopyPolicy(2, 1, "ok");
   const copyToCorrupt = resolveSlotCopyPolicy(2, 1, "corrupt");
-  const copyFromEmpty = resolveSlotCopyPolicy(2, 3, "empty", "empty");
-  const copyFromCorrupt = resolveSlotCopyPolicy(2, 3, "empty", "corrupt");
   checks.push({
     id: "slot_copy_policy_requires_confirm_only_on_non_empty_target",
     passed:
       copySameSlot.allowed === false &&
       copySameSlot.reason === "same_slot" &&
-      copyFromEmpty.allowed === false &&
-      copyFromEmpty.reason === "source_empty" &&
-      copyFromCorrupt.allowed === false &&
-      copyFromCorrupt.reason === "source_corrupt" &&
       copyToEmpty.allowed === true &&
       copyToEmpty.requiresConfirm === false &&
       copyToEmpty.reason === "target_empty" &&
@@ -162,6 +167,48 @@ async function main() {
       deleteCorrupt.allowed === true &&
       deleteCorrupt.requiresConfirm === true &&
       deleteCorrupt.reason === "corrupt_slot",
+  });
+
+  const copyHintEmptyTarget = resolveSlotCopyHint(copyToEmpty);
+  const copyHintConfirm = resolveSlotCopyHint(copyToData);
+  const copyHintBlocked = resolveSlotCopyHint(copySameSlot);
+  const deleteHintEmpty = resolveSlotDeleteHint(deleteEmpty);
+  const deleteHintOk = resolveSlotDeleteHint(deleteOk);
+  const deleteHintCorrupt = resolveSlotDeleteHint(deleteCorrupt);
+  checks.push({
+    id: "slot_action_hints_match_policy_reasons",
+    passed:
+      copyHintEmptyTarget.includes("복제 가능") &&
+      copyHintConfirm.includes("덮어써") &&
+      copyHintBlocked.includes("달라야") &&
+      deleteHintEmpty.includes("삭제할 데이터가 없습니다") &&
+      deleteHintOk.includes("메모리 상태는 유지") &&
+      deleteHintCorrupt.includes("손상된 저장 데이터"),
+  });
+
+  checks.push({
+    id: "slot_action_hint_tones_match_policy_reasons",
+    passed:
+      resolveSlotCopyHintTone(copyToEmpty) === "info" &&
+      resolveSlotCopyHintTone(copyToData) === "warn" &&
+      resolveSlotCopyHintTone(copySameSlot) === "warn" &&
+      resolveSlotDeleteHintTone(deleteOk) === "info" &&
+      resolveSlotDeleteHintTone(deleteCorrupt) === "warn" &&
+      resolveSlotDeleteHintTone(deleteEmpty) === "warn",
+  });
+
+  checks.push({
+    id: "slot_target_state_label_and_tone_match",
+    passed:
+      resolveSlotSummaryStateLabelKo("empty") === "비어 있음" &&
+      resolveSlotSummaryStateLabelKo("ok") === "저장 데이터 있음" &&
+      resolveSlotSummaryStateLabelKo("corrupt") === "손상된 저장 데이터" &&
+      resolveSlotSummaryStateShortKo("empty") === "비어있음" &&
+      resolveSlotSummaryStateShortKo("ok") === "저장됨" &&
+      resolveSlotSummaryStateShortKo("corrupt") === "손상" &&
+      resolveSlotSummaryStateTone("empty") === "info" &&
+      resolveSlotSummaryStateTone("ok") === "warn" &&
+      resolveSlotSummaryStateTone("corrupt") === "error",
   });
 
   const initWithResume = createInitialSliceState(context, {
