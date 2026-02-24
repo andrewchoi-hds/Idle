@@ -14,6 +14,7 @@ import {
   normalizeSlotSummaryState,
   parseSliceState,
   previewBreakthroughChance,
+  resolveBreakthroughRiskTier,
   resolveDebouncedAction,
   resolveSlotCopyHint,
   resolveSlotCopyHintTone,
@@ -48,6 +49,10 @@ const dom = {
   invTribulationTalisman: document.getElementById("invTribulationTalisman"),
   previewSuccessPct: document.getElementById("previewSuccessPct"),
   previewDeathPct: document.getElementById("previewDeathPct"),
+  previewMinorFailPct: document.getElementById("previewMinorFailPct"),
+  previewRetreatFailPct: document.getElementById("previewRetreatFailPct"),
+  previewRiskLabel: document.getElementById("previewRiskLabel"),
+  previewDeathInFailPct: document.getElementById("previewDeathInFailPct"),
   optAutoBattle: document.getElementById("optAutoBattle"),
   optAutoBreakthrough: document.getElementById("optAutoBreakthrough"),
   optAutoTribulation: document.getElementById("optAutoTribulation"),
@@ -442,6 +447,22 @@ function tryConsumeSlotQuickLoadDebounce() {
 }
 
 function applySlotHintTone(node, tone) {
+  if (!node) {
+    return;
+  }
+  node.classList.remove("tone-info", "tone-warn", "tone-error");
+  if (tone === "error") {
+    node.classList.add("tone-error");
+    return;
+  }
+  if (tone === "warn") {
+    node.classList.add("tone-warn");
+    return;
+  }
+  node.classList.add("tone-info");
+}
+
+function applyRiskTone(node, tone) {
   if (!node) {
     return;
   }
@@ -968,6 +989,7 @@ function render() {
     useBreakthroughElixir: dom.useBreakthroughElixir.checked,
     useTribulationTalisman: dom.useTribulationTalisman.checked,
   });
+  const riskTier = resolveBreakthroughRiskTier(preview);
 
   dom.stageDisplay.textContent = displayName;
   dom.worldTag.textContent = worldKo(stage.world);
@@ -981,6 +1003,12 @@ function render() {
   dom.invTribulationTalisman.textContent = fmtNumber(state.inventory.tribulationTalisman);
   dom.previewSuccessPct.textContent = preview.successPct.toFixed(1);
   dom.previewDeathPct.textContent = preview.deathPct.toFixed(1);
+  dom.previewMinorFailPct.textContent = preview.minorFailPct.toFixed(1);
+  dom.previewRetreatFailPct.textContent = preview.retreatFailPct.toFixed(1);
+  dom.previewDeathInFailPct.textContent = preview.deathInFailurePct.toFixed(1);
+  dom.previewRiskLabel.textContent = riskTier.labelKo;
+  dom.previewRiskLabel.title = riskTier.descriptionKo;
+  applyRiskTone(dom.previewRiskLabel, riskTier.tone);
   dom.playerNameInput.value = state.playerName;
   dom.optSaveSlot.value = String(activeSaveSlot);
   dom.lastSavedAt.textContent = fmtDateTimeFromIso(state.lastSavedAtIso);
