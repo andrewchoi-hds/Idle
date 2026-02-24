@@ -257,6 +257,11 @@ function buildOfflineDetailSignatureChecksum(signatureInput) {
   return String(value).padStart(6, "0");
 }
 
+const OFFLINE_DETAIL_COMPARE_CODE_EXACT_PATTERN =
+  /^ODR1-T\d+-C\d+-H\d+-V[AC]-A\d{6}-S\d{6}$/;
+const OFFLINE_DETAIL_COMPARE_CODE_SEARCH_PATTERN =
+  /ODR1-T\d+-C\d+-H\d+-V[AC]-A\d{6}-S\d{6}/;
+
 export function buildOfflineDetailKindDigest(eventsInput, maxKindsInput = 8) {
   const rows = Array.isArray(eventsInput) ? eventsInput.slice() : [];
   const maxKinds = clamp(toNonNegativeInt(maxKindsInput, 8), 1, 20);
@@ -309,11 +314,17 @@ export function isOfflineDetailCompareCode(codeInput) {
   if (typeof codeInput !== "string") {
     return false;
   }
-  return /^ODR1-T\d+-C\d+-H\d+-V[AC]-A\d{6}-S\d{6}$/.test(codeInput);
+  return OFFLINE_DETAIL_COMPARE_CODE_EXACT_PATTERN.test(codeInput);
+}
+
+export function extractOfflineDetailCompareCode(textInput) {
+  const text = typeof textInput === "string" ? textInput.trim() : "";
+  const matched = OFFLINE_DETAIL_COMPARE_CODE_SEARCH_PATTERN.exec(text);
+  return matched ? matched[0] : "";
 }
 
 export function parseOfflineDetailCompareCode(codeInput) {
-  const raw = typeof codeInput === "string" ? codeInput.trim() : "";
+  const raw = extractOfflineDetailCompareCode(codeInput);
   const matched = /^ODR1-T(\d+)-C(\d+)-H(\d+)-V([AC])-A(\d{6})-S(\d{6})$/.exec(raw);
   if (!matched) {
     return null;
