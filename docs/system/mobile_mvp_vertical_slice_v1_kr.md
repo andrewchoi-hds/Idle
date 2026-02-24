@@ -99,6 +99,7 @@ npm run mobile:mvp:serve
     - `offlineDetailHiddenSummary`에 숨김 건수(`숨김 없음` 또는 `비핵심 N건 숨김`)를 노출
     - `offlineDetailHiddenKindsSummary`에 숨김 상세 구성(예: `전투 승리 1건 · 전투 패배 1건`)을 노출
     - `offlineDetailCompareCode`에 비교 코드(`ODR1-*`)를 노출해 로그 분포 비교를 빠르게 수행
+    - `btnCopyOfflineCompareCode`로 비교 코드를 클립보드에 즉시 복사(미지원 시 `savePayload`에 대체 출력)
     - 팝업에서 세부 로그 토글(최근 이벤트) + 정산 리포트 JSON 내보내기 지원
 - 옵션:
   - `앱 복귀 시 실시간 자동 재개` (`autoResumeRealtime`, on/off)
@@ -191,7 +192,7 @@ npm run mobile:mvp:check
   - 오프라인 상세 로그 숨김 요약(`buildOfflineDetailHiddenSummaryLabelKo`)이 모드/숨김 건수에 맞는 라벨을 반환하는지 검증
   - 오프라인 상세 로그 숨김 구성 요약(`summarizeOfflineDetailHiddenKinds`, `buildOfflineDetailHiddenKindsSummaryLabelKo`)이 숨김 종류/건수와 라벨을 일관되게 반환하는지 검증
   - 오프라인 종류 digest(`buildOfflineDetailKindDigest`)가 이벤트 분포 signature/상위 종류를 일관되게 반환하는지 검증
-  - 오프라인 비교 코드(`buildOfflineDetailCompareCode`)가 모드 구분과 checksum 포맷을 일관되게 반환하는지 검증
+  - 오프라인 비교 코드(`buildOfflineDetailCompareCode`, `isOfflineDetailCompareCode`)가 모드 구분/checksum 포맷/검증 결과를 일관되게 반환하는지 검증
   - 오프라인 리포트 스냅샷(`buildOfflineDetailReportSnapshot`)이 필터 집계/라벨/숨김 상위 종류 및 kind digest(view 포함)/compareCode를 일관되게 반환하는지 검증
   - 오프라인 핵심 이벤트 요약(`summarizeOfflineDetailCriticalEvents`, `buildOfflineDetailCriticalSummaryLabelKo`)이 카운트/라벨을 일관되게 반환하는지 검증
   - 자동 재개 워밍업 가드(`autoBreakthroughWarmupUntilSec`)가 지정 구간에서 자동 돌파를 지연하고 타임라인 오프셋 기준 잔여 시간을 일관되게 계산하는지 검증
