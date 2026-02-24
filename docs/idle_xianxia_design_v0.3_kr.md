@@ -1082,3 +1082,11 @@
 
 ## 235) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 상세 로그 필터 요약 라벨 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 236) 다음 순차 작업
+1. [완료] 오프라인 상세 로그 숨김 요약 라벨 헬퍼(`buildOfflineDetailHiddenSummaryLabelKo`)를 추가.
+2. [완료] 오프라인 모달에 숨김 요약 라인(`offlineDetailHiddenSummary`)을 추가해 필터로 가려진 비핵심 로그 수를 즉시 노출.
+3. [완료] 모바일 회귀/DOM 체크에 숨김 요약 라벨 헬퍼 및 신규 요약 라인 ID 계약 시나리오를 추가.
+
+## 237) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 상세 로그 숨김 요약 라벨 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

@@ -162,6 +162,17 @@ export function buildOfflineDetailFilterSummaryLabelKo(eventsInput, modeInput = 
   return `세부 로그 ${summary.visible}건 (전체)`;
 }
 
+export function buildOfflineDetailHiddenSummaryLabelKo(eventsInput, modeInput = "all") {
+  const summary = summarizeOfflineDetailFilterResult(eventsInput, modeInput);
+  if (summary.hidden <= 0) {
+    return "숨김 이벤트 없음";
+  }
+  if (summary.mode === "critical") {
+    return `비핵심 ${summary.hidden}건 숨김`;
+  }
+  return `숨김 이벤트 ${summary.hidden}건`;
+}
+
 export function summarizeOfflineDetailCriticalEvents(eventsInput) {
   const rows = Array.isArray(eventsInput) ? eventsInput : [];
   const summary = {

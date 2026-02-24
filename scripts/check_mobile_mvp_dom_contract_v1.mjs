@@ -92,6 +92,7 @@ const REQUIRED_HTML_IDS = [
   "btnToggleOfflineCriticalOnly",
   "btnExportOfflineReport",
   "offlineDetailFilterSummary",
+  "offlineDetailHiddenSummary",
   "offlineDetailList",
   "btnCloseOfflineModal",
   "btnRealtimeAuto",
@@ -153,6 +154,7 @@ const REQUIRED_DOM_KEYS = [
   "btnToggleOfflineCriticalOnly",
   "btnExportOfflineReport",
   "offlineDetailFilterSummary",
+  "offlineDetailHiddenSummary",
   "offlineDetailList",
   "btnCloseOfflineModal",
 ];
