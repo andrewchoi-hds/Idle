@@ -15,6 +15,7 @@ import {
   parseSliceState,
   previewBreakthroughChance,
   resolveBreakthroughRecommendation,
+  resolveBreakthroughRecommendationToggles,
   resolveBreakthroughRiskTier,
   resolveDebouncedAction,
   resolveSlotCopyHint,
@@ -56,6 +57,7 @@ const dom = {
   previewDeathInFailPct: document.getElementById("previewDeathInFailPct"),
   previewRecommendationLabel: document.getElementById("previewRecommendationLabel"),
   previewRecommendationHint: document.getElementById("previewRecommendationHint"),
+  btnApplyRecommendation: document.getElementById("btnApplyRecommendation"),
   optAutoBattle: document.getElementById("optAutoBattle"),
   optAutoBreakthrough: document.getElementById("optAutoBreakthrough"),
   optAutoTribulation: document.getElementById("optAutoTribulation"),
@@ -1004,6 +1006,12 @@ function render() {
     usingTribulationTalisman: preview.useTribulationTalisman,
     mitigatedPreview,
   });
+  const recommendationToggle = resolveBreakthroughRecommendationToggles(preview, {
+    hasBreakthroughElixir: state.inventory.breakthroughElixir > 0,
+    hasTribulationTalisman: state.inventory.tribulationTalisman > 0,
+    currentUseBreakthroughElixir: dom.useBreakthroughElixir.checked,
+    currentUseTribulationTalisman: dom.useTribulationTalisman.checked,
+  });
 
   dom.stageDisplay.textContent = displayName;
   dom.worldTag.textContent = worldKo(stage.world);
@@ -1028,6 +1036,8 @@ function render() {
   dom.previewRecommendationHint.textContent = recommendation.messageKo;
   applyRiskTone(dom.previewRecommendationLabel, recommendation.tone);
   applyRiskTone(dom.previewRecommendationHint, recommendation.tone);
+  dom.btnApplyRecommendation.disabled = !recommendationToggle.changed;
+  dom.btnApplyRecommendation.title = recommendationToggle.messageKo;
   dom.playerNameInput.value = state.playerName;
   dom.optSaveSlot.value = String(activeSaveSlot);
   dom.lastSavedAt.textContent = fmtDateTimeFromIso(state.lastSavedAtIso);
@@ -1257,6 +1267,39 @@ function bindEvents() {
       120,
     );
     persistLocal();
+    render();
+  });
+  dom.useBreakthroughElixir.addEventListener("change", () => {
+    render();
+  });
+  dom.useTribulationTalisman.addEventListener("change", () => {
+    render();
+  });
+  dom.btnApplyRecommendation.addEventListener("click", () => {
+    const preview = previewBreakthroughChance(context, state, {
+      useBreakthroughElixir: dom.useBreakthroughElixir.checked,
+      useTribulationTalisman: dom.useTribulationTalisman.checked,
+    });
+    const recommendationToggle = resolveBreakthroughRecommendationToggles(preview, {
+      hasBreakthroughElixir: state.inventory.breakthroughElixir > 0,
+      hasTribulationTalisman: state.inventory.tribulationTalisman > 0,
+      currentUseBreakthroughElixir: dom.useBreakthroughElixir.checked,
+      currentUseTribulationTalisman: dom.useTribulationTalisman.checked,
+    });
+    if (!recommendationToggle.changed) {
+      const insufficient =
+        recommendationToggle.missingBreakthroughElixir ||
+        recommendationToggle.missingTribulationTalisman;
+      setStatus(
+        `권장 설정 반영: 변경 없음 (${recommendationToggle.messageKo})`,
+        insufficient,
+      );
+      render();
+      return;
+    }
+    dom.useBreakthroughElixir.checked = recommendationToggle.nextUseBreakthroughElixir;
+    dom.useTribulationTalisman.checked = recommendationToggle.nextUseTribulationTalisman;
+    setStatus(`권장 설정 반영: ${recommendationToggle.messageKo}`);
     render();
   });
 
