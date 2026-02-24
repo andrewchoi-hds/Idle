@@ -1813,6 +1813,10 @@ export function runOfflineCatchup(context, state, rng, options = {}) {
     savedAtEpochMs,
   );
   const anchorEpochMs = toNonNegativeInt(options.anchorEpochMs, defaultAnchorEpochMs);
+  const autoBreakthroughWarmupUntilSec = Math.max(
+    0,
+    toNonNegativeInt(options.autoBreakthroughWarmupUntilSec, 0),
+  );
   const rawOfflineSec = Math.max(0, Math.floor((nowEpochMs - anchorEpochMs) / 1000));
   const maxOfflineHours = clamp(Number(options.maxOfflineHours) || 12, 0, 168);
   const maxOfflineSec = Math.floor(maxOfflineHours * 3600);
@@ -1835,6 +1839,7 @@ export function runOfflineCatchup(context, state, rng, options = {}) {
         toNonNegativeInt(options.breakthroughEverySec, 3),
       ),
       passiveQiRatio: clamp(Number(options.passiveQiRatio) || 0.012, 0.001, 0.2),
+      autoBreakthroughWarmupUntilSec,
       suppressLogs: true,
       collectEvents: true,
       maxCollectedEvents: clamp(

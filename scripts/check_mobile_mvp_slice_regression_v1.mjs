@@ -1107,6 +1107,71 @@ async function main() {
       state.logs.length > 0,
   });
 
+  const offlineWarmupState = createInitialSliceState(context, {
+    playerName: "offline-warmup",
+  });
+  offlineWarmupState.settings.autoBattle = false;
+  offlineWarmupState.settings.autoBreakthrough = true;
+  offlineWarmupState.settings.autoTribulation = false;
+  offlineWarmupState.progression.difficultyIndex = 1;
+  offlineWarmupState.currencies.qi = 500000;
+  offlineWarmupState.lastActiveEpochMs = 2000000000000;
+  const offlineWarmup = runOfflineCatchup(
+    context,
+    offlineWarmupState,
+    createSeededRng(301),
+    {
+      nowEpochMs: offlineWarmupState.lastActiveEpochMs + 5 * 1000,
+      maxOfflineHours: 12,
+      maxCollectedEvents: 20,
+      battleEverySec: 2,
+      breakthroughEverySec: 1,
+      passiveQiRatio: 0.012,
+      autoBreakthroughWarmupUntilSec: 3,
+      syncAnchorToNow: true,
+    },
+  );
+  const offlineWarmupRemainState = createInitialSliceState(context, {
+    playerName: "offline-warmup-remain",
+  });
+  offlineWarmupRemainState.settings.autoBattle = false;
+  offlineWarmupRemainState.settings.autoBreakthrough = true;
+  offlineWarmupRemainState.settings.autoTribulation = false;
+  offlineWarmupRemainState.progression.difficultyIndex = 1;
+  offlineWarmupRemainState.currencies.qi = 500000;
+  offlineWarmupRemainState.lastActiveEpochMs = 2000000005000;
+  const offlineWarmupRemain = runOfflineCatchup(
+    context,
+    offlineWarmupRemainState,
+    createSeededRng(302),
+    {
+      nowEpochMs: offlineWarmupRemainState.lastActiveEpochMs + 2 * 1000,
+      maxOfflineHours: 12,
+      maxCollectedEvents: 20,
+      battleEverySec: 2,
+      breakthroughEverySec: 1,
+      passiveQiRatio: 0.012,
+      autoBreakthroughWarmupUntilSec: 3,
+      syncAnchorToNow: true,
+    },
+  );
+  checks.push({
+    id: "offline_catchup_respects_auto_breakthrough_warmup_guard",
+    passed:
+      offlineWarmup.summary.autoSummary !== null &&
+      offlineWarmup.summary.autoSummary.seconds === 5 &&
+      offlineWarmup.summary.autoSummary.breakthroughs === 2 &&
+      offlineWarmup.summary.autoSummary.autoBreakthroughWarmupSkips === 3 &&
+      offlineWarmup.summary.autoSummary.autoBreakthroughWarmupRemainingSec === 0 &&
+      offlineWarmup.summary.autoSummary.collectedEvents.some(
+        (event) => event.kind === "auto_breakthrough_warmup_skip",
+      ) &&
+      offlineWarmupRemain.summary.autoSummary !== null &&
+      offlineWarmupRemain.summary.autoSummary.seconds === 2 &&
+      offlineWarmupRemain.summary.autoSummary.autoBreakthroughWarmupSkips === 2 &&
+      offlineWarmupRemain.summary.autoSummary.autoBreakthroughWarmupRemainingSec === 1,
+  });
+
   const offlineNowEpochMs = 1771894800000;
   state.lastActiveEpochMs = offlineNowEpochMs - 20 * 3600 * 1000;
   const offline = runOfflineCatchup(context, state, rng, {

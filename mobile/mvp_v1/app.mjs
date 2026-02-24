@@ -858,6 +858,14 @@ function buildOfflineStatus(prefix, summary) {
     return `${prefix}: 오프라인 정산 없음`;
   }
   const auto = summary.autoSummary;
+  const warmupSkipText =
+    (auto?.autoBreakthroughWarmupSkips ?? 0) > 0
+      ? ` · 워밍업 차단 ${auto.autoBreakthroughWarmupSkips}회`
+      : "";
+  const warmupRemainingText =
+    (auto?.autoBreakthroughWarmupRemainingSec ?? 0) > 0
+      ? ` · 워밍업 잔여 ${auto.autoBreakthroughWarmupRemainingSec}초`
+      : "";
   const maxOfflineHours = Math.floor((summary.maxOfflineSec || 0) / 3600);
   const capText = summary.cappedByMaxOffline ? ` · ${maxOfflineHours}시간 cap 적용` : "";
   const reasonText = formatPolicyBlockReasonSummary(auto?.breakthroughPolicyBlockReasons);
@@ -870,7 +878,7 @@ function buildOfflineStatus(prefix, summary) {
   const pausedText = auto?.autoBreakthroughPaused
     ? ` · 자동돌파 일시정지(${String(auto.autoBreakthroughPauseReasonLabelKo || "정책")})`
     : "";
-  return `${prefix}: ${fmtDurationSec(summary.appliedOfflineSec)} 정산 (전투 ${auto?.battles ?? 0}회 · 돌파 ${auto?.breakthroughs ?? 0}회${blockedText}${pausedText} · 환생 ${auto?.rebirths ?? 0}회${capText})`;
+  return `${prefix}: ${fmtDurationSec(summary.appliedOfflineSec)} 정산 (전투 ${auto?.battles ?? 0}회 · 돌파 ${auto?.breakthroughs ?? 0}회${warmupSkipText}${blockedText}${pausedText}${warmupRemainingText} · 환생 ${auto?.rebirths ?? 0}회${capText})`;
 }
 
 function getCurrentSpeedTuning() {
@@ -1041,6 +1049,8 @@ function maybeAutoStartRealtime(sourceLabel = "자동 재개") {
 }
 
 function applyOfflineCatchupNow() {
+  const stats = getRealtimeStats();
+  const warmupRemainingSecBefore = getAutoBreakthroughWarmupRemainingSec(stats);
   const tuning = getCurrentSpeedTuning();
   const before = {
     qi: state.currencies.qi,
@@ -1054,8 +1064,29 @@ function applyOfflineCatchupNow() {
     battleEverySec: tuning.battleEverySec,
     breakthroughEverySec: tuning.breakthroughEverySec,
     passiveQiRatio: tuning.passiveQiRatio,
+    autoBreakthroughWarmupUntilSec: warmupRemainingSecBefore,
     syncAnchorToNow: true,
   });
+  const warmupRemainingSecAfter = result.summary.autoSummary
+    ? Math.max(
+        0,
+        Math.floor(Number(result.summary.autoSummary.autoBreakthroughWarmupRemainingSec) || 0),
+      )
+    : resolveAutoBreakthroughWarmupRemainingSec(
+        warmupRemainingSecBefore,
+        result.summary.appliedOfflineSec,
+      );
+  stats.autoBreakthroughWarmupUntilTimelineSec = Math.max(
+    0,
+    Math.floor(Number(stats.timelineSec) || 0) + warmupRemainingSecAfter,
+  );
+  if (
+    warmupRemainingSecBefore > 0 &&
+    warmupRemainingSecAfter === 0 &&
+    state.settings.autoBreakthrough
+  ) {
+    addClientLog("auto", "오프라인 정산: 돌파 워밍업 종료");
+  }
   return {
     summary: result.summary,
     delta: {
