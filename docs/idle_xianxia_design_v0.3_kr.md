@@ -882,3 +882,11 @@
 
 ## 185) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(도겁 4분기 확률 프리뷰 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 186) 다음 순차 작업
+1. [완료] 도겁 프리뷰에 위험도 판정 함수(`resolveBreakthroughRiskTier`)를 추가하고 `비도겁/경미/주의/위험/치명` 단계로 분류.
+2. [완료] 모바일 UI에 위험도 배지(`previewRiskLabel`)와 실패 내 사망 비율(`previewDeathInFailPct`) 표시를 추가.
+3. [완료] 회귀 체크에 위험도 하향(영약/수호부 보정 시) 및 실패 분기 내부 합(100%) 검증 시나리오를 추가.
+
+## 187) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(도겁 위험도 배지 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

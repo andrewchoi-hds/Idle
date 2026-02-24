@@ -402,6 +402,64 @@ function calcBreakthroughOutcomeDistribution(stage, successPct, deathPct) {
   };
 }
 
+function riskTierRank(tier) {
+  if (tier === "extreme") return 4;
+  if (tier === "high") return 3;
+  if (tier === "medium") return 2;
+  if (tier === "low") return 1;
+  return 0;
+}
+
+export function resolveBreakthroughRiskTier(preview = {}) {
+  const stage = preview.stage;
+  const deathFailPct = clamp(Number(preview.deathFailPct) || 0, 0, 100);
+  const tribulationStage = stage?.is_tribulation === 1;
+  if (!tribulationStage || deathFailPct <= 0) {
+    return {
+      tier: "safe",
+      rank: riskTierRank("safe"),
+      tone: "info",
+      labelKo: "비도겁 구간",
+      descriptionKo: "사망 위험 없음",
+    };
+  }
+
+  if (deathFailPct >= 18) {
+    return {
+      tier: "extreme",
+      rank: riskTierRank("extreme"),
+      tone: "error",
+      labelKo: "치명",
+      descriptionKo: "사망 실패 확률 매우 높음",
+    };
+  }
+  if (deathFailPct >= 10) {
+    return {
+      tier: "high",
+      rank: riskTierRank("high"),
+      tone: "error",
+      labelKo: "위험",
+      descriptionKo: "수호부/환생 보정 권장",
+    };
+  }
+  if (deathFailPct >= 4) {
+    return {
+      tier: "medium",
+      rank: riskTierRank("medium"),
+      tone: "warn",
+      labelKo: "주의",
+      descriptionKo: "도겁 실패 리스크 존재",
+    };
+  }
+  return {
+    tier: "low",
+    rank: riskTierRank("low"),
+    tone: "warn",
+    labelKo: "경미",
+    descriptionKo: "낮은 도겁 리스크",
+  };
+}
+
 function evaluateBreakthroughOutcome(stage, successPct, deathPct, rng, debugForcedOutcome) {
   if (debugForcedOutcome) {
     return debugForcedOutcome;
@@ -618,6 +676,9 @@ export function previewBreakthroughChance(context, state, options = {}) {
     deathFailPct: distribution.deathFailPct,
     failChancePct: distribution.failChancePct,
     retreatWeightPct: distribution.retreatWeightPct,
+    deathInFailurePct: distribution.deathInFailurePct,
+    retreatInFailurePct: distribution.retreatInFailurePct,
+    minorInFailurePct: distribution.minorInFailurePct,
     rebirthBonus,
     potionBonus,
     rebirthGuard,

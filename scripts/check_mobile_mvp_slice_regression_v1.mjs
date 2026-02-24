@@ -13,6 +13,7 @@ import {
   normalizeSlotSummaryState,
   parseSliceState,
   previewBreakthroughChance,
+  resolveBreakthroughRiskTier,
   resolveDebouncedAction,
   resolveSlotCopyHint,
   resolveSlotCopyHintTone,
@@ -271,6 +272,9 @@ async function main() {
     useBreakthroughElixir: false,
     useTribulationTalisman: false,
   });
+  const riskTribulationBase = resolveBreakthroughRiskTier(previewTribulationBase);
+  const riskTribulationBoosted = resolveBreakthroughRiskTier(previewTribulationBoosted);
+  const riskMortal = resolveBreakthroughRiskTier(previewMortal);
   const triTotal =
     previewTribulationBase.successPct +
     previewTribulationBase.minorFailPct +
@@ -281,17 +285,27 @@ async function main() {
     previewMortal.minorFailPct +
     previewMortal.retreatFailPct +
     previewMortal.deathFailPct;
+  const triFailureSplitTotal =
+    previewTribulationBase.deathInFailurePct +
+    previewTribulationBase.retreatInFailurePct +
+    previewTribulationBase.minorInFailurePct;
   checks.push({
     id: "breakthrough_preview_distribution_is_consistent",
     passed:
       Math.abs(triTotal - 100) < 0.000001 &&
+      Math.abs(triFailureSplitTotal - 100) < 0.000001 &&
       previewTribulationBase.minorFailPct >= 0 &&
       previewTribulationBase.retreatFailPct >= 0 &&
       previewTribulationBase.deathFailPct >= 0 &&
       previewTribulationBoosted.successPct >= previewTribulationBase.successPct &&
       previewTribulationBoosted.deathPct <= previewTribulationBase.deathPct &&
       previewTribulationBoosted.deathFailPct <= previewTribulationBase.deathFailPct &&
+      riskTribulationBoosted.rank <= riskTribulationBase.rank &&
+      riskTribulationBase.tone !== "info" &&
+      riskMortal.tier === "safe" &&
+      riskMortal.tone === "info" &&
       Math.abs(mortalTotal - 100) < 0.000001 &&
+      previewMortal.deathInFailurePct === 0 &&
       previewMortal.deathFailPct === 0 &&
       previewMortal.retreatFailPct === 0,
   });
