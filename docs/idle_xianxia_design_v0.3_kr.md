@@ -632,3 +632,12 @@
 ## 123) 추가 문서
 - PR Required Check 커버리지 가이드: `/Users/hirediversity/Idle/docs/system/pr_required_check_coverage_v1_kr.md`
 - PR 본문 품질 Lint 가이드(Validation 9개 커맨드 기준): `/Users/hirediversity/Idle/docs/system/pr_body_lint_v1_kr.md`
+
+## 124) 다음 순차 작업
+1. [완료] PR Validation 명령 레지스트리 점검 스크립트(`pr:validation:registry:check`) 추가.
+2. [완료] `verify-combat-diff`에 `PR Validation Command Registry` 단계/Step Summary 연동.
+3. [완료] PR Validation 표준 명령/템플릿/문서를 10개 커맨드 기준으로 동기화.
+
+## 125) 추가 문서
+- PR Validation 명령 레지스트리 가이드: `/Users/hirediversity/Idle/docs/system/pr_validation_registry_v1_kr.md`
+- PR 본문 품질 Lint 가이드(Validation 10개 커맨드 기준): `/Users/hirediversity/Idle/docs/system/pr_body_lint_v1_kr.md`
