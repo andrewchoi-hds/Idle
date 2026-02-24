@@ -621,6 +621,81 @@ export function resolveBreakthroughRecommendationToggles(currentPreview, options
   };
 }
 
+function fmtSignedPct(value) {
+  const amount = Number(value) || 0;
+  if (amount > 0) {
+    return `+${amount.toFixed(1)}%p`;
+  }
+  if (amount < 0) {
+    return `-${Math.abs(amount).toFixed(1)}%p`;
+  }
+  return "+0.0%p";
+}
+
+export function resolveBreakthroughMitigationSummary(currentPreview, mitigatedPreview) {
+  const current =
+    currentPreview && typeof currentPreview === "object" ? currentPreview : {};
+  const mitigated =
+    mitigatedPreview && typeof mitigatedPreview === "object" ? mitigatedPreview : current;
+  const currentRisk = resolveBreakthroughRiskTier(current);
+  const mitigatedRisk = resolveBreakthroughRiskTier(mitigated);
+  const currentSuccessPct = clamp(Number(current.successPct) || 0, 0, 100);
+  const mitigatedSuccessPct = clamp(Number(mitigated.successPct) || 0, 0, 100);
+  const currentDeathFailPct = clamp(Number(current.deathFailPct) || 0, 0, 100);
+  const mitigatedDeathFailPct = clamp(Number(mitigated.deathFailPct) || 0, 0, 100);
+  const successDeltaPct = mitigatedSuccessPct - currentSuccessPct;
+  const deathFailDeltaPct = currentDeathFailPct - mitigatedDeathFailPct;
+  const riskImproved = mitigatedRisk.rank < currentRisk.rank;
+  const tribulationStage = current?.stage?.is_tribulation === 1;
+
+  if (!tribulationStage || currentRisk.tier === "safe") {
+    return {
+      tone: "info",
+      labelKo: "비도겁",
+      messageKo: "현재 경지는 도겁 리스크가 없어 보정 효과가 제한적입니다.",
+      successDeltaPct,
+      deathFailDeltaPct,
+      riskImproved: false,
+      riskBefore: currentRisk,
+      riskAfter: mitigatedRisk,
+    };
+  }
+
+  if (successDeltaPct <= 0.05 && deathFailDeltaPct <= 0.05 && !riskImproved) {
+    return {
+      tone: "warn",
+      labelKo: "개선 없음",
+      messageKo: "현재 조건 대비 추가 보정 효과가 거의 없습니다.",
+      successDeltaPct,
+      deathFailDeltaPct,
+      riskImproved,
+      riskBefore: currentRisk,
+      riskAfter: mitigatedRisk,
+    };
+  }
+
+  let labelKo = "개선 경미";
+  if (riskImproved || successDeltaPct >= 8 || deathFailDeltaPct >= 6) {
+    labelKo = "개선 큼";
+  } else if (successDeltaPct >= 4 || deathFailDeltaPct >= 3) {
+    labelKo = "개선 보통";
+  }
+
+  const riskText = riskImproved
+    ? `위험도 ${currentRisk.labelKo}→${mitigatedRisk.labelKo}`
+    : `위험도 ${currentRisk.labelKo} 유지`;
+  return {
+    tone: "info",
+    labelKo,
+    messageKo: `보정 적용 시 성공 ${fmtSignedPct(successDeltaPct)}, 사망 ${fmtSignedPct(-deathFailDeltaPct)} (${riskText})`,
+    successDeltaPct,
+    deathFailDeltaPct,
+    riskImproved,
+    riskBefore: currentRisk,
+    riskAfter: mitigatedRisk,
+  };
+}
+
 function evaluateBreakthroughOutcome(stage, successPct, deathPct, rng, debugForcedOutcome) {
   if (debugForcedOutcome) {
     return debugForcedOutcome;

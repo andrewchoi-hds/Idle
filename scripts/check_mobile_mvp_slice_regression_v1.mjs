@@ -13,6 +13,7 @@ import {
   normalizeSlotSummaryState,
   parseSliceState,
   previewBreakthroughChance,
+  resolveBreakthroughMitigationSummary,
   resolveBreakthroughRecommendation,
   resolveBreakthroughRecommendationToggles,
   resolveBreakthroughRiskTier,
@@ -363,6 +364,57 @@ async function main() {
       recommendationPrepared.tone === "info" &&
       recommendationSafe.labelKo === "자원 비축" &&
       recommendationSafe.tone === "info",
+  });
+
+  const mitigationLarge = resolveBreakthroughMitigationSummary(
+    {
+      stage: { is_tribulation: 1 },
+      successPct: 40,
+      deathFailPct: 18,
+    },
+    {
+      stage: { is_tribulation: 1 },
+      successPct: 55,
+      deathFailPct: 8,
+    },
+  );
+  const mitigationNone = resolveBreakthroughMitigationSummary(
+    {
+      stage: { is_tribulation: 1 },
+      successPct: 55,
+      deathFailPct: 8,
+    },
+    {
+      stage: { is_tribulation: 1 },
+      successPct: 55,
+      deathFailPct: 8,
+    },
+  );
+  const mitigationSafe = resolveBreakthroughMitigationSummary(
+    {
+      stage: { is_tribulation: 0 },
+      successPct: 70,
+      deathFailPct: 0,
+    },
+    {
+      stage: { is_tribulation: 0 },
+      successPct: 82,
+      deathFailPct: 0,
+    },
+  );
+  checks.push({
+    id: "breakthrough_mitigation_summary_reports_delta_and_risk_shift",
+    passed:
+      mitigationLarge.labelKo === "개선 큼" &&
+      mitigationLarge.tone === "info" &&
+      mitigationLarge.riskImproved === true &&
+      mitigationLarge.successDeltaPct > 0 &&
+      mitigationLarge.deathFailDeltaPct > 0 &&
+      mitigationNone.labelKo === "개선 없음" &&
+      mitigationNone.tone === "warn" &&
+      mitigationNone.riskImproved === false &&
+      mitigationSafe.labelKo === "비도겁" &&
+      mitigationSafe.tone === "info",
   });
 
   const toggleHighRisk = resolveBreakthroughRecommendationToggles(
