@@ -733,6 +733,46 @@ async function main() {
       ),
   });
 
+  const autoPauseState = createInitialSliceState(context, { playerName: "auto-pause" });
+  autoPauseState.settings.autoBattle = false;
+  autoPauseState.settings.autoBreakthrough = true;
+  autoPauseState.settings.autoTribulation = true;
+  autoPauseState.progression.difficultyIndex = 198;
+  autoPauseState.inventory.breakthroughElixir = 0;
+  autoPauseState.inventory.tribulationTalisman = 0;
+  autoPauseState.currencies.qi = Math.max(
+    1,
+    (context.stageByDifficulty.get(198)?.qi_required ?? 1) * 8,
+  );
+  const autoPauseSummary = runAutoSliceSeconds(
+    context,
+    autoPauseState,
+    createSeededRng(79),
+    {
+      seconds: 6,
+      battleEverySec: 2,
+      breakthroughEverySec: 1,
+      passiveQiRatio: 0.012,
+      collectEvents: true,
+      maxCollectedEvents: 20,
+      autoBreakthroughPausePolicyBlockThreshold: 2,
+      suppressLogs: true,
+    },
+  );
+  checks.push({
+    id: "auto_breakthrough_pauses_after_consecutive_policy_blocks",
+    passed:
+      autoPauseSummary.autoBreakthroughPaused === true &&
+      autoPauseSummary.autoBreakthroughPauseReason.length > 0 &&
+      autoPauseSummary.autoBreakthroughPauseReasonLabelKo.length > 0 &&
+      autoPauseSummary.autoBreakthroughPauseAtSec > 0 &&
+      autoPauseSummary.breakthroughPolicyBlocks >= 2 &&
+      autoPauseState.settings.autoBreakthrough === false &&
+      autoPauseSummary.collectedEvents.some(
+        (event) => event.kind === "auto_breakthrough_paused_by_policy",
+      ),
+  });
+
   state.settings.autoBattle = true;
   state.settings.autoBreakthrough = true;
   state.settings.autoTribulation = true;

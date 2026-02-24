@@ -1352,6 +1352,15 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
   const breakthroughEverySec = Math.max(1, toNonNegativeInt(options.breakthroughEverySec, 3));
   const passiveQiRatio = clamp(Number(options.passiveQiRatio) || 0.012, 0.001, 0.2);
   const timelineOffsetSec = Math.max(0, toNonNegativeInt(options.timelineOffsetSec, 0));
+  const pauseAutoBreakthroughOnPolicyBlocks = pickBoolean(
+    options.pauseAutoBreakthroughOnPolicyBlocks,
+    true,
+  );
+  const autoBreakthroughPausePolicyBlockThreshold = clamp(
+    toNonNegativeInt(options.autoBreakthroughPausePolicyBlockThreshold, 3),
+    1,
+    20,
+  );
   const suppressLogs = pickBoolean(options.suppressLogs, false);
   const collectEvents = pickBoolean(options.collectEvents, false);
   const maxCollectedEvents = clamp(
@@ -1372,9 +1381,14 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
       highRisk: 0,
       highQiCost: 0,
     },
+    autoBreakthroughPaused: false,
+    autoBreakthroughPauseReason: "",
+    autoBreakthroughPauseReasonLabelKo: "",
+    autoBreakthroughPauseAtSec: 0,
     rebirths: 0,
   };
   const collectedEvents = [];
+  let consecutivePolicyBlocks = 0;
 
   for (let sec = 1; sec <= seconds; sec += 1) {
     const timelineSec = timelineOffsetSec + sec;
@@ -1425,11 +1439,13 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
       });
       if (breakthrough.attempted) {
         summary.breakthroughs += 1;
+        consecutivePolicyBlocks = 0;
         if (breakthrough.outcome === "death_fail") {
           summary.rebirths += 1;
         }
       } else if (breakthrough.outcome === "blocked_auto_risk_policy") {
         summary.breakthroughPolicyBlocks += 1;
+        consecutivePolicyBlocks += 1;
         if (breakthrough.autoPolicy?.reason === "blocked_extreme_risk") {
           summary.breakthroughPolicyBlockReasons.extremeRisk += 1;
         } else if (breakthrough.autoPolicy?.reason === "blocked_high_risk") {
@@ -1451,15 +1467,54 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
             maxCollectedEvents,
           );
         }
+        if (
+          pauseAutoBreakthroughOnPolicyBlocks &&
+          !summary.autoBreakthroughPaused &&
+          consecutivePolicyBlocks >= autoBreakthroughPausePolicyBlockThreshold
+        ) {
+          state.settings.autoBreakthrough = false;
+          summary.autoBreakthroughPaused = true;
+          summary.autoBreakthroughPauseReason =
+            breakthrough.autoPolicy?.reason || "blocked_auto_risk_policy";
+          summary.autoBreakthroughPauseReasonLabelKo =
+            breakthrough.autoPolicy?.reasonLabelKo || "정책 차단";
+          summary.autoBreakthroughPauseAtSec = timelineSec;
+          if (!suppressLogs) {
+            addLog(
+              state,
+              "auto",
+              `자동 돌파 일시정지: 연속 차단 ${consecutivePolicyBlocks}회 (${summary.autoBreakthroughPauseReasonLabelKo})`,
+            );
+          }
+          if (collectEvents) {
+            pushLimited(
+              collectedEvents,
+              {
+                sec: timelineSec,
+                kind: "auto_breakthrough_paused_by_policy",
+                threshold: autoBreakthroughPausePolicyBlockThreshold,
+                consecutiveBlocks: consecutivePolicyBlocks,
+                reason: summary.autoBreakthroughPauseReason,
+                reasonLabelKo: summary.autoBreakthroughPauseReasonLabelKo,
+              },
+              maxCollectedEvents,
+            );
+          }
+        }
+      } else {
+        consecutivePolicyBlocks = 0;
       }
     }
   }
 
   if (!suppressLogs) {
+    const pauseText = summary.autoBreakthroughPaused
+      ? ` · 자동돌파 일시정지(${summary.autoBreakthroughPauseReasonLabelKo})`
+      : "";
     addLog(
       state,
       "auto",
-      `자동 ${seconds}초 진행 완료 (전투 ${summary.battles}회, 돌파 ${summary.breakthroughs}회, 위험 차단 ${summary.breakthroughPolicyBlocks}회, 환생 ${summary.rebirths}회)`,
+      `자동 ${seconds}초 진행 완료 (전투 ${summary.battles}회, 돌파 ${summary.breakthroughs}회, 위험 차단 ${summary.breakthroughPolicyBlocks}회, 환생 ${summary.rebirths}회${pauseText})`,
     );
   }
   return {
