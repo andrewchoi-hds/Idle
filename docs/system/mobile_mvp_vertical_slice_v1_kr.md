@@ -53,6 +53,8 @@ npm run mobile:mvp:serve
   - 10초마다 누적 요약 로그를 기록하고 3틱마다 localStorage 동기화
   - 백그라운드 진입 시 실시간 자동 중지 + 포그라운드 복귀 시 오프라인 정산 자동 시도
   - `autoResumeRealtime`가 켜져 있으면 포그라운드 복귀/앱 진입/세이브 불러오기 후 실시간 자동 재개
+  - `자동 돌파 재개` 버튼으로 복구한 직후 6초 워밍업 동안 자동 돌파 시도를 지연해 재개 직후 급격한 소모를 방지
+  - 실시간 상태 라인에 돌파 워밍업 잔여 시간(`돌파 워밍업 Ns`)을 노출
   - 실시간 통계 카드(`누적 시간/전투/돌파/환생`)를 화면에 상시 표시
   - `실시간 리포트 JSON` 버튼으로 누적 세션 리포트를 `savePayload`로 내보내기
   - `실시간 통계 초기화` 버튼으로 누적 세션 통계를 즉시 리셋
@@ -110,7 +112,7 @@ npm run mobile:mvp:serve
   - 자동 옵션 상태
   - 이벤트 로그
   - 마지막 활동 시각(`lastActiveEpochMs`)
-  - 실시간 세션 통계(`realtimeStats`: sessionStartedAtIso/timelineSec/elapsedSec/전투·돌파·환생/anchor 재화)
+  - 실시간 세션 통계(`realtimeStats`: sessionStartedAtIso/timelineSec/autoBreakthroughWarmupUntilTimelineSec/elapsedSec/전투·돌파·환생/anchor 재화)
 
 ## 5) 오프라인 복귀 정산 규칙
 - 계산:
@@ -155,6 +157,7 @@ npm run mobile:mvp:check
   - 자동 재개 정책(`resolveAutoBreakthroughResumePolicy`)이 상태별(이미 진행 중/재개 가능/도겁 허용 필요/재개 보류)로 일관된 액션 가능 여부를 반환하는지 검증
   - 자동 재개 확인 정책(`resolveAutoBreakthroughResumeConfirmPolicy`)이 도겁 단계에서 확인 필요 여부를 일관되게 반환하는지 검증
   - 자동 재개 권장 적용 정책(`resolveAutoBreakthroughResumeRecommendationPlan`)이 확인 모달 경로에서만 자동 적용 플랜을 활성화하는지 검증
+  - 자동 재개 워밍업 가드(`autoBreakthroughWarmupUntilSec`)가 지정 구간에서 자동 돌파를 지연하고 타임라인 오프셋 기준 잔여 시간을 일관되게 계산하는지 검증
   - 보정 효과 요약(`resolveBreakthroughMitigationSummary`)이 위험도 변화/확률 델타를 일관되게 반환하는지 검증
   - 돌파 권장 정책(`resolveBreakthroughRecommendation`)이 보유 자원/사용 상태에 맞는 문구를 반환하는지 검증
   - 돌파 권장 토글 정책(`resolveBreakthroughRecommendationToggles`)이 고위험/중위험/비도겁 구간에서 올바른 토글 상태를 반환하는지 검증
