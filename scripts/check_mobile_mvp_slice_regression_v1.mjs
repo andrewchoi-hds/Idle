@@ -12,6 +12,7 @@ import {
   normalizeSaveSlot,
   normalizeSlotSummaryState,
   parseSliceState,
+  resolveAutoBreakthroughResumeConfirmPolicy,
   resolveAutoBreakthroughResumePolicy,
   previewBreakthroughChance,
   resolveBreakthroughAutoAttemptPolicy,
@@ -449,6 +450,20 @@ async function main() {
     context,
     resumeNeedTribulationState,
   );
+  const resumeTribulationReadyState = createInitialSliceState(context, {
+    playerName: "resume-tribulation-ready",
+  });
+  resumeTribulationReadyState.settings.autoBreakthrough = false;
+  resumeTribulationReadyState.settings.autoTribulation = true;
+  resumeTribulationReadyState.progression.difficultyIndex = 13;
+  resumeTribulationReadyState.currencies.qi = Math.max(
+    1,
+    (context.stageByDifficulty.get(13)?.qi_required ?? 1) * 4,
+  );
+  const resumeTribulationReadyPolicy = resolveAutoBreakthroughResumePolicy(
+    context,
+    resumeTribulationReadyState,
+  );
   checks.push({
     id: "auto_breakthrough_resume_policy_matches_state_and_risk",
     passed:
@@ -463,6 +478,32 @@ async function main() {
       resumeNeedTribulationPolicy.actionable === true &&
       resumeNeedTribulationPolicy.shouldEnableAutoBreakthrough === true &&
       resumeNeedTribulationPolicy.shouldEnableAutoTribulation === true,
+  });
+
+  const resumeConfirmReady = resolveAutoBreakthroughResumeConfirmPolicy(
+    resumeReadyPolicy,
+  );
+  const resumeConfirmTribulationReady = resolveAutoBreakthroughResumeConfirmPolicy(
+    resumeTribulationReadyPolicy,
+  );
+  const resumeConfirmNeedTribulation = resolveAutoBreakthroughResumeConfirmPolicy(
+    resumeNeedTribulationPolicy,
+  );
+  const resumeConfirmBlocked = resolveAutoBreakthroughResumeConfirmPolicy(
+    resumeBlockedPolicy,
+  );
+  checks.push({
+    id: "auto_breakthrough_resume_confirm_policy_matches_tribulation_context",
+    passed:
+      resumeConfirmReady.requiresConfirm === false &&
+      resumeConfirmReady.reason === "non_tribulation" &&
+      resumeConfirmTribulationReady.requiresConfirm === true &&
+      resumeConfirmTribulationReady.reason === "tribulation_auto_resume" &&
+      resumeConfirmNeedTribulation.requiresConfirm === true &&
+      resumeConfirmNeedTribulation.reason === "enable_tribulation_auto_resume" &&
+      resumeConfirmNeedTribulation.enableTribulation === true &&
+      resumeConfirmBlocked.requiresConfirm === false &&
+      resumeConfirmBlocked.reason === "not_actionable",
   });
 
   const autoPolicyBlockedState = createInitialSliceState(context, { playerName: "auto-blocked" });

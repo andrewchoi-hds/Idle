@@ -13,6 +13,7 @@ import {
   normalizeSaveSlot,
   normalizeSlotSummaryState,
   parseSliceState,
+  resolveAutoBreakthroughResumeConfirmPolicy,
   previewBreakthroughChance,
   resolveAutoBreakthroughResumePolicy,
   resolveBreakthroughManualAttemptPolicy,
@@ -1446,6 +1447,25 @@ function bindEvents() {
       );
       render();
       return;
+    }
+    const confirmPolicy = resolveAutoBreakthroughResumeConfirmPolicy(resumePolicy);
+    if (confirmPolicy.requiresConfirm) {
+      const confirmed = window.confirm(
+        buildSlotActionConfirmMessage("자동 돌파 재개 확인", [
+          `위험도: ${confirmPolicy.riskTier.labelKo}`,
+          `사망 실패 확률: ${Number(confirmPolicy.preview?.deathFailPct || 0).toFixed(1)}%`,
+          `기대값(1회): 기 ${fmtSignedInteger(confirmPolicy.expectedDelta?.expectedQiDelta)}, 환생정수 ${fmtSignedFixed(confirmPolicy.expectedDelta?.expectedRebirthEssenceDelta, 1)}, 경지 ${fmtSignedFixed(confirmPolicy.expectedDelta?.expectedDifficultyDelta, 1)}`,
+          confirmPolicy.enableTribulation
+            ? "자동 도겁 허용이 함께 켜집니다."
+            : "자동 돌파만 재개됩니다.",
+          "계속할까요?",
+        ]),
+      );
+      if (!confirmed) {
+        setStatus("자동 돌파 재개 취소(사전 확인)", true);
+        render();
+        return;
+      }
     }
     state.settings.autoBreakthrough = resumePolicy.shouldEnableAutoBreakthrough;
     if (resumePolicy.shouldEnableAutoTribulation) {
