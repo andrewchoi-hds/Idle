@@ -95,6 +95,19 @@ export function buildOfflineWarmupTelemetryLabelKo(offlineSummaryInput) {
   return `워밍업 ${telemetry.before}초 → ${telemetry.after}초 (차단 ${telemetry.skippedAttempts}회${exhaustedText})`;
 }
 
+const CRITICAL_OFFLINE_DETAIL_KINDS = new Set([
+  "offline_warmup_summary",
+  "auto_breakthrough_paused_by_policy",
+  "breakthrough_death_fail",
+]);
+
+export function isCriticalOfflineDetailEventKind(kindInput) {
+  if (typeof kindInput !== "string") {
+    return false;
+  }
+  return CRITICAL_OFFLINE_DETAIL_KINDS.has(kindInput);
+}
+
 export function prioritizeOfflineDetailEvents(eventsInput) {
   const rows = Array.isArray(eventsInput) ? eventsInput.slice() : [];
   const buckets = [[], [], [], []];
@@ -111,6 +124,19 @@ export function prioritizeOfflineDetailEvents(eventsInput) {
     buckets[priority].push(row);
   }
   return buckets[0].concat(buckets[1], buckets[2], buckets[3]);
+}
+
+export function filterOfflineDetailEventsByMode(eventsInput, modeInput = "all") {
+  const rows = Array.isArray(eventsInput) ? eventsInput.slice() : [];
+  const mode = modeInput === "critical" ? "critical" : "all";
+  if (mode !== "critical") {
+    return rows;
+  }
+  return rows.filter((row) =>
+    isCriticalOfflineDetailEventKind(
+      row && typeof row.kind === "string" ? row.kind : "",
+    ),
+  );
 }
 
 export function summarizeOfflineDetailCriticalEvents(eventsInput) {

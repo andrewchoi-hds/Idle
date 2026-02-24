@@ -1066,3 +1066,11 @@
 
 ## 231) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 핵심 이벤트 요약 라벨/모달 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 232) 다음 순차 작업
+1. [완료] 오프라인 상세 로그 필터 헬퍼(`filterOfflineDetailEventsByMode`)를 추가해 `all/critical` 모드를 표준화.
+2. [완료] 오프라인 모달에 `핵심 로그만 보기` 토글(`btnToggleOfflineCriticalOnly`)을 추가해 세부 로그 모드를 즉시 전환.
+3. [완료] 모바일 회귀/DOM 체크에 오프라인 상세 로그 필터 모드 및 신규 버튼 ID 계약 시나리오를 추가.
+
+## 233) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 상세 로그 핵심 필터 토글 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
