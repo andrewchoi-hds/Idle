@@ -8,6 +8,7 @@ import {
   createInitialSliceState,
   createSeededRng,
   buildOfflineDetailCriticalSummaryLabelKo,
+  buildOfflineDetailReportSnapshot,
   buildOfflineDetailHiddenKindsSummaryLabelKo,
   buildOfflineDetailHiddenSummaryLabelKo,
   buildOfflineDetailFilterSummaryLabelKo,
@@ -1179,6 +1180,7 @@ function showOfflineModal(offline) {
   const warmup = resolveOfflineWarmupTelemetry(summary);
   const warmupLabelKo = buildOfflineWarmupTelemetryLabelKo(summary);
   const criticalSummaryLabelKo = buildOfflineDetailCriticalSummaryLabelKo(events);
+  const detailReportSnapshot = buildOfflineDetailReportSnapshot(events);
   dom.offlineAppliedDuration.textContent = fmtDurationSec(summary.appliedOfflineSec);
   dom.offlineRawDuration.textContent = fmtDurationSec(summary.rawOfflineSec);
   dom.offlineWarmupSummary.textContent = warmupLabelKo;
@@ -1198,6 +1200,7 @@ function showOfflineModal(offline) {
     stageDifficultyIndex: state.progression.difficultyIndex,
     warmup,
     warmupLabelKo,
+    detailReportSnapshot,
     summary,
     delta,
     events,

@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import {
   buildOfflineDetailCriticalSummaryLabelKo,
   buildOfflineDetailHiddenKindsSummaryLabelKo,
+  buildOfflineDetailReportSnapshot,
   buildOfflineDetailHiddenSummaryLabelKo,
   buildOfflineDetailFilterSummaryLabelKo,
   buildStorageKeyForSlot,
@@ -442,6 +443,24 @@ async function main() {
       buildOfflineDetailHiddenKindsSummaryLabelKo(prioritizedOfflineEvents, "critical") ===
         "숨김 상세 전투 승리 1건 · 전투 패배 1건" &&
       buildOfflineDetailHiddenKindsSummaryLabelKo([], "critical") === "숨김 상세 없음",
+  });
+
+  const detailReportSnapshot = buildOfflineDetailReportSnapshot(prioritizedOfflineEvents, 1);
+  checks.push({
+    id: "offline_detail_report_snapshot_contains_filter_breakdown",
+    passed:
+      detailReportSnapshot.totalEvents === 6 &&
+      detailReportSnapshot.visibleAllEvents === 6 &&
+      detailReportSnapshot.visibleCriticalEvents === 4 &&
+      detailReportSnapshot.hiddenCriticalEvents === 2 &&
+      detailReportSnapshot.labelsKo.all === "세부 로그 6건 (전체)" &&
+      detailReportSnapshot.labelsKo.critical === "세부 로그 4/6건 (핵심)" &&
+      detailReportSnapshot.labelsKo.hidden === "비핵심 2건 숨김" &&
+      detailReportSnapshot.labelsKo.hiddenKinds === "숨김 상세 전투 승리 1건 · 외 1건" &&
+      Array.isArray(detailReportSnapshot.hiddenKindsTop) &&
+      detailReportSnapshot.hiddenKindsTop.length === 1 &&
+      detailReportSnapshot.hiddenKindsTop[0].kind === "battle_win" &&
+      detailReportSnapshot.hiddenKindsTop[0].count === 1,
   });
 
   const offlineCriticalSummary = summarizeOfflineDetailCriticalEvents([
