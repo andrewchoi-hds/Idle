@@ -1033,6 +1033,60 @@ export function resolveAutoBreakthroughResumeConfirmPolicy(resumePolicyInput) {
   };
 }
 
+export function resolveAutoBreakthroughResumeRecommendationPlan(
+  confirmPolicyInput,
+  recommendationToggleInput,
+) {
+  const confirmPolicy =
+    confirmPolicyInput && typeof confirmPolicyInput === "object"
+      ? confirmPolicyInput
+      : {};
+  const recommendationToggle =
+    recommendationToggleInput && typeof recommendationToggleInput === "object"
+      ? recommendationToggleInput
+      : {};
+  const changed = recommendationToggle.changed === true;
+  const nextUseBreakthroughElixir =
+    recommendationToggle.nextUseBreakthroughElixir === true;
+  const nextUseTribulationTalisman =
+    recommendationToggle.nextUseTribulationTalisman === true;
+  const shouldApplyRecommendation =
+    confirmPolicy.requiresConfirm === true && changed;
+  const missingBreakthroughElixir =
+    recommendationToggle.missingBreakthroughElixir === true;
+  const missingTribulationTalisman =
+    recommendationToggle.missingTribulationTalisman === true;
+  const hasMissing =
+    missingBreakthroughElixir || missingTribulationTalisman;
+
+  const elixirText = nextUseBreakthroughElixir ? "ON" : "OFF";
+  const talismanText = nextUseTribulationTalisman ? "ON" : "OFF";
+  let messageKo = "권장 설정 변경 없음";
+  if (shouldApplyRecommendation) {
+    messageKo = `확인 시 권장 설정 자동 적용: 영약 ${elixirText}, 수호부 ${talismanText}`;
+  } else if (changed) {
+    messageKo = `권장 설정 제안: 영약 ${elixirText}, 수호부 ${talismanText}`;
+  }
+  if (hasMissing) {
+    const missingLabels = [];
+    if (missingBreakthroughElixir) missingLabels.push("영약");
+    if (missingTribulationTalisman) missingLabels.push("수호부");
+    messageKo += ` (보유 없음: ${missingLabels.join(", ")})`;
+  }
+
+  return {
+    shouldApplyRecommendation,
+    changed,
+    nextUseBreakthroughElixir,
+    nextUseTribulationTalisman,
+    missingBreakthroughElixir,
+    missingTribulationTalisman,
+    hasMissing,
+    tone: hasMissing ? "warn" : "info",
+    messageKo,
+  };
+}
+
 function evaluateBreakthroughOutcome(stage, successPct, deathPct, rng, debugForcedOutcome) {
   if (debugForcedOutcome) {
     return debugForcedOutcome;
