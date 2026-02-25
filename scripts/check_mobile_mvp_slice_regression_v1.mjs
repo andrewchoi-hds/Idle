@@ -25,6 +25,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryTone,
   buildOfflineDetailCompareResultLabelKo,
   buildOfflineDetailCompareInvalidTargetLabelKo,
+  buildOfflineDetailCompareMissingCurrentLabelKo,
   isOfflineDetailCompareResultError,
   buildOfflineDetailCompareResultStateLabelKo,
   buildOfflineDetailCompareResultStateTone,
@@ -791,6 +792,17 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_missing_current_label_is_stable",
+    passed:
+      buildOfflineDetailCompareMissingCurrentLabelKo() ===
+        "현재 비교 코드가 없어 대조 불가" &&
+      buildOfflineDetailCompareResultLabelKo(
+        "INVALID",
+        offlineDetailCompareCodeAll,
+      ) === buildOfflineDetailCompareMissingCurrentLabelKo(),
+  });
+
+  checks.push({
     id: "offline_detail_compare_code_target_summary_label_matches_target",
     passed:
       buildOfflineDetailCompareCodeTargetSummaryLabelKo("") === "대상 코드: 없음" &&
@@ -964,7 +976,7 @@ async function main() {
         `payload => ${offlineDetailCompareCodeCritical}`,
       ) === "비교 결과: 전체 분포 동일, view 분포 차이" &&
       buildOfflineDetailCompareResultStateLabelKo("INVALID", offlineDetailCompareCodeAll) ===
-        "현재 비교 코드가 없어 대조 불가",
+        buildOfflineDetailCompareMissingCurrentLabelKo(),
   });
 
   checks.push({

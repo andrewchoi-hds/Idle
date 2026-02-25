@@ -610,7 +610,7 @@ export function buildOfflineDetailCompareResultLabelKo(
   const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
   if (!diff.comparable) {
     return diff.reason === "current_invalid"
-      ? "현재 비교 코드가 없어 대조 불가"
+      ? buildOfflineDetailCompareMissingCurrentLabelKo()
       : buildOfflineDetailCompareInvalidTargetLabelKo();
   }
   if (diff.identical) {
@@ -659,6 +659,10 @@ export function buildOfflineDetailCompareResultLabelKo(
 
 export function buildOfflineDetailCompareInvalidTargetLabelKo() {
   return "입력 비교 코드 형식 오류";
+}
+
+export function buildOfflineDetailCompareMissingCurrentLabelKo() {
+  return "현재 비교 코드가 없어 대조 불가";
 }
 
 export function isOfflineDetailCompareResultError(

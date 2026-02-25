@@ -232,6 +232,7 @@ npm run mobile:mvp:check
   - 오프라인 비교 대상 입력 상태 해석(`resolveOfflineDetailCompareTargetInputState`)이 빈 입력/형식 오류/유효 코드 케이스를 `empty/invalid/valid`로 일관되게 반환하는지 검증
   - 오프라인 비교 대상 입력 상태 메시지(`resolveOfflineDetailCompareTargetInputStateStatusMessageKo`)가 `empty/invalid` 상태를 `비교 코드 입력 필요/비교 코드 형식 오류`로 일관되게 반환하는지 검증
   - 오프라인 비교 대상 형식 오류 라벨(`buildOfflineDetailCompareInvalidTargetLabelKo`)이 추출 실패/대조 실패 경로에서 동일 문구를 일관되게 반환하는지 검증
+  - 오프라인 비교 현재 코드 누락 라벨(`buildOfflineDetailCompareMissingCurrentLabelKo`)이 현재 코드 부재 대조 실패 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 현재 요약 라벨(`buildOfflineDetailCompareCodeCurrentSummaryLabelKo`)이 빈 입력/형식 오류/전체·핵심 보기 케이스를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 현재 요약 톤(`buildOfflineDetailCompareCodeCurrentSummaryTone`)이 빈 입력/형식 오류/정상 입력 케이스에서 `info/warn`을 일관되게 반환하는지 검증
   - 오프라인 비교 코드 대상 요약 라벨(`buildOfflineDetailCompareCodeTargetSummaryLabelKo`)이 빈 입력/형식 오류/전체·핵심 보기 케이스를 일관되게 반환하는지 검증
