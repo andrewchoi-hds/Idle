@@ -12,6 +12,7 @@ import {
   buildOfflineDetailCompareCodeTargetSummaryLabelKo,
   buildOfflineDetailCompareResultLabelKo,
   buildOfflineDetailCompareResultStateLabelKo,
+  buildOfflineDetailCompareActionHintLabelKo,
   buildOfflineDetailCriticalSummaryLabelKo,
   buildOfflineDetailKindDigest,
   buildOfflineDetailHiddenKindsSummaryLabelKo,
@@ -488,6 +489,17 @@ async function main() {
     prioritizedOfflineEvents,
     "critical",
   );
+  const allChecksumReplacement = offlineDetailCompareCodeAll.includes("-A000000-")
+    ? "999999"
+    : "000000";
+  const offlineDetailCompareCodeAllChecksumMismatch = offlineDetailCompareCodeAll.replace(
+    /-A\d{6}-S/,
+    `-A${allChecksumReplacement}-S`,
+  );
+  const offlineDetailCompareCodeAggregateMismatch = offlineDetailCompareCodeAll.replace(
+    /-T\d+-/,
+    "-T99-",
+  );
   checks.push({
     id: "offline_detail_compare_code_has_mode_and_checksum",
     passed:
@@ -688,6 +700,33 @@ async function main() {
       ) === "비교 결과: 전체 분포 동일, view 분포 차이" &&
       buildOfflineDetailCompareResultStateLabelKo("INVALID", offlineDetailCompareCodeAll) ===
         "현재 비교 코드가 없어 대조 불가",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_action_hint_label_matches_state",
+    passed:
+      buildOfflineDetailCompareActionHintLabelKo(offlineDetailCompareCodeAll, "") ===
+        "가이드: 비교 코드를 입력하세요." &&
+      buildOfflineDetailCompareActionHintLabelKo(offlineDetailCompareCodeAll, "invalid") ===
+        "가이드: ODR1 비교 코드를 붙여넣거나 입력하세요." &&
+      buildOfflineDetailCompareActionHintLabelKo("INVALID", offlineDetailCompareCodeAll) ===
+        "가이드: 오프라인 정산 로그를 열어 현재 코드를 먼저 생성하세요." &&
+      buildOfflineDetailCompareActionHintLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ) === "가이드: 코드가 일치합니다. 그대로 유지하세요." &&
+      buildOfflineDetailCompareActionHintLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ) === "가이드: 보기 모드 차이입니다. 동일 모드로 다시 비교하세요." &&
+      buildOfflineDetailCompareActionHintLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAllChecksumMismatch,
+      ) === "가이드: 이벤트 구성 분포가 다릅니다. 정산 로그 원본을 확인하세요." &&
+      buildOfflineDetailCompareActionHintLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAggregateMismatch,
+      ) === "가이드: 주요 집계가 다릅니다. 저장 시점/필터를 다시 확인하세요.",
   });
 
   const parsedOfflineCompareCode = parseOfflineDetailCompareCode(offlineDetailCompareCodeAll);

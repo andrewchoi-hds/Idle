@@ -534,6 +534,42 @@ export function buildOfflineDetailCompareResultStateLabelKo(
   return buildOfflineDetailCompareResultLabelKo(currentCodeInput, targetCode);
 }
 
+export function buildOfflineDetailCompareActionHintLabelKo(
+  currentCodeInput,
+  targetCodeInput,
+) {
+  const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
+  if (!targetText) {
+    return "가이드: 비교 코드를 입력하세요.";
+  }
+  const targetCode = extractOfflineDetailCompareCode(targetText);
+  if (!targetCode) {
+    return "가이드: ODR1 비교 코드를 붙여넣거나 입력하세요.";
+  }
+  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCode);
+  if (!diff.comparable) {
+    return diff.reason === "current_invalid"
+      ? "가이드: 오프라인 정산 로그를 열어 현재 코드를 먼저 생성하세요."
+      : "가이드: ODR1 비교 코드를 붙여넣거나 입력하세요.";
+  }
+  if (diff.identical) {
+    return "가이드: 코드가 일치합니다. 그대로 유지하세요.";
+  }
+  if (
+    !diff.sameViewMode &&
+    diff.sameTotalEvents &&
+    diff.sameCriticalVisibleEvents &&
+    diff.sameHiddenCriticalEvents &&
+    diff.sameAllChecksum
+  ) {
+    return "가이드: 보기 모드 차이입니다. 동일 모드로 다시 비교하세요.";
+  }
+  if (!diff.sameAllChecksum || !diff.sameViewChecksum) {
+    return "가이드: 이벤트 구성 분포가 다릅니다. 정산 로그 원본을 확인하세요.";
+  }
+  return "가이드: 주요 집계가 다릅니다. 저장 시점/필터를 다시 확인하세요.";
+}
+
 function formatSignedDelta(valueInput) {
   const value = Number(valueInput) || 0;
   if (value > 0) {
