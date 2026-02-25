@@ -28,6 +28,7 @@ import {
   buildOfflineDetailCompareResultIdenticalLabelKo,
   buildOfflineDetailCompareResultViewMismatchLabelKo,
   buildOfflineDetailCompareResultAggregateMismatchLabelKo,
+  buildOfflineDetailCompareResultCodeDifferenceLabelKo,
   buildOfflineDetailCompareMissingCurrentLabelKo,
   buildOfflineDetailCompareResultPendingLabelKo,
   buildOfflineDetailCompareResultInputRequiredLabelKo,
@@ -531,6 +532,11 @@ async function main() {
     /-T\d+-/,
     "-T99-",
   );
+  const offlineDetailCompareCodeCanonicalVariant = offlineDetailCompareCodeAll.replace(
+    /-T(\d+)-C(\d+)-H(\d+)-/,
+    (_, totalEvents, criticalVisibleEvents, hiddenCriticalEvents) =>
+      `-T${totalEvents.padStart(2, "0")}-C${criticalVisibleEvents.padStart(2, "0")}-H${hiddenCriticalEvents.padStart(2, "0")}-`,
+  );
   checks.push({
     id: "offline_detail_compare_code_has_mode_and_checksum",
     passed:
@@ -847,6 +853,18 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_result_code_difference_label_is_stable",
+    passed:
+      buildOfflineDetailCompareResultCodeDifferenceLabelKo() ===
+        "비교 결과: 코드 차이 감지" &&
+      offlineDetailCompareCodeCanonicalVariant !== offlineDetailCompareCodeAll &&
+      buildOfflineDetailCompareResultLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCanonicalVariant,
+      ) === buildOfflineDetailCompareResultCodeDifferenceLabelKo(),
+  });
+
+  checks.push({
     id: "offline_detail_compare_result_pending_label_is_stable",
     passed:
       buildOfflineDetailCompareResultPendingLabelKo() === "비교 대기 중" &&
@@ -1039,6 +1057,10 @@ async function main() {
         offlineDetailCompareCodeAll,
         `payload => ${offlineDetailCompareCodeCritical}`,
       ) === buildOfflineDetailCompareResultViewMismatchLabelKo() &&
+      buildOfflineDetailCompareResultStateLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCanonicalVariant,
+      ) === buildOfflineDetailCompareResultCodeDifferenceLabelKo() &&
       buildOfflineDetailCompareResultStateLabelKo("INVALID", offlineDetailCompareCodeAll) ===
         buildOfflineDetailCompareMissingCurrentLabelKo(),
   });
