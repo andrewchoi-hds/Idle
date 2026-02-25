@@ -236,6 +236,7 @@ async function main() {
   assertIncludes(app, "function startRealtimeAuto(", "app.mjs", failures);
   assertIncludes(app, "function stopRealtimeAuto(", "app.mjs", failures);
   assertIncludes(css, ".offline-modal", "app.css", failures);
+  assertIncludes(css, ".offline-compare-result.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-action-hint.tone-error", "app.css", failures);
   assertIncludes(css, ".actions {", "app.css", failures);
   assertIncludes(css, "env(safe-area-inset-bottom)", "app.css", failures);

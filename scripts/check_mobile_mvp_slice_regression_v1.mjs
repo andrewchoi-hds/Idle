@@ -12,6 +12,7 @@ import {
   buildOfflineDetailCompareCodeTargetSummaryLabelKo,
   buildOfflineDetailCompareResultLabelKo,
   buildOfflineDetailCompareResultStateLabelKo,
+  buildOfflineDetailCompareResultStateTone,
   buildOfflineDetailCompareActionHintLabelKo,
   buildOfflineDetailCompareActionHintTone,
   resolveOfflineDetailCompareViewModeAlignmentTarget,
@@ -702,6 +703,30 @@ async function main() {
       ) === "비교 결과: 전체 분포 동일, view 분포 차이" &&
       buildOfflineDetailCompareResultStateLabelKo("INVALID", offlineDetailCompareCodeAll) ===
         "현재 비교 코드가 없어 대조 불가",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_result_state_tone_matches_input_state",
+    passed:
+      buildOfflineDetailCompareResultStateTone(offlineDetailCompareCodeAll, "") === "info" &&
+      buildOfflineDetailCompareResultStateTone(offlineDetailCompareCodeAll, "invalid") ===
+        "warn" &&
+      buildOfflineDetailCompareResultStateTone(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ) === "info" &&
+      buildOfflineDetailCompareResultStateTone(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ) === "warn" &&
+      buildOfflineDetailCompareResultStateTone(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAllChecksumMismatch,
+      ) === "warn" &&
+      buildOfflineDetailCompareResultStateTone(
+        "INVALID",
+        offlineDetailCompareCodeAll,
+      ) === "error",
   });
 
   checks.push({
