@@ -101,6 +101,7 @@ npm run mobile:mvp:serve
     - `offlineDetailCompareCode`에 비교 코드(`ODR1-*`)를 노출해 로그 분포 비교를 빠르게 수행
     - `btnCopyOfflineCompareCode`로 비교 코드를 클립보드에 즉시 복사(미지원 시 `savePayload`에 대체 출력)
     - 비교 코드 입력(`offlineCompareCodeInput`) + 대조 버튼(`btnCompareOfflineCode`)으로 현재 코드와 일치/차이 요약을 즉시 확인
+    - 보기 모드 정렬 버튼(`btnApplyOfflineCompareViewMode`)으로 `view-only mismatch`일 때 대상 코드 모드(전체/핵심)로 즉시 정렬
     - `btnPasteOfflineCompareCode`로 클립보드 텍스트에서 비교 코드를 추출해 입력/대조를 즉시 실행
     - `btnLoadOfflineCompareCodeFromPayload`로 `savePayload` JSON/텍스트에서 비교 코드를 추출해 입력/대조를 즉시 실행(상태 메시지에 추출 출처 포함)
     - 비교 코드 출처 라인(`offlineCompareCodeSource`)에 입력/클립보드/savePayload 추출 경로를 상시 표시
@@ -215,6 +216,7 @@ npm run mobile:mvp:check
   - 오프라인 비교 결과 상태 라벨(`buildOfflineDetailCompareResultStateLabelKo`)이 대기/입력 필요/일치/보기 차이/현재 코드 없음 케이스를 일관되게 반환하는지 검증
   - 오프라인 비교 가이드 라벨(`buildOfflineDetailCompareActionHintLabelKo`)이 입력 필요/형식 오류/현재 코드 없음/일치/보기 모드 차이/checksum·집계 차이 케이스를 일관되게 반환하는지 검증
   - 오프라인 비교 가이드 톤(`buildOfflineDetailCompareActionHintTone`)이 입력 필요/형식 오류/현재 코드 없음/일치/보기 모드 차이/checksum·집계 차이 케이스에서 `warn/error/info`를 일관되게 반환하는지 검증
+  - 오프라인 비교 보기 모드 정렬 타깃(`resolveOfflineDetailCompareViewModeAlignmentTarget`)이 `view-only mismatch`에서만 대상 모드(`all/critical`)를 반환하는지 검증
   - 오프라인 비교 대조(`parseOfflineDetailCompareCode`, `resolveOfflineDetailCompareCodeDiff`, `buildOfflineDetailCompareResultLabelKo`)가 파싱/차이 요약/오류 문구를 일관되게 반환하는지 검증
   - 오프라인 리포트 스냅샷(`buildOfflineDetailReportSnapshot`)이 필터 집계/라벨/숨김 상위 종류 및 kind digest(view 포함)/compareCode를 일관되게 반환하는지 검증
   - 오프라인 핵심 이벤트 요약(`summarizeOfflineDetailCriticalEvents`, `buildOfflineDetailCriticalSummaryLabelKo`)이 카운트/라벨을 일관되게 반환하는지 검증
