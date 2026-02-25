@@ -1170,3 +1170,11 @@
 
 ## 257) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(`savePayload` 기반 비교 코드 추출 출처 메타 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 258) 다음 순차 작업
+1. [완료] 비교 코드 출처 라벨 헬퍼(`buildOfflineDetailCompareCodeSourceLabelKo`)를 추가해 source key별 표시 문구를 표준화.
+2. [완료] 오프라인 모달에 비교 코드 출처 라인(`offlineCompareCodeSource`)을 추가해 입력/클립보드/savePayload 경로를 상시 표시.
+3. [완료] 모바일 회귀/DOM 체크에 출처 라벨 헬퍼 및 신규 출처 라인 ID 계약 시나리오를 추가.
+
+## 259) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 출처 라인 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
