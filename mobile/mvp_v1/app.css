@@ -565,6 +565,22 @@ textarea:focus-visible,
   margin-top: 2px;
 }
 
+.offline-compare-result {
+  color: #bfd4cc;
+}
+
+.offline-compare-result.tone-info {
+  color: #bfe6d9;
+}
+
+.offline-compare-result.tone-warn {
+  color: #ffdca0;
+}
+
+.offline-compare-result.tone-error {
+  color: #ffb4ac;
+}
+
 .offline-compare-action-hint {
   color: #9eb8af;
 }

@@ -534,6 +534,40 @@ export function buildOfflineDetailCompareResultStateLabelKo(
   return buildOfflineDetailCompareResultLabelKo(currentCodeInput, targetCode);
 }
 
+export function buildOfflineDetailCompareResultStateTone(
+  currentCodeInput,
+  targetCodeInput,
+) {
+  const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
+  if (!targetText) {
+    return "info";
+  }
+  const targetCode = extractOfflineDetailCompareCode(targetText);
+  if (!targetCode) {
+    return "warn";
+  }
+  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCode);
+  if (!diff.comparable) {
+    return diff.reason === "current_invalid" ? "error" : "warn";
+  }
+  if (diff.identical) {
+    return "info";
+  }
+  if (
+    !diff.sameViewMode &&
+    diff.sameTotalEvents &&
+    diff.sameCriticalVisibleEvents &&
+    diff.sameHiddenCriticalEvents &&
+    diff.sameAllChecksum
+  ) {
+    return "warn";
+  }
+  if (!diff.sameAllChecksum || !diff.sameViewChecksum) {
+    return "warn";
+  }
+  return "warn";
+}
+
 export function buildOfflineDetailCompareActionHintLabelKo(
   currentCodeInput,
   targetCodeInput,
