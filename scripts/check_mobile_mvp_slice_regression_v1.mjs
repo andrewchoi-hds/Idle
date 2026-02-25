@@ -11,6 +11,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryTargetMissingLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTone,
@@ -974,6 +975,17 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_code_delta_summary_no_difference_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo() ===
+        "차이 요약: 차이 없음" &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ) === buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo(),
+  });
+
+  checks.push({
     id: "offline_detail_compare_code_delta_summary_label_matches_diff",
     passed:
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
@@ -991,7 +1003,7 @@ async function main() {
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAll,
-      ) === "차이 요약: 차이 없음" &&
+      ) === buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo() &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,

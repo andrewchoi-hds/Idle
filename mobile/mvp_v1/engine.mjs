@@ -894,7 +894,7 @@ export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
       : buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo();
   }
   if (diff.identical) {
-    return "차이 요약: 차이 없음";
+    return buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo();
   }
   const parts = [];
   if (!diff.sameTotalEvents) {
@@ -942,6 +942,10 @@ export function buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingLabelKo()
 
 export function buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo() {
   return "차이 요약: 대상 코드 형식 오류";
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo() {
+  return "차이 요약: 차이 없음";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo() {
