@@ -927,7 +927,13 @@ export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
   if (!diff.sameViewChecksum) {
     parts.push("view checksum 변경");
   }
-  return parts.length > 0 ? `차이 요약: ${parts.join(" · ")}` : "차이 요약: 코드 차이 감지";
+  return parts.length > 0
+    ? `차이 요약: ${parts.join(" · ")}`
+    : buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo();
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo() {
+  return "차이 요약: 코드 차이 감지";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryTone(
