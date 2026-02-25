@@ -433,6 +433,14 @@ export function buildOfflineDetailCompareCodeTargetSummaryLabelKo(codeInput) {
   return buildOfflineDetailCompareCodeSummaryLabelKo(codeInput, "대상 코드");
 }
 
+export function buildOfflineDetailCompareCodeTargetSummaryTone(codeInput) {
+  const text = typeof codeInput === "string" ? codeInput.trim() : "";
+  if (!text) {
+    return "info";
+  }
+  return parseOfflineDetailCompareCode(text) ? "info" : "warn";
+}
+
 export function buildOfflineDetailCompareCodeCurrentSummaryLabelKo(codeInput) {
   return buildOfflineDetailCompareCodeSummaryLabelKo(codeInput, "현재 코드");
 }
