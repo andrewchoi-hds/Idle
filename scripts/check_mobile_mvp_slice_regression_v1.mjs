@@ -38,6 +38,7 @@ import {
   buildOfflineDetailCompareActionHintIdenticalLabelKo,
   buildOfflineDetailCompareActionHintViewMismatchLabelKo,
   buildOfflineDetailCompareActionHintChecksumMismatchLabelKo,
+  buildOfflineDetailCompareActionHintAggregateMismatchLabelKo,
   buildOfflineDetailCompareActionHintTone,
   resolveOfflineDetailCompareViewModeAlignmentTarget,
   buildOfflineDetailCriticalSummaryLabelKo,
@@ -1098,6 +1099,17 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_action_hint_aggregate_mismatch_label_is_stable",
+    passed:
+      buildOfflineDetailCompareActionHintAggregateMismatchLabelKo() ===
+        "가이드: 주요 집계가 다릅니다. 저장 시점/필터를 다시 확인하세요." &&
+      buildOfflineDetailCompareActionHintLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAggregateMismatch,
+      ) === buildOfflineDetailCompareActionHintAggregateMismatchLabelKo(),
+  });
+
+  checks.push({
     id: "offline_detail_compare_code_action_hint_label_matches_state",
     passed:
       buildOfflineDetailCompareActionHintLabelKo(offlineDetailCompareCodeAll, "") ===
@@ -1121,7 +1133,7 @@ async function main() {
       buildOfflineDetailCompareActionHintLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAggregateMismatch,
-      ) === "가이드: 주요 집계가 다릅니다. 저장 시점/필터를 다시 확인하세요.",
+      ) === buildOfflineDetailCompareActionHintAggregateMismatchLabelKo(),
   });
 
   checks.push({
