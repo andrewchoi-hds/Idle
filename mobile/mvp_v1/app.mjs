@@ -15,7 +15,7 @@ import {
   buildOfflineDetailHiddenSummaryLabelKo,
   buildOfflineDetailFilterSummaryLabelKo,
   extractOfflineDetailCompareCode,
-  extractOfflineDetailCompareCodeFromPayloadText,
+  extractOfflineDetailCompareCodeFromPayloadTextWithSource,
   getStage,
   getStageDisplayNameKo,
   isCopyTargetSlotDisabled,
@@ -901,7 +901,7 @@ async function copyOfflineCompareCodeToClipboard() {
   setStatus(copied ? "오프라인 비교 코드 복사 완료" : "오프라인 비교 코드 생성 완료");
 }
 
-function runOfflineCompareCodeCheck() {
+function runOfflineCompareCodeCheck(sourceLabelKo = "") {
   const currentCode = String(dom.offlineDetailCompareCode.textContent || "").trim();
   const targetText = String(dom.offlineCompareCodeInput.value || "").trim();
   const targetCode = extractOfflineDetailCompareCode(targetText);
@@ -916,7 +916,11 @@ function runOfflineCompareCodeCheck() {
   const resultLabel = buildOfflineDetailCompareResultLabelKo(currentCode, targetCode);
   dom.offlineCompareCodeResult.textContent = resultLabel;
   const isError = resultLabel.includes("오류") || resultLabel.includes("불가");
-  setStatus(resultLabel, isError);
+  const sourcePrefix =
+    typeof sourceLabelKo === "string" && sourceLabelKo.trim()
+      ? `[${sourceLabelKo.trim()}] `
+      : "";
+  setStatus(`${sourcePrefix}${resultLabel}`, isError);
 }
 
 async function pasteOfflineCompareCodeFromClipboard() {
@@ -947,14 +951,22 @@ function loadOfflineCompareCodeFromPayload() {
     setStatus("savePayload 입력 필요", true);
     return;
   }
-  const extractedCode = extractOfflineDetailCompareCodeFromPayloadText(payloadText);
-  if (!extractedCode) {
+  const extracted = extractOfflineDetailCompareCodeFromPayloadTextWithSource(payloadText);
+  if (!extracted.code) {
     dom.offlineCompareCodeResult.textContent = "입력 비교 코드 형식 오류";
     setStatus("savePayload에서 비교 코드 인식 실패", true);
     return;
   }
-  dom.offlineCompareCodeInput.value = extractedCode;
-  runOfflineCompareCodeCheck();
+  dom.offlineCompareCodeInput.value = extracted.code;
+  let sourceLabelKo = "savePayload";
+  if (extracted.source === "detail_view_snapshot") {
+    sourceLabelKo = "savePayload.detailViewSnapshotAtExport";
+  } else if (extracted.source === "detail_report_snapshot") {
+    sourceLabelKo = "savePayload.detailReportSnapshot";
+  } else if (extracted.source === "text") {
+    sourceLabelKo = "savePayload 텍스트";
+  }
+  runOfflineCompareCodeCheck(sourceLabelKo);
 }
 
 async function exportRealtimeReportToPayload() {
