@@ -7,6 +7,7 @@ import {
   buildOfflineDetailCompareCode,
   buildOfflineDetailCompareCodeCurrentSummaryLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryLabelKo,
+  buildOfflineDetailCompareCodeMatchSummaryLabelKo,
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeTargetSummaryLabelKo,
   buildOfflineDetailCompareResultLabelKo,
@@ -640,6 +641,33 @@ async function main() {
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
       ) === "차이 요약: 보기 전체→핵심 · view checksum 변경",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_match_summary_label_matches_diff",
+    passed:
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        "",
+      ) === "일치 요약: 대상 코드 없음" &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        "INVALID",
+        offlineDetailCompareCodeAll,
+      ) === "일치 요약: 현재 코드 없음" &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        "invalid target",
+      ) === "일치 요약: 대상 코드 형식 오류" &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ) ===
+        "일치 요약: 총 일치 · 핵심표시 일치 · 숨김 일치 · 보기 일치 · 전체 checksum 일치 · view checksum 일치" &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ) ===
+        "일치 요약: 총 일치 · 핵심표시 일치 · 숨김 일치 · 보기 불일치 · 전체 checksum 일치 · view checksum 불일치",
   });
 
   const parsedOfflineCompareCode = parseOfflineDetailCompareCode(offlineDetailCompareCodeAll);

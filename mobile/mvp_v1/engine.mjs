@@ -578,6 +578,33 @@ export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
   return parts.length > 0 ? `차이 요약: ${parts.join(" · ")}` : "차이 요약: 코드 차이 감지";
 }
 
+function boolMark(value) {
+  return value ? "일치" : "불일치";
+}
+
+export function buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+  currentCodeInput,
+  targetCodeInput,
+) {
+  const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
+  if (!targetText) {
+    return "일치 요약: 대상 코드 없음";
+  }
+  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
+  if (!diff.comparable) {
+    return diff.reason === "current_invalid"
+      ? "일치 요약: 현재 코드 없음"
+      : "일치 요약: 대상 코드 형식 오류";
+  }
+  return `일치 요약: 총 ${boolMark(diff.sameTotalEvents)} · 핵심표시 ${boolMark(
+    diff.sameCriticalVisibleEvents,
+  )} · 숨김 ${boolMark(diff.sameHiddenCriticalEvents)} · 보기 ${boolMark(
+    diff.sameViewMode,
+  )} · 전체 checksum ${boolMark(diff.sameAllChecksum)} · view checksum ${boolMark(
+    diff.sameViewChecksum,
+  )}`;
+}
+
 export function buildOfflineDetailReportSnapshot(
   eventsInput,
   maxKindsInput = 3,
