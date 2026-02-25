@@ -1103,7 +1103,10 @@ function runOfflineCompareCodeCheck(source = "keep") {
 
 async function pasteOfflineCompareCodeFromClipboard() {
   if (!(navigator.clipboard && typeof navigator.clipboard.readText === "function")) {
-    setStatus("클립보드 읽기 미지원 환경", true);
+    setStatus(
+      buildOfflineDetailCompareStatusLabelKo("clipboard", "클립보드 읽기 미지원 환경"),
+      true,
+    );
     return;
   }
   let text = "";
@@ -1111,7 +1114,7 @@ async function pasteOfflineCompareCodeFromClipboard() {
   try {
     text = await navigator.clipboard.readText();
   } catch {
-    setStatus("클립보드 읽기 실패", true);
+    setStatus(buildOfflineDetailCompareStatusLabelKo("clipboard", "클립보드 읽기 실패"), true);
     return;
   }
   const extractedCode = extractOfflineDetailCompareCode(text);
@@ -1123,7 +1126,10 @@ async function pasteOfflineCompareCodeFromClipboard() {
     setOfflineCompareMatchSummary(currentCode, text);
     setOfflineCompareActionHint(currentCode, text);
     setOfflineCompareSource("clipboard");
-    setStatus("클립보드에서 비교 코드 인식 실패", true);
+    setStatus(
+      buildOfflineDetailCompareStatusLabelKo("clipboard", "클립보드에서 비교 코드 인식 실패"),
+      true,
+    );
     return;
   }
   dom.offlineCompareCodeInput.value = extractedCode;
@@ -1140,7 +1146,7 @@ function loadOfflineCompareCodeFromPayload() {
     setOfflineCompareMatchSummary(currentCode, payloadText);
     setOfflineCompareActionHint(currentCode, payloadText);
     setOfflineCompareSource("none");
-    setStatus("savePayload 입력 필요", true);
+    setStatus(buildOfflineDetailCompareStatusLabelKo("none", "savePayload 입력 필요"), true);
     return;
   }
   const extracted = extractOfflineDetailCompareCodeFromPayloadTextWithSource(payloadText);
@@ -1152,7 +1158,10 @@ function loadOfflineCompareCodeFromPayload() {
     setOfflineCompareMatchSummary(currentCode, payloadText);
     setOfflineCompareActionHint(currentCode, payloadText);
     setOfflineCompareSource("payload");
-    setStatus("savePayload에서 비교 코드 인식 실패", true);
+    setStatus(
+      buildOfflineDetailCompareStatusLabelKo("payload", "savePayload에서 비교 코드 인식 실패"),
+      true,
+    );
     return;
   }
   dom.offlineCompareCodeInput.value = extracted.code;

@@ -645,6 +645,25 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_status_label_supports_extraction_failures",
+    passed:
+      buildOfflineDetailCompareStatusLabelKo("clipboard", "클립보드 읽기 미지원 환경") ===
+        "[출처: 클립보드 텍스트] 클립보드 읽기 미지원 환경" &&
+      buildOfflineDetailCompareStatusLabelKo("clipboard", "클립보드 읽기 실패") ===
+        "[출처: 클립보드 텍스트] 클립보드 읽기 실패" &&
+      buildOfflineDetailCompareStatusLabelKo(
+        "clipboard",
+        "클립보드에서 비교 코드 인식 실패",
+      ) === "[출처: 클립보드 텍스트] 클립보드에서 비교 코드 인식 실패" &&
+      buildOfflineDetailCompareStatusLabelKo("none", "savePayload 입력 필요") ===
+        "[출처: 없음] savePayload 입력 필요" &&
+      buildOfflineDetailCompareStatusLabelKo(
+        "payload",
+        "savePayload에서 비교 코드 인식 실패",
+      ) === "[출처: savePayload 텍스트] savePayload에서 비교 코드 인식 실패",
+  });
+
+  checks.push({
     id: "offline_detail_compare_input_source_resolves_none_or_input",
     passed:
       resolveOfflineDetailCompareInputSource("") === "none" &&

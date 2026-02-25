@@ -1322,3 +1322,11 @@
 
 ## 295) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 상태 메시지 출처 포맷 통일 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 296) 다음 순차 작업
+1. [완료] 오프라인 비교 추출 실패 경로(클립보드/`savePayload`) 상태 메시지가 `buildOfflineDetailCompareStatusLabelKo`를 사용하도록 정리해 출처 프리픽스를 통일.
+2. [완료] 클립보드 읽기 미지원/읽기 실패/코드 인식 실패 및 `savePayload` 입력 필요/코드 인식 실패 케이스에서 `[출처] 메시지` 포맷으로 상태를 즉시 안내하도록 반영.
+3. [완료] 모바일 회귀 체크에 추출 실패 메시지 포맷 시나리오를 추가해 source key별 상태 라벨 안정성을 검증.
+
+## 297) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 추출 실패 상태 메시지 출처 포맷 통일 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
