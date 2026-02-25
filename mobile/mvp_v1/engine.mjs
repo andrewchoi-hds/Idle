@@ -391,6 +391,23 @@ export function extractOfflineDetailCompareCodeFromPayloadText(payloadInput) {
   return extractOfflineDetailCompareCodeFromPayloadTextWithSource(payloadInput).code;
 }
 
+export function buildOfflineDetailCompareCodeTargetSummaryLabelKo(codeInput) {
+  const text = typeof codeInput === "string" ? codeInput.trim() : "";
+  if (!text) {
+    return "대상 코드: 없음";
+  }
+  const extracted = extractOfflineDetailCompareCode(text);
+  if (!extracted) {
+    return "대상 코드 형식 오류";
+  }
+  const parsed = parseOfflineDetailCompareCode(extracted);
+  if (!parsed) {
+    return "대상 코드 형식 오류";
+  }
+  const viewLabelKo = parsed.viewMode === "critical" ? "핵심" : "전체";
+  return `대상 코드: 총 ${parsed.totalEvents} · 핵심표시 ${parsed.criticalVisibleEvents} · 숨김 ${parsed.hiddenCriticalEvents} · 보기 ${viewLabelKo}`;
+}
+
 export function parseOfflineDetailCompareCode(codeInput) {
   const raw = extractOfflineDetailCompareCode(codeInput);
   const matched = /^ODR1-T(\d+)-C(\d+)-H(\d+)-V([AC])-A(\d{6})-S(\d{6})$/.exec(raw);

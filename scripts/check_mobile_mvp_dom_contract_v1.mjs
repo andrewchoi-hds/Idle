@@ -102,6 +102,7 @@ const REQUIRED_HTML_IDS = [
   "offlineDetailCompareCode",
   "offlineCompareCodeResult",
   "offlineCompareCodeSource",
+  "offlineCompareCodeTargetSummary",
   "offlineDetailList",
   "btnCloseOfflineModal",
   "btnRealtimeAuto",
@@ -173,6 +174,7 @@ const REQUIRED_DOM_KEYS = [
   "offlineDetailCompareCode",
   "offlineCompareCodeResult",
   "offlineCompareCodeSource",
+  "offlineCompareCodeTargetSummary",
   "offlineDetailList",
   "btnCloseOfflineModal",
 ];
