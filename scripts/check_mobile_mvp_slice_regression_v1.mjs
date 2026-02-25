@@ -15,6 +15,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTargetMissingLabelKo,
+  buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTone,
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeSourceTone,
@@ -1062,6 +1063,17 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_code_match_summary_current_missing_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo() ===
+        "일치 요약: 현재 코드 없음" &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        "INVALID",
+        offlineDetailCompareCodeAll,
+      ) === buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo(),
+  });
+
+  checks.push({
     id: "offline_detail_compare_code_match_summary_label_matches_diff",
     passed:
       buildOfflineDetailCompareCodeMatchSummaryLabelKo(
@@ -1071,7 +1083,7 @@ async function main() {
       buildOfflineDetailCompareCodeMatchSummaryLabelKo(
         "INVALID",
         offlineDetailCompareCodeAll,
-      ) === "일치 요약: 현재 코드 없음" &&
+      ) === buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo() &&
       buildOfflineDetailCompareCodeMatchSummaryLabelKo(
         offlineDetailCompareCodeAll,
         "invalid target",
