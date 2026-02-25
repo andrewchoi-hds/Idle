@@ -32,6 +32,7 @@ import {
   buildOfflineDetailCompareResultStateLabelKo,
   buildOfflineDetailCompareResultStateTone,
   buildOfflineDetailCompareActionHintLabelKo,
+  buildOfflineDetailCompareActionHintInputRequiredLabelKo,
   buildOfflineDetailCompareActionHintTone,
   resolveOfflineDetailCompareViewModeAlignmentTarget,
   buildOfflineDetailCriticalSummaryLabelKo,
@@ -1026,10 +1027,21 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_action_hint_input_required_label_is_stable",
+    passed:
+      buildOfflineDetailCompareActionHintInputRequiredLabelKo() ===
+        "가이드: 비교 코드를 입력하세요." &&
+      buildOfflineDetailCompareActionHintLabelKo(
+        offlineDetailCompareCodeAll,
+        "",
+      ) === buildOfflineDetailCompareActionHintInputRequiredLabelKo(),
+  });
+
+  checks.push({
     id: "offline_detail_compare_code_action_hint_label_matches_state",
     passed:
       buildOfflineDetailCompareActionHintLabelKo(offlineDetailCompareCodeAll, "") ===
-        "가이드: 비교 코드를 입력하세요." &&
+        buildOfflineDetailCompareActionHintInputRequiredLabelKo() &&
       buildOfflineDetailCompareActionHintLabelKo(offlineDetailCompareCodeAll, "invalid") ===
         "가이드: ODR1 비교 코드를 붙여넣거나 입력하세요." &&
       buildOfflineDetailCompareActionHintLabelKo("INVALID", offlineDetailCompareCodeAll) ===
