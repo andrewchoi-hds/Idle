@@ -1202,3 +1202,11 @@
 
 ## 265) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 차이 요약 라인 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 266) 다음 순차 작업
+1. [완료] 비교 코드 일치 요약 라벨 헬퍼(`buildOfflineDetailCompareCodeMatchSummaryLabelKo`)를 추가해 대상 없음/형식 오류/일치·불일치 조합 문구를 표준화.
+2. [완료] 오프라인 모달에 일치 요약 라인(`offlineCompareCodeMatchSummary`)을 추가해 항목별 일치 상태(총/핵심표시/숨김/보기/checksum)를 상시 노출.
+3. [완료] 모바일 회귀/DOM 체크에 일치 요약 라벨 헬퍼 및 신규 요약 라인 ID 계약 시나리오를 추가.
+
+## 267) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 일치 요약 라인 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
