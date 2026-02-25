@@ -17,6 +17,7 @@ import {
   buildOfflineDetailCompareCodeMatchSummaryTargetMissingLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo,
+  buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTone,
@@ -1085,6 +1086,19 @@ async function main() {
         offlineDetailCompareCodeAll,
         "invalid target",
       ) === buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo(),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_match_summary_prefix_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo() === "일치 요약:" &&
+      buildOfflineDetailCompareCodeMatchSummaryTargetMissingLabelKo().startsWith(
+        buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo(),
+      ) &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ).startsWith(buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()),
   });
 
   checks.push({
