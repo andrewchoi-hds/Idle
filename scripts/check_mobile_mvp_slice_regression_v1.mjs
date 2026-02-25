@@ -27,6 +27,7 @@ import {
   buildOfflineDetailCompareInvalidTargetLabelKo,
   buildOfflineDetailCompareMissingCurrentLabelKo,
   buildOfflineDetailCompareResultPendingLabelKo,
+  buildOfflineDetailCompareResultInputRequiredLabelKo,
   isOfflineDetailCompareResultError,
   buildOfflineDetailCompareResultStateLabelKo,
   buildOfflineDetailCompareResultStateTone,
@@ -814,6 +815,16 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_result_input_required_label_is_stable",
+    passed:
+      buildOfflineDetailCompareResultInputRequiredLabelKo() === "비교 코드를 입력하세요" &&
+      buildOfflineDetailCompareResultStateLabelKo(
+        offlineDetailCompareCodeAll,
+        "invalid",
+      ) === buildOfflineDetailCompareResultInputRequiredLabelKo(),
+  });
+
+  checks.push({
     id: "offline_detail_compare_code_target_summary_label_matches_target",
     passed:
       buildOfflineDetailCompareCodeTargetSummaryLabelKo("") === "대상 코드: 없음" &&
@@ -977,7 +988,7 @@ async function main() {
       buildOfflineDetailCompareResultStateLabelKo(offlineDetailCompareCodeAll, "") ===
         buildOfflineDetailCompareResultPendingLabelKo() &&
       buildOfflineDetailCompareResultStateLabelKo(offlineDetailCompareCodeAll, "invalid") ===
-        "비교 코드를 입력하세요" &&
+        buildOfflineDetailCompareResultInputRequiredLabelKo() &&
       buildOfflineDetailCompareResultStateLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAll,
