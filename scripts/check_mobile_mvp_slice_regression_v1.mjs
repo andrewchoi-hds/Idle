@@ -33,6 +33,7 @@ import {
   buildOfflineDetailCompareResultStateTone,
   buildOfflineDetailCompareActionHintLabelKo,
   buildOfflineDetailCompareActionHintInputRequiredLabelKo,
+  buildOfflineDetailCompareActionHintInvalidTargetLabelKo,
   buildOfflineDetailCompareActionHintTone,
   resolveOfflineDetailCompareViewModeAlignmentTarget,
   buildOfflineDetailCriticalSummaryLabelKo,
@@ -1038,12 +1039,23 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_action_hint_invalid_target_label_is_stable",
+    passed:
+      buildOfflineDetailCompareActionHintInvalidTargetLabelKo() ===
+        "가이드: ODR1 비교 코드를 붙여넣거나 입력하세요." &&
+      buildOfflineDetailCompareActionHintLabelKo(
+        offlineDetailCompareCodeAll,
+        "invalid",
+      ) === buildOfflineDetailCompareActionHintInvalidTargetLabelKo(),
+  });
+
+  checks.push({
     id: "offline_detail_compare_code_action_hint_label_matches_state",
     passed:
       buildOfflineDetailCompareActionHintLabelKo(offlineDetailCompareCodeAll, "") ===
         buildOfflineDetailCompareActionHintInputRequiredLabelKo() &&
       buildOfflineDetailCompareActionHintLabelKo(offlineDetailCompareCodeAll, "invalid") ===
-        "가이드: ODR1 비교 코드를 붙여넣거나 입력하세요." &&
+        buildOfflineDetailCompareActionHintInvalidTargetLabelKo() &&
       buildOfflineDetailCompareActionHintLabelKo("INVALID", offlineDetailCompareCodeAll) ===
         "가이드: 오프라인 정산 로그를 열어 현재 코드를 먼저 생성하세요." &&
       buildOfflineDetailCompareActionHintLabelKo(
