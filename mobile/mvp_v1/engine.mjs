@@ -1000,7 +1000,7 @@ export function buildOfflineDetailCompareCodeMatchSummaryLabelKo(
       ? buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo()
       : buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo();
   }
-  return `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} 총 ${boolMark(diff.sameTotalEvents)} · 핵심표시 ${boolMark(
+  return `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo()} ${boolMark(diff.sameTotalEvents)} · 핵심표시 ${boolMark(
     diff.sameCriticalVisibleEvents,
   )} · 숨김 ${boolMark(diff.sameHiddenCriticalEvents)} · 보기 ${boolMark(
     diff.sameViewMode,
@@ -1023,6 +1023,10 @@ export function buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo() 
 
 export function buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo() {
   return "일치 요약:";
+}
+
+export function buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo() {
+  return "총";
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo() {

@@ -18,6 +18,7 @@ import {
   buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo,
+  buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTone,
@@ -1099,6 +1100,24 @@ async function main() {
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAll,
       ).startsWith(buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_match_summary_total_key_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo() === "총" &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ).includes(
+        `${buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
+      ) &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAggregateMismatch,
+      ).includes(
+        `${buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo()}`,
+      ),
   });
 
   checks.push({
