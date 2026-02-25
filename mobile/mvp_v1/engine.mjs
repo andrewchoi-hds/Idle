@@ -990,7 +990,7 @@ export function buildOfflineDetailCompareCodeMatchSummaryLabelKo(
 ) {
   const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
   if (!targetText) {
-    return "일치 요약: 대상 코드 없음";
+    return buildOfflineDetailCompareCodeMatchSummaryTargetMissingLabelKo();
   }
   const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
   if (!diff.comparable) {
@@ -1005,6 +1005,10 @@ export function buildOfflineDetailCompareCodeMatchSummaryLabelKo(
   )} · 전체 checksum ${boolMark(diff.sameAllChecksum)} · view checksum ${boolMark(
     diff.sameViewChecksum,
   )}`;
+}
+
+export function buildOfflineDetailCompareCodeMatchSummaryTargetMissingLabelKo() {
+  return "일치 요약: 대상 코드 없음";
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryTone(
