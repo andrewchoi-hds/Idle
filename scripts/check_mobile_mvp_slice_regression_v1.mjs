@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import {
   buildOfflineDetailCompareCode,
   buildOfflineDetailCompareCodeCurrentSummaryLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryLabelKo,
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeTargetSummaryLabelKo,
   buildOfflineDetailCompareResultLabelKo,
@@ -614,6 +615,31 @@ async function main() {
       buildOfflineDetailCompareCodeCurrentSummaryLabelKo(
         `log ${offlineDetailCompareCodeCritical} log`,
       ) === "현재 코드: 총 6 · 핵심표시 4 · 숨김 2 · 보기 핵심",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_delta_summary_label_matches_diff",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        "",
+      ) === "차이 요약: 대상 코드 없음" &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        "INVALID",
+        offlineDetailCompareCodeAll,
+      ) === "차이 요약: 현재 코드 없음" &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        "invalid target",
+      ) === "차이 요약: 대상 코드 형식 오류" &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ) === "차이 요약: 차이 없음" &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ) === "차이 요약: 보기 전체→핵심 · view checksum 변경",
   });
 
   const parsedOfflineCompareCode = parseOfflineDetailCompareCode(offlineDetailCompareCodeAll);

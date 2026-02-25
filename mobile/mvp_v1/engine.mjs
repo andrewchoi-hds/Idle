@@ -519,6 +519,65 @@ export function buildOfflineDetailCompareResultLabelKo(
     : "비교 결과: 코드 차이 감지";
 }
 
+function formatSignedDelta(valueInput) {
+  const value = Number(valueInput) || 0;
+  if (value > 0) {
+    return `+${value}`;
+  }
+  return String(value);
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+  currentCodeInput,
+  targetCodeInput,
+) {
+  const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
+  if (!targetText) {
+    return "차이 요약: 대상 코드 없음";
+  }
+  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
+  if (!diff.comparable) {
+    return diff.reason === "current_invalid"
+      ? "차이 요약: 현재 코드 없음"
+      : "차이 요약: 대상 코드 형식 오류";
+  }
+  if (diff.identical) {
+    return "차이 요약: 차이 없음";
+  }
+  const parts = [];
+  if (!diff.sameTotalEvents) {
+    parts.push(
+      `총 ${formatSignedDelta(diff.target.totalEvents - diff.current.totalEvents)}`,
+    );
+  }
+  if (!diff.sameCriticalVisibleEvents) {
+    parts.push(
+      `핵심표시 ${formatSignedDelta(
+        diff.target.criticalVisibleEvents - diff.current.criticalVisibleEvents,
+      )}`,
+    );
+  }
+  if (!diff.sameHiddenCriticalEvents) {
+    parts.push(
+      `숨김 ${formatSignedDelta(
+        diff.target.hiddenCriticalEvents - diff.current.hiddenCriticalEvents,
+      )}`,
+    );
+  }
+  if (!diff.sameViewMode) {
+    const currentMode = diff.current.viewMode === "critical" ? "핵심" : "전체";
+    const targetMode = diff.target.viewMode === "critical" ? "핵심" : "전체";
+    parts.push(`보기 ${currentMode}→${targetMode}`);
+  }
+  if (!diff.sameAllChecksum) {
+    parts.push("전체 checksum 변경");
+  }
+  if (!diff.sameViewChecksum) {
+    parts.push("view checksum 변경");
+  }
+  return parts.length > 0 ? `차이 요약: ${parts.join(" · ")}` : "차이 요약: 코드 차이 감지";
+}
+
 export function buildOfflineDetailReportSnapshot(
   eventsInput,
   maxKindsInput = 3,
