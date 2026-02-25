@@ -22,6 +22,7 @@ import {
   resolveOfflineDetailCompareViewModeAlignmentTarget,
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeSourceTone,
+  resolveOfflineDetailCompareInputSource,
   buildOfflineDetailCompareCodeTargetSummaryLabelKo,
   buildOfflineDetailCompareCodeTargetSummaryTone,
   buildOfflineDetailCriticalSummaryLabelKo,
@@ -1052,9 +1053,13 @@ async function copyOfflineCompareCodeToClipboard() {
 }
 
 function runOfflineCompareCodeCheck(source = "input") {
-  const sourceLabelKo = setOfflineCompareSource(source);
   const currentCode = String(dom.offlineDetailCompareCode.textContent || "").trim();
   const targetText = String(dom.offlineCompareCodeInput.value || "").trim();
+  const normalizedSource =
+    source === "input"
+      ? resolveOfflineDetailCompareInputSource(targetText)
+      : source;
+  const sourceLabelKo = setOfflineCompareSource(normalizedSource);
   setOfflineCompareResultState(currentCode, targetText);
   setOfflineCompareActionHint(currentCode, targetText);
   setOfflineCompareTargetSummary(targetText);
@@ -1784,6 +1789,9 @@ function bindEvents() {
   });
   dom.offlineCompareCodeInput.addEventListener("input", () => {
     const currentCode = String(dom.offlineDetailCompareCode.textContent || "").trim();
+    setOfflineCompareSource(
+      resolveOfflineDetailCompareInputSource(dom.offlineCompareCodeInput.value),
+    );
     setOfflineCompareResultState(currentCode, dom.offlineCompareCodeInput.value);
     setOfflineCompareActionHint(currentCode, dom.offlineCompareCodeInput.value);
     setOfflineCompareTargetSummary(dom.offlineCompareCodeInput.value);

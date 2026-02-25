@@ -362,6 +362,11 @@ export function buildOfflineDetailCompareCodeSourceTone(sourceInput) {
   return "error";
 }
 
+export function resolveOfflineDetailCompareInputSource(codeInput) {
+  const text = typeof codeInput === "string" ? codeInput.trim() : "";
+  return text ? "input" : "none";
+}
+
 export function extractOfflineDetailCompareCodeFromPayloadTextWithSource(payloadInput) {
   const text = typeof payloadInput === "string" ? payloadInput.trim() : "";
   if (!text) {
