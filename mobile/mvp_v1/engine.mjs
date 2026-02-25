@@ -604,6 +604,33 @@ export function buildOfflineDetailCompareActionHintTone(
   return "error";
 }
 
+export function resolveOfflineDetailCompareViewModeAlignmentTarget(
+  currentCodeInput,
+  targetCodeInput,
+) {
+  const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
+  if (!targetText) {
+    return "";
+  }
+  const targetCode = extractOfflineDetailCompareCode(targetText);
+  if (!targetCode) {
+    return "";
+  }
+  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCode);
+  if (!diff.comparable || diff.identical || diff.sameViewMode) {
+    return "";
+  }
+  if (
+    diff.sameTotalEvents &&
+    diff.sameCriticalVisibleEvents &&
+    diff.sameHiddenCriticalEvents &&
+    diff.sameAllChecksum
+  ) {
+    return diff.target.viewMode;
+  }
+  return "";
+}
+
 function formatSignedDelta(valueInput) {
   const value = Number(valueInput) || 0;
   if (value > 0) {

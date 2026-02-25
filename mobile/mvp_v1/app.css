@@ -584,7 +584,7 @@ textarea:focus-visible,
 .offline-compare-row {
   margin-top: 8px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) repeat(3, auto);
+  grid-template-columns: minmax(0, 1fr) repeat(4, auto);
   gap: 8px;
 }
 

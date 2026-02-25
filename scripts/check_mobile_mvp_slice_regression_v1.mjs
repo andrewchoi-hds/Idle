@@ -14,6 +14,7 @@ import {
   buildOfflineDetailCompareResultStateLabelKo,
   buildOfflineDetailCompareActionHintLabelKo,
   buildOfflineDetailCompareActionHintTone,
+  resolveOfflineDetailCompareViewModeAlignmentTarget,
   buildOfflineDetailCriticalSummaryLabelKo,
   buildOfflineDetailKindDigest,
   buildOfflineDetailHiddenKindsSummaryLabelKo,
@@ -754,6 +755,41 @@ async function main() {
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAggregateMismatch,
       ) === "error",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_view_mode_alignment_target_matches_state",
+    passed:
+      resolveOfflineDetailCompareViewModeAlignmentTarget(offlineDetailCompareCodeAll, "") ===
+        "" &&
+      resolveOfflineDetailCompareViewModeAlignmentTarget(
+        offlineDetailCompareCodeAll,
+        "invalid",
+      ) === "" &&
+      resolveOfflineDetailCompareViewModeAlignmentTarget(
+        "INVALID",
+        offlineDetailCompareCodeAll,
+      ) === "" &&
+      resolveOfflineDetailCompareViewModeAlignmentTarget(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ) === "" &&
+      resolveOfflineDetailCompareViewModeAlignmentTarget(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ) === "critical" &&
+      resolveOfflineDetailCompareViewModeAlignmentTarget(
+        offlineDetailCompareCodeCritical,
+        offlineDetailCompareCodeAll,
+      ) === "all" &&
+      resolveOfflineDetailCompareViewModeAlignmentTarget(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAllChecksumMismatch,
+      ) === "" &&
+      resolveOfflineDetailCompareViewModeAlignmentTarget(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAggregateMismatch,
+      ) === "",
   });
 
   const parsedOfflineCompareCode = parseOfflineDetailCompareCode(offlineDetailCompareCodeAll);

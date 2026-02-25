@@ -15,6 +15,7 @@ import {
   buildOfflineDetailCompareResultStateLabelKo,
   buildOfflineDetailCompareActionHintLabelKo,
   buildOfflineDetailCompareActionHintTone,
+  resolveOfflineDetailCompareViewModeAlignmentTarget,
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeTargetSummaryLabelKo,
   buildOfflineDetailCriticalSummaryLabelKo,
@@ -145,6 +146,7 @@ const dom = {
   btnToggleOfflineDetail: document.getElementById("btnToggleOfflineDetail"),
   btnToggleOfflineCriticalOnly: document.getElementById("btnToggleOfflineCriticalOnly"),
   btnCompareOfflineCode: document.getElementById("btnCompareOfflineCode"),
+  btnApplyOfflineCompareViewMode: document.getElementById("btnApplyOfflineCompareViewMode"),
   btnPasteOfflineCompareCode: document.getElementById("btnPasteOfflineCompareCode"),
   btnLoadOfflineCompareCodeFromPayload: document.getElementById("btnLoadOfflineCompareCodeFromPayload"),
   btnCopyOfflineCompareCode: document.getElementById("btnCopyOfflineCompareCode"),
@@ -590,6 +592,26 @@ function applyRiskTone(node, tone) {
   node.classList.add("tone-info");
 }
 
+function syncOfflineCompareViewModeAction(currentCodeInput, targetCodeInput) {
+  if (!dom.btnApplyOfflineCompareViewMode) {
+    return;
+  }
+  const targetMode = resolveOfflineDetailCompareViewModeAlignmentTarget(
+    currentCodeInput,
+    targetCodeInput,
+  );
+  if (targetMode !== "all" && targetMode !== "critical") {
+    dom.btnApplyOfflineCompareViewMode.disabled = true;
+    dom.btnApplyOfflineCompareViewMode.dataset.targetMode = "";
+    dom.btnApplyOfflineCompareViewMode.textContent = "보기 모드 맞추기";
+    return;
+  }
+  const modeLabelKo = targetMode === "critical" ? "핵심" : "전체";
+  dom.btnApplyOfflineCompareViewMode.disabled = false;
+  dom.btnApplyOfflineCompareViewMode.dataset.targetMode = targetMode;
+  dom.btnApplyOfflineCompareViewMode.textContent = `보기 모드 맞추기(${modeLabelKo})`;
+}
+
 function setOfflineCompareActionHint(currentCodeInput, targetCodeInput) {
   const label = buildOfflineDetailCompareActionHintLabelKo(
     currentCodeInput,
@@ -601,6 +623,7 @@ function setOfflineCompareActionHint(currentCodeInput, targetCodeInput) {
   );
   dom.offlineCompareCodeActionHint.textContent = label;
   applyRiskTone(dom.offlineCompareCodeActionHint, tone);
+  syncOfflineCompareViewModeAction(currentCodeInput, targetCodeInput);
 }
 
 function syncSlotActionButtons() {
@@ -1688,6 +1711,17 @@ function bindEvents() {
   });
   dom.btnLoadOfflineCompareCodeFromPayload.addEventListener("click", () => {
     loadOfflineCompareCodeFromPayload();
+  });
+  dom.btnApplyOfflineCompareViewMode.addEventListener("click", () => {
+    const targetMode = String(dom.btnApplyOfflineCompareViewMode.dataset.targetMode || "");
+    if (targetMode !== "all" && targetMode !== "critical") {
+      setStatus("정렬 가능한 보기 모드 없음", true);
+      return;
+    }
+    setOfflineDetailCriticalOnly(targetMode === "critical");
+    renderOfflineDetailList(lastOfflineReport?.events ?? []);
+    const modeLabelKo = targetMode === "critical" ? "핵심" : "전체";
+    setStatus(`비교 대상 보기 모드(${modeLabelKo})로 정렬 완료`);
   });
   dom.offlineCompareCodeInput.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
