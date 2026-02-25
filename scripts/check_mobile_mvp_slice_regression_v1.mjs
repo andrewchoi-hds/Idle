@@ -26,6 +26,7 @@ import {
   buildOfflineDetailCompareResultLabelKo,
   buildOfflineDetailCompareInvalidTargetLabelKo,
   buildOfflineDetailCompareResultIdenticalLabelKo,
+  buildOfflineDetailCompareResultViewMismatchLabelKo,
   buildOfflineDetailCompareMissingCurrentLabelKo,
   buildOfflineDetailCompareResultPendingLabelKo,
   buildOfflineDetailCompareResultInputRequiredLabelKo,
@@ -823,6 +824,17 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_result_view_mismatch_label_is_stable",
+    passed:
+      buildOfflineDetailCompareResultViewMismatchLabelKo() ===
+        "비교 결과: 전체 분포 동일, view 분포 차이" &&
+      buildOfflineDetailCompareResultLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ) === buildOfflineDetailCompareResultViewMismatchLabelKo(),
+  });
+
+  checks.push({
     id: "offline_detail_compare_result_pending_label_is_stable",
     passed:
       buildOfflineDetailCompareResultPendingLabelKo() === "비교 대기 중" &&
@@ -1014,7 +1026,7 @@ async function main() {
       buildOfflineDetailCompareResultStateLabelKo(
         offlineDetailCompareCodeAll,
         `payload => ${offlineDetailCompareCodeCritical}`,
-      ) === "비교 결과: 전체 분포 동일, view 분포 차이" &&
+      ) === buildOfflineDetailCompareResultViewMismatchLabelKo() &&
       buildOfflineDetailCompareResultStateLabelKo("INVALID", offlineDetailCompareCodeAll) ===
         buildOfflineDetailCompareMissingCurrentLabelKo(),
   });

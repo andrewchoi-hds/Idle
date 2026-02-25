@@ -623,7 +623,7 @@ export function buildOfflineDetailCompareResultLabelKo(
     diff.sameAllChecksum &&
     !diff.sameViewChecksum
   ) {
-    return "비교 결과: 전체 분포 동일, view 분포 차이";
+    return buildOfflineDetailCompareResultViewMismatchLabelKo();
   }
   if (
     diff.sameTotalEvents &&
@@ -663,6 +663,10 @@ export function buildOfflineDetailCompareInvalidTargetLabelKo() {
 
 export function buildOfflineDetailCompareResultIdenticalLabelKo() {
   return "비교 결과: 완전 일치";
+}
+
+export function buildOfflineDetailCompareResultViewMismatchLabelKo() {
+  return "비교 결과: 전체 분포 동일, view 분포 차이";
 }
 
 export function buildOfflineDetailCompareMissingCurrentLabelKo() {
