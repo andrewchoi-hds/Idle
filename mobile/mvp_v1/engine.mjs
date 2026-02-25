@@ -367,6 +367,29 @@ export function resolveOfflineDetailCompareInputSource(codeInput) {
   return text ? "input" : "none";
 }
 
+export function resolveOfflineDetailCompareCheckSource(
+  requestedSourceInput,
+  currentSourceInput,
+  codeInput,
+) {
+  const requested =
+    typeof requestedSourceInput === "string" ? requestedSourceInput.trim() : "";
+  const current = typeof currentSourceInput === "string" ? currentSourceInput.trim() : "";
+  if (requested === "input") {
+    return resolveOfflineDetailCompareInputSource(codeInput);
+  }
+  if (requested === "keep") {
+    if (current && current !== "none") {
+      return current;
+    }
+    return resolveOfflineDetailCompareInputSource(codeInput);
+  }
+  if (!requested) {
+    return "none";
+  }
+  return requested;
+}
+
 export function extractOfflineDetailCompareCodeFromPayloadTextWithSource(payloadInput) {
   const text = typeof payloadInput === "string" ? payloadInput.trim() : "";
   if (!text) {

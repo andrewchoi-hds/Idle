@@ -23,6 +23,7 @@ import {
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeSourceTone,
   resolveOfflineDetailCompareInputSource,
+  resolveOfflineDetailCompareCheckSource,
   buildOfflineDetailCompareCodeTargetSummaryLabelKo,
   buildOfflineDetailCompareCodeTargetSummaryTone,
   buildOfflineDetailCriticalSummaryLabelKo,
@@ -232,6 +233,7 @@ let slotLocks = createDefaultSlotLockMap();
 let lastOfflineReport = null;
 let offlineDetailExpanded = false;
 let offlineDetailCriticalOnly = false;
+let offlineCompareSource = "none";
 let realtimeAutoTimer = null;
 let realtimePersistTicks = 0;
 let realtimePolicyBlockAccum = 0;
@@ -661,9 +663,14 @@ function setOfflineCompareMatchSummary(
 
 function setOfflineCompareSource(sourceInput) {
   const source = typeof sourceInput === "string" ? sourceInput.trim() : "";
-  const label = buildOfflineDetailCompareCodeSourceLabelKo(source);
+  const normalizedSource = source || "none";
+  offlineCompareSource = normalizedSource;
+  const label = buildOfflineDetailCompareCodeSourceLabelKo(normalizedSource);
   dom.offlineCompareCodeSource.textContent = label;
-  applyRiskTone(dom.offlineCompareCodeSource, buildOfflineDetailCompareCodeSourceTone(source));
+  applyRiskTone(
+    dom.offlineCompareCodeSource,
+    buildOfflineDetailCompareCodeSourceTone(normalizedSource),
+  );
   return label;
 }
 
@@ -1052,13 +1059,14 @@ async function copyOfflineCompareCodeToClipboard() {
   setStatus(copied ? "오프라인 비교 코드 복사 완료" : "오프라인 비교 코드 생성 완료");
 }
 
-function runOfflineCompareCodeCheck(source = "input") {
+function runOfflineCompareCodeCheck(source = "keep") {
   const currentCode = String(dom.offlineDetailCompareCode.textContent || "").trim();
   const targetText = String(dom.offlineCompareCodeInput.value || "").trim();
-  const normalizedSource =
-    source === "input"
-      ? resolveOfflineDetailCompareInputSource(targetText)
-      : source;
+  const normalizedSource = resolveOfflineDetailCompareCheckSource(
+    source,
+    offlineCompareSource,
+    targetText,
+  );
   const sourceLabelKo = setOfflineCompareSource(normalizedSource);
   setOfflineCompareResultState(currentCode, targetText);
   setOfflineCompareActionHint(currentCode, targetText);
