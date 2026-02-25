@@ -238,6 +238,7 @@ async function main() {
   assertIncludes(css, ".offline-modal", "app.css", failures);
   assertIncludes(css, ".offline-compare-result.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-delta-summary.tone-error", "app.css", failures);
+  assertIncludes(css, ".offline-compare-match-summary.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-action-hint.tone-error", "app.css", failures);
   assertIncludes(css, ".actions {", "app.css", failures);
   assertIncludes(css, "env(safe-area-inset-bottom)", "app.css", failures);

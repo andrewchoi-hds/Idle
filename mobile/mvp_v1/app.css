@@ -597,6 +597,22 @@ textarea:focus-visible,
   color: #ffb4ac;
 }
 
+.offline-compare-match-summary {
+  color: #bfd4cc;
+}
+
+.offline-compare-match-summary.tone-info {
+  color: #bfe6d9;
+}
+
+.offline-compare-match-summary.tone-warn {
+  color: #ffdca0;
+}
+
+.offline-compare-match-summary.tone-error {
+  color: #ffb4ac;
+}
+
 .offline-compare-action-hint {
   color: #9eb8af;
 }
