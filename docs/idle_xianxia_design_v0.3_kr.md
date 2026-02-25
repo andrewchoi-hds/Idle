@@ -1338,3 +1338,11 @@
 
 ## 299) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 클립보드 실패 메타/출처 라인 동기화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 300) 다음 순차 작업
+1. [완료] payload 실패 메타 헬퍼(`resolveOfflineDetailComparePayloadFailureInfo`)를 추가해 실패 사유(`missing_payload/extract_failed`)별 source/message 매핑을 표준화.
+2. [완료] 오프라인 모달 `savePayload` 불러오기 실패 경로(입력 없음/코드 인식 실패)가 payload 실패 메타를 사용해 출처 라인/상태 메시지를 일관된 기준으로 갱신하도록 반영.
+3. [완료] 모바일 회귀 체크에 payload 실패 메타 헬퍼 시나리오를 추가해 사유별 매핑 안정성을 검증.
+
+## 301) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 payload 실패 메타/실패 경로 상태 동기화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

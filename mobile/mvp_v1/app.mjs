@@ -24,6 +24,7 @@ import {
   buildOfflineDetailCompareCodeSourceTone,
   buildOfflineDetailCompareStatusLabelKo,
   resolveOfflineDetailCompareClipboardFailureInfo,
+  resolveOfflineDetailComparePayloadFailureInfo,
   resolveOfflineDetailCompareInputSource,
   resolveOfflineDetailCompareTargetInputState,
   resolveOfflineDetailCompareCheckSource,
@@ -1158,26 +1159,37 @@ function loadOfflineCompareCodeFromPayload() {
   const payloadText = String(dom.savePayload.value || "").trim();
   const currentCode = String(dom.offlineDetailCompareCode.textContent || "").trim();
   if (!payloadText) {
+    const payloadFailure = resolveOfflineDetailComparePayloadFailureInfo("missing_payload");
     setOfflineCompareResultState(currentCode, payloadText);
     setOfflineCompareTargetSummary(payloadText);
     setOfflineCompareDeltaSummary(currentCode, payloadText);
     setOfflineCompareMatchSummary(currentCode, payloadText);
     setOfflineCompareActionHint(currentCode, payloadText);
-    setOfflineCompareSource("none");
-    setStatus(buildOfflineDetailCompareStatusLabelKo("none", "savePayload 입력 필요"), true);
+    setOfflineCompareSource(payloadFailure.source);
+    setStatus(
+      buildOfflineDetailCompareStatusLabelKo(
+        payloadFailure.source,
+        payloadFailure.messageKo,
+      ),
+      true,
+    );
     return;
   }
   const extracted = extractOfflineDetailCompareCodeFromPayloadTextWithSource(payloadText);
   if (!extracted.code) {
+    const payloadFailure = resolveOfflineDetailComparePayloadFailureInfo("extract_failed");
     dom.offlineCompareCodeResult.textContent = "입력 비교 코드 형식 오류";
     applyRiskTone(dom.offlineCompareCodeResult, "warn");
     setOfflineCompareTargetSummary(payloadText);
     setOfflineCompareDeltaSummary(currentCode, payloadText);
     setOfflineCompareMatchSummary(currentCode, payloadText);
     setOfflineCompareActionHint(currentCode, payloadText);
-    setOfflineCompareSource("payload");
+    setOfflineCompareSource(payloadFailure.source);
     setStatus(
-      buildOfflineDetailCompareStatusLabelKo("payload", "savePayload에서 비교 코드 인식 실패"),
+      buildOfflineDetailCompareStatusLabelKo(
+        payloadFailure.source,
+        payloadFailure.messageKo,
+      ),
       true,
     );
     return;
