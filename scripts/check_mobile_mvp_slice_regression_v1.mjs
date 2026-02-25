@@ -37,6 +37,7 @@ import {
   buildOfflineDetailCompareActionHintMissingCurrentLabelKo,
   buildOfflineDetailCompareActionHintIdenticalLabelKo,
   buildOfflineDetailCompareActionHintViewMismatchLabelKo,
+  buildOfflineDetailCompareActionHintChecksumMismatchLabelKo,
   buildOfflineDetailCompareActionHintTone,
   resolveOfflineDetailCompareViewModeAlignmentTarget,
   buildOfflineDetailCriticalSummaryLabelKo,
@@ -1086,6 +1087,17 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_action_hint_checksum_mismatch_label_is_stable",
+    passed:
+      buildOfflineDetailCompareActionHintChecksumMismatchLabelKo() ===
+        "가이드: 이벤트 구성 분포가 다릅니다. 정산 로그 원본을 확인하세요." &&
+      buildOfflineDetailCompareActionHintLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAllChecksumMismatch,
+      ) === buildOfflineDetailCompareActionHintChecksumMismatchLabelKo(),
+  });
+
+  checks.push({
     id: "offline_detail_compare_code_action_hint_label_matches_state",
     passed:
       buildOfflineDetailCompareActionHintLabelKo(offlineDetailCompareCodeAll, "") ===
@@ -1105,7 +1117,7 @@ async function main() {
       buildOfflineDetailCompareActionHintLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAllChecksumMismatch,
-      ) === "가이드: 이벤트 구성 분포가 다릅니다. 정산 로그 원본을 확인하세요." &&
+      ) === buildOfflineDetailCompareActionHintChecksumMismatchLabelKo() &&
       buildOfflineDetailCompareActionHintLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAggregateMismatch,
