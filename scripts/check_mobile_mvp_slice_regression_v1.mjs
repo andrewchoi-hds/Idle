@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 
 import {
   buildOfflineDetailCompareCode,
+  buildOfflineDetailCompareCodeCurrentSummaryLabelKo,
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeTargetSummaryLabelKo,
   buildOfflineDetailCompareResultLabelKo,
@@ -600,6 +601,19 @@ async function main() {
       buildOfflineDetailCompareCodeTargetSummaryLabelKo(
         `payload => ${offlineDetailCompareCodeCritical}`,
       ) === "대상 코드: 총 6 · 핵심표시 4 · 숨김 2 · 보기 핵심",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_current_summary_label_matches_current",
+    passed:
+      buildOfflineDetailCompareCodeCurrentSummaryLabelKo("") === "현재 코드: 없음" &&
+      buildOfflineDetailCompareCodeCurrentSummaryLabelKo("invalid text") ===
+        "현재 코드 형식 오류" &&
+      buildOfflineDetailCompareCodeCurrentSummaryLabelKo(offlineDetailCompareCodeAll) ===
+        "현재 코드: 총 6 · 핵심표시 4 · 숨김 2 · 보기 전체" &&
+      buildOfflineDetailCompareCodeCurrentSummaryLabelKo(
+        `log ${offlineDetailCompareCodeCritical} log`,
+      ) === "현재 코드: 총 6 · 핵심표시 4 · 숨김 2 · 보기 핵심",
   });
 
   const parsedOfflineCompareCode = parseOfflineDetailCompareCode(offlineDetailCompareCodeAll);

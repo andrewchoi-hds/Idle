@@ -8,6 +8,7 @@ import {
   createInitialSliceState,
   createSeededRng,
   buildOfflineDetailCompareCode,
+  buildOfflineDetailCompareCodeCurrentSummaryLabelKo,
   buildOfflineDetailCompareResultLabelKo,
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeTargetSummaryLabelKo,
@@ -121,6 +122,7 @@ const dom = {
   offlineCompareCodeInput: document.getElementById("offlineCompareCodeInput"),
   offlineCompareCodeResult: document.getElementById("offlineCompareCodeResult"),
   offlineCompareCodeSource: document.getElementById("offlineCompareCodeSource"),
+  offlineCompareCodeCurrentSummary: document.getElementById("offlineCompareCodeCurrentSummary"),
   offlineCompareCodeTargetSummary: document.getElementById("offlineCompareCodeTargetSummary"),
   offlineDetailFilterSummary: document.getElementById("offlineDetailFilterSummary"),
   offlineDetailHiddenSummary: document.getElementById("offlineDetailHiddenSummary"),
@@ -731,10 +733,10 @@ function renderOfflineDetailList(events) {
   const prioritizedRows = prioritizeOfflineDetailEvents(events);
   const mode = offlineDetailCriticalOnly ? "critical" : "all";
   const rows = filterOfflineDetailEventsByMode(prioritizedRows, mode);
-  dom.offlineDetailCompareCode.textContent = buildOfflineDetailCompareCode(
-    prioritizedRows,
-    mode,
-  );
+  const currentCompareCode = buildOfflineDetailCompareCode(prioritizedRows, mode);
+  dom.offlineDetailCompareCode.textContent = currentCompareCode;
+  dom.offlineCompareCodeCurrentSummary.textContent =
+    buildOfflineDetailCompareCodeCurrentSummaryLabelKo(currentCompareCode);
   dom.offlineDetailFilterSummary.textContent = buildOfflineDetailFilterSummaryLabelKo(
     prioritizedRows,
     mode,
@@ -1288,6 +1290,7 @@ function hideOfflineModal() {
   dom.offlineModal.classList.add("hidden");
   dom.offlineModal.setAttribute("aria-hidden", "true");
   dom.offlineDetailCompareCode.textContent = "비교 코드 없음";
+  dom.offlineCompareCodeCurrentSummary.textContent = "현재 코드: 없음";
   dom.offlineCompareCodeInput.value = "";
   dom.offlineCompareCodeResult.textContent = "비교 대기 중";
   dom.offlineCompareCodeSource.textContent = "출처: 없음";
@@ -1338,6 +1341,7 @@ function showOfflineModal(offline) {
   dom.offlineCompareCodeInput.value = "";
   dom.offlineCompareCodeResult.textContent = "비교 대기 중";
   dom.offlineCompareCodeSource.textContent = "출처: 없음";
+  dom.offlineCompareCodeCurrentSummary.textContent = "현재 코드: 없음";
   dom.offlineCompareCodeTargetSummary.textContent = "대상 코드: 없음";
   setOfflineDetailCriticalOnly(false);
   renderOfflineDetailList(events);

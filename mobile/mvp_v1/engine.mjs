@@ -391,21 +391,31 @@ export function extractOfflineDetailCompareCodeFromPayloadText(payloadInput) {
   return extractOfflineDetailCompareCodeFromPayloadTextWithSource(payloadInput).code;
 }
 
-export function buildOfflineDetailCompareCodeTargetSummaryLabelKo(codeInput) {
+function buildOfflineDetailCompareCodeSummaryLabelKo(codeInput, labelPrefixInput) {
+  const labelPrefix = typeof labelPrefixInput === "string" ? labelPrefixInput.trim() : "";
+  const normalizedPrefix = labelPrefix || "대상 코드";
   const text = typeof codeInput === "string" ? codeInput.trim() : "";
   if (!text) {
-    return "대상 코드: 없음";
+    return `${normalizedPrefix}: 없음`;
   }
   const extracted = extractOfflineDetailCompareCode(text);
   if (!extracted) {
-    return "대상 코드 형식 오류";
+    return `${normalizedPrefix} 형식 오류`;
   }
   const parsed = parseOfflineDetailCompareCode(extracted);
   if (!parsed) {
-    return "대상 코드 형식 오류";
+    return `${normalizedPrefix} 형식 오류`;
   }
   const viewLabelKo = parsed.viewMode === "critical" ? "핵심" : "전체";
-  return `대상 코드: 총 ${parsed.totalEvents} · 핵심표시 ${parsed.criticalVisibleEvents} · 숨김 ${parsed.hiddenCriticalEvents} · 보기 ${viewLabelKo}`;
+  return `${normalizedPrefix}: 총 ${parsed.totalEvents} · 핵심표시 ${parsed.criticalVisibleEvents} · 숨김 ${parsed.hiddenCriticalEvents} · 보기 ${viewLabelKo}`;
+}
+
+export function buildOfflineDetailCompareCodeTargetSummaryLabelKo(codeInput) {
+  return buildOfflineDetailCompareCodeSummaryLabelKo(codeInput, "대상 코드");
+}
+
+export function buildOfflineDetailCompareCodeCurrentSummaryLabelKo(codeInput) {
+  return buildOfflineDetailCompareCodeSummaryLabelKo(codeInput, "현재 코드");
 }
 
 export function parseOfflineDetailCompareCode(codeInput) {
