@@ -23,6 +23,7 @@ import {
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeSourceTone,
   buildOfflineDetailCompareStatusLabelKo,
+  resolveOfflineDetailCompareClipboardFailureInfo,
   resolveOfflineDetailCompareInputSource,
   resolveOfflineDetailCompareTargetInputState,
   resolveOfflineDetailCompareCheckSource,
@@ -1103,8 +1104,13 @@ function runOfflineCompareCodeCheck(source = "keep") {
 
 async function pasteOfflineCompareCodeFromClipboard() {
   if (!(navigator.clipboard && typeof navigator.clipboard.readText === "function")) {
+    const clipboardFailure = resolveOfflineDetailCompareClipboardFailureInfo("unsupported");
+    setOfflineCompareSource(clipboardFailure.source);
     setStatus(
-      buildOfflineDetailCompareStatusLabelKo("clipboard", "클립보드 읽기 미지원 환경"),
+      buildOfflineDetailCompareStatusLabelKo(
+        clipboardFailure.source,
+        clipboardFailure.messageKo,
+      ),
       true,
     );
     return;
@@ -1114,20 +1120,32 @@ async function pasteOfflineCompareCodeFromClipboard() {
   try {
     text = await navigator.clipboard.readText();
   } catch {
-    setStatus(buildOfflineDetailCompareStatusLabelKo("clipboard", "클립보드 읽기 실패"), true);
+    const clipboardFailure = resolveOfflineDetailCompareClipboardFailureInfo("read_failed");
+    setOfflineCompareSource(clipboardFailure.source);
+    setStatus(
+      buildOfflineDetailCompareStatusLabelKo(
+        clipboardFailure.source,
+        clipboardFailure.messageKo,
+      ),
+      true,
+    );
     return;
   }
   const extractedCode = extractOfflineDetailCompareCode(text);
   if (!extractedCode) {
+    const clipboardFailure = resolveOfflineDetailCompareClipboardFailureInfo("extract_failed");
     dom.offlineCompareCodeResult.textContent = "입력 비교 코드 형식 오류";
     applyRiskTone(dom.offlineCompareCodeResult, "warn");
     setOfflineCompareTargetSummary(text);
     setOfflineCompareDeltaSummary(currentCode, text);
     setOfflineCompareMatchSummary(currentCode, text);
     setOfflineCompareActionHint(currentCode, text);
-    setOfflineCompareSource("clipboard");
+    setOfflineCompareSource(clipboardFailure.source);
     setStatus(
-      buildOfflineDetailCompareStatusLabelKo("clipboard", "클립보드에서 비교 코드 인식 실패"),
+      buildOfflineDetailCompareStatusLabelKo(
+        clipboardFailure.source,
+        clipboardFailure.messageKo,
+      ),
       true,
     );
     return;
