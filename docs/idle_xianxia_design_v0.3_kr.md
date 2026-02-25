@@ -1186,3 +1186,11 @@
 
 ## 261) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 대상 요약 라인 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 262) 다음 순차 작업
+1. [완료] 비교 코드 현재 요약 라벨 헬퍼(`buildOfflineDetailCompareCodeCurrentSummaryLabelKo`)를 추가해 빈 입력/형식 오류/전체·핵심 보기 요약 문구를 표준화.
+2. [완료] 오프라인 모달에 현재 요약 라인(`offlineCompareCodeCurrentSummary`)을 추가해 기준 코드 집계(총/핵심표시/숨김/보기)를 상시 노출.
+3. [완료] 모바일 회귀/DOM 체크에 현재 요약 라벨 헬퍼 및 신규 요약 라인 ID 계약 시나리오를 추가.
+
+## 263) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 현재 요약 라인 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
