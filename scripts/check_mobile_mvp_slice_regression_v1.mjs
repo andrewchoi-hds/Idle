@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 
 import {
   buildOfflineDetailCompareCode,
+  buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareResultLabelKo,
   buildOfflineDetailCriticalSummaryLabelKo,
   buildOfflineDetailKindDigest,
@@ -571,6 +572,20 @@ async function main() {
       payloadSourceFromText.source === "text" &&
       payloadSourceMissing.code === "" &&
       payloadSourceMissing.source === "none",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_source_label_matches_source",
+    passed:
+      buildOfflineDetailCompareCodeSourceLabelKo("detail_view_snapshot") ===
+        "출처: savePayload.detailViewSnapshotAtExport" &&
+      buildOfflineDetailCompareCodeSourceLabelKo("detail_report_snapshot") ===
+        "출처: savePayload.detailReportSnapshot" &&
+      buildOfflineDetailCompareCodeSourceLabelKo("text") === "출처: savePayload 텍스트" &&
+      buildOfflineDetailCompareCodeSourceLabelKo("payload") === "출처: savePayload 텍스트" &&
+      buildOfflineDetailCompareCodeSourceLabelKo("clipboard") === "출처: 클립보드 텍스트" &&
+      buildOfflineDetailCompareCodeSourceLabelKo("input") === "출처: 비교 코드 입력값" &&
+      buildOfflineDetailCompareCodeSourceLabelKo("unknown") === "출처: 없음",
   });
 
   const parsedOfflineCompareCode = parseOfflineDetailCompareCode(offlineDetailCompareCodeAll);

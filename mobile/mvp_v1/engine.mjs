@@ -323,6 +323,26 @@ export function extractOfflineDetailCompareCode(textInput) {
   return matched ? matched[0] : "";
 }
 
+export function buildOfflineDetailCompareCodeSourceLabelKo(sourceInput) {
+  const source = typeof sourceInput === "string" ? sourceInput.trim() : "";
+  if (source === "detail_view_snapshot") {
+    return "출처: savePayload.detailViewSnapshotAtExport";
+  }
+  if (source === "detail_report_snapshot") {
+    return "출처: savePayload.detailReportSnapshot";
+  }
+  if (source === "text" || source === "payload") {
+    return "출처: savePayload 텍스트";
+  }
+  if (source === "clipboard") {
+    return "출처: 클립보드 텍스트";
+  }
+  if (source === "input") {
+    return "출처: 비교 코드 입력값";
+  }
+  return "출처: 없음";
+}
+
 export function extractOfflineDetailCompareCodeFromPayloadTextWithSource(payloadInput) {
   const text = typeof payloadInput === "string" ? payloadInput.trim() : "";
   if (!text) {
