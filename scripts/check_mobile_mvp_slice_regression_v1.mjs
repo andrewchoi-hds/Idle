@@ -25,6 +25,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryTone,
   buildOfflineDetailCompareResultLabelKo,
   buildOfflineDetailCompareInvalidTargetLabelKo,
+  buildOfflineDetailCompareResultIdenticalLabelKo,
   buildOfflineDetailCompareMissingCurrentLabelKo,
   buildOfflineDetailCompareResultPendingLabelKo,
   buildOfflineDetailCompareResultInputRequiredLabelKo,
@@ -812,6 +813,16 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_result_identical_label_is_stable",
+    passed:
+      buildOfflineDetailCompareResultIdenticalLabelKo() === "비교 결과: 완전 일치" &&
+      buildOfflineDetailCompareResultLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ) === buildOfflineDetailCompareResultIdenticalLabelKo(),
+  });
+
+  checks.push({
     id: "offline_detail_compare_result_pending_label_is_stable",
     passed:
       buildOfflineDetailCompareResultPendingLabelKo() === "비교 대기 중" &&
@@ -999,7 +1010,7 @@ async function main() {
       buildOfflineDetailCompareResultStateLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAll,
-      ) === "비교 결과: 완전 일치" &&
+      ) === buildOfflineDetailCompareResultIdenticalLabelKo() &&
       buildOfflineDetailCompareResultStateLabelKo(
         offlineDetailCompareCodeAll,
         `payload => ${offlineDetailCompareCodeCritical}`,
@@ -1225,7 +1236,7 @@ async function main() {
       buildOfflineDetailCompareResultLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAll,
-      ) === "비교 결과: 완전 일치" &&
+      ) === buildOfflineDetailCompareResultIdenticalLabelKo() &&
       buildOfflineDetailCompareResultLabelKo(offlineDetailCompareCodeAll, "BAD") ===
         buildOfflineDetailCompareInvalidTargetLabelKo(),
   });

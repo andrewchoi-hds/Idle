@@ -614,7 +614,7 @@ export function buildOfflineDetailCompareResultLabelKo(
       : buildOfflineDetailCompareInvalidTargetLabelKo();
   }
   if (diff.identical) {
-    return "비교 결과: 완전 일치";
+    return buildOfflineDetailCompareResultIdenticalLabelKo();
   }
   if (
     diff.sameTotalEvents &&
@@ -659,6 +659,10 @@ export function buildOfflineDetailCompareResultLabelKo(
 
 export function buildOfflineDetailCompareInvalidTargetLabelKo() {
   return "입력 비교 코드 형식 오류";
+}
+
+export function buildOfflineDetailCompareResultIdenticalLabelKo() {
+  return "비교 결과: 완전 일치";
 }
 
 export function buildOfflineDetailCompareMissingCurrentLabelKo() {
