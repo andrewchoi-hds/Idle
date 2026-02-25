@@ -14,6 +14,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryLabelKo,
+  buildOfflineDetailCompareCodeMatchSummaryTargetMissingLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTone,
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeSourceTone,
@@ -1050,12 +1051,23 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_code_match_summary_target_missing_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeMatchSummaryTargetMissingLabelKo() ===
+        "일치 요약: 대상 코드 없음" &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        "",
+      ) === buildOfflineDetailCompareCodeMatchSummaryTargetMissingLabelKo(),
+  });
+
+  checks.push({
     id: "offline_detail_compare_code_match_summary_label_matches_diff",
     passed:
       buildOfflineDetailCompareCodeMatchSummaryLabelKo(
         offlineDetailCompareCodeAll,
         "",
-      ) === "일치 요약: 대상 코드 없음" &&
+      ) === buildOfflineDetailCompareCodeMatchSummaryTargetMissingLabelKo() &&
       buildOfflineDetailCompareCodeMatchSummaryLabelKo(
         "INVALID",
         offlineDetailCompareCodeAll,
