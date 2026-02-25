@@ -110,6 +110,7 @@ npm run mobile:mvp:serve
     - 비교 코드 일치 요약 라인(`offlineCompareCodeMatchSummary`)에 항목별 일치/불일치(총/핵심표시/숨김/보기/checksum)를 상시 표시
     - 기준 코드가 리렌더될 때 비교 결과 라인(`offlineCompareCodeResult`)도 입력값 기준으로 즉시 재계산해 stale 상태를 방지
     - 비교 가이드 라인(`offlineCompareCodeActionHint`)에 입력 필요/형식 오류/일치/보기 모드 차이/집계 차이별 다음 액션을 상시 표시
+    - 비교 가이드 라인 톤(`info/warn/error`)을 함께 반영해 상태 우선순위를 색상으로 즉시 구분
     - 팝업에서 세부 로그 토글(최근 이벤트) + 정산 리포트 JSON 내보내기 지원
 - 옵션:
   - `앱 복귀 시 실시간 자동 재개` (`autoResumeRealtime`, on/off)
@@ -213,6 +214,7 @@ npm run mobile:mvp:check
   - 오프라인 비교 코드 일치 요약 라벨(`buildOfflineDetailCompareCodeMatchSummaryLabelKo`)이 대상 없음/형식 오류/일치·불일치 조합 케이스를 일관되게 반환하는지 검증
   - 오프라인 비교 결과 상태 라벨(`buildOfflineDetailCompareResultStateLabelKo`)이 대기/입력 필요/일치/보기 차이/현재 코드 없음 케이스를 일관되게 반환하는지 검증
   - 오프라인 비교 가이드 라벨(`buildOfflineDetailCompareActionHintLabelKo`)이 입력 필요/형식 오류/현재 코드 없음/일치/보기 모드 차이/checksum·집계 차이 케이스를 일관되게 반환하는지 검증
+  - 오프라인 비교 가이드 톤(`buildOfflineDetailCompareActionHintTone`)이 입력 필요/형식 오류/현재 코드 없음/일치/보기 모드 차이/checksum·집계 차이 케이스에서 `warn/error/info`를 일관되게 반환하는지 검증
   - 오프라인 비교 대조(`parseOfflineDetailCompareCode`, `resolveOfflineDetailCompareCodeDiff`, `buildOfflineDetailCompareResultLabelKo`)가 파싱/차이 요약/오류 문구를 일관되게 반환하는지 검증
   - 오프라인 리포트 스냅샷(`buildOfflineDetailReportSnapshot`)이 필터 집계/라벨/숨김 상위 종류 및 kind digest(view 포함)/compareCode를 일관되게 반환하는지 검증
   - 오프라인 핵심 이벤트 요약(`summarizeOfflineDetailCriticalEvents`, `buildOfflineDetailCriticalSummaryLabelKo`)이 카운트/라벨을 일관되게 반환하는지 검증

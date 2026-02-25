@@ -13,6 +13,7 @@ import {
   buildOfflineDetailCompareResultLabelKo,
   buildOfflineDetailCompareResultStateLabelKo,
   buildOfflineDetailCompareActionHintLabelKo,
+  buildOfflineDetailCompareActionHintTone,
   buildOfflineDetailCriticalSummaryLabelKo,
   buildOfflineDetailKindDigest,
   buildOfflineDetailHiddenKindsSummaryLabelKo,
@@ -727,6 +728,32 @@ async function main() {
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAggregateMismatch,
       ) === "가이드: 주요 집계가 다릅니다. 저장 시점/필터를 다시 확인하세요.",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_action_hint_tone_matches_state",
+    passed:
+      buildOfflineDetailCompareActionHintTone(offlineDetailCompareCodeAll, "") === "warn" &&
+      buildOfflineDetailCompareActionHintTone(offlineDetailCompareCodeAll, "invalid") ===
+        "warn" &&
+      buildOfflineDetailCompareActionHintTone("INVALID", offlineDetailCompareCodeAll) ===
+        "error" &&
+      buildOfflineDetailCompareActionHintTone(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ) === "info" &&
+      buildOfflineDetailCompareActionHintTone(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ) === "warn" &&
+      buildOfflineDetailCompareActionHintTone(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAllChecksumMismatch,
+      ) === "warn" &&
+      buildOfflineDetailCompareActionHintTone(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAggregateMismatch,
+      ) === "error",
   });
 
   const parsedOfflineCompareCode = parseOfflineDetailCompareCode(offlineDetailCompareCodeAll);

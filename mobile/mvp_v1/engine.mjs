@@ -570,6 +570,40 @@ export function buildOfflineDetailCompareActionHintLabelKo(
   return "가이드: 주요 집계가 다릅니다. 저장 시점/필터를 다시 확인하세요.";
 }
 
+export function buildOfflineDetailCompareActionHintTone(
+  currentCodeInput,
+  targetCodeInput,
+) {
+  const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
+  if (!targetText) {
+    return "warn";
+  }
+  const targetCode = extractOfflineDetailCompareCode(targetText);
+  if (!targetCode) {
+    return "warn";
+  }
+  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCode);
+  if (!diff.comparable) {
+    return diff.reason === "current_invalid" ? "error" : "warn";
+  }
+  if (diff.identical) {
+    return "info";
+  }
+  if (
+    !diff.sameViewMode &&
+    diff.sameTotalEvents &&
+    diff.sameCriticalVisibleEvents &&
+    diff.sameHiddenCriticalEvents &&
+    diff.sameAllChecksum
+  ) {
+    return "warn";
+  }
+  if (!diff.sameAllChecksum || !diff.sameViewChecksum) {
+    return "warn";
+  }
+  return "error";
+}
+
 function formatSignedDelta(valueInput) {
   const value = Number(valueInput) || 0;
   if (value > 0) {

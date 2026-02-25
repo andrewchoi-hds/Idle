@@ -14,6 +14,7 @@ import {
   buildOfflineDetailCompareResultLabelKo,
   buildOfflineDetailCompareResultStateLabelKo,
   buildOfflineDetailCompareActionHintLabelKo,
+  buildOfflineDetailCompareActionHintTone,
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeTargetSummaryLabelKo,
   buildOfflineDetailCriticalSummaryLabelKo,
@@ -589,6 +590,19 @@ function applyRiskTone(node, tone) {
   node.classList.add("tone-info");
 }
 
+function setOfflineCompareActionHint(currentCodeInput, targetCodeInput) {
+  const label = buildOfflineDetailCompareActionHintLabelKo(
+    currentCodeInput,
+    targetCodeInput,
+  );
+  const tone = buildOfflineDetailCompareActionHintTone(
+    currentCodeInput,
+    targetCodeInput,
+  );
+  dom.offlineCompareCodeActionHint.textContent = label;
+  applyRiskTone(dom.offlineCompareCodeActionHint, tone);
+}
+
 function syncSlotActionButtons() {
   const targetSlot = normalizeSaveSlot(dom.optCopySlotTarget.value, activeSaveSlot);
   const targetSummary = summarizeSaveSlot(targetSlot);
@@ -749,10 +763,7 @@ function renderOfflineDetailList(events) {
     currentCompareCode,
     targetText,
   );
-  dom.offlineCompareCodeActionHint.textContent = buildOfflineDetailCompareActionHintLabelKo(
-    currentCompareCode,
-    targetText,
-  );
+  setOfflineCompareActionHint(currentCompareCode, targetText);
   dom.offlineCompareCodeDeltaSummary.textContent = targetText
     ? buildOfflineDetailCompareCodeDeltaSummaryLabelKo(currentCompareCode, targetText)
     : "차이 요약: 대기 중";
@@ -938,10 +949,7 @@ function runOfflineCompareCodeCheck(source = "input") {
     currentCode,
     targetText,
   );
-  dom.offlineCompareCodeActionHint.textContent = buildOfflineDetailCompareActionHintLabelKo(
-    currentCode,
-    targetText,
-  );
+  setOfflineCompareActionHint(currentCode, targetText);
   dom.offlineCompareCodeTargetSummary.textContent =
     buildOfflineDetailCompareCodeTargetSummaryLabelKo(targetText);
   dom.offlineCompareCodeDeltaSummary.textContent = buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
@@ -963,10 +971,7 @@ function runOfflineCompareCodeCheck(source = "input") {
       currentCode,
       targetCode,
     );
-    dom.offlineCompareCodeActionHint.textContent = buildOfflineDetailCompareActionHintLabelKo(
-      currentCode,
-      targetCode,
-    );
+    setOfflineCompareActionHint(currentCode, targetCode);
     dom.offlineCompareCodeTargetSummary.textContent =
       buildOfflineDetailCompareCodeTargetSummaryLabelKo(targetCode);
     dom.offlineCompareCodeDeltaSummary.textContent =
@@ -976,10 +981,7 @@ function runOfflineCompareCodeCheck(source = "input") {
   }
   const resultLabel = buildOfflineDetailCompareResultLabelKo(currentCode, targetCode);
   dom.offlineCompareCodeResult.textContent = resultLabel;
-  dom.offlineCompareCodeActionHint.textContent = buildOfflineDetailCompareActionHintLabelKo(
-    currentCode,
-    targetCode,
-  );
+  setOfflineCompareActionHint(currentCode, targetCode);
   const isError = resultLabel.includes("오류") || resultLabel.includes("불가");
   setStatus(`[${sourceLabelKo}] ${resultLabel}`, isError);
 }
@@ -1012,10 +1014,7 @@ async function pasteOfflineCompareCodeFromClipboard() {
         currentCode,
         text,
       );
-    dom.offlineCompareCodeActionHint.textContent = buildOfflineDetailCompareActionHintLabelKo(
-      currentCode,
-      text,
-    );
+    setOfflineCompareActionHint(currentCode, text);
     dom.offlineCompareCodeSource.textContent = buildOfflineDetailCompareCodeSourceLabelKo(
       "clipboard",
     );
@@ -1033,10 +1032,7 @@ function loadOfflineCompareCodeFromPayload() {
     dom.offlineCompareCodeTargetSummary.textContent = "대상 코드: 없음";
     dom.offlineCompareCodeDeltaSummary.textContent = "차이 요약: 대상 코드 없음";
     dom.offlineCompareCodeMatchSummary.textContent = "일치 요약: 대상 코드 없음";
-    dom.offlineCompareCodeActionHint.textContent = buildOfflineDetailCompareActionHintLabelKo(
-      currentCode,
-      payloadText,
-    );
+    setOfflineCompareActionHint(currentCode, payloadText);
     dom.offlineCompareCodeSource.textContent = buildOfflineDetailCompareCodeSourceLabelKo("none");
     setStatus("savePayload 입력 필요", true);
     return;
@@ -1056,10 +1052,7 @@ function loadOfflineCompareCodeFromPayload() {
         currentCode,
         payloadText,
       );
-    dom.offlineCompareCodeActionHint.textContent = buildOfflineDetailCompareActionHintLabelKo(
-      currentCode,
-      payloadText,
-    );
+    setOfflineCompareActionHint(currentCode, payloadText);
     dom.offlineCompareCodeSource.textContent =
       buildOfflineDetailCompareCodeSourceLabelKo("payload");
     setStatus("savePayload에서 비교 코드 인식 실패", true);
@@ -1382,7 +1375,7 @@ function hideOfflineModal() {
   dom.offlineCompareCodeCurrentSummary.textContent = "현재 코드: 없음";
   dom.offlineCompareCodeInput.value = "";
   dom.offlineCompareCodeResult.textContent = "비교 대기 중";
-  dom.offlineCompareCodeActionHint.textContent = "가이드: 비교 코드를 입력하세요.";
+  setOfflineCompareActionHint("", "");
   dom.offlineCompareCodeSource.textContent = "출처: 없음";
   dom.offlineCompareCodeTargetSummary.textContent = "대상 코드: 없음";
   dom.offlineCompareCodeDeltaSummary.textContent = "차이 요약: 대기 중";
@@ -1432,7 +1425,7 @@ function showOfflineModal(offline) {
   };
   dom.offlineCompareCodeInput.value = "";
   dom.offlineCompareCodeResult.textContent = "비교 대기 중";
-  dom.offlineCompareCodeActionHint.textContent = "가이드: 비교 코드를 입력하세요.";
+  setOfflineCompareActionHint("", "");
   dom.offlineCompareCodeSource.textContent = "출처: 없음";
   dom.offlineCompareCodeCurrentSummary.textContent = "현재 코드: 없음";
   dom.offlineCompareCodeTargetSummary.textContent = "대상 코드: 없음";
@@ -1708,10 +1701,7 @@ function bindEvents() {
       currentCode,
       dom.offlineCompareCodeInput.value,
     );
-    dom.offlineCompareCodeActionHint.textContent = buildOfflineDetailCompareActionHintLabelKo(
-      currentCode,
-      dom.offlineCompareCodeInput.value,
-    );
+    setOfflineCompareActionHint(currentCode, dom.offlineCompareCodeInput.value);
     dom.offlineCompareCodeTargetSummary.textContent =
       buildOfflineDetailCompareCodeTargetSummaryLabelKo(dom.offlineCompareCodeInput.value);
     dom.offlineCompareCodeDeltaSummary.textContent = buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
