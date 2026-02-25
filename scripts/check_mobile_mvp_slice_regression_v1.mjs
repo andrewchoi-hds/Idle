@@ -8,6 +8,7 @@ import {
   buildOfflineDetailCompareCodeCurrentSummaryLabelKo,
   buildOfflineDetailCompareCodeCurrentSummaryTone,
   buildOfflineDetailCompareCodeDeltaSummaryLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTone,
   buildOfflineDetailCompareCodeSourceLabelKo,
@@ -959,6 +960,18 @@ async function main() {
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
       ) === "차이 요약: 보기 전체→핵심 · view checksum 변경",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_delta_summary_code_difference_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo() ===
+        "차이 요약: 코드 차이 감지" &&
+      offlineDetailCompareCodeCanonicalVariant !== offlineDetailCompareCodeAll &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCanonicalVariant,
+      ) === buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo(),
   });
 
   checks.push({

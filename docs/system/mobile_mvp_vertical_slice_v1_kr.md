@@ -244,6 +244,7 @@ npm run mobile:mvp:check
   - 오프라인 비교 코드 대상 요약 라벨(`buildOfflineDetailCompareCodeTargetSummaryLabelKo`)이 빈 입력/형식 오류/전체·핵심 보기 케이스를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 대상 요약 톤(`buildOfflineDetailCompareCodeTargetSummaryTone`)이 빈 입력/형식 오류/정상 입력 케이스에서 `info/warn`을 일관되게 반환하는지 검증
   - 오프라인 비교 코드 차이 요약 라벨(`buildOfflineDetailCompareCodeDeltaSummaryLabelKo`)이 대상 없음/형식 오류/일치/보기 차이 케이스를 일관되게 반환하는지 검증
+  - 오프라인 비교 코드 차이 요약 fallback 라벨(`buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo`)이 의미 동일 코드(0패딩 표기 차이) fallback 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 차이 요약 톤(`buildOfflineDetailCompareCodeDeltaSummaryTone`)이 대상 없음/형식 오류/일치/보기 차이/checksum·집계 차이 케이스에서 `info/warn/error`를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 일치 요약 라벨(`buildOfflineDetailCompareCodeMatchSummaryLabelKo`)이 대상 없음/형식 오류/일치·불일치 조합 케이스를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 일치 요약 톤(`buildOfflineDetailCompareCodeMatchSummaryTone`)이 대상 없음/형식 오류/일치/보기 차이/checksum·집계 차이 케이스에서 `info/warn/error`를 일관되게 반환하는지 검증
