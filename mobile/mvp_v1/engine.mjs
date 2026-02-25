@@ -394,6 +394,20 @@ export function resolveOfflineDetailCompareClipboardFailureInfo(reasonInput) {
   };
 }
 
+export function resolveOfflineDetailComparePayloadFailureInfo(reasonInput) {
+  const reason = typeof reasonInput === "string" ? reasonInput.trim() : "";
+  if (reason === "missing_payload") {
+    return {
+      source: "none",
+      messageKo: "savePayload 입력 필요",
+    };
+  }
+  return {
+    source: "payload",
+    messageKo: "savePayload에서 비교 코드 인식 실패",
+  };
+}
+
 export function resolveOfflineDetailCompareInputSource(codeInput) {
   const text = typeof codeInput === "string" ? codeInput.trim() : "";
   return text ? "input" : "none";

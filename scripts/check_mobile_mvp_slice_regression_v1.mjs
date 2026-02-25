@@ -14,6 +14,7 @@ import {
   buildOfflineDetailCompareCodeSourceTone,
   buildOfflineDetailCompareStatusLabelKo,
   resolveOfflineDetailCompareClipboardFailureInfo,
+  resolveOfflineDetailComparePayloadFailureInfo,
   resolveOfflineDetailCompareCheckSource,
   resolveOfflineDetailCompareInputSource,
   resolveOfflineDetailCompareTargetInputState,
@@ -681,6 +682,23 @@ async function main() {
         "클립보드에서 비교 코드 인식 실패" &&
       resolveOfflineDetailCompareClipboardFailureInfo("unknown").messageKo ===
         "클립보드에서 비교 코드 인식 실패",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_payload_failure_info_maps_reason",
+    passed:
+      resolveOfflineDetailComparePayloadFailureInfo("missing_payload").source ===
+        "none" &&
+      resolveOfflineDetailComparePayloadFailureInfo("missing_payload").messageKo ===
+        "savePayload 입력 필요" &&
+      resolveOfflineDetailComparePayloadFailureInfo("extract_failed").source ===
+        "payload" &&
+      resolveOfflineDetailComparePayloadFailureInfo("extract_failed").messageKo ===
+        "savePayload에서 비교 코드 인식 실패" &&
+      resolveOfflineDetailComparePayloadFailureInfo("unknown").source ===
+        "payload" &&
+      resolveOfflineDetailComparePayloadFailureInfo("unknown").messageKo ===
+        "savePayload에서 비교 코드 인식 실패",
   });
 
   checks.push({
