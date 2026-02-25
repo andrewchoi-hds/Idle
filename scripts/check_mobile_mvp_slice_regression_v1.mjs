@@ -13,6 +13,7 @@ import {
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeSourceTone,
   buildOfflineDetailCompareStatusLabelKo,
+  resolveOfflineDetailCompareClipboardFailureInfo,
   resolveOfflineDetailCompareCheckSource,
   resolveOfflineDetailCompareInputSource,
   resolveOfflineDetailCompareTargetInputState,
@@ -661,6 +662,25 @@ async function main() {
         "payload",
         "savePayload에서 비교 코드 인식 실패",
       ) === "[출처: savePayload 텍스트] savePayload에서 비교 코드 인식 실패",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_clipboard_failure_info_maps_reason",
+    passed:
+      resolveOfflineDetailCompareClipboardFailureInfo("unsupported").source ===
+        "clipboard" &&
+      resolveOfflineDetailCompareClipboardFailureInfo("unsupported").messageKo ===
+        "클립보드 읽기 미지원 환경" &&
+      resolveOfflineDetailCompareClipboardFailureInfo("read_failed").source ===
+        "clipboard" &&
+      resolveOfflineDetailCompareClipboardFailureInfo("read_failed").messageKo ===
+        "클립보드 읽기 실패" &&
+      resolveOfflineDetailCompareClipboardFailureInfo("extract_failed").source ===
+        "clipboard" &&
+      resolveOfflineDetailCompareClipboardFailureInfo("extract_failed").messageKo ===
+        "클립보드에서 비교 코드 인식 실패" &&
+      resolveOfflineDetailCompareClipboardFailureInfo("unknown").messageKo ===
+        "클립보드에서 비교 코드 인식 실패",
   });
 
   checks.push({

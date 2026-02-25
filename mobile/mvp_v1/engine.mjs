@@ -374,6 +374,26 @@ export function buildOfflineDetailCompareStatusLabelKo(
   return `[${sourceLabel}] ${message}`;
 }
 
+export function resolveOfflineDetailCompareClipboardFailureInfo(reasonInput) {
+  const reason = typeof reasonInput === "string" ? reasonInput.trim() : "";
+  if (reason === "unsupported") {
+    return {
+      source: "clipboard",
+      messageKo: "클립보드 읽기 미지원 환경",
+    };
+  }
+  if (reason === "read_failed") {
+    return {
+      source: "clipboard",
+      messageKo: "클립보드 읽기 실패",
+    };
+  }
+  return {
+    source: "clipboard",
+    messageKo: "클립보드에서 비교 코드 인식 실패",
+  };
+}
+
 export function resolveOfflineDetailCompareInputSource(codeInput) {
   const text = typeof codeInput === "string" ? codeInput.trim() : "";
   return text ? "input" : "none";

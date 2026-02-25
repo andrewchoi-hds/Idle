@@ -1330,3 +1330,11 @@
 
 ## 297) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 추출 실패 상태 메시지 출처 포맷 통일 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 298) 다음 순차 작업
+1. [완료] 클립보드 실패 메타 헬퍼(`resolveOfflineDetailCompareClipboardFailureInfo`)를 추가해 실패 사유(`unsupported/read_failed/extract_failed`)별 source/message 매핑을 표준화.
+2. [완료] 오프라인 모달 클립보드 읽기 미지원/읽기 실패 경로에서 출처 라인(`offlineCompareCodeSource`)을 `클립보드 텍스트`로 즉시 동기화하도록 반영.
+3. [완료] 모바일 회귀 체크에 클립보드 실패 메타 헬퍼 시나리오를 추가해 사유별 매핑 안정성을 검증.
+
+## 299) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 클립보드 실패 메타/출처 라인 동기화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
