@@ -12,6 +12,7 @@ import {
   buildOfflineDetailCompareCodeMatchSummaryTone,
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeSourceTone,
+  resolveOfflineDetailCompareCheckSource,
   resolveOfflineDetailCompareInputSource,
   buildOfflineDetailCompareCodeTargetSummaryLabelKo,
   buildOfflineDetailCompareCodeTargetSummaryTone,
@@ -634,6 +635,35 @@ async function main() {
       resolveOfflineDetailCompareInputSource("   ") === "none" &&
       resolveOfflineDetailCompareInputSource("ODR1-T6-C4-H2-VA-A000000-S000000") ===
         "input",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_check_source_resolves_keep_input_and_explicit",
+    passed:
+      resolveOfflineDetailCompareCheckSource(
+        "input",
+        "detail_view_snapshot",
+        "",
+      ) === "none" &&
+      resolveOfflineDetailCompareCheckSource(
+        "input",
+        "detail_view_snapshot",
+        "ODR1-T6-C4-H2-VA-A000000-S000000",
+      ) === "input" &&
+      resolveOfflineDetailCompareCheckSource(
+        "keep",
+        "detail_view_snapshot",
+        "ODR1-T6-C4-H2-VA-A000000-S000000",
+      ) === "detail_view_snapshot" &&
+      resolveOfflineDetailCompareCheckSource(
+        "keep",
+        "none",
+        "ODR1-T6-C4-H2-VA-A000000-S000000",
+      ) === "input" &&
+      resolveOfflineDetailCompareCheckSource("keep", "", "") === "none" &&
+      resolveOfflineDetailCompareCheckSource("clipboard", "none", "") ===
+        "clipboard" &&
+      resolveOfflineDetailCompareCheckSource("", "input", "") === "none",
   });
 
   checks.push({

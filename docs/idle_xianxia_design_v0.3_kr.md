@@ -1298,3 +1298,11 @@
 
 ## 289) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 입력 출처 라인 실시간 동기화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 290) 다음 순차 작업
+1. [완료] 비교 대조 출처 해석 헬퍼(`resolveOfflineDetailCompareCheckSource`)를 추가해 `keep/input/명시 출처` 분기 규칙을 표준화.
+2. [완료] 오프라인 모달 비교 대조 기본 동작을 `keep`으로 전환해 버튼/Enter 재실행 시 마지막 확정 출처를 유지하도록 반영.
+3. [완료] 모바일 회귀 체크에 비교 대조 출처 해석 헬퍼 시나리오를 추가해 `keep` 유지/입력 fallback/명시 출처 분기 안정성을 검증.
+
+## 291) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 대조 출처 유지 동작 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
