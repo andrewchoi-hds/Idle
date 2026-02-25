@@ -18,6 +18,7 @@ import {
   createSeededRng,
   extractOfflineDetailCompareCode,
   extractOfflineDetailCompareCodeFromPayloadText,
+  extractOfflineDetailCompareCodeFromPayloadTextWithSource,
   filterOfflineDetailEventsByMode,
   isCopyTargetSlotDisabled,
   isOfflineDetailCompareCode,
@@ -534,6 +535,42 @@ async function main() {
         `report => ${offlineDetailCompareCodeAll}`,
       ) === offlineDetailCompareCodeAll &&
       extractOfflineDetailCompareCodeFromPayloadText("payload missing compare code") === "",
+  });
+
+  const payloadSourceFromDetailView = extractOfflineDetailCompareCodeFromPayloadTextWithSource(
+    JSON.stringify({
+      detailViewSnapshotAtExport: {
+        compareCode: offlineDetailCompareCodeCritical,
+      },
+      detailReportSnapshot: {
+        compareCode: offlineDetailCompareCodeAll,
+      },
+    }),
+  );
+  const payloadSourceFromDetailReport = extractOfflineDetailCompareCodeFromPayloadTextWithSource(
+    JSON.stringify({
+      detailReportSnapshot: {
+        compareCode: offlineDetailCompareCodeAll,
+      },
+    }),
+  );
+  const payloadSourceFromText = extractOfflineDetailCompareCodeFromPayloadTextWithSource(
+    `report => ${offlineDetailCompareCodeCritical}`,
+  );
+  const payloadSourceMissing = extractOfflineDetailCompareCodeFromPayloadTextWithSource(
+    "payload missing compare code",
+  );
+  checks.push({
+    id: "offline_detail_compare_code_payload_source_is_stable",
+    passed:
+      payloadSourceFromDetailView.code === offlineDetailCompareCodeCritical &&
+      payloadSourceFromDetailView.source === "detail_view_snapshot" &&
+      payloadSourceFromDetailReport.code === offlineDetailCompareCodeAll &&
+      payloadSourceFromDetailReport.source === "detail_report_snapshot" &&
+      payloadSourceFromText.code === offlineDetailCompareCodeCritical &&
+      payloadSourceFromText.source === "text" &&
+      payloadSourceMissing.code === "" &&
+      payloadSourceMissing.source === "none",
   });
 
   const parsedOfflineCompareCode = parseOfflineDetailCompareCode(offlineDetailCompareCodeAll);

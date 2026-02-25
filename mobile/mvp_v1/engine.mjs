@@ -323,10 +323,13 @@ export function extractOfflineDetailCompareCode(textInput) {
   return matched ? matched[0] : "";
 }
 
-export function extractOfflineDetailCompareCodeFromPayloadText(payloadInput) {
+export function extractOfflineDetailCompareCodeFromPayloadTextWithSource(payloadInput) {
   const text = typeof payloadInput === "string" ? payloadInput.trim() : "";
   if (!text) {
-    return "";
+    return {
+      code: "",
+      source: "none",
+    };
   }
   try {
     const parsed = JSON.parse(text);
@@ -334,18 +337,38 @@ export function extractOfflineDetailCompareCodeFromPayloadText(payloadInput) {
       parsed?.detailViewSnapshotAtExport?.compareCode,
     );
     if (fromDetailView) {
-      return fromDetailView;
+      return {
+        code: fromDetailView,
+        source: "detail_view_snapshot",
+      };
     }
     const fromDetailReport = extractOfflineDetailCompareCode(
       parsed?.detailReportSnapshot?.compareCode,
     );
     if (fromDetailReport) {
-      return fromDetailReport;
+      return {
+        code: fromDetailReport,
+        source: "detail_report_snapshot",
+      };
     }
   } catch {
     // Ignore JSON parse failures and fall back to first detected token.
   }
-  return extractOfflineDetailCompareCode(text);
+  const fallbackCode = extractOfflineDetailCompareCode(text);
+  if (fallbackCode) {
+    return {
+      code: fallbackCode,
+      source: "text",
+    };
+  }
+  return {
+    code: "",
+    source: "none",
+  };
+}
+
+export function extractOfflineDetailCompareCodeFromPayloadText(payloadInput) {
+  return extractOfflineDetailCompareCodeFromPayloadTextWithSource(payloadInput).code;
 }
 
 export function parseOfflineDetailCompareCode(codeInput) {

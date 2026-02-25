@@ -1162,3 +1162,11 @@
 
 ## 255) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(`savePayload` 기반 오프라인 비교 코드 대조 액션 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 256) 다음 순차 작업
+1. [완료] payload 비교 코드 추출 헬퍼를 확장(`extractOfflineDetailCompareCodeFromPayloadTextWithSource`)해 코드와 추출 출처를 함께 반환.
+2. [완료] `savePayload` 기반 비교 코드 대조 경로에서 상태 메시지에 추출 출처(`detailView/detailReport/text`)를 포함해 디버깅 가시성을 강화.
+3. [완료] 모바일 회귀 체크에 payload 비교 코드 출처 분기 안정성 시나리오를 추가.
+
+## 257) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(`savePayload` 기반 비교 코드 추출 출처 메타 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
