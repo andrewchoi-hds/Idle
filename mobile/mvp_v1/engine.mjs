@@ -1000,7 +1000,7 @@ export function buildOfflineDetailCompareCodeMatchSummaryLabelKo(
       ? buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo()
       : buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo();
   }
-  return `일치 요약: 총 ${boolMark(diff.sameTotalEvents)} · 핵심표시 ${boolMark(
+  return `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} 총 ${boolMark(diff.sameTotalEvents)} · 핵심표시 ${boolMark(
     diff.sameCriticalVisibleEvents,
   )} · 숨김 ${boolMark(diff.sameHiddenCriticalEvents)} · 보기 ${boolMark(
     diff.sameViewMode,
@@ -1010,15 +1010,19 @@ export function buildOfflineDetailCompareCodeMatchSummaryLabelKo(
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryTargetMissingLabelKo() {
-  return "일치 요약: 대상 코드 없음";
+  return `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} 대상 코드 없음`;
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo() {
-  return "일치 요약: 현재 코드 없음";
+  return `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} 현재 코드 없음`;
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo() {
-  return "일치 요약: 대상 코드 형식 오류";
+  return `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} 대상 코드 형식 오류`;
+}
+
+export function buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo() {
+  return "일치 요약:";
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo() {
