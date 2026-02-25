@@ -27,6 +27,7 @@ import {
   buildOfflineDetailCompareInvalidTargetLabelKo,
   buildOfflineDetailCompareResultIdenticalLabelKo,
   buildOfflineDetailCompareResultViewMismatchLabelKo,
+  buildOfflineDetailCompareResultAggregateMismatchLabelKo,
   buildOfflineDetailCompareMissingCurrentLabelKo,
   buildOfflineDetailCompareResultPendingLabelKo,
   buildOfflineDetailCompareResultInputRequiredLabelKo,
@@ -832,6 +833,17 @@ async function main() {
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
       ) === buildOfflineDetailCompareResultViewMismatchLabelKo(),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_result_aggregate_mismatch_label_is_stable",
+    passed:
+      buildOfflineDetailCompareResultAggregateMismatchLabelKo() ===
+        "비교 결과: 집계 동일, 구성 분포 차이" &&
+      buildOfflineDetailCompareResultLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAllChecksumMismatch,
+      ) === buildOfflineDetailCompareResultAggregateMismatchLabelKo(),
   });
 
   checks.push({

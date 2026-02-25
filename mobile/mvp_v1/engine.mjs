@@ -631,7 +631,7 @@ export function buildOfflineDetailCompareResultLabelKo(
     diff.sameHiddenCriticalEvents &&
     !diff.sameAllChecksum
   ) {
-    return "비교 결과: 집계 동일, 구성 분포 차이";
+    return buildOfflineDetailCompareResultAggregateMismatchLabelKo();
   }
   const parts = [];
   if (!diff.sameTotalEvents) {
@@ -667,6 +667,10 @@ export function buildOfflineDetailCompareResultIdenticalLabelKo() {
 
 export function buildOfflineDetailCompareResultViewMismatchLabelKo() {
   return "비교 결과: 전체 분포 동일, view 분포 차이";
+}
+
+export function buildOfflineDetailCompareResultAggregateMismatchLabelKo() {
+  return "비교 결과: 집계 동일, 구성 분포 차이";
 }
 
 export function buildOfflineDetailCompareMissingCurrentLabelKo() {
