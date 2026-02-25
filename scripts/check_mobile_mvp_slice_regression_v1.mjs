@@ -15,6 +15,7 @@ import {
   buildOfflineDetailCompareStatusLabelKo,
   resolveOfflineDetailCompareClipboardFailureInfo,
   resolveOfflineDetailComparePayloadFailureInfo,
+  resolveOfflineDetailComparePayloadLoadSource,
   resolveOfflineDetailCompareCheckSource,
   resolveOfflineDetailCompareInputSource,
   resolveOfflineDetailCompareTargetInputState,
@@ -699,6 +700,19 @@ async function main() {
         "payload" &&
       resolveOfflineDetailComparePayloadFailureInfo("unknown").messageKo ===
         "savePayload에서 비교 코드 인식 실패",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_payload_load_source_normalizes_success_source",
+    passed:
+      resolveOfflineDetailComparePayloadLoadSource("detail_view_snapshot") ===
+        "detail_view_snapshot" &&
+      resolveOfflineDetailComparePayloadLoadSource("detail_report_snapshot") ===
+        "detail_report_snapshot" &&
+      resolveOfflineDetailComparePayloadLoadSource("text") === "text" &&
+      resolveOfflineDetailComparePayloadLoadSource("payload") === "payload" &&
+      resolveOfflineDetailComparePayloadLoadSource(" unknown ") === "payload" &&
+      resolveOfflineDetailComparePayloadLoadSource("") === "payload",
   });
 
   checks.push({

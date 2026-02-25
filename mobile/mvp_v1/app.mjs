@@ -25,6 +25,7 @@ import {
   buildOfflineDetailCompareStatusLabelKo,
   resolveOfflineDetailCompareClipboardFailureInfo,
   resolveOfflineDetailComparePayloadFailureInfo,
+  resolveOfflineDetailComparePayloadLoadSource,
   resolveOfflineDetailCompareInputSource,
   resolveOfflineDetailCompareTargetInputState,
   resolveOfflineDetailCompareCheckSource,
@@ -1195,7 +1196,9 @@ function loadOfflineCompareCodeFromPayload() {
     return;
   }
   dom.offlineCompareCodeInput.value = extracted.code;
-  runOfflineCompareCodeCheck(extracted.source || "payload");
+  runOfflineCompareCodeCheck(
+    resolveOfflineDetailComparePayloadLoadSource(extracted.source),
+  );
 }
 
 async function exportRealtimeReportToPayload() {
