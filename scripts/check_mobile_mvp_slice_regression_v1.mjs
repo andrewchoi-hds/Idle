@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import {
   buildOfflineDetailCompareCode,
   buildOfflineDetailCompareCodeCurrentSummaryLabelKo,
+  buildOfflineDetailCompareCodeCurrentSummaryTone,
   buildOfflineDetailCompareCodeDeltaSummaryLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTone,
@@ -662,6 +663,19 @@ async function main() {
       buildOfflineDetailCompareCodeCurrentSummaryLabelKo(
         `log ${offlineDetailCompareCodeCritical} log`,
       ) === "현재 코드: 총 6 · 핵심표시 4 · 숨김 2 · 보기 핵심",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_current_summary_tone_matches_current",
+    passed:
+      buildOfflineDetailCompareCodeCurrentSummaryTone("") === "info" &&
+      buildOfflineDetailCompareCodeCurrentSummaryTone("invalid text") ===
+        "warn" &&
+      buildOfflineDetailCompareCodeCurrentSummaryTone(offlineDetailCompareCodeAll) ===
+        "info" &&
+      buildOfflineDetailCompareCodeCurrentSummaryTone(
+        `log ${offlineDetailCompareCodeCritical} log`,
+      ) === "info",
   });
 
   checks.push({

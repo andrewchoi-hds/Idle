@@ -445,6 +445,14 @@ export function buildOfflineDetailCompareCodeCurrentSummaryLabelKo(codeInput) {
   return buildOfflineDetailCompareCodeSummaryLabelKo(codeInput, "현재 코드");
 }
 
+export function buildOfflineDetailCompareCodeCurrentSummaryTone(codeInput) {
+  const text = typeof codeInput === "string" ? codeInput.trim() : "";
+  if (!text) {
+    return "info";
+  }
+  return parseOfflineDetailCompareCode(text) ? "info" : "warn";
+}
+
 export function parseOfflineDetailCompareCode(codeInput) {
   const raw = extractOfflineDetailCompareCode(codeInput);
   const matched = /^ODR1-T(\d+)-C(\d+)-H(\d+)-V([AC])-A(\d{6})-S(\d{6})$/.exec(raw);
