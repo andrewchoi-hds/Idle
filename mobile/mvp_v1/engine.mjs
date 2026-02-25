@@ -432,6 +432,16 @@ export function resolveOfflineDetailCompareTargetInputState(codeInput) {
   return extractOfflineDetailCompareCode(text) ? "valid" : "invalid";
 }
 
+export function resolveOfflineDetailCompareTargetInputStateStatusMessageKo(
+  stateInput,
+) {
+  const state = typeof stateInput === "string" ? stateInput.trim() : "";
+  if (state === "empty") {
+    return "비교 코드 입력 필요";
+  }
+  return "비교 코드 형식 오류";
+}
+
 export function resolveOfflineDetailCompareCheckSource(
   requestedSourceInput,
   currentSourceInput,

@@ -1354,3 +1354,11 @@
 
 ## 303) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 payload 성공 출처 정규화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 304) 다음 순차 작업
+1. [완료] 대상 입력 상태 메시지 헬퍼(`resolveOfflineDetailCompareTargetInputStateStatusMessageKo`)를 추가해 `empty/invalid` 상태를 상태 문구로 표준화.
+2. [완료] 오프라인 모달 비교 대조 실행의 조기 실패 경로가 인라인 ternary 대신 상태 메시지 헬퍼를 사용해 `비교 코드 입력 필요/형식 오류` 문구를 일관되게 구성하도록 반영.
+3. [완료] 모바일 회귀 체크에 대상 입력 상태 메시지 헬퍼 시나리오를 추가해 상태별 문구 매핑 안정성을 검증.
+
+## 305) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 대상 입력 상태 메시지 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
