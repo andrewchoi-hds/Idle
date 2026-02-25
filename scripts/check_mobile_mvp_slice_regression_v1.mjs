@@ -35,6 +35,7 @@ import {
   buildOfflineDetailCompareActionHintInputRequiredLabelKo,
   buildOfflineDetailCompareActionHintInvalidTargetLabelKo,
   buildOfflineDetailCompareActionHintMissingCurrentLabelKo,
+  buildOfflineDetailCompareActionHintIdenticalLabelKo,
   buildOfflineDetailCompareActionHintTone,
   resolveOfflineDetailCompareViewModeAlignmentTarget,
   buildOfflineDetailCriticalSummaryLabelKo,
@@ -1062,6 +1063,17 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_action_hint_identical_label_is_stable",
+    passed:
+      buildOfflineDetailCompareActionHintIdenticalLabelKo() ===
+        "가이드: 코드가 일치합니다. 그대로 유지하세요." &&
+      buildOfflineDetailCompareActionHintLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ) === buildOfflineDetailCompareActionHintIdenticalLabelKo(),
+  });
+
+  checks.push({
     id: "offline_detail_compare_code_action_hint_label_matches_state",
     passed:
       buildOfflineDetailCompareActionHintLabelKo(offlineDetailCompareCodeAll, "") ===
@@ -1073,7 +1085,7 @@ async function main() {
       buildOfflineDetailCompareActionHintLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAll,
-      ) === "가이드: 코드가 일치합니다. 그대로 유지하세요." &&
+      ) === buildOfflineDetailCompareActionHintIdenticalLabelKo() &&
       buildOfflineDetailCompareActionHintLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
