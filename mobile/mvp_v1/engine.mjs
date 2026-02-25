@@ -758,7 +758,7 @@ export function buildOfflineDetailCompareActionHintLabelKo(
     diff.sameHiddenCriticalEvents &&
     diff.sameAllChecksum
   ) {
-    return "가이드: 보기 모드 차이입니다. 동일 모드로 다시 비교하세요.";
+    return buildOfflineDetailCompareActionHintViewMismatchLabelKo();
   }
   if (!diff.sameAllChecksum || !diff.sameViewChecksum) {
     return "가이드: 이벤트 구성 분포가 다릅니다. 정산 로그 원본을 확인하세요.";
@@ -780,6 +780,10 @@ export function buildOfflineDetailCompareActionHintMissingCurrentLabelKo() {
 
 export function buildOfflineDetailCompareActionHintIdenticalLabelKo() {
   return "가이드: 코드가 일치합니다. 그대로 유지하세요.";
+}
+
+export function buildOfflineDetailCompareActionHintViewMismatchLabelKo() {
+  return "가이드: 보기 모드 차이입니다. 동일 모드로 다시 비교하세요.";
 }
 
 export function buildOfflineDetailCompareActionHintTone(
