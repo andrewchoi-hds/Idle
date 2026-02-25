@@ -1210,3 +1210,11 @@
 
 ## 267) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 일치 요약 라인 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 268) 다음 순차 작업
+1. [완료] 비교 결과 상태 라벨 헬퍼(`buildOfflineDetailCompareResultStateLabelKo`)를 추가해 대기/입력 필요/일치/보기 차이/현재 코드 없음 케이스를 표준화.
+2. [완료] 기준 코드 리렌더 시 비교 결과 라인(`offlineCompareCodeResult`)을 입력값 기준으로 즉시 재계산해 stale 결과를 제거.
+3. [완료] 모바일 회귀 체크에 비교 결과 상태 라벨 헬퍼 시나리오를 추가.
+
+## 269) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 결과 상태 라인 동기화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
