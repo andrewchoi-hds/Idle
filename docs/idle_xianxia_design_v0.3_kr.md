@@ -1362,3 +1362,11 @@
 
 ## 305) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 대상 입력 상태 메시지 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 306) 다음 순차 작업
+1. [완료] 비교 결과 오류 판정 헬퍼(`isOfflineDetailCompareResultError`)를 추가해 문자열 includes(`오류/불가`) 의존 없이 comparable 상태 기반으로 오류 여부를 계산하도록 표준화.
+2. [완료] 오프라인 모달 비교 대조 실행 상태 갱신이 결과 라벨 문자열 파싱 대신 결과 오류 헬퍼를 사용해 `setStatus(..., isError)`를 일관되게 적용하도록 반영.
+3. [완료] 모바일 회귀 체크에 비교 결과 오류 플래그 시나리오를 추가해 일치/보기 차이/입력 오류/현재 코드 없음 케이스에서 오류 판정 안정성을 검증.
+
+## 307) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 결과 오류 판정 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

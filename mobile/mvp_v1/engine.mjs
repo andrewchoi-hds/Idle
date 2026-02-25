@@ -657,6 +657,14 @@ export function buildOfflineDetailCompareResultLabelKo(
     : "비교 결과: 코드 차이 감지";
 }
 
+export function isOfflineDetailCompareResultError(
+  currentCodeInput,
+  targetCodeInput,
+) {
+  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
+  return !diff.comparable;
+}
+
 export function buildOfflineDetailCompareResultStateLabelKo(
   currentCodeInput,
   targetCodeInput,
