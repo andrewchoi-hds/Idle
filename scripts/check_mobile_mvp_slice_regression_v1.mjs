@@ -8,6 +8,7 @@ import {
   buildOfflineDetailCompareCodeCurrentSummaryLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryLabelKo,
+  buildOfflineDetailCompareCodeMatchSummaryTone,
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeTargetSummaryLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryTone,
@@ -712,6 +713,33 @@ async function main() {
         offlineDetailCompareCodeCritical,
       ) ===
         "일치 요약: 총 일치 · 핵심표시 일치 · 숨김 일치 · 보기 불일치 · 전체 checksum 일치 · view checksum 불일치",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_match_summary_tone_matches_diff",
+    passed:
+      buildOfflineDetailCompareCodeMatchSummaryTone(offlineDetailCompareCodeAll, "") ===
+        "info" &&
+      buildOfflineDetailCompareCodeMatchSummaryTone("INVALID", offlineDetailCompareCodeAll) ===
+        "error" &&
+      buildOfflineDetailCompareCodeMatchSummaryTone(offlineDetailCompareCodeAll, "invalid") ===
+        "warn" &&
+      buildOfflineDetailCompareCodeMatchSummaryTone(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ) === "info" &&
+      buildOfflineDetailCompareCodeMatchSummaryTone(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ) === "warn" &&
+      buildOfflineDetailCompareCodeMatchSummaryTone(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAllChecksumMismatch,
+      ) === "warn" &&
+      buildOfflineDetailCompareCodeMatchSummaryTone(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAggregateMismatch,
+      ) === "error",
   });
 
   checks.push({

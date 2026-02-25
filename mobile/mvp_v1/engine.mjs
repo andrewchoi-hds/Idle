@@ -779,6 +779,38 @@ export function buildOfflineDetailCompareCodeMatchSummaryLabelKo(
   )}`;
 }
 
+export function buildOfflineDetailCompareCodeMatchSummaryTone(
+  currentCodeInput,
+  targetCodeInput,
+) {
+  const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
+  if (!targetText) {
+    return "info";
+  }
+  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetText);
+  if (!diff.comparable) {
+    return diff.reason === "current_invalid" ? "error" : "warn";
+  }
+  if (
+    diff.sameTotalEvents &&
+    diff.sameCriticalVisibleEvents &&
+    diff.sameHiddenCriticalEvents &&
+    diff.sameViewMode &&
+    diff.sameAllChecksum &&
+    diff.sameViewChecksum
+  ) {
+    return "info";
+  }
+  if (
+    !diff.sameTotalEvents ||
+    !diff.sameCriticalVisibleEvents ||
+    !diff.sameHiddenCriticalEvents
+  ) {
+    return "error";
+  }
+  return "warn";
+}
+
 export function buildOfflineDetailReportSnapshot(
   eventsInput,
   maxKindsInput = 3,
