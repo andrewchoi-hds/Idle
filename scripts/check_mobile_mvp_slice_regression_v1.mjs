@@ -24,6 +24,7 @@ import {
   buildOfflineDetailCompareCodeTargetSummaryTone,
   buildOfflineDetailCompareCodeDeltaSummaryTone,
   buildOfflineDetailCompareResultLabelKo,
+  isOfflineDetailCompareResultError,
   buildOfflineDetailCompareResultStateLabelKo,
   buildOfflineDetailCompareResultStateTone,
   buildOfflineDetailCompareActionHintLabelKo,
@@ -1099,6 +1100,24 @@ async function main() {
       buildOfflineDetailCompareResultLabelKo(offlineDetailCompareCodeAll, "BAD").includes(
         "형식 오류",
       ),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_result_error_flag_matches_comparable_state",
+    passed:
+      isOfflineDetailCompareResultError(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ) === false &&
+      isOfflineDetailCompareResultError(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ) === false &&
+      isOfflineDetailCompareResultError(offlineDetailCompareCodeAll, "BAD") === true &&
+      isOfflineDetailCompareResultError(
+        "",
+        offlineDetailCompareCodeAll,
+      ) === true,
   });
 
   const detailReportSnapshot = buildOfflineDetailReportSnapshot(prioritizedOfflineEvents, 1);

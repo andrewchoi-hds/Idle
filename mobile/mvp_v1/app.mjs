@@ -15,6 +15,7 @@ import {
   buildOfflineDetailCompareCodeCurrentSummaryLabelKo,
   buildOfflineDetailCompareCodeCurrentSummaryTone,
   buildOfflineDetailCompareResultLabelKo,
+  isOfflineDetailCompareResultError,
   buildOfflineDetailCompareResultStateLabelKo,
   buildOfflineDetailCompareResultStateTone,
   buildOfflineDetailCompareActionHintLabelKo,
@@ -1101,7 +1102,7 @@ function runOfflineCompareCodeCheck(source = "keep") {
   const resultLabel = buildOfflineDetailCompareResultLabelKo(currentCode, targetCode);
   setOfflineCompareResultLabel(currentCode, targetCode);
   setOfflineCompareActionHint(currentCode, targetCode);
-  const isError = resultLabel.includes("오류") || resultLabel.includes("불가");
+  const isError = isOfflineDetailCompareResultError(currentCode, targetCode);
   setStatus(buildOfflineDetailCompareStatusLabelKo(normalizedSource, resultLabel), isError);
 }
 
