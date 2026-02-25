@@ -761,7 +761,7 @@ export function buildOfflineDetailCompareActionHintLabelKo(
     return buildOfflineDetailCompareActionHintViewMismatchLabelKo();
   }
   if (!diff.sameAllChecksum || !diff.sameViewChecksum) {
-    return "가이드: 이벤트 구성 분포가 다릅니다. 정산 로그 원본을 확인하세요.";
+    return buildOfflineDetailCompareActionHintChecksumMismatchLabelKo();
   }
   return "가이드: 주요 집계가 다릅니다. 저장 시점/필터를 다시 확인하세요.";
 }
@@ -784,6 +784,10 @@ export function buildOfflineDetailCompareActionHintIdenticalLabelKo() {
 
 export function buildOfflineDetailCompareActionHintViewMismatchLabelKo() {
   return "가이드: 보기 모드 차이입니다. 동일 모드로 다시 비교하세요.";
+}
+
+export function buildOfflineDetailCompareActionHintChecksumMismatchLabelKo() {
+  return "가이드: 이벤트 구성 분포가 다릅니다. 정산 로그 원본을 확인하세요.";
 }
 
 export function buildOfflineDetailCompareActionHintTone(
