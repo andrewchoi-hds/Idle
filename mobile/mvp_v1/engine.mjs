@@ -981,7 +981,9 @@ export function buildOfflineDetailCompareCodeDeltaSummaryTone(
 }
 
 function boolMark(value) {
-  return value ? "일치" : "불일치";
+  return value
+    ? buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()
+    : "불일치";
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryLabelKo(
@@ -1017,6 +1019,10 @@ export function buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo()
 
 export function buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo() {
   return "일치 요약: 대상 코드 형식 오류";
+}
+
+export function buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo() {
+  return "일치";
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryTone(
