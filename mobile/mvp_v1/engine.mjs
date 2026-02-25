@@ -885,7 +885,7 @@ export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
 ) {
   const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
   if (!targetText) {
-    return "차이 요약: 대상 코드 없음";
+    return buildOfflineDetailCompareCodeDeltaSummaryTargetMissingLabelKo();
   }
   const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
   if (!diff.comparable) {
@@ -930,6 +930,10 @@ export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
   return parts.length > 0
     ? `차이 요약: ${parts.join(" · ")}`
     : buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo();
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryTargetMissingLabelKo() {
+  return "차이 요약: 대상 코드 없음";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo() {
