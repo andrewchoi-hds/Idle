@@ -246,6 +246,7 @@ npm run mobile:mvp:check
   - 오프라인 비교 결과 상태 라벨(`buildOfflineDetailCompareResultStateLabelKo`)이 대기/입력 필요/일치/보기 차이/현재 코드 없음 케이스를 일관되게 반환하는지 검증
   - 오프라인 비교 결과 톤(`buildOfflineDetailCompareResultStateTone`)이 대기/입력 필요/일치/보기 차이/현재 코드 없음 케이스에서 `info/warn/error`를 일관되게 반환하는지 검증
   - 오프라인 비교 결과 오류 플래그(`isOfflineDetailCompareResultError`)가 comparable 여부에 따라 오류 상태를 일관되게 반환하는지 검증
+  - 오프라인 비교 가이드 입력 필요 라벨(`buildOfflineDetailCompareActionHintInputRequiredLabelKo`)이 대상 미입력 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 가이드 라벨(`buildOfflineDetailCompareActionHintLabelKo`)이 입력 필요/형식 오류/현재 코드 없음/일치/보기 모드 차이/checksum·집계 차이 케이스를 일관되게 반환하는지 검증
   - 오프라인 비교 가이드 톤(`buildOfflineDetailCompareActionHintTone`)이 입력 필요/형식 오류/현재 코드 없음/일치/보기 모드 차이/checksum·집계 차이 케이스에서 `warn/error/info`를 일관되게 반환하는지 검증
   - 오프라인 비교 보기 모드 정렬 타깃(`resolveOfflineDetailCompareViewModeAlignmentTarget`)이 `view-only mismatch`에서만 대상 모드(`all/critical`)를 반환하는지 검증

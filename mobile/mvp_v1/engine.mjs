@@ -736,7 +736,7 @@ export function buildOfflineDetailCompareActionHintLabelKo(
 ) {
   const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
   if (!targetText) {
-    return "가이드: 비교 코드를 입력하세요.";
+    return buildOfflineDetailCompareActionHintInputRequiredLabelKo();
   }
   const targetCode = extractOfflineDetailCompareCode(targetText);
   if (!targetCode) {
@@ -764,6 +764,10 @@ export function buildOfflineDetailCompareActionHintLabelKo(
     return "가이드: 이벤트 구성 분포가 다릅니다. 정산 로그 원본을 확인하세요.";
   }
   return "가이드: 주요 집계가 다릅니다. 저장 시점/필터를 다시 확인하세요.";
+}
+
+export function buildOfflineDetailCompareActionHintInputRequiredLabelKo() {
+  return "가이드: 비교 코드를 입력하세요.";
 }
 
 export function buildOfflineDetailCompareActionHintTone(
