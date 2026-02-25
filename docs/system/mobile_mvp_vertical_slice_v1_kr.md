@@ -104,6 +104,7 @@ npm run mobile:mvp:serve
     - `btnPasteOfflineCompareCode`로 클립보드 텍스트에서 비교 코드를 추출해 입력/대조를 즉시 실행
     - `btnLoadOfflineCompareCodeFromPayload`로 `savePayload` JSON/텍스트에서 비교 코드를 추출해 입력/대조를 즉시 실행(상태 메시지에 추출 출처 포함)
     - 비교 코드 출처 라인(`offlineCompareCodeSource`)에 입력/클립보드/savePayload 추출 경로를 상시 표시
+    - 비교 코드 대상 요약 라인(`offlineCompareCodeTargetSummary`)에 대상 코드의 총건수/핵심표시/숨김/보기 모드를 상시 표시
     - 팝업에서 세부 로그 토글(최근 이벤트) + 정산 리포트 JSON 내보내기 지원
 - 옵션:
   - `앱 복귀 시 실시간 자동 재개` (`autoResumeRealtime`, on/off)
@@ -201,6 +202,7 @@ npm run mobile:mvp:check
   - 오프라인 payload 기반 비교 코드 추출(`extractOfflineDetailCompareCodeFromPayloadText`)이 `detailViewSnapshotAtExport`/`detailReportSnapshot` 우선순위와 일반 텍스트 fallback을 일관되게 적용하는지 검증
   - 오프라인 payload 비교 코드 출처 메타(`extractOfflineDetailCompareCodeFromPayloadTextWithSource`)가 `detail_view_snapshot/detail_report_snapshot/text/none` 분기를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 출처 라벨(`buildOfflineDetailCompareCodeSourceLabelKo`)이 source key별 표시 문구를 일관되게 반환하는지 검증
+  - 오프라인 비교 코드 대상 요약 라벨(`buildOfflineDetailCompareCodeTargetSummaryLabelKo`)이 빈 입력/형식 오류/전체·핵심 보기 케이스를 일관되게 반환하는지 검증
   - 오프라인 비교 대조(`parseOfflineDetailCompareCode`, `resolveOfflineDetailCompareCodeDiff`, `buildOfflineDetailCompareResultLabelKo`)가 파싱/차이 요약/오류 문구를 일관되게 반환하는지 검증
   - 오프라인 리포트 스냅샷(`buildOfflineDetailReportSnapshot`)이 필터 집계/라벨/숨김 상위 종류 및 kind digest(view 포함)/compareCode를 일관되게 반환하는지 검증
   - 오프라인 핵심 이벤트 요약(`summarizeOfflineDetailCriticalEvents`, `buildOfflineDetailCriticalSummaryLabelKo`)이 카운트/라벨을 일관되게 반환하는지 검증

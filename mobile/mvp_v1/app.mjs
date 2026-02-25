@@ -10,6 +10,7 @@ import {
   buildOfflineDetailCompareCode,
   buildOfflineDetailCompareResultLabelKo,
   buildOfflineDetailCompareCodeSourceLabelKo,
+  buildOfflineDetailCompareCodeTargetSummaryLabelKo,
   buildOfflineDetailCriticalSummaryLabelKo,
   buildOfflineDetailReportSnapshot,
   buildOfflineDetailHiddenKindsSummaryLabelKo,
@@ -120,6 +121,7 @@ const dom = {
   offlineCompareCodeInput: document.getElementById("offlineCompareCodeInput"),
   offlineCompareCodeResult: document.getElementById("offlineCompareCodeResult"),
   offlineCompareCodeSource: document.getElementById("offlineCompareCodeSource"),
+  offlineCompareCodeTargetSummary: document.getElementById("offlineCompareCodeTargetSummary"),
   offlineDetailFilterSummary: document.getElementById("offlineDetailFilterSummary"),
   offlineDetailHiddenSummary: document.getElementById("offlineDetailHiddenSummary"),
   offlineDetailHiddenKindsSummary: document.getElementById("offlineDetailHiddenKindsSummary"),
@@ -908,6 +910,8 @@ function runOfflineCompareCodeCheck(source = "input") {
   dom.offlineCompareCodeSource.textContent = sourceLabelKo;
   const currentCode = String(dom.offlineDetailCompareCode.textContent || "").trim();
   const targetText = String(dom.offlineCompareCodeInput.value || "").trim();
+  dom.offlineCompareCodeTargetSummary.textContent =
+    buildOfflineDetailCompareCodeTargetSummaryLabelKo(targetText);
   const targetCode = extractOfflineDetailCompareCode(targetText);
   if (!targetCode) {
     dom.offlineCompareCodeResult.textContent = "비교 코드를 입력하세요";
@@ -916,6 +920,8 @@ function runOfflineCompareCodeCheck(source = "input") {
   }
   if (targetText !== targetCode) {
     dom.offlineCompareCodeInput.value = targetCode;
+    dom.offlineCompareCodeTargetSummary.textContent =
+      buildOfflineDetailCompareCodeTargetSummaryLabelKo(targetCode);
   }
   const resultLabel = buildOfflineDetailCompareResultLabelKo(currentCode, targetCode);
   dom.offlineCompareCodeResult.textContent = resultLabel;
@@ -938,6 +944,8 @@ async function pasteOfflineCompareCodeFromClipboard() {
   const extractedCode = extractOfflineDetailCompareCode(text);
   if (!extractedCode) {
     dom.offlineCompareCodeResult.textContent = "입력 비교 코드 형식 오류";
+    dom.offlineCompareCodeTargetSummary.textContent =
+      buildOfflineDetailCompareCodeTargetSummaryLabelKo(text);
     dom.offlineCompareCodeSource.textContent = buildOfflineDetailCompareCodeSourceLabelKo(
       "clipboard",
     );
@@ -951,6 +959,7 @@ async function pasteOfflineCompareCodeFromClipboard() {
 function loadOfflineCompareCodeFromPayload() {
   const payloadText = String(dom.savePayload.value || "").trim();
   if (!payloadText) {
+    dom.offlineCompareCodeTargetSummary.textContent = "대상 코드: 없음";
     dom.offlineCompareCodeSource.textContent = buildOfflineDetailCompareCodeSourceLabelKo("none");
     setStatus("savePayload 입력 필요", true);
     return;
@@ -958,6 +967,8 @@ function loadOfflineCompareCodeFromPayload() {
   const extracted = extractOfflineDetailCompareCodeFromPayloadTextWithSource(payloadText);
   if (!extracted.code) {
     dom.offlineCompareCodeResult.textContent = "입력 비교 코드 형식 오류";
+    dom.offlineCompareCodeTargetSummary.textContent =
+      buildOfflineDetailCompareCodeTargetSummaryLabelKo(payloadText);
     dom.offlineCompareCodeSource.textContent =
       buildOfflineDetailCompareCodeSourceLabelKo("payload");
     setStatus("savePayload에서 비교 코드 인식 실패", true);
@@ -1280,6 +1291,7 @@ function hideOfflineModal() {
   dom.offlineCompareCodeInput.value = "";
   dom.offlineCompareCodeResult.textContent = "비교 대기 중";
   dom.offlineCompareCodeSource.textContent = "출처: 없음";
+  dom.offlineCompareCodeTargetSummary.textContent = "대상 코드: 없음";
   dom.offlineDetailFilterSummary.textContent = "세부 로그 0건 (전체)";
   dom.offlineDetailHiddenSummary.textContent = "숨김 이벤트 없음";
   dom.offlineDetailHiddenKindsSummary.textContent = "숨김 상세 없음";
@@ -1326,6 +1338,7 @@ function showOfflineModal(offline) {
   dom.offlineCompareCodeInput.value = "";
   dom.offlineCompareCodeResult.textContent = "비교 대기 중";
   dom.offlineCompareCodeSource.textContent = "출처: 없음";
+  dom.offlineCompareCodeTargetSummary.textContent = "대상 코드: 없음";
   setOfflineDetailCriticalOnly(false);
   renderOfflineDetailList(events);
   setOfflineDetailExpanded(false);
@@ -1589,6 +1602,10 @@ function bindEvents() {
       event.preventDefault();
       runOfflineCompareCodeCheck();
     }
+  });
+  dom.offlineCompareCodeInput.addEventListener("input", () => {
+    dom.offlineCompareCodeTargetSummary.textContent =
+      buildOfflineDetailCompareCodeTargetSummaryLabelKo(dom.offlineCompareCodeInput.value);
   });
   dom.btnCopyOfflineCompareCode.addEventListener("click", () => {
     copyOfflineCompareCodeToClipboard();
