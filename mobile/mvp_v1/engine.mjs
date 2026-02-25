@@ -983,7 +983,7 @@ export function buildOfflineDetailCompareCodeDeltaSummaryTone(
 function boolMark(value) {
   return value
     ? buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()
-    : "불일치";
+    : buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo();
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryLabelKo(
@@ -1023,6 +1023,10 @@ export function buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo() 
 
 export function buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo() {
   return "일치";
+}
+
+export function buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo() {
+  return "불일치";
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryTone(
