@@ -12,6 +12,7 @@ import {
   buildOfflineDetailCompareCodeMatchSummaryTone,
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeSourceTone,
+  buildOfflineDetailCompareStatusLabelKo,
   resolveOfflineDetailCompareCheckSource,
   resolveOfflineDetailCompareInputSource,
   resolveOfflineDetailCompareTargetInputState,
@@ -627,6 +628,20 @@ async function main() {
       buildOfflineDetailCompareCodeSourceTone("input") === "warn" &&
       buildOfflineDetailCompareCodeSourceTone("none") === "info" &&
       buildOfflineDetailCompareCodeSourceTone("unknown") === "error",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_status_label_includes_source_prefix",
+    passed:
+      buildOfflineDetailCompareStatusLabelKo("none", "비교 코드 입력 필요") ===
+        "[출처: 없음] 비교 코드 입력 필요" &&
+      buildOfflineDetailCompareStatusLabelKo("clipboard", "비교 코드 형식 오류") ===
+        "[출처: 클립보드 텍스트] 비교 코드 형식 오류" &&
+      buildOfflineDetailCompareStatusLabelKo(
+        "detail_view_snapshot",
+        "비교 코드 일치",
+      ) === "[출처: savePayload.detailViewSnapshotAtExport] 비교 코드 일치" &&
+      buildOfflineDetailCompareStatusLabelKo("unknown", "") === "[출처: 없음] 상태 없음",
   });
 
   checks.push({

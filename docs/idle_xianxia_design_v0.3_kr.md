@@ -1314,3 +1314,11 @@
 
 ## 293) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 대조 상태 메시지 정밀화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 294) 다음 순차 작업
+1. [완료] 비교 상태 라벨 헬퍼(`buildOfflineDetailCompareStatusLabelKo`)를 추가해 출처/메시지를 `[출처] 메시지` 포맷으로 표준화.
+2. [완료] 오프라인 모달 비교 대조 실행의 성공/실패(입력 필요/형식 오류) 상태 메시지를 공통 헬퍼로 조합하도록 반영해 출처 컨텍스트를 항상 유지.
+3. [완료] 모바일 회귀 체크에 비교 상태 라벨 헬퍼 시나리오를 추가해 source key별 포맷 안정성을 검증.
+
+## 295) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 상태 메시지 출처 포맷 통일 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

@@ -108,6 +108,7 @@ npm run mobile:mvp:serve
     - 비교 코드 입력값이 비어있으면 출처 라인을 즉시 `없음`으로 복원하고, 값이 있으면 즉시 `비교 코드 입력값`으로 전환
     - 비교 코드 대조 버튼/Enter 재실행 시에는 마지막 확정 출처(`savePayload/clipboard/input`)를 유지하고, 입력 변경이 감지된 경우에만 출처를 `입력값/없음`으로 전환
     - 비교 코드 대조 실행 시 빈 입력(`입력 필요`)과 형식 오류(`형식 오류`) 상태 메시지를 분리해 즉시 안내
+    - 비교 코드 대조 상태 메시지는 항상 `[출처] 메시지` 포맷으로 출력해 성공/오류 경로 모두 동일한 추적 컨텍스트를 유지
     - 비교 코드 출처 라인 톤(`info/warn/error`)을 함께 반영해 snapshot 기반/수동 입력 기반/미확인 출처를 색상으로 즉시 구분
     - 비교 코드 현재 요약 라인(`offlineCompareCodeCurrentSummary`)에 기준 코드의 총건수/핵심표시/숨김/보기 모드를 상시 표시
     - 비교 코드 현재 요약 라인 톤(`info/warn/error`)을 함께 반영해 대기/형식 오류/정상 코드 상태를 색상으로 즉시 구분
@@ -219,6 +220,7 @@ npm run mobile:mvp:check
   - 오프라인 payload 비교 코드 출처 메타(`extractOfflineDetailCompareCodeFromPayloadTextWithSource`)가 `detail_view_snapshot/detail_report_snapshot/text/none` 분기를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 출처 라벨(`buildOfflineDetailCompareCodeSourceLabelKo`)이 source key별 표시 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 출처 톤(`buildOfflineDetailCompareCodeSourceTone`)이 source key별 `info/warn/error`를 일관되게 반환하는지 검증
+  - 오프라인 비교 상태 라벨(`buildOfflineDetailCompareStatusLabelKo`)이 source key와 메시지를 `[출처] 메시지` 포맷으로 일관되게 조합하는지 검증
   - 오프라인 비교 입력 출처 해석(`resolveOfflineDetailCompareInputSource`)이 입력값 공백/유효 문자열에 대해 `none/input`을 일관되게 반환하는지 검증
   - 오프라인 비교 대조 출처 해석(`resolveOfflineDetailCompareCheckSource`)이 `keep/input/명시 출처` 분기에서 최종 출처를 일관되게 반환하는지 검증
   - 오프라인 비교 대상 입력 상태 해석(`resolveOfflineDetailCompareTargetInputState`)이 빈 입력/형식 오류/유효 코드 케이스를 `empty/invalid/valid`로 일관되게 반환하는지 검증
