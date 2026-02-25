@@ -28,6 +28,7 @@ import {
   resolveOfflineDetailComparePayloadLoadSource,
   resolveOfflineDetailCompareInputSource,
   resolveOfflineDetailCompareTargetInputState,
+  resolveOfflineDetailCompareTargetInputStateStatusMessageKo,
   resolveOfflineDetailCompareCheckSource,
   buildOfflineDetailCompareCodeTargetSummaryLabelKo,
   buildOfflineDetailCompareCodeTargetSummaryTone,
@@ -1081,7 +1082,7 @@ function runOfflineCompareCodeCheck(source = "keep") {
   const targetInputState = resolveOfflineDetailCompareTargetInputState(targetText);
   if (targetInputState !== "valid") {
     const earlyMessage =
-      targetInputState === "empty" ? "비교 코드 입력 필요" : "비교 코드 형식 오류";
+      resolveOfflineDetailCompareTargetInputStateStatusMessageKo(targetInputState);
     setStatus(
       buildOfflineDetailCompareStatusLabelKo(normalizedSource, earlyMessage),
       true,

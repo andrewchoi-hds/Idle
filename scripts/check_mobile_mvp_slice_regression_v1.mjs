@@ -19,6 +19,7 @@ import {
   resolveOfflineDetailCompareCheckSource,
   resolveOfflineDetailCompareInputSource,
   resolveOfflineDetailCompareTargetInputState,
+  resolveOfflineDetailCompareTargetInputStateStatusMessageKo,
   buildOfflineDetailCompareCodeTargetSummaryLabelKo,
   buildOfflineDetailCompareCodeTargetSummaryTone,
   buildOfflineDetailCompareCodeDeltaSummaryTone,
@@ -762,6 +763,19 @@ async function main() {
       resolveOfflineDetailCompareTargetInputState(
         `prefix ${offlineDetailCompareCodeAll} suffix`,
       ) === "valid",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_target_input_state_status_message_maps_state",
+    passed:
+      resolveOfflineDetailCompareTargetInputStateStatusMessageKo("empty") ===
+        "비교 코드 입력 필요" &&
+      resolveOfflineDetailCompareTargetInputStateStatusMessageKo("invalid") ===
+        "비교 코드 형식 오류" &&
+      resolveOfflineDetailCompareTargetInputStateStatusMessageKo("valid") ===
+        "비교 코드 형식 오류" &&
+      resolveOfflineDetailCompareTargetInputStateStatusMessageKo("unknown") ===
+        "비교 코드 형식 오류",
   });
 
   checks.push({
