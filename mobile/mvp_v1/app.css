@@ -565,6 +565,22 @@ textarea:focus-visible,
   margin-top: 2px;
 }
 
+.offline-compare-action-hint {
+  color: #9eb8af;
+}
+
+.offline-compare-action-hint.tone-info {
+  color: #bfe6d9;
+}
+
+.offline-compare-action-hint.tone-warn {
+  color: #ffdca0;
+}
+
+.offline-compare-action-hint.tone-error {
+  color: #ffb4ac;
+}
+
 .offline-compare-row {
   margin-top: 8px;
   display: grid;
