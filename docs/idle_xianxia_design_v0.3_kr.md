@@ -1306,3 +1306,11 @@
 
 ## 291) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 대조 출처 유지 동작 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 292) 다음 순차 작업
+1. [완료] 비교 대상 입력 상태 해석 헬퍼(`resolveOfflineDetailCompareTargetInputState`)를 추가해 빈 입력/형식 오류/유효 코드를 `empty/invalid/valid`로 표준화.
+2. [완료] 오프라인 모달 비교 대조 실행에서 빈 입력과 형식 오류 상태 메시지를 분리해 `비교 코드 입력 필요`/`비교 코드 형식 오류`를 정확히 안내하도록 반영.
+3. [완료] 모바일 회귀 체크에 대상 입력 상태 해석 헬퍼 시나리오를 추가해 `empty/invalid/valid` 분기 안정성을 검증.
+
+## 293) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 대조 상태 메시지 정밀화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

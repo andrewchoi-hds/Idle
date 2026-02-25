@@ -14,6 +14,7 @@ import {
   buildOfflineDetailCompareCodeSourceTone,
   resolveOfflineDetailCompareCheckSource,
   resolveOfflineDetailCompareInputSource,
+  resolveOfflineDetailCompareTargetInputState,
   buildOfflineDetailCompareCodeTargetSummaryLabelKo,
   buildOfflineDetailCompareCodeTargetSummaryTone,
   buildOfflineDetailCompareCodeDeltaSummaryTone,
@@ -664,6 +665,17 @@ async function main() {
       resolveOfflineDetailCompareCheckSource("clipboard", "none", "") ===
         "clipboard" &&
       resolveOfflineDetailCompareCheckSource("", "input", "") === "none",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_target_input_state_distinguishes_empty_invalid_valid",
+    passed:
+      resolveOfflineDetailCompareTargetInputState("") === "empty" &&
+      resolveOfflineDetailCompareTargetInputState("   ") === "empty" &&
+      resolveOfflineDetailCompareTargetInputState("invalid text") === "invalid" &&
+      resolveOfflineDetailCompareTargetInputState(
+        `prefix ${offlineDetailCompareCodeAll} suffix`,
+      ) === "valid",
   });
 
   checks.push({

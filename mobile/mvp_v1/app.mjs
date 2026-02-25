@@ -23,6 +23,7 @@ import {
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeSourceTone,
   resolveOfflineDetailCompareInputSource,
+  resolveOfflineDetailCompareTargetInputState,
   resolveOfflineDetailCompareCheckSource,
   buildOfflineDetailCompareCodeTargetSummaryLabelKo,
   buildOfflineDetailCompareCodeTargetSummaryTone,
@@ -1073,11 +1074,15 @@ function runOfflineCompareCodeCheck(source = "keep") {
   setOfflineCompareTargetSummary(targetText);
   setOfflineCompareDeltaSummary(currentCode, targetText);
   setOfflineCompareMatchSummary(currentCode, targetText);
-  const targetCode = extractOfflineDetailCompareCode(targetText);
-  if (!targetCode) {
-    setStatus("비교 코드 입력 필요", true);
+  const targetInputState = resolveOfflineDetailCompareTargetInputState(targetText);
+  if (targetInputState !== "valid") {
+    setStatus(
+      targetInputState === "empty" ? "비교 코드 입력 필요" : "비교 코드 형식 오류",
+      true,
+    );
     return;
   }
+  const targetCode = extractOfflineDetailCompareCode(targetText);
   if (targetText !== targetCode) {
     dom.offlineCompareCodeInput.value = targetCode;
     setOfflineCompareResultState(currentCode, targetCode);

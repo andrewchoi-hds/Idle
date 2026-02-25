@@ -367,6 +367,14 @@ export function resolveOfflineDetailCompareInputSource(codeInput) {
   return text ? "input" : "none";
 }
 
+export function resolveOfflineDetailCompareTargetInputState(codeInput) {
+  const text = typeof codeInput === "string" ? codeInput.trim() : "";
+  if (!text) {
+    return "empty";
+  }
+  return extractOfflineDetailCompareCode(text) ? "valid" : "invalid";
+}
+
 export function resolveOfflineDetailCompareCheckSource(
   requestedSourceInput,
   currentSourceInput,
