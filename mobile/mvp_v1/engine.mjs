@@ -996,7 +996,7 @@ export function buildOfflineDetailCompareCodeMatchSummaryLabelKo(
   if (!diff.comparable) {
     return diff.reason === "current_invalid"
       ? buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo()
-      : "일치 요약: 대상 코드 형식 오류";
+      : buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo();
   }
   return `일치 요약: 총 ${boolMark(diff.sameTotalEvents)} · 핵심표시 ${boolMark(
     diff.sameCriticalVisibleEvents,
@@ -1013,6 +1013,10 @@ export function buildOfflineDetailCompareCodeMatchSummaryTargetMissingLabelKo() 
 
 export function buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo() {
   return "일치 요약: 현재 코드 없음";
+}
+
+export function buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo() {
+  return "일치 요약: 대상 코드 형식 오류";
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryTone(
