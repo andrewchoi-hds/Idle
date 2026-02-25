@@ -12,6 +12,7 @@ import {
   buildOfflineDetailCompareCodeMatchSummaryTone,
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeSourceTone,
+  resolveOfflineDetailCompareInputSource,
   buildOfflineDetailCompareCodeTargetSummaryLabelKo,
   buildOfflineDetailCompareCodeTargetSummaryTone,
   buildOfflineDetailCompareCodeDeltaSummaryTone,
@@ -624,6 +625,15 @@ async function main() {
       buildOfflineDetailCompareCodeSourceTone("input") === "warn" &&
       buildOfflineDetailCompareCodeSourceTone("none") === "info" &&
       buildOfflineDetailCompareCodeSourceTone("unknown") === "error",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_input_source_resolves_none_or_input",
+    passed:
+      resolveOfflineDetailCompareInputSource("") === "none" &&
+      resolveOfflineDetailCompareInputSource("   ") === "none" &&
+      resolveOfflineDetailCompareInputSource("ODR1-T6-C4-H2-VA-A000000-S000000") ===
+        "input",
   });
 
   checks.push({

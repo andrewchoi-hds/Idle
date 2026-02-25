@@ -105,6 +105,7 @@ npm run mobile:mvp:serve
     - `btnPasteOfflineCompareCode`로 클립보드 텍스트에서 비교 코드를 추출해 입력/대조를 즉시 실행
     - `btnLoadOfflineCompareCodeFromPayload`로 `savePayload` JSON/텍스트에서 비교 코드를 추출해 입력/대조를 즉시 실행(상태 메시지에 추출 출처 포함)
     - 비교 코드 출처 라인(`offlineCompareCodeSource`)에 입력/클립보드/savePayload 추출 경로를 상시 표시
+    - 비교 코드 입력값이 비어있으면 출처 라인을 즉시 `없음`으로 복원하고, 값이 있으면 즉시 `비교 코드 입력값`으로 전환
     - 비교 코드 출처 라인 톤(`info/warn/error`)을 함께 반영해 snapshot 기반/수동 입력 기반/미확인 출처를 색상으로 즉시 구분
     - 비교 코드 현재 요약 라인(`offlineCompareCodeCurrentSummary`)에 기준 코드의 총건수/핵심표시/숨김/보기 모드를 상시 표시
     - 비교 코드 현재 요약 라인 톤(`info/warn/error`)을 함께 반영해 대기/형식 오류/정상 코드 상태를 색상으로 즉시 구분
@@ -216,6 +217,7 @@ npm run mobile:mvp:check
   - 오프라인 payload 비교 코드 출처 메타(`extractOfflineDetailCompareCodeFromPayloadTextWithSource`)가 `detail_view_snapshot/detail_report_snapshot/text/none` 분기를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 출처 라벨(`buildOfflineDetailCompareCodeSourceLabelKo`)이 source key별 표시 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 출처 톤(`buildOfflineDetailCompareCodeSourceTone`)이 source key별 `info/warn/error`를 일관되게 반환하는지 검증
+  - 오프라인 비교 입력 출처 해석(`resolveOfflineDetailCompareInputSource`)이 입력값 공백/유효 문자열에 대해 `none/input`을 일관되게 반환하는지 검증
   - 오프라인 비교 코드 현재 요약 라벨(`buildOfflineDetailCompareCodeCurrentSummaryLabelKo`)이 빈 입력/형식 오류/전체·핵심 보기 케이스를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 현재 요약 톤(`buildOfflineDetailCompareCodeCurrentSummaryTone`)이 빈 입력/형식 오류/정상 입력 케이스에서 `info/warn`을 일관되게 반환하는지 검증
   - 오프라인 비교 코드 대상 요약 라벨(`buildOfflineDetailCompareCodeTargetSummaryLabelKo`)이 빈 입력/형식 오류/전체·핵심 보기 케이스를 일관되게 반환하는지 검증

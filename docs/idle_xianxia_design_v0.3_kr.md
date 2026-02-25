@@ -1290,3 +1290,11 @@
 
 ## 287) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 현재 요약 라인 톤 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 288) 다음 순차 작업
+1. [완료] 비교 입력 출처 해석 헬퍼(`resolveOfflineDetailCompareInputSource`)를 추가해 공백 입력은 `none`, 값이 있는 입력은 `input`으로 표준화.
+2. [완료] 오프라인 모달 비교 입력 `input` 이벤트에서 출처 라인(`offlineCompareCodeSource`)을 즉시 동기화해 빈 입력 시 `출처: 없음`으로 복원되도록 반영.
+3. [완료] 모바일 회귀 체크에 입력 출처 해석 헬퍼 시나리오를 추가해 `none/input` 분기 안정성을 검증.
+
+## 289) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 입력 출처 라인 실시간 동기화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
