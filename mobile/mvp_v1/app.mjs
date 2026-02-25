@@ -13,6 +13,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryTone,
   buildOfflineDetailCompareCodeCurrentSummaryLabelKo,
+  buildOfflineDetailCompareCodeCurrentSummaryTone,
   buildOfflineDetailCompareResultLabelKo,
   buildOfflineDetailCompareResultStateLabelKo,
   buildOfflineDetailCompareResultStateTone,
@@ -665,6 +666,17 @@ function setOfflineCompareSource(sourceInput) {
   return label;
 }
 
+function setOfflineCompareCurrentSummary(currentCodeInput) {
+  const currentText =
+    typeof currentCodeInput === "string" ? currentCodeInput.trim() : "";
+  dom.offlineCompareCodeCurrentSummary.textContent =
+    buildOfflineDetailCompareCodeCurrentSummaryLabelKo(currentText);
+  applyRiskTone(
+    dom.offlineCompareCodeCurrentSummary,
+    buildOfflineDetailCompareCodeCurrentSummaryTone(currentText),
+  );
+}
+
 function setOfflineCompareTargetSummary(targetCodeInput) {
   const targetText =
     typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
@@ -863,8 +875,7 @@ function renderOfflineDetailList(events) {
   const rows = filterOfflineDetailEventsByMode(prioritizedRows, mode);
   const currentCompareCode = buildOfflineDetailCompareCode(prioritizedRows, mode);
   dom.offlineDetailCompareCode.textContent = currentCompareCode;
-  dom.offlineCompareCodeCurrentSummary.textContent =
-    buildOfflineDetailCompareCodeCurrentSummaryLabelKo(currentCompareCode);
+  setOfflineCompareCurrentSummary(currentCompareCode);
   const targetText = String(dom.offlineCompareCodeInput.value || "").trim();
   setOfflineCompareResultState(currentCompareCode, targetText);
   setOfflineCompareActionHint(currentCompareCode, targetText);
@@ -1437,7 +1448,7 @@ function hideOfflineModal() {
   dom.offlineModal.classList.add("hidden");
   dom.offlineModal.setAttribute("aria-hidden", "true");
   dom.offlineDetailCompareCode.textContent = "비교 코드 없음";
-  dom.offlineCompareCodeCurrentSummary.textContent = "현재 코드: 없음";
+  setOfflineCompareCurrentSummary("");
   dom.offlineCompareCodeInput.value = "";
   setOfflineCompareResultState("", "");
   setOfflineCompareActionHint("", "");
@@ -1492,7 +1503,7 @@ function showOfflineModal(offline) {
   setOfflineCompareResultState("", "");
   setOfflineCompareActionHint("", "");
   setOfflineCompareSource("none");
-  dom.offlineCompareCodeCurrentSummary.textContent = "현재 코드: 없음";
+  setOfflineCompareCurrentSummary("");
   setOfflineCompareTargetSummary("");
   setOfflineCompareDeltaSummary("", "", true);
   setOfflineCompareMatchSummary("", "", true);
