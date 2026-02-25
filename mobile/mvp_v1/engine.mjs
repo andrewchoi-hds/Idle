@@ -343,6 +343,25 @@ export function buildOfflineDetailCompareCodeSourceLabelKo(sourceInput) {
   return "출처: 없음";
 }
 
+export function buildOfflineDetailCompareCodeSourceTone(sourceInput) {
+  const source = typeof sourceInput === "string" ? sourceInput.trim() : "";
+  if (source === "detail_view_snapshot" || source === "detail_report_snapshot") {
+    return "info";
+  }
+  if (
+    source === "text" ||
+    source === "payload" ||
+    source === "clipboard" ||
+    source === "input"
+  ) {
+    return "warn";
+  }
+  if (source === "none") {
+    return "info";
+  }
+  return "error";
+}
+
 export function extractOfflineDetailCompareCodeFromPayloadTextWithSource(payloadInput) {
   const text = typeof payloadInput === "string" ? payloadInput.trim() : "";
   if (!text) {

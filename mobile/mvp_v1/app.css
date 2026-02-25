@@ -613,6 +613,22 @@ textarea:focus-visible,
   color: #ffb4ac;
 }
 
+.offline-compare-source {
+  color: #bfd4cc;
+}
+
+.offline-compare-source.tone-info {
+  color: #bfe6d9;
+}
+
+.offline-compare-source.tone-warn {
+  color: #ffdca0;
+}
+
+.offline-compare-source.tone-error {
+  color: #ffb4ac;
+}
+
 .offline-compare-action-hint {
   color: #9eb8af;
 }
