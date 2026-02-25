@@ -12,6 +12,7 @@ import {
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeSourceTone,
   buildOfflineDetailCompareCodeTargetSummaryLabelKo,
+  buildOfflineDetailCompareCodeTargetSummaryTone,
   buildOfflineDetailCompareCodeDeltaSummaryTone,
   buildOfflineDetailCompareResultLabelKo,
   buildOfflineDetailCompareResultStateLabelKo,
@@ -635,6 +636,19 @@ async function main() {
       buildOfflineDetailCompareCodeTargetSummaryLabelKo(
         `payload => ${offlineDetailCompareCodeCritical}`,
       ) === "대상 코드: 총 6 · 핵심표시 4 · 숨김 2 · 보기 핵심",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_target_summary_tone_matches_target",
+    passed:
+      buildOfflineDetailCompareCodeTargetSummaryTone("") === "info" &&
+      buildOfflineDetailCompareCodeTargetSummaryTone("no compare code in this text") ===
+        "warn" &&
+      buildOfflineDetailCompareCodeTargetSummaryTone(offlineDetailCompareCodeAll) ===
+        "info" &&
+      buildOfflineDetailCompareCodeTargetSummaryTone(
+        `payload => ${offlineDetailCompareCodeCritical}`,
+      ) === "info",
   });
 
   checks.push({
