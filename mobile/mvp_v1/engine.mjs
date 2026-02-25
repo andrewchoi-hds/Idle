@@ -408,6 +408,17 @@ export function resolveOfflineDetailComparePayloadFailureInfo(reasonInput) {
   };
 }
 
+export function resolveOfflineDetailComparePayloadLoadSource(sourceInput) {
+  const source = typeof sourceInput === "string" ? sourceInput.trim() : "";
+  if (source === "detail_view_snapshot" || source === "detail_report_snapshot") {
+    return source;
+  }
+  if (source === "text") {
+    return "text";
+  }
+  return "payload";
+}
+
 export function resolveOfflineDetailCompareInputSource(codeInput) {
   const text = typeof codeInput === "string" ? codeInput.trim() : "";
   return text ? "input" : "none";
