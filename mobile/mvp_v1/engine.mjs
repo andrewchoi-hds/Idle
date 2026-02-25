@@ -749,7 +749,7 @@ export function buildOfflineDetailCompareActionHintLabelKo(
       : buildOfflineDetailCompareActionHintInvalidTargetLabelKo();
   }
   if (diff.identical) {
-    return "가이드: 코드가 일치합니다. 그대로 유지하세요.";
+    return buildOfflineDetailCompareActionHintIdenticalLabelKo();
   }
   if (
     !diff.sameViewMode &&
@@ -776,6 +776,10 @@ export function buildOfflineDetailCompareActionHintInvalidTargetLabelKo() {
 
 export function buildOfflineDetailCompareActionHintMissingCurrentLabelKo() {
   return "가이드: 오프라인 정산 로그를 열어 현재 코드를 먼저 생성하세요.";
+}
+
+export function buildOfflineDetailCompareActionHintIdenticalLabelKo() {
+  return "가이드: 코드가 일치합니다. 그대로 유지하세요.";
 }
 
 export function buildOfflineDetailCompareActionHintTone(
