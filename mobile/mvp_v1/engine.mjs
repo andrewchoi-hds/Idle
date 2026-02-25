@@ -745,7 +745,7 @@ export function buildOfflineDetailCompareActionHintLabelKo(
   const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCode);
   if (!diff.comparable) {
     return diff.reason === "current_invalid"
-      ? "가이드: 오프라인 정산 로그를 열어 현재 코드를 먼저 생성하세요."
+      ? buildOfflineDetailCompareActionHintMissingCurrentLabelKo()
       : buildOfflineDetailCompareActionHintInvalidTargetLabelKo();
   }
   if (diff.identical) {
@@ -772,6 +772,10 @@ export function buildOfflineDetailCompareActionHintInputRequiredLabelKo() {
 
 export function buildOfflineDetailCompareActionHintInvalidTargetLabelKo() {
   return "가이드: ODR1 비교 코드를 붙여넣거나 입력하세요.";
+}
+
+export function buildOfflineDetailCompareActionHintMissingCurrentLabelKo() {
+  return "가이드: 오프라인 정산 로그를 열어 현재 코드를 먼저 생성하세요.";
 }
 
 export function buildOfflineDetailCompareActionHintTone(
