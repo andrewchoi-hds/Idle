@@ -250,6 +250,7 @@ npm run mobile:mvp:check
   - 오프라인 비교 가이드 대상 형식 오류 라벨(`buildOfflineDetailCompareActionHintInvalidTargetLabelKo`)이 대상 코드 형식 오류 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 가이드 현재 코드 누락 라벨(`buildOfflineDetailCompareActionHintMissingCurrentLabelKo`)이 현재 코드 부재 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 가이드 일치 라벨(`buildOfflineDetailCompareActionHintIdenticalLabelKo`)이 비교 코드 완전 일치 경로에서 동일 문구를 일관되게 반환하는지 검증
+  - 오프라인 비교 가이드 보기 모드 차이 라벨(`buildOfflineDetailCompareActionHintViewMismatchLabelKo`)이 view mismatch 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 가이드 라벨(`buildOfflineDetailCompareActionHintLabelKo`)이 입력 필요/형식 오류/현재 코드 없음/일치/보기 모드 차이/checksum·집계 차이 케이스를 일관되게 반환하는지 검증
   - 오프라인 비교 가이드 톤(`buildOfflineDetailCompareActionHintTone`)이 입력 필요/형식 오류/현재 코드 없음/일치/보기 모드 차이/checksum·집계 차이 케이스에서 `warn/error/info`를 일관되게 반환하는지 검증
   - 오프라인 비교 보기 모드 정렬 타깃(`resolveOfflineDetailCompareViewModeAlignmentTarget`)이 `view-only mismatch`에서만 대상 모드(`all/critical`)를 반환하는지 검증

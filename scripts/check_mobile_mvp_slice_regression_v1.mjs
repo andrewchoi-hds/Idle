@@ -36,6 +36,7 @@ import {
   buildOfflineDetailCompareActionHintInvalidTargetLabelKo,
   buildOfflineDetailCompareActionHintMissingCurrentLabelKo,
   buildOfflineDetailCompareActionHintIdenticalLabelKo,
+  buildOfflineDetailCompareActionHintViewMismatchLabelKo,
   buildOfflineDetailCompareActionHintTone,
   resolveOfflineDetailCompareViewModeAlignmentTarget,
   buildOfflineDetailCriticalSummaryLabelKo,
@@ -1074,6 +1075,17 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_action_hint_view_mismatch_label_is_stable",
+    passed:
+      buildOfflineDetailCompareActionHintViewMismatchLabelKo() ===
+        "가이드: 보기 모드 차이입니다. 동일 모드로 다시 비교하세요." &&
+      buildOfflineDetailCompareActionHintLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ) === buildOfflineDetailCompareActionHintViewMismatchLabelKo(),
+  });
+
+  checks.push({
     id: "offline_detail_compare_code_action_hint_label_matches_state",
     passed:
       buildOfflineDetailCompareActionHintLabelKo(offlineDetailCompareCodeAll, "") ===
@@ -1089,7 +1101,7 @@ async function main() {
       buildOfflineDetailCompareActionHintLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
-      ) === "가이드: 보기 모드 차이입니다. 동일 모드로 다시 비교하세요." &&
+      ) === buildOfflineDetailCompareActionHintViewMismatchLabelKo() &&
       buildOfflineDetailCompareActionHintLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAllChecksumMismatch,
