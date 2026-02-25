@@ -519,6 +519,21 @@ export function buildOfflineDetailCompareResultLabelKo(
     : "비교 결과: 코드 차이 감지";
 }
 
+export function buildOfflineDetailCompareResultStateLabelKo(
+  currentCodeInput,
+  targetCodeInput,
+) {
+  const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
+  if (!targetText) {
+    return "비교 대기 중";
+  }
+  const targetCode = extractOfflineDetailCompareCode(targetText);
+  if (!targetCode) {
+    return "비교 코드를 입력하세요";
+  }
+  return buildOfflineDetailCompareResultLabelKo(currentCodeInput, targetCode);
+}
+
 function formatSignedDelta(valueInput) {
   const value = Number(valueInput) || 0;
   if (value > 0) {

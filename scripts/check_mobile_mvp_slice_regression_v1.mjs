@@ -11,6 +11,7 @@ import {
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeTargetSummaryLabelKo,
   buildOfflineDetailCompareResultLabelKo,
+  buildOfflineDetailCompareResultStateLabelKo,
   buildOfflineDetailCriticalSummaryLabelKo,
   buildOfflineDetailKindDigest,
   buildOfflineDetailHiddenKindsSummaryLabelKo,
@@ -668,6 +669,25 @@ async function main() {
         offlineDetailCompareCodeCritical,
       ) ===
         "일치 요약: 총 일치 · 핵심표시 일치 · 숨김 일치 · 보기 불일치 · 전체 checksum 일치 · view checksum 불일치",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_result_state_label_matches_input_state",
+    passed:
+      buildOfflineDetailCompareResultStateLabelKo(offlineDetailCompareCodeAll, "") ===
+        "비교 대기 중" &&
+      buildOfflineDetailCompareResultStateLabelKo(offlineDetailCompareCodeAll, "invalid") ===
+        "비교 코드를 입력하세요" &&
+      buildOfflineDetailCompareResultStateLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ) === "비교 결과: 완전 일치" &&
+      buildOfflineDetailCompareResultStateLabelKo(
+        offlineDetailCompareCodeAll,
+        `payload => ${offlineDetailCompareCodeCritical}`,
+      ) === "비교 결과: 전체 분포 동일, view 분포 차이" &&
+      buildOfflineDetailCompareResultStateLabelKo("INVALID", offlineDetailCompareCodeAll) ===
+        "현재 비교 코드가 없어 대조 불가",
   });
 
   const parsedOfflineCompareCode = parseOfflineDetailCompareCode(offlineDetailCompareCodeAll);
