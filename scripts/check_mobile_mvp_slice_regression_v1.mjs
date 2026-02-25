@@ -18,6 +18,7 @@ import {
   buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo,
+  buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTone,
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeSourceTone,
@@ -1098,6 +1099,20 @@ async function main() {
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAll,
       ).includes(`view checksum ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_match_summary_mismatched_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo() === "불일치" &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ).includes(`보기 ${buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo()}`) &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ).includes(`view checksum ${buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo()}`),
   });
 
   checks.push({
