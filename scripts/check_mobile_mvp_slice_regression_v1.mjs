@@ -10,6 +10,7 @@ import {
   buildOfflineDetailCompareCodeMatchSummaryLabelKo,
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeTargetSummaryLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryTone,
   buildOfflineDetailCompareResultLabelKo,
   buildOfflineDetailCompareResultStateLabelKo,
   buildOfflineDetailCompareResultStateTone,
@@ -657,6 +658,33 @@ async function main() {
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
       ) === "차이 요약: 보기 전체→핵심 · view checksum 변경",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_delta_summary_tone_matches_diff",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryTone(offlineDetailCompareCodeAll, "") ===
+        "info" &&
+      buildOfflineDetailCompareCodeDeltaSummaryTone("INVALID", offlineDetailCompareCodeAll) ===
+        "error" &&
+      buildOfflineDetailCompareCodeDeltaSummaryTone(offlineDetailCompareCodeAll, "invalid") ===
+        "warn" &&
+      buildOfflineDetailCompareCodeDeltaSummaryTone(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ) === "info" &&
+      buildOfflineDetailCompareCodeDeltaSummaryTone(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ) === "warn" &&
+      buildOfflineDetailCompareCodeDeltaSummaryTone(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAllChecksumMismatch,
+      ) === "warn" &&
+      buildOfflineDetailCompareCodeDeltaSummaryTone(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAggregateMismatch,
+      ) === "error",
   });
 
   checks.push({

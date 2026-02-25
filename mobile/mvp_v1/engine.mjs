@@ -724,6 +724,34 @@ export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
   return parts.length > 0 ? `차이 요약: ${parts.join(" · ")}` : "차이 요약: 코드 차이 감지";
 }
 
+export function buildOfflineDetailCompareCodeDeltaSummaryTone(
+  currentCodeInput,
+  targetCodeInput,
+) {
+  const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
+  if (!targetText) {
+    return "info";
+  }
+  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetText);
+  if (!diff.comparable) {
+    return diff.reason === "current_invalid" ? "error" : "warn";
+  }
+  if (diff.identical) {
+    return "info";
+  }
+  if (
+    !diff.sameTotalEvents ||
+    !diff.sameCriticalVisibleEvents ||
+    !diff.sameHiddenCriticalEvents
+  ) {
+    return "error";
+  }
+  if (!diff.sameAllChecksum || !diff.sameViewChecksum || !diff.sameViewMode) {
+    return "warn";
+  }
+  return "warn";
+}
+
 function boolMark(value) {
   return value ? "일치" : "불일치";
 }

@@ -581,6 +581,22 @@ textarea:focus-visible,
   color: #ffb4ac;
 }
 
+.offline-compare-delta-summary {
+  color: #bfd4cc;
+}
+
+.offline-compare-delta-summary.tone-info {
+  color: #bfe6d9;
+}
+
+.offline-compare-delta-summary.tone-warn {
+  color: #ffdca0;
+}
+
+.offline-compare-delta-summary.tone-error {
+  color: #ffb4ac;
+}
+
 .offline-compare-action-hint {
   color: #9eb8af;
 }

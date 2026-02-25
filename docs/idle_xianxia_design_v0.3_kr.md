@@ -1250,3 +1250,11 @@
 
 ## 277) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 결과 라인 톤 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 278) 다음 순차 작업
+1. [완료] 오프라인 비교 차이 요약 톤 헬퍼(`buildOfflineDetailCompareCodeDeltaSummaryTone`)를 추가해 대기/형식 오류/보기 차이/checksum·집계 차이를 `info/warn/error`로 표준화.
+2. [완료] 오프라인 모달 차이 요약 라인(`offlineCompareCodeDeltaSummary`)에 톤 클래스를 연동해 입력/붙여넣기/savePayload/모달 open·close 경로에서 라벨+톤을 함께 즉시 동기화.
+3. [완료] 모바일 회귀/DOM 체크에 차이 요약 톤 시나리오 및 스타일 계약(`.offline-compare-delta-summary.tone-error`) 검증을 추가.
+
+## 279) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 차이 요약 라인 톤 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
