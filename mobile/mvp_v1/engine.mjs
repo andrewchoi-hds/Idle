@@ -890,7 +890,7 @@ export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
   const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
   if (!diff.comparable) {
     return diff.reason === "current_invalid"
-      ? "차이 요약: 현재 코드 없음"
+      ? buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingLabelKo()
       : "차이 요약: 대상 코드 형식 오류";
   }
   if (diff.identical) {
@@ -934,6 +934,10 @@ export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
 
 export function buildOfflineDetailCompareCodeDeltaSummaryTargetMissingLabelKo() {
   return "차이 요약: 대상 코드 없음";
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingLabelKo() {
+  return "차이 요약: 현재 코드 없음";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo() {
