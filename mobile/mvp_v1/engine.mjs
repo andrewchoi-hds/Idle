@@ -654,7 +654,7 @@ export function buildOfflineDetailCompareResultLabelKo(
   }
   return parts.length > 0
     ? `비교 결과: ${parts.join(", ")}`
-    : "비교 결과: 코드 차이 감지";
+    : buildOfflineDetailCompareResultCodeDifferenceLabelKo();
 }
 
 export function buildOfflineDetailCompareInvalidTargetLabelKo() {
@@ -671,6 +671,10 @@ export function buildOfflineDetailCompareResultViewMismatchLabelKo() {
 
 export function buildOfflineDetailCompareResultAggregateMismatchLabelKo() {
   return "비교 결과: 집계 동일, 구성 분포 차이";
+}
+
+export function buildOfflineDetailCompareResultCodeDifferenceLabelKo() {
+  return "비교 결과: 코드 차이 감지";
 }
 
 export function buildOfflineDetailCompareMissingCurrentLabelKo() {
