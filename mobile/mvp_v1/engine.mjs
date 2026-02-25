@@ -362,6 +362,18 @@ export function buildOfflineDetailCompareCodeSourceTone(sourceInput) {
   return "error";
 }
 
+export function buildOfflineDetailCompareStatusLabelKo(
+  sourceInput,
+  messageInput,
+) {
+  const sourceLabel = buildOfflineDetailCompareCodeSourceLabelKo(sourceInput);
+  const message = typeof messageInput === "string" ? messageInput.trim() : "";
+  if (!message) {
+    return `[${sourceLabel}] 상태 없음`;
+  }
+  return `[${sourceLabel}] ${message}`;
+}
+
 export function resolveOfflineDetailCompareInputSource(codeInput) {
   const text = typeof codeInput === "string" ? codeInput.trim() : "";
   return text ? "input" : "none";

@@ -22,6 +22,7 @@ import {
   resolveOfflineDetailCompareViewModeAlignmentTarget,
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeSourceTone,
+  buildOfflineDetailCompareStatusLabelKo,
   resolveOfflineDetailCompareInputSource,
   resolveOfflineDetailCompareTargetInputState,
   resolveOfflineDetailCompareCheckSource,
@@ -1068,7 +1069,7 @@ function runOfflineCompareCodeCheck(source = "keep") {
     offlineCompareSource,
     targetText,
   );
-  const sourceLabelKo = setOfflineCompareSource(normalizedSource);
+  setOfflineCompareSource(normalizedSource);
   setOfflineCompareResultState(currentCode, targetText);
   setOfflineCompareActionHint(currentCode, targetText);
   setOfflineCompareTargetSummary(targetText);
@@ -1076,8 +1077,10 @@ function runOfflineCompareCodeCheck(source = "keep") {
   setOfflineCompareMatchSummary(currentCode, targetText);
   const targetInputState = resolveOfflineDetailCompareTargetInputState(targetText);
   if (targetInputState !== "valid") {
+    const earlyMessage =
+      targetInputState === "empty" ? "비교 코드 입력 필요" : "비교 코드 형식 오류";
     setStatus(
-      targetInputState === "empty" ? "비교 코드 입력 필요" : "비교 코드 형식 오류",
+      buildOfflineDetailCompareStatusLabelKo(normalizedSource, earlyMessage),
       true,
     );
     return;
@@ -1095,7 +1098,7 @@ function runOfflineCompareCodeCheck(source = "keep") {
   setOfflineCompareResultLabel(currentCode, targetCode);
   setOfflineCompareActionHint(currentCode, targetCode);
   const isError = resultLabel.includes("오류") || resultLabel.includes("불가");
-  setStatus(`[${sourceLabelKo}] ${resultLabel}`, isError);
+  setStatus(buildOfflineDetailCompareStatusLabelKo(normalizedSource, resultLabel), isError);
 }
 
 async function pasteOfflineCompareCodeFromClipboard() {
