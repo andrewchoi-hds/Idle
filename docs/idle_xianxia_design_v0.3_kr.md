@@ -1386,3 +1386,11 @@
 
 ## 311) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 현재 코드 누락 라벨 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 312) 다음 순차 작업
+1. [완료] 비교 결과 대기 라벨 헬퍼(`buildOfflineDetailCompareResultPendingLabelKo`)를 추가해 대상 미입력 시 표시 문구를 단일 함수로 표준화.
+2. [완료] 오프라인 비교 결과 상태 라벨 생성이 인라인 문자열 대신 대기 라벨 헬퍼를 사용하도록 반영.
+3. [완료] 모바일 회귀 체크에 대기 라벨 헬퍼 시나리오를 추가해 결과 상태 라벨 경로에서 문구 일치성을 검증.
+
+## 313) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 결과 대기 라벨 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

@@ -665,6 +665,10 @@ export function buildOfflineDetailCompareMissingCurrentLabelKo() {
   return "현재 비교 코드가 없어 대조 불가";
 }
 
+export function buildOfflineDetailCompareResultPendingLabelKo() {
+  return "비교 대기 중";
+}
+
 export function isOfflineDetailCompareResultError(
   currentCodeInput,
   targetCodeInput,
@@ -679,7 +683,7 @@ export function buildOfflineDetailCompareResultStateLabelKo(
 ) {
   const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
   if (!targetText) {
-    return "비교 대기 중";
+    return buildOfflineDetailCompareResultPendingLabelKo();
   }
   const targetCode = extractOfflineDetailCompareCode(targetText);
   if (!targetCode) {
