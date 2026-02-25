@@ -10,6 +10,7 @@ import {
   buildOfflineDetailCompareCodeMatchSummaryLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTone,
   buildOfflineDetailCompareCodeSourceLabelKo,
+  buildOfflineDetailCompareCodeSourceTone,
   buildOfflineDetailCompareCodeTargetSummaryLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryTone,
   buildOfflineDetailCompareResultLabelKo,
@@ -608,6 +609,19 @@ async function main() {
       buildOfflineDetailCompareCodeSourceLabelKo("clipboard") === "출처: 클립보드 텍스트" &&
       buildOfflineDetailCompareCodeSourceLabelKo("input") === "출처: 비교 코드 입력값" &&
       buildOfflineDetailCompareCodeSourceLabelKo("unknown") === "출처: 없음",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_source_tone_matches_source",
+    passed:
+      buildOfflineDetailCompareCodeSourceTone("detail_view_snapshot") === "info" &&
+      buildOfflineDetailCompareCodeSourceTone("detail_report_snapshot") === "info" &&
+      buildOfflineDetailCompareCodeSourceTone("text") === "warn" &&
+      buildOfflineDetailCompareCodeSourceTone("payload") === "warn" &&
+      buildOfflineDetailCompareCodeSourceTone("clipboard") === "warn" &&
+      buildOfflineDetailCompareCodeSourceTone("input") === "warn" &&
+      buildOfflineDetailCompareCodeSourceTone("none") === "info" &&
+      buildOfflineDetailCompareCodeSourceTone("unknown") === "error",
   });
 
   checks.push({
