@@ -24,6 +24,7 @@ import {
   buildOfflineDetailCompareCodeTargetSummaryTone,
   buildOfflineDetailCompareCodeDeltaSummaryTone,
   buildOfflineDetailCompareResultLabelKo,
+  buildOfflineDetailCompareInvalidTargetLabelKo,
   isOfflineDetailCompareResultError,
   buildOfflineDetailCompareResultStateLabelKo,
   buildOfflineDetailCompareResultStateTone,
@@ -780,6 +781,16 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_invalid_target_label_is_stable",
+    passed:
+      buildOfflineDetailCompareInvalidTargetLabelKo() === "입력 비교 코드 형식 오류" &&
+      buildOfflineDetailCompareResultLabelKo(
+        offlineDetailCompareCodeAll,
+        "BAD",
+      ) === buildOfflineDetailCompareInvalidTargetLabelKo(),
+  });
+
+  checks.push({
     id: "offline_detail_compare_code_target_summary_label_matches_target",
     passed:
       buildOfflineDetailCompareCodeTargetSummaryLabelKo("") === "대상 코드: 없음" &&
@@ -1097,9 +1108,8 @@ async function main() {
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAll,
       ) === "비교 결과: 완전 일치" &&
-      buildOfflineDetailCompareResultLabelKo(offlineDetailCompareCodeAll, "BAD").includes(
-        "형식 오류",
-      ),
+      buildOfflineDetailCompareResultLabelKo(offlineDetailCompareCodeAll, "BAD") ===
+        buildOfflineDetailCompareInvalidTargetLabelKo(),
   });
 
   checks.push({

@@ -611,7 +611,7 @@ export function buildOfflineDetailCompareResultLabelKo(
   if (!diff.comparable) {
     return diff.reason === "current_invalid"
       ? "현재 비교 코드가 없어 대조 불가"
-      : "입력 비교 코드 형식 오류";
+      : buildOfflineDetailCompareInvalidTargetLabelKo();
   }
   if (diff.identical) {
     return "비교 결과: 완전 일치";
@@ -655,6 +655,10 @@ export function buildOfflineDetailCompareResultLabelKo(
   return parts.length > 0
     ? `비교 결과: ${parts.join(", ")}`
     : "비교 결과: 코드 차이 감지";
+}
+
+export function buildOfflineDetailCompareInvalidTargetLabelKo() {
+  return "입력 비교 코드 형식 오류";
 }
 
 export function isOfflineDetailCompareResultError(

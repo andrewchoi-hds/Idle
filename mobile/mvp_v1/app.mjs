@@ -15,6 +15,7 @@ import {
   buildOfflineDetailCompareCodeCurrentSummaryLabelKo,
   buildOfflineDetailCompareCodeCurrentSummaryTone,
   buildOfflineDetailCompareResultLabelKo,
+  buildOfflineDetailCompareInvalidTargetLabelKo,
   isOfflineDetailCompareResultError,
   buildOfflineDetailCompareResultStateLabelKo,
   buildOfflineDetailCompareResultStateTone,
@@ -1138,7 +1139,7 @@ async function pasteOfflineCompareCodeFromClipboard() {
   const extractedCode = extractOfflineDetailCompareCode(text);
   if (!extractedCode) {
     const clipboardFailure = resolveOfflineDetailCompareClipboardFailureInfo("extract_failed");
-    dom.offlineCompareCodeResult.textContent = "입력 비교 코드 형식 오류";
+    dom.offlineCompareCodeResult.textContent = buildOfflineDetailCompareInvalidTargetLabelKo();
     applyRiskTone(dom.offlineCompareCodeResult, "warn");
     setOfflineCompareTargetSummary(text);
     setOfflineCompareDeltaSummary(currentCode, text);
@@ -1181,7 +1182,7 @@ function loadOfflineCompareCodeFromPayload() {
   const extracted = extractOfflineDetailCompareCodeFromPayloadTextWithSource(payloadText);
   if (!extracted.code) {
     const payloadFailure = resolveOfflineDetailComparePayloadFailureInfo("extract_failed");
-    dom.offlineCompareCodeResult.textContent = "입력 비교 코드 형식 오류";
+    dom.offlineCompareCodeResult.textContent = buildOfflineDetailCompareInvalidTargetLabelKo();
     applyRiskTone(dom.offlineCompareCodeResult, "warn");
     setOfflineCompareTargetSummary(payloadText);
     setOfflineCompareDeltaSummary(currentCode, payloadText);
