@@ -17,6 +17,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceMessageLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceMessageLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryItemSeparatorLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo,
@@ -1353,12 +1354,27 @@ async function main() {
     id: "offline_detail_compare_code_delta_summary_code_difference_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo() ===
-        "차이 요약: 코드 차이 감지" &&
+        `차이 요약: ${buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceMessageLabelKo()}` &&
       offlineDetailCompareCodeCanonicalVariant !== offlineDetailCompareCodeAll &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCanonicalVariant,
       ) === buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo(),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_delta_summary_code_difference_message_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceMessageLabelKo() ===
+        "코드 차이 감지" &&
+      offlineDetailCompareCodeCanonicalVariant !== offlineDetailCompareCodeAll &&
+      buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo().endsWith(
+        buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceMessageLabelKo(),
+      ) &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCanonicalVariant,
+      ).endsWith(buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceMessageLabelKo()),
   });
 
   checks.push({
