@@ -20,6 +20,7 @@ import {
   buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo,
+  buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTone,
@@ -544,6 +545,10 @@ async function main() {
   const offlineDetailCompareCodeAggregateMismatch = offlineDetailCompareCodeAll.replace(
     /-T\d+-/,
     "-T99-",
+  );
+  const offlineDetailCompareCodeHiddenMismatch = offlineDetailCompareCodeAll.replace(
+    /-H\d+-/,
+    "-H0-",
   );
   const offlineDetailCompareCodeCanonicalVariant = offlineDetailCompareCodeAll.replace(
     /-T(\d+)-C(\d+)-H(\d+)-/,
@@ -1136,6 +1141,24 @@ async function main() {
         offlineDetailCompareCodeAggregateMismatch,
       ).includes(
         `${buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
+      ),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_match_summary_hidden_key_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo() === "숨김" &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ).includes(
+        `${buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
+      ) &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeHiddenMismatch,
+      ).includes(
+        `${buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo()}`,
       ),
   });
 
