@@ -1146,14 +1146,17 @@ export function buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptors() {
     {
       reason: "target_missing",
       messageLabelKo: buildOfflineDetailCompareCodeMatchSummaryTargetMissingMessageLabelKo(),
+      fallbackTone: "info",
     },
     {
       reason: "current_missing",
       messageLabelKo: buildOfflineDetailCompareCodeMatchSummaryCurrentMissingMessageLabelKo(),
+      fallbackTone: "error",
     },
     {
       reason: "invalid_target",
       messageLabelKo: buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo(),
+      fallbackTone: "warn",
     },
   ];
 }
@@ -1174,6 +1177,7 @@ export function buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor(
       reason: "invalid_target",
       messageLabelKo:
         buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo(),
+      fallbackTone: "warn",
     }
   );
 }
@@ -1184,6 +1188,13 @@ export function buildOfflineDetailCompareCodeMatchSummaryFallbackLabelKo(
   const fallbackDescriptor =
     buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor(reasonInput);
   return `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${fallbackDescriptor.messageLabelKo}`;
+}
+
+export function buildOfflineDetailCompareCodeMatchSummaryFallbackTone(
+  reasonInput,
+) {
+  return buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor(reasonInput)
+    .fallbackTone;
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryTargetMissingLabelKo() {
@@ -1328,11 +1339,13 @@ export function buildOfflineDetailCompareCodeMatchSummaryTone(
 ) {
   const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
   if (!targetText) {
-    return "info";
+    return buildOfflineDetailCompareCodeMatchSummaryFallbackTone("target_missing");
   }
   const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetText);
   if (!diff.comparable) {
-    return diff.reason === "current_invalid" ? "error" : "warn";
+    return buildOfflineDetailCompareCodeMatchSummaryFallbackTone(
+      diff.reason === "current_invalid" ? "current_missing" : "invalid_target",
+    );
   }
   return buildOfflineDetailCompareCodeMatchSummaryToneFromItemDescriptors(
     buildOfflineDetailCompareCodeMatchSummaryItemDescriptors(diff),
