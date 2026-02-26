@@ -33,6 +33,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTargetMissingLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo,
@@ -1391,11 +1392,25 @@ async function main() {
     id: "offline_detail_compare_code_delta_summary_view_checksum_changed_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo() ===
-        "view checksum 변경" &&
+        `${buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo()} 변경` &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
       ).includes(buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo()),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_delta_summary_view_checksum_key_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo() ===
+        "view checksum" &&
+      buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo().startsWith(
+        buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo(),
+      ) &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ).includes(buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo()),
   });
 
   checks.push({
