@@ -988,7 +988,11 @@ export function buildOfflineDetailCompareCodeDeltaSummaryItemSeparatorLabelKo() 
 export function buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(
   totalEventsDelta,
 ) {
-  return `총 ${formatSignedDelta(totalEventsDelta)}`;
+  return `${buildOfflineDetailCompareCodeDeltaSummaryTotalKeyLabelKo()} ${formatSignedDelta(totalEventsDelta)}`;
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryTotalKeyLabelKo() {
+  return "총";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo(

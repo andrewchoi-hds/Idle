@@ -21,6 +21,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryItemSeparatorLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryTotalKeyLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo,
@@ -1189,8 +1190,10 @@ async function main() {
   checks.push({
     id: "offline_detail_compare_code_delta_summary_total_changed_label_is_stable",
     passed:
-      buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(93) === "총 +93" &&
-      buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(-2) === "총 -2" &&
+      buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(93) ===
+        `${buildOfflineDetailCompareCodeDeltaSummaryTotalKeyLabelKo()} +93` &&
+      buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(-2) ===
+        `${buildOfflineDetailCompareCodeDeltaSummaryTotalKeyLabelKo()} -2` &&
       offlineDetailCompareAggregateMismatchDiff.comparable &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         offlineDetailCompareCodeAll,
@@ -1200,6 +1203,18 @@ async function main() {
           offlineDetailCompareAggregateMismatchDiff.target.totalEvents -
             offlineDetailCompareAggregateMismatchDiff.current.totalEvents,
         ),
+      ),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_delta_summary_total_key_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryTotalKeyLabelKo() === "총" &&
+      buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(93).startsWith(
+        `${buildOfflineDetailCompareCodeDeltaSummaryTotalKeyLabelKo()} `,
+      ) &&
+      buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(-2).startsWith(
+        `${buildOfflineDetailCompareCodeDeltaSummaryTotalKeyLabelKo()} `,
       ),
   });
 
