@@ -1047,11 +1047,15 @@ export function buildOfflineDetailCompareCodeDeltaSummaryViewModeTransitionLabel
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo() {
-  return `${buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo()} 변경`;
+  return `${buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedSuffixLabelKo()}`;
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo() {
   return "view checksum";
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedSuffixLabelKo() {
+  return "변경";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo() {
