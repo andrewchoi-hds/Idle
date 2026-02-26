@@ -15,6 +15,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo,
@@ -579,6 +580,10 @@ async function main() {
       offlineDetailCompareCodeAll,
       offlineDetailCompareCodeCriticalVisibleMismatch,
     );
+  const offlineDetailCompareHiddenMismatchDiff = resolveOfflineDetailCompareCodeDiff(
+    offlineDetailCompareCodeAll,
+    offlineDetailCompareCodeHiddenMismatch,
+  );
   checks.push({
     id: "offline_detail_compare_code_has_mode_and_checksum",
     passed:
@@ -1075,6 +1080,15 @@ async function main() {
             .criticalVisibleEvents -
             offlineDetailCompareCriticalVisibleMismatchDiff.current
               .criticalVisibleEvents,
+        )}` &&
+      offlineDetailCompareHiddenMismatchDiff.comparable &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeHiddenMismatch,
+      ) ===
+        `차이 요약: ${buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo(
+          offlineDetailCompareHiddenMismatchDiff.target.hiddenCriticalEvents -
+            offlineDetailCompareHiddenMismatchDiff.current.hiddenCriticalEvents,
         )}`,
   });
 
@@ -1112,6 +1126,23 @@ async function main() {
             .criticalVisibleEvents -
             offlineDetailCompareCriticalVisibleMismatchDiff.current
               .criticalVisibleEvents,
+        ),
+      ),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_delta_summary_hidden_changed_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo(4) === "숨김 +4" &&
+      buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo(-1) === "숨김 -1" &&
+      offlineDetailCompareHiddenMismatchDiff.comparable &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeHiddenMismatch,
+      ).includes(
+        buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo(
+          offlineDetailCompareHiddenMismatchDiff.target.hiddenCriticalEvents -
+            offlineDetailCompareHiddenMismatchDiff.current.hiddenCriticalEvents,
         ),
       ),
   });

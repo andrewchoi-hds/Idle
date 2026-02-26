@@ -913,9 +913,9 @@ export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
   }
   if (!diff.sameHiddenCriticalEvents) {
     parts.push(
-      `숨김 ${formatSignedDelta(
+      buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo(
         diff.target.hiddenCriticalEvents - diff.current.hiddenCriticalEvents,
-      )}`,
+      ),
     );
   }
   if (!diff.sameViewMode) {
@@ -967,6 +967,12 @@ export function buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedL
   criticalVisibleEventsDelta,
 ) {
   return `핵심표시 ${formatSignedDelta(criticalVisibleEventsDelta)}`;
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo(
+  hiddenCriticalEventsDelta,
+) {
+  return `숨김 ${formatSignedDelta(hiddenCriticalEventsDelta)}`;
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo(
