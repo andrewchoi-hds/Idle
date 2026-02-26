@@ -1890,3 +1890,11 @@
 
 ## 437) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 일치 요약 톤 descriptor 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 438) 다음 순차 작업
+1. [완료] 오프라인 비교 코드 일치 요약 fallback descriptor 헬퍼(`buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptors`, `buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor`)를 추가해 fallback 사유와 본문 문구 매핑 경로를 단일 함수로 표준화.
+2. [완료] 오프라인 비교 코드 일치 요약 fallback 라벨 formatter(`buildOfflineDetailCompareCodeMatchSummaryFallbackLabelKo`)를 추가하고 target/current/invalid fallback 라벨 경로가 해당 formatter를 사용하도록 통합.
+3. [완료] 모바일 회귀 체크에 fallback descriptor/formatter 시나리오를 추가해 fallback 사유별 라벨 조합과 unknown 사유 fallback(`invalid_target`) 일관성을 검증.
+
+## 439) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 일치 요약 fallback descriptor/formatter 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
