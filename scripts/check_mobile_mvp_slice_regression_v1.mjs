@@ -21,6 +21,7 @@ import {
   buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo,
+  buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTone,
@@ -1159,6 +1160,24 @@ async function main() {
         offlineDetailCompareCodeHiddenMismatch,
       ).includes(
         `${buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo()}`,
+      ),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_match_summary_view_key_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo() === "보기" &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ).includes(
+        `${buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
+      ) &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ).includes(
+        `${buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo()}`,
       ),
   });
 
