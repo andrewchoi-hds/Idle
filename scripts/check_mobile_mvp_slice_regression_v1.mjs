@@ -11,6 +11,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryTargetMissingLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryTargetMissingMessageLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingMessageLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo,
@@ -1019,11 +1020,25 @@ async function main() {
     id: "offline_detail_compare_code_delta_summary_current_missing_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingLabelKo() ===
-        "차이 요약: 현재 코드 없음" &&
+        `차이 요약: ${buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingMessageLabelKo()}` &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         "INVALID",
         offlineDetailCompareCodeAll,
       ) === buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingLabelKo(),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_delta_summary_current_missing_message_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingMessageLabelKo() ===
+        "현재 코드 없음" &&
+      buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingLabelKo().endsWith(
+        buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingMessageLabelKo(),
+      ) &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        "INVALID",
+        offlineDetailCompareCodeAll,
+      ).endsWith(buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingMessageLabelKo()),
   });
 
   checks.push({
