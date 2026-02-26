@@ -1004,7 +1004,7 @@ export function buildOfflineDetailCompareCodeMatchSummaryLabelKo(
     diff.sameCriticalVisibleEvents,
   )} · ${buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo()} ${boolMark(diff.sameHiddenCriticalEvents)} · ${buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo()} ${boolMark(
     diff.sameViewMode,
-  )} · ${buildOfflineDetailCompareCodeMatchSummaryAllChecksumKeyLabelKo()} ${boolMark(diff.sameAllChecksum)} · view checksum ${boolMark(
+  )} · ${buildOfflineDetailCompareCodeMatchSummaryAllChecksumKeyLabelKo()} ${boolMark(diff.sameAllChecksum)} · ${buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo()} ${boolMark(
     diff.sameViewChecksum,
   )}`;
 }
@@ -1043,6 +1043,10 @@ export function buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo() {
 
 export function buildOfflineDetailCompareCodeMatchSummaryAllChecksumKeyLabelKo() {
   return "전체 checksum";
+}
+
+export function buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo() {
+  return "view checksum";
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo() {
