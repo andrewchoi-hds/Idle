@@ -954,7 +954,11 @@ export function buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingMessageLa
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo() {
-  return `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} 대상 코드 형식 오류`;
+  return `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetMessageLabelKo()}`;
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetMessageLabelKo() {
+  return "대상 코드 형식 오류";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo() {

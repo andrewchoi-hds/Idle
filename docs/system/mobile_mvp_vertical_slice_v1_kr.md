@@ -249,6 +249,7 @@ npm run mobile:mvp:check
   - 오프라인 비교 코드 차이 요약 현재 코드 없음 라벨(`buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingLabelKo`)이 현재 코드 부재 fallback 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 차이 요약 현재 코드 없음 본문 라벨(`buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingMessageLabelKo`)이 현재 코드 부재 fallback 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 차이 요약 대상 형식 오류 라벨(`buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo`)이 대상 코드 형식 오류 fallback 경로에서 동일 문구를 일관되게 반환하는지 검증
+  - 오프라인 비교 코드 차이 요약 대상 형식 오류 본문 라벨(`buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetMessageLabelKo`)이 대상 코드 형식 오류 fallback 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 차이 요약 차이 없음 라벨(`buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo`)이 완전 일치 fallback 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 차이 요약 prefix 라벨(`buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo`)이 대상 없음/요약 조합 경로에서 동일 prefix를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 차이 요약 항목 구분자 라벨(`buildOfflineDetailCompareCodeDeltaSummaryItemSeparatorLabelKo`)이 다중 항목 조합 경로에서 동일 구분자를 일관되게 반환하는지 검증
