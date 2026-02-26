@@ -13,6 +13,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo,
@@ -1028,6 +1029,19 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_code_delta_summary_prefix_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo() === "차이 요약:" &&
+      buildOfflineDetailCompareCodeDeltaSummaryTargetMissingLabelKo().startsWith(
+        buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo(),
+      ) &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ).startsWith(buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()),
+  });
+
+  checks.push({
     id: "offline_detail_compare_code_delta_summary_label_matches_diff",
     passed:
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
@@ -1050,23 +1064,23 @@ async function main() {
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
       ) ===
-        `차이 요약: ${buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo("all", "critical")} · ${buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo()}` &&
+        `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo("all", "critical")} · ${buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo()}` &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         offlineDetailCompareCodeCritical,
         offlineDetailCompareCodeAll,
       ) ===
-        `차이 요약: ${buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo("critical", "all")} · ${buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo()}` &&
+        `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo("critical", "all")} · ${buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo()}` &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAllChecksumMismatch,
       ) ===
-        `차이 요약: ${buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo()}` &&
+        `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo()}` &&
       offlineDetailCompareAggregateMismatchDiff.comparable &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAggregateMismatch,
       ) ===
-        `차이 요약: ${buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(
+        `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(
           offlineDetailCompareAggregateMismatchDiff.target.totalEvents -
             offlineDetailCompareAggregateMismatchDiff.current.totalEvents,
         )}` &&
@@ -1075,7 +1089,7 @@ async function main() {
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCriticalVisibleMismatch,
       ) ===
-        `차이 요약: ${buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo(
+        `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo(
           offlineDetailCompareCriticalVisibleMismatchDiff.target
             .criticalVisibleEvents -
             offlineDetailCompareCriticalVisibleMismatchDiff.current
@@ -1086,7 +1100,7 @@ async function main() {
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeHiddenMismatch,
       ) ===
-        `차이 요약: ${buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo(
+        `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo(
           offlineDetailCompareHiddenMismatchDiff.target.hiddenCriticalEvents -
             offlineDetailCompareHiddenMismatchDiff.current.hiddenCriticalEvents,
         )}`,
