@@ -303,6 +303,7 @@ npm run mobile:mvp:check
   - 오프라인 비교 결과 상태 라벨(`buildOfflineDetailCompareResultStateLabelKo`)이 대기/입력 필요/일치/보기 차이/현재 코드 없음 케이스를 일관되게 반환하는지 검증
   - 오프라인 비교 결과 톤(`buildOfflineDetailCompareResultStateTone`)이 대기/입력 필요/일치/보기 차이/현재 코드 없음 케이스에서 `info/warn/error`를 일관되게 반환하는지 검증
   - 오프라인 비교 결과 오류 플래그(`isOfflineDetailCompareResultError`)가 comparable 여부에 따라 오류 상태를 일관되게 반환하는지 검증
+  - 오프라인 비교 가이드 fallback 헬퍼(`buildOfflineDetailCompareActionHintFallbackLabelKo`, `buildOfflineDetailCompareActionHintFallbackTone`)가 fallback 사유별 라벨/톤 매핑을 일관되게 반환하는지 검증
   - 오프라인 비교 가이드 입력 필요 라벨(`buildOfflineDetailCompareActionHintInputRequiredLabelKo`)이 대상 미입력 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 가이드 대상 형식 오류 라벨(`buildOfflineDetailCompareActionHintInvalidTargetLabelKo`)이 대상 코드 형식 오류 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 가이드 현재 코드 누락 라벨(`buildOfflineDetailCompareActionHintMissingCurrentLabelKo`)이 현재 코드 부재 경로에서 동일 문구를 일관되게 반환하는지 검증
