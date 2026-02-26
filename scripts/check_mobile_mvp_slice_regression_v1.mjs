@@ -19,6 +19,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryLabelKo,
@@ -1166,9 +1167,9 @@ async function main() {
     id: "offline_detail_compare_code_delta_summary_view_mode_changed_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo("all", "critical") ===
-        `보기 전체→${buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo()}` &&
+        `보기 ${buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo()}→${buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo()}` &&
       buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo("critical", "all") ===
-        `보기 ${buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo()}→전체` &&
+        `보기 ${buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo()}→${buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo()}` &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
@@ -1201,6 +1202,20 @@ async function main() {
         "critical",
         "all",
       ).includes(buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo()),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_delta_summary_view_mode_all_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo() === "전체" &&
+      buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo(
+        "all",
+        "critical",
+      ).includes(buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo()) &&
+      buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo(
+        "critical",
+        "all",
+      ).includes(buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo()),
   });
 
   checks.push({
