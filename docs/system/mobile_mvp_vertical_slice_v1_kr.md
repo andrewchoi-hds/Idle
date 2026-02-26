@@ -284,6 +284,7 @@ npm run mobile:mvp:check
   - 오프라인 비교 코드 일치 요약 대상 형식 오류 라벨(`buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo`)이 대상 코드 형식 오류 fallback 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 일치 요약 대상 형식 오류 본문 라벨(`buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo`)이 대상 코드 형식 오류 fallback 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 일치 요약 prefix 라벨(`buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo`)이 일치 요약 문구 조합 경로에서 동일 prefix를 일관되게 반환하는지 검증
+  - 오프라인 비교 코드 일치 요약 항목 구분자 라벨(`buildOfflineDetailCompareCodeMatchSummaryItemSeparatorLabelKo`)이 일치/불일치 조합 경로에서 동일 구분자를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 일치 요약 총 항목 키 라벨(`buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo`)이 총 일치/불일치 조합 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 일치 요약 핵심표시 항목 키 라벨(`buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo`)이 핵심표시 일치/불일치 조합 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 일치 요약 숨김 항목 키 라벨(`buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo`)이 숨김 일치/불일치 조합 경로에서 동일 문구를 일관되게 반환하는지 검증

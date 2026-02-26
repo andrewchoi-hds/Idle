@@ -1132,13 +1132,15 @@ export function buildOfflineDetailCompareCodeMatchSummaryLabelKo(
       ? buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo()
       : buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo();
   }
-  return `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo()} ${boolMark(diff.sameTotalEvents)} · ${buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo()} ${boolMark(
-    diff.sameCriticalVisibleEvents,
-  )} · ${buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo()} ${boolMark(diff.sameHiddenCriticalEvents)} · ${buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo()} ${boolMark(
-    diff.sameViewMode,
-  )} · ${buildOfflineDetailCompareCodeMatchSummaryAllChecksumKeyLabelKo()} ${boolMark(diff.sameAllChecksum)} · ${buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo()} ${boolMark(
-    diff.sameViewChecksum,
-  )}`;
+  const separator = buildOfflineDetailCompareCodeMatchSummaryItemSeparatorLabelKo();
+  return [
+    `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo()} ${boolMark(diff.sameTotalEvents)}`,
+    `${buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo()} ${boolMark(diff.sameCriticalVisibleEvents)}`,
+    `${buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo()} ${boolMark(diff.sameHiddenCriticalEvents)}`,
+    `${buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo()} ${boolMark(diff.sameViewMode)}`,
+    `${buildOfflineDetailCompareCodeMatchSummaryAllChecksumKeyLabelKo()} ${boolMark(diff.sameAllChecksum)}`,
+    `${buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo()} ${boolMark(diff.sameViewChecksum)}`,
+  ].join(separator);
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryTargetMissingLabelKo() {
@@ -1167,6 +1169,10 @@ export function buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLab
 
 export function buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo() {
   return "일치 요약:";
+}
+
+export function buildOfflineDetailCompareCodeMatchSummaryItemSeparatorLabelKo() {
+  return " · ";
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo() {
