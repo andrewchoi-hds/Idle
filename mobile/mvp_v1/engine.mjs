@@ -752,17 +752,17 @@ export function buildOfflineDetailCompareActionHintLabelKo(
 ) {
   const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
   if (!targetText) {
-    return buildOfflineDetailCompareActionHintInputRequiredLabelKo();
+    return buildOfflineDetailCompareActionHintFallbackLabelKo("target_missing");
   }
   const targetCode = extractOfflineDetailCompareCode(targetText);
   if (!targetCode) {
-    return buildOfflineDetailCompareActionHintInvalidTargetLabelKo();
+    return buildOfflineDetailCompareActionHintFallbackLabelKo("invalid_target");
   }
   const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCode);
   if (!diff.comparable) {
-    return diff.reason === "current_invalid"
-      ? buildOfflineDetailCompareActionHintMissingCurrentLabelKo()
-      : buildOfflineDetailCompareActionHintInvalidTargetLabelKo();
+    return buildOfflineDetailCompareActionHintFallbackLabelKo(
+      diff.reason === "current_invalid" ? "current_missing" : "invalid_target",
+    );
   }
   if (diff.identical) {
     return buildOfflineDetailCompareActionHintIdenticalLabelKo();
@@ -782,16 +782,21 @@ export function buildOfflineDetailCompareActionHintLabelKo(
   return buildOfflineDetailCompareActionHintAggregateMismatchLabelKo();
 }
 
+export function buildOfflineDetailCompareActionHintFallbackLabelKo(reasonInput) {
+  return buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor(reasonInput)
+    .actionHintLabelKo;
+}
+
 export function buildOfflineDetailCompareActionHintInputRequiredLabelKo() {
-  return "가이드: 비교 코드를 입력하세요.";
+  return buildOfflineDetailCompareActionHintFallbackLabelKo("target_missing");
 }
 
 export function buildOfflineDetailCompareActionHintInvalidTargetLabelKo() {
-  return "가이드: ODR1 비교 코드를 붙여넣거나 입력하세요.";
+  return buildOfflineDetailCompareActionHintFallbackLabelKo("invalid_target");
 }
 
 export function buildOfflineDetailCompareActionHintMissingCurrentLabelKo() {
-  return "가이드: 오프라인 정산 로그를 열어 현재 코드를 먼저 생성하세요.";
+  return buildOfflineDetailCompareActionHintFallbackLabelKo("current_missing");
 }
 
 export function buildOfflineDetailCompareActionHintIdenticalLabelKo() {
@@ -816,15 +821,17 @@ export function buildOfflineDetailCompareActionHintTone(
 ) {
   const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
   if (!targetText) {
-    return "warn";
+    return buildOfflineDetailCompareActionHintFallbackTone("target_missing");
   }
   const targetCode = extractOfflineDetailCompareCode(targetText);
   if (!targetCode) {
-    return "warn";
+    return buildOfflineDetailCompareActionHintFallbackTone("invalid_target");
   }
   const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCode);
   if (!diff.comparable) {
-    return diff.reason === "current_invalid" ? "error" : "warn";
+    return buildOfflineDetailCompareActionHintFallbackTone(
+      diff.reason === "current_invalid" ? "current_missing" : "invalid_target",
+    );
   }
   if (diff.identical) {
     return "info";
@@ -842,6 +849,11 @@ export function buildOfflineDetailCompareActionHintTone(
     return "warn";
   }
   return "error";
+}
+
+export function buildOfflineDetailCompareActionHintFallbackTone(reasonInput) {
+  return buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor(reasonInput)
+    .actionHintTone;
 }
 
 export function resolveOfflineDetailCompareViewModeAlignmentTarget(
@@ -1147,16 +1159,22 @@ export function buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptors() {
       reason: "target_missing",
       messageLabelKo: buildOfflineDetailCompareCodeMatchSummaryTargetMissingMessageLabelKo(),
       fallbackTone: "info",
+      actionHintLabelKo: "가이드: 비교 코드를 입력하세요.",
+      actionHintTone: "warn",
     },
     {
       reason: "current_missing",
       messageLabelKo: buildOfflineDetailCompareCodeMatchSummaryCurrentMissingMessageLabelKo(),
       fallbackTone: "error",
+      actionHintLabelKo: "가이드: 오프라인 정산 로그를 열어 현재 코드를 먼저 생성하세요.",
+      actionHintTone: "error",
     },
     {
       reason: "invalid_target",
       messageLabelKo: buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo(),
       fallbackTone: "warn",
+      actionHintLabelKo: "가이드: ODR1 비교 코드를 붙여넣거나 입력하세요.",
+      actionHintTone: "warn",
     },
   ];
 }
@@ -1178,6 +1196,8 @@ export function buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor(
       messageLabelKo:
         buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo(),
       fallbackTone: "warn",
+      actionHintLabelKo: "가이드: ODR1 비교 코드를 붙여넣거나 입력하세요.",
+      actionHintTone: "warn",
     }
   );
 }

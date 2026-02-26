@@ -1906,3 +1906,11 @@
 
 ## 441) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 일치 요약 fallback 톤 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 442) 다음 순차 작업
+1. [완료] 오프라인 비교 코드 일치 요약 fallback descriptor에 액션 힌트 메타(`actionHintLabelKo`, `actionHintTone`)를 추가하고 액션 힌트 fallback 헬퍼(`buildOfflineDetailCompareActionHintFallbackLabelKo`, `buildOfflineDetailCompareActionHintFallbackTone`)를 도입해 fallback 사유별 가이드 라벨/톤 매핑 경로를 단일 함수로 표준화.
+2. [완료] 오프라인 비교 가이드 라벨/톤 경로(`buildOfflineDetailCompareActionHintLabelKo`, `buildOfflineDetailCompareActionHintTone`)가 대상 미입력/비교 불가 fallback 분기에서 직접 조건 비교 대신 액션 힌트 fallback 헬퍼를 사용하도록 반영.
+3. [완료] 모바일 회귀 체크에 액션 힌트 fallback 헬퍼 시나리오를 추가해 fallback 사유별 라벨·톤 매핑과 unknown 사유 fallback(`invalid_target`) 일관성을 검증.
+
+## 443) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 가이드 fallback 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

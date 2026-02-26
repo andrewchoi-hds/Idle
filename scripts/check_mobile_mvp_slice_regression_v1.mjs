@@ -93,10 +93,12 @@ import {
   buildOfflineDetailCompareActionHintInputRequiredLabelKo,
   buildOfflineDetailCompareActionHintInvalidTargetLabelKo,
   buildOfflineDetailCompareActionHintMissingCurrentLabelKo,
+  buildOfflineDetailCompareActionHintFallbackLabelKo,
   buildOfflineDetailCompareActionHintIdenticalLabelKo,
   buildOfflineDetailCompareActionHintViewMismatchLabelKo,
   buildOfflineDetailCompareActionHintChecksumMismatchLabelKo,
   buildOfflineDetailCompareActionHintAggregateMismatchLabelKo,
+  buildOfflineDetailCompareActionHintFallbackTone,
   buildOfflineDetailCompareActionHintTone,
   resolveOfflineDetailCompareViewModeAlignmentTarget,
   buildOfflineDetailCriticalSummaryLabelKo,
@@ -1592,6 +1594,18 @@ async function main() {
         .map((descriptor) => descriptor.fallbackTone)
         .join("|") ===
         ["info", "error", "warn"].join("|") &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptors()
+        .map((descriptor) => descriptor.actionHintLabelKo)
+        .join("|") ===
+        [
+          buildOfflineDetailCompareActionHintInputRequiredLabelKo(),
+          buildOfflineDetailCompareActionHintMissingCurrentLabelKo(),
+          buildOfflineDetailCompareActionHintInvalidTargetLabelKo(),
+        ].join("|") &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptors()
+        .map((descriptor) => descriptor.actionHintTone)
+        .join("|") ===
+        ["warn", "error", "warn"].join("|") &&
       buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("target_missing")
         .messageLabelKo ===
         buildOfflineDetailCompareCodeMatchSummaryTargetMissingMessageLabelKo() &&
@@ -1607,10 +1621,26 @@ async function main() {
         .fallbackTone === "error" &&
       buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("invalid_target")
         .fallbackTone === "warn" &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("target_missing")
+        .actionHintLabelKo === buildOfflineDetailCompareActionHintInputRequiredLabelKo() &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("current_missing")
+        .actionHintLabelKo === buildOfflineDetailCompareActionHintMissingCurrentLabelKo() &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("invalid_target")
+        .actionHintLabelKo === buildOfflineDetailCompareActionHintInvalidTargetLabelKo() &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("target_missing")
+        .actionHintTone === "warn" &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("current_missing")
+        .actionHintTone === "error" &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("invalid_target")
+        .actionHintTone === "warn" &&
       buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("unknown").reason ===
         "invalid_target" &&
       buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("unknown")
-        .fallbackTone === "warn",
+        .fallbackTone === "warn" &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("unknown")
+        .actionHintLabelKo === buildOfflineDetailCompareActionHintInvalidTargetLabelKo() &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("unknown")
+        .actionHintTone === "warn",
   });
 
   checks.push({
@@ -2110,10 +2140,27 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_action_hint_fallback_helpers_are_stable",
+    passed:
+      buildOfflineDetailCompareActionHintFallbackLabelKo("target_missing") ===
+        buildOfflineDetailCompareActionHintInputRequiredLabelKo() &&
+      buildOfflineDetailCompareActionHintFallbackLabelKo("current_missing") ===
+        buildOfflineDetailCompareActionHintMissingCurrentLabelKo() &&
+      buildOfflineDetailCompareActionHintFallbackLabelKo("invalid_target") ===
+        buildOfflineDetailCompareActionHintInvalidTargetLabelKo() &&
+      buildOfflineDetailCompareActionHintFallbackLabelKo("unknown") ===
+        buildOfflineDetailCompareActionHintInvalidTargetLabelKo() &&
+      buildOfflineDetailCompareActionHintFallbackTone("target_missing") === "warn" &&
+      buildOfflineDetailCompareActionHintFallbackTone("current_missing") === "error" &&
+      buildOfflineDetailCompareActionHintFallbackTone("invalid_target") === "warn" &&
+      buildOfflineDetailCompareActionHintFallbackTone("unknown") === "warn",
+  });
+
+  checks.push({
     id: "offline_detail_compare_action_hint_input_required_label_is_stable",
     passed:
       buildOfflineDetailCompareActionHintInputRequiredLabelKo() ===
-        "가이드: 비교 코드를 입력하세요." &&
+        buildOfflineDetailCompareActionHintFallbackLabelKo("target_missing") &&
       buildOfflineDetailCompareActionHintLabelKo(
         offlineDetailCompareCodeAll,
         "",
@@ -2124,7 +2171,7 @@ async function main() {
     id: "offline_detail_compare_action_hint_invalid_target_label_is_stable",
     passed:
       buildOfflineDetailCompareActionHintInvalidTargetLabelKo() ===
-        "가이드: ODR1 비교 코드를 붙여넣거나 입력하세요." &&
+        buildOfflineDetailCompareActionHintFallbackLabelKo("invalid_target") &&
       buildOfflineDetailCompareActionHintLabelKo(
         offlineDetailCompareCodeAll,
         "invalid",
@@ -2135,7 +2182,7 @@ async function main() {
     id: "offline_detail_compare_action_hint_missing_current_label_is_stable",
     passed:
       buildOfflineDetailCompareActionHintMissingCurrentLabelKo() ===
-        "가이드: 오프라인 정산 로그를 열어 현재 코드를 먼저 생성하세요." &&
+        buildOfflineDetailCompareActionHintFallbackLabelKo("current_missing") &&
       buildOfflineDetailCompareActionHintLabelKo(
         "INVALID",
         offlineDetailCompareCodeAll,
@@ -2216,11 +2263,12 @@ async function main() {
   checks.push({
     id: "offline_detail_compare_code_action_hint_tone_matches_state",
     passed:
-      buildOfflineDetailCompareActionHintTone(offlineDetailCompareCodeAll, "") === "warn" &&
+      buildOfflineDetailCompareActionHintTone(offlineDetailCompareCodeAll, "") ===
+        buildOfflineDetailCompareActionHintFallbackTone("target_missing") &&
       buildOfflineDetailCompareActionHintTone(offlineDetailCompareCodeAll, "invalid") ===
-        "warn" &&
+        buildOfflineDetailCompareActionHintFallbackTone("invalid_target") &&
       buildOfflineDetailCompareActionHintTone("INVALID", offlineDetailCompareCodeAll) ===
-        "error" &&
+        buildOfflineDetailCompareActionHintFallbackTone("current_missing") &&
       buildOfflineDetailCompareActionHintTone(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAll,
