@@ -1004,7 +1004,7 @@ export function buildOfflineDetailCompareCodeMatchSummaryLabelKo(
     diff.sameCriticalVisibleEvents,
   )} · ${buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo()} ${boolMark(diff.sameHiddenCriticalEvents)} · ${buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo()} ${boolMark(
     diff.sameViewMode,
-  )} · 전체 checksum ${boolMark(diff.sameAllChecksum)} · view checksum ${boolMark(
+  )} · ${buildOfflineDetailCompareCodeMatchSummaryAllChecksumKeyLabelKo()} ${boolMark(diff.sameAllChecksum)} · view checksum ${boolMark(
     diff.sameViewChecksum,
   )}`;
 }
@@ -1039,6 +1039,10 @@ export function buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo() {
 
 export function buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo() {
   return "보기";
+}
+
+export function buildOfflineDetailCompareCodeMatchSummaryAllChecksumKeyLabelKo() {
+  return "전체 checksum";
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo() {
