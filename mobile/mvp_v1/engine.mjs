@@ -1047,7 +1047,11 @@ export function buildOfflineDetailCompareCodeDeltaSummaryViewModeTransitionLabel
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo() {
-  return "view checksum 변경";
+  return `${buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo()} 변경`;
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo() {
+  return "view checksum";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo() {
