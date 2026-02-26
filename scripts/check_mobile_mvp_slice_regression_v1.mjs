@@ -9,6 +9,7 @@ import {
   buildOfflineDetailCompareCodeCurrentSummaryTone,
   buildOfflineDetailCompareCodeDeltaSummaryLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryTargetMissingLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryTargetMissingMessageLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo,
@@ -993,11 +994,25 @@ async function main() {
     id: "offline_detail_compare_code_delta_summary_target_missing_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeDeltaSummaryTargetMissingLabelKo() ===
-        "차이 요약: 대상 코드 없음" &&
+        `차이 요약: ${buildOfflineDetailCompareCodeDeltaSummaryTargetMissingMessageLabelKo()}` &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         offlineDetailCompareCodeAll,
         "",
       ) === buildOfflineDetailCompareCodeDeltaSummaryTargetMissingLabelKo(),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_delta_summary_target_missing_message_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryTargetMissingMessageLabelKo() ===
+        "대상 코드 없음" &&
+      buildOfflineDetailCompareCodeDeltaSummaryTargetMissingLabelKo().endsWith(
+        buildOfflineDetailCompareCodeDeltaSummaryTargetMissingMessageLabelKo(),
+      ) &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        "",
+      ).endsWith(buildOfflineDetailCompareCodeDeltaSummaryTargetMissingMessageLabelKo()),
   });
 
   checks.push({
