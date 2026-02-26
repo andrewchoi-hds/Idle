@@ -1118,13 +1118,13 @@ export function buildOfflineDetailCompareCodeMatchSummaryLabelKo(
 ) {
   const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
   if (!targetText) {
-    return buildOfflineDetailCompareCodeMatchSummaryTargetMissingLabelKo();
+    return buildOfflineDetailCompareCodeMatchSummaryFallbackLabelKo("target_missing");
   }
   const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
   if (!diff.comparable) {
-    return diff.reason === "current_invalid"
-      ? buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo()
-      : buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo();
+    return buildOfflineDetailCompareCodeMatchSummaryFallbackLabelKo(
+      diff.reason === "current_invalid" ? "current_missing" : "invalid_target",
+    );
   }
   const separator = buildOfflineDetailCompareCodeMatchSummaryItemSeparatorLabelKo();
   const descriptors = buildOfflineDetailCompareCodeMatchSummaryItemDescriptors(diff);
@@ -1141,8 +1141,53 @@ export function buildOfflineDetailCompareCodeMatchSummaryLabelKo(
   return parts.join(separator);
 }
 
+export function buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptors() {
+  return [
+    {
+      reason: "target_missing",
+      messageLabelKo: buildOfflineDetailCompareCodeMatchSummaryTargetMissingMessageLabelKo(),
+    },
+    {
+      reason: "current_missing",
+      messageLabelKo: buildOfflineDetailCompareCodeMatchSummaryCurrentMissingMessageLabelKo(),
+    },
+    {
+      reason: "invalid_target",
+      messageLabelKo: buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo(),
+    },
+  ];
+}
+
+export function buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor(
+  reasonInput,
+) {
+  const reason =
+    reasonInput === "target_missing" ||
+    reasonInput === "current_missing" ||
+    reasonInput === "invalid_target"
+      ? reasonInput
+      : "invalid_target";
+  return (
+    buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptors().find(
+      (descriptor) => descriptor.reason === reason,
+    ) || {
+      reason: "invalid_target",
+      messageLabelKo:
+        buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo(),
+    }
+  );
+}
+
+export function buildOfflineDetailCompareCodeMatchSummaryFallbackLabelKo(
+  reasonInput,
+) {
+  const fallbackDescriptor =
+    buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor(reasonInput);
+  return `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${fallbackDescriptor.messageLabelKo}`;
+}
+
 export function buildOfflineDetailCompareCodeMatchSummaryTargetMissingLabelKo() {
-  return `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryTargetMissingMessageLabelKo()}`;
+  return buildOfflineDetailCompareCodeMatchSummaryFallbackLabelKo("target_missing");
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryTargetMissingMessageLabelKo() {
@@ -1150,7 +1195,7 @@ export function buildOfflineDetailCompareCodeMatchSummaryTargetMissingMessageLab
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo() {
-  return `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryCurrentMissingMessageLabelKo()}`;
+  return buildOfflineDetailCompareCodeMatchSummaryFallbackLabelKo("current_missing");
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryCurrentMissingMessageLabelKo() {
@@ -1158,7 +1203,7 @@ export function buildOfflineDetailCompareCodeMatchSummaryCurrentMissingMessageLa
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo() {
-  return `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo()}`;
+  return buildOfflineDetailCompareCodeMatchSummaryFallbackLabelKo("invalid_target");
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo() {
