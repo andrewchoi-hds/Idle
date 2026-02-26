@@ -983,9 +983,19 @@ export function buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo(
   currentViewMode,
   targetViewMode,
 ) {
-  const currentMode = currentViewMode === "critical" ? "핵심" : "전체";
-  const targetMode = targetViewMode === "critical" ? "핵심" : "전체";
+  const currentMode =
+    currentViewMode === "critical"
+      ? buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo()
+      : "전체";
+  const targetMode =
+    targetViewMode === "critical"
+      ? buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo()
+      : "전체";
   return `보기 ${currentMode}→${targetMode}`;
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo() {
+  return "핵심";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo() {

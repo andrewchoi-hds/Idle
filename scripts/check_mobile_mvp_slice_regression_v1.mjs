@@ -18,6 +18,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryLabelKo,
@@ -1165,9 +1166,9 @@ async function main() {
     id: "offline_detail_compare_code_delta_summary_view_mode_changed_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo("all", "critical") ===
-        "보기 전체→핵심" &&
+        `보기 전체→${buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo()}` &&
       buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo("critical", "all") ===
-        "보기 핵심→전체" &&
+        `보기 ${buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo()}→전체` &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
@@ -1186,6 +1187,20 @@ async function main() {
           "all",
         ),
       ),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_delta_summary_view_mode_critical_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo() === "핵심" &&
+      buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo(
+        "all",
+        "critical",
+      ).includes(buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo()) &&
+      buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo(
+        "critical",
+        "all",
+      ).includes(buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo()),
   });
 
   checks.push({
