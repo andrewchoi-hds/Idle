@@ -269,6 +269,7 @@ npm run mobile:mvp:check
   - 오프라인 비교 코드 차이 요약 보기 모드 전체 라벨(`buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo`)이 보기 모드 전환 조합 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 차이 요약 전체 checksum 변경 라벨(`buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo`)이 전체 checksum mismatch 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 차이 요약 전체 checksum 키 라벨(`buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo`)이 전체 checksum mismatch 경로에서 동일 문구를 일관되게 반환하는지 검증
+  - 오프라인 비교 코드 차이 요약 전체 checksum 변경 접미 라벨(`buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedSuffixLabelKo`)이 전체 checksum mismatch 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 차이 요약 view checksum 변경 라벨(`buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo`)이 view checksum mismatch 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 차이 요약 view checksum 키 라벨(`buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo`)이 view checksum mismatch 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 차이 요약 view checksum 변경 접미 라벨(`buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedSuffixLabelKo`)이 view checksum mismatch 경로에서 동일 문구를 일관되게 반환하는지 검증

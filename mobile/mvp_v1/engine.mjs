@@ -1059,11 +1059,15 @@ export function buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedSuff
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo() {
-  return `${buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo()} 변경`;
+  return `${buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedSuffixLabelKo()}`;
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo() {
   return "전체 checksum";
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedSuffixLabelKo() {
+  return "변경";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryTone(
