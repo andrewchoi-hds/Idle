@@ -933,7 +933,7 @@ export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
     parts.push(buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo());
   }
   return parts.length > 0
-    ? `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${parts.join(" · ")}`
+    ? `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${parts.join(buildOfflineDetailCompareCodeDeltaSummaryItemSeparatorLabelKo())}`
     : buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo();
 }
 
@@ -959,6 +959,10 @@ export function buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo()
 
 export function buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo() {
   return "차이 요약:";
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryItemSeparatorLabelKo() {
+  return " · ";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(

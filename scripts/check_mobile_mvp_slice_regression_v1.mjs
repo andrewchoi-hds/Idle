@@ -14,6 +14,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryItemSeparatorLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo,
@@ -1046,6 +1047,20 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_code_delta_summary_item_separator_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryItemSeparatorLabelKo() === " · " &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ).includes(buildOfflineDetailCompareCodeDeltaSummaryItemSeparatorLabelKo()) &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        offlineDetailCompareCodeCritical,
+        offlineDetailCompareCodeAll,
+      ).includes(buildOfflineDetailCompareCodeDeltaSummaryItemSeparatorLabelKo()),
+  });
+
+  checks.push({
     id: "offline_detail_compare_code_delta_summary_label_matches_diff",
     passed:
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
@@ -1068,12 +1083,12 @@ async function main() {
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
       ) ===
-        `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo("all", "critical")} · ${buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo()}` &&
+        `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo("all", "critical")}${buildOfflineDetailCompareCodeDeltaSummaryItemSeparatorLabelKo()}${buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo()}` &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         offlineDetailCompareCodeCritical,
         offlineDetailCompareCodeAll,
       ) ===
-        `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo("critical", "all")} · ${buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo()}` &&
+        `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo("critical", "all")}${buildOfflineDetailCompareCodeDeltaSummaryItemSeparatorLabelKo()}${buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo()}` &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAllChecksumMismatch,
