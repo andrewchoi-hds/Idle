@@ -34,6 +34,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedSuffixLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryChecksumChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryChangedSuffixLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo,
@@ -1385,7 +1386,9 @@ async function main() {
     id: "offline_detail_compare_code_delta_summary_all_checksum_changed_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo() ===
-        `${buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedSuffixLabelKo()}` &&
+        buildOfflineDetailCompareCodeDeltaSummaryChecksumChangedLabelKo(
+          buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo(),
+        ) &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAllChecksumMismatch,
@@ -1417,6 +1420,19 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_code_delta_summary_checksum_changed_label_formatter_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryChecksumChangedLabelKo(
+        buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo(),
+      ) === buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo() &&
+      buildOfflineDetailCompareCodeDeltaSummaryChecksumChangedLabelKo(
+        buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo(),
+      ) === buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo() &&
+      buildOfflineDetailCompareCodeDeltaSummaryChecksumChangedLabelKo("임시 checksum") ===
+        `임시 checksum ${buildOfflineDetailCompareCodeDeltaSummaryChangedSuffixLabelKo()}`,
+  });
+
+  checks.push({
     id: "offline_detail_compare_code_delta_summary_all_checksum_key_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo() ===
@@ -1434,7 +1450,9 @@ async function main() {
     id: "offline_detail_compare_code_delta_summary_view_checksum_changed_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo() ===
-        `${buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedSuffixLabelKo()}` &&
+        buildOfflineDetailCompareCodeDeltaSummaryChecksumChangedLabelKo(
+          buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo(),
+        ) &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
