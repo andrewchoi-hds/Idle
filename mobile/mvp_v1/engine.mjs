@@ -899,7 +899,9 @@ export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
   const parts = [];
   if (!diff.sameTotalEvents) {
     parts.push(
-      `총 ${formatSignedDelta(diff.target.totalEvents - diff.current.totalEvents)}`,
+      buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(
+        diff.target.totalEvents - diff.current.totalEvents,
+      ),
     );
   }
   if (!diff.sameCriticalVisibleEvents) {
@@ -953,6 +955,12 @@ export function buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo() {
 
 export function buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo() {
   return "차이 요약: 코드 차이 감지";
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(
+  totalEventsDelta,
+) {
+  return `총 ${formatSignedDelta(totalEventsDelta)}`;
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo(
