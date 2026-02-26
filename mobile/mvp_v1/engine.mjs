@@ -1127,32 +1127,18 @@ export function buildOfflineDetailCompareCodeMatchSummaryLabelKo(
       : buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo();
   }
   const separator = buildOfflineDetailCompareCodeMatchSummaryItemSeparatorLabelKo();
-  return [
-    `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
-      buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo(),
-      diff.sameTotalEvents,
-    )}`,
+  const descriptors = buildOfflineDetailCompareCodeMatchSummaryItemDescriptors(diff);
+  const parts = descriptors.map((descriptor) =>
     buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
-      buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo(),
-      diff.sameCriticalVisibleEvents,
+      descriptor.itemKeyLabel,
+      descriptor.isMatched,
     ),
-    buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
-      buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo(),
-      diff.sameHiddenCriticalEvents,
-    ),
-    buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
-      buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo(),
-      diff.sameViewMode,
-    ),
-    buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
-      buildOfflineDetailCompareCodeMatchSummaryAllChecksumKeyLabelKo(),
-      diff.sameAllChecksum,
-    ),
-    buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
-      buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo(),
-      diff.sameViewChecksum,
-    ),
-  ].join(separator);
+  );
+  if (!parts.length) {
+    return buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo();
+  }
+  parts[0] = `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${parts[0]}`;
+  return parts.join(separator);
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryTargetMissingLabelKo() {
@@ -1185,6 +1171,36 @@ export function buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo() {
 
 export function buildOfflineDetailCompareCodeMatchSummaryItemSeparatorLabelKo() {
   return " · ";
+}
+
+export function buildOfflineDetailCompareCodeMatchSummaryItemDescriptors(diffInput) {
+  const diff = diffInput && typeof diffInput === "object" ? diffInput : {};
+  return [
+    {
+      itemKeyLabel: buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo(),
+      isMatched: diff.sameTotalEvents === true,
+    },
+    {
+      itemKeyLabel: buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo(),
+      isMatched: diff.sameCriticalVisibleEvents === true,
+    },
+    {
+      itemKeyLabel: buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo(),
+      isMatched: diff.sameHiddenCriticalEvents === true,
+    },
+    {
+      itemKeyLabel: buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo(),
+      isMatched: diff.sameViewMode === true,
+    },
+    {
+      itemKeyLabel: buildOfflineDetailCompareCodeMatchSummaryAllChecksumKeyLabelKo(),
+      isMatched: diff.sameAllChecksum === true,
+    },
+    {
+      itemKeyLabel: buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo(),
+      isMatched: diff.sameViewChecksum === true,
+    },
+  ];
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(

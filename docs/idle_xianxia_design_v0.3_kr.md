@@ -1874,3 +1874,11 @@
 
 ## 433) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 일치 요약 항목 결과 formatter 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 434) 다음 순차 작업
+1. [완료] 오프라인 비교 코드 일치 요약 항목 descriptor 헬퍼(`buildOfflineDetailCompareCodeMatchSummaryItemDescriptors`)를 추가해 항목 순서/키/일치상태 데이터 구성을 단일 함수로 표준화.
+2. [완료] 오프라인 비교 코드 일치 요약 라벨 경로가 항목 key/status 나열 로직을 descriptor 헬퍼 기반으로 조합하도록 반영.
+3. [완료] 모바일 회귀 체크에 항목 descriptor 헬퍼 시나리오를 추가해 일치/불일치 조합 및 null 입력 fallback에서 descriptor 반환 일관성을 검증.
+
+## 435) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 일치 요약 항목 descriptor 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
