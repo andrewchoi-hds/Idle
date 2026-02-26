@@ -933,28 +933,32 @@ export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
     parts.push(buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo());
   }
   return parts.length > 0
-    ? `차이 요약: ${parts.join(" · ")}`
+    ? `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${parts.join(" · ")}`
     : buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo();
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryTargetMissingLabelKo() {
-  return "차이 요약: 대상 코드 없음";
+  return `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} 대상 코드 없음`;
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingLabelKo() {
-  return "차이 요약: 현재 코드 없음";
+  return `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} 현재 코드 없음`;
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo() {
-  return "차이 요약: 대상 코드 형식 오류";
+  return `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} 대상 코드 형식 오류`;
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo() {
-  return "차이 요약: 차이 없음";
+  return `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} 차이 없음`;
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo() {
-  return "차이 요약: 코드 차이 감지";
+  return `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} 코드 차이 감지`;
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo() {
+  return "차이 요약:";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(
