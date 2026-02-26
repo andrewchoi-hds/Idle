@@ -23,6 +23,7 @@ import {
   buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryAllChecksumKeyLabelKo,
+  buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTone,
@@ -1201,6 +1202,24 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_code_match_summary_view_checksum_key_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo() === "view checksum" &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ).includes(
+        `${buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
+      ) &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ).includes(
+        `${buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo()}`,
+      ),
+  });
+
+  checks.push({
     id: "offline_detail_compare_code_match_summary_matched_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo() === "일치" &&
@@ -1211,7 +1230,9 @@ async function main() {
       buildOfflineDetailCompareCodeMatchSummaryLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAll,
-      ).includes(`view checksum ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`),
+      ).includes(
+        `${buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
+      ),
   });
 
   checks.push({
@@ -1225,7 +1246,9 @@ async function main() {
       buildOfflineDetailCompareCodeMatchSummaryLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
-      ).includes(`view checksum ${buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo()}`),
+      ).includes(
+        `${buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo()}`,
+      ),
   });
 
   checks.push({
