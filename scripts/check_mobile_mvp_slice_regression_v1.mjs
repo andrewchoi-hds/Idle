@@ -18,6 +18,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryViewModeKeyLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo,
@@ -1167,9 +1168,9 @@ async function main() {
     id: "offline_detail_compare_code_delta_summary_view_mode_changed_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo("all", "critical") ===
-        `보기 ${buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo()}→${buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo()}` &&
+        `${buildOfflineDetailCompareCodeDeltaSummaryViewModeKeyLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo()}→${buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo()}` &&
       buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo("critical", "all") ===
-        `보기 ${buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo()}→${buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo()}` &&
+        `${buildOfflineDetailCompareCodeDeltaSummaryViewModeKeyLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo()}→${buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo()}` &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
@@ -1187,6 +1188,24 @@ async function main() {
           "critical",
           "all",
         ),
+      ),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_delta_summary_view_mode_key_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryViewModeKeyLabelKo() === "보기" &&
+      buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo(
+        "all",
+        "critical",
+      ).startsWith(
+        `${buildOfflineDetailCompareCodeDeltaSummaryViewModeKeyLabelKo()} `,
+      ) &&
+      buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo(
+        "critical",
+        "all",
+      ).startsWith(
+        `${buildOfflineDetailCompareCodeDeltaSummaryViewModeKeyLabelKo()} `,
       ),
   });
 

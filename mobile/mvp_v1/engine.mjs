@@ -991,7 +991,11 @@ export function buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo(
     targetViewMode === "critical"
       ? buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo()
       : buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo();
-  return `보기 ${currentMode}→${targetMode}`;
+  return `${buildOfflineDetailCompareCodeDeltaSummaryViewModeKeyLabelKo()} ${currentMode}→${targetMode}`;
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryViewModeKeyLabelKo() {
+  return "보기";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo() {

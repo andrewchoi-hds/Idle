@@ -254,6 +254,7 @@ npm run mobile:mvp:check
   - 오프라인 비교 코드 차이 요약 핵심표시 변화 라벨(`buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo`)이 핵심표시 증감(`+/-`) 조합 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 차이 요약 숨김 변화 라벨(`buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo`)이 숨김 증감(`+/-`) 조합 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 차이 요약 보기 모드 변경 라벨(`buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo`)이 `전체→핵심/핵심→전체` 조합 경로에서 동일 문구를 일관되게 반환하는지 검증
+  - 오프라인 비교 코드 차이 요약 보기 모드 키 라벨(`buildOfflineDetailCompareCodeDeltaSummaryViewModeKeyLabelKo`)이 보기 모드 전환 조합 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 차이 요약 보기 모드 핵심 라벨(`buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo`)이 보기 모드 전환 조합 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 차이 요약 보기 모드 전체 라벨(`buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo`)이 보기 모드 전환 조합 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 차이 요약 전체 checksum 변경 라벨(`buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo`)이 전체 checksum mismatch 경로에서 동일 문구를 일관되게 반환하는지 검증
