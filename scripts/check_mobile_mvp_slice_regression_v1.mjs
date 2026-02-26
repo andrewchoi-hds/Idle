@@ -14,6 +14,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo,
@@ -557,6 +558,13 @@ async function main() {
     /-H\d+-/,
     "-H0-",
   );
+  const criticalVisibleReplacement = offlineDetailCompareCodeAll.includes("-C0-")
+    ? "9"
+    : "0";
+  const offlineDetailCompareCodeCriticalVisibleMismatch = offlineDetailCompareCodeAll.replace(
+    /-C\d+-/,
+    `-C${criticalVisibleReplacement}-`,
+  );
   const offlineDetailCompareCodeCanonicalVariant = offlineDetailCompareCodeAll.replace(
     /-T(\d+)-C(\d+)-H(\d+)-/,
     (_, totalEvents, criticalVisibleEvents, hiddenCriticalEvents) =>
@@ -566,6 +574,11 @@ async function main() {
     offlineDetailCompareCodeAll,
     offlineDetailCompareCodeAggregateMismatch,
   );
+  const offlineDetailCompareCriticalVisibleMismatchDiff =
+    resolveOfflineDetailCompareCodeDiff(
+      offlineDetailCompareCodeAll,
+      offlineDetailCompareCodeCriticalVisibleMismatch,
+    );
   checks.push({
     id: "offline_detail_compare_code_has_mode_and_checksum",
     passed:
@@ -1051,6 +1064,17 @@ async function main() {
         `차이 요약: ${buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(
           offlineDetailCompareAggregateMismatchDiff.target.totalEvents -
             offlineDetailCompareAggregateMismatchDiff.current.totalEvents,
+        )}` &&
+      offlineDetailCompareCriticalVisibleMismatchDiff.comparable &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCriticalVisibleMismatch,
+      ) ===
+        `차이 요약: ${buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo(
+          offlineDetailCompareCriticalVisibleMismatchDiff.target
+            .criticalVisibleEvents -
+            offlineDetailCompareCriticalVisibleMismatchDiff.current
+              .criticalVisibleEvents,
         )}`,
   });
 
@@ -1067,6 +1091,27 @@ async function main() {
         buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(
           offlineDetailCompareAggregateMismatchDiff.target.totalEvents -
             offlineDetailCompareAggregateMismatchDiff.current.totalEvents,
+        ),
+      ),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_delta_summary_critical_visible_changed_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo(5) ===
+        "핵심표시 +5" &&
+      buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo(-2) ===
+        "핵심표시 -2" &&
+      offlineDetailCompareCriticalVisibleMismatchDiff.comparable &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCriticalVisibleMismatch,
+      ).includes(
+        buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo(
+          offlineDetailCompareCriticalVisibleMismatchDiff.target
+            .criticalVisibleEvents -
+            offlineDetailCompareCriticalVisibleMismatchDiff.current
+              .criticalVisibleEvents,
         ),
       ),
   });
