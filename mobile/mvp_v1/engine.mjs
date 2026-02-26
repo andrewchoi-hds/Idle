@@ -1142,7 +1142,11 @@ export function buildOfflineDetailCompareCodeMatchSummaryLabelKo(
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryTargetMissingLabelKo() {
-  return `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} 대상 코드 없음`;
+  return `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryTargetMissingMessageLabelKo()}`;
+}
+
+export function buildOfflineDetailCompareCodeMatchSummaryTargetMissingMessageLabelKo() {
+  return "대상 코드 없음";
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo() {
