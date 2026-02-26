@@ -1055,7 +1055,11 @@ export function buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo(
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo() {
-  return "전체 checksum 변경";
+  return `${buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo()} 변경`;
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo() {
+  return "전체 checksum";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryTone(
