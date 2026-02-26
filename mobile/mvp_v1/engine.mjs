@@ -962,7 +962,11 @@ export function buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetMessageLab
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo() {
-  return `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} 차이 없음`;
+  return `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceMessageLabelKo()}`;
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceMessageLabelKo() {
+  return "차이 없음";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo() {
