@@ -970,7 +970,11 @@ export function buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceMessageLabe
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo() {
-  return `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} 코드 차이 감지`;
+  return `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceMessageLabelKo()}`;
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceMessageLabelKo() {
+  return "코드 차이 감지";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo() {
