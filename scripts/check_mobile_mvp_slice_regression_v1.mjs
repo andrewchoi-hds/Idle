@@ -13,6 +13,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTargetMissingLabelKo,
@@ -1025,7 +1026,23 @@ async function main() {
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
       ) ===
-        `차이 요약: 보기 전체→핵심 · ${buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo()}`,
+        `차이 요약: 보기 전체→핵심 · ${buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo()}` &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAllChecksumMismatch,
+      ) ===
+        `차이 요약: ${buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo()}`,
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_delta_summary_all_checksum_changed_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo() ===
+        "전체 checksum 변경" &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAllChecksumMismatch,
+      ).includes(buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo()),
   });
 
   checks.push({

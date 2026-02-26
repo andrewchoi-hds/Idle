@@ -922,7 +922,7 @@ export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
     parts.push(`보기 ${currentMode}→${targetMode}`);
   }
   if (!diff.sameAllChecksum) {
-    parts.push("전체 checksum 변경");
+    parts.push(buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo());
   }
   if (!diff.sameViewChecksum) {
     parts.push(buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo());
@@ -954,6 +954,10 @@ export function buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo()
 
 export function buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo() {
   return "view checksum 변경";
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo() {
+  return "전체 checksum 변경";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryTone(

@@ -1634,3 +1634,11 @@
 
 ## 373) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 차이 요약 view checksum 변경 라벨 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 374) 다음 순차 작업
+1. [완료] 오프라인 비교 코드 차이 요약 전체 checksum 변경 라벨 헬퍼(`buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo`)를 추가해 전체 checksum 변경 문구를 단일 함수로 표준화.
+2. [완료] 오프라인 비교 코드 차이 요약 라벨 경로의 전체 checksum mismatch 분기가 인라인 문자열 대신 전체 checksum 변경 라벨 헬퍼를 사용하도록 반영.
+3. [완료] 모바일 회귀 체크에 전체 checksum 변경 라벨 헬퍼 시나리오를 추가해 전체 checksum mismatch 경로에서 문구 일치성을 검증.
+
+## 375) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 차이 요약 전체 checksum 변경 라벨 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
