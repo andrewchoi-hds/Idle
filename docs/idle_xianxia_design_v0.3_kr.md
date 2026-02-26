@@ -1842,3 +1842,11 @@
 
 ## 425) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 일치 요약 대상 없음 본문 라벨 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 426) 다음 순차 작업
+1. [완료] 오프라인 비교 코드 일치 요약 현재 코드 없음 본문 라벨 헬퍼(`buildOfflineDetailCompareCodeMatchSummaryCurrentMissingMessageLabelKo`)를 추가해 현재 코드 없음 메시지 본문 문구를 단일 함수로 표준화.
+2. [완료] 오프라인 비교 코드 일치 요약 현재 코드 없음 라벨 경로가 인라인 `현재 코드 없음` 문자열 대신 현재 코드 없음 본문 라벨 헬퍼를 사용하도록 반영.
+3. [완료] 모바일 회귀 체크에 현재 코드 없음 본문 라벨 헬퍼 시나리오를 추가해 현재 코드 부재 fallback 경로에서 본문 문구 일치성을 검증.
+
+## 427) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 일치 요약 현재 코드 없음 본문 라벨 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

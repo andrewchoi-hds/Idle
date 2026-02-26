@@ -1150,7 +1150,11 @@ export function buildOfflineDetailCompareCodeMatchSummaryTargetMissingMessageLab
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo() {
-  return `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} 현재 코드 없음`;
+  return `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryCurrentMissingMessageLabelKo()}`;
+}
+
+export function buildOfflineDetailCompareCodeMatchSummaryCurrentMissingMessageLabelKo() {
+  return "현재 코드 없음";
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo() {

@@ -43,6 +43,7 @@ import {
   buildOfflineDetailCompareCodeMatchSummaryTargetMissingLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTargetMissingMessageLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo,
+  buildOfflineDetailCompareCodeMatchSummaryCurrentMissingMessageLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo,
@@ -1571,11 +1572,25 @@ async function main() {
     id: "offline_detail_compare_code_match_summary_current_missing_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo() ===
-        "일치 요약: 현재 코드 없음" &&
+        `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryCurrentMissingMessageLabelKo()}` &&
       buildOfflineDetailCompareCodeMatchSummaryLabelKo(
         "INVALID",
         offlineDetailCompareCodeAll,
       ) === buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo(),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_match_summary_current_missing_message_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeMatchSummaryCurrentMissingMessageLabelKo() ===
+        "현재 코드 없음" &&
+      buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo().endsWith(
+        buildOfflineDetailCompareCodeMatchSummaryCurrentMissingMessageLabelKo(),
+      ) &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        "INVALID",
+        offlineDetailCompareCodeAll,
+      ).endsWith(buildOfflineDetailCompareCodeMatchSummaryCurrentMissingMessageLabelKo()),
   });
 
   checks.push({
