@@ -47,6 +47,7 @@ import {
   buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo,
+  buildOfflineDetailCompareCodeMatchSummaryItemSeparatorLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo,
@@ -1633,6 +1634,20 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_code_match_summary_item_separator_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeMatchSummaryItemSeparatorLabelKo() === " · " &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ).includes(buildOfflineDetailCompareCodeMatchSummaryItemSeparatorLabelKo()) &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ).includes(buildOfflineDetailCompareCodeMatchSummaryItemSeparatorLabelKo()),
+  });
+
+  checks.push({
     id: "offline_detail_compare_code_match_summary_total_key_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo() === "총" &&
@@ -1791,12 +1806,26 @@ async function main() {
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAll,
       ) ===
-        "일치 요약: 총 일치 · 핵심표시 일치 · 숨김 일치 · 보기 일치 · 전체 checksum 일치 · view checksum 일치" &&
+        [
+          `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
+          `${buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
+          `${buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
+          `${buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
+          `${buildOfflineDetailCompareCodeMatchSummaryAllChecksumKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
+          `${buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
+        ].join(buildOfflineDetailCompareCodeMatchSummaryItemSeparatorLabelKo()) &&
       buildOfflineDetailCompareCodeMatchSummaryLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
       ) ===
-        "일치 요약: 총 일치 · 핵심표시 일치 · 숨김 일치 · 보기 불일치 · 전체 checksum 일치 · view checksum 불일치",
+        [
+          `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
+          `${buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
+          `${buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
+          `${buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo()}`,
+          `${buildOfflineDetailCompareCodeMatchSummaryAllChecksumKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
+          `${buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo()}`,
+        ].join(buildOfflineDetailCompareCodeMatchSummaryItemSeparatorLabelKo()),
   });
 
   checks.push({
