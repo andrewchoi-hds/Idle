@@ -19,6 +19,7 @@ import {
   buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo,
+  buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTone,
@@ -1117,6 +1118,24 @@ async function main() {
         offlineDetailCompareCodeAggregateMismatch,
       ).includes(
         `${buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo()}`,
+      ),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_match_summary_critical_visible_key_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo() === "핵심표시" &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ).includes(
+        `${buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
+      ) &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAggregateMismatch,
+      ).includes(
+        `${buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
       ),
   });
 
