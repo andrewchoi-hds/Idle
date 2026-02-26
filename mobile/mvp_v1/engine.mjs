@@ -998,7 +998,11 @@ export function buildOfflineDetailCompareCodeDeltaSummaryTotalKeyLabelKo() {
 export function buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo(
   criticalVisibleEventsDelta,
 ) {
-  return `핵심표시 ${formatSignedDelta(criticalVisibleEventsDelta)}`;
+  return `${buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleKeyLabelKo()} ${formatSignedDelta(criticalVisibleEventsDelta)}`;
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleKeyLabelKo() {
+  return "핵심표시";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo(
