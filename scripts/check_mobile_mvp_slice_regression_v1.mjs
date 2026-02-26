@@ -13,6 +13,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo,
@@ -561,6 +562,10 @@ async function main() {
     (_, totalEvents, criticalVisibleEvents, hiddenCriticalEvents) =>
       `-T${totalEvents.padStart(2, "0")}-C${criticalVisibleEvents.padStart(2, "0")}-H${hiddenCriticalEvents.padStart(2, "0")}-`,
   );
+  const offlineDetailCompareAggregateMismatchDiff = resolveOfflineDetailCompareCodeDiff(
+    offlineDetailCompareCodeAll,
+    offlineDetailCompareCodeAggregateMismatch,
+  );
   checks.push({
     id: "offline_detail_compare_code_has_mode_and_checksum",
     passed:
@@ -1037,7 +1042,33 @@ async function main() {
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAllChecksumMismatch,
       ) ===
-        `차이 요약: ${buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo()}`,
+        `차이 요약: ${buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo()}` &&
+      offlineDetailCompareAggregateMismatchDiff.comparable &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAggregateMismatch,
+      ) ===
+        `차이 요약: ${buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(
+          offlineDetailCompareAggregateMismatchDiff.target.totalEvents -
+            offlineDetailCompareAggregateMismatchDiff.current.totalEvents,
+        )}`,
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_delta_summary_total_changed_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(93) === "총 +93" &&
+      buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(-2) === "총 -2" &&
+      offlineDetailCompareAggregateMismatchDiff.comparable &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAggregateMismatch,
+      ).includes(
+        buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(
+          offlineDetailCompareAggregateMismatchDiff.target.totalEvents -
+            offlineDetailCompareAggregateMismatchDiff.current.totalEvents,
+        ),
+      ),
   });
 
   checks.push({
