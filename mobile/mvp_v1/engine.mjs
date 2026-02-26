@@ -946,7 +946,11 @@ export function buildOfflineDetailCompareCodeDeltaSummaryTargetMissingMessageLab
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingLabelKo() {
-  return `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} 현재 코드 없음`;
+  return `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingMessageLabelKo()}`;
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingMessageLabelKo() {
+  return "현재 코드 없음";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo() {
