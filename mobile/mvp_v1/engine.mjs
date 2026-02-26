@@ -925,7 +925,7 @@ export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
     parts.push("전체 checksum 변경");
   }
   if (!diff.sameViewChecksum) {
-    parts.push("view checksum 변경");
+    parts.push(buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo());
   }
   return parts.length > 0
     ? `차이 요약: ${parts.join(" · ")}`
@@ -950,6 +950,10 @@ export function buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo() {
 
 export function buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo() {
   return "차이 요약: 코드 차이 감지";
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo() {
+  return "view checksum 변경";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryTone(
