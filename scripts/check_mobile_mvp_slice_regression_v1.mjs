@@ -58,6 +58,7 @@ import {
   buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo,
+  buildOfflineDetailCompareCodeMatchSummaryToneFromItemDescriptors,
   buildOfflineDetailCompareCodeMatchSummaryTone,
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeSourceTone,
@@ -625,6 +626,10 @@ async function main() {
   const offlineDetailCompareMatchSummaryViewMismatchDescriptors =
     buildOfflineDetailCompareCodeMatchSummaryItemDescriptors(
       offlineDetailCompareViewMismatchDiff,
+    );
+  const offlineDetailCompareMatchSummaryAggregateMismatchDescriptors =
+    buildOfflineDetailCompareCodeMatchSummaryItemDescriptors(
+      offlineDetailCompareAggregateMismatchDiff,
     );
   checks.push({
     id: "offline_detail_compare_code_has_mode_and_checksum",
@@ -1713,12 +1718,20 @@ async function main() {
           buildOfflineDetailCompareCodeMatchSummaryAllChecksumKeyLabelKo(),
           buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo(),
         ].join("|") &&
+      offlineDetailCompareMatchSummaryAllDescriptors
+        .map((descriptor) => descriptor.mismatchTone)
+        .join("|") ===
+        ["error", "error", "error", "warn", "warn", "warn"].join("|") &&
       offlineDetailCompareMatchSummaryAllDescriptors.every(
         (descriptor) => descriptor.isMatched === true,
       ) &&
       offlineDetailCompareMatchSummaryViewMismatchDescriptors[3].isMatched === false &&
       offlineDetailCompareMatchSummaryViewMismatchDescriptors[5].isMatched === false &&
       buildOfflineDetailCompareCodeMatchSummaryItemDescriptors(null).length === 6 &&
+      buildOfflineDetailCompareCodeMatchSummaryItemDescriptors(null)
+        .map((descriptor) => descriptor.mismatchTone)
+        .join("|") ===
+        ["error", "error", "error", "warn", "warn", "warn"].join("|") &&
       buildOfflineDetailCompareCodeMatchSummaryItemDescriptors(null).every(
         (descriptor) => descriptor.isMatched === false,
       ),
@@ -1915,6 +1928,35 @@ async function main() {
               ),
             ),
         ].join(buildOfflineDetailCompareCodeMatchSummaryItemSeparatorLabelKo()),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_match_summary_tone_from_item_descriptors_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeMatchSummaryToneFromItemDescriptors(
+        offlineDetailCompareMatchSummaryAllDescriptors,
+      ) === "info" &&
+      buildOfflineDetailCompareCodeMatchSummaryToneFromItemDescriptors(
+        offlineDetailCompareMatchSummaryViewMismatchDescriptors,
+      ) === "warn" &&
+      buildOfflineDetailCompareCodeMatchSummaryToneFromItemDescriptors(
+        offlineDetailCompareMatchSummaryAggregateMismatchDescriptors,
+      ) === "error" &&
+      buildOfflineDetailCompareCodeMatchSummaryToneFromItemDescriptors([]) === "info" &&
+      buildOfflineDetailCompareCodeMatchSummaryToneFromItemDescriptors([
+        {
+          itemKeyLabel: "임시",
+          isMatched: false,
+          mismatchTone: "warn",
+        },
+      ]) === "warn" &&
+      buildOfflineDetailCompareCodeMatchSummaryToneFromItemDescriptors([
+        {
+          itemKeyLabel: "임시",
+          isMatched: false,
+          mismatchTone: "error",
+        },
+      ]) === "error",
   });
 
   checks.push({

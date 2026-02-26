@@ -1179,26 +1179,32 @@ export function buildOfflineDetailCompareCodeMatchSummaryItemDescriptors(diffInp
     {
       itemKeyLabel: buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo(),
       isMatched: diff.sameTotalEvents === true,
+      mismatchTone: "error",
     },
     {
       itemKeyLabel: buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo(),
       isMatched: diff.sameCriticalVisibleEvents === true,
+      mismatchTone: "error",
     },
     {
       itemKeyLabel: buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo(),
       isMatched: diff.sameHiddenCriticalEvents === true,
+      mismatchTone: "error",
     },
     {
       itemKeyLabel: buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo(),
       isMatched: diff.sameViewMode === true,
+      mismatchTone: "warn",
     },
     {
       itemKeyLabel: buildOfflineDetailCompareCodeMatchSummaryAllChecksumKeyLabelKo(),
       isMatched: diff.sameAllChecksum === true,
+      mismatchTone: "warn",
     },
     {
       itemKeyLabel: buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo(),
       isMatched: diff.sameViewChecksum === true,
+      mismatchTone: "warn",
     },
   ];
 }
@@ -1246,6 +1252,31 @@ export function buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo() {
   return "불일치";
 }
 
+export function buildOfflineDetailCompareCodeMatchSummaryToneFromItemDescriptors(
+  descriptorsInput,
+) {
+  const descriptors = Array.isArray(descriptorsInput) ? descriptorsInput : [];
+  let hasErrorMismatch = false;
+  let hasWarnMismatch = false;
+  for (const descriptor of descriptors) {
+    if (!descriptor || descriptor.isMatched !== false) {
+      continue;
+    }
+    if (descriptor.mismatchTone === "error") {
+      hasErrorMismatch = true;
+      continue;
+    }
+    hasWarnMismatch = true;
+  }
+  if (hasErrorMismatch) {
+    return "error";
+  }
+  if (hasWarnMismatch) {
+    return "warn";
+  }
+  return "info";
+}
+
 export function buildOfflineDetailCompareCodeMatchSummaryTone(
   currentCodeInput,
   targetCodeInput,
@@ -1258,24 +1289,9 @@ export function buildOfflineDetailCompareCodeMatchSummaryTone(
   if (!diff.comparable) {
     return diff.reason === "current_invalid" ? "error" : "warn";
   }
-  if (
-    diff.sameTotalEvents &&
-    diff.sameCriticalVisibleEvents &&
-    diff.sameHiddenCriticalEvents &&
-    diff.sameViewMode &&
-    diff.sameAllChecksum &&
-    diff.sameViewChecksum
-  ) {
-    return "info";
-  }
-  if (
-    !diff.sameTotalEvents ||
-    !diff.sameCriticalVisibleEvents ||
-    !diff.sameHiddenCriticalEvents
-  ) {
-    return "error";
-  }
-  return "warn";
+  return buildOfflineDetailCompareCodeMatchSummaryToneFromItemDescriptors(
+    buildOfflineDetailCompareCodeMatchSummaryItemDescriptors(diff),
+  );
 }
 
 export function buildOfflineDetailReportSnapshot(

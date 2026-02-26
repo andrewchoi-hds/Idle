@@ -287,6 +287,7 @@ npm run mobile:mvp:check
   - 오프라인 비교 코드 일치 요약 항목 구분자 라벨(`buildOfflineDetailCompareCodeMatchSummaryItemSeparatorLabelKo`)이 일치/불일치 조합 경로에서 동일 구분자를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 일치 요약 항목 descriptor 헬퍼(`buildOfflineDetailCompareCodeMatchSummaryItemDescriptors`)가 항목 순서/키/일치상태 조합을 일관되게 반환하는지 검증
   - 오프라인 비교 코드 일치 요약 항목 결과 formatter(`buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo`)가 항목 키+일치상태 조합 경로에서 동일 문구를 일관되게 반환하는지 검증
+  - 오프라인 비교 코드 일치 요약 톤 descriptor 헬퍼(`buildOfflineDetailCompareCodeMatchSummaryToneFromItemDescriptors`)가 항목 descriptor 조합에 따라 `info/warn/error`를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 일치 요약 총 항목 키 라벨(`buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo`)이 총 일치/불일치 조합 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 일치 요약 핵심표시 항목 키 라벨(`buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo`)이 핵심표시 일치/불일치 조합 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 일치 요약 숨김 항목 키 라벨(`buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo`)이 숨김 일치/불일치 조합 경로에서 동일 문구를 일관되게 반환하는지 검증
