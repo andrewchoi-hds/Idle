@@ -1055,7 +1055,7 @@ export function buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo(
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedSuffixLabelKo() {
-  return "변경";
+  return buildOfflineDetailCompareCodeDeltaSummaryChangedSuffixLabelKo();
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo() {
@@ -1067,6 +1067,10 @@ export function buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo()
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedSuffixLabelKo() {
+  return buildOfflineDetailCompareCodeDeltaSummaryChangedSuffixLabelKo();
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryChangedSuffixLabelKo() {
   return "변경";
 }
 
