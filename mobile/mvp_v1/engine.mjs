@@ -1002,7 +1002,7 @@ export function buildOfflineDetailCompareCodeMatchSummaryLabelKo(
   }
   return `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo()} ${boolMark(diff.sameTotalEvents)} · ${buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo()} ${boolMark(
     diff.sameCriticalVisibleEvents,
-  )} · 숨김 ${boolMark(diff.sameHiddenCriticalEvents)} · 보기 ${boolMark(
+  )} · ${buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo()} ${boolMark(diff.sameHiddenCriticalEvents)} · 보기 ${boolMark(
     diff.sameViewMode,
   )} · 전체 checksum ${boolMark(diff.sameAllChecksum)} · view checksum ${boolMark(
     diff.sameViewChecksum,
@@ -1031,6 +1031,10 @@ export function buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo() {
 
 export function buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo() {
   return "핵심표시";
+}
+
+export function buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo() {
+  return "숨김";
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo() {
