@@ -1112,12 +1112,6 @@ export function buildOfflineDetailCompareCodeDeltaSummaryTone(
   return "warn";
 }
 
-function boolMark(value) {
-  return value
-    ? buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()
-    : buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo();
-}
-
 export function buildOfflineDetailCompareCodeMatchSummaryLabelKo(
   currentCodeInput,
   targetCodeInput,
@@ -1134,12 +1128,30 @@ export function buildOfflineDetailCompareCodeMatchSummaryLabelKo(
   }
   const separator = buildOfflineDetailCompareCodeMatchSummaryItemSeparatorLabelKo();
   return [
-    `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo()} ${boolMark(diff.sameTotalEvents)}`,
-    `${buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo()} ${boolMark(diff.sameCriticalVisibleEvents)}`,
-    `${buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo()} ${boolMark(diff.sameHiddenCriticalEvents)}`,
-    `${buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo()} ${boolMark(diff.sameViewMode)}`,
-    `${buildOfflineDetailCompareCodeMatchSummaryAllChecksumKeyLabelKo()} ${boolMark(diff.sameAllChecksum)}`,
-    `${buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo()} ${boolMark(diff.sameViewChecksum)}`,
+    `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+      buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo(),
+      diff.sameTotalEvents,
+    )}`,
+    buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+      buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo(),
+      diff.sameCriticalVisibleEvents,
+    ),
+    buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+      buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo(),
+      diff.sameHiddenCriticalEvents,
+    ),
+    buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+      buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo(),
+      diff.sameViewMode,
+    ),
+    buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+      buildOfflineDetailCompareCodeMatchSummaryAllChecksumKeyLabelKo(),
+      diff.sameAllChecksum,
+    ),
+    buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+      buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo(),
+      diff.sameViewChecksum,
+    ),
   ].join(separator);
 }
 
@@ -1173,6 +1185,17 @@ export function buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo() {
 
 export function buildOfflineDetailCompareCodeMatchSummaryItemSeparatorLabelKo() {
   return " · ";
+}
+
+export function buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+  itemKeyLabel,
+  isMatched,
+) {
+  return `${itemKeyLabel} ${
+    isMatched
+      ? buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()
+      : buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo()
+  }`;
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo() {
