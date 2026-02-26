@@ -991,7 +991,7 @@ export function buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo(
     targetViewMode === "critical"
       ? buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo()
       : buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo();
-  return `${buildOfflineDetailCompareCodeDeltaSummaryViewModeKeyLabelKo()} ${currentMode}→${targetMode}`;
+  return `${buildOfflineDetailCompareCodeDeltaSummaryViewModeKeyLabelKo()} ${currentMode}${buildOfflineDetailCompareCodeDeltaSummaryViewModeTransitionLabelKo()}${targetMode}`;
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryViewModeKeyLabelKo() {
@@ -1004,6 +1004,10 @@ export function buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo
 
 export function buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo() {
   return "전체";
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryViewModeTransitionLabelKo() {
+  return "→";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo() {
