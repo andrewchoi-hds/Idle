@@ -906,9 +906,9 @@ export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
   }
   if (!diff.sameCriticalVisibleEvents) {
     parts.push(
-      `핵심표시 ${formatSignedDelta(
+      buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo(
         diff.target.criticalVisibleEvents - diff.current.criticalVisibleEvents,
-      )}`,
+      ),
     );
   }
   if (!diff.sameHiddenCriticalEvents) {
@@ -961,6 +961,12 @@ export function buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(
   totalEventsDelta,
 ) {
   return `총 ${formatSignedDelta(totalEventsDelta)}`;
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo(
+  criticalVisibleEventsDelta,
+) {
+  return `핵심표시 ${formatSignedDelta(criticalVisibleEventsDelta)}`;
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo(
