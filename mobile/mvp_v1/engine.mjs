@@ -938,7 +938,11 @@ export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryTargetMissingLabelKo() {
-  return `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} 대상 코드 없음`;
+  return `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryTargetMissingMessageLabelKo()}`;
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryTargetMissingMessageLabelKo() {
+  return "대상 코드 없음";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingLabelKo() {
