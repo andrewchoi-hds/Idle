@@ -678,15 +678,25 @@ export function buildOfflineDetailCompareResultCodeDifferenceLabelKo() {
 }
 
 export function buildOfflineDetailCompareMissingCurrentLabelKo() {
-  return "현재 비교 코드가 없어 대조 불가";
+  return buildOfflineDetailCompareResultStateFallbackLabelKo("current_missing");
 }
 
 export function buildOfflineDetailCompareResultPendingLabelKo() {
-  return "비교 대기 중";
+  return buildOfflineDetailCompareResultStateFallbackLabelKo("target_missing");
 }
 
 export function buildOfflineDetailCompareResultInputRequiredLabelKo() {
-  return "비교 코드를 입력하세요";
+  return buildOfflineDetailCompareResultStateFallbackLabelKo("invalid_target");
+}
+
+export function buildOfflineDetailCompareResultStateFallbackLabelKo(reasonInput) {
+  return buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor(reasonInput)
+    .resultStateLabelKo;
+}
+
+export function buildOfflineDetailCompareResultStateFallbackTone(reasonInput) {
+  return buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor(reasonInput)
+    .resultStateTone;
 }
 
 export function isOfflineDetailCompareResultError(
@@ -703,11 +713,17 @@ export function buildOfflineDetailCompareResultStateLabelKo(
 ) {
   const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
   if (!targetText) {
-    return buildOfflineDetailCompareResultPendingLabelKo();
+    return buildOfflineDetailCompareResultStateFallbackLabelKo("target_missing");
   }
   const targetCode = extractOfflineDetailCompareCode(targetText);
   if (!targetCode) {
-    return buildOfflineDetailCompareResultInputRequiredLabelKo();
+    return buildOfflineDetailCompareResultStateFallbackLabelKo("invalid_target");
+  }
+  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCode);
+  if (!diff.comparable) {
+    return buildOfflineDetailCompareResultStateFallbackLabelKo(
+      diff.reason === "current_invalid" ? "current_missing" : "invalid_target",
+    );
   }
   return buildOfflineDetailCompareResultLabelKo(currentCodeInput, targetCode);
 }
@@ -718,15 +734,17 @@ export function buildOfflineDetailCompareResultStateTone(
 ) {
   const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
   if (!targetText) {
-    return "info";
+    return buildOfflineDetailCompareResultStateFallbackTone("target_missing");
   }
   const targetCode = extractOfflineDetailCompareCode(targetText);
   if (!targetCode) {
-    return "warn";
+    return buildOfflineDetailCompareResultStateFallbackTone("invalid_target");
   }
   const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCode);
   if (!diff.comparable) {
-    return diff.reason === "current_invalid" ? "error" : "warn";
+    return buildOfflineDetailCompareResultStateFallbackTone(
+      diff.reason === "current_invalid" ? "current_missing" : "invalid_target",
+    );
   }
   if (diff.identical) {
     return "info";
@@ -1159,6 +1177,8 @@ export function buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptors() {
       reason: "target_missing",
       messageLabelKo: buildOfflineDetailCompareCodeMatchSummaryTargetMissingMessageLabelKo(),
       fallbackTone: "info",
+      resultStateLabelKo: "비교 대기 중",
+      resultStateTone: "info",
       actionHintLabelKo: "가이드: 비교 코드를 입력하세요.",
       actionHintTone: "warn",
     },
@@ -1166,6 +1186,8 @@ export function buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptors() {
       reason: "current_missing",
       messageLabelKo: buildOfflineDetailCompareCodeMatchSummaryCurrentMissingMessageLabelKo(),
       fallbackTone: "error",
+      resultStateLabelKo: "현재 비교 코드가 없어 대조 불가",
+      resultStateTone: "error",
       actionHintLabelKo: "가이드: 오프라인 정산 로그를 열어 현재 코드를 먼저 생성하세요.",
       actionHintTone: "error",
     },
@@ -1173,6 +1195,8 @@ export function buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptors() {
       reason: "invalid_target",
       messageLabelKo: buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo(),
       fallbackTone: "warn",
+      resultStateLabelKo: "비교 코드를 입력하세요",
+      resultStateTone: "warn",
       actionHintLabelKo: "가이드: ODR1 비교 코드를 붙여넣거나 입력하세요.",
       actionHintTone: "warn",
     },
@@ -1196,6 +1220,8 @@ export function buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor(
       messageLabelKo:
         buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo(),
       fallbackTone: "warn",
+      resultStateLabelKo: "비교 코드를 입력하세요",
+      resultStateTone: "warn",
       actionHintLabelKo: "가이드: ODR1 비교 코드를 붙여넣거나 입력하세요.",
       actionHintTone: "warn",
     }
