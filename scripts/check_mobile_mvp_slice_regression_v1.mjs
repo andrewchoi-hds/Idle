@@ -35,6 +35,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedSuffixLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTargetMissingLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo,
@@ -1407,11 +1408,25 @@ async function main() {
     id: "offline_detail_compare_code_delta_summary_view_checksum_changed_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo() ===
-        `${buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo()} 변경` &&
+        `${buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedSuffixLabelKo()}` &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
       ).includes(buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo()),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_delta_summary_view_checksum_changed_suffix_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedSuffixLabelKo() ===
+        "변경" &&
+      buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo().endsWith(
+        buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedSuffixLabelKo(),
+      ) &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ).includes(buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedSuffixLabelKo()),
   });
 
   checks.push({
