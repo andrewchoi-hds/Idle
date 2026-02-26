@@ -1008,7 +1008,11 @@ export function buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleKeyLabel
 export function buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo(
   hiddenCriticalEventsDelta,
 ) {
-  return `숨김 ${formatSignedDelta(hiddenCriticalEventsDelta)}`;
+  return `${buildOfflineDetailCompareCodeDeltaSummaryHiddenKeyLabelKo()} ${formatSignedDelta(hiddenCriticalEventsDelta)}`;
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryHiddenKeyLabelKo() {
+  return "숨김";
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo(

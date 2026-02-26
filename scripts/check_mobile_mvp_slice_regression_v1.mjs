@@ -25,6 +25,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleKeyLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryHiddenKeyLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewModeKeyLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewModeTransitionLabelKo,
@@ -1260,8 +1261,10 @@ async function main() {
   checks.push({
     id: "offline_detail_compare_code_delta_summary_hidden_changed_label_is_stable",
     passed:
-      buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo(4) === "숨김 +4" &&
-      buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo(-1) === "숨김 -1" &&
+      buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo(4) ===
+        `${buildOfflineDetailCompareCodeDeltaSummaryHiddenKeyLabelKo()} +4` &&
+      buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo(-1) ===
+        `${buildOfflineDetailCompareCodeDeltaSummaryHiddenKeyLabelKo()} -1` &&
       offlineDetailCompareHiddenMismatchDiff.comparable &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         offlineDetailCompareCodeAll,
@@ -1271,6 +1274,18 @@ async function main() {
           offlineDetailCompareHiddenMismatchDiff.target.hiddenCriticalEvents -
             offlineDetailCompareHiddenMismatchDiff.current.hiddenCriticalEvents,
         ),
+      ),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_delta_summary_hidden_key_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryHiddenKeyLabelKo() === "숨김" &&
+      buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo(4).startsWith(
+        `${buildOfflineDetailCompareCodeDeltaSummaryHiddenKeyLabelKo()} `,
+      ) &&
+      buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo(-1).startsWith(
+        `${buildOfflineDetailCompareCodeDeltaSummaryHiddenKeyLabelKo()} `,
       ),
   });
 
