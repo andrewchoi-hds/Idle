@@ -32,6 +32,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryLabelKo,
@@ -1381,11 +1382,25 @@ async function main() {
     id: "offline_detail_compare_code_delta_summary_all_checksum_changed_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo() ===
-        "전체 checksum 변경" &&
+        `${buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo()} 변경` &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAllChecksumMismatch,
       ).includes(buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo()),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_delta_summary_all_checksum_key_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo() ===
+        "전체 checksum" &&
+      buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo().startsWith(
+        buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo(),
+      ) &&
+      buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAllChecksumMismatch,
+      ).includes(buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo()),
   });
 
   checks.push({
