@@ -1866,3 +1866,11 @@
 
 ## 431) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 일치 요약 항목 구분자 라벨 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 432) 다음 순차 작업
+1. [완료] 오프라인 비교 코드 일치 요약 항목 결과 formatter 헬퍼(`buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo`)를 추가해 항목 키와 일치/불일치 상태 조합 경로를 단일 함수로 표준화.
+2. [완료] 오프라인 비교 코드 일치 요약 라벨 경로가 인라인 `${key} ${status}` 조합 대신 항목 결과 formatter 헬퍼를 사용하도록 반영.
+3. [완료] 모바일 회귀 체크에 항목 결과 formatter 헬퍼 시나리오를 추가해 일치/불일치 조합 경로에서 항목 문구 일치성을 검증.
+
+## 433) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 일치 요약 항목 결과 formatter 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

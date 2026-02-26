@@ -48,6 +48,7 @@ import {
   buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryItemSeparatorLabelKo,
+  buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo,
@@ -1648,6 +1649,39 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_code_match_summary_item_result_label_formatter_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+        buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo(),
+        true,
+      ) ===
+        `${buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}` &&
+      buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+        buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo(),
+        false,
+      ) ===
+        `${buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo()}` &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ).includes(
+        buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+          buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo(),
+          true,
+        ),
+      ) &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ).includes(
+        buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+          buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo(),
+          false,
+        ),
+      ),
+  });
+
+  checks.push({
     id: "offline_detail_compare_code_match_summary_total_key_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo() === "총" &&
@@ -1807,24 +1841,60 @@ async function main() {
         offlineDetailCompareCodeAll,
       ) ===
         [
-          `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
-          `${buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
-          `${buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
-          `${buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
-          `${buildOfflineDetailCompareCodeMatchSummaryAllChecksumKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
-          `${buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
+          `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+            buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo(),
+            true,
+          )}`,
+          buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+            buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo(),
+            true,
+          ),
+          buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+            buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo(),
+            true,
+          ),
+          buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+            buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo(),
+            true,
+          ),
+          buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+            buildOfflineDetailCompareCodeMatchSummaryAllChecksumKeyLabelKo(),
+            true,
+          ),
+          buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+            buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo(),
+            true,
+          ),
         ].join(buildOfflineDetailCompareCodeMatchSummaryItemSeparatorLabelKo()) &&
       buildOfflineDetailCompareCodeMatchSummaryLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
       ) ===
         [
-          `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
-          `${buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
-          `${buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
-          `${buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo()}`,
-          `${buildOfflineDetailCompareCodeMatchSummaryAllChecksumKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMatchedLabelKo()}`,
-          `${buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo()}`,
+          `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+            buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo(),
+            true,
+          )}`,
+          buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+            buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo(),
+            true,
+          ),
+          buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+            buildOfflineDetailCompareCodeMatchSummaryHiddenKeyLabelKo(),
+            true,
+          ),
+          buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+            buildOfflineDetailCompareCodeMatchSummaryViewKeyLabelKo(),
+            false,
+          ),
+          buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+            buildOfflineDetailCompareCodeMatchSummaryAllChecksumKeyLabelKo(),
+            true,
+          ),
+          buildOfflineDetailCompareCodeMatchSummaryItemResultLabelKo(
+            buildOfflineDetailCompareCodeMatchSummaryViewChecksumKeyLabelKo(),
+            false,
+          ),
         ].join(buildOfflineDetailCompareCodeMatchSummaryItemSeparatorLabelKo()),
   });
 
