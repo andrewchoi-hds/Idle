@@ -34,6 +34,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedSuffixLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryChangedSuffixLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedSuffixLabelKo,
@@ -1395,7 +1396,7 @@ async function main() {
     id: "offline_detail_compare_code_delta_summary_all_checksum_changed_suffix_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedSuffixLabelKo() ===
-        "변경" &&
+        buildOfflineDetailCompareCodeDeltaSummaryChangedSuffixLabelKo() &&
       buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo().endsWith(
         buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedSuffixLabelKo(),
       ) &&
@@ -1403,6 +1404,16 @@ async function main() {
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAllChecksumMismatch,
       ).includes(buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedSuffixLabelKo()),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_delta_summary_changed_suffix_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryChangedSuffixLabelKo() === "변경" &&
+      buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedSuffixLabelKo() ===
+        buildOfflineDetailCompareCodeDeltaSummaryChangedSuffixLabelKo() &&
+      buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedSuffixLabelKo() ===
+        buildOfflineDetailCompareCodeDeltaSummaryChangedSuffixLabelKo(),
   });
 
   checks.push({
@@ -1434,7 +1445,7 @@ async function main() {
     id: "offline_detail_compare_code_delta_summary_view_checksum_changed_suffix_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedSuffixLabelKo() ===
-        "변경" &&
+        buildOfflineDetailCompareCodeDeltaSummaryChangedSuffixLabelKo() &&
       buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo().endsWith(
         buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedSuffixLabelKo(),
       ) &&
