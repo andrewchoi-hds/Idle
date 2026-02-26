@@ -43,6 +43,7 @@ import {
   buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptors,
   buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor,
   buildOfflineDetailCompareCodeMatchSummaryFallbackLabelKo,
+  buildOfflineDetailCompareCodeMatchSummaryFallbackTone,
   buildOfflineDetailCompareCodeMatchSummaryTargetMissingLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTargetMissingMessageLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo,
@@ -1587,6 +1588,10 @@ async function main() {
           buildOfflineDetailCompareCodeMatchSummaryCurrentMissingMessageLabelKo(),
           buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo(),
         ].join("|") &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptors()
+        .map((descriptor) => descriptor.fallbackTone)
+        .join("|") ===
+        ["info", "error", "warn"].join("|") &&
       buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("target_missing")
         .messageLabelKo ===
         buildOfflineDetailCompareCodeMatchSummaryTargetMissingMessageLabelKo() &&
@@ -1596,8 +1601,16 @@ async function main() {
       buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("invalid_target")
         .messageLabelKo ===
         buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo() &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("target_missing")
+        .fallbackTone === "info" &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("current_missing")
+        .fallbackTone === "error" &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("invalid_target")
+        .fallbackTone === "warn" &&
       buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("unknown").reason ===
-        "invalid_target",
+        "invalid_target" &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("unknown")
+        .fallbackTone === "warn",
   });
 
   checks.push({
@@ -1611,6 +1624,18 @@ async function main() {
         buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo() &&
       buildOfflineDetailCompareCodeMatchSummaryFallbackLabelKo("unknown") ===
         buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo(),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_match_summary_fallback_tone_helper_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeMatchSummaryFallbackTone("target_missing") ===
+        "info" &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackTone("current_missing") ===
+        "error" &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackTone("invalid_target") ===
+        "warn" &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackTone("unknown") === "warn",
   });
 
   checks.push({
@@ -2014,11 +2039,11 @@ async function main() {
     id: "offline_detail_compare_code_match_summary_tone_matches_diff",
     passed:
       buildOfflineDetailCompareCodeMatchSummaryTone(offlineDetailCompareCodeAll, "") ===
-        "info" &&
+        buildOfflineDetailCompareCodeMatchSummaryFallbackTone("target_missing") &&
       buildOfflineDetailCompareCodeMatchSummaryTone("INVALID", offlineDetailCompareCodeAll) ===
-        "error" &&
+        buildOfflineDetailCompareCodeMatchSummaryFallbackTone("current_missing") &&
       buildOfflineDetailCompareCodeMatchSummaryTone(offlineDetailCompareCodeAll, "invalid") ===
-        "warn" &&
+        buildOfflineDetailCompareCodeMatchSummaryFallbackTone("invalid_target") &&
       buildOfflineDetailCompareCodeMatchSummaryTone(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAll,
