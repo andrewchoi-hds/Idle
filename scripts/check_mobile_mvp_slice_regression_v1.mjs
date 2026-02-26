@@ -19,6 +19,7 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewModeKeyLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryViewModeTransitionLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo,
@@ -1168,9 +1169,9 @@ async function main() {
     id: "offline_detail_compare_code_delta_summary_view_mode_changed_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo("all", "critical") ===
-        `${buildOfflineDetailCompareCodeDeltaSummaryViewModeKeyLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo()}→${buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo()}` &&
+        `${buildOfflineDetailCompareCodeDeltaSummaryViewModeKeyLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo()}${buildOfflineDetailCompareCodeDeltaSummaryViewModeTransitionLabelKo()}${buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo()}` &&
       buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo("critical", "all") ===
-        `${buildOfflineDetailCompareCodeDeltaSummaryViewModeKeyLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo()}→${buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo()}` &&
+        `${buildOfflineDetailCompareCodeDeltaSummaryViewModeKeyLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryViewModeCriticalLabelKo()}${buildOfflineDetailCompareCodeDeltaSummaryViewModeTransitionLabelKo()}${buildOfflineDetailCompareCodeDeltaSummaryViewModeAllLabelKo()}` &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
@@ -1207,6 +1208,20 @@ async function main() {
       ).startsWith(
         `${buildOfflineDetailCompareCodeDeltaSummaryViewModeKeyLabelKo()} `,
       ),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_delta_summary_view_mode_transition_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryViewModeTransitionLabelKo() === "→" &&
+      buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo(
+        "all",
+        "critical",
+      ).includes(buildOfflineDetailCompareCodeDeltaSummaryViewModeTransitionLabelKo()) &&
+      buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo(
+        "critical",
+        "all",
+      ).includes(buildOfflineDetailCompareCodeDeltaSummaryViewModeTransitionLabelKo()),
   });
 
   checks.push({
