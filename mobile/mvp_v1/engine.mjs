@@ -917,9 +917,12 @@ export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
     );
   }
   if (!diff.sameViewMode) {
-    const currentMode = diff.current.viewMode === "critical" ? "핵심" : "전체";
-    const targetMode = diff.target.viewMode === "critical" ? "핵심" : "전체";
-    parts.push(`보기 ${currentMode}→${targetMode}`);
+    parts.push(
+      buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo(
+        diff.current.viewMode,
+        diff.target.viewMode,
+      ),
+    );
   }
   if (!diff.sameAllChecksum) {
     parts.push(buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo());
@@ -950,6 +953,15 @@ export function buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo() {
 
 export function buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo() {
   return "차이 요약: 코드 차이 감지";
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo(
+  currentViewMode,
+  targetViewMode,
+) {
+  const currentMode = currentViewMode === "critical" ? "핵심" : "전체";
+  const targetMode = targetViewMode === "critical" ? "핵심" : "전체";
+  return `보기 ${currentMode}→${targetMode}`;
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo() {
