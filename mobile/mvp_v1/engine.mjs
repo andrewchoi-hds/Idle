@@ -1047,7 +1047,9 @@ export function buildOfflineDetailCompareCodeDeltaSummaryViewModeTransitionLabel
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo() {
-  return `${buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedSuffixLabelKo()}`;
+  return buildOfflineDetailCompareCodeDeltaSummaryChecksumChangedLabelKo(
+    buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo(),
+  );
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo() {
@@ -1059,7 +1061,9 @@ export function buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedSuff
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo() {
-  return `${buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedSuffixLabelKo()}`;
+  return buildOfflineDetailCompareCodeDeltaSummaryChecksumChangedLabelKo(
+    buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo(),
+  );
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo() {
@@ -1068,6 +1072,12 @@ export function buildOfflineDetailCompareCodeDeltaSummaryAllChecksumKeyLabelKo()
 
 export function buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedSuffixLabelKo() {
   return buildOfflineDetailCompareCodeDeltaSummaryChangedSuffixLabelKo();
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryChecksumChangedLabelKo(
+  checksumKeyLabel,
+) {
+  return `${checksumKeyLabel} ${buildOfflineDetailCompareCodeDeltaSummaryChangedSuffixLabelKo()}`;
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryChangedSuffixLabelKo() {
