@@ -45,6 +45,7 @@ import {
   buildOfflineDetailCompareCodeMatchSummaryCurrentMissingLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryCurrentMissingMessageLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo,
+  buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryTotalKeyLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryCriticalVisibleKeyLabelKo,
@@ -1597,11 +1598,25 @@ async function main() {
     id: "offline_detail_compare_code_match_summary_invalid_target_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo() ===
-        "일치 요약: 대상 코드 형식 오류" &&
+        `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo()}` &&
       buildOfflineDetailCompareCodeMatchSummaryLabelKo(
         offlineDetailCompareCodeAll,
         "invalid target",
       ) === buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo(),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_match_summary_invalid_target_message_label_is_stable",
+    passed:
+      buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo() ===
+        "대상 코드 형식 오류" &&
+      buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo().endsWith(
+        buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo(),
+      ) &&
+      buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+        offlineDetailCompareCodeAll,
+        "invalid target",
+      ).endsWith(buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo()),
   });
 
   checks.push({

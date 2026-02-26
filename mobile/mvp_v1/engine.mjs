@@ -1158,7 +1158,11 @@ export function buildOfflineDetailCompareCodeMatchSummaryCurrentMissingMessageLa
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryInvalidTargetLabelKo() {
-  return `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} 대상 코드 형식 오류`;
+  return `${buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo()}`;
+}
+
+export function buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo() {
+  return "대상 코드 형식 오류";
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryPrefixLabelKo() {
