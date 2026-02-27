@@ -699,6 +699,31 @@ export function buildOfflineDetailCompareResultStateFallbackTone(reasonInput) {
     .resultStateTone;
 }
 
+function resolveOfflineDetailCompareFallbackReasonFromDiff(diffInput) {
+  const diff = diffInput && typeof diffInput === "object" ? diffInput : null;
+  if (!diff || diff.comparable !== false) {
+    return "";
+  }
+  return diff.reason === "current_invalid" ? "current_missing" : "invalid_target";
+}
+
+export function resolveOfflineDetailCompareFallbackReason(
+  currentCodeInput,
+  targetCodeInput,
+) {
+  const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
+  if (!targetText) {
+    return "target_missing";
+  }
+  const targetCode = extractOfflineDetailCompareCode(targetText);
+  if (!targetCode) {
+    return "invalid_target";
+  }
+  return resolveOfflineDetailCompareFallbackReasonFromDiff(
+    resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCode),
+  );
+}
+
 export function isOfflineDetailCompareResultError(
   currentCodeInput,
   targetCodeInput,
@@ -711,41 +736,28 @@ export function buildOfflineDetailCompareResultStateLabelKo(
   currentCodeInput,
   targetCodeInput,
 ) {
-  const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
-  if (!targetText) {
-    return buildOfflineDetailCompareResultStateFallbackLabelKo("target_missing");
+  const fallbackReason = resolveOfflineDetailCompareFallbackReason(
+    currentCodeInput,
+    targetCodeInput,
+  );
+  if (fallbackReason) {
+    return buildOfflineDetailCompareResultStateFallbackLabelKo(fallbackReason);
   }
-  const targetCode = extractOfflineDetailCompareCode(targetText);
-  if (!targetCode) {
-    return buildOfflineDetailCompareResultStateFallbackLabelKo("invalid_target");
-  }
-  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCode);
-  if (!diff.comparable) {
-    return buildOfflineDetailCompareResultStateFallbackLabelKo(
-      diff.reason === "current_invalid" ? "current_missing" : "invalid_target",
-    );
-  }
-  return buildOfflineDetailCompareResultLabelKo(currentCodeInput, targetCode);
+  return buildOfflineDetailCompareResultLabelKo(currentCodeInput, targetCodeInput);
 }
 
 export function buildOfflineDetailCompareResultStateTone(
   currentCodeInput,
   targetCodeInput,
 ) {
-  const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
-  if (!targetText) {
-    return buildOfflineDetailCompareResultStateFallbackTone("target_missing");
+  const fallbackReason = resolveOfflineDetailCompareFallbackReason(
+    currentCodeInput,
+    targetCodeInput,
+  );
+  if (fallbackReason) {
+    return buildOfflineDetailCompareResultStateFallbackTone(fallbackReason);
   }
-  const targetCode = extractOfflineDetailCompareCode(targetText);
-  if (!targetCode) {
-    return buildOfflineDetailCompareResultStateFallbackTone("invalid_target");
-  }
-  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCode);
-  if (!diff.comparable) {
-    return buildOfflineDetailCompareResultStateFallbackTone(
-      diff.reason === "current_invalid" ? "current_missing" : "invalid_target",
-    );
-  }
+  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
   if (diff.identical) {
     return "info";
   }
@@ -768,20 +780,14 @@ export function buildOfflineDetailCompareActionHintLabelKo(
   currentCodeInput,
   targetCodeInput,
 ) {
-  const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
-  if (!targetText) {
-    return buildOfflineDetailCompareActionHintFallbackLabelKo("target_missing");
+  const fallbackReason = resolveOfflineDetailCompareFallbackReason(
+    currentCodeInput,
+    targetCodeInput,
+  );
+  if (fallbackReason) {
+    return buildOfflineDetailCompareActionHintFallbackLabelKo(fallbackReason);
   }
-  const targetCode = extractOfflineDetailCompareCode(targetText);
-  if (!targetCode) {
-    return buildOfflineDetailCompareActionHintFallbackLabelKo("invalid_target");
-  }
-  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCode);
-  if (!diff.comparable) {
-    return buildOfflineDetailCompareActionHintFallbackLabelKo(
-      diff.reason === "current_invalid" ? "current_missing" : "invalid_target",
-    );
-  }
+  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
   if (diff.identical) {
     return buildOfflineDetailCompareActionHintIdenticalLabelKo();
   }
@@ -837,20 +843,14 @@ export function buildOfflineDetailCompareActionHintTone(
   currentCodeInput,
   targetCodeInput,
 ) {
-  const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
-  if (!targetText) {
-    return buildOfflineDetailCompareActionHintFallbackTone("target_missing");
+  const fallbackReason = resolveOfflineDetailCompareFallbackReason(
+    currentCodeInput,
+    targetCodeInput,
+  );
+  if (fallbackReason) {
+    return buildOfflineDetailCompareActionHintFallbackTone(fallbackReason);
   }
-  const targetCode = extractOfflineDetailCompareCode(targetText);
-  if (!targetCode) {
-    return buildOfflineDetailCompareActionHintFallbackTone("invalid_target");
-  }
-  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCode);
-  if (!diff.comparable) {
-    return buildOfflineDetailCompareActionHintFallbackTone(
-      diff.reason === "current_invalid" ? "current_missing" : "invalid_target",
-    );
-  }
+  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
   if (diff.identical) {
     return "info";
   }
@@ -913,16 +913,20 @@ export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
   currentCodeInput,
   targetCodeInput,
 ) {
-  const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
-  if (!targetText) {
+  const fallbackReason = resolveOfflineDetailCompareFallbackReason(
+    currentCodeInput,
+    targetCodeInput,
+  );
+  if (fallbackReason === "target_missing") {
     return buildOfflineDetailCompareCodeDeltaSummaryTargetMissingLabelKo();
   }
-  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
-  if (!diff.comparable) {
-    return diff.reason === "current_invalid"
-      ? buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingLabelKo()
-      : buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo();
+  if (fallbackReason === "current_missing") {
+    return buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingLabelKo();
   }
+  if (fallbackReason === "invalid_target") {
+    return buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo();
+  }
+  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
   if (diff.identical) {
     return buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo();
   }
@@ -1118,14 +1122,20 @@ export function buildOfflineDetailCompareCodeDeltaSummaryTone(
   currentCodeInput,
   targetCodeInput,
 ) {
-  const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
-  if (!targetText) {
+  const fallbackReason = resolveOfflineDetailCompareFallbackReason(
+    currentCodeInput,
+    targetCodeInput,
+  );
+  if (fallbackReason === "target_missing") {
     return "info";
   }
-  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetText);
-  if (!diff.comparable) {
-    return diff.reason === "current_invalid" ? "error" : "warn";
+  if (fallbackReason === "current_missing") {
+    return "error";
   }
+  if (fallbackReason === "invalid_target") {
+    return "warn";
+  }
+  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
   if (diff.identical) {
     return "info";
   }
@@ -1146,16 +1156,14 @@ export function buildOfflineDetailCompareCodeMatchSummaryLabelKo(
   currentCodeInput,
   targetCodeInput,
 ) {
-  const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
-  if (!targetText) {
-    return buildOfflineDetailCompareCodeMatchSummaryFallbackLabelKo("target_missing");
+  const fallbackReason = resolveOfflineDetailCompareFallbackReason(
+    currentCodeInput,
+    targetCodeInput,
+  );
+  if (fallbackReason) {
+    return buildOfflineDetailCompareCodeMatchSummaryFallbackLabelKo(fallbackReason);
   }
   const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
-  if (!diff.comparable) {
-    return buildOfflineDetailCompareCodeMatchSummaryFallbackLabelKo(
-      diff.reason === "current_invalid" ? "current_missing" : "invalid_target",
-    );
-  }
   const separator = buildOfflineDetailCompareCodeMatchSummaryItemSeparatorLabelKo();
   const descriptors = buildOfflineDetailCompareCodeMatchSummaryItemDescriptors(diff);
   const parts = descriptors.map((descriptor) =>
@@ -1383,16 +1391,14 @@ export function buildOfflineDetailCompareCodeMatchSummaryTone(
   currentCodeInput,
   targetCodeInput,
 ) {
-  const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
-  if (!targetText) {
-    return buildOfflineDetailCompareCodeMatchSummaryFallbackTone("target_missing");
+  const fallbackReason = resolveOfflineDetailCompareFallbackReason(
+    currentCodeInput,
+    targetCodeInput,
+  );
+  if (fallbackReason) {
+    return buildOfflineDetailCompareCodeMatchSummaryFallbackTone(fallbackReason);
   }
-  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetText);
-  if (!diff.comparable) {
-    return buildOfflineDetailCompareCodeMatchSummaryFallbackTone(
-      diff.reason === "current_invalid" ? "current_missing" : "invalid_target",
-    );
-  }
+  const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
   return buildOfflineDetailCompareCodeMatchSummaryToneFromItemDescriptors(
     buildOfflineDetailCompareCodeMatchSummaryItemDescriptors(diff),
   );

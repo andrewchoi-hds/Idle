@@ -1922,3 +1922,11 @@
 
 ## 445) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 결과 상태 fallback 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 446) 다음 순차 작업
+1. [완료] 오프라인 비교 fallback 사유 판정 헬퍼(`resolveOfflineDetailCompareFallbackReason`)를 추가해 대상 미입력/대상 형식 오류/현재 코드 없음 fallback 판정 경로를 단일 함수로 표준화.
+2. [완료] 오프라인 비교 결과 상태/가이드/차이 요약/일치 요약 라벨·톤 경로가 fallback 분기에서 직접 조건 비교 대신 fallback 사유 판정 헬퍼를 사용하도록 통합.
+3. [완료] 모바일 회귀 체크에 fallback 사유 판정 헬퍼 시나리오를 추가해 fallback 사유 매핑과 비교 가능 케이스(빈 문자열 반환) 일관성을 검증.
+
+## 447) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 fallback 사유 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

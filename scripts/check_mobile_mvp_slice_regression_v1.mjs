@@ -91,6 +91,7 @@ import {
   buildOfflineDetailCompareResultStateTone,
   buildOfflineDetailCompareResultStateFallbackLabelKo,
   buildOfflineDetailCompareResultStateFallbackTone,
+  resolveOfflineDetailCompareFallbackReason,
   buildOfflineDetailCompareActionHintLabelKo,
   buildOfflineDetailCompareActionHintInputRequiredLabelKo,
   buildOfflineDetailCompareActionHintInvalidTargetLabelKo,
@@ -2122,6 +2123,29 @@ async function main() {
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAggregateMismatch,
       ) === "error",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_fallback_reason_helper_is_stable",
+    passed:
+      resolveOfflineDetailCompareFallbackReason(offlineDetailCompareCodeAll, "") ===
+        "target_missing" &&
+      resolveOfflineDetailCompareFallbackReason(offlineDetailCompareCodeAll, "   ") ===
+        "target_missing" &&
+      resolveOfflineDetailCompareFallbackReason(offlineDetailCompareCodeAll, "invalid") ===
+        "invalid_target" &&
+      resolveOfflineDetailCompareFallbackReason(
+        "INVALID",
+        offlineDetailCompareCodeAll,
+      ) === "current_missing" &&
+      resolveOfflineDetailCompareFallbackReason(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ) === "" &&
+      resolveOfflineDetailCompareFallbackReason(
+        offlineDetailCompareCodeAll,
+        `payload => ${offlineDetailCompareCodeCritical}`,
+      ) === "",
   });
 
   checks.push({
