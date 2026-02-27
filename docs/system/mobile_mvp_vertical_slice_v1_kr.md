@@ -142,6 +142,8 @@ npm run mobile:mvp:serve
   - 진영 아이콘에 SVG 아바타(`battle_avatar_cultivator.svg`, `battle_avatar_guardian.svg`)를 적용해 플레이어/적 구분을 즉시 인지 가능하게 개선
   - `전투 1회/자동 10초/실시간 자동/오프라인 정산` 결과를 동일 연출 경로(`playBattleSceneBattleOutcome`, `playBattleSceneAutoSummary`, `playBattleSceneOfflineSummary`)로 통합
   - stage 메타(`world`, `difficulty_index`, `is_tribulation`)를 연출 패널 `data-scene-world`, `data-scene-tier`로 반영해 인간계/신선계/진선계 및 난도 구간별 색감·오라 강도를 차등 적용
+  - 전투 spark 레이어(`battleSceneSparkLayer`)를 추가해 클릭 없이도 상시 파티클/충돌 파동이 순환되도록 구성
+  - 상시 루프(`runBattleSceneAmbientTick`)가 `idle/auto/realtime` 모드별로 연출 강도와 임팩트 빈도를 조절해 방치형 전투 화면처럼 지속 동작
   - 상시 연출 애니메이션(오라 드리프트/actor idle/오버레이 pulse)과 임팩트 연출(타격/돌파 burst·collapse)을 분리해 자동 루프 중에도 시각 피드백을 유지하고, `prefers-reduced-motion` 환경에서는 해당 애니메이션을 비활성화
 
 ## 4) 저장 포맷

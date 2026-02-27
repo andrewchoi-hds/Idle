@@ -199,6 +199,7 @@ h2 {
   --battle-floor-pulse-sec: 5.4s;
   --battle-overlay-pulse-sec: 6.2s;
   --battle-actor-idle-sec: 3.4s;
+  --battle-spark-linger-sec: 0.74s;
   border-radius: 12px;
   border: 1px solid #2a4f45;
   overflow: hidden;
@@ -291,6 +292,25 @@ h2 {
   --battle-aura-opacity: 0.62;
   --battle-floor-pulse-sec: 4.2s;
   --battle-overlay-pulse-sec: 4.8s;
+}
+
+.battle-scene-arena[data-scene-loop="idle"] {
+  --battle-aura-drift-sec: 5s;
+  --battle-actor-idle-sec: 3.7s;
+}
+
+.battle-scene-arena[data-scene-loop="auto"] {
+  --battle-aura-drift-sec: 4s;
+  --battle-aura-opacity: calc(var(--battle-aura-opacity) + 0.04);
+  --battle-floor-pulse-sec: 4.8s;
+}
+
+.battle-scene-arena[data-scene-loop="realtime"] {
+  --battle-aura-drift-sec: 3.2s;
+  --battle-aura-opacity: calc(var(--battle-aura-opacity) + 0.08);
+  --battle-floor-pulse-sec: 4.1s;
+  --battle-overlay-pulse-sec: 4.2s;
+  --battle-spark-linger-sec: 0.62s;
 }
 
 .battle-aura {
@@ -419,6 +439,65 @@ h2 {
 
 .battle-scene-flash.tone-error {
   background: radial-gradient(circle, rgba(255, 140, 131, 0.26) 0%, rgba(255, 140, 131, 0) 64%);
+}
+
+.battle-scene-spark-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.battle-spark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(var(--battle-spark-angle, 0deg)) scale(var(--battle-spark-scale, 1));
+  opacity: 0;
+  animation: battle-spark-pop var(--battle-spark-linger-sec) ease-out forwards;
+  mix-blend-mode: screen;
+}
+
+.battle-spark.shape-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  filter: blur(0.2px);
+}
+
+.battle-spark.shape-shard {
+  width: 16px;
+  height: 4px;
+  border-radius: 999px;
+}
+
+.battle-spark.shape-ring {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: transparent !important;
+  border: 1px solid currentColor;
+}
+
+.battle-spark.tone-info {
+  background: radial-gradient(circle, rgba(174, 235, 215, 0.96) 0%, rgba(174, 235, 215, 0.2) 78%);
+  color: rgba(174, 235, 215, 0.95);
+}
+
+.battle-spark.tone-success {
+  background: radial-gradient(circle, rgba(133, 250, 203, 0.98) 0%, rgba(133, 250, 203, 0.22) 82%);
+  color: rgba(133, 250, 203, 0.96);
+}
+
+.battle-spark.tone-warn {
+  background: radial-gradient(circle, rgba(255, 212, 141, 0.98) 0%, rgba(255, 212, 141, 0.22) 82%);
+  color: rgba(255, 212, 141, 0.95);
+}
+
+.battle-spark.tone-error {
+  background: radial-gradient(circle, rgba(255, 163, 154, 0.98) 0%, rgba(255, 163, 154, 0.22) 82%);
+  color: rgba(255, 163, 154, 0.95);
 }
 
 .battle-scene-float-layer {
@@ -630,6 +709,25 @@ h2 {
   100% {
     opacity: 0;
     transform: translate(-50%, -34px);
+  }
+}
+
+@keyframes battle-spark-pop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--battle-spark-angle, 0deg)) scale(calc(var(--battle-spark-scale, 1) * 0.56));
+    filter: brightness(1);
+  }
+
+  24% {
+    opacity: 1;
+    filter: brightness(1.18);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--battle-spark-angle, 0deg)) scale(calc(var(--battle-spark-scale, 1) * 1.22));
+    filter: brightness(0.94);
   }
 }
 
@@ -1317,6 +1415,7 @@ textarea:focus-visible,
   .battle-aura,
   .battle-actor,
   .battle-actor::before,
+  .battle-spark,
   .battle-float,
   .battle-scene-flash.is-active,
   .battle-scene-arena.scene-impact-win .battle-actor-player,
@@ -1328,6 +1427,10 @@ textarea:focus-visible,
   .battle-scene-arena.scene-impact-breakthrough-fail .battle-actor-player,
   .battle-scene-arena.scene-impact-breakthrough-fail .battle-aura-player {
     animation: none !important;
+  }
+
+  .battle-scene-spark-layer {
+    display: none;
   }
 }
 
