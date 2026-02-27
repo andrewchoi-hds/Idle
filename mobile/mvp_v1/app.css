@@ -579,6 +579,9 @@ h2 {
   --battle-actor-cast-track: rgba(151, 215, 195, 0.24);
   --battle-actor-cast-fill-a: rgba(180, 246, 223, 0.95);
   --battle-actor-cast-fill-b: rgba(78, 160, 132, 0.96);
+  --battle-frame-attack-ring: rgba(118, 242, 199, 0.34);
+  --battle-frame-hit-ring: rgba(255, 175, 152, 0.34);
+  --battle-frame-skill-ring: rgba(139, 226, 255, 0.38);
   transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
   animation: battle-actor-idle var(--battle-actor-idle-sec) ease-in-out infinite;
 }
@@ -611,6 +614,9 @@ h2 {
   --battle-actor-cast-track: rgba(215, 177, 154, 0.25);
   --battle-actor-cast-fill-a: rgba(255, 217, 194, 0.95);
   --battle-actor-cast-fill-b: rgba(175, 111, 78, 0.96);
+  --battle-frame-attack-ring: rgba(255, 201, 166, 0.36);
+  --battle-frame-hit-ring: rgba(255, 147, 133, 0.4);
+  --battle-frame-skill-ring: rgba(255, 196, 139, 0.4);
   justify-items: end;
   text-align: right;
   border-color: #6f5242;
@@ -625,6 +631,40 @@ h2 {
     radial-gradient(circle at 35% 30%, rgba(255, 229, 220, 0.88), rgba(199, 108, 76, 0.42) 50%, rgba(76, 27, 20, 0.94) 100%);
   box-shadow: 0 0 0 3px rgba(98, 45, 36, 0.45), 0 5px 12px rgba(9, 4, 3, 0.42);
   animation-duration: 3.35s;
+}
+
+.battle-actor[data-actor-frame="attack"] {
+  animation: battle-actor-lunge 0.36s ease-out both;
+  box-shadow: 0 0 0 1px var(--battle-frame-attack-ring), 0 10px 24px rgba(0, 0, 0, 0.36);
+  filter: saturate(1.08) brightness(1.12);
+}
+
+.battle-actor[data-actor-frame="hit"] {
+  animation: battle-actor-hit 0.42s ease-out both;
+  box-shadow: 0 0 0 1px var(--battle-frame-hit-ring), 0 8px 22px rgba(0, 0, 0, 0.36);
+  filter: saturate(0.92) brightness(0.86);
+}
+
+.battle-actor[data-actor-frame="skill"] {
+  animation: battle-actor-ascend 0.6s ease-out both;
+  box-shadow: 0 0 0 1px var(--battle-frame-skill-ring), 0 12px 28px rgba(0, 0, 0, 0.38);
+  filter: saturate(1.16) brightness(1.2);
+}
+
+.battle-actor[data-actor-frame="attack"]::before {
+  animation: battle-avatar-frame-attack 0.36s ease-out both;
+}
+
+.battle-actor[data-actor-frame="hit"]::before {
+  animation: battle-avatar-frame-hit 0.42s ease-out both;
+}
+
+.battle-actor[data-actor-frame="skill"]::before {
+  animation: battle-avatar-frame-skill 0.6s ease-out both;
+}
+
+.battle-actor[data-actor-frame="skill"] .battle-actor-cast-fill {
+  filter: saturate(1.3) brightness(1.16);
 }
 
 .battle-actor-tag {
@@ -1095,6 +1135,57 @@ h2 {
 
   100% {
     box-shadow: 0 0 0 3px rgba(34, 87, 73, 0.42), 0 5px 12px rgba(3, 9, 8, 0.34);
+    filter: brightness(1);
+  }
+}
+
+@keyframes battle-avatar-frame-attack {
+  0% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+
+  45% {
+    transform: scale(1.08);
+    filter: brightness(1.22);
+  }
+
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+@keyframes battle-avatar-frame-hit {
+  0% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+
+  34% {
+    transform: scale(0.92);
+    filter: brightness(0.68);
+  }
+
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+@keyframes battle-avatar-frame-skill {
+  0% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+
+  35% {
+    transform: scale(1.12);
+    filter: brightness(1.35);
+  }
+
+  100% {
+    transform: scale(1);
     filter: brightness(1);
   }
 }
