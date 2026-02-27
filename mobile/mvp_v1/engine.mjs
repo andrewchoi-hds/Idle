@@ -917,14 +917,8 @@ export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
     currentCodeInput,
     targetCodeInput,
   );
-  if (fallbackReason === "target_missing") {
-    return buildOfflineDetailCompareCodeDeltaSummaryTargetMissingLabelKo();
-  }
-  if (fallbackReason === "current_missing") {
-    return buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingLabelKo();
-  }
-  if (fallbackReason === "invalid_target") {
-    return buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo();
+  if (fallbackReason) {
+    return buildOfflineDetailCompareCodeDeltaSummaryFallbackLabelKo(fallbackReason);
   }
   const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
   if (diff.identical) {
@@ -972,7 +966,7 @@ export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryTargetMissingLabelKo() {
-  return `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryTargetMissingMessageLabelKo()}`;
+  return buildOfflineDetailCompareCodeDeltaSummaryFallbackLabelKo("target_missing");
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryTargetMissingMessageLabelKo() {
@@ -980,7 +974,7 @@ export function buildOfflineDetailCompareCodeDeltaSummaryTargetMissingMessageLab
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingLabelKo() {
-  return `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingMessageLabelKo()}`;
+  return buildOfflineDetailCompareCodeDeltaSummaryFallbackLabelKo("current_missing");
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingMessageLabelKo() {
@@ -988,7 +982,7 @@ export function buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingMessageLa
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo() {
-  return `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetMessageLabelKo()}`;
+  return buildOfflineDetailCompareCodeDeltaSummaryFallbackLabelKo("invalid_target");
 }
 
 export function buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetMessageLabelKo() {
@@ -1118,6 +1112,18 @@ export function buildOfflineDetailCompareCodeDeltaSummaryChangedSuffixLabelKo() 
   return "변경";
 }
 
+export function buildOfflineDetailCompareCodeDeltaSummaryFallbackLabelKo(
+  reasonInput,
+) {
+  return buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor(reasonInput)
+    .deltaSummaryLabelKo;
+}
+
+export function buildOfflineDetailCompareCodeDeltaSummaryFallbackTone(reasonInput) {
+  return buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor(reasonInput)
+    .deltaSummaryTone;
+}
+
 export function buildOfflineDetailCompareCodeDeltaSummaryTone(
   currentCodeInput,
   targetCodeInput,
@@ -1126,14 +1132,8 @@ export function buildOfflineDetailCompareCodeDeltaSummaryTone(
     currentCodeInput,
     targetCodeInput,
   );
-  if (fallbackReason === "target_missing") {
-    return "info";
-  }
-  if (fallbackReason === "current_missing") {
-    return "error";
-  }
-  if (fallbackReason === "invalid_target") {
-    return "warn";
+  if (fallbackReason) {
+    return buildOfflineDetailCompareCodeDeltaSummaryFallbackTone(fallbackReason);
   }
   const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
   if (diff.identical) {
@@ -1185,6 +1185,8 @@ export function buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptors() {
       reason: "target_missing",
       messageLabelKo: buildOfflineDetailCompareCodeMatchSummaryTargetMissingMessageLabelKo(),
       fallbackTone: "info",
+      deltaSummaryLabelKo: `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryTargetMissingMessageLabelKo()}`,
+      deltaSummaryTone: "info",
       resultStateLabelKo: "비교 대기 중",
       resultStateTone: "info",
       actionHintLabelKo: "가이드: 비교 코드를 입력하세요.",
@@ -1194,6 +1196,8 @@ export function buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptors() {
       reason: "current_missing",
       messageLabelKo: buildOfflineDetailCompareCodeMatchSummaryCurrentMissingMessageLabelKo(),
       fallbackTone: "error",
+      deltaSummaryLabelKo: `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingMessageLabelKo()}`,
+      deltaSummaryTone: "error",
       resultStateLabelKo: "현재 비교 코드가 없어 대조 불가",
       resultStateTone: "error",
       actionHintLabelKo: "가이드: 오프라인 정산 로그를 열어 현재 코드를 먼저 생성하세요.",
@@ -1203,6 +1207,8 @@ export function buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptors() {
       reason: "invalid_target",
       messageLabelKo: buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo(),
       fallbackTone: "warn",
+      deltaSummaryLabelKo: `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetMessageLabelKo()}`,
+      deltaSummaryTone: "warn",
       resultStateLabelKo: "비교 코드를 입력하세요",
       resultStateTone: "warn",
       actionHintLabelKo: "가이드: ODR1 비교 코드를 붙여넣거나 입력하세요.",
@@ -1228,6 +1234,8 @@ export function buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor(
       messageLabelKo:
         buildOfflineDetailCompareCodeMatchSummaryInvalidTargetMessageLabelKo(),
       fallbackTone: "warn",
+      deltaSummaryLabelKo: `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetMessageLabelKo()}`,
+      deltaSummaryTone: "warn",
       resultStateLabelKo: "비교 코드를 입력하세요",
       resultStateTone: "warn",
       actionHintLabelKo: "가이드: ODR1 비교 코드를 붙여넣거나 입력하세요.",

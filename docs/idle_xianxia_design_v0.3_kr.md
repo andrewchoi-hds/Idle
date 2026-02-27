@@ -1930,3 +1930,11 @@
 
 ## 447) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 fallback 사유 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 448) 다음 순차 작업
+1. [완료] 오프라인 비교 코드 일치 요약 fallback descriptor에 차이 요약 메타(`deltaSummaryLabelKo`, `deltaSummaryTone`)를 추가하고 차이 요약 fallback 헬퍼(`buildOfflineDetailCompareCodeDeltaSummaryFallbackLabelKo`, `buildOfflineDetailCompareCodeDeltaSummaryFallbackTone`)를 도입해 fallback 사유별 라벨/톤 매핑 경로를 단일 함수로 표준화.
+2. [완료] 오프라인 비교 코드 차이 요약 라벨/톤 경로(`buildOfflineDetailCompareCodeDeltaSummaryLabelKo`, `buildOfflineDetailCompareCodeDeltaSummaryTone`)가 fallback 분기에서 직접 조건 비교 대신 차이 요약 fallback 헬퍼를 사용하도록 반영.
+3. [완료] 모바일 회귀 체크에 차이 요약 fallback 헬퍼 시나리오를 추가해 fallback descriptor 라벨·톤 매핑과 unknown 사유 fallback(`invalid_target`) 일관성을 검증.
+
+## 449) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 차이 요약 fallback 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

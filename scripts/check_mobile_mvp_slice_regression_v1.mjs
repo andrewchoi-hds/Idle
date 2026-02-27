@@ -36,6 +36,8 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedSuffixLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryChecksumChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryChangedSuffixLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryFallbackLabelKo,
+  buildOfflineDetailCompareCodeDeltaSummaryFallbackTone,
   buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewChecksumKeyLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedSuffixLabelKo,
@@ -1045,7 +1047,7 @@ async function main() {
     id: "offline_detail_compare_code_delta_summary_target_missing_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeDeltaSummaryTargetMissingLabelKo() ===
-        `차이 요약: ${buildOfflineDetailCompareCodeDeltaSummaryTargetMissingMessageLabelKo()}` &&
+        buildOfflineDetailCompareCodeDeltaSummaryFallbackLabelKo("target_missing") &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         offlineDetailCompareCodeAll,
         "",
@@ -1070,7 +1072,7 @@ async function main() {
     id: "offline_detail_compare_code_delta_summary_current_missing_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingLabelKo() ===
-        `차이 요약: ${buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingMessageLabelKo()}` &&
+        buildOfflineDetailCompareCodeDeltaSummaryFallbackLabelKo("current_missing") &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         "INVALID",
         offlineDetailCompareCodeAll,
@@ -1095,7 +1097,7 @@ async function main() {
     id: "offline_detail_compare_code_delta_summary_invalid_target_label_is_stable",
     passed:
       buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo() ===
-        `차이 요약: ${buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetMessageLabelKo()}` &&
+        buildOfflineDetailCompareCodeDeltaSummaryFallbackLabelKo("invalid_target") &&
       buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
         offlineDetailCompareCodeAll,
         "invalid target",
@@ -1166,6 +1168,24 @@ async function main() {
         offlineDetailCompareCodeCritical,
         offlineDetailCompareCodeAll,
       ).includes(buildOfflineDetailCompareCodeDeltaSummaryItemSeparatorLabelKo()),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_delta_summary_fallback_helpers_are_stable",
+    passed:
+      buildOfflineDetailCompareCodeDeltaSummaryFallbackLabelKo("target_missing") ===
+        buildOfflineDetailCompareCodeDeltaSummaryTargetMissingLabelKo() &&
+      buildOfflineDetailCompareCodeDeltaSummaryFallbackLabelKo("current_missing") ===
+        buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingLabelKo() &&
+      buildOfflineDetailCompareCodeDeltaSummaryFallbackLabelKo("invalid_target") ===
+        buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo() &&
+      buildOfflineDetailCompareCodeDeltaSummaryFallbackLabelKo("unknown") ===
+        buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo() &&
+      buildOfflineDetailCompareCodeDeltaSummaryFallbackTone("target_missing") === "info" &&
+      buildOfflineDetailCompareCodeDeltaSummaryFallbackTone("current_missing") ===
+        "error" &&
+      buildOfflineDetailCompareCodeDeltaSummaryFallbackTone("invalid_target") === "warn" &&
+      buildOfflineDetailCompareCodeDeltaSummaryFallbackTone("unknown") === "warn",
   });
 
   checks.push({
@@ -1556,11 +1576,11 @@ async function main() {
     id: "offline_detail_compare_code_delta_summary_tone_matches_diff",
     passed:
       buildOfflineDetailCompareCodeDeltaSummaryTone(offlineDetailCompareCodeAll, "") ===
-        "info" &&
+        buildOfflineDetailCompareCodeDeltaSummaryFallbackTone("target_missing") &&
       buildOfflineDetailCompareCodeDeltaSummaryTone("INVALID", offlineDetailCompareCodeAll) ===
-        "error" &&
+        buildOfflineDetailCompareCodeDeltaSummaryFallbackTone("current_missing") &&
       buildOfflineDetailCompareCodeDeltaSummaryTone(offlineDetailCompareCodeAll, "invalid") ===
-        "warn" &&
+        buildOfflineDetailCompareCodeDeltaSummaryFallbackTone("invalid_target") &&
       buildOfflineDetailCompareCodeDeltaSummaryTone(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAll,
@@ -1597,6 +1617,18 @@ async function main() {
         ].join("|") &&
       buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptors()
         .map((descriptor) => descriptor.fallbackTone)
+        .join("|") ===
+        ["info", "error", "warn"].join("|") &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptors()
+        .map((descriptor) => descriptor.deltaSummaryLabelKo)
+        .join("|") ===
+        [
+          buildOfflineDetailCompareCodeDeltaSummaryTargetMissingLabelKo(),
+          buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingLabelKo(),
+          buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo(),
+        ].join("|") &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptors()
+        .map((descriptor) => descriptor.deltaSummaryTone)
         .join("|") ===
         ["info", "error", "warn"].join("|") &&
       buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptors()
@@ -1639,6 +1671,19 @@ async function main() {
       buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("invalid_target")
         .fallbackTone === "warn" &&
       buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("target_missing")
+        .deltaSummaryLabelKo === buildOfflineDetailCompareCodeDeltaSummaryTargetMissingLabelKo() &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("current_missing")
+        .deltaSummaryLabelKo ===
+        buildOfflineDetailCompareCodeDeltaSummaryCurrentMissingLabelKo() &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("invalid_target")
+        .deltaSummaryLabelKo === buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo() &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("target_missing")
+        .deltaSummaryTone === "info" &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("current_missing")
+        .deltaSummaryTone === "error" &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("invalid_target")
+        .deltaSummaryTone === "warn" &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("target_missing")
         .resultStateLabelKo === buildOfflineDetailCompareResultPendingLabelKo() &&
       buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("current_missing")
         .resultStateLabelKo === buildOfflineDetailCompareMissingCurrentLabelKo() &&
@@ -1666,6 +1711,10 @@ async function main() {
         "invalid_target" &&
       buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("unknown")
         .fallbackTone === "warn" &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("unknown")
+        .deltaSummaryLabelKo === buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo() &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("unknown")
+        .deltaSummaryTone === "warn" &&
       buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("unknown")
         .resultStateLabelKo === buildOfflineDetailCompareResultInputRequiredLabelKo() &&
       buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("unknown")
