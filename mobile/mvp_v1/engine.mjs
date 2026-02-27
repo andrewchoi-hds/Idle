@@ -1314,6 +1314,83 @@ function formatSignedDelta(valueInput) {
   return String(value);
 }
 
+export function buildOfflineDetailCompareCodeDeltaPartDescriptors(diffInput) {
+  const diff = diffInput && typeof diffInput === "object" ? diffInput : null;
+  const current = diff && diff.current ? diff.current : {};
+  const target = diff && diff.target ? diff.target : {};
+  return [
+    {
+      key: "total_events",
+      isChanged: diff ? diff.sameTotalEvents !== true : false,
+      deltaValue: (Number(target.totalEvents) || 0) - (Number(current.totalEvents) || 0),
+    },
+    {
+      key: "critical_visible_events",
+      isChanged: diff ? diff.sameCriticalVisibleEvents !== true : false,
+      deltaValue:
+        (Number(target.criticalVisibleEvents) || 0) -
+        (Number(current.criticalVisibleEvents) || 0),
+    },
+    {
+      key: "hidden_critical_events",
+      isChanged: diff ? diff.sameHiddenCriticalEvents !== true : false,
+      deltaValue:
+        (Number(target.hiddenCriticalEvents) || 0) -
+        (Number(current.hiddenCriticalEvents) || 0),
+    },
+    {
+      key: "view_mode",
+      isChanged: diff ? diff.sameViewMode !== true : false,
+      currentValue: current.viewMode,
+      targetValue: target.viewMode,
+    },
+    {
+      key: "all_checksum",
+      isChanged: diff ? diff.sameAllChecksum !== true : false,
+    },
+    {
+      key: "view_checksum",
+      isChanged: diff ? diff.sameViewChecksum !== true : false,
+    },
+  ];
+}
+
+export function buildOfflineDetailCompareCodeDeltaPartLabelKo(descriptorInput) {
+  const descriptor =
+    descriptorInput && typeof descriptorInput === "object" ? descriptorInput : {};
+  if (descriptor.isChanged !== true) {
+    return "";
+  }
+  if (descriptor.key === "total_events") {
+    return buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(
+      descriptor.deltaValue,
+    );
+  }
+  if (descriptor.key === "critical_visible_events") {
+    return buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo(
+      descriptor.deltaValue,
+    );
+  }
+  if (descriptor.key === "hidden_critical_events") {
+    return buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo(
+      descriptor.deltaValue,
+    );
+  }
+  if (descriptor.key === "view_mode") {
+    return buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo(
+      descriptor.currentValue,
+      descriptor.targetValue,
+    );
+  }
+  if (descriptor.key === "all_checksum") {
+    return buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo();
+  }
+  if (descriptor.key === "view_checksum") {
+    return buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo();
+  }
+  return "";
+}
+
 export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
   currentCodeInput,
   targetCodeInput,
@@ -1329,42 +1406,9 @@ export function buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
   if (diff.identical) {
     return buildOfflineDetailCompareCodeDeltaSummaryNoDifferenceLabelKo();
   }
-  const parts = [];
-  if (!diff.sameTotalEvents) {
-    parts.push(
-      buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(
-        diff.target.totalEvents - diff.current.totalEvents,
-      ),
-    );
-  }
-  if (!diff.sameCriticalVisibleEvents) {
-    parts.push(
-      buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo(
-        diff.target.criticalVisibleEvents - diff.current.criticalVisibleEvents,
-      ),
-    );
-  }
-  if (!diff.sameHiddenCriticalEvents) {
-    parts.push(
-      buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo(
-        diff.target.hiddenCriticalEvents - diff.current.hiddenCriticalEvents,
-      ),
-    );
-  }
-  if (!diff.sameViewMode) {
-    parts.push(
-      buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo(
-        diff.current.viewMode,
-        diff.target.viewMode,
-      ),
-    );
-  }
-  if (!diff.sameAllChecksum) {
-    parts.push(buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo());
-  }
-  if (!diff.sameViewChecksum) {
-    parts.push(buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo());
-  }
+  const parts = buildOfflineDetailCompareCodeDeltaPartDescriptors(diff)
+    .map((descriptor) => buildOfflineDetailCompareCodeDeltaPartLabelKo(descriptor))
+    .filter((part) => typeof part === "string" && part.length > 0);
   return parts.length > 0
     ? `${buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo()} ${parts.join(buildOfflineDetailCompareCodeDeltaSummaryItemSeparatorLabelKo())}`
     : buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceLabelKo();
