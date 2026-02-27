@@ -21,6 +21,11 @@ const REQUIRED_HTML_IDS = [
   "battleSceneEnemyCastBar",
   "battleSceneEnemyVitals",
   "battleSceneClashCore",
+  "battleSceneRoundBadge",
+  "battleSceneComboBadge",
+  "battleSceneDpsBadge",
+  "battleSceneSkillBanner",
+  "battleSceneTicker",
   "statQi",
   "statSpiritCoin",
   "statRebirthEssence",
@@ -139,6 +144,11 @@ const REQUIRED_DOM_KEYS = [
   "battleSceneEnemyCastBar",
   "battleSceneEnemyVitals",
   "battleSceneClashCore",
+  "battleSceneRoundBadge",
+  "battleSceneComboBadge",
+  "battleSceneDpsBadge",
+  "battleSceneSkillBanner",
+  "battleSceneTicker",
   "previewMinorFailPct",
   "previewRetreatFailPct",
   "previewRiskLabel",
@@ -252,10 +262,15 @@ async function main() {
   assertIncludes(app, "function exportRealtimeReportToPayload(", "app.mjs", failures);
   assertIncludes(app, "function setOfflineDetailExpanded(", "app.mjs", failures);
   assertIncludes(app, "function runBattleSceneDuelTick(", "app.mjs", failures);
+  assertIncludes(app, "function pushBattleSceneTicker(", "app.mjs", failures);
+  assertIncludes(app, "function setBattleSceneSkillBanner(", "app.mjs", failures);
   assertIncludes(app, "function startRealtimeAuto(", "app.mjs", failures);
   assertIncludes(app, "function stopRealtimeAuto(", "app.mjs", failures);
   assertIncludes(css, ".battle-actor-hp-track", "app.css", failures);
   assertIncludes(css, ".battle-scene-clash-core", "app.css", failures);
+  assertIncludes(css, ".battle-scene-top-hud", "app.css", failures);
+  assertIncludes(css, ".battle-scene-skill-banner", "app.css", failures);
+  assertIncludes(css, ".battle-scene-ticker", "app.css", failures);
   assertIncludes(css, ".offline-modal", "app.css", failures);
   assertIncludes(css, ".offline-compare-result.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-current-summary.tone-error", "app.css", failures);

@@ -39,6 +39,11 @@
         <div id="battleSceneArena" class="battle-scene-arena" data-scene-state="idle">
           <div class="battle-scene-flow battle-scene-flow-back" aria-hidden="true"></div>
           <div class="battle-scene-flow battle-scene-flow-front" aria-hidden="true"></div>
+          <div class="battle-scene-top-hud" aria-hidden="true">
+            <span id="battleSceneRoundBadge" class="battle-scene-chip">1R</span>
+            <span id="battleSceneComboBadge" class="battle-scene-chip">연격 x0</span>
+            <span id="battleSceneDpsBadge" class="battle-scene-chip">압력 0</span>
+          </div>
           <div class="battle-aura battle-aura-player" aria-hidden="true"></div>
           <div class="battle-aura battle-aura-enemy" aria-hidden="true"></div>
           <div id="battleSceneSparkLayer" class="battle-scene-spark-layer" aria-hidden="true"></div>
@@ -66,11 +71,17 @@
             <p id="battleSceneEnemyVitals" class="battle-actor-vitals">HP 100% · 기세 0%</p>
           </article>
           <div id="battleSceneClashCore" class="battle-scene-clash-core" aria-hidden="true"></div>
+          <div id="battleSceneSkillBanner" class="battle-scene-skill-banner tone-info" aria-hidden="true">
+            기세 수렴
+          </div>
           <div id="battleSceneFlash" class="battle-scene-flash" aria-hidden="true"></div>
           <div id="battleSceneFloatLayer" class="battle-scene-float-layer" aria-hidden="true"></div>
         </div>
         <p id="battleSceneResult" class="sub battle-scene-result tone-info">
           전장 파동 감지 중 · 자동/실시간 루프에서 연출이 계속 갱신됩니다.
+        </p>
+        <p id="battleSceneTicker" class="sub battle-scene-ticker tone-info">
+          전투 신호 대기 · 상시 교전 로그를 수집 중입니다.
         </p>
       </section>
 
