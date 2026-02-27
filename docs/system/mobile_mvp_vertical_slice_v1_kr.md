@@ -221,7 +221,9 @@ npm run mobile:mvp:check
   - 오프라인 payload 기반 비교 코드 추출(`extractOfflineDetailCompareCodeFromPayloadText`)이 `detailViewSnapshotAtExport`/`detailReportSnapshot` 우선순위와 일반 텍스트 fallback을 일관되게 적용하는지 검증
   - 오프라인 payload 추출 출처 descriptor 헬퍼(`buildOfflineDetailComparePayloadExtractSourceDescriptors`, `buildOfflineDetailComparePayloadExtractSourceDescriptor`)가 JSON 스냅샷 경로 우선순위(`detail_view_snapshot > detail_report_snapshot`)를 일관되게 반환하는지 검증
   - 오프라인 payload 추출 출처 우선순위가 descriptor 헬퍼 순서를 기준으로 적용되는지 검증
+  - 오프라인 payload 추출 fallback descriptor 헬퍼(`buildOfflineDetailComparePayloadExtractFallbackDescriptors`, `buildOfflineDetailComparePayloadExtractFallbackDescriptor`)가 fallback 코드 유무에 따라 `text/none` source 매핑을 일관되게 반환하는지 검증
   - 오프라인 payload 비교 코드 출처 메타(`extractOfflineDetailCompareCodeFromPayloadTextWithSource`)가 `detail_view_snapshot/detail_report_snapshot/text/none` 분기를 일관되게 반환하는지 검증
+  - 오프라인 payload 비교 코드 출처 메타(`extractOfflineDetailCompareCodeFromPayloadTextWithSource`)가 fallback 구간에서 descriptor 기반 `text/none` source 매핑을 일관되게 반영하는지 검증
   - 오프라인 비교 코드 출처 descriptor 헬퍼(`buildOfflineDetailCompareCodeSourceDescriptors`, `buildOfflineDetailCompareCodeSourceDescriptor`)가 source key별 라벨/톤 매핑과 unknown fallback(`unknown`)을 일관되게 반환하는지 검증
   - 오프라인 비교 코드 출처 라벨(`buildOfflineDetailCompareCodeSourceLabelKo`)이 source key별 표시 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 출처 톤(`buildOfflineDetailCompareCodeSourceTone`)이 source key별 `info/warn/error`를 일관되게 반환하는지 검증
@@ -249,6 +251,7 @@ npm run mobile:mvp:check
   - 오프라인 비교 결과 대기 라벨(`buildOfflineDetailCompareResultPendingLabelKo`)이 대조 미실행/대상 미입력 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 결과 입력 필요 라벨(`buildOfflineDetailCompareResultInputRequiredLabelKo`)이 대상 형식 오류 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 현재 요약 라벨(`buildOfflineDetailCompareCodeCurrentSummaryLabelKo`)이 빈 입력/형식 오류/전체·핵심 보기 케이스를 일관되게 반환하는지 검증
+  - 오프라인 비교 코드 요약 상태 descriptor 헬퍼(`buildOfflineDetailCompareCodeSummaryStateDescriptors`, `buildOfflineDetailCompareCodeSummaryStateDescriptor`)가 `empty/invalid/valid` 상태별 요약 톤 매핑(`info/warn/info`)을 일관되게 반환하는지 검증
   - 오프라인 비교 코드 현재 요약 톤(`buildOfflineDetailCompareCodeCurrentSummaryTone`)이 빈 입력/형식 오류/정상 입력 케이스에서 `info/warn`을 일관되게 반환하는지 검증
   - 오프라인 비교 코드 대상 요약 라벨(`buildOfflineDetailCompareCodeTargetSummaryLabelKo`)이 빈 입력/형식 오류/전체·핵심 보기 케이스를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 대상 요약 톤(`buildOfflineDetailCompareCodeTargetSummaryTone`)이 빈 입력/형식 오류/정상 입력 케이스에서 `info/warn`을 일관되게 반환하는지 검증

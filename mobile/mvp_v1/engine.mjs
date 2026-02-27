@@ -664,6 +664,35 @@ export function buildOfflineDetailComparePayloadExtractSourceDescriptor(sourceIn
   );
 }
 
+export function buildOfflineDetailComparePayloadExtractFallbackDescriptors() {
+  return [
+    {
+      fallbackKind: "text",
+      source: "text",
+      keepExtractedCode: true,
+    },
+    {
+      fallbackKind: "none",
+      source: "none",
+      keepExtractedCode: false,
+    },
+  ];
+}
+
+export function buildOfflineDetailComparePayloadExtractFallbackDescriptor(codeInput) {
+  const code = typeof codeInput === "string" ? codeInput.trim() : "";
+  const fallbackKind = code ? "text" : "none";
+  return (
+    buildOfflineDetailComparePayloadExtractFallbackDescriptors().find(
+      (descriptor) => descriptor.fallbackKind === fallbackKind,
+    ) || {
+      fallbackKind: "none",
+      source: "none",
+      keepExtractedCode: false,
+    }
+  );
+}
+
 export function extractOfflineDetailCompareCodeFromPayloadTextWithSource(payloadInput) {
   const text = typeof payloadInput === "string" ? payloadInput.trim() : "";
   if (!text) {
@@ -689,15 +718,11 @@ export function extractOfflineDetailCompareCodeFromPayloadTextWithSource(payload
     // Ignore JSON parse failures and fall back to first detected token.
   }
   const fallbackCode = extractOfflineDetailCompareCode(text);
-  if (fallbackCode) {
-    return {
-      code: fallbackCode,
-      source: "text",
-    };
-  }
+  const fallbackDescriptor =
+    buildOfflineDetailComparePayloadExtractFallbackDescriptor(fallbackCode);
   return {
-    code: "",
-    source: "none",
+    code: fallbackDescriptor.keepExtractedCode ? fallbackCode : "",
+    source: fallbackDescriptor.source,
   };
 }
 
@@ -724,16 +749,46 @@ function buildOfflineDetailCompareCodeSummaryLabelKo(codeInput, labelPrefixInput
   return `${normalizedPrefix}: 총 ${parsed.totalEvents} · 핵심표시 ${parsed.criticalVisibleEvents} · 숨김 ${parsed.hiddenCriticalEvents} · 보기 ${viewLabelKo}`;
 }
 
+export function buildOfflineDetailCompareCodeSummaryStateDescriptors() {
+  return [
+    {
+      state: "empty",
+      tone: "info",
+    },
+    {
+      state: "invalid",
+      tone: "warn",
+    },
+    {
+      state: "valid",
+      tone: "info",
+    },
+  ];
+}
+
+export function buildOfflineDetailCompareCodeSummaryStateDescriptor(codeInput) {
+  const text = typeof codeInput === "string" ? codeInput.trim() : "";
+  const state = !text
+    ? "empty"
+    : parseOfflineDetailCompareCode(text)
+      ? "valid"
+      : "invalid";
+  return (
+    buildOfflineDetailCompareCodeSummaryStateDescriptors().find(
+      (descriptor) => descriptor.state === state,
+    ) || {
+      state: "invalid",
+      tone: "warn",
+    }
+  );
+}
+
 export function buildOfflineDetailCompareCodeTargetSummaryLabelKo(codeInput) {
   return buildOfflineDetailCompareCodeSummaryLabelKo(codeInput, "대상 코드");
 }
 
 export function buildOfflineDetailCompareCodeTargetSummaryTone(codeInput) {
-  const text = typeof codeInput === "string" ? codeInput.trim() : "";
-  if (!text) {
-    return "info";
-  }
-  return parseOfflineDetailCompareCode(text) ? "info" : "warn";
+  return buildOfflineDetailCompareCodeSummaryStateDescriptor(codeInput).tone;
 }
 
 export function buildOfflineDetailCompareCodeCurrentSummaryLabelKo(codeInput) {
@@ -741,11 +796,7 @@ export function buildOfflineDetailCompareCodeCurrentSummaryLabelKo(codeInput) {
 }
 
 export function buildOfflineDetailCompareCodeCurrentSummaryTone(codeInput) {
-  const text = typeof codeInput === "string" ? codeInput.trim() : "";
-  if (!text) {
-    return "info";
-  }
-  return parseOfflineDetailCompareCode(text) ? "info" : "warn";
+  return buildOfflineDetailCompareCodeSummaryStateDescriptor(codeInput).tone;
 }
 
 export function parseOfflineDetailCompareCode(codeInput) {
