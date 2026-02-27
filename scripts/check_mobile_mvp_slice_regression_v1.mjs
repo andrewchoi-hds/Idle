@@ -134,6 +134,8 @@ import {
   extractOfflineDetailCompareCode,
   extractOfflineDetailCompareCodeFromPayloadText,
   extractOfflineDetailCompareCodeFromPayloadTextWithSource,
+  buildOfflineDetailComparePayloadExtractSourceDescriptors,
+  buildOfflineDetailComparePayloadExtractSourceDescriptor,
   filterOfflineDetailEventsByMode,
   isCopyTargetSlotDisabled,
   isOfflineDetailCompareCode,
@@ -712,6 +714,23 @@ async function main() {
       extractOfflineDetailCompareCodeFromPayloadText("payload missing compare code") === "",
   });
 
+  checks.push({
+    id: "offline_detail_compare_payload_extract_source_descriptors_are_stable",
+    passed:
+      buildOfflineDetailComparePayloadExtractSourceDescriptors().length === 2 &&
+      buildOfflineDetailComparePayloadExtractSourceDescriptors()
+        .map((descriptor) => descriptor.source)
+        .join("|") === ["detail_view_snapshot", "detail_report_snapshot"].join("|") &&
+      buildOfflineDetailComparePayloadExtractSourceDescriptor("detail_view_snapshot")
+        .snapshotField === "detailViewSnapshotAtExport" &&
+      buildOfflineDetailComparePayloadExtractSourceDescriptor("detail_report_snapshot")
+        .snapshotField === "detailReportSnapshot" &&
+      buildOfflineDetailComparePayloadExtractSourceDescriptor("unknown").source ===
+        "detail_view_snapshot" &&
+      buildOfflineDetailComparePayloadExtractSourceDescriptor("unknown").snapshotField ===
+        "detailViewSnapshotAtExport",
+  });
+
   const payloadSourceFromDetailView = extractOfflineDetailCompareCodeFromPayloadTextWithSource(
     JSON.stringify({
       detailViewSnapshotAtExport: {
@@ -735,6 +754,15 @@ async function main() {
   const payloadSourceMissing = extractOfflineDetailCompareCodeFromPayloadTextWithSource(
     "payload missing compare code",
   );
+  checks.push({
+    id: "offline_detail_compare_payload_extract_source_priority_is_stable",
+    passed:
+      payloadSourceFromDetailView.source ===
+        buildOfflineDetailComparePayloadExtractSourceDescriptors()[0].source &&
+      payloadSourceFromDetailReport.source ===
+        buildOfflineDetailComparePayloadExtractSourceDescriptors()[1].source,
+  });
+
   checks.push({
     id: "offline_detail_compare_code_payload_source_is_stable",
     passed:
