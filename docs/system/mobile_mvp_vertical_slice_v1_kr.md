@@ -155,7 +155,9 @@ npm run mobile:mvp:serve
 ## 5) 오프라인 복귀 정산 규칙
 - 계산:
   - `rawOfflineSec = floor((nowEpochMs - anchorEpochMs) / 1000)`
-  - `appliedOfflineSec = min(rawOfflineSec, offlineCapHours * 3600)`
+  - `cappedOfflineSec = min(rawOfflineSec, offlineCapHours * 3600)`
+  - `offlineEfficiency = 0.9` (기본값, `runOfflineCatchup` 옵션으로 override 가능)
+  - `appliedOfflineSec = round(cappedOfflineSec * offlineEfficiency)` (`cappedOfflineSec > 0`일 때 최소 1초 보장)
 - anchor 우선순위:
   - `lastActiveEpochMs`
   - `lastSavedAtIso`(파싱 가능 시)
@@ -181,7 +183,7 @@ npm run mobile:mvp:serve
 ## 6) 모바일 뷰포트 최적화
 - `viewport-fit=cover` + CSS `env(safe-area-inset-*)` 패딩 적용.
 - 버튼/입력 최소 높이 44px로 터치 타겟 확보.
-- 작은 화면(`<=680px`)에서 액션 패널(`.actions`) sticky 고정.
+- 작은 화면(`<=680px`)에서 패널 순서 가시성을 위해 액션 패널(`.actions`)을 일반 flow(`position: relative`)로 유지.
 - 로그 목록 스크롤 영역(`max-height`)로 긴 로그에서도 조작 영역 유지.
 - 상태 텍스트(`aria-live="polite"`)로 복귀 정산/오류 메시지 접근성 강화.
 
@@ -318,6 +320,7 @@ npm run mobile:mvp:check
   - 오프라인 비교 결과 톤(`buildOfflineDetailCompareResultStateTone`)이 대기/입력 필요/일치/보기 차이/현재 코드 없음 케이스에서 `info/warn/error`를 일관되게 반환하는지 검증
   - 오프라인 비교 결과 delta part descriptor 헬퍼(`buildOfflineDetailCompareResultViewModeLabelKo`, `buildOfflineDetailCompareResultDeltaPartDescriptors`, `buildOfflineDetailCompareResultDeltaPartLabelKo`)가 `total/critical_visible/hidden/view_mode` 변화 파트 조합을 일관되게 반환하는지 검증
   - 오프라인 비교 집계 건수 일치 descriptor 헬퍼(`buildOfflineDetailCompareAggregateCountMatchDescriptors`, `isOfflineDetailCompareAggregateCountMatched`)가 `total/critical_visible/hidden` 집계 일치 상태를 일관되게 반환하는지 검증
+  - 오프라인 비교 메타 일치 descriptor 헬퍼(`buildOfflineDetailCompareMetaMatchDescriptors`, `buildOfflineDetailCompareMetaMatchDescriptor`)가 `view_mode/all_checksum/view_checksum` 판정과 unknown key fallback을 일관되게 반환하는지 검증
   - 오프라인 비교 comparable outcome descriptor 헬퍼(`buildOfflineDetailCompareComparableOutcomeDescriptors`, `buildOfflineDetailCompareComparableOutcomeDescriptor`)가 `identical/view_mode_mismatch/checksum_mismatch/aggregate_mismatch` 상태 매핑과 결과 톤·가이드 라벨/톤 메타를 일관되게 반환하는지 검증
   - 오프라인 비교 결과 fallback 라벨 헬퍼(`buildOfflineDetailCompareResultFallbackLabelKo`)가 fallback 사유별 라벨 매핑을 일관되게 반환하는지 검증
   - 오프라인 비교 결과 상태 fallback 헬퍼(`buildOfflineDetailCompareResultStateFallbackLabelKo`, `buildOfflineDetailCompareResultStateFallbackTone`)가 fallback 사유별 라벨/톤 매핑을 일관되게 반환하는지 검증
@@ -354,7 +357,7 @@ npm run mobile:mvp:check
   - 전투 속도 설정에 따른 자동 루프 cadence 차이 검증
   - 타임라인 오프셋 기반 1초 chunk 연속 실행 시 cadence 유지 검증(실시간 루프 기반)
   - 자동 10초 루프 실행
-  - 오프라인 복귀 20시간 입력 시 설정 cap(`offlineCapHours`) 정산 검증
+  - 오프라인 복귀 20시간 입력 시 cap(`offlineCapHours`) + 효율(`offlineEfficiency=90%`)이 함께 반영되어 적용 시간이 일관되게 축소되는지 검증
   - 오프라인 경과시간 0초일 때 정산 skip(`time_not_elapsed`) 검증
   - 저장 직렬화/복원 roundtrip
   - 모바일 화면 필수 DOM id/모달 요소/safe-area 스타일 계약 검증

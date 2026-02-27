@@ -6,6 +6,7 @@ export const MOBILE_MVP_SLOT_LOCKS_KEY = "idle_xianxia_mobile_mvp_v1_slot_locks"
 const DEFAULT_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC = 6;
 const MIN_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC = 0;
 const MAX_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC = 30;
+const DEFAULT_OFFLINE_CATCHUP_EFFICIENCY = 0.9;
 const SLOT_SUMMARY_STATES = new Set(["ok", "empty", "corrupt"]);
 
 function clamp(value, min, max) {
@@ -870,6 +871,40 @@ export function isOfflineDetailCompareAggregateCountMatched(diffInput) {
   );
 }
 
+export function buildOfflineDetailCompareMetaMatchDescriptors(diffInput) {
+  const diff = diffInput && typeof diffInput === "object" ? diffInput : {};
+  return [
+    {
+      key: "view_mode",
+      isMatched: diff.sameViewMode === true,
+    },
+    {
+      key: "all_checksum",
+      isMatched: diff.sameAllChecksum === true,
+    },
+    {
+      key: "view_checksum",
+      isMatched: diff.sameViewChecksum === true,
+    },
+  ];
+}
+
+export function buildOfflineDetailCompareMetaMatchDescriptor(diffInput, keyInput) {
+  const key = typeof keyInput === "string" ? keyInput : "";
+  return (
+    buildOfflineDetailCompareMetaMatchDescriptors(diffInput).find(
+      (descriptor) => descriptor.key === key,
+    ) || {
+      key,
+      isMatched: false,
+    }
+  );
+}
+
+function isOfflineDetailCompareMetaMatched(diffInput, keyInput) {
+  return buildOfflineDetailCompareMetaMatchDescriptor(diffInput, keyInput).isMatched === true;
+}
+
 export function buildOfflineDetailCompareResultViewModeLabelKo(viewModeInput) {
   return viewModeInput === "critical" ? "핵심" : "전체";
 }
@@ -932,6 +967,9 @@ export function buildOfflineDetailCompareResultLabelKo(
   targetCodeInput,
 ) {
   const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
+  const aggregateMatched = isOfflineDetailCompareAggregateCountMatched(diff);
+  const allChecksumMatched = isOfflineDetailCompareMetaMatched(diff, "all_checksum");
+  const viewChecksumMatched = isOfflineDetailCompareMetaMatched(diff, "view_checksum");
   if (!diff.comparable) {
     return buildOfflineDetailCompareResultFallbackLabelKo(
       resolveOfflineDetailCompareFallbackReasonFromDiff(diff),
@@ -940,17 +978,10 @@ export function buildOfflineDetailCompareResultLabelKo(
   if (diff.identical) {
     return buildOfflineDetailCompareResultIdenticalLabelKo();
   }
-  if (
-    isOfflineDetailCompareAggregateCountMatched(diff) &&
-    diff.sameAllChecksum &&
-    !diff.sameViewChecksum
-  ) {
+  if (aggregateMatched && allChecksumMatched && !viewChecksumMatched) {
     return buildOfflineDetailCompareResultViewMismatchLabelKo();
   }
-  if (
-    isOfflineDetailCompareAggregateCountMatched(diff) &&
-    !diff.sameAllChecksum
-  ) {
+  if (aggregateMatched && !allChecksumMatched) {
     return buildOfflineDetailCompareResultAggregateMismatchLabelKo();
   }
   const parts = buildOfflineDetailCompareResultDeltaPartDescriptors(diff)
@@ -1099,17 +1130,17 @@ export function buildOfflineDetailCompareComparableOutcomeDescriptor(diffInput) 
   if (!diff || diff.comparable !== true) {
     return descriptorFor("aggregate_mismatch");
   }
+  const aggregateMatched = isOfflineDetailCompareAggregateCountMatched(diff);
+  const viewModeMatched = isOfflineDetailCompareMetaMatched(diff, "view_mode");
+  const allChecksumMatched = isOfflineDetailCompareMetaMatched(diff, "all_checksum");
+  const viewChecksumMatched = isOfflineDetailCompareMetaMatched(diff, "view_checksum");
   if (diff.identical) {
     return descriptorFor("identical");
   }
-  if (
-    !diff.sameViewMode &&
-    isOfflineDetailCompareAggregateCountMatched(diff) &&
-    diff.sameAllChecksum
-  ) {
+  if (!viewModeMatched && aggregateMatched && allChecksumMatched) {
     return descriptorFor("view_mode_mismatch");
   }
-  if (!diff.sameAllChecksum || !diff.sameViewChecksum) {
+  if (!allChecksumMatched || !viewChecksumMatched) {
     return descriptorFor("checksum_mismatch");
   }
   return descriptorFor("aggregate_mismatch");
@@ -1271,16 +1302,16 @@ export function buildOfflineDetailCompareViewModeAlignmentDescriptor(
   if (!diff.comparable) {
     return descriptorFor(diff.reason === "target_invalid" ? "target_invalid" : "current_invalid");
   }
+  const aggregateMatched = isOfflineDetailCompareAggregateCountMatched(diff);
+  const viewModeMatched = isOfflineDetailCompareMetaMatched(diff, "view_mode");
+  const allChecksumMatched = isOfflineDetailCompareMetaMatched(diff, "all_checksum");
   if (diff.identical) {
     return descriptorFor("identical");
   }
-  if (diff.sameViewMode) {
+  if (viewModeMatched) {
     return descriptorFor("already_aligned");
   }
-  if (
-    isOfflineDetailCompareAggregateCountMatched(diff) &&
-    diff.sameAllChecksum
-  ) {
+  if (aggregateMatched && allChecksumMatched) {
     const targetMode = diff.target.viewMode === "critical" ? "critical" : "all";
     const baseDescriptor = descriptorFor("view_only_mismatch");
     return {
@@ -1585,16 +1616,32 @@ export function buildOfflineDetailCompareCodeDeltaSummaryTone(
     return buildOfflineDetailCompareCodeDeltaSummaryFallbackTone(fallbackReason);
   }
   const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
+  const aggregateMatched = isOfflineDetailCompareAggregateCountMatched(diff);
+  const viewModeMatched = isOfflineDetailCompareMetaMatched(diff, "view_mode");
+  const allChecksumMatched = isOfflineDetailCompareMetaMatched(diff, "all_checksum");
+  const viewChecksumMatched = isOfflineDetailCompareMetaMatched(diff, "view_checksum");
   if (diff.identical) {
     return "info";
   }
-  if (!isOfflineDetailCompareAggregateCountMatched(diff)) {
+  if (!aggregateMatched) {
     return "error";
   }
-  if (!diff.sameAllChecksum || !diff.sameViewChecksum || !diff.sameViewMode) {
+  if (!allChecksumMatched || !viewChecksumMatched || !viewModeMatched) {
     return "warn";
   }
   return "warn";
+}
+
+export function normalizeOfflineCatchupEfficiency(value, fallback) {
+  const normalizedFallback = clamp(
+    Number.isFinite(Number(fallback))
+      ? Number(fallback)
+      : DEFAULT_OFFLINE_CATCHUP_EFFICIENCY,
+    0,
+    1,
+  );
+  const parsedValue = Number(value);
+  return clamp(Number.isFinite(parsedValue) ? parsedValue : normalizedFallback, 0, 1);
 }
 
 export function buildOfflineDetailCompareCodeMatchSummaryLabelKo(
@@ -3721,8 +3768,24 @@ export function runOfflineCatchup(context, state, rng, options = {}) {
   const rawOfflineSec = Math.max(0, Math.floor((nowEpochMs - anchorEpochMs) / 1000));
   const maxOfflineHours = clamp(Number(options.maxOfflineHours) || 12, 0, 168);
   const maxOfflineSec = Math.floor(maxOfflineHours * 3600);
-  const appliedOfflineSec = Math.min(rawOfflineSec, maxOfflineSec);
-  const cappedByMaxOffline = rawOfflineSec > appliedOfflineSec;
+  const cappedOfflineSec = Math.min(rawOfflineSec, maxOfflineSec);
+  const offlineEfficiency = normalizeOfflineCatchupEfficiency(
+    options.offlineEfficiency,
+    DEFAULT_OFFLINE_CATCHUP_EFFICIENCY,
+  );
+  const appliedOfflineSec =
+    cappedOfflineSec <= 0
+      ? 0
+      : Math.max(
+          1,
+          Math.min(
+            cappedOfflineSec,
+            Math.round(cappedOfflineSec * offlineEfficiency),
+          ),
+        );
+  const cappedByMaxOffline = rawOfflineSec > cappedOfflineSec;
+  const reducedByEfficiency = appliedOfflineSec < cappedOfflineSec;
+  const offlineEfficiencyPct = Math.round(offlineEfficiency * 100);
   const syncAnchorToNow = pickBoolean(options.syncAnchorToNow, true);
   const maxCollectedEvents = clamp(
     toNonNegativeInt(options.maxCollectedEvents, 24),
@@ -3789,7 +3852,7 @@ export function runOfflineCatchup(context, state, rng, options = {}) {
     addLog(
       state,
       "offline",
-      `오프라인 복귀 정산: ${appliedOfflineSec}초 적용 (raw ${rawOfflineSec}초${cappedByMaxOffline ? `, cap ${maxOfflineSec}초` : ""})`,
+      `오프라인 복귀 정산: ${appliedOfflineSec}초 적용 (raw ${rawOfflineSec}초${cappedByMaxOffline ? `, cap ${cappedOfflineSec}초` : ""}, 효율 ${offlineEfficiencyPct}%${reducedByEfficiency ? ", 효율 보정 적용" : ""})`,
     );
   }
 
@@ -3803,7 +3866,9 @@ export function runOfflineCatchup(context, state, rng, options = {}) {
       anchorEpochMs,
       rawOfflineSec,
       maxOfflineSec,
+      cappedOfflineSec,
       appliedOfflineSec,
+      offlineEfficiency,
       cappedByMaxOffline,
       skipReason,
       autoBreakthroughWarmupRemainingSecBefore,
