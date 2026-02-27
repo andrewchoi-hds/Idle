@@ -101,6 +101,9 @@ import {
   buildOfflineDetailCompareResultViewMismatchLabelKo,
   buildOfflineDetailCompareResultAggregateMismatchLabelKo,
   buildOfflineDetailCompareResultCodeDifferenceLabelKo,
+  buildOfflineDetailCompareResultViewModeLabelKo,
+  buildOfflineDetailCompareResultDeltaPartDescriptors,
+  buildOfflineDetailCompareResultDeltaPartLabelKo,
   buildOfflineDetailCompareResultFallbackLabelKo,
   buildOfflineDetailCompareMissingCurrentLabelKo,
   buildOfflineDetailCompareResultPendingLabelKo,
@@ -679,6 +682,18 @@ async function main() {
   const offlineDetailCompareMatchSummaryAggregateMismatchDescriptors =
     buildOfflineDetailCompareCodeMatchSummaryItemDescriptors(
       offlineDetailCompareAggregateMismatchDiff,
+    );
+  const offlineDetailCompareResultDeltaAllMatchDescriptors =
+    buildOfflineDetailCompareResultDeltaPartDescriptors(offlineDetailCompareAllMatchDiff);
+  const offlineDetailCompareResultDeltaViewMismatchDescriptors =
+    buildOfflineDetailCompareResultDeltaPartDescriptors(offlineDetailCompareViewMismatchDiff);
+  const offlineDetailCompareResultDeltaAggregateMismatchDescriptors =
+    buildOfflineDetailCompareResultDeltaPartDescriptors(
+      offlineDetailCompareAggregateMismatchDiff,
+    );
+  const offlineDetailCompareResultDeltaHiddenMismatchDescriptors =
+    buildOfflineDetailCompareResultDeltaPartDescriptors(
+      offlineDetailCompareHiddenMismatchDiff,
     );
   checks.push({
     id: "offline_detail_compare_aggregate_count_match_descriptors_are_stable",
@@ -1269,6 +1284,52 @@ async function main() {
         buildOfflineDetailCompareInvalidTargetLabelKo() &&
       buildOfflineDetailCompareResultFallbackLabelKo("unknown") ===
         buildOfflineDetailCompareInvalidTargetLabelKo(),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_result_delta_part_descriptors_are_stable",
+    passed:
+      buildOfflineDetailCompareResultViewModeLabelKo("critical") === "핵심" &&
+      buildOfflineDetailCompareResultViewModeLabelKo("all") === "전체" &&
+      buildOfflineDetailCompareResultViewModeLabelKo("unknown") === "전체" &&
+      offlineDetailCompareResultDeltaAllMatchDescriptors.length === 4 &&
+      offlineDetailCompareResultDeltaAllMatchDescriptors
+        .map((descriptor) => descriptor.key)
+        .join("|") ===
+        [
+          "total_events",
+          "critical_visible_events",
+          "hidden_critical_events",
+          "view_mode",
+        ].join("|") &&
+      offlineDetailCompareResultDeltaAllMatchDescriptors.every(
+        (descriptor) => descriptor.isChanged === false,
+      ) &&
+      offlineDetailCompareResultDeltaAllMatchDescriptors.every(
+        (descriptor) =>
+          buildOfflineDetailCompareResultDeltaPartLabelKo(descriptor) === "",
+      ) &&
+      offlineDetailCompareResultDeltaViewMismatchDescriptors[3].isChanged === true &&
+      buildOfflineDetailCompareResultDeltaPartLabelKo(
+        offlineDetailCompareResultDeltaViewMismatchDescriptors[3],
+      ) === "view 전체→핵심" &&
+      offlineDetailCompareResultDeltaAggregateMismatchDescriptors[0].isChanged ===
+        true &&
+      buildOfflineDetailCompareResultDeltaPartLabelKo(
+        offlineDetailCompareResultDeltaAggregateMismatchDescriptors[0],
+      ) ===
+        `총 ${offlineDetailCompareAggregateMismatchDiff.current.totalEvents}→${offlineDetailCompareAggregateMismatchDiff.target.totalEvents}` &&
+      offlineDetailCompareResultDeltaHiddenMismatchDescriptors[2].isChanged === true &&
+      buildOfflineDetailCompareResultDeltaPartLabelKo(
+        offlineDetailCompareResultDeltaHiddenMismatchDescriptors[2],
+      ) ===
+        `숨김 ${offlineDetailCompareHiddenMismatchDiff.current.hiddenCriticalEvents}→${offlineDetailCompareHiddenMismatchDiff.target.hiddenCriticalEvents}` &&
+      buildOfflineDetailCompareResultDeltaPartLabelKo({
+        key: "unknown",
+        isChanged: true,
+        currentValue: 1,
+        targetValue: 2,
+      }) === "",
   });
 
   checks.push({
