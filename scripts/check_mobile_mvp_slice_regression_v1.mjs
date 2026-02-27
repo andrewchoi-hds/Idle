@@ -152,6 +152,8 @@ import {
   parseOfflineDetailCompareCode,
   parseSliceState,
   prioritizeOfflineDetailEvents,
+  buildOfflineDetailCompareAggregateCountMatchDescriptors,
+  isOfflineDetailCompareAggregateCountMatched,
   resolveOfflineDetailCompareCodeDiff,
   summarizeOfflineDetailCriticalEvents,
   summarizeOfflineDetailFilterResult,
@@ -649,6 +651,11 @@ async function main() {
     offlineDetailCompareCodeAll,
     offlineDetailCompareCodeHiddenMismatch,
   );
+  const offlineDetailCompareViewAggregateMismatchDiff =
+    resolveOfflineDetailCompareCodeDiff(
+      offlineDetailCompareCodeAll,
+      offlineDetailCompareCodeViewAggregateMismatch,
+    );
   const offlineDetailCompareAllMatchDiff = resolveOfflineDetailCompareCodeDiff(
     offlineDetailCompareCodeAll,
     offlineDetailCompareCodeAll,
@@ -673,6 +680,48 @@ async function main() {
     buildOfflineDetailCompareCodeMatchSummaryItemDescriptors(
       offlineDetailCompareAggregateMismatchDiff,
     );
+  checks.push({
+    id: "offline_detail_compare_aggregate_count_match_descriptors_are_stable",
+    passed:
+      buildOfflineDetailCompareAggregateCountMatchDescriptors(
+        offlineDetailCompareAllMatchDiff,
+      ).length === 3 &&
+      buildOfflineDetailCompareAggregateCountMatchDescriptors(
+        offlineDetailCompareAllMatchDiff,
+      )
+        .map((descriptor) => descriptor.key)
+        .join("|") ===
+        [
+          "total_events",
+          "critical_visible_events",
+          "hidden_critical_events",
+        ].join("|") &&
+      buildOfflineDetailCompareAggregateCountMatchDescriptors(
+        offlineDetailCompareAllMatchDiff,
+      ).every((descriptor) => descriptor.isMatched === true) &&
+      isOfflineDetailCompareAggregateCountMatched(offlineDetailCompareAllMatchDiff) &&
+      isOfflineDetailCompareAggregateCountMatched(offlineDetailCompareViewMismatchDiff) &&
+      buildOfflineDetailCompareAggregateCountMatchDescriptors(
+        offlineDetailCompareAggregateMismatchDiff,
+      )[0].isMatched === false &&
+      buildOfflineDetailCompareAggregateCountMatchDescriptors(
+        offlineDetailCompareCriticalVisibleMismatchDiff,
+      )[1].isMatched === false &&
+      buildOfflineDetailCompareAggregateCountMatchDescriptors(
+        offlineDetailCompareHiddenMismatchDiff,
+      )[2].isMatched === false &&
+      !isOfflineDetailCompareAggregateCountMatched(
+        offlineDetailCompareAggregateMismatchDiff,
+      ) &&
+      !isOfflineDetailCompareAggregateCountMatched(
+        offlineDetailCompareCriticalVisibleMismatchDiff,
+      ) &&
+      !isOfflineDetailCompareAggregateCountMatched(
+        offlineDetailCompareHiddenMismatchDiff,
+      ) &&
+      !isOfflineDetailCompareAggregateCountMatched(null),
+  });
+
   checks.push({
     id: "offline_detail_compare_code_has_mode_and_checksum",
     passed:
@@ -2874,6 +2923,7 @@ async function main() {
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
       ).alignmentState === "view_only_mismatch" &&
+      isOfflineDetailCompareAggregateCountMatched(offlineDetailCompareViewMismatchDiff) &&
       buildOfflineDetailCompareViewModeAlignmentDescriptor(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
@@ -2890,6 +2940,9 @@ async function main() {
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeViewAggregateMismatch,
       ).alignmentState === "aggregate_mismatch" &&
+      !isOfflineDetailCompareAggregateCountMatched(
+        offlineDetailCompareViewAggregateMismatchDiff,
+      ) &&
       buildOfflineDetailCompareViewModeAlignmentDescriptor(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeViewAggregateMismatch,

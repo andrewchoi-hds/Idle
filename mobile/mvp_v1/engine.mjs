@@ -846,6 +846,30 @@ export function resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCode
   };
 }
 
+export function buildOfflineDetailCompareAggregateCountMatchDescriptors(diffInput) {
+  const diff = diffInput && typeof diffInput === "object" ? diffInput : {};
+  return [
+    {
+      key: "total_events",
+      isMatched: diff.sameTotalEvents === true,
+    },
+    {
+      key: "critical_visible_events",
+      isMatched: diff.sameCriticalVisibleEvents === true,
+    },
+    {
+      key: "hidden_critical_events",
+      isMatched: diff.sameHiddenCriticalEvents === true,
+    },
+  ];
+}
+
+export function isOfflineDetailCompareAggregateCountMatched(diffInput) {
+  return buildOfflineDetailCompareAggregateCountMatchDescriptors(diffInput).every(
+    (descriptor) => descriptor.isMatched === true,
+  );
+}
+
 export function buildOfflineDetailCompareResultLabelKo(
   currentCodeInput,
   targetCodeInput,
@@ -860,18 +884,14 @@ export function buildOfflineDetailCompareResultLabelKo(
     return buildOfflineDetailCompareResultIdenticalLabelKo();
   }
   if (
-    diff.sameTotalEvents &&
-    diff.sameCriticalVisibleEvents &&
-    diff.sameHiddenCriticalEvents &&
+    isOfflineDetailCompareAggregateCountMatched(diff) &&
     diff.sameAllChecksum &&
     !diff.sameViewChecksum
   ) {
     return buildOfflineDetailCompareResultViewMismatchLabelKo();
   }
   if (
-    diff.sameTotalEvents &&
-    diff.sameCriticalVisibleEvents &&
-    diff.sameHiddenCriticalEvents &&
+    isOfflineDetailCompareAggregateCountMatched(diff) &&
     !diff.sameAllChecksum
   ) {
     return buildOfflineDetailCompareResultAggregateMismatchLabelKo();
@@ -1043,9 +1063,7 @@ export function buildOfflineDetailCompareComparableOutcomeDescriptor(diffInput) 
   }
   if (
     !diff.sameViewMode &&
-    diff.sameTotalEvents &&
-    diff.sameCriticalVisibleEvents &&
-    diff.sameHiddenCriticalEvents &&
+    isOfflineDetailCompareAggregateCountMatched(diff) &&
     diff.sameAllChecksum
   ) {
     return descriptorFor("view_mode_mismatch");
@@ -1219,9 +1237,7 @@ export function buildOfflineDetailCompareViewModeAlignmentDescriptor(
     return descriptorFor("already_aligned");
   }
   if (
-    diff.sameTotalEvents &&
-    diff.sameCriticalVisibleEvents &&
-    diff.sameHiddenCriticalEvents &&
+    isOfflineDetailCompareAggregateCountMatched(diff) &&
     diff.sameAllChecksum
   ) {
     const targetMode = diff.target.viewMode === "critical" ? "critical" : "all";
@@ -1487,11 +1503,7 @@ export function buildOfflineDetailCompareCodeDeltaSummaryTone(
   if (diff.identical) {
     return "info";
   }
-  if (
-    !diff.sameTotalEvents ||
-    !diff.sameCriticalVisibleEvents ||
-    !diff.sameHiddenCriticalEvents
-  ) {
+  if (!isOfflineDetailCompareAggregateCountMatched(diff)) {
     return "error";
   }
   if (!diff.sameAllChecksum || !diff.sameViewChecksum || !diff.sameViewMode) {
