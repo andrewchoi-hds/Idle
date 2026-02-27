@@ -71,7 +71,11 @@ import {
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeSourceTone,
   buildOfflineDetailCompareStatusLabelKo,
+  buildOfflineDetailCompareClipboardFailureDescriptors,
+  buildOfflineDetailCompareClipboardFailureDescriptor,
   resolveOfflineDetailCompareClipboardFailureInfo,
+  buildOfflineDetailComparePayloadFailureDescriptors,
+  buildOfflineDetailComparePayloadFailureDescriptor,
   resolveOfflineDetailComparePayloadFailureInfo,
   resolveOfflineDetailComparePayloadLoadSource,
   resolveOfflineDetailCompareCheckSource,
@@ -848,39 +852,96 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_clipboard_failure_descriptors_are_stable",
+    passed:
+      buildOfflineDetailCompareClipboardFailureDescriptors().length === 3 &&
+      buildOfflineDetailCompareClipboardFailureDescriptors()
+        .map((descriptor) => descriptor.reason)
+        .join("|") ===
+        ["unsupported", "read_failed", "extract_failed"].join("|") &&
+      buildOfflineDetailCompareClipboardFailureDescriptor("unsupported").source ===
+        "clipboard" &&
+      buildOfflineDetailCompareClipboardFailureDescriptor("unsupported").messageKo ===
+        "클립보드 읽기 미지원 환경" &&
+      buildOfflineDetailCompareClipboardFailureDescriptor("read_failed").source ===
+        "clipboard" &&
+      buildOfflineDetailCompareClipboardFailureDescriptor("read_failed").messageKo ===
+        "클립보드 읽기 실패" &&
+      buildOfflineDetailCompareClipboardFailureDescriptor("extract_failed").source ===
+        "clipboard" &&
+      buildOfflineDetailCompareClipboardFailureDescriptor("extract_failed")
+        .messageKo === "클립보드에서 비교 코드 인식 실패" &&
+      buildOfflineDetailCompareClipboardFailureDescriptor("unknown").reason ===
+        "extract_failed" &&
+      buildOfflineDetailCompareClipboardFailureDescriptor("unknown").source ===
+        "clipboard" &&
+      buildOfflineDetailCompareClipboardFailureDescriptor("unknown").messageKo ===
+        "클립보드에서 비교 코드 인식 실패",
+  });
+
+  checks.push({
     id: "offline_detail_compare_clipboard_failure_info_maps_reason",
     passed:
       resolveOfflineDetailCompareClipboardFailureInfo("unsupported").source ===
-        "clipboard" &&
+        buildOfflineDetailCompareClipboardFailureDescriptor("unsupported").source &&
       resolveOfflineDetailCompareClipboardFailureInfo("unsupported").messageKo ===
-        "클립보드 읽기 미지원 환경" &&
+        buildOfflineDetailCompareClipboardFailureDescriptor("unsupported").messageKo &&
       resolveOfflineDetailCompareClipboardFailureInfo("read_failed").source ===
-        "clipboard" &&
+        buildOfflineDetailCompareClipboardFailureDescriptor("read_failed").source &&
       resolveOfflineDetailCompareClipboardFailureInfo("read_failed").messageKo ===
-        "클립보드 읽기 실패" &&
+        buildOfflineDetailCompareClipboardFailureDescriptor("read_failed").messageKo &&
       resolveOfflineDetailCompareClipboardFailureInfo("extract_failed").source ===
-        "clipboard" &&
+        buildOfflineDetailCompareClipboardFailureDescriptor("extract_failed").source &&
       resolveOfflineDetailCompareClipboardFailureInfo("extract_failed").messageKo ===
-        "클립보드에서 비교 코드 인식 실패" &&
+        buildOfflineDetailCompareClipboardFailureDescriptor("extract_failed")
+          .messageKo &&
+      resolveOfflineDetailCompareClipboardFailureInfo("unknown").source ===
+        buildOfflineDetailCompareClipboardFailureDescriptor("unknown").source &&
       resolveOfflineDetailCompareClipboardFailureInfo("unknown").messageKo ===
-        "클립보드에서 비교 코드 인식 실패",
+        buildOfflineDetailCompareClipboardFailureDescriptor("unknown").messageKo,
+  });
+
+  checks.push({
+    id: "offline_detail_compare_payload_failure_descriptors_are_stable",
+    passed:
+      buildOfflineDetailComparePayloadFailureDescriptors().length === 2 &&
+      buildOfflineDetailComparePayloadFailureDescriptors()
+        .map((descriptor) => descriptor.reason)
+        .join("|") ===
+        ["missing_payload", "extract_failed"].join("|") &&
+      buildOfflineDetailComparePayloadFailureDescriptor("missing_payload").source ===
+        "none" &&
+      buildOfflineDetailComparePayloadFailureDescriptor("missing_payload").messageKo ===
+        "savePayload 입력 필요" &&
+      buildOfflineDetailComparePayloadFailureDescriptor("extract_failed").source ===
+        "payload" &&
+      buildOfflineDetailComparePayloadFailureDescriptor("extract_failed").messageKo ===
+        "savePayload에서 비교 코드 인식 실패" &&
+      buildOfflineDetailComparePayloadFailureDescriptor("unknown").reason ===
+        "extract_failed" &&
+      buildOfflineDetailComparePayloadFailureDescriptor("unknown").source ===
+        "payload" &&
+      buildOfflineDetailComparePayloadFailureDescriptor("unknown").messageKo ===
+        "savePayload에서 비교 코드 인식 실패",
   });
 
   checks.push({
     id: "offline_detail_compare_payload_failure_info_maps_reason",
     passed:
       resolveOfflineDetailComparePayloadFailureInfo("missing_payload").source ===
-        "none" &&
+        buildOfflineDetailComparePayloadFailureDescriptor("missing_payload").source &&
       resolveOfflineDetailComparePayloadFailureInfo("missing_payload").messageKo ===
-        "savePayload 입력 필요" &&
+        buildOfflineDetailComparePayloadFailureDescriptor("missing_payload")
+          .messageKo &&
       resolveOfflineDetailComparePayloadFailureInfo("extract_failed").source ===
-        "payload" &&
+        buildOfflineDetailComparePayloadFailureDescriptor("extract_failed").source &&
       resolveOfflineDetailComparePayloadFailureInfo("extract_failed").messageKo ===
-        "savePayload에서 비교 코드 인식 실패" &&
+        buildOfflineDetailComparePayloadFailureDescriptor("extract_failed")
+          .messageKo &&
       resolveOfflineDetailComparePayloadFailureInfo("unknown").source ===
-        "payload" &&
+        buildOfflineDetailComparePayloadFailureDescriptor("unknown").source &&
       resolveOfflineDetailComparePayloadFailureInfo("unknown").messageKo ===
-        "savePayload에서 비교 코드 인식 실패",
+        buildOfflineDetailComparePayloadFailureDescriptor("unknown").messageKo,
   });
 
   checks.push({

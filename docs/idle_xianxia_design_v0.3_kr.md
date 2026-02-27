@@ -1962,3 +1962,11 @@
 
 ## 455) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 대상 입력 상태 descriptor 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 456) 다음 순차 작업
+1. [완료] 오프라인 비교 클립보드/payload 실패 descriptor 헬퍼(`buildOfflineDetailCompareClipboardFailureDescriptors`, `buildOfflineDetailCompareClipboardFailureDescriptor`, `buildOfflineDetailComparePayloadFailureDescriptors`, `buildOfflineDetailComparePayloadFailureDescriptor`)를 추가해 실패 사유별 source/message 매핑 경로를 단일 함수로 표준화.
+2. [완료] 오프라인 비교 클립보드/payload 실패 메타 경로(`resolveOfflineDetailCompareClipboardFailureInfo`, `resolveOfflineDetailComparePayloadFailureInfo`)가 직접 분기 비교 대신 실패 descriptor 헬퍼를 사용하도록 통합.
+3. [완료] 모바일 회귀 체크에 실패 descriptor 헬퍼 시나리오를 추가해 실패 사유별 source/message 매핑과 unknown fallback(`extract_failed`) 일관성을 검증.
+
+## 457) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 실패 descriptor 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
