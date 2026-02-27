@@ -145,7 +145,10 @@ npm run mobile:mvp:serve
   - 전투 spark 레이어(`battleSceneSparkLayer`)를 추가해 클릭 없이도 상시 파티클/충돌 파동이 순환되도록 구성
   - 전장 흐름 레이어(`battle-scene-flow-back/front`)를 추가해 배경 전류가 상시 흐르는 느낌을 유지
   - 타격 궤적 레이어(`battleSceneTrailLayer`, `spawnBattleSceneTrail`)를 추가해 실시간/자동 루프에서 slash/wave 궤적이 지속적으로 발생
+  - 미니 듀얼 HUD(`battleScenePlayerHpBar/EnemyHpBar`, `battleScenePlayerCastBar/EnemyCastBar`, `battleSceneClashCore`)를 추가해 버튼 입력 없이도 HP/기세/충돌 압력이 상시 갱신
+  - 상시 듀얼 tick(`runBattleSceneDuelTick`, `applyBattleSceneDuelStrike`, `applyBattleSceneDuelBurst`)을 추가해 `idle/auto/realtime` 모드별 타격 빈도·피해량·비기 주기를 차등 적용
   - 상시 루프(`runBattleSceneAmbientTick`)가 `idle/auto/realtime` 모드별로 연출 강도와 임팩트 빈도를 조절해 방치형 전투 화면처럼 지속 동작
+  - `prefers-reduced-motion` 환경에서는 spark/trail 등 모션 이펙트를 비활성화하되 듀얼 HUD 수치(HP/기세)는 계속 갱신해 상태 가시성을 유지
   - 상시 연출 애니메이션(오라 드리프트/actor idle/오버레이 pulse)과 임팩트 연출(타격/돌파 burst·collapse)을 분리해 자동 루프 중에도 시각 피드백을 유지하고, `prefers-reduced-motion` 환경에서는 해당 애니메이션을 비활성화
 
 ## 4) 저장 포맷

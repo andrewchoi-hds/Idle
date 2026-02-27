@@ -2090,3 +2090,11 @@
 
 ## 487) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(전장 흐름 레이어 + 타격 궤적 레이어 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 488) 다음 순차 작업
+1. [완료] 전투 연출 패널에 미니 듀얼 HUD(`battleScenePlayerHpBar/EnemyHpBar`, `battleScenePlayerCastBar/EnemyCastBar`, `battleSceneClashCore`)를 추가해 버튼 입력 없이도 HP/기세/충돌 압력이 상시 변하도록 구성.
+2. [완료] 상시 듀얼 tick(`runBattleSceneDuelTick`, `applyBattleSceneDuelStrike`, `applyBattleSceneDuelBurst`)을 추가해 `idle/auto/realtime` 모드별 타격 빈도·피해량·비기 주기를 차등 적용.
+3. [완료] `prefers-reduced-motion` 환경에서 spark/trail 모션은 비활성화하되 듀얼 HUD 수치 갱신은 유지하도록 분리 적용하고, DOM contract 체크에 신규 HUD 요소를 반영.
+
+## 489) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(미니 듀얼 HUD + 상시 듀얼 tick 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

@@ -92,8 +92,17 @@ const dom = {
   qiProgressBar: document.getElementById("qiProgressBar"),
   battleSceneStatus: document.getElementById("battleSceneStatus"),
   battleSceneArena: document.getElementById("battleSceneArena"),
+  battleScenePlayer: document.getElementById("battleScenePlayer"),
+  battleSceneEnemy: document.getElementById("battleSceneEnemy"),
   battleScenePlayerStage: document.getElementById("battleScenePlayerStage"),
   battleSceneEnemyStage: document.getElementById("battleSceneEnemyStage"),
+  battleScenePlayerHpBar: document.getElementById("battleScenePlayerHpBar"),
+  battleScenePlayerCastBar: document.getElementById("battleScenePlayerCastBar"),
+  battleScenePlayerVitals: document.getElementById("battleScenePlayerVitals"),
+  battleSceneEnemyHpBar: document.getElementById("battleSceneEnemyHpBar"),
+  battleSceneEnemyCastBar: document.getElementById("battleSceneEnemyCastBar"),
+  battleSceneEnemyVitals: document.getElementById("battleSceneEnemyVitals"),
+  battleSceneClashCore: document.getElementById("battleSceneClashCore"),
   battleSceneFlash: document.getElementById("battleSceneFlash"),
   battleSceneFloatLayer: document.getElementById("battleSceneFloatLayer"),
   battleSceneSparkLayer: document.getElementById("battleSceneSparkLayer"),
@@ -269,6 +278,8 @@ const BATTLE_SCENE_IMPACT_CLASSES = [
   "scene-impact-breakthrough-fail",
 ];
 const BATTLE_SCENE_AMBIENT_TICK_MS = 820;
+const BATTLE_SCENE_DUEL_MAX_HP = 100;
+const BATTLE_SCENE_DUEL_MAX_CAST = 100;
 const BATTLE_SCENE_DEFAULT_STATUS = "대기 중";
 const BATTLE_SCENE_DEFAULT_RESULT =
   "전장 파동 감지 중 · 자동/실시간 루프에서 연출이 계속 갱신됩니다.";
@@ -283,6 +294,14 @@ let battleSceneFlashTimer = null;
 let battleSceneAmbientTimer = null;
 let battleSceneAmbientStep = 0;
 let battleSceneLastExplicitEventAtMs = 0;
+const battleSceneDuelState = {
+  round: 1,
+  playerHp: BATTLE_SCENE_DUEL_MAX_HP,
+  enemyHp: BATTLE_SCENE_DUEL_MAX_HP,
+  playerCast: 16,
+  enemyCast: 12,
+  pressure: "low",
+};
 
 function setStatus(message, isError = false) {
   dom.appStatus.textContent = message;
@@ -455,6 +474,271 @@ function setBattleSceneStageLabels(stage, displayName) {
   }
 }
 
+function clampBattleSceneGauge(value, max = BATTLE_SCENE_DUEL_MAX_HP) {
+  return Math.max(0, Math.min(max, Number(value) || 0));
+}
+
+function rollBattleSceneInteger(min, max) {
+  const normalizedMin = Math.floor(Math.min(min, max));
+  const normalizedMax = Math.floor(Math.max(min, max));
+  return Math.floor(Math.random() * (normalizedMax - normalizedMin + 1)) + normalizedMin;
+}
+
+function resolveBattleSceneHpTier(hpPct) {
+  if (hpPct <= 28) {
+    return "danger";
+  }
+  if (hpPct <= 56) {
+    return "warn";
+  }
+  return "safe";
+}
+
+function resolveBattleSceneDuelPressure(mode = "idle") {
+  const playerHpPct = Math.round(
+    (clampBattleSceneGauge(battleSceneDuelState.playerHp, BATTLE_SCENE_DUEL_MAX_HP) /
+      BATTLE_SCENE_DUEL_MAX_HP) *
+      100,
+  );
+  const enemyHpPct = Math.round(
+    (clampBattleSceneGauge(battleSceneDuelState.enemyHp, BATTLE_SCENE_DUEL_MAX_HP) /
+      BATTLE_SCENE_DUEL_MAX_HP) *
+      100,
+  );
+  const minHpPct = Math.min(playerHpPct, enemyHpPct);
+  const hpGap = Math.abs(playerHpPct - enemyHpPct);
+  if (minHpPct <= 24 || hpGap >= 44) {
+    return "high";
+  }
+  if (minHpPct <= 52 || hpGap >= 22) {
+    return "medium";
+  }
+  return mode === "realtime" ? "medium" : "low";
+}
+
+function resolveBattleSceneDuelLeadTone() {
+  const hpGap = battleSceneDuelState.playerHp - battleSceneDuelState.enemyHp;
+  if (Math.abs(hpGap) <= 6) {
+    return "info";
+  }
+  return hpGap > 0 ? "success" : "warn";
+}
+
+function renderBattleSceneDuelHud() {
+  const playerHpPct = Math.round(
+    (clampBattleSceneGauge(battleSceneDuelState.playerHp, BATTLE_SCENE_DUEL_MAX_HP) /
+      BATTLE_SCENE_DUEL_MAX_HP) *
+      100,
+  );
+  const enemyHpPct = Math.round(
+    (clampBattleSceneGauge(battleSceneDuelState.enemyHp, BATTLE_SCENE_DUEL_MAX_HP) /
+      BATTLE_SCENE_DUEL_MAX_HP) *
+      100,
+  );
+  const playerCastPct = Math.round(
+    (clampBattleSceneGauge(battleSceneDuelState.playerCast, BATTLE_SCENE_DUEL_MAX_CAST) /
+      BATTLE_SCENE_DUEL_MAX_CAST) *
+      100,
+  );
+  const enemyCastPct = Math.round(
+    (clampBattleSceneGauge(battleSceneDuelState.enemyCast, BATTLE_SCENE_DUEL_MAX_CAST) /
+      BATTLE_SCENE_DUEL_MAX_CAST) *
+      100,
+  );
+  if (dom.battleScenePlayerHpBar) {
+    dom.battleScenePlayerHpBar.style.width = `${playerHpPct}%`;
+  }
+  if (dom.battleSceneEnemyHpBar) {
+    dom.battleSceneEnemyHpBar.style.width = `${enemyHpPct}%`;
+  }
+  if (dom.battleScenePlayerCastBar) {
+    dom.battleScenePlayerCastBar.style.width = `${playerCastPct}%`;
+  }
+  if (dom.battleSceneEnemyCastBar) {
+    dom.battleSceneEnemyCastBar.style.width = `${enemyCastPct}%`;
+  }
+  if (dom.battleScenePlayerVitals) {
+    dom.battleScenePlayerVitals.textContent = `HP ${playerHpPct}% · 기세 ${playerCastPct}%`;
+  }
+  if (dom.battleSceneEnemyVitals) {
+    dom.battleSceneEnemyVitals.textContent = `HP ${enemyHpPct}% · 기세 ${enemyCastPct}%`;
+  }
+  if (dom.battleScenePlayer) {
+    dom.battleScenePlayer.dataset.hpTier = resolveBattleSceneHpTier(playerHpPct);
+  }
+  if (dom.battleSceneEnemy) {
+    dom.battleSceneEnemy.dataset.hpTier = resolveBattleSceneHpTier(enemyHpPct);
+  }
+  if (dom.battleSceneClashCore) {
+    dom.battleSceneClashCore.dataset.pressure = battleSceneDuelState.pressure;
+  }
+}
+
+function resetBattleSceneDuelState(options = {}) {
+  if (!options.keepRound) {
+    battleSceneDuelState.round = 1;
+  }
+  battleSceneDuelState.playerHp = BATTLE_SCENE_DUEL_MAX_HP;
+  battleSceneDuelState.enemyHp = BATTLE_SCENE_DUEL_MAX_HP;
+  battleSceneDuelState.playerCast = rollBattleSceneInteger(12, 36);
+  battleSceneDuelState.enemyCast = rollBattleSceneInteger(12, 36);
+  battleSceneDuelState.pressure = "low";
+  renderBattleSceneDuelHud();
+}
+
+function syncBattleSceneDuelFromImpact(kind) {
+  if (kind === "battle_win") {
+    battleSceneDuelState.enemyHp = clampBattleSceneGauge(
+      battleSceneDuelState.enemyHp - rollBattleSceneInteger(18, 34),
+      BATTLE_SCENE_DUEL_MAX_HP,
+    );
+    battleSceneDuelState.playerCast = clampBattleSceneGauge(
+      battleSceneDuelState.playerCast + rollBattleSceneInteger(22, 36),
+      BATTLE_SCENE_DUEL_MAX_CAST,
+    );
+  } else if (kind === "battle_loss") {
+    battleSceneDuelState.playerHp = clampBattleSceneGauge(
+      battleSceneDuelState.playerHp - rollBattleSceneInteger(18, 34),
+      BATTLE_SCENE_DUEL_MAX_HP,
+    );
+    battleSceneDuelState.enemyCast = clampBattleSceneGauge(
+      battleSceneDuelState.enemyCast + rollBattleSceneInteger(22, 36),
+      BATTLE_SCENE_DUEL_MAX_CAST,
+    );
+  } else if (kind === "breakthrough_success") {
+    battleSceneDuelState.playerHp = BATTLE_SCENE_DUEL_MAX_HP;
+    battleSceneDuelState.enemyHp = BATTLE_SCENE_DUEL_MAX_HP;
+    battleSceneDuelState.playerCast = rollBattleSceneInteger(34, 72);
+    battleSceneDuelState.enemyCast = rollBattleSceneInteger(14, 48);
+  } else {
+    battleSceneDuelState.playerHp = clampBattleSceneGauge(
+      battleSceneDuelState.playerHp - rollBattleSceneInteger(10, 22),
+      BATTLE_SCENE_DUEL_MAX_HP,
+    );
+    battleSceneDuelState.enemyCast = clampBattleSceneGauge(
+      battleSceneDuelState.enemyCast + rollBattleSceneInteger(12, 26),
+      BATTLE_SCENE_DUEL_MAX_CAST,
+    );
+  }
+  battleSceneDuelState.pressure = resolveBattleSceneDuelPressure(resolveBattleSceneAmbientMode());
+  renderBattleSceneDuelHud();
+}
+
+function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true) {
+  const attackerKey = attacker === "player" ? "playerCast" : "enemyCast";
+  const defenderKey = attacker === "player" ? "enemyHp" : "playerHp";
+  const attackerAnchor = attacker === "player" ? "player" : "enemy";
+  const defenderAnchor = attacker === "player" ? "enemy" : "player";
+  const tone = attacker === "player" ? "success" : "warn";
+  const burstDamage =
+    mode === "realtime"
+      ? rollBattleSceneInteger(22, 38)
+      : mode === "auto"
+        ? rollBattleSceneInteger(18, 32)
+        : rollBattleSceneInteger(14, 24);
+  battleSceneDuelState[attackerKey] = 0;
+  battleSceneDuelState[defenderKey] = clampBattleSceneGauge(
+    battleSceneDuelState[defenderKey] - burstDamage,
+    BATTLE_SCENE_DUEL_MAX_HP,
+  );
+  if (!visuals) {
+    return;
+  }
+  spawnBattleSceneFloat("비기", { tone, anchor: attackerAnchor });
+  spawnBattleSceneFloat(`-${burstDamage}`, { tone, anchor: defenderAnchor });
+  spawnBattleSceneSpark({ anchor: "center", tone, shape: "ring", scale: 1.24 });
+  spawnBattleSceneTrail({ anchor: "center", tone, shape: "wave", angleDeg: 0, length: 104 });
+}
+
+function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true) {
+  const defenderKey = attacker === "player" ? "enemyHp" : "playerHp";
+  const attackerCastKey = attacker === "player" ? "playerCast" : "enemyCast";
+  const defenderAnchor = attacker === "player" ? "enemy" : "player";
+  const attackerAnchor = attacker === "player" ? "player" : "enemy";
+  const tone = attacker === "player" ? "success" : "warn";
+  const [minDamage, maxDamage] =
+    mode === "realtime" ? [7, 13] : mode === "auto" ? [5, 9] : [3, 6];
+  let damage = rollBattleSceneInteger(minDamage, maxDamage);
+  const critChance = mode === "realtime" ? 0.22 : mode === "auto" ? 0.14 : 0.08;
+  const isCrit = Math.random() < critChance;
+  if (isCrit) {
+    damage = Math.max(damage + 2, Math.round(damage * 1.55));
+  }
+  const castGain = mode === "realtime" ? 24 : mode === "auto" ? 18 : 12;
+  battleSceneDuelState[defenderKey] = clampBattleSceneGauge(
+    battleSceneDuelState[defenderKey] - damage,
+    BATTLE_SCENE_DUEL_MAX_HP,
+  );
+  battleSceneDuelState[attackerCastKey] = clampBattleSceneGauge(
+    battleSceneDuelState[attackerCastKey] + castGain,
+    BATTLE_SCENE_DUEL_MAX_CAST,
+  );
+  if (visuals) {
+    spawnBattleSceneFloat(`-${damage}`, {
+      tone: isCrit ? "error" : tone,
+      anchor: defenderAnchor,
+    });
+    if (isCrit) {
+      spawnBattleSceneFloat("치명", { tone: "error", anchor: attackerAnchor });
+    }
+    spawnBattleSceneSpark({
+      anchor: "center",
+      tone,
+      shape: isCrit ? "ring" : "shard",
+      scale: isCrit ? 1.24 : 0.98,
+    });
+    spawnBattleSceneTrail({
+      anchor: "center",
+      tone,
+      angleDeg: attacker === "player" ? 12 : 166,
+      length: isCrit ? 102 : 84,
+    });
+  }
+  if (battleSceneDuelState[attackerCastKey] >= BATTLE_SCENE_DUEL_MAX_CAST) {
+    applyBattleSceneDuelBurst(attacker, mode, visuals);
+  }
+}
+
+function runBattleSceneDuelTick(mode = "idle", options = {}) {
+  const visuals = options.visuals !== false;
+  const strikeAttempts = mode === "realtime" ? 2 : 1;
+  const strikeChance = mode === "realtime" ? 0.92 : mode === "auto" ? 0.76 : 0.52;
+  for (let i = 0; i < strikeAttempts; i += 1) {
+    if (Math.random() > strikeChance) {
+      continue;
+    }
+    const momentum = battleSceneDuelState.playerHp - battleSceneDuelState.enemyHp;
+    const playerBias = momentum < 0 ? 0.58 : momentum > 0 ? 0.42 : 0.5;
+    const attacker = Math.random() < playerBias ? "player" : "enemy";
+    applyBattleSceneDuelStrike(attacker, mode, visuals);
+  }
+
+  const playerDown = battleSceneDuelState.playerHp <= 0;
+  const enemyDown = battleSceneDuelState.enemyHp <= 0;
+  if (playerDown || enemyDown) {
+    const playerWon = enemyDown && !playerDown ? true : playerDown && !enemyDown ? false : Math.random() < 0.5;
+    const tone = playerWon ? "success" : "warn";
+    if (visuals) {
+      triggerBattleSceneImpact(playerWon ? "battle_win" : "battle_loss", tone, {
+        fromAmbient: true,
+        syncDuel: false,
+      });
+      spawnBattleSceneFloat(playerWon ? "환영 승리" : "환영 패배", {
+        tone,
+        anchor: "center",
+      });
+    }
+    battleSceneDuelState.round += 1;
+    battleSceneDuelState.playerHp = BATTLE_SCENE_DUEL_MAX_HP;
+    battleSceneDuelState.enemyHp = BATTLE_SCENE_DUEL_MAX_HP;
+    battleSceneDuelState.playerCast = rollBattleSceneInteger(12, 34);
+    battleSceneDuelState.enemyCast = rollBattleSceneInteger(12, 34);
+  }
+
+  battleSceneDuelState.pressure = resolveBattleSceneDuelPressure(mode);
+  renderBattleSceneDuelHud();
+}
+
 function spawnBattleSceneFloat(text, options = {}) {
   if (!dom.battleSceneFloatLayer) {
     return;
@@ -584,6 +868,7 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
     return;
   }
   const fromAmbient = options && options.fromAmbient === true;
+  const syncDuel = !(options && options.syncDuel === false);
   if (!fromAmbient) {
     battleSceneLastExplicitEventAtMs = Date.now();
   }
@@ -630,6 +915,9 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
     spawnBattleSceneSpark({ anchor: "player", tone, shape: "ring", scale: 1.15 });
     spawnBattleSceneTrail({ anchor: "player", tone, shape: "wave", angleDeg: -24, length: 88 });
   }
+  if (syncDuel) {
+    syncBattleSceneDuelFromImpact(kind);
+  }
 }
 
 function resolveBattleSceneAmbientMode() {
@@ -649,12 +937,14 @@ function runBattleSceneAmbientTick() {
   if (!dom.battleSceneArena || !state || document.hidden) {
     return;
   }
-  if (shouldReduceBattleSceneMotion()) {
-    return;
-  }
-  battleSceneAmbientStep += 1;
   const mode = resolveBattleSceneAmbientMode();
   setBattleSceneLoopMode(mode);
+  const reducedMotion = shouldReduceBattleSceneMotion();
+  battleSceneAmbientStep += 1;
+  runBattleSceneDuelTick(mode, { visuals: !reducedMotion });
+  if (reducedMotion) {
+    return;
+  }
 
   const tonePool =
     mode === "realtime"
@@ -662,7 +952,7 @@ function runBattleSceneAmbientTick() {
       : mode === "auto"
         ? ["success", "info", "info", "warn"]
         : ["info", "info", "warn"];
-  const sparkCount = mode === "realtime" ? 3 : mode === "auto" ? 2 : 1;
+  const sparkCount = mode === "realtime" ? 2 : mode === "auto" ? 2 : 1;
   for (let i = 0; i < sparkCount; i += 1) {
     if (Math.random() > 0.7) {
       continue;
@@ -733,15 +1023,35 @@ function runBattleSceneAmbientTick() {
   }
 
   if (quietMs > 8000 && battleSceneAmbientStep % 6 === 0) {
+    const playerHpPct = Math.round(
+      (clampBattleSceneGauge(battleSceneDuelState.playerHp, BATTLE_SCENE_DUEL_MAX_HP) /
+        BATTLE_SCENE_DUEL_MAX_HP) *
+        100,
+    );
+    const enemyHpPct = Math.round(
+      (clampBattleSceneGauge(battleSceneDuelState.enemyHp, BATTLE_SCENE_DUEL_MAX_HP) /
+        BATTLE_SCENE_DUEL_MAX_HP) *
+        100,
+    );
+    const leadTone = resolveBattleSceneDuelLeadTone();
     if (mode === "realtime") {
-      setBattleSceneStatus("실시간 교전 파동", "success");
-      setBattleSceneResult("자동 전투 루프가 지속적으로 전장 신호를 갱신합니다.", "info");
+      setBattleSceneStatus(`실시간 교전 ${battleSceneDuelState.round}R`, leadTone);
+      setBattleSceneResult(
+        `수련자 ${playerHpPct}% · 적수 ${enemyHpPct}% · 자동 전투 루프가 연출을 갱신 중입니다.`,
+        "info",
+      );
     } else if (mode === "auto") {
-      setBattleSceneStatus("자동 교전 대기", "info");
-      setBattleSceneResult("자동 옵션 기반으로 전장 파동이 순환 중입니다.", "info");
+      setBattleSceneStatus(`자동 교전 ${battleSceneDuelState.round}R`, leadTone);
+      setBattleSceneResult(
+        `수련자 ${playerHpPct}% · 적수 ${enemyHpPct}% · 자동 옵션 기반 전장 파동 순환 중`,
+        "info",
+      );
     } else {
-      setBattleSceneStatus("전장 호흡 감지", "info");
-      setBattleSceneResult("수동 조작이 없어도 전장 연출은 지속 순환됩니다.", "info");
+      setBattleSceneStatus("전장 호흡 감지", leadTone);
+      setBattleSceneResult(
+        `환영 교전 ${battleSceneDuelState.round}R · 수련자 ${playerHpPct}% / 적수 ${enemyHpPct}%`,
+        "info",
+      );
     }
   }
 }
@@ -750,7 +1060,7 @@ function startBattleSceneAmbientLoop() {
   if (!dom.battleSceneArena || !state) {
     return;
   }
-  if (document.hidden || shouldReduceBattleSceneMotion()) {
+  if (document.hidden) {
     stopBattleSceneAmbientLoop();
     setBattleSceneLoopMode(resolveBattleSceneAmbientMode());
     return;
@@ -760,6 +1070,7 @@ function startBattleSceneAmbientLoop() {
   }
   battleSceneAmbientStep = 0;
   setBattleSceneLoopMode(resolveBattleSceneAmbientMode());
+  renderBattleSceneDuelHud();
   runBattleSceneAmbientTick();
   battleSceneAmbientTimer = window.setInterval(
     runBattleSceneAmbientTick,
@@ -778,6 +1089,8 @@ function stopBattleSceneAmbientLoop() {
   if (dom.battleSceneTrailLayer) {
     dom.battleSceneTrailLayer.innerHTML = "";
   }
+  battleSceneDuelState.pressure = "low";
+  renderBattleSceneDuelHud();
 }
 
 function renderBattleScene(stage, displayName) {
@@ -787,6 +1100,7 @@ function renderBattleScene(stage, displayName) {
   setBattleSceneAtmosphere(stage);
   setBattleSceneLoopMode(resolveBattleSceneAmbientMode());
   setBattleSceneStageLabels(stage, displayName);
+  renderBattleSceneDuelHud();
   applyBattleSceneUiState();
 }
 
@@ -2456,6 +2770,7 @@ function tryLoadActiveSlot(sourceLabel = "로컬 불러오기") {
     resetRealtimeAutoSession();
     state = parseSliceState(raw, context);
     ensureRealtimeStatsShape();
+    resetBattleSceneDuelState();
     addClientLog(
       "save",
       `${sourceLabel}: 슬롯 ${activeSaveSlot} 불러오기 완료${payload.source === "legacy" ? " (legacy)" : ""}`,
@@ -3084,6 +3399,7 @@ function bindEvents() {
       offlineEventLimit: state.settings.offlineEventLimit,
     });
     lastOfflineReport = null;
+    resetBattleSceneDuelState();
     hideOfflineModal();
     setStatus("런 초기화 완료");
     persistLocal();
@@ -3118,6 +3434,7 @@ function bindEvents() {
       const imported = parseSliceState(raw, context);
       state = cloneSliceState(imported);
       ensureRealtimeStatsShape();
+      resetBattleSceneDuelState();
       addClientLog("save", "JSON 가져오기 완료");
       const offline = applyOfflineCatchupNow();
       setStatus(buildOfflineStatus("JSON 가져오기 완료", offline.summary));
@@ -3160,6 +3477,7 @@ async function bootstrap() {
     context = buildSliceContext(progressionRows, localeRows);
     state = createInitialSliceState(context, { playerName: "도심" });
     ensureRealtimeStatsShape();
+    resetBattleSceneDuelState();
     resetRealtimeAutoSession();
     restoreSlotLocks();
     restoreSaveSlotPreference();
@@ -3171,6 +3489,7 @@ async function bootstrap() {
       try {
         state = parseSliceState(raw, context);
         ensureRealtimeStatsShape();
+        resetBattleSceneDuelState();
         addClientLog(
           "save",
           `기존 로컬 세이브 자동 로드(슬롯 ${activeSaveSlot}${payload.source === "legacy" ? ", legacy" : ""})`,
