@@ -31,6 +31,30 @@
         </div>
       </section>
 
+      <section class="panel battle-scene" aria-label="전투 연출 미리보기">
+        <div class="battle-scene-head">
+          <h2>전투 연출</h2>
+          <p id="battleSceneStatus" class="battle-scene-status tone-info">대기 중</p>
+        </div>
+        <div id="battleSceneArena" class="battle-scene-arena" data-scene-state="idle">
+          <div class="battle-aura battle-aura-player" aria-hidden="true"></div>
+          <div class="battle-aura battle-aura-enemy" aria-hidden="true"></div>
+          <article id="battleScenePlayer" class="battle-actor battle-actor-player">
+            <span class="battle-actor-tag">수련자</span>
+            <strong id="battleScenePlayerStage">-</strong>
+          </article>
+          <article id="battleSceneEnemy" class="battle-actor battle-actor-enemy">
+            <span class="battle-actor-tag">적수</span>
+            <strong id="battleSceneEnemyStage">-</strong>
+          </article>
+          <div id="battleSceneFlash" class="battle-scene-flash" aria-hidden="true"></div>
+          <div id="battleSceneFloatLayer" class="battle-scene-float-layer" aria-hidden="true"></div>
+        </div>
+        <p id="battleSceneResult" class="sub battle-scene-result tone-info">
+          전투 1회 / 돌파 시도를 눌러 연출을 확인하세요.
+        </p>
+      </section>
+
       <section class="panel stats">
         <article>
           <h3>기(氣)</h3>
