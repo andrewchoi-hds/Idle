@@ -122,6 +122,8 @@ import {
   buildOfflineDetailCompareActionHintAggregateMismatchLabelKo,
   buildOfflineDetailCompareActionHintFallbackTone,
   buildOfflineDetailCompareActionHintTone,
+  buildOfflineDetailCompareViewModeAlignmentDescriptors,
+  buildOfflineDetailCompareViewModeAlignmentDescriptor,
   resolveOfflineDetailCompareViewModeAlignmentTarget,
   buildOfflineDetailCriticalSummaryLabelKo,
   buildOfflineDetailKindDigest,
@@ -614,6 +616,8 @@ async function main() {
     /-T\d+-/,
     "-T99-",
   );
+  const offlineDetailCompareCodeViewAggregateMismatch =
+    offlineDetailCompareCodeCritical.replace(/-T\d+-/, "-T99-");
   const offlineDetailCompareCodeHiddenMismatch = offlineDetailCompareCodeAll.replace(
     /-H\d+-/,
     "-H0-",
@@ -2747,10 +2751,81 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_view_mode_alignment_descriptors_are_stable",
+    passed:
+      buildOfflineDetailCompareViewModeAlignmentDescriptors().length === 7 &&
+      buildOfflineDetailCompareViewModeAlignmentDescriptors()
+        .map((descriptor) => descriptor.alignmentState)
+        .join("|") ===
+        [
+          "target_missing",
+          "target_invalid",
+          "current_invalid",
+          "identical",
+          "already_aligned",
+          "view_only_mismatch",
+          "aggregate_mismatch",
+        ].join("|") &&
+      buildOfflineDetailCompareViewModeAlignmentDescriptor(
+        offlineDetailCompareCodeAll,
+        "",
+      ).alignmentState === "target_missing" &&
+      buildOfflineDetailCompareViewModeAlignmentDescriptor(
+        offlineDetailCompareCodeAll,
+        "invalid",
+      ).alignmentState === "target_invalid" &&
+      buildOfflineDetailCompareViewModeAlignmentDescriptor(
+        "INVALID",
+        offlineDetailCompareCodeAll,
+      ).alignmentState === "current_invalid" &&
+      buildOfflineDetailCompareViewModeAlignmentDescriptor(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ).alignmentState === "identical" &&
+      buildOfflineDetailCompareViewModeAlignmentDescriptor(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ).alignmentState === "view_only_mismatch" &&
+      buildOfflineDetailCompareViewModeAlignmentDescriptor(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ).targetMode === "critical" &&
+      buildOfflineDetailCompareViewModeAlignmentDescriptor(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ).resolvedMode === "critical" &&
+      buildOfflineDetailCompareViewModeAlignmentDescriptor(
+        offlineDetailCompareCodeCritical,
+        offlineDetailCompareCodeAll,
+      ).targetMode === "all" &&
+      buildOfflineDetailCompareViewModeAlignmentDescriptor(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeViewAggregateMismatch,
+      ).alignmentState === "aggregate_mismatch" &&
+      buildOfflineDetailCompareViewModeAlignmentDescriptor(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeViewAggregateMismatch,
+      ).canAlign === false,
+  });
+
+  checks.push({
     id: "offline_detail_compare_view_mode_alignment_target_matches_state",
     passed:
       resolveOfflineDetailCompareViewModeAlignmentTarget(offlineDetailCompareCodeAll, "") ===
+        buildOfflineDetailCompareViewModeAlignmentDescriptor(
+          offlineDetailCompareCodeAll,
+          "",
+        ).resolvedMode &&
+      resolveOfflineDetailCompareViewModeAlignmentTarget(offlineDetailCompareCodeAll, "") ===
         "" &&
+      resolveOfflineDetailCompareViewModeAlignmentTarget(
+        offlineDetailCompareCodeAll,
+        "invalid",
+      ) ===
+        buildOfflineDetailCompareViewModeAlignmentDescriptor(
+          offlineDetailCompareCodeAll,
+          "invalid",
+        ).resolvedMode &&
       resolveOfflineDetailCompareViewModeAlignmentTarget(
         offlineDetailCompareCodeAll,
         "invalid",
@@ -2758,11 +2833,35 @@ async function main() {
       resolveOfflineDetailCompareViewModeAlignmentTarget(
         "INVALID",
         offlineDetailCompareCodeAll,
+      ) ===
+        buildOfflineDetailCompareViewModeAlignmentDescriptor(
+          "INVALID",
+          offlineDetailCompareCodeAll,
+        ).resolvedMode &&
+      resolveOfflineDetailCompareViewModeAlignmentTarget(
+        "INVALID",
+        offlineDetailCompareCodeAll,
       ) === "" &&
       resolveOfflineDetailCompareViewModeAlignmentTarget(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAll,
+      ) ===
+        buildOfflineDetailCompareViewModeAlignmentDescriptor(
+          offlineDetailCompareCodeAll,
+          offlineDetailCompareCodeAll,
+        ).resolvedMode &&
+      resolveOfflineDetailCompareViewModeAlignmentTarget(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
       ) === "" &&
+      resolveOfflineDetailCompareViewModeAlignmentTarget(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ) ===
+        buildOfflineDetailCompareViewModeAlignmentDescriptor(
+          offlineDetailCompareCodeAll,
+          offlineDetailCompareCodeCritical,
+        ).resolvedMode &&
       resolveOfflineDetailCompareViewModeAlignmentTarget(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
@@ -2770,7 +2869,23 @@ async function main() {
       resolveOfflineDetailCompareViewModeAlignmentTarget(
         offlineDetailCompareCodeCritical,
         offlineDetailCompareCodeAll,
+      ) ===
+        buildOfflineDetailCompareViewModeAlignmentDescriptor(
+          offlineDetailCompareCodeCritical,
+          offlineDetailCompareCodeAll,
+        ).resolvedMode &&
+      resolveOfflineDetailCompareViewModeAlignmentTarget(
+        offlineDetailCompareCodeCritical,
+        offlineDetailCompareCodeAll,
       ) === "all" &&
+      resolveOfflineDetailCompareViewModeAlignmentTarget(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAllChecksumMismatch,
+      ) ===
+        buildOfflineDetailCompareViewModeAlignmentDescriptor(
+          offlineDetailCompareCodeAll,
+          offlineDetailCompareCodeAllChecksumMismatch,
+        ).resolvedMode &&
       resolveOfflineDetailCompareViewModeAlignmentTarget(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAllChecksumMismatch,
@@ -2778,6 +2893,26 @@ async function main() {
       resolveOfflineDetailCompareViewModeAlignmentTarget(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAggregateMismatch,
+      ) ===
+        buildOfflineDetailCompareViewModeAlignmentDescriptor(
+          offlineDetailCompareCodeAll,
+          offlineDetailCompareCodeAggregateMismatch,
+        ).resolvedMode &&
+      resolveOfflineDetailCompareViewModeAlignmentTarget(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAggregateMismatch,
+      ) === "" &&
+      resolveOfflineDetailCompareViewModeAlignmentTarget(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeViewAggregateMismatch,
+      ) ===
+        buildOfflineDetailCompareViewModeAlignmentDescriptor(
+          offlineDetailCompareCodeAll,
+          offlineDetailCompareCodeViewAggregateMismatch,
+        ).resolvedMode &&
+      resolveOfflineDetailCompareViewModeAlignmentTarget(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeViewAggregateMismatch,
       ) === "",
   });
 
