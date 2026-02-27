@@ -7,6 +7,8 @@ const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
 
 const REQUIRED_HTML_IDS = [
   "appStatus",
+  "btnToggleBattleFocus",
+  "battleFocusHint",
   "stageDisplay",
   "worldTag",
   "difficultyIndex",
@@ -135,6 +137,8 @@ const REQUIRED_HTML_IDS = [
 ];
 
 const REQUIRED_DOM_KEYS = [
+  "btnToggleBattleFocus",
+  "battleFocusHint",
   "battleScenePlayer",
   "battleSceneEnemy",
   "battleScenePlayerHpBar",
@@ -261,11 +265,14 @@ async function main() {
   assertIncludes(app, "function exportOfflineReportToPayload(", "app.mjs", failures);
   assertIncludes(app, "function exportRealtimeReportToPayload(", "app.mjs", failures);
   assertIncludes(app, "function setOfflineDetailExpanded(", "app.mjs", failures);
+  assertIncludes(app, "function applyBattleFocusMode(", "app.mjs", failures);
   assertIncludes(app, "function runBattleSceneDuelTick(", "app.mjs", failures);
   assertIncludes(app, "function pushBattleSceneTicker(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneSkillBanner(", "app.mjs", failures);
   assertIncludes(app, "function startRealtimeAuto(", "app.mjs", failures);
   assertIncludes(app, "function stopRealtimeAuto(", "app.mjs", failures);
+  assertIncludes(css, ".focus-controls", "app.css", failures);
+  assertIncludes(css, ".app.battle-focus-mode .panel[data-panel-role=\"secondary\"]", "app.css", failures);
   assertIncludes(css, ".battle-actor-hp-track", "app.css", failures);
   assertIncludes(css, ".battle-scene-clash-core", "app.css", failures);
   assertIncludes(css, ".battle-scene-top-hud", "app.css", failures);

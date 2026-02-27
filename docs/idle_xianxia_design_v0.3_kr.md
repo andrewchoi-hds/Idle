@@ -2106,3 +2106,11 @@
 
 ## 491) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(전투 상단 HUD + 스킬 배너/티커 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 492) 다음 순차 작업
+1. [완료] 전투 집중 토글(`btnToggleBattleFocus`)과 모드 적용 헬퍼(`applyBattleFocusMode`)를 추가해 모바일 화면에서 운영 패널(`settings/consumables/save/assets/logs`)을 접고 펼칠 수 있도록 구성.
+2. [완료] `main.app.battle-focus-mode`를 기본 ON으로 적용해 첫 진입부터 전투/액션 중심 화면 비중을 높이고, 토글 상태에 따라 안내 문구(`battleFocusHint`)와 버튼 상태(`aria-pressed`)를 동기화.
+3. [완료] DOM contract 체크에 신규 집중 모드 요소/헬퍼(`btnToggleBattleFocus`, `battleFocusHint`, `applyBattleFocusMode`)와 레이아웃 규칙 CSS 토큰을 반영해 구조 회귀를 방지.
+
+## 493) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(전투 집중 모드 레이아웃 토글 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
