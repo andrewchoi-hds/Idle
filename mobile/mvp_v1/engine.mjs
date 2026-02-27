@@ -639,6 +639,31 @@ export function resolveOfflineDetailCompareCheckSource(
   return requestDescriptor.normalizedSource;
 }
 
+export function buildOfflineDetailComparePayloadExtractSourceDescriptors() {
+  return [
+    {
+      source: "detail_view_snapshot",
+      snapshotField: "detailViewSnapshotAtExport",
+    },
+    {
+      source: "detail_report_snapshot",
+      snapshotField: "detailReportSnapshot",
+    },
+  ];
+}
+
+export function buildOfflineDetailComparePayloadExtractSourceDescriptor(sourceInput) {
+  const source = typeof sourceInput === "string" ? sourceInput.trim() : "";
+  return (
+    buildOfflineDetailComparePayloadExtractSourceDescriptors().find(
+      (descriptor) => descriptor.source === source,
+    ) || {
+      source: "detail_view_snapshot",
+      snapshotField: "detailViewSnapshotAtExport",
+    }
+  );
+}
+
 export function extractOfflineDetailCompareCodeFromPayloadTextWithSource(payloadInput) {
   const text = typeof payloadInput === "string" ? payloadInput.trim() : "";
   if (!text) {
@@ -649,23 +674,16 @@ export function extractOfflineDetailCompareCodeFromPayloadTextWithSource(payload
   }
   try {
     const parsed = JSON.parse(text);
-    const fromDetailView = extractOfflineDetailCompareCode(
-      parsed?.detailViewSnapshotAtExport?.compareCode,
-    );
-    if (fromDetailView) {
-      return {
-        code: fromDetailView,
-        source: "detail_view_snapshot",
-      };
-    }
-    const fromDetailReport = extractOfflineDetailCompareCode(
-      parsed?.detailReportSnapshot?.compareCode,
-    );
-    if (fromDetailReport) {
-      return {
-        code: fromDetailReport,
-        source: "detail_report_snapshot",
-      };
+    for (const descriptor of buildOfflineDetailComparePayloadExtractSourceDescriptors()) {
+      const extractedCode = extractOfflineDetailCompareCode(
+        parsed?.[descriptor.snapshotField]?.compareCode,
+      );
+      if (extractedCode) {
+        return {
+          code: extractedCode,
+          source: descriptor.source,
+        };
+      }
     }
   } catch {
     // Ignore JSON parse failures and fall back to first detected token.
