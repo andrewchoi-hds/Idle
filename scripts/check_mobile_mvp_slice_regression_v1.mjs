@@ -77,6 +77,8 @@ import {
   resolveOfflineDetailCompareCheckSource,
   resolveOfflineDetailCompareInputSource,
   resolveOfflineDetailCompareTargetInputState,
+  buildOfflineDetailCompareTargetInputStateDescriptors,
+  buildOfflineDetailCompareTargetInputStateDescriptor,
   resolveOfflineDetailCompareTargetInputStateStatusMessageKo,
   buildOfflineDetailCompareCodeTargetSummaryLabelKo,
   buildOfflineDetailCompareCodeTargetSummaryTone,
@@ -933,6 +935,26 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_target_input_state_descriptors_are_stable",
+    passed:
+      buildOfflineDetailCompareTargetInputStateDescriptors().length === 3 &&
+      buildOfflineDetailCompareTargetInputStateDescriptors()
+        .map((descriptor) => descriptor.state)
+        .join("|") ===
+        ["empty", "invalid", "valid"].join("|") &&
+      buildOfflineDetailCompareTargetInputStateDescriptor("empty")
+        .statusMessageKo === "비교 코드 입력 필요" &&
+      buildOfflineDetailCompareTargetInputStateDescriptor("invalid")
+        .statusMessageKo === "비교 코드 형식 오류" &&
+      buildOfflineDetailCompareTargetInputStateDescriptor("valid").statusMessageKo ===
+        "비교 코드 형식 오류" &&
+      buildOfflineDetailCompareTargetInputStateDescriptor("unknown").state ===
+        "invalid" &&
+      buildOfflineDetailCompareTargetInputStateDescriptor("unknown")
+        .statusMessageKo === "비교 코드 형식 오류",
+  });
+
+  checks.push({
     id: "offline_detail_compare_target_input_state_distinguishes_empty_invalid_valid",
     passed:
       resolveOfflineDetailCompareTargetInputState("") === "empty" &&
@@ -947,13 +969,16 @@ async function main() {
     id: "offline_detail_compare_target_input_state_status_message_maps_state",
     passed:
       resolveOfflineDetailCompareTargetInputStateStatusMessageKo("empty") ===
-        "비교 코드 입력 필요" &&
+        buildOfflineDetailCompareTargetInputStateDescriptor("empty")
+          .statusMessageKo &&
       resolveOfflineDetailCompareTargetInputStateStatusMessageKo("invalid") ===
-        "비교 코드 형식 오류" &&
+        buildOfflineDetailCompareTargetInputStateDescriptor("invalid")
+          .statusMessageKo &&
       resolveOfflineDetailCompareTargetInputStateStatusMessageKo("valid") ===
-        "비교 코드 형식 오류" &&
+        buildOfflineDetailCompareTargetInputStateDescriptor("valid").statusMessageKo &&
       resolveOfflineDetailCompareTargetInputStateStatusMessageKo("unknown") ===
-        "비교 코드 형식 오류",
+        buildOfflineDetailCompareTargetInputStateDescriptor("unknown")
+          .statusMessageKo,
   });
 
   checks.push({

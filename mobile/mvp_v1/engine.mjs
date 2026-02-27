@@ -454,14 +454,40 @@ export function resolveOfflineDetailCompareTargetInputState(codeInput) {
   return extractOfflineDetailCompareCode(text) ? "valid" : "invalid";
 }
 
+export function buildOfflineDetailCompareTargetInputStateDescriptors() {
+  return [
+    {
+      state: "empty",
+      statusMessageKo: "비교 코드 입력 필요",
+    },
+    {
+      state: "invalid",
+      statusMessageKo: "비교 코드 형식 오류",
+    },
+    {
+      state: "valid",
+      statusMessageKo: "비교 코드 형식 오류",
+    },
+  ];
+}
+
+export function buildOfflineDetailCompareTargetInputStateDescriptor(stateInput) {
+  const state = typeof stateInput === "string" ? stateInput.trim() : "";
+  return (
+    buildOfflineDetailCompareTargetInputStateDescriptors().find(
+      (descriptor) => descriptor.state === state,
+    ) || {
+      state: "invalid",
+      statusMessageKo: "비교 코드 형식 오류",
+    }
+  );
+}
+
 export function resolveOfflineDetailCompareTargetInputStateStatusMessageKo(
   stateInput,
 ) {
-  const state = typeof stateInput === "string" ? stateInput.trim() : "";
-  if (state === "empty") {
-    return "비교 코드 입력 필요";
-  }
-  return "비교 코드 형식 오류";
+  return buildOfflineDetailCompareTargetInputStateDescriptor(stateInput)
+    .statusMessageKo;
 }
 
 export function resolveOfflineDetailCompareCheckSource(
