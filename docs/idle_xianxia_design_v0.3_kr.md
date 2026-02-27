@@ -2058,3 +2058,11 @@
 
 ## 479) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 정산 90% 효율 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 480) 다음 순차 작업
+1. [완료] 전투 연출 아레나/아이콘에 SVG 에셋(`battle_arena_mist.svg`, `battle_avatar_cultivator.svg`, `battle_avatar_guardian.svg`)을 적용해 텍스트 중심 화면 대비 시각 밀도를 강화.
+2. [완료] 자동 진행 요약 연출 헬퍼(`playBattleSceneAutoSummary`)와 오프라인 정산 연출 헬퍼(`playBattleSceneOfflineSummary`)를 추가하고, `runRealtimeAutoTick`/`자동 10초`/`applyOfflineCatchupNow` 경로를 동일 전투 연출 루프로 통합.
+3. [완료] 검증 11종(`typecheck`, `combat diff`, `save auto/offline`, `pr validation/body/registry`, `mobile:mvp:check`)을 재실행해 회귀 없이 통과 확인.
+
+## 481) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(전투 연출 에셋 + 자동/오프라인 요약 연출 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

@@ -575,6 +575,161 @@ function playBattleSceneBreakthroughOutcome(outcome) {
   triggerBattleSceneImpact("breakthrough_fail", "info");
 }
 
+function playBattleSceneAutoSummary(summaryInput, sourceLabel = "자동 진행") {
+  const summary =
+    summaryInput && typeof summaryInput === "object" ? summaryInput : null;
+  if (!summary) {
+    return;
+  }
+  const battles = Math.max(0, Number(summary.battles) || 0);
+  const battleWins = Math.max(0, Number(summary.battleWins) || 0);
+  const breakthroughs = Math.max(0, Number(summary.breakthroughs) || 0);
+  const rebirths = Math.max(0, Number(summary.rebirths) || 0);
+  const blocked = Math.max(0, Number(summary.breakthroughPolicyBlocks) || 0);
+  const warmupSkips = Math.max(0, Number(summary.autoBreakthroughWarmupSkips) || 0);
+  if (
+    battles <= 0 &&
+    breakthroughs <= 0 &&
+    rebirths <= 0 &&
+    blocked <= 0 &&
+    warmupSkips <= 0 &&
+    summary.autoBreakthroughPaused !== true
+  ) {
+    return;
+  }
+
+  let tone = "info";
+  let impactKind = "battle_win";
+  let statusText = `${sourceLabel} 갱신`;
+  if (rebirths > 0) {
+    tone = "error";
+    impactKind = "breakthrough_fail";
+    statusText = `${sourceLabel} 환생 발생`;
+  } else if (summary.autoBreakthroughPaused) {
+    tone = "error";
+    impactKind = "breakthrough_fail";
+    statusText = `${sourceLabel} 자동돌파 일시정지`;
+  } else if (breakthroughs > 0) {
+    tone = "success";
+    impactKind = "breakthrough_success";
+    statusText = `${sourceLabel} 돌파 진행`;
+  } else if (battles > 0) {
+    const losses = Math.max(0, battles - battleWins);
+    tone = battleWins > losses ? "success" : losses > 0 ? "warn" : "info";
+    impactKind = battleWins > 0 ? "battle_win" : "battle_loss";
+    statusText = `${sourceLabel} 전투 진행`;
+  } else if (blocked > 0 || warmupSkips > 0) {
+    tone = "warn";
+    impactKind = "breakthrough_fail";
+    statusText = `${sourceLabel} 돌파 대기`;
+  }
+
+  const parts = [];
+  if (battles > 0) {
+    parts.push(`전투 ${battles}회`);
+    parts.push(`승리 ${battleWins}회`);
+  }
+  if (breakthroughs > 0) {
+    parts.push(`돌파 ${breakthroughs}회`);
+  }
+  if (warmupSkips > 0) {
+    parts.push(`워밍업 차단 ${warmupSkips}회`);
+  }
+  if (blocked > 0) {
+    parts.push(`위험 차단 ${blocked}회`);
+  }
+  if (summary.autoBreakthroughPaused) {
+    parts.push(`자동돌파 일시정지(${String(summary.autoBreakthroughPauseReasonLabelKo || "정책")})`);
+  }
+  if (rebirths > 0) {
+    parts.push(`환생 ${rebirths}회`);
+  }
+
+  setBattleSceneStatus(statusText, tone);
+  setBattleSceneResult(
+    `${sourceLabel} · ${parts.length > 0 ? parts.join(" · ") : "변화 없음"}`,
+    tone,
+  );
+  triggerBattleSceneImpact(impactKind, tone);
+
+  if (battles > 0) {
+    spawnBattleSceneFloat(`전투 +${battles}`, {
+      tone: tone === "error" ? "warn" : "success",
+      anchor: "center",
+    });
+  }
+  if (breakthroughs > 0) {
+    spawnBattleSceneFloat(`돌파 +${breakthroughs}`, {
+      tone: "success",
+      anchor: "center",
+    });
+  }
+  if (blocked > 0) {
+    spawnBattleSceneFloat(`차단 ${blocked}`, {
+      tone: "warn",
+      anchor: "enemy",
+    });
+  }
+  if (rebirths > 0) {
+    spawnBattleSceneFloat(`환생 ${rebirths}`, {
+      tone: "error",
+      anchor: "center",
+    });
+  }
+}
+
+function playBattleSceneOfflineSummary(offlineReportInput) {
+  const report =
+    offlineReportInput && typeof offlineReportInput === "object"
+      ? offlineReportInput
+      : null;
+  const summary =
+    report?.summary && typeof report.summary === "object"
+      ? report.summary
+      : null;
+  const auto =
+    summary?.autoSummary && typeof summary.autoSummary === "object"
+      ? summary.autoSummary
+      : null;
+  if (!summary || !auto || (Number(summary.appliedOfflineSec) || 0) <= 0) {
+    return;
+  }
+  const delta =
+    report?.delta && typeof report.delta === "object"
+      ? report.delta
+      : { qi: 0, spiritCoin: 0, rebirthEssence: 0 };
+  const rebirths = Math.max(0, Number(auto.rebirths) || 0);
+  const breakthroughs = Math.max(0, Number(auto.breakthroughs) || 0);
+  const battles = Math.max(0, Number(auto.battles) || 0);
+  const tone = rebirths > 0 ? "error" : breakthroughs > 0 || battles > 0 ? "success" : "info";
+  const impactKind =
+    rebirths > 0 ? "breakthrough_fail" : breakthroughs > 0 ? "breakthrough_success" : "battle_win";
+  setBattleSceneStatus("오프라인 정산 완료", tone);
+  setBattleSceneResult(
+    `오프라인 ${fmtDurationSec(summary.appliedOfflineSec)} · 전투 ${battles}회 · 돌파 ${breakthroughs}회 · 환생 ${rebirths}회`,
+    tone,
+  );
+  triggerBattleSceneImpact(impactKind, tone);
+  if ((Number(delta.qi) || 0) !== 0) {
+    spawnBattleSceneFloat(`기 ${fmtSignedInteger(delta.qi)}`, {
+      tone: delta.qi >= 0 ? "success" : "error",
+      anchor: "player",
+    });
+  }
+  if ((Number(delta.spiritCoin) || 0) !== 0) {
+    spawnBattleSceneFloat(`영석 ${fmtSignedInteger(delta.spiritCoin)}`, {
+      tone: delta.spiritCoin >= 0 ? "success" : "error",
+      anchor: "player",
+    });
+  }
+  if ((Number(delta.rebirthEssence) || 0) !== 0) {
+    spawnBattleSceneFloat(`정수 ${fmtSignedInteger(delta.rebirthEssence)}`, {
+      tone: delta.rebirthEssence >= 0 ? "warn" : "error",
+      anchor: "player",
+    });
+  }
+}
+
 function clampInteger(value, fallback, min, max) {
   const parsed = Number(value);
   if (!Number.isFinite(parsed)) {
@@ -1647,6 +1802,16 @@ function runRealtimeAutoTick() {
     setStatus(`실시간 자동: 자동 돌파 일시정지 (${reasonLabel})`, true);
   }
 
+  if (
+    summary.battles > 0 ||
+    summary.breakthroughs > 0 ||
+    summary.rebirths > 0 ||
+    summary.breakthroughPolicyBlocks > 0 ||
+    summary.autoBreakthroughPaused
+  ) {
+    playBattleSceneAutoSummary(summary, "실시간 자동");
+  }
+
   const warmupRemainingSecAfter = getAutoBreakthroughWarmupRemainingSec(stats);
   if (
     warmupRemainingSecBefore > 0 &&
@@ -1727,6 +1892,14 @@ function applyOfflineCatchupNow() {
   ) {
     addClientLog("auto", "오프라인 정산: 돌파 워밍업 종료");
   }
+  playBattleSceneOfflineSummary({
+    summary: result.summary,
+    delta: {
+      qi: state.currencies.qi - before.qi,
+      spiritCoin: state.currencies.spiritCoin - before.spiritCoin,
+      rebirthEssence: state.currencies.rebirthEssence - before.rebirthEssence,
+    },
+  });
   return {
     summary: result.summary,
     delta: {
@@ -2576,6 +2749,7 @@ function bindEvents() {
     setStatus(
       `자동 10초(${tuning.labelKo}): 전투 ${summary.battles}회 · 돌파 ${summary.breakthroughs}회${warmupSkipText}${blockedText}${pausedText}${warmupRemainingText} · 환생 ${summary.rebirths}회`,
     );
+    playBattleSceneAutoSummary(summary, "자동 10초");
     persistLocal();
     render();
   });

@@ -58,6 +58,7 @@ npm run mobile:mvp:serve
   - 워밍업 길이는 옵션(`optAutoBreakthroughResumeWarmupSec`, 0~30초)으로 조정 가능하며 0초면 즉시 돌파 시도 허용
   - 실시간 상태 라인에 돌파 워밍업 잔여 시간(`돌파 워밍업 Ns`)을 노출
   - 실시간 통계 카드(`누적 시간/전투/돌파/환생`)를 화면에 상시 표시
+  - 실시간 자동 tick에서 발생한 전투/돌파/정책 차단/환생 요약을 전투 연출 패널 상태·결과 라인과 플로팅 텍스트로 즉시 반영
   - `실시간 리포트 JSON` 버튼으로 누적 세션 리포트를 `savePayload`로 내보내기
   - `실시간 통계 초기화` 버튼으로 누적 세션 통계를 즉시 리셋
 - 저장/복구:
@@ -136,6 +137,10 @@ npm run mobile:mvp:serve
   - `오프라인 세부 로그 개수` (`5~120`)
   - 위 5개는 저장 데이터(`settings`)에 영속화되어 다음 접속에도 유지
   - `세이브 슬롯` 선택(`optSaveSlot`, 1~3): 저장/불러오기 대상 슬롯 지정
+- 전투 연출 패널:
+  - 아레나 배경에 SVG 에셋(`battle_arena_mist.svg`)을 적용해 텍스트 중심 레이아웃 대비 시각 밀도를 강화
+  - 진영 아이콘에 SVG 아바타(`battle_avatar_cultivator.svg`, `battle_avatar_guardian.svg`)를 적용해 플레이어/적 구분을 즉시 인지 가능하게 개선
+  - `전투 1회/자동 10초/실시간 자동/오프라인 정산` 결과를 동일 연출 경로(`playBattleSceneBattleOutcome`, `playBattleSceneAutoSummary`, `playBattleSceneOfflineSummary`)로 통합
 
 ## 4) 저장 포맷
 - localStorage key:
