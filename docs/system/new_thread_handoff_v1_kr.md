@@ -3,8 +3,8 @@
 ## 1) 현재 스냅샷
 - 저장소: `/Users/hirediversity/Idle`
 - 기준 브랜치: `main`
-- 상태: `origin/main`과 동기화, 워킹트리에는 인수인계 문서 1개(`docs/system/new_thread_handoff_v1_kr.md`) 미추적 파일이 존재
-- 최신 기준 커밋: `ed87894` (`feat(mobile): add payload extract source descriptor helpers`, PR #174)
+- 상태: `origin/main`과 동기화, 워킹트리 클린
+- 최신 기준 커밋: `c53df3d` (`docs(system): refresh mobile mvp handoff status`, PR #175)
 
 ## 2) 최근 완료 범위
 - 오프라인 비교 뷰의 fallback/descriptor 정규화 작업을 연속 반영.
@@ -20,6 +20,7 @@
   - #172 payload load source descriptor helpers
   - #173 compare input and check source descriptor helpers
   - #174 payload extract source descriptor helpers
+  - #175 refresh mobile mvp handoff status
 - 설계 로그 반영 위치: `/Users/hirediversity/Idle/docs/idle_xianxia_design_v0.3_kr.md`의 `444)~463)` 구간.
 
 ## 3) 남은 작업 큐 (새 쓰레드 시작용)
