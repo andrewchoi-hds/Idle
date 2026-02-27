@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" fill="none">
+  <defs>
+    <linearGradient id="armor" x1="20" y1="24" x2="78" y2="82" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F5C8B3"/>
+      <stop offset="1" stop-color="#6D2B1E"/>
+    </linearGradient>
+    <radialGradient id="ember" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(48 50) rotate(90) scale(42)">
+      <stop stop-color="#FFE8DA" stop-opacity=".88"/>
+      <stop offset="1" stop-color="#742516" stop-opacity=".18"/>
+    </radialGradient>
+  </defs>
+  <rect x="6" y="6" width="84" height="84" rx="42" fill="url(#ember)"/>
+  <path d="M48 18c10 0 18 8.3 18 18.6S58 55.2 48 55.2 30 46.9 30 36.6 38 18 48 18Z" fill="#FFEFE5"/>
+  <path d="M22 80v-4.8C22 63.5 33.6 54 48 54s26 9.5 26 21.2V80H22Z" fill="url(#armor)"/>
+  <path d="M33 40h30" stroke="#5D1F13" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M34.5 50c3.6-2.2 8-3.4 13.5-3.4s9.9 1.2 13.5 3.4" stroke="#5D1F13" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M20 70c8.5-9 18-13.6 28-13.6S67.5 61 76 70" stroke="#FFD4BF" stroke-opacity=".64" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="39" cy="38.8" r="3.1" fill="#5D1F13"/>
+  <circle cx="57" cy="38.8" r="3.1" fill="#5D1F13"/>
+  <path d="M14 22 24 38" stroke="#FFC2B3" stroke-width="4" stroke-linecap="round"/>
+  <path d="M26 18 33 30" stroke="#FFC2B3" stroke-opacity=".84" stroke-width="3" stroke-linecap="round"/>
+  <path d="M13 36 30 42" stroke="#FFC2B3" stroke-opacity=".8" stroke-width="3" stroke-linecap="round"/>
+</svg>

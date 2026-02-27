@@ -288,6 +288,8 @@ async function main() {
   assertIncludes(css, ".battle-scene-ticker", "app.css", failures);
   assertIncludes(css, ".battle-actor[data-actor-frame=\"attack\"]", "app.css", failures);
   assertIncludes(css, "@keyframes battle-avatar-frame-skill", "app.css", failures);
+  assertIncludes(css, "battle_avatar_cultivator_skill.svg", "app.css", failures);
+  assertIncludes(css, "battle_avatar_guardian_hit.svg", "app.css", failures);
   assertIncludes(css, ".offline-modal", "app.css", failures);
   assertIncludes(css, ".offline-compare-result.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-current-summary.tone-error", "app.css", failures);

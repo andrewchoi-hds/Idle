@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" fill="none">
+  <defs>
+    <linearGradient id="armor" x1="20" y1="24" x2="78" y2="82" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFD9C8"/>
+      <stop offset="1" stop-color="#B66A31"/>
+    </linearGradient>
+    <radialGradient id="ember" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(48 48) rotate(90) scale(42)">
+      <stop stop-color="#FFF1E7" stop-opacity=".98"/>
+      <stop offset="1" stop-color="#C46A2D" stop-opacity=".13"/>
+    </radialGradient>
+  </defs>
+  <rect x="6" y="6" width="84" height="84" rx="42" fill="url(#ember)"/>
+  <circle cx="48" cy="48" r="34" stroke="#FFD9BE" stroke-opacity=".56" stroke-width="2"/>
+  <path d="M48 18c10 0 18 8.3 18 18.6S58 55.2 48 55.2 30 46.9 30 36.6 38 18 48 18Z" fill="#FFF4EC"/>
+  <path d="M22 80v-4.8C22 63.5 33.6 54 48 54s26 9.5 26 21.2V80H22Z" fill="url(#armor)"/>
+  <path d="M33 40h30" stroke="#7A2E18" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M34.5 48c4.2 4.4 8.7 6.2 13.5 6.2s9.3-1.8 13.5-6.2" stroke="#7A2E18" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M20 70c8.5-9 18-13.6 28-13.6S67.5 61 76 70" stroke="#FFE3D1" stroke-opacity=".8" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="39" cy="38.8" r="3.1" fill="#7A2E18"/>
+  <circle cx="57" cy="38.8" r="3.1" fill="#7A2E18"/>
+  <path d="M48 16 52 28 64 28 54 35 58 47 48 39 38 47 42 35 32 28 44 28Z" fill="#FFD9BE" fill-opacity=".86"/>
+</svg>
