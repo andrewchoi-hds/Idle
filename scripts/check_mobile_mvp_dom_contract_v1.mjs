@@ -251,6 +251,12 @@ async function main() {
     "index.html",
     failures,
   );
+  assertIncludes(
+    html,
+    'data-actor-frame="idle"',
+    "index.html",
+    failures,
+  );
 
   for (const id of REQUIRED_HTML_IDS) {
     assertIncludes(html, `id="${id}"`, "index.html", failures);
@@ -269,6 +275,8 @@ async function main() {
   assertIncludes(app, "function runBattleSceneDuelTick(", "app.mjs", failures);
   assertIncludes(app, "function pushBattleSceneTicker(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneSkillBanner(", "app.mjs", failures);
+  assertIncludes(app, "function setBattleSceneActorFrame(", "app.mjs", failures);
+  assertIncludes(app, "function resetBattleSceneActorFrames(", "app.mjs", failures);
   assertIncludes(app, "function startRealtimeAuto(", "app.mjs", failures);
   assertIncludes(app, "function stopRealtimeAuto(", "app.mjs", failures);
   assertIncludes(css, ".focus-controls", "app.css", failures);
@@ -278,6 +286,8 @@ async function main() {
   assertIncludes(css, ".battle-scene-top-hud", "app.css", failures);
   assertIncludes(css, ".battle-scene-skill-banner", "app.css", failures);
   assertIncludes(css, ".battle-scene-ticker", "app.css", failures);
+  assertIncludes(css, ".battle-actor[data-actor-frame=\"attack\"]", "app.css", failures);
+  assertIncludes(css, "@keyframes battle-avatar-frame-skill", "app.css", failures);
   assertIncludes(css, ".offline-modal", "app.css", failures);
   assertIncludes(css, ".offline-compare-result.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-current-summary.tone-error", "app.css", failures);

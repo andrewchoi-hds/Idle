@@ -2114,3 +2114,11 @@
 
 ## 493) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(전투 집중 모드 레이아웃 토글 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 494) 다음 순차 작업
+1. [완료] 전투 배우 프레임 상태(`data-actor-frame=idle/attack/hit/skill`)와 전환 헬퍼(`setBattleSceneActorFrame`, `resetBattleSceneActorFrames`)를 추가해 strike/burst/impact 경로에서 공격/피격/비기 상태가 즉시 반영되도록 구성.
+2. [완료] 전투 연출 CSS에 프레임별 스타일/아바타 키프레임(`battle-avatar-frame-attack/hit/skill`)을 추가해 기존 idle·impact 애니메이션과 독립적으로 배우 상태 표현을 강화.
+3. [완료] DOM contract 체크에 신규 프레임 전환 토큰(`data-actor-frame`, `setBattleSceneActorFrame`, `.battle-actor[data-actor-frame="attack"]`)을 반영해 구조 회귀를 방지.
+
+## 495) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(전투 배우 프레임 전환 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

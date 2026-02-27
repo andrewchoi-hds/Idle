@@ -286,6 +286,16 @@ const BATTLE_SCENE_IMPACT_CLASSES = [
   "scene-impact-breakthrough-success",
   "scene-impact-breakthrough-fail",
 ];
+const BATTLE_SCENE_ACTOR_FRAME_HOLD_MS = {
+  attack: 360,
+  hit: 420,
+  skill: 620,
+};
+const BATTLE_SCENE_ACTOR_FRAME_HOLD_REDUCED_MS = {
+  attack: 180,
+  hit: 220,
+  skill: 280,
+};
 const BATTLE_SCENE_AMBIENT_TICK_MS = 820;
 const BATTLE_SCENE_DUEL_MAX_HP = 100;
 const BATTLE_SCENE_DUEL_MAX_CAST = 100;
@@ -309,6 +319,10 @@ let battleSceneAmbientTimer = null;
 let battleSceneAmbientStep = 0;
 let battleSceneLastExplicitEventAtMs = 0;
 let battleSceneSkillBannerTimer = null;
+const battleSceneActorFrameTimers = {
+  player: null,
+  enemy: null,
+};
 const battleSceneTickerState = {
   items: [],
 };
@@ -424,6 +438,104 @@ function shouldReduceBattleSceneMotion() {
     typeof window.matchMedia === "function" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches
   );
+}
+
+function normalizeBattleSceneActor(actorInput) {
+  return actorInput === "enemy" ? "enemy" : "player";
+}
+
+function normalizeBattleSceneActorFrame(frameInput) {
+  if (frameInput === "attack" || frameInput === "hit" || frameInput === "skill") {
+    return frameInput;
+  }
+  return "idle";
+}
+
+function resolveBattleSceneActorNode(actorInput) {
+  const actor = normalizeBattleSceneActor(actorInput);
+  return actor === "enemy" ? dom.battleSceneEnemy : dom.battleScenePlayer;
+}
+
+function resolveBattleSceneActorFrameHoldMs(frameInput, holdMsInput) {
+  const frame = normalizeBattleSceneActorFrame(frameInput);
+  const requested = Number(holdMsInput);
+  if (Number.isFinite(requested) && requested >= 0) {
+    return Math.floor(requested);
+  }
+  if (frame === "idle") {
+    return 0;
+  }
+  if (shouldReduceBattleSceneMotion()) {
+    return BATTLE_SCENE_ACTOR_FRAME_HOLD_REDUCED_MS[frame] || 200;
+  }
+  return BATTLE_SCENE_ACTOR_FRAME_HOLD_MS[frame] || 360;
+}
+
+function clearBattleSceneActorFrameTimer(actorInput) {
+  const actor = normalizeBattleSceneActor(actorInput);
+  if (battleSceneActorFrameTimers[actor] !== null) {
+    window.clearTimeout(battleSceneActorFrameTimers[actor]);
+    battleSceneActorFrameTimers[actor] = null;
+  }
+}
+
+function setBattleSceneActorFrame(actorInput, frameInput, options = {}) {
+  const actor = normalizeBattleSceneActor(actorInput);
+  const frame = normalizeBattleSceneActorFrame(frameInput);
+  const actorNode = resolveBattleSceneActorNode(actor);
+  if (!actorNode) {
+    clearBattleSceneActorFrameTimer(actor);
+    return;
+  }
+  clearBattleSceneActorFrameTimer(actor);
+  actorNode.dataset.actorFrame = frame;
+  if (frame === "idle") {
+    return;
+  }
+  const holdMs = resolveBattleSceneActorFrameHoldMs(frame, options.holdMs);
+  if (holdMs <= 0) {
+    return;
+  }
+  battleSceneActorFrameTimers[actor] = window.setTimeout(() => {
+    const node = resolveBattleSceneActorNode(actor);
+    if (node) {
+      node.dataset.actorFrame = "idle";
+    }
+    battleSceneActorFrameTimers[actor] = null;
+  }, holdMs);
+}
+
+function resetBattleSceneActorFrames() {
+  clearBattleSceneActorFrameTimer("player");
+  clearBattleSceneActorFrameTimer("enemy");
+  const playerNode = resolveBattleSceneActorNode("player");
+  if (playerNode) {
+    playerNode.dataset.actorFrame = "idle";
+  }
+  const enemyNode = resolveBattleSceneActorNode("enemy");
+  if (enemyNode) {
+    enemyNode.dataset.actorFrame = "idle";
+  }
+}
+
+function applyBattleSceneImpactActorFrames(kind) {
+  if (kind === "battle_win") {
+    setBattleSceneActorFrame("player", "attack", { holdMs: 380 });
+    setBattleSceneActorFrame("enemy", "hit", { holdMs: 460 });
+    return;
+  }
+  if (kind === "battle_loss") {
+    setBattleSceneActorFrame("enemy", "attack", { holdMs: 380 });
+    setBattleSceneActorFrame("player", "hit", { holdMs: 460 });
+    return;
+  }
+  if (kind === "breakthrough_success") {
+    setBattleSceneActorFrame("player", "skill", { holdMs: 680 });
+    setBattleSceneActorFrame("enemy", "hit", { holdMs: 420 });
+    return;
+  }
+  setBattleSceneActorFrame("player", "hit", { holdMs: 520 });
+  setBattleSceneActorFrame("enemy", "idle");
 }
 
 function setBattleSceneLoopMode(loopMode = "idle") {
@@ -742,6 +854,7 @@ function resetBattleSceneDuelState(options = {}) {
   battleSceneDuelState.combo = 0;
   battleSceneDuelState.maxCombo = 0;
   battleSceneDuelState.dpsMomentum = 0;
+  resetBattleSceneActorFrames();
   if (options.clearTicker) {
     clearBattleSceneTicker();
   }
@@ -828,6 +941,8 @@ function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true) {
     36,
     battleSceneDuelState.dpsMomentum + burstDamage * 0.5,
   );
+  setBattleSceneActorFrame(attacker, "skill");
+  setBattleSceneActorFrame(defenderAnchor, "hit");
   pushBattleSceneTicker(
     `${attacker === "player" ? "수련자" : "적수"} 비기 ${skillLabel} · ${burstDamage}`,
     tone,
@@ -874,6 +989,8 @@ function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true) {
     battleSceneDuelState[attackerCastKey] + castGain,
     BATTLE_SCENE_DUEL_MAX_CAST,
   );
+  setBattleSceneActorFrame(attacker, "attack");
+  setBattleSceneActorFrame(defenderAnchor, "hit");
   if (isCrit || damage >= 12) {
     pushBattleSceneTicker(
       `${attacker === "player" ? "수련자" : "적수"} ${isCrit ? "치명타" : "강타"} · ${damage}`,
@@ -1115,6 +1232,7 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
         : kind === "breakthrough_success"
           ? "breakthrough_success"
           : "breakthrough_fail";
+  applyBattleSceneImpactActorFrames(kind);
   dom.battleSceneArena.classList.remove(...BATTLE_SCENE_IMPACT_CLASSES);
   void dom.battleSceneArena.offsetWidth;
   dom.battleSceneArena.classList.add(impactClass);
@@ -1336,6 +1454,7 @@ function stopBattleSceneAmbientLoop() {
   if (dom.battleSceneTrailLayer) {
     dom.battleSceneTrailLayer.innerHTML = "";
   }
+  resetBattleSceneActorFrames();
   battleSceneDuelState.pressure = "low";
   renderBattleSceneDuelHud();
 }
