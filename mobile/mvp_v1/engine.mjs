@@ -870,6 +870,63 @@ export function isOfflineDetailCompareAggregateCountMatched(diffInput) {
   );
 }
 
+export function buildOfflineDetailCompareResultViewModeLabelKo(viewModeInput) {
+  return viewModeInput === "critical" ? "핵심" : "전체";
+}
+
+export function buildOfflineDetailCompareResultDeltaPartDescriptors(diffInput) {
+  const diff = diffInput && typeof diffInput === "object" ? diffInput : null;
+  const current = diff && diff.current ? diff.current : {};
+  const target = diff && diff.target ? diff.target : {};
+  return [
+    {
+      key: "total_events",
+      isChanged: diff ? diff.sameTotalEvents !== true : false,
+      currentValue: Number(current.totalEvents) || 0,
+      targetValue: Number(target.totalEvents) || 0,
+    },
+    {
+      key: "critical_visible_events",
+      isChanged: diff ? diff.sameCriticalVisibleEvents !== true : false,
+      currentValue: Number(current.criticalVisibleEvents) || 0,
+      targetValue: Number(target.criticalVisibleEvents) || 0,
+    },
+    {
+      key: "hidden_critical_events",
+      isChanged: diff ? diff.sameHiddenCriticalEvents !== true : false,
+      currentValue: Number(current.hiddenCriticalEvents) || 0,
+      targetValue: Number(target.hiddenCriticalEvents) || 0,
+    },
+    {
+      key: "view_mode",
+      isChanged: diff ? diff.sameViewMode !== true : false,
+      currentValue: buildOfflineDetailCompareResultViewModeLabelKo(current.viewMode),
+      targetValue: buildOfflineDetailCompareResultViewModeLabelKo(target.viewMode),
+    },
+  ];
+}
+
+export function buildOfflineDetailCompareResultDeltaPartLabelKo(descriptorInput) {
+  const descriptor =
+    descriptorInput && typeof descriptorInput === "object" ? descriptorInput : {};
+  if (descriptor.isChanged !== true) {
+    return "";
+  }
+  if (descriptor.key === "total_events") {
+    return `총 ${descriptor.currentValue}→${descriptor.targetValue}`;
+  }
+  if (descriptor.key === "critical_visible_events") {
+    return `핵심 ${descriptor.currentValue}→${descriptor.targetValue}`;
+  }
+  if (descriptor.key === "hidden_critical_events") {
+    return `숨김 ${descriptor.currentValue}→${descriptor.targetValue}`;
+  }
+  if (descriptor.key === "view_mode") {
+    return `view ${descriptor.currentValue}→${descriptor.targetValue}`;
+  }
+  return "";
+}
+
 export function buildOfflineDetailCompareResultLabelKo(
   currentCodeInput,
   targetCodeInput,
@@ -896,25 +953,9 @@ export function buildOfflineDetailCompareResultLabelKo(
   ) {
     return buildOfflineDetailCompareResultAggregateMismatchLabelKo();
   }
-  const parts = [];
-  if (!diff.sameTotalEvents) {
-    parts.push(`총 ${diff.current.totalEvents}→${diff.target.totalEvents}`);
-  }
-  if (!diff.sameCriticalVisibleEvents) {
-    parts.push(
-      `핵심 ${diff.current.criticalVisibleEvents}→${diff.target.criticalVisibleEvents}`,
-    );
-  }
-  if (!diff.sameHiddenCriticalEvents) {
-    parts.push(
-      `숨김 ${diff.current.hiddenCriticalEvents}→${diff.target.hiddenCriticalEvents}`,
-    );
-  }
-  if (!diff.sameViewMode) {
-    const currentMode = diff.current.viewMode === "critical" ? "핵심" : "전체";
-    const targetMode = diff.target.viewMode === "critical" ? "핵심" : "전체";
-    parts.push(`view ${currentMode}→${targetMode}`);
-  }
+  const parts = buildOfflineDetailCompareResultDeltaPartDescriptors(diff)
+    .map((descriptor) => buildOfflineDetailCompareResultDeltaPartLabelKo(descriptor))
+    .filter((part) => typeof part === "string" && part.length > 0);
   return parts.length > 0
     ? `비교 결과: ${parts.join(", ")}`
     : buildOfflineDetailCompareResultCodeDifferenceLabelKo();
