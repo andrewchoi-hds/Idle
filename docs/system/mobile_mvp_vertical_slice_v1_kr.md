@@ -229,6 +229,7 @@ npm run mobile:mvp:check
   - 오프라인 비교 클립보드 실패 메타(`resolveOfflineDetailCompareClipboardFailureInfo`)가 실패 사유별 source/message 매핑을 일관되게 반환하는지 검증
   - 오프라인 비교 payload 실패 descriptor 헬퍼(`buildOfflineDetailComparePayloadFailureDescriptors`, `buildOfflineDetailComparePayloadFailureDescriptor`)가 실패 사유별 source/message 매핑과 unknown fallback(`extract_failed`)을 일관되게 반환하는지 검증
   - 오프라인 비교 payload 실패 메타(`resolveOfflineDetailComparePayloadFailureInfo`)가 실패 사유별 source/message 매핑을 일관되게 반환하는지 검증
+  - 오프라인 비교 payload 성공 출처 descriptor 헬퍼(`buildOfflineDetailComparePayloadLoadSourceDescriptors`, `buildOfflineDetailComparePayloadLoadSourceDescriptor`)가 source key별 정규화 매핑과 unknown fallback(`payload`)을 일관되게 반환하는지 검증
   - 오프라인 비교 payload 성공 출처 정규화(`resolveOfflineDetailComparePayloadLoadSource`)가 `detail_view_snapshot/detail_report_snapshot/text` 유지 및 기타 입력 fallback(`payload`)을 일관되게 반환하는지 검증
   - 오프라인 비교 입력 출처 해석(`resolveOfflineDetailCompareInputSource`)이 입력값 공백/유효 문자열에 대해 `none/input`을 일관되게 반환하는지 검증
   - 오프라인 비교 대조 출처 해석(`resolveOfflineDetailCompareCheckSource`)이 `keep/input/명시 출처` 분기에서 최종 출처를 일관되게 반환하는지 검증
