@@ -66,6 +66,8 @@ import {
   buildOfflineDetailCompareCodeMatchSummaryMismatchedLabelKo,
   buildOfflineDetailCompareCodeMatchSummaryToneFromItemDescriptors,
   buildOfflineDetailCompareCodeMatchSummaryTone,
+  buildOfflineDetailCompareCodeSourceDescriptors,
+  buildOfflineDetailCompareCodeSourceDescriptor,
   buildOfflineDetailCompareCodeSourceLabelKo,
   buildOfflineDetailCompareCodeSourceTone,
   buildOfflineDetailCompareStatusLabelKo,
@@ -732,6 +734,55 @@ async function main() {
       payloadSourceFromText.source === "text" &&
       payloadSourceMissing.code === "" &&
       payloadSourceMissing.source === "none",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_source_descriptors_are_stable",
+    passed:
+      buildOfflineDetailCompareCodeSourceDescriptors().length === 7 &&
+      buildOfflineDetailCompareCodeSourceDescriptors()
+        .map((descriptor) => descriptor.source)
+        .join("|") ===
+        [
+          "detail_view_snapshot",
+          "detail_report_snapshot",
+          "text",
+          "payload",
+          "clipboard",
+          "input",
+          "none",
+        ].join("|") &&
+      buildOfflineDetailCompareCodeSourceDescriptor("detail_view_snapshot").labelKo ===
+        buildOfflineDetailCompareCodeSourceLabelKo("detail_view_snapshot") &&
+      buildOfflineDetailCompareCodeSourceDescriptor("detail_report_snapshot").labelKo ===
+        buildOfflineDetailCompareCodeSourceLabelKo("detail_report_snapshot") &&
+      buildOfflineDetailCompareCodeSourceDescriptor("text").labelKo ===
+        buildOfflineDetailCompareCodeSourceLabelKo("text") &&
+      buildOfflineDetailCompareCodeSourceDescriptor("payload").labelKo ===
+        buildOfflineDetailCompareCodeSourceLabelKo("payload") &&
+      buildOfflineDetailCompareCodeSourceDescriptor("clipboard").labelKo ===
+        buildOfflineDetailCompareCodeSourceLabelKo("clipboard") &&
+      buildOfflineDetailCompareCodeSourceDescriptor("input").labelKo ===
+        buildOfflineDetailCompareCodeSourceLabelKo("input") &&
+      buildOfflineDetailCompareCodeSourceDescriptor(" none ").labelKo ===
+        buildOfflineDetailCompareCodeSourceLabelKo("none") &&
+      buildOfflineDetailCompareCodeSourceDescriptor("detail_view_snapshot").tone ===
+        buildOfflineDetailCompareCodeSourceTone("detail_view_snapshot") &&
+      buildOfflineDetailCompareCodeSourceDescriptor("detail_report_snapshot").tone ===
+        buildOfflineDetailCompareCodeSourceTone("detail_report_snapshot") &&
+      buildOfflineDetailCompareCodeSourceDescriptor("text").tone ===
+        buildOfflineDetailCompareCodeSourceTone("text") &&
+      buildOfflineDetailCompareCodeSourceDescriptor("payload").tone ===
+        buildOfflineDetailCompareCodeSourceTone("payload") &&
+      buildOfflineDetailCompareCodeSourceDescriptor("clipboard").tone ===
+        buildOfflineDetailCompareCodeSourceTone("clipboard") &&
+      buildOfflineDetailCompareCodeSourceDescriptor("input").tone ===
+        buildOfflineDetailCompareCodeSourceTone("input") &&
+      buildOfflineDetailCompareCodeSourceDescriptor("none").tone ===
+        buildOfflineDetailCompareCodeSourceTone("none") &&
+      buildOfflineDetailCompareCodeSourceDescriptor("unknown").source === "unknown" &&
+      buildOfflineDetailCompareCodeSourceDescriptor("unknown").labelKo === "출처: 없음" &&
+      buildOfflineDetailCompareCodeSourceDescriptor("unknown").tone === "error",
   });
 
   checks.push({
