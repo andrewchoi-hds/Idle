@@ -220,6 +220,7 @@ npm run mobile:mvp:check
   - 오프라인 비교 코드 추출(`extractOfflineDetailCompareCode`)이 원문/문장/JSON 텍스트에서 코드를 일관되게 추출하는지 검증
   - 오프라인 payload 기반 비교 코드 추출(`extractOfflineDetailCompareCodeFromPayloadText`)이 `detailViewSnapshotAtExport`/`detailReportSnapshot` 우선순위와 일반 텍스트 fallback을 일관되게 적용하는지 검증
   - 오프라인 payload 비교 코드 출처 메타(`extractOfflineDetailCompareCodeFromPayloadTextWithSource`)가 `detail_view_snapshot/detail_report_snapshot/text/none` 분기를 일관되게 반환하는지 검증
+  - 오프라인 비교 코드 출처 descriptor 헬퍼(`buildOfflineDetailCompareCodeSourceDescriptors`, `buildOfflineDetailCompareCodeSourceDescriptor`)가 source key별 라벨/톤 매핑과 unknown fallback(`unknown`)을 일관되게 반환하는지 검증
   - 오프라인 비교 코드 출처 라벨(`buildOfflineDetailCompareCodeSourceLabelKo`)이 source key별 표시 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 출처 톤(`buildOfflineDetailCompareCodeSourceTone`)이 source key별 `info/warn/error`를 일관되게 반환하는지 검증
   - 오프라인 비교 상태 라벨(`buildOfflineDetailCompareStatusLabelKo`)이 source key와 메시지를 `[출처] 메시지` 포맷으로 일관되게 조합하는지 검증

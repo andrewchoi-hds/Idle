@@ -323,43 +323,65 @@ export function extractOfflineDetailCompareCode(textInput) {
   return matched ? matched[0] : "";
 }
 
-export function buildOfflineDetailCompareCodeSourceLabelKo(sourceInput) {
+export function buildOfflineDetailCompareCodeSourceDescriptors() {
+  return [
+    {
+      source: "detail_view_snapshot",
+      labelKo: "출처: savePayload.detailViewSnapshotAtExport",
+      tone: "info",
+    },
+    {
+      source: "detail_report_snapshot",
+      labelKo: "출처: savePayload.detailReportSnapshot",
+      tone: "info",
+    },
+    {
+      source: "text",
+      labelKo: "출처: savePayload 텍스트",
+      tone: "warn",
+    },
+    {
+      source: "payload",
+      labelKo: "출처: savePayload 텍스트",
+      tone: "warn",
+    },
+    {
+      source: "clipboard",
+      labelKo: "출처: 클립보드 텍스트",
+      tone: "warn",
+    },
+    {
+      source: "input",
+      labelKo: "출처: 비교 코드 입력값",
+      tone: "warn",
+    },
+    {
+      source: "none",
+      labelKo: "출처: 없음",
+      tone: "info",
+    },
+  ];
+}
+
+export function buildOfflineDetailCompareCodeSourceDescriptor(sourceInput) {
   const source = typeof sourceInput === "string" ? sourceInput.trim() : "";
-  if (source === "detail_view_snapshot") {
-    return "출처: savePayload.detailViewSnapshotAtExport";
-  }
-  if (source === "detail_report_snapshot") {
-    return "출처: savePayload.detailReportSnapshot";
-  }
-  if (source === "text" || source === "payload") {
-    return "출처: savePayload 텍스트";
-  }
-  if (source === "clipboard") {
-    return "출처: 클립보드 텍스트";
-  }
-  if (source === "input") {
-    return "출처: 비교 코드 입력값";
-  }
-  return "출처: 없음";
+  return (
+    buildOfflineDetailCompareCodeSourceDescriptors().find(
+      (descriptor) => descriptor.source === source,
+    ) || {
+      source: "unknown",
+      labelKo: "출처: 없음",
+      tone: "error",
+    }
+  );
+}
+
+export function buildOfflineDetailCompareCodeSourceLabelKo(sourceInput) {
+  return buildOfflineDetailCompareCodeSourceDescriptor(sourceInput).labelKo;
 }
 
 export function buildOfflineDetailCompareCodeSourceTone(sourceInput) {
-  const source = typeof sourceInput === "string" ? sourceInput.trim() : "";
-  if (source === "detail_view_snapshot" || source === "detail_report_snapshot") {
-    return "info";
-  }
-  if (
-    source === "text" ||
-    source === "payload" ||
-    source === "clipboard" ||
-    source === "input"
-  ) {
-    return "warn";
-  }
-  if (source === "none") {
-    return "info";
-  }
-  return "error";
+  return buildOfflineDetailCompareCodeSourceDescriptor(sourceInput).tone;
 }
 
 export function buildOfflineDetailCompareStatusLabelKo(
