@@ -503,9 +503,34 @@ export function buildOfflineDetailComparePayloadLoadSourceDescriptor(sourceInput
   );
 }
 
-export function resolveOfflineDetailCompareInputSource(codeInput) {
+export function buildOfflineDetailCompareInputSourceDescriptors() {
+  return [
+    {
+      inputState: "empty",
+      normalizedSource: "none",
+    },
+    {
+      inputState: "filled",
+      normalizedSource: "input",
+    },
+  ];
+}
+
+export function buildOfflineDetailCompareInputSourceDescriptor(codeInput) {
   const text = typeof codeInput === "string" ? codeInput.trim() : "";
-  return text ? "input" : "none";
+  const inputState = text ? "filled" : "empty";
+  return (
+    buildOfflineDetailCompareInputSourceDescriptors().find(
+      (descriptor) => descriptor.inputState === inputState,
+    ) || {
+      inputState: "empty",
+      normalizedSource: "none",
+    }
+  );
+}
+
+export function resolveOfflineDetailCompareInputSource(codeInput) {
+  return buildOfflineDetailCompareInputSourceDescriptor(codeInput).normalizedSource;
 }
 
 export function resolveOfflineDetailCompareTargetInputState(codeInput) {
@@ -552,27 +577,66 @@ export function resolveOfflineDetailCompareTargetInputStateStatusMessageKo(
     .statusMessageKo;
 }
 
+export function buildOfflineDetailCompareCheckSourceRequestDescriptors() {
+  return [
+    {
+      requestedSource: "input",
+      requestKind: "input",
+      normalizedSource: "input",
+    },
+    {
+      requestedSource: "keep",
+      requestKind: "keep",
+      normalizedSource: "keep",
+    },
+    {
+      requestedSource: "",
+      requestKind: "empty",
+      normalizedSource: "none",
+    },
+  ];
+}
+
+export function buildOfflineDetailCompareCheckSourceRequestDescriptor(
+  requestedSourceInput,
+) {
+  const requested =
+    typeof requestedSourceInput === "string" ? requestedSourceInput.trim() : "";
+  const knownDescriptor = buildOfflineDetailCompareCheckSourceRequestDescriptors().find(
+    (descriptor) => descriptor.requestedSource === requested,
+  );
+  if (knownDescriptor) {
+    return knownDescriptor;
+  }
+  return {
+    requestedSource: requested,
+    requestKind: requested ? "custom" : "empty",
+    normalizedSource: requested || "none",
+  };
+}
+
 export function resolveOfflineDetailCompareCheckSource(
   requestedSourceInput,
   currentSourceInput,
   codeInput,
 ) {
-  const requested =
-    typeof requestedSourceInput === "string" ? requestedSourceInput.trim() : "";
+  const requestDescriptor = buildOfflineDetailCompareCheckSourceRequestDescriptor(
+    requestedSourceInput,
+  );
   const current = typeof currentSourceInput === "string" ? currentSourceInput.trim() : "";
-  if (requested === "input") {
+  if (requestDescriptor.requestKind === "input") {
     return resolveOfflineDetailCompareInputSource(codeInput);
   }
-  if (requested === "keep") {
+  if (requestDescriptor.requestKind === "keep") {
     if (current && current !== "none") {
       return current;
     }
     return resolveOfflineDetailCompareInputSource(codeInput);
   }
-  if (!requested) {
-    return "none";
+  if (requestDescriptor.requestKind === "empty") {
+    return requestDescriptor.normalizedSource;
   }
-  return requested;
+  return requestDescriptor.normalizedSource;
 }
 
 export function extractOfflineDetailCompareCodeFromPayloadTextWithSource(payloadInput) {
