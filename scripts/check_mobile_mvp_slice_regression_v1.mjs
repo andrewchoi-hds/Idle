@@ -7,6 +7,8 @@ import {
   buildOfflineDetailCompareCode,
   buildOfflineDetailCompareCodeCurrentSummaryLabelKo,
   buildOfflineDetailCompareCodeCurrentSummaryTone,
+  buildOfflineDetailCompareCodeSummaryStateDescriptors,
+  buildOfflineDetailCompareCodeSummaryStateDescriptor,
   buildOfflineDetailCompareCodeDeltaSummaryLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryTargetMissingLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryTargetMissingMessageLabelKo,
@@ -136,6 +138,8 @@ import {
   extractOfflineDetailCompareCodeFromPayloadTextWithSource,
   buildOfflineDetailComparePayloadExtractSourceDescriptors,
   buildOfflineDetailComparePayloadExtractSourceDescriptor,
+  buildOfflineDetailComparePayloadExtractFallbackDescriptors,
+  buildOfflineDetailComparePayloadExtractFallbackDescriptor,
   filterOfflineDetailEventsByMode,
   isCopyTargetSlotDisabled,
   isOfflineDetailCompareCode,
@@ -764,6 +768,25 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_payload_extract_fallback_descriptors_are_stable",
+    passed:
+      buildOfflineDetailComparePayloadExtractFallbackDescriptors().length === 2 &&
+      buildOfflineDetailComparePayloadExtractFallbackDescriptors()
+        .map((descriptor) => descriptor.fallbackKind)
+        .join("|") === ["text", "none"].join("|") &&
+      buildOfflineDetailComparePayloadExtractFallbackDescriptor(
+        offlineDetailCompareCodeAll,
+      ).source === "text" &&
+      buildOfflineDetailComparePayloadExtractFallbackDescriptor(
+        offlineDetailCompareCodeAll,
+      ).keepExtractedCode === true &&
+      buildOfflineDetailComparePayloadExtractFallbackDescriptor("").source ===
+        "none" &&
+      buildOfflineDetailComparePayloadExtractFallbackDescriptor("")
+        .keepExtractedCode === false,
+  });
+
+  checks.push({
     id: "offline_detail_compare_code_payload_source_is_stable",
     passed:
       payloadSourceFromDetailView.code === offlineDetailCompareCodeCritical &&
@@ -771,9 +794,15 @@ async function main() {
       payloadSourceFromDetailReport.code === offlineDetailCompareCodeAll &&
       payloadSourceFromDetailReport.source === "detail_report_snapshot" &&
       payloadSourceFromText.code === offlineDetailCompareCodeCritical &&
-      payloadSourceFromText.source === "text" &&
+      payloadSourceFromText.source ===
+        buildOfflineDetailComparePayloadExtractFallbackDescriptor(
+          payloadSourceFromText.code,
+        ).source &&
       payloadSourceMissing.code === "" &&
-      payloadSourceMissing.source === "none",
+      payloadSourceMissing.source ===
+        buildOfflineDetailComparePayloadExtractFallbackDescriptor(
+          payloadSourceMissing.code,
+        ).source,
   });
 
   checks.push({
@@ -1265,14 +1294,22 @@ async function main() {
   checks.push({
     id: "offline_detail_compare_code_target_summary_tone_matches_target",
     passed:
-      buildOfflineDetailCompareCodeTargetSummaryTone("") === "info" &&
+      buildOfflineDetailCompareCodeTargetSummaryTone("") ===
+        buildOfflineDetailCompareCodeSummaryStateDescriptor("").tone &&
       buildOfflineDetailCompareCodeTargetSummaryTone("no compare code in this text") ===
-        "warn" &&
+        buildOfflineDetailCompareCodeSummaryStateDescriptor(
+          "no compare code in this text",
+        ).tone &&
       buildOfflineDetailCompareCodeTargetSummaryTone(offlineDetailCompareCodeAll) ===
-        "info" &&
+        buildOfflineDetailCompareCodeSummaryStateDescriptor(
+          offlineDetailCompareCodeAll,
+        ).tone &&
       buildOfflineDetailCompareCodeTargetSummaryTone(
         `payload => ${offlineDetailCompareCodeCritical}`,
-      ) === "info",
+      ) ===
+        buildOfflineDetailCompareCodeSummaryStateDescriptor(
+          `payload => ${offlineDetailCompareCodeCritical}`,
+        ).tone,
   });
 
   checks.push({
@@ -1291,14 +1328,39 @@ async function main() {
   checks.push({
     id: "offline_detail_compare_code_current_summary_tone_matches_current",
     passed:
-      buildOfflineDetailCompareCodeCurrentSummaryTone("") === "info" &&
+      buildOfflineDetailCompareCodeCurrentSummaryTone("") ===
+        buildOfflineDetailCompareCodeSummaryStateDescriptor("").tone &&
       buildOfflineDetailCompareCodeCurrentSummaryTone("invalid text") ===
-        "warn" &&
+        buildOfflineDetailCompareCodeSummaryStateDescriptor("invalid text").tone &&
       buildOfflineDetailCompareCodeCurrentSummaryTone(offlineDetailCompareCodeAll) ===
-        "info" &&
+        buildOfflineDetailCompareCodeSummaryStateDescriptor(
+          offlineDetailCompareCodeAll,
+        ).tone &&
       buildOfflineDetailCompareCodeCurrentSummaryTone(
         `log ${offlineDetailCompareCodeCritical} log`,
-      ) === "info",
+      ) ===
+        buildOfflineDetailCompareCodeSummaryStateDescriptor(
+          `log ${offlineDetailCompareCodeCritical} log`,
+        ).tone,
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_summary_state_descriptors_are_stable",
+    passed:
+      buildOfflineDetailCompareCodeSummaryStateDescriptors().length === 3 &&
+      buildOfflineDetailCompareCodeSummaryStateDescriptors()
+        .map((descriptor) => descriptor.state)
+        .join("|") === ["empty", "invalid", "valid"].join("|") &&
+      buildOfflineDetailCompareCodeSummaryStateDescriptor("").state === "empty" &&
+      buildOfflineDetailCompareCodeSummaryStateDescriptor("").tone === "info" &&
+      buildOfflineDetailCompareCodeSummaryStateDescriptor("invalid text").state ===
+        "invalid" &&
+      buildOfflineDetailCompareCodeSummaryStateDescriptor("invalid text").tone ===
+        "warn" &&
+      buildOfflineDetailCompareCodeSummaryStateDescriptor(offlineDetailCompareCodeAll)
+        .state === "valid" &&
+      buildOfflineDetailCompareCodeSummaryStateDescriptor(offlineDetailCompareCodeAll)
+        .tone === "info",
   });
 
   checks.push({
