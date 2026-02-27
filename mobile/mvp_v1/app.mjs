@@ -90,6 +90,13 @@ const dom = {
   difficultyIndex: document.getElementById("difficultyIndex"),
   qiRequired: document.getElementById("qiRequired"),
   qiProgressBar: document.getElementById("qiProgressBar"),
+  battleSceneStatus: document.getElementById("battleSceneStatus"),
+  battleSceneArena: document.getElementById("battleSceneArena"),
+  battleScenePlayerStage: document.getElementById("battleScenePlayerStage"),
+  battleSceneEnemyStage: document.getElementById("battleSceneEnemyStage"),
+  battleSceneFlash: document.getElementById("battleSceneFlash"),
+  battleSceneFloatLayer: document.getElementById("battleSceneFloatLayer"),
+  battleSceneResult: document.getElementById("battleSceneResult"),
   statQi: document.getElementById("statQi"),
   statSpiritCoin: document.getElementById("statSpiritCoin"),
   statRebirthEssence: document.getElementById("statRebirthEssence"),
@@ -251,6 +258,24 @@ let slotSummaryLastRenderedAtMs = 0;
 let slotQuickLoadLastAcceptedAtMs = 0;
 const SLOT_QUICK_LOAD_DEBOUNCE_MS = 700;
 const DEFAULT_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC = 6;
+const BATTLE_SCENE_TONES = new Set(["info", "success", "warn", "error"]);
+const BATTLE_SCENE_TONE_CLASSES = ["tone-info", "tone-success", "tone-warn", "tone-error"];
+const BATTLE_SCENE_IMPACT_CLASSES = [
+  "scene-impact-win",
+  "scene-impact-loss",
+  "scene-impact-breakthrough-success",
+  "scene-impact-breakthrough-fail",
+];
+const BATTLE_SCENE_DEFAULT_STATUS = "대기 중";
+const BATTLE_SCENE_DEFAULT_RESULT = "전투 1회 / 돌파 시도를 눌러 연출을 확인하세요.";
+const battleSceneUiState = {
+  statusText: BATTLE_SCENE_DEFAULT_STATUS,
+  statusTone: "info",
+  resultText: BATTLE_SCENE_DEFAULT_RESULT,
+  resultTone: "info",
+};
+let battleSceneImpactTimer = null;
+let battleSceneFlashTimer = null;
 
 function setStatus(message, isError = false) {
   dom.appStatus.textContent = message;
@@ -318,6 +343,236 @@ function fmtSignedFixed(value, digits = 1) {
     return `-${Math.abs(amount).toFixed(digits)}`;
   }
   return `+${(0).toFixed(digits)}`;
+}
+
+function normalizeBattleSceneTone(tone) {
+  return BATTLE_SCENE_TONES.has(tone) ? tone : "info";
+}
+
+function applyBattleSceneTone(node, tone) {
+  if (!node) {
+    return;
+  }
+  node.classList.remove(...BATTLE_SCENE_TONE_CLASSES);
+  node.classList.add(`tone-${normalizeBattleSceneTone(tone)}`);
+}
+
+function applyBattleSceneUiState() {
+  if (dom.battleSceneStatus) {
+    dom.battleSceneStatus.textContent = battleSceneUiState.statusText;
+    applyBattleSceneTone(dom.battleSceneStatus, battleSceneUiState.statusTone);
+  }
+  if (dom.battleSceneResult) {
+    dom.battleSceneResult.textContent = battleSceneUiState.resultText;
+    applyBattleSceneTone(dom.battleSceneResult, battleSceneUiState.resultTone);
+  }
+}
+
+function setBattleSceneStatus(text, tone = "info") {
+  battleSceneUiState.statusText = String(text || BATTLE_SCENE_DEFAULT_STATUS);
+  battleSceneUiState.statusTone = normalizeBattleSceneTone(tone);
+  applyBattleSceneUiState();
+}
+
+function setBattleSceneResult(text, tone = "info") {
+  battleSceneUiState.resultText = String(text || BATTLE_SCENE_DEFAULT_RESULT);
+  battleSceneUiState.resultTone = normalizeBattleSceneTone(tone);
+  applyBattleSceneUiState();
+}
+
+function setBattleSceneState(sceneState = "idle") {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  dom.battleSceneArena.dataset.sceneState = String(sceneState || "idle");
+}
+
+function setBattleSceneStageLabels(stage, displayName) {
+  if (dom.battleScenePlayerStage) {
+    dom.battleScenePlayerStage.textContent = `${state.playerName} · ${displayName}`;
+  }
+  if (dom.battleSceneEnemyStage) {
+    dom.battleSceneEnemyStage.textContent =
+      `${worldKo(stage.world)} 수문자 · 요구 기 ${fmtNumber(stage.qi_required)}`;
+  }
+}
+
+function spawnBattleSceneFloat(text, options = {}) {
+  if (!dom.battleSceneFloatLayer) {
+    return;
+  }
+  const anchor = options.anchor === "player" || options.anchor === "enemy" ? options.anchor : "center";
+  const tone = normalizeBattleSceneTone(options.tone || "info");
+  const anchorPoint =
+    anchor === "player"
+      ? { leftPct: 28, topPct: 69 }
+      : anchor === "enemy"
+        ? { leftPct: 72, topPct: 44 }
+        : { leftPct: 50, topPct: 52 };
+  const jitterX = (Math.random() - 0.5) * 12;
+  const jitterY = (Math.random() - 0.5) * 8;
+  const floatNode = document.createElement("span");
+  floatNode.className = "battle-float";
+  floatNode.classList.add(`tone-${tone}`);
+  floatNode.textContent = String(text);
+  floatNode.style.left = `calc(${anchorPoint.leftPct}% + ${jitterX.toFixed(1)}px)`;
+  floatNode.style.top = `calc(${anchorPoint.topPct}% + ${jitterY.toFixed(1)}px)`;
+  floatNode.addEventListener(
+    "animationend",
+    () => {
+      floatNode.remove();
+    },
+    { once: true },
+  );
+  dom.battleSceneFloatLayer.append(floatNode);
+  while (dom.battleSceneFloatLayer.childElementCount > 18) {
+    dom.battleSceneFloatLayer.firstElementChild?.remove();
+  }
+}
+
+function triggerBattleSceneFlash(tone = "info") {
+  if (!dom.battleSceneFlash) {
+    return;
+  }
+  dom.battleSceneFlash.classList.remove("is-active", ...BATTLE_SCENE_TONE_CLASSES);
+  dom.battleSceneFlash.classList.add(`tone-${normalizeBattleSceneTone(tone)}`);
+  void dom.battleSceneFlash.offsetWidth;
+  dom.battleSceneFlash.classList.add("is-active");
+  if (battleSceneFlashTimer !== null) {
+    window.clearTimeout(battleSceneFlashTimer);
+  }
+  battleSceneFlashTimer = window.setTimeout(() => {
+    dom.battleSceneFlash?.classList.remove("is-active");
+    battleSceneFlashTimer = null;
+  }, 520);
+}
+
+function triggerBattleSceneImpact(kind, tone = "info") {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  const impactClass =
+    kind === "battle_win"
+      ? "scene-impact-win"
+      : kind === "battle_loss"
+        ? "scene-impact-loss"
+        : kind === "breakthrough_success"
+          ? "scene-impact-breakthrough-success"
+          : "scene-impact-breakthrough-fail";
+  const sceneState =
+    kind === "battle_win"
+      ? "battle_win"
+      : kind === "battle_loss"
+        ? "battle_loss"
+        : kind === "breakthrough_success"
+          ? "breakthrough_success"
+          : "breakthrough_fail";
+  dom.battleSceneArena.classList.remove(...BATTLE_SCENE_IMPACT_CLASSES);
+  void dom.battleSceneArena.offsetWidth;
+  dom.battleSceneArena.classList.add(impactClass);
+  setBattleSceneState(sceneState);
+  if (battleSceneImpactTimer !== null) {
+    window.clearTimeout(battleSceneImpactTimer);
+  }
+  battleSceneImpactTimer = window.setTimeout(() => {
+    dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_IMPACT_CLASSES);
+    battleSceneImpactTimer = null;
+  }, 560);
+  triggerBattleSceneFlash(tone);
+}
+
+function renderBattleScene(stage, displayName) {
+  if (!stage) {
+    return;
+  }
+  setBattleSceneStageLabels(stage, displayName);
+  applyBattleSceneUiState();
+}
+
+function playBattleSceneBattleOutcome(outcome) {
+  if (!outcome) {
+    return;
+  }
+  if (outcome.won) {
+    setBattleSceneStatus("전투 승리", "success");
+    setBattleSceneResult(
+      `전투 승리 · 기 ${fmtSignedInteger(outcome.qiDelta)} · 영석 ${fmtSignedInteger(outcome.spiritCoinDelta)}`,
+      "success",
+    );
+    triggerBattleSceneImpact("battle_win", "success");
+    spawnBattleSceneFloat(`기 ${fmtSignedInteger(outcome.qiDelta)}`, { tone: "success", anchor: "player" });
+    spawnBattleSceneFloat(`영석 ${fmtSignedInteger(outcome.spiritCoinDelta)}`, {
+      tone: "success",
+      anchor: "player",
+    });
+    if ((Number(outcome.rebirthEssenceDelta) || 0) > 0) {
+      spawnBattleSceneFloat(`정수 ${fmtSignedInteger(outcome.rebirthEssenceDelta)}`, {
+        tone: "warn",
+        anchor: "player",
+      });
+    }
+    spawnBattleSceneFloat("일격 적중", { tone: "info", anchor: "enemy" });
+    return;
+  }
+  setBattleSceneStatus("전투 패배", "error");
+  setBattleSceneResult(`전투 패배 · 기 ${fmtSignedInteger(outcome.qiDelta)}`, "error");
+  triggerBattleSceneImpact("battle_loss", "error");
+  spawnBattleSceneFloat(`기 ${fmtSignedInteger(outcome.qiDelta)}`, { tone: "error", anchor: "player" });
+  spawnBattleSceneFloat("적 반격", { tone: "warn", anchor: "enemy" });
+}
+
+function playBattleSceneBreakthroughOutcome(outcome) {
+  if (!outcome) {
+    return;
+  }
+  if (!outcome.attempted) {
+    const tone = outcome.outcome === "blocked_no_qi" ? "warn" : "error";
+    setBattleSceneStatus("돌파 조건 부족", tone);
+    setBattleSceneResult(outcome.message || "돌파를 진행할 수 없습니다.", tone);
+    triggerBattleSceneImpact("breakthrough_fail", tone);
+    spawnBattleSceneFloat("돌파 차단", { tone, anchor: "center" });
+    return;
+  }
+  if (outcome.outcome === "success") {
+    const qiConsume = Math.max(1, Math.round((outcome.stage?.qi_required || 0) * 0.85));
+    setBattleSceneStatus("돌파 성공", "success");
+    setBattleSceneResult(outcome.message || "돌파 성공", "success");
+    triggerBattleSceneImpact("breakthrough_success", "success");
+    spawnBattleSceneFloat("경지 상승", { tone: "success", anchor: "center" });
+    spawnBattleSceneFloat(`기 ${fmtSignedInteger(-qiConsume)}`, { tone: "warn", anchor: "player" });
+    return;
+  }
+  if (outcome.outcome === "minor_fail") {
+    const qiLoss = Math.max(1, Math.round((outcome.stage?.qi_required || 0) * 0.22));
+    setBattleSceneStatus("돌파 실패(경상)", "warn");
+    setBattleSceneResult(outcome.message || "경상 실패", "warn");
+    triggerBattleSceneImpact("breakthrough_fail", "warn");
+    spawnBattleSceneFloat(`기 ${fmtSignedInteger(-qiLoss)}`, { tone: "error", anchor: "player" });
+    spawnBattleSceneFloat("경상", { tone: "warn", anchor: "center" });
+    return;
+  }
+  if (outcome.outcome === "retreat_fail") {
+    const qiLoss = Math.max(1, Math.round((outcome.stage?.qi_required || 0) * 0.28));
+    const retreatLayers = Math.max(1, Number(outcome.retreatLayers) || 1);
+    setBattleSceneStatus("돌파 실패(후퇴)", "error");
+    setBattleSceneResult(outcome.message || "경지 후퇴 발생", "error");
+    triggerBattleSceneImpact("breakthrough_fail", "error");
+    spawnBattleSceneFloat(`기 ${fmtSignedInteger(-qiLoss)}`, { tone: "error", anchor: "player" });
+    spawnBattleSceneFloat(`${retreatLayers}단계 후퇴`, { tone: "error", anchor: "center" });
+    return;
+  }
+  if (outcome.outcome === "death_fail") {
+    const reward = Math.max(0, Number(outcome.rebirthReward) || 0);
+    setBattleSceneStatus("도겁 사망", "error");
+    setBattleSceneResult(outcome.message || "사망 후 환생 발동", "error");
+    triggerBattleSceneImpact("breakthrough_fail", "error");
+    spawnBattleSceneFloat("환생 발동", { tone: "warn", anchor: "center" });
+    spawnBattleSceneFloat(`정수 ${fmtSignedInteger(reward)}`, { tone: "success", anchor: "player" });
+    return;
+  }
+  setBattleSceneStatus("돌파 결과 확인", "info");
+  setBattleSceneResult(outcome.message || "돌파 처리 완료", "info");
+  triggerBattleSceneImpact("breakthrough_fail", "info");
 }
 
 function clampInteger(value, fallback, min, max) {
@@ -1691,6 +1946,7 @@ function render() {
   dom.optSaveSlot.value = String(activeSaveSlot);
   dom.lastSavedAt.textContent = fmtDateTimeFromIso(state.lastSavedAtIso);
   dom.lastActiveAt.textContent = fmtDateTimeFromEpochMs(state.lastActiveEpochMs);
+  renderBattleScene(stage, displayName);
 
   const qiRatio = clampPercent((state.currencies.qi / stage.qi_required) * 100);
   dom.qiProgressBar.style.width = `${qiRatio}%`;
@@ -2224,7 +2480,8 @@ function bindEvents() {
   });
 
   dom.btnBattle.addEventListener("click", () => {
-    runBattleOnce(context, state, rng);
+    const outcome = runBattleOnce(context, state, rng);
+    playBattleSceneBattleOutcome(outcome);
     persistLocal();
     render();
   });
@@ -2247,6 +2504,10 @@ function bindEvents() {
       );
       if (!confirmed) {
         setStatus("돌파 시도 취소(고위험 확인)", true);
+        setBattleSceneStatus("돌파 취소", "warn");
+        setBattleSceneResult("고위험 확인 단계에서 수동으로 취소됨", "warn");
+        triggerBattleSceneImpact("breakthrough_fail", "warn");
+        spawnBattleSceneFloat("돌파 취소", { tone: "warn", anchor: "center" });
         render();
         return;
       }
@@ -2261,6 +2522,7 @@ function bindEvents() {
     } else {
       setStatus(outcome.message || "돌파 시도 완료");
     }
+    playBattleSceneBreakthroughOutcome(outcome);
     persistLocal();
     render();
   });
