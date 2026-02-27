@@ -85,6 +85,7 @@ import {
   buildOfflineDetailCompareResultViewMismatchLabelKo,
   buildOfflineDetailCompareResultAggregateMismatchLabelKo,
   buildOfflineDetailCompareResultCodeDifferenceLabelKo,
+  buildOfflineDetailCompareResultFallbackLabelKo,
   buildOfflineDetailCompareMissingCurrentLabelKo,
   buildOfflineDetailCompareResultPendingLabelKo,
   buildOfflineDetailCompareResultInputRequiredLabelKo,
@@ -907,7 +908,8 @@ async function main() {
   checks.push({
     id: "offline_detail_compare_invalid_target_label_is_stable",
     passed:
-      buildOfflineDetailCompareInvalidTargetLabelKo() === "입력 비교 코드 형식 오류" &&
+      buildOfflineDetailCompareInvalidTargetLabelKo() ===
+        buildOfflineDetailCompareResultFallbackLabelKo("invalid_target") &&
       buildOfflineDetailCompareResultLabelKo(
         offlineDetailCompareCodeAll,
         "BAD",
@@ -918,11 +920,24 @@ async function main() {
     id: "offline_detail_compare_missing_current_label_is_stable",
     passed:
       buildOfflineDetailCompareMissingCurrentLabelKo() ===
-        "현재 비교 코드가 없어 대조 불가" &&
+        buildOfflineDetailCompareResultFallbackLabelKo("current_missing") &&
       buildOfflineDetailCompareResultLabelKo(
         "INVALID",
         offlineDetailCompareCodeAll,
       ) === buildOfflineDetailCompareMissingCurrentLabelKo(),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_result_fallback_label_helper_is_stable",
+    passed:
+      buildOfflineDetailCompareResultFallbackLabelKo("target_missing") ===
+        buildOfflineDetailCompareInvalidTargetLabelKo() &&
+      buildOfflineDetailCompareResultFallbackLabelKo("current_missing") ===
+        buildOfflineDetailCompareMissingCurrentLabelKo() &&
+      buildOfflineDetailCompareResultFallbackLabelKo("invalid_target") ===
+        buildOfflineDetailCompareInvalidTargetLabelKo() &&
+      buildOfflineDetailCompareResultFallbackLabelKo("unknown") ===
+        buildOfflineDetailCompareInvalidTargetLabelKo(),
   });
 
   checks.push({
@@ -1632,6 +1647,14 @@ async function main() {
         .join("|") ===
         ["info", "error", "warn"].join("|") &&
       buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptors()
+        .map((descriptor) => descriptor.resultLabelKo)
+        .join("|") ===
+        [
+          buildOfflineDetailCompareInvalidTargetLabelKo(),
+          buildOfflineDetailCompareMissingCurrentLabelKo(),
+          buildOfflineDetailCompareInvalidTargetLabelKo(),
+        ].join("|") &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptors()
         .map((descriptor) => descriptor.resultStateLabelKo)
         .join("|") ===
         [
@@ -1684,6 +1707,12 @@ async function main() {
       buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("invalid_target")
         .deltaSummaryTone === "warn" &&
       buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("target_missing")
+        .resultLabelKo === buildOfflineDetailCompareInvalidTargetLabelKo() &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("current_missing")
+        .resultLabelKo === buildOfflineDetailCompareMissingCurrentLabelKo() &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("invalid_target")
+        .resultLabelKo === buildOfflineDetailCompareInvalidTargetLabelKo() &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("target_missing")
         .resultStateLabelKo === buildOfflineDetailCompareResultPendingLabelKo() &&
       buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("current_missing")
         .resultStateLabelKo === buildOfflineDetailCompareMissingCurrentLabelKo() &&
@@ -1715,6 +1744,8 @@ async function main() {
         .deltaSummaryLabelKo === buildOfflineDetailCompareCodeDeltaSummaryInvalidTargetLabelKo() &&
       buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("unknown")
         .deltaSummaryTone === "warn" &&
+      buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("unknown")
+        .resultLabelKo === buildOfflineDetailCompareInvalidTargetLabelKo() &&
       buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("unknown")
         .resultStateLabelKo === buildOfflineDetailCompareResultInputRequiredLabelKo() &&
       buildOfflineDetailCompareCodeMatchSummaryFallbackDescriptor("unknown")
