@@ -158,7 +158,10 @@ import {
   parseSliceState,
   prioritizeOfflineDetailEvents,
   buildOfflineDetailCompareAggregateCountMatchDescriptors,
+  buildOfflineDetailCompareMetaMatchDescriptors,
+  buildOfflineDetailCompareMetaMatchDescriptor,
   isOfflineDetailCompareAggregateCountMatched,
+  normalizeOfflineCatchupEfficiency,
   resolveOfflineDetailCompareCodeDiff,
   summarizeOfflineDetailCriticalEvents,
   summarizeOfflineDetailFilterResult,
@@ -757,6 +760,109 @@ async function main() {
         offlineDetailCompareHiddenMismatchDiff,
       ) &&
       !isOfflineDetailCompareAggregateCountMatched(null),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_meta_match_descriptors_are_stable",
+    passed:
+      buildOfflineDetailCompareMetaMatchDescriptors(offlineDetailCompareAllMatchDiff).length ===
+        3 &&
+      buildOfflineDetailCompareMetaMatchDescriptors(offlineDetailCompareAllMatchDiff)
+        .map((descriptor) => descriptor.key)
+        .join("|") === ["view_mode", "all_checksum", "view_checksum"].join("|") &&
+      buildOfflineDetailCompareMetaMatchDescriptor(
+        offlineDetailCompareAllMatchDiff,
+        "view_mode",
+      ).isMatched === true &&
+      buildOfflineDetailCompareMetaMatchDescriptor(
+        offlineDetailCompareViewMismatchDiff,
+        "view_mode",
+      ).isMatched === false &&
+      buildOfflineDetailCompareMetaMatchDescriptor(
+        offlineDetailCompareViewMismatchDiff,
+        "all_checksum",
+      ).isMatched === true &&
+      buildOfflineDetailCompareMetaMatchDescriptor(
+        offlineDetailCompareViewMismatchDiff,
+        "view_checksum",
+      ).isMatched === false &&
+      buildOfflineDetailCompareMetaMatchDescriptor(
+        offlineDetailCompareAllChecksumMismatchDiff,
+        "all_checksum",
+      ).isMatched === false &&
+      buildOfflineDetailCompareMetaMatchDescriptor(
+        offlineDetailCompareAllChecksumMismatchDiff,
+        "view_checksum",
+      ).isMatched === true &&
+      buildOfflineDetailCompareMetaMatchDescriptor(null, "view_mode").isMatched === false &&
+      buildOfflineDetailCompareMetaMatchDescriptor(
+        offlineDetailCompareAllMatchDiff,
+        "unknown",
+      ).isMatched === false,
+  });
+
+  checks.push({
+    id: "offline_detail_compare_meta_descriptor_usage_matches_state",
+    passed:
+      buildOfflineDetailCompareComparableOutcomeDescriptor(offlineDetailCompareAllMatchDiff)
+        .outcome === "identical" &&
+      buildOfflineDetailCompareComparableOutcomeDescriptor(offlineDetailCompareViewMismatchDiff)
+        .outcome ===
+        (!buildOfflineDetailCompareMetaMatchDescriptor(
+            offlineDetailCompareViewMismatchDiff,
+            "view_mode",
+          ).isMatched &&
+        isOfflineDetailCompareAggregateCountMatched(offlineDetailCompareViewMismatchDiff) &&
+        buildOfflineDetailCompareMetaMatchDescriptor(
+          offlineDetailCompareViewMismatchDiff,
+          "all_checksum",
+        ).isMatched
+          ? "view_mode_mismatch"
+          : "aggregate_mismatch") &&
+      buildOfflineDetailCompareComparableOutcomeDescriptor(
+        offlineDetailCompareAllChecksumMismatchDiff,
+      ).outcome ===
+        (!buildOfflineDetailCompareMetaMatchDescriptor(
+            offlineDetailCompareAllChecksumMismatchDiff,
+            "all_checksum",
+          ).isMatched ||
+        !buildOfflineDetailCompareMetaMatchDescriptor(
+          offlineDetailCompareAllChecksumMismatchDiff,
+          "view_checksum",
+        ).isMatched
+          ? "checksum_mismatch"
+          : "aggregate_mismatch") &&
+      buildOfflineDetailCompareComparableOutcomeDescriptor(
+        offlineDetailCompareAggregateMismatchDiff,
+      ).outcome === "aggregate_mismatch" &&
+      buildOfflineDetailCompareViewModeAlignmentDescriptor(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ).alignmentState === "view_only_mismatch" &&
+      buildOfflineDetailCompareViewModeAlignmentDescriptor(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAllChecksumMismatch,
+      ).alignmentState === "already_aligned" &&
+      buildOfflineDetailCompareViewModeAlignmentDescriptor(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeViewAggregateMismatch,
+      ).alignmentState === "aggregate_mismatch" &&
+      buildOfflineDetailCompareCodeDeltaSummaryTone(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAll,
+      ) === "info" &&
+      buildOfflineDetailCompareCodeDeltaSummaryTone(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeCritical,
+      ) === "warn" &&
+      buildOfflineDetailCompareCodeDeltaSummaryTone(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAllChecksumMismatch,
+      ) === "warn" &&
+      buildOfflineDetailCompareCodeDeltaSummaryTone(
+        offlineDetailCompareCodeAll,
+        offlineDetailCompareCodeAggregateMismatch,
+      ) === "error",
   });
 
   checks.push({
@@ -4279,12 +4385,15 @@ async function main() {
     id: "offline_catchup_respects_cap_setting_and_syncs_anchor",
     passed:
       offline.summary.rawOfflineSec === 72000 &&
-      offline.summary.appliedOfflineSec === 64800 &&
+      offline.summary.maxOfflineSec === 64800 &&
+      offline.summary.cappedOfflineSec === 64800 &&
+      offline.summary.offlineEfficiency === normalizeOfflineCatchupEfficiency(undefined, 0.9) &&
+      offline.summary.appliedOfflineSec === 58320 &&
       offline.summary.cappedByMaxOffline === true &&
       offline.summary.autoBreakthroughWarmupRemainingSecBefore === 0 &&
       offline.summary.autoBreakthroughWarmupRemainingSecAfter === 0 &&
       offline.summary.autoSummary !== null &&
-      offline.summary.autoSummary.seconds === 64800 &&
+      offline.summary.autoSummary.seconds === 58320 &&
       Array.isArray(offline.summary.autoSummary.collectedEvents) &&
       offline.summary.autoSummary.collectedEvents.length > 0 &&
       offline.summary.autoSummary.collectedEvents.length <= 40 &&

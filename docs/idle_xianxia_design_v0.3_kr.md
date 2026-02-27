@@ -2042,3 +2042,19 @@
 
 ## 475) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 코드 차이 요약 delta part descriptor 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 476) 다음 순차 작업
+1. [완료] 오프라인 비교 메타 일치 descriptor 헬퍼(`buildOfflineDetailCompareMetaMatchDescriptors`, `buildOfflineDetailCompareMetaMatchDescriptor`)를 추가해 `view_mode/all_checksum/view_checksum` 판정 경로를 단일 함수로 표준화.
+2. [완료] 오프라인 비교 comparable outcome/보기 모드 정렬/차이 요약 톤 경로(`buildOfflineDetailCompareComparableOutcomeDescriptor`, `buildOfflineDetailCompareViewModeAlignmentDescriptor`, `buildOfflineDetailCompareCodeDeltaSummaryTone`)가 직접 메타 조건 비교 대신 메타 일치 descriptor 헬퍼를 사용하도록 통합.
+3. [완료] 모바일 회귀 체크에 메타 일치 descriptor 시나리오 2개(`offline_detail_compare_meta_match_descriptors_are_stable`, `offline_detail_compare_meta_descriptor_usage_matches_state`)를 추가해 descriptor 안정성과 상태 매핑 일관성을 검증.
+
+## 477) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 메타 일치 descriptor 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 478) 다음 순차 작업
+1. [완료] 모바일 오프라인 정산(`runOfflineCatchup`)에 효율 계수(`offlineEfficiency`, 기본 0.9)를 추가해 cap 적용 시간(`cappedOfflineSec`) 대비 실적용 시간(`appliedOfflineSec`)을 90%로 축소 반영.
+2. [완료] 오프라인 정산 summary에 `cappedOfflineSec/offlineEfficiency`를 포함해 UI/리포트/회귀 체크에서 효율 보정 상태를 추적 가능하도록 반영.
+3. [완료] 모바일 회귀 체크의 오프라인 cap 시나리오를 갱신해 20시간 복귀 입력에서 `64800초(cap) -> 58320초(90% 적용)` 축소 정산이 일관되게 유지되는지 검증.
+
+## 479) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 정산 90% 효율 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
