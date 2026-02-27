@@ -2082,3 +2082,11 @@
 
 ## 485) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(전투 연출 상시 루프 + spark 레이어 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 486) 다음 순차 작업
+1. [완료] 전투 패널에 전장 흐름 레이어(`battle-scene-flow-back/front`)를 추가해 조작이 없어도 방치형 전투 배경이 계속 움직이도록 구성.
+2. [완료] 타격 궤적 레이어(`battleSceneTrailLayer`)와 생성 헬퍼(`spawnBattleSceneTrail`)를 추가하고, 임팩트/상시 루프에서 slash·wave 궤적이 지속적으로 발생하도록 연동.
+3. [완료] 루프 모드(`idle/auto/realtime`)에 따라 flow 속도/투명도와 trail 잔상 길이를 차등 적용하고, `prefers-reduced-motion`에서 flow/trail/spark를 비활성화해 접근성을 유지.
+
+## 487) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(전장 흐름 레이어 + 타격 궤적 레이어 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

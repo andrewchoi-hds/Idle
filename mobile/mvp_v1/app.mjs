@@ -97,6 +97,7 @@ const dom = {
   battleSceneFlash: document.getElementById("battleSceneFlash"),
   battleSceneFloatLayer: document.getElementById("battleSceneFloatLayer"),
   battleSceneSparkLayer: document.getElementById("battleSceneSparkLayer"),
+  battleSceneTrailLayer: document.getElementById("battleSceneTrailLayer"),
   battleSceneResult: document.getElementById("battleSceneResult"),
   statQi: document.getElementById("statQi"),
   statSpiritCoin: document.getElementById("statSpiritCoin"),
@@ -524,6 +525,43 @@ function spawnBattleSceneSpark(options = {}) {
   }
 }
 
+function spawnBattleSceneTrail(options = {}) {
+  if (!dom.battleSceneTrailLayer || shouldReduceBattleSceneMotion()) {
+    return;
+  }
+  const tone = normalizeBattleSceneTone(options.tone || "info");
+  const shape = options.shape === "wave" ? "wave" : "slash";
+  const anchor = options.anchor === "player" || options.anchor === "enemy" ? options.anchor : "center";
+  const anchorPoint =
+    anchor === "player"
+      ? { leftPct: 34, topPct: 66 }
+      : anchor === "enemy"
+        ? { leftPct: 66, topPct: 44 }
+        : { leftPct: 50, topPct: 52 };
+  const jitterX = (Math.random() - 0.5) * 12;
+  const jitterY = (Math.random() - 0.5) * 10;
+  const baseAngleDeg = Number(options.angleDeg) || 0;
+  const angleDeg = baseAngleDeg + (Math.random() - 0.5) * 18;
+  const length = Math.max(42, Math.min(118, Number(options.length) || 72));
+  const node = document.createElement("span");
+  node.className = `battle-trail tone-${tone} shape-${shape}`;
+  node.style.left = `calc(${anchorPoint.leftPct}% + ${jitterX.toFixed(1)}px)`;
+  node.style.top = `calc(${anchorPoint.topPct}% + ${jitterY.toFixed(1)}px)`;
+  node.style.setProperty("--battle-trail-angle", `${angleDeg.toFixed(1)}deg`);
+  node.style.setProperty("--battle-trail-length", `${length.toFixed(1)}px`);
+  node.addEventListener(
+    "animationend",
+    () => {
+      node.remove();
+    },
+    { once: true },
+  );
+  dom.battleSceneTrailLayer.append(node);
+  while (dom.battleSceneTrailLayer.childElementCount > 28) {
+    dom.battleSceneTrailLayer.firstElementChild?.remove();
+  }
+}
+
 function triggerBattleSceneFlash(tone = "info") {
   if (!dom.battleSceneFlash) {
     return;
@@ -579,12 +617,18 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
   triggerBattleSceneFlash(tone);
   if (kind === "battle_win") {
     spawnBattleSceneSpark({ anchor: "center", tone, shape: "shard", angleDeg: 16, scale: 1.05 });
+    spawnBattleSceneTrail({ anchor: "center", tone, angleDeg: 12, length: 84 });
+    spawnBattleSceneTrail({ anchor: "center", tone, angleDeg: -10, length: 76 });
   } else if (kind === "battle_loss") {
     spawnBattleSceneSpark({ anchor: "center", tone, shape: "shard", angleDeg: -18, scale: 1.08 });
+    spawnBattleSceneTrail({ anchor: "center", tone, angleDeg: 166, length: 82 });
+    spawnBattleSceneTrail({ anchor: "center", tone, angleDeg: -164, length: 70 });
   } else if (kind === "breakthrough_success") {
     spawnBattleSceneSpark({ anchor: "center", tone, shape: "ring", scale: 1.25 });
+    spawnBattleSceneTrail({ anchor: "center", tone, shape: "wave", angleDeg: 0, length: 96 });
   } else {
     spawnBattleSceneSpark({ anchor: "player", tone, shape: "ring", scale: 1.15 });
+    spawnBattleSceneTrail({ anchor: "player", tone, shape: "wave", angleDeg: -24, length: 88 });
   }
 }
 
@@ -629,6 +673,37 @@ function runBattleSceneAmbientTick() {
     const shapeRoll = Math.random();
     const shape = shapeRoll < 0.5 ? "dot" : shapeRoll < 0.83 ? "shard" : "ring";
     spawnBattleSceneSpark({ anchor, tone, shape, scale: 0.9 + Math.random() * 0.5 });
+  }
+  const trailCount = mode === "realtime" ? 2 : mode === "auto" ? 1 : 0;
+  for (let i = 0; i < trailCount; i += 1) {
+    if (Math.random() > (mode === "realtime" ? 0.82 : 0.72)) {
+      continue;
+    }
+    const trailTone = Math.random() < 0.62 ? "success" : "warn";
+    const laneRoll = Math.random();
+    if (laneRoll < 0.38) {
+      spawnBattleSceneTrail({
+        anchor: "center",
+        tone: trailTone,
+        angleDeg: 12 + Math.random() * 8,
+        length: 74 + Math.random() * 24,
+      });
+    } else if (laneRoll < 0.76) {
+      spawnBattleSceneTrail({
+        anchor: "center",
+        tone: trailTone,
+        angleDeg: 164 + Math.random() * 10,
+        length: 70 + Math.random() * 20,
+      });
+    } else {
+      spawnBattleSceneTrail({
+        anchor: "center",
+        tone: "info",
+        shape: "wave",
+        angleDeg: (Math.random() - 0.5) * 26,
+        length: 88 + Math.random() * 16,
+      });
+    }
   }
 
   const quietMs = Date.now() - battleSceneLastExplicitEventAtMs;
@@ -699,6 +774,9 @@ function stopBattleSceneAmbientLoop() {
   }
   if (dom.battleSceneSparkLayer) {
     dom.battleSceneSparkLayer.innerHTML = "";
+  }
+  if (dom.battleSceneTrailLayer) {
+    dom.battleSceneTrailLayer.innerHTML = "";
   }
 }
 
