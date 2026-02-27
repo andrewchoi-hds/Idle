@@ -2018,3 +2018,11 @@
 
 ## 469) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 comparable outcome descriptor 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 470) 다음 순차 작업
+1. [완료] 오프라인 비교 집계 건수 일치 descriptor 헬퍼(`buildOfflineDetailCompareAggregateCountMatchDescriptors`, `isOfflineDetailCompareAggregateCountMatched`)를 추가해 `total/critical_visible/hidden` 3개 집계 일치 판정 경로를 단일 함수로 표준화.
+2. [완료] 오프라인 비교 결과 라벨/결과 톤/보기 모드 정렬/차이 요약 톤 경로(`buildOfflineDetailCompareResultLabelKo`, `buildOfflineDetailCompareComparableOutcomeDescriptor`, `buildOfflineDetailCompareViewModeAlignmentDescriptor`, `buildOfflineDetailCompareCodeDeltaSummaryTone`)가 직접 3중 조건 비교 대신 집계 건수 일치 descriptor 헬퍼를 사용하도록 통합.
+3. [완료] 모바일 회귀 체크에 집계 건수 일치 descriptor 안정성 시나리오를 추가하고 보기 모드 정렬 시나리오가 descriptor 결과를 참조하도록 갱신해 집계 일치 기반 상태 매핑 일관성을 검증.
+
+## 471) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 집계 건수 일치 descriptor 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
