@@ -387,6 +387,43 @@ function setBattleSceneState(sceneState = "idle") {
   dom.battleSceneArena.dataset.sceneState = String(sceneState || "idle");
 }
 
+function normalizeBattleSceneWorld(worldInput) {
+  if (worldInput === "mortal" || worldInput === "immortal") {
+    return worldInput;
+  }
+  return "true";
+}
+
+function resolveBattleSceneTier(stageInput) {
+  const stage = stageInput && typeof stageInput === "object" ? stageInput : null;
+  if (!stage) {
+    return "novice";
+  }
+  if (Number(stage.is_tribulation) === 1) {
+    return "tribulation";
+  }
+  const difficultyIndex = Math.max(1, Number(stage.difficulty_index) || 1);
+  if (difficultyIndex >= 150) {
+    return "mythic";
+  }
+  if (difficultyIndex >= 90) {
+    return "ascendant";
+  }
+  if (difficultyIndex >= 40) {
+    return "adept";
+  }
+  return "novice";
+}
+
+function setBattleSceneAtmosphere(stageInput) {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  const stage = stageInput && typeof stageInput === "object" ? stageInput : null;
+  dom.battleSceneArena.dataset.sceneWorld = normalizeBattleSceneWorld(stage?.world);
+  dom.battleSceneArena.dataset.sceneTier = resolveBattleSceneTier(stage);
+}
+
 function setBattleSceneStageLabels(stage, displayName) {
   if (dom.battleScenePlayerStage) {
     dom.battleScenePlayerStage.textContent = `${state.playerName} · ${displayName}`;
@@ -485,6 +522,7 @@ function renderBattleScene(stage, displayName) {
   if (!stage) {
     return;
   }
+  setBattleSceneAtmosphere(stage);
   setBattleSceneStageLabels(stage, displayName);
   applyBattleSceneUiState();
 }

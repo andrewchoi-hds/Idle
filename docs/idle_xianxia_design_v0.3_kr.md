@@ -2066,3 +2066,11 @@
 
 ## 481) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(전투 연출 에셋 + 자동/오프라인 요약 연출 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 482) 다음 순차 작업
+1. [완료] 전투 연출 stage 메타 반영 헬퍼(`normalizeBattleSceneWorld`, `resolveBattleSceneTier`, `setBattleSceneAtmosphere`)를 추가해 `world/difficulty/is_tribulation` 기반 분위기 상태를 `data-scene-world`, `data-scene-tier`로 단일화.
+2. [완료] 전투 연출 CSS를 확장해 상시 애니메이션(오라 드리프트/actor idle/오버레이 pulse)과 임팩트 애니메이션(승패 타격/돌파 burst·collapse)을 분리 적용하고, 세계/난도 tier별 오라 색감·강도를 차등화.
+3. [완료] 접근성 보완으로 `prefers-reduced-motion: reduce` 환경에서 전투 연출 애니메이션을 비활성화하고 모바일 회귀 체크(`typecheck`, `mobile:mvp:check`)를 통과 확인.
+
+## 483) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(전투 연출 동적 애니메이션 + world/tier 분위기 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

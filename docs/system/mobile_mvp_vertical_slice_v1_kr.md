@@ -141,6 +141,8 @@ npm run mobile:mvp:serve
   - 아레나 배경에 SVG 에셋(`battle_arena_mist.svg`)을 적용해 텍스트 중심 레이아웃 대비 시각 밀도를 강화
   - 진영 아이콘에 SVG 아바타(`battle_avatar_cultivator.svg`, `battle_avatar_guardian.svg`)를 적용해 플레이어/적 구분을 즉시 인지 가능하게 개선
   - `전투 1회/자동 10초/실시간 자동/오프라인 정산` 결과를 동일 연출 경로(`playBattleSceneBattleOutcome`, `playBattleSceneAutoSummary`, `playBattleSceneOfflineSummary`)로 통합
+  - stage 메타(`world`, `difficulty_index`, `is_tribulation`)를 연출 패널 `data-scene-world`, `data-scene-tier`로 반영해 인간계/신선계/진선계 및 난도 구간별 색감·오라 강도를 차등 적용
+  - 상시 연출 애니메이션(오라 드리프트/actor idle/오버레이 pulse)과 임팩트 연출(타격/돌파 burst·collapse)을 분리해 자동 루프 중에도 시각 피드백을 유지하고, `prefers-reduced-motion` 환경에서는 해당 애니메이션을 비활성화
 
 ## 4) 저장 포맷
 - localStorage key:
