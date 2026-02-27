@@ -582,6 +582,7 @@ h2 {
   --battle-frame-attack-ring: rgba(118, 242, 199, 0.34);
   --battle-frame-hit-ring: rgba(255, 175, 152, 0.34);
   --battle-frame-skill-ring: rgba(139, 226, 255, 0.38);
+  --battle-avatar-image: url("./assets/battle_avatar_cultivator.svg");
   transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
   animation: battle-actor-idle var(--battle-actor-idle-sec) ease-in-out infinite;
 }
@@ -593,7 +594,7 @@ h2 {
   border-radius: 50%;
   border: 1px solid rgba(167, 230, 205, 0.54);
   background:
-    url("./assets/battle_avatar_cultivator.svg") center / cover no-repeat,
+    var(--battle-avatar-image) center / cover no-repeat,
     radial-gradient(circle at 35% 30%, rgba(224, 255, 245, 0.9), rgba(77, 182, 143, 0.4) 52%, rgba(16, 59, 49, 0.96) 100%);
   box-shadow: 0 0 0 3px rgba(34, 87, 73, 0.44), 0 5px 12px rgba(3, 9, 8, 0.35);
   animation: battle-avatar-glow 2.9s ease-in-out infinite;
@@ -617,6 +618,7 @@ h2 {
   --battle-frame-attack-ring: rgba(255, 201, 166, 0.36);
   --battle-frame-hit-ring: rgba(255, 147, 133, 0.4);
   --battle-frame-skill-ring: rgba(255, 196, 139, 0.4);
+  --battle-avatar-image: url("./assets/battle_avatar_guardian.svg");
   justify-items: end;
   text-align: right;
   border-color: #6f5242;
@@ -627,7 +629,7 @@ h2 {
 .battle-actor-enemy::before {
   border-color: rgba(255, 192, 167, 0.5);
   background:
-    url("./assets/battle_avatar_guardian.svg") center / cover no-repeat,
+    var(--battle-avatar-image) center / cover no-repeat,
     radial-gradient(circle at 35% 30%, rgba(255, 229, 220, 0.88), rgba(199, 108, 76, 0.42) 50%, rgba(76, 27, 20, 0.94) 100%);
   box-shadow: 0 0 0 3px rgba(98, 45, 36, 0.45), 0 5px 12px rgba(9, 4, 3, 0.42);
   animation-duration: 3.35s;
@@ -639,16 +641,40 @@ h2 {
   filter: saturate(1.08) brightness(1.12);
 }
 
+.battle-actor-player[data-actor-frame="attack"] {
+  --battle-avatar-image: url("./assets/battle_avatar_cultivator_attack.svg");
+}
+
+.battle-actor-enemy[data-actor-frame="attack"] {
+  --battle-avatar-image: url("./assets/battle_avatar_guardian_attack.svg");
+}
+
 .battle-actor[data-actor-frame="hit"] {
   animation: battle-actor-hit 0.42s ease-out both;
   box-shadow: 0 0 0 1px var(--battle-frame-hit-ring), 0 8px 22px rgba(0, 0, 0, 0.36);
   filter: saturate(0.92) brightness(0.86);
 }
 
+.battle-actor-player[data-actor-frame="hit"] {
+  --battle-avatar-image: url("./assets/battle_avatar_cultivator_hit.svg");
+}
+
+.battle-actor-enemy[data-actor-frame="hit"] {
+  --battle-avatar-image: url("./assets/battle_avatar_guardian_hit.svg");
+}
+
 .battle-actor[data-actor-frame="skill"] {
   animation: battle-actor-ascend 0.6s ease-out both;
   box-shadow: 0 0 0 1px var(--battle-frame-skill-ring), 0 12px 28px rgba(0, 0, 0, 0.38);
   filter: saturate(1.16) brightness(1.2);
+}
+
+.battle-actor-player[data-actor-frame="skill"] {
+  --battle-avatar-image: url("./assets/battle_avatar_cultivator_skill.svg");
+}
+
+.battle-actor-enemy[data-actor-frame="skill"] {
+  --battle-avatar-image: url("./assets/battle_avatar_guardian_skill.svg");
 }
 
 .battle-actor[data-actor-frame="attack"]::before {

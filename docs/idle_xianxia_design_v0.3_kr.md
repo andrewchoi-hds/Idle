@@ -2122,3 +2122,11 @@
 
 ## 495) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(전투 배우 프레임 전환 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 496) 다음 순차 작업
+1. [완료] 프레임 상태별 아바타 에셋 6종(`battle_avatar_cultivator_{attack|hit|skill}.svg`, `battle_avatar_guardian_{attack|hit|skill}.svg`)을 추가해 수련자/적수의 공격·피격·비기 순간을 분리된 비주얼로 표현.
+2. [완료] 전투 배우 CSS를 `--battle-avatar-image` 변수 기반으로 리팩터링해 `data-actor-frame` 전환 시 플레이어/적수 아바타가 상태별 SVG로 즉시 교체되도록 연결.
+3. [완료] DOM contract 체크에 신규 프레임 에셋 토큰(`battle_avatar_cultivator_skill.svg`, `battle_avatar_guardian_hit.svg`)을 반영해 에셋 연결 회귀를 방지.
+
+## 497) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(전투 프레임별 아바타 에셋 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
