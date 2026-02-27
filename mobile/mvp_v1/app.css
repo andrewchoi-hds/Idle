@@ -94,6 +94,26 @@ h2 {
   line-height: 1.35;
 }
 
+.focus-controls {
+  display: grid;
+  gap: 8px;
+  padding-block: 10px;
+}
+
+.focus-controls-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.app.battle-focus-mode .panel[data-panel-role="secondary"] {
+  display: none;
+}
+
+.app.battle-focus-mode .battle-scene {
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28);
+}
+
 .stage-head {
   display: flex;
   gap: 8px;
@@ -1632,6 +1652,17 @@ textarea:focus-visible,
   padding: 8px 12px;
   border-radius: 8px;
   font-size: 12px;
+}
+
+#btnToggleBattleFocus[aria-pressed="true"] {
+  border-color: #2e8f68;
+  color: #9af5ce;
+  background: linear-gradient(180deg, rgba(23, 72, 57, 0.86), rgba(13, 39, 31, 0.9));
+}
+
+#btnToggleBattleFocus[aria-pressed="false"] {
+  border-color: #6a7b76;
+  color: #c2d5cf;
 }
 
 .offline-grid {

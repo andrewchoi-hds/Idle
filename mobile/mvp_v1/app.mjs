@@ -84,7 +84,10 @@ import {
 } from "./engine.mjs";
 
 const dom = {
+  appRoot: document.querySelector("main.app"),
   appStatus: document.getElementById("appStatus"),
+  btnToggleBattleFocus: document.getElementById("btnToggleBattleFocus"),
+  battleFocusHint: document.getElementById("battleFocusHint"),
   stageDisplay: document.getElementById("stageDisplay"),
   worldTag: document.getElementById("worldTag"),
   difficultyIndex: document.getElementById("difficultyIndex"),
@@ -272,6 +275,7 @@ let realtimePolicyReasonAccum = createEmptyPolicyBlockReasonSummary();
 let slotSummaryDirty = true;
 let slotSummaryLastRenderedAtMs = 0;
 let slotQuickLoadLastAcceptedAtMs = 0;
+let battleFocusMode = true;
 const SLOT_QUICK_LOAD_DEBOUNCE_MS = 700;
 const DEFAULT_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC = 6;
 const BATTLE_SCENE_TONES = new Set(["info", "success", "warn", "error"]);
@@ -323,6 +327,29 @@ const battleSceneDuelState = {
 function setStatus(message, isError = false) {
   dom.appStatus.textContent = message;
   dom.appStatus.style.color = isError ? "#f27167" : "#f3bd4d";
+}
+
+function applyBattleFocusMode(enabled, options = {}) {
+  battleFocusMode = enabled !== false;
+  dom.appRoot?.classList.toggle("battle-focus-mode", battleFocusMode);
+  if (dom.btnToggleBattleFocus) {
+    dom.btnToggleBattleFocus.setAttribute("aria-pressed", String(battleFocusMode));
+    dom.btnToggleBattleFocus.textContent = battleFocusMode
+      ? "전투 집중 ON"
+      : "전투 집중 OFF";
+  }
+  if (dom.battleFocusHint) {
+    dom.battleFocusHint.textContent = battleFocusMode
+      ? "전투/액션 중심 화면입니다. 운영 패널은 접혀 있습니다."
+      : "전체 패널 화면입니다. 운영/저장/로그 패널이 표시됩니다.";
+  }
+  if (options.announce === true) {
+    setStatus(
+      battleFocusMode
+        ? "전투 집중 모드 활성화"
+        : "전투 집중 모드 해제",
+    );
+  }
 }
 
 function fmtNumber(value) {
@@ -3081,6 +3108,9 @@ function clampPercent(value) {
 }
 
 function bindEvents() {
+  dom.btnToggleBattleFocus.addEventListener("click", () => {
+    applyBattleFocusMode(!battleFocusMode, { announce: true });
+  });
   dom.btnCloseOfflineModal.addEventListener("click", hideOfflineModal);
   dom.btnToggleOfflineDetail.addEventListener("click", () => {
     setOfflineDetailExpanded(!offlineDetailExpanded);
@@ -3732,6 +3762,7 @@ async function bootstrap() {
     }
 
     bindEvents();
+    applyBattleFocusMode(true);
     render();
     setStatus(bootstrapStatus);
     const resumedRealtime = maybeAutoStartRealtime("앱 진입");
