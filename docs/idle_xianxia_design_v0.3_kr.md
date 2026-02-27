@@ -2074,3 +2074,11 @@
 
 ## 483) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(전투 연출 동적 애니메이션 + world/tier 분위기 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 484) 다음 순차 작업
+1. [완료] 전투 연출 패널에 spark 레이어(`battleSceneSparkLayer`)와 파티클 생성 헬퍼(`spawnBattleSceneSpark`)를 추가해 텍스트 안내 없이도 상시 충돌 파동을 시각화.
+2. [완료] 상시 루프(`runBattleSceneAmbientTick`, `start/stopBattleSceneAmbientLoop`)를 추가해 `idle/auto/realtime` 상태별로 파티클 밀도·임팩트 빈도를 차등 적용하고, 페이지 hidden/pagehide 시 루프를 중단하도록 연결.
+3. [완료] 전투 기본 안내 문구를 클릭 유도형에서 상시 동작형으로 교체하고 `prefers-reduced-motion` 환경에서 spark/임팩트 애니메이션을 비활성화해 접근성을 유지.
+
+## 485) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(전투 연출 상시 루프 + spark 레이어 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

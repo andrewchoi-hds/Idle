@@ -96,6 +96,7 @@ const dom = {
   battleSceneEnemyStage: document.getElementById("battleSceneEnemyStage"),
   battleSceneFlash: document.getElementById("battleSceneFlash"),
   battleSceneFloatLayer: document.getElementById("battleSceneFloatLayer"),
+  battleSceneSparkLayer: document.getElementById("battleSceneSparkLayer"),
   battleSceneResult: document.getElementById("battleSceneResult"),
   statQi: document.getElementById("statQi"),
   statSpiritCoin: document.getElementById("statSpiritCoin"),
@@ -266,8 +267,10 @@ const BATTLE_SCENE_IMPACT_CLASSES = [
   "scene-impact-breakthrough-success",
   "scene-impact-breakthrough-fail",
 ];
+const BATTLE_SCENE_AMBIENT_TICK_MS = 820;
 const BATTLE_SCENE_DEFAULT_STATUS = "대기 중";
-const BATTLE_SCENE_DEFAULT_RESULT = "전투 1회 / 돌파 시도를 눌러 연출을 확인하세요.";
+const BATTLE_SCENE_DEFAULT_RESULT =
+  "전장 파동 감지 중 · 자동/실시간 루프에서 연출이 계속 갱신됩니다.";
 const battleSceneUiState = {
   statusText: BATTLE_SCENE_DEFAULT_STATUS,
   statusTone: "info",
@@ -276,6 +279,9 @@ const battleSceneUiState = {
 };
 let battleSceneImpactTimer = null;
 let battleSceneFlashTimer = null;
+let battleSceneAmbientTimer = null;
+let battleSceneAmbientStep = 0;
+let battleSceneLastExplicitEventAtMs = 0;
 
 function setStatus(message, isError = false) {
   dom.appStatus.textContent = message;
@@ -347,6 +353,20 @@ function fmtSignedFixed(value, digits = 1) {
 
 function normalizeBattleSceneTone(tone) {
   return BATTLE_SCENE_TONES.has(tone) ? tone : "info";
+}
+
+function shouldReduceBattleSceneMotion() {
+  return (
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
+
+function setBattleSceneLoopMode(loopMode = "idle") {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  dom.battleSceneArena.dataset.sceneLoop = String(loopMode || "idle");
 }
 
 function applyBattleSceneTone(node, tone) {
@@ -467,6 +487,43 @@ function spawnBattleSceneFloat(text, options = {}) {
   }
 }
 
+function spawnBattleSceneSpark(options = {}) {
+  if (!dom.battleSceneSparkLayer || shouldReduceBattleSceneMotion()) {
+    return;
+  }
+  const anchor = options.anchor === "player" || options.anchor === "enemy" ? options.anchor : "center";
+  const tone = normalizeBattleSceneTone(options.tone || "info");
+  const shape =
+    options.shape === "shard" || options.shape === "ring" ? options.shape : "dot";
+  const anchorPoint =
+    anchor === "player"
+      ? { leftPct: 30, topPct: 68 }
+      : anchor === "enemy"
+        ? { leftPct: 70, topPct: 46 }
+        : { leftPct: 50, topPct: 54 };
+  const jitterX = (Math.random() - 0.5) * 18;
+  const jitterY = (Math.random() - 0.5) * 12;
+  const angleDeg = (Number(options.angleDeg) || 0) + (Math.random() - 0.5) * 36;
+  const scale = Math.max(0.7, Math.min(1.6, Number(options.scale) || 1));
+  const node = document.createElement("span");
+  node.className = `battle-spark tone-${tone} shape-${shape}`;
+  node.style.left = `calc(${anchorPoint.leftPct}% + ${jitterX.toFixed(1)}px)`;
+  node.style.top = `calc(${anchorPoint.topPct}% + ${jitterY.toFixed(1)}px)`;
+  node.style.setProperty("--battle-spark-angle", `${angleDeg.toFixed(1)}deg`);
+  node.style.setProperty("--battle-spark-scale", scale.toFixed(2));
+  node.addEventListener(
+    "animationend",
+    () => {
+      node.remove();
+    },
+    { once: true },
+  );
+  dom.battleSceneSparkLayer.append(node);
+  while (dom.battleSceneSparkLayer.childElementCount > 36) {
+    dom.battleSceneSparkLayer.firstElementChild?.remove();
+  }
+}
+
 function triggerBattleSceneFlash(tone = "info") {
   if (!dom.battleSceneFlash) {
     return;
@@ -484,9 +541,13 @@ function triggerBattleSceneFlash(tone = "info") {
   }, 520);
 }
 
-function triggerBattleSceneImpact(kind, tone = "info") {
+function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
   if (!dom.battleSceneArena) {
     return;
+  }
+  const fromAmbient = options && options.fromAmbient === true;
+  if (!fromAmbient) {
+    battleSceneLastExplicitEventAtMs = Date.now();
   }
   const impactClass =
     kind === "battle_win"
@@ -516,6 +577,129 @@ function triggerBattleSceneImpact(kind, tone = "info") {
     battleSceneImpactTimer = null;
   }, 560);
   triggerBattleSceneFlash(tone);
+  if (kind === "battle_win") {
+    spawnBattleSceneSpark({ anchor: "center", tone, shape: "shard", angleDeg: 16, scale: 1.05 });
+  } else if (kind === "battle_loss") {
+    spawnBattleSceneSpark({ anchor: "center", tone, shape: "shard", angleDeg: -18, scale: 1.08 });
+  } else if (kind === "breakthrough_success") {
+    spawnBattleSceneSpark({ anchor: "center", tone, shape: "ring", scale: 1.25 });
+  } else {
+    spawnBattleSceneSpark({ anchor: "player", tone, shape: "ring", scale: 1.15 });
+  }
+}
+
+function resolveBattleSceneAmbientMode() {
+  if (!state || !state.settings) {
+    return "idle";
+  }
+  if (isRealtimeAutoRunning()) {
+    return "realtime";
+  }
+  if (state.settings.autoBattle || state.settings.autoBreakthrough) {
+    return "auto";
+  }
+  return "idle";
+}
+
+function runBattleSceneAmbientTick() {
+  if (!dom.battleSceneArena || !state || document.hidden) {
+    return;
+  }
+  if (shouldReduceBattleSceneMotion()) {
+    return;
+  }
+  battleSceneAmbientStep += 1;
+  const mode = resolveBattleSceneAmbientMode();
+  setBattleSceneLoopMode(mode);
+
+  const tonePool =
+    mode === "realtime"
+      ? ["success", "success", "info", "warn"]
+      : mode === "auto"
+        ? ["success", "info", "info", "warn"]
+        : ["info", "info", "warn"];
+  const sparkCount = mode === "realtime" ? 3 : mode === "auto" ? 2 : 1;
+  for (let i = 0; i < sparkCount; i += 1) {
+    if (Math.random() > 0.7) {
+      continue;
+    }
+    const anchorRoll = Math.random();
+    const anchor = anchorRoll < 0.33 ? "player" : anchorRoll < 0.66 ? "enemy" : "center";
+    const tone = tonePool[Math.floor(Math.random() * tonePool.length)] || "info";
+    const shapeRoll = Math.random();
+    const shape = shapeRoll < 0.5 ? "dot" : shapeRoll < 0.83 ? "shard" : "ring";
+    spawnBattleSceneSpark({ anchor, tone, shape, scale: 0.9 + Math.random() * 0.5 });
+  }
+
+  const quietMs = Date.now() - battleSceneLastExplicitEventAtMs;
+  const shouldPulseImpact =
+    quietMs > 2200 &&
+    (mode === "realtime"
+      ? battleSceneAmbientStep % 2 === 0
+      : mode === "auto"
+        ? battleSceneAmbientStep % 3 === 0
+        : battleSceneAmbientStep % 5 === 0);
+  if (shouldPulseImpact) {
+    if (mode === "realtime") {
+      const random = Math.random();
+      const kind = random < 0.58 ? "battle_win" : random < 0.85 ? "battle_loss" : "breakthrough_success";
+      const tone = kind === "battle_loss" ? "warn" : "success";
+      triggerBattleSceneImpact(kind, tone, { fromAmbient: true });
+    } else if (mode === "auto") {
+      const random = Math.random();
+      const kind = random < 0.62 ? "battle_win" : random < 0.86 ? "battle_loss" : "breakthrough_fail";
+      const tone = kind === "battle_win" ? "success" : kind === "battle_loss" ? "warn" : "error";
+      triggerBattleSceneImpact(kind, tone, { fromAmbient: true });
+    } else {
+      const kind = Math.random() < 0.5 ? "battle_win" : "battle_loss";
+      const tone = kind === "battle_win" ? "info" : "warn";
+      triggerBattleSceneImpact(kind, tone, { fromAmbient: true });
+    }
+  }
+
+  if (quietMs > 8000 && battleSceneAmbientStep % 6 === 0) {
+    if (mode === "realtime") {
+      setBattleSceneStatus("실시간 교전 파동", "success");
+      setBattleSceneResult("자동 전투 루프가 지속적으로 전장 신호를 갱신합니다.", "info");
+    } else if (mode === "auto") {
+      setBattleSceneStatus("자동 교전 대기", "info");
+      setBattleSceneResult("자동 옵션 기반으로 전장 파동이 순환 중입니다.", "info");
+    } else {
+      setBattleSceneStatus("전장 호흡 감지", "info");
+      setBattleSceneResult("수동 조작이 없어도 전장 연출은 지속 순환됩니다.", "info");
+    }
+  }
+}
+
+function startBattleSceneAmbientLoop() {
+  if (!dom.battleSceneArena || !state) {
+    return;
+  }
+  if (document.hidden || shouldReduceBattleSceneMotion()) {
+    stopBattleSceneAmbientLoop();
+    setBattleSceneLoopMode(resolveBattleSceneAmbientMode());
+    return;
+  }
+  if (battleSceneAmbientTimer !== null) {
+    return;
+  }
+  battleSceneAmbientStep = 0;
+  setBattleSceneLoopMode(resolveBattleSceneAmbientMode());
+  runBattleSceneAmbientTick();
+  battleSceneAmbientTimer = window.setInterval(
+    runBattleSceneAmbientTick,
+    BATTLE_SCENE_AMBIENT_TICK_MS,
+  );
+}
+
+function stopBattleSceneAmbientLoop() {
+  if (battleSceneAmbientTimer !== null) {
+    window.clearInterval(battleSceneAmbientTimer);
+    battleSceneAmbientTimer = null;
+  }
+  if (dom.battleSceneSparkLayer) {
+    dom.battleSceneSparkLayer.innerHTML = "";
+  }
 }
 
 function renderBattleScene(stage, displayName) {
@@ -523,6 +707,7 @@ function renderBattleScene(stage, displayName) {
     return;
   }
   setBattleSceneAtmosphere(stage);
+  setBattleSceneLoopMode(resolveBattleSceneAmbientMode());
   setBattleSceneStageLabels(stage, displayName);
   applyBattleSceneUiState();
 }
@@ -2178,6 +2363,7 @@ function render() {
   renderSaveSlotSummary();
   renderRealtimeSummary();
   syncRealtimeAutoControls();
+  startBattleSceneAmbientLoop();
 }
 
 function tryLoadActiveSlot(sourceLabel = "로컬 불러오기") {
@@ -2353,6 +2539,7 @@ function bindEvents() {
   });
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
+      stopBattleSceneAmbientLoop();
       if (isRealtimeAutoRunning()) {
         stopRealtimeAuto("백그라운드 진입");
       }
@@ -2362,6 +2549,7 @@ function bindEvents() {
     }
 
     if (!document.hidden && state && context) {
+      startBattleSceneAmbientLoop();
       const resumed = applyResumeCatchupIfNeeded();
       const restarted = maybeAutoStartRealtime("포그라운드 복귀");
       if (!resumed) {
@@ -2373,6 +2561,7 @@ function bindEvents() {
     }
   });
   window.addEventListener("pagehide", () => {
+    stopBattleSceneAmbientLoop();
     if (isRealtimeAutoRunning()) {
       stopRealtimeAuto("페이지 종료");
     }
