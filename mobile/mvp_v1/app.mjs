@@ -103,11 +103,16 @@ const dom = {
   battleSceneEnemyCastBar: document.getElementById("battleSceneEnemyCastBar"),
   battleSceneEnemyVitals: document.getElementById("battleSceneEnemyVitals"),
   battleSceneClashCore: document.getElementById("battleSceneClashCore"),
+  battleSceneRoundBadge: document.getElementById("battleSceneRoundBadge"),
+  battleSceneComboBadge: document.getElementById("battleSceneComboBadge"),
+  battleSceneDpsBadge: document.getElementById("battleSceneDpsBadge"),
+  battleSceneSkillBanner: document.getElementById("battleSceneSkillBanner"),
   battleSceneFlash: document.getElementById("battleSceneFlash"),
   battleSceneFloatLayer: document.getElementById("battleSceneFloatLayer"),
   battleSceneSparkLayer: document.getElementById("battleSceneSparkLayer"),
   battleSceneTrailLayer: document.getElementById("battleSceneTrailLayer"),
   battleSceneResult: document.getElementById("battleSceneResult"),
+  battleSceneTicker: document.getElementById("battleSceneTicker"),
   statQi: document.getElementById("statQi"),
   statSpiritCoin: document.getElementById("statSpiritCoin"),
   statRebirthEssence: document.getElementById("statRebirthEssence"),
@@ -280,9 +285,14 @@ const BATTLE_SCENE_IMPACT_CLASSES = [
 const BATTLE_SCENE_AMBIENT_TICK_MS = 820;
 const BATTLE_SCENE_DUEL_MAX_HP = 100;
 const BATTLE_SCENE_DUEL_MAX_CAST = 100;
+const BATTLE_SCENE_TICKER_MAX = 5;
 const BATTLE_SCENE_DEFAULT_STATUS = "대기 중";
 const BATTLE_SCENE_DEFAULT_RESULT =
   "전장 파동 감지 중 · 자동/실시간 루프에서 연출이 계속 갱신됩니다.";
+const BATTLE_SCENE_DEFAULT_TICKER =
+  "전투 신호 대기 · 상시 교전 로그를 수집 중입니다.";
+const BATTLE_SCENE_PLAYER_SKILLS = ["청운연격", "현무참", "비천격"];
+const BATTLE_SCENE_ENEMY_SKILLS = ["혈영쇄", "황혼식", "혼멸파"];
 const battleSceneUiState = {
   statusText: BATTLE_SCENE_DEFAULT_STATUS,
   statusTone: "info",
@@ -294,6 +304,10 @@ let battleSceneFlashTimer = null;
 let battleSceneAmbientTimer = null;
 let battleSceneAmbientStep = 0;
 let battleSceneLastExplicitEventAtMs = 0;
+let battleSceneSkillBannerTimer = null;
+const battleSceneTickerState = {
+  items: [],
+};
 const battleSceneDuelState = {
   round: 1,
   playerHp: BATTLE_SCENE_DUEL_MAX_HP,
@@ -301,6 +315,9 @@ const battleSceneDuelState = {
   playerCast: 16,
   enemyCast: 12,
   pressure: "low",
+  combo: 0,
+  maxCombo: 0,
+  dpsMomentum: 0,
 };
 
 function setStatus(message, isError = false) {
@@ -418,6 +435,117 @@ function setBattleSceneResult(text, tone = "info") {
   battleSceneUiState.resultText = String(text || BATTLE_SCENE_DEFAULT_RESULT);
   battleSceneUiState.resultTone = normalizeBattleSceneTone(tone);
   applyBattleSceneUiState();
+}
+
+function applyBattleSceneTickerTone(tone = "info") {
+  if (!dom.battleSceneTicker) {
+    return;
+  }
+  applyBattleSceneTone(dom.battleSceneTicker, tone);
+}
+
+function renderBattleSceneTicker() {
+  if (!dom.battleSceneTicker) {
+    return;
+  }
+  const latest = battleSceneTickerState.items[0];
+  if (!latest) {
+    dom.battleSceneTicker.textContent = BATTLE_SCENE_DEFAULT_TICKER;
+    applyBattleSceneTickerTone("info");
+    return;
+  }
+  dom.battleSceneTicker.textContent = latest.message;
+  applyBattleSceneTickerTone(latest.tone);
+}
+
+function pushBattleSceneTicker(message, tone = "info") {
+  const normalizedMessage = String(message || "").trim();
+  if (!normalizedMessage) {
+    return;
+  }
+  battleSceneTickerState.items.unshift({
+    message: normalizedMessage,
+    tone: normalizeBattleSceneTone(tone),
+    atMs: Date.now(),
+  });
+  if (battleSceneTickerState.items.length > BATTLE_SCENE_TICKER_MAX) {
+    battleSceneTickerState.items.length = BATTLE_SCENE_TICKER_MAX;
+  }
+  renderBattleSceneTicker();
+}
+
+function clearBattleSceneTicker() {
+  battleSceneTickerState.items.length = 0;
+  renderBattleSceneTicker();
+}
+
+function applyBattleSceneChipTone(node, tone = "info") {
+  if (!node) {
+    return;
+  }
+  node.dataset.tone = normalizeBattleSceneTone(tone);
+}
+
+function setBattleSceneSkillBanner(label, tone = "info") {
+  if (!dom.battleSceneSkillBanner) {
+    return;
+  }
+  const normalizedTone = normalizeBattleSceneTone(tone);
+  dom.battleSceneSkillBanner.textContent = String(label || "기세 수렴");
+  dom.battleSceneSkillBanner.classList.remove("is-active", ...BATTLE_SCENE_TONE_CLASSES);
+  dom.battleSceneSkillBanner.classList.add(`tone-${normalizedTone}`);
+  void dom.battleSceneSkillBanner.offsetWidth;
+  dom.battleSceneSkillBanner.classList.add("is-active");
+  if (battleSceneSkillBannerTimer !== null) {
+    window.clearTimeout(battleSceneSkillBannerTimer);
+  }
+  battleSceneSkillBannerTimer = window.setTimeout(() => {
+    dom.battleSceneSkillBanner?.classList.remove("is-active");
+    battleSceneSkillBannerTimer = null;
+  }, 860);
+}
+
+function resolveBattleSceneDpsTone(momentum) {
+  if (momentum >= 22) {
+    return "success";
+  }
+  if (momentum >= 11) {
+    return "warn";
+  }
+  return "info";
+}
+
+function renderBattleSceneCombatMetrics() {
+  if (dom.battleSceneRoundBadge) {
+    dom.battleSceneRoundBadge.textContent = `${battleSceneDuelState.round}R`;
+    applyBattleSceneChipTone(dom.battleSceneRoundBadge, "info");
+  }
+  if (dom.battleSceneComboBadge) {
+    dom.battleSceneComboBadge.textContent = `연격 x${battleSceneDuelState.combo}`;
+    const comboTone =
+      battleSceneDuelState.combo >= 9
+        ? "error"
+        : battleSceneDuelState.combo >= 5
+          ? "warn"
+          : battleSceneDuelState.combo >= 2
+            ? "success"
+            : "info";
+    applyBattleSceneChipTone(dom.battleSceneComboBadge, comboTone);
+  }
+  if (dom.battleSceneDpsBadge) {
+    const pressureScore = Math.max(
+      0,
+      Math.round(
+        (battleSceneDuelState.dpsMomentum * 1000) /
+          BATTLE_SCENE_AMBIENT_TICK_MS,
+      ),
+    );
+    dom.battleSceneDpsBadge.textContent = `압력 ${pressureScore}`;
+    applyBattleSceneChipTone(
+      dom.battleSceneDpsBadge,
+      resolveBattleSceneDpsTone(pressureScore),
+    );
+  }
 }
 
 function setBattleSceneState(sceneState = "idle") {
@@ -572,6 +700,7 @@ function renderBattleSceneDuelHud() {
   if (dom.battleSceneClashCore) {
     dom.battleSceneClashCore.dataset.pressure = battleSceneDuelState.pressure;
   }
+  renderBattleSceneCombatMetrics();
 }
 
 function resetBattleSceneDuelState(options = {}) {
@@ -583,6 +712,12 @@ function resetBattleSceneDuelState(options = {}) {
   battleSceneDuelState.playerCast = rollBattleSceneInteger(12, 36);
   battleSceneDuelState.enemyCast = rollBattleSceneInteger(12, 36);
   battleSceneDuelState.pressure = "low";
+  battleSceneDuelState.combo = 0;
+  battleSceneDuelState.maxCombo = 0;
+  battleSceneDuelState.dpsMomentum = 0;
+  if (options.clearTicker) {
+    clearBattleSceneTicker();
+  }
   renderBattleSceneDuelHud();
 }
 
@@ -620,6 +755,16 @@ function syncBattleSceneDuelFromImpact(kind) {
       BATTLE_SCENE_DUEL_MAX_CAST,
     );
   }
+  if (kind === "battle_win") {
+    pushBattleSceneTicker("수동 전투 승리 · 전장 주도권 확보", "success");
+  } else if (kind === "battle_loss") {
+    pushBattleSceneTicker("수동 전투 패배 · 진형 재정비", "warn");
+  } else if (kind === "breakthrough_success") {
+    pushBattleSceneTicker("돌파 성공 · 기세 급상승", "success");
+    setBattleSceneSkillBanner("경지 돌파 · 영맥 개화", "success");
+  } else {
+    pushBattleSceneTicker("돌파 실패 · 기세 불안정", "warn");
+  }
   battleSceneDuelState.pressure = resolveBattleSceneDuelPressure(resolveBattleSceneAmbientMode());
   renderBattleSceneDuelHud();
 }
@@ -630,6 +775,12 @@ function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true) {
   const attackerAnchor = attacker === "player" ? "player" : "enemy";
   const defenderAnchor = attacker === "player" ? "enemy" : "player";
   const tone = attacker === "player" ? "success" : "warn";
+  const skillPool =
+    attacker === "player"
+      ? BATTLE_SCENE_PLAYER_SKILLS
+      : BATTLE_SCENE_ENEMY_SKILLS;
+  const skillLabel =
+    skillPool[rollBattleSceneInteger(0, skillPool.length - 1)] || "비기";
   const burstDamage =
     mode === "realtime"
       ? rollBattleSceneInteger(22, 38)
@@ -641,6 +792,19 @@ function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true) {
     battleSceneDuelState[defenderKey] - burstDamage,
     BATTLE_SCENE_DUEL_MAX_HP,
   );
+  battleSceneDuelState.combo += 1;
+  battleSceneDuelState.maxCombo = Math.max(
+    battleSceneDuelState.maxCombo,
+    battleSceneDuelState.combo,
+  );
+  battleSceneDuelState.dpsMomentum = Math.min(
+    36,
+    battleSceneDuelState.dpsMomentum + burstDamage * 0.5,
+  );
+  pushBattleSceneTicker(
+    `${attacker === "player" ? "수련자" : "적수"} 비기 ${skillLabel} · ${burstDamage}`,
+    tone,
+  );
   if (!visuals) {
     return;
   }
@@ -648,6 +812,7 @@ function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true) {
   spawnBattleSceneFloat(`-${burstDamage}`, { tone, anchor: defenderAnchor });
   spawnBattleSceneSpark({ anchor: "center", tone, shape: "ring", scale: 1.24 });
   spawnBattleSceneTrail({ anchor: "center", tone, shape: "wave", angleDeg: 0, length: 104 });
+  setBattleSceneSkillBanner(`${attacker === "player" ? "수련자" : "적수"} · ${skillLabel}`, tone);
 }
 
 function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true) {
@@ -669,10 +834,25 @@ function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true) {
     battleSceneDuelState[defenderKey] - damage,
     BATTLE_SCENE_DUEL_MAX_HP,
   );
+  battleSceneDuelState.combo += 1;
+  battleSceneDuelState.maxCombo = Math.max(
+    battleSceneDuelState.maxCombo,
+    battleSceneDuelState.combo,
+  );
+  battleSceneDuelState.dpsMomentum = Math.min(
+    36,
+    battleSceneDuelState.dpsMomentum + damage * 0.28,
+  );
   battleSceneDuelState[attackerCastKey] = clampBattleSceneGauge(
     battleSceneDuelState[attackerCastKey] + castGain,
     BATTLE_SCENE_DUEL_MAX_CAST,
   );
+  if (isCrit || damage >= 12) {
+    pushBattleSceneTicker(
+      `${attacker === "player" ? "수련자" : "적수"} ${isCrit ? "치명타" : "강타"} · ${damage}`,
+      isCrit ? "error" : tone,
+    );
+  }
   if (visuals) {
     spawnBattleSceneFloat(`-${damage}`, {
       tone: isCrit ? "error" : tone,
@@ -703,6 +883,7 @@ function runBattleSceneDuelTick(mode = "idle", options = {}) {
   const visuals = options.visuals !== false;
   const strikeAttempts = mode === "realtime" ? 2 : 1;
   const strikeChance = mode === "realtime" ? 0.92 : mode === "auto" ? 0.76 : 0.52;
+  let strikeHappened = false;
   for (let i = 0; i < strikeAttempts; i += 1) {
     if (Math.random() > strikeChance) {
       continue;
@@ -711,6 +892,16 @@ function runBattleSceneDuelTick(mode = "idle", options = {}) {
     const playerBias = momentum < 0 ? 0.58 : momentum > 0 ? 0.42 : 0.5;
     const attacker = Math.random() < playerBias ? "player" : "enemy";
     applyBattleSceneDuelStrike(attacker, mode, visuals);
+    strikeHappened = true;
+  }
+  if (!strikeHappened && battleSceneDuelState.combo > 0) {
+    battleSceneDuelState.combo = Math.max(
+      0,
+      battleSceneDuelState.combo - (mode === "realtime" ? 2 : 1),
+    );
+    if (battleSceneDuelState.combo === 0 && Math.random() < 0.2) {
+      pushBattleSceneTicker("연격 종료 · 기세 재정렬", "info");
+    }
   }
 
   const playerDown = battleSceneDuelState.playerHp <= 0;
@@ -728,13 +919,22 @@ function runBattleSceneDuelTick(mode = "idle", options = {}) {
         anchor: "center",
       });
     }
+    pushBattleSceneTicker(
+      `${battleSceneDuelState.round}R 종료 · ${playerWon ? "수련자 우세" : "적수 우세"}`,
+      tone,
+    );
     battleSceneDuelState.round += 1;
     battleSceneDuelState.playerHp = BATTLE_SCENE_DUEL_MAX_HP;
     battleSceneDuelState.enemyHp = BATTLE_SCENE_DUEL_MAX_HP;
     battleSceneDuelState.playerCast = rollBattleSceneInteger(12, 34);
     battleSceneDuelState.enemyCast = rollBattleSceneInteger(12, 34);
+    battleSceneDuelState.combo = 0;
   }
 
+  battleSceneDuelState.dpsMomentum = Math.max(
+    0,
+    battleSceneDuelState.dpsMomentum * (mode === "realtime" ? 0.86 : mode === "auto" ? 0.82 : 0.76),
+  );
   battleSceneDuelState.pressure = resolveBattleSceneDuelPressure(mode);
   renderBattleSceneDuelHud();
 }
@@ -1040,18 +1240,33 @@ function runBattleSceneAmbientTick() {
         `수련자 ${playerHpPct}% · 적수 ${enemyHpPct}% · 자동 전투 루프가 연출을 갱신 중입니다.`,
         "info",
       );
+      if (Math.random() < 0.44) {
+        pushBattleSceneTicker(
+          `실시간 ${battleSceneDuelState.round}R · 수련자 ${playerHpPct}% / 적수 ${enemyHpPct}%`,
+          leadTone,
+        );
+      }
     } else if (mode === "auto") {
       setBattleSceneStatus(`자동 교전 ${battleSceneDuelState.round}R`, leadTone);
       setBattleSceneResult(
         `수련자 ${playerHpPct}% · 적수 ${enemyHpPct}% · 자동 옵션 기반 전장 파동 순환 중`,
         "info",
       );
+      if (Math.random() < 0.36) {
+        pushBattleSceneTicker(
+          `자동 ${battleSceneDuelState.round}R · 압력 ${Math.round(battleSceneDuelState.dpsMomentum * 10)}`,
+          leadTone,
+        );
+      }
     } else {
       setBattleSceneStatus("전장 호흡 감지", leadTone);
       setBattleSceneResult(
         `환영 교전 ${battleSceneDuelState.round}R · 수련자 ${playerHpPct}% / 적수 ${enemyHpPct}%`,
         "info",
       );
+      if (Math.random() < 0.28) {
+        pushBattleSceneTicker("전장 파동 안정화 · 조작 없이도 교전 지속", "info");
+      }
     }
   }
 }
@@ -1083,6 +1298,11 @@ function stopBattleSceneAmbientLoop() {
     window.clearInterval(battleSceneAmbientTimer);
     battleSceneAmbientTimer = null;
   }
+  if (battleSceneSkillBannerTimer !== null) {
+    window.clearTimeout(battleSceneSkillBannerTimer);
+    battleSceneSkillBannerTimer = null;
+  }
+  dom.battleSceneSkillBanner?.classList.remove("is-active");
   if (dom.battleSceneSparkLayer) {
     dom.battleSceneSparkLayer.innerHTML = "";
   }
@@ -1102,6 +1322,7 @@ function renderBattleScene(stage, displayName) {
   setBattleSceneStageLabels(stage, displayName);
   renderBattleSceneDuelHud();
   applyBattleSceneUiState();
+  renderBattleSceneTicker();
 }
 
 function playBattleSceneBattleOutcome(outcome) {
@@ -2770,7 +2991,7 @@ function tryLoadActiveSlot(sourceLabel = "로컬 불러오기") {
     resetRealtimeAutoSession();
     state = parseSliceState(raw, context);
     ensureRealtimeStatsShape();
-    resetBattleSceneDuelState();
+    resetBattleSceneDuelState({ clearTicker: true });
     addClientLog(
       "save",
       `${sourceLabel}: 슬롯 ${activeSaveSlot} 불러오기 완료${payload.source === "legacy" ? " (legacy)" : ""}`,
@@ -3399,7 +3620,7 @@ function bindEvents() {
       offlineEventLimit: state.settings.offlineEventLimit,
     });
     lastOfflineReport = null;
-    resetBattleSceneDuelState();
+    resetBattleSceneDuelState({ clearTicker: true });
     hideOfflineModal();
     setStatus("런 초기화 완료");
     persistLocal();
@@ -3434,7 +3655,7 @@ function bindEvents() {
       const imported = parseSliceState(raw, context);
       state = cloneSliceState(imported);
       ensureRealtimeStatsShape();
-      resetBattleSceneDuelState();
+      resetBattleSceneDuelState({ clearTicker: true });
       addClientLog("save", "JSON 가져오기 완료");
       const offline = applyOfflineCatchupNow();
       setStatus(buildOfflineStatus("JSON 가져오기 완료", offline.summary));
@@ -3477,7 +3698,7 @@ async function bootstrap() {
     context = buildSliceContext(progressionRows, localeRows);
     state = createInitialSliceState(context, { playerName: "도심" });
     ensureRealtimeStatsShape();
-    resetBattleSceneDuelState();
+    resetBattleSceneDuelState({ clearTicker: true });
     resetRealtimeAutoSession();
     restoreSlotLocks();
     restoreSaveSlotPreference();
@@ -3489,7 +3710,7 @@ async function bootstrap() {
       try {
         state = parseSliceState(raw, context);
         ensureRealtimeStatsShape();
-        resetBattleSceneDuelState();
+        resetBattleSceneDuelState({ clearTicker: true });
         addClientLog(
           "save",
           `기존 로컬 세이브 자동 로드(슬롯 ${activeSaveSlot}${payload.source === "legacy" ? ", legacy" : ""})`,

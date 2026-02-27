@@ -2098,3 +2098,11 @@
 
 ## 489) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(미니 듀얼 HUD + 상시 듀얼 tick 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 490) 다음 순차 작업
+1. [완료] 전투 상단 HUD(`battleSceneRoundBadge`, `battleSceneComboBadge`, `battleSceneDpsBadge`)를 추가해 라운드/연격/압력 지표가 상시 갱신되도록 구성.
+2. [완료] 스킬 배너(`battleSceneSkillBanner`)와 전투 티커(`battleSceneTicker`)를 추가하고 듀얼 tick(`applyBattleSceneDuelStrike`, `applyBattleSceneDuelBurst`)에 치명타/비기/라운드 종료 이벤트를 연결.
+3. [완료] DOM contract 체크에 신규 HUD/배너/티커 요소와 헬퍼(`pushBattleSceneTicker`, `setBattleSceneSkillBanner`)를 반영해 구조 회귀를 방지.
+
+## 491) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(전투 상단 HUD + 스킬 배너/티커 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
