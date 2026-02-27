@@ -255,6 +255,7 @@ npm run mobile:mvp:check
   - 오프라인 비교 코드 현재 요약 톤(`buildOfflineDetailCompareCodeCurrentSummaryTone`)이 빈 입력/형식 오류/정상 입력 케이스에서 `info/warn`을 일관되게 반환하는지 검증
   - 오프라인 비교 코드 대상 요약 라벨(`buildOfflineDetailCompareCodeTargetSummaryLabelKo`)이 빈 입력/형식 오류/전체·핵심 보기 케이스를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 대상 요약 톤(`buildOfflineDetailCompareCodeTargetSummaryTone`)이 빈 입력/형식 오류/정상 입력 케이스에서 `info/warn`을 일관되게 반환하는지 검증
+  - 오프라인 비교 코드 차이 요약 delta part descriptor 헬퍼(`buildOfflineDetailCompareCodeDeltaPartDescriptors`, `buildOfflineDetailCompareCodeDeltaPartLabelKo`)가 `total/critical_visible/hidden/view_mode/all_checksum/view_checksum` 파트 조합을 일관되게 반환하는지 검증
   - 오프라인 비교 코드 차이 요약 라벨(`buildOfflineDetailCompareCodeDeltaSummaryLabelKo`)이 대상 없음/형식 오류/일치/보기 차이 케이스를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 차이 요약 대상 없음 라벨(`buildOfflineDetailCompareCodeDeltaSummaryTargetMissingLabelKo`)이 대상 미입력 fallback 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 코드 차이 요약 대상 없음 본문 라벨(`buildOfflineDetailCompareCodeDeltaSummaryTargetMissingMessageLabelKo`)이 대상 미입력 fallback 경로에서 동일 문구를 일관되게 반환하는지 검증

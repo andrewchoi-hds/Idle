@@ -22,6 +22,8 @@ import {
   buildOfflineDetailCompareCodeDeltaSummaryCodeDifferenceMessageLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryPrefixLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryItemSeparatorLabelKo,
+  buildOfflineDetailCompareCodeDeltaPartDescriptors,
+  buildOfflineDetailCompareCodeDeltaPartLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryTotalKeyLabelKo,
   buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo,
@@ -693,6 +695,26 @@ async function main() {
     );
   const offlineDetailCompareResultDeltaHiddenMismatchDescriptors =
     buildOfflineDetailCompareResultDeltaPartDescriptors(
+      offlineDetailCompareHiddenMismatchDiff,
+    );
+  const offlineDetailCompareCodeDeltaAllMatchDescriptors =
+    buildOfflineDetailCompareCodeDeltaPartDescriptors(offlineDetailCompareAllMatchDiff);
+  const offlineDetailCompareCodeDeltaViewMismatchDescriptors =
+    buildOfflineDetailCompareCodeDeltaPartDescriptors(offlineDetailCompareViewMismatchDiff);
+  const offlineDetailCompareCodeDeltaAllChecksumMismatchDescriptors =
+    buildOfflineDetailCompareCodeDeltaPartDescriptors(
+      offlineDetailCompareAllChecksumMismatchDiff,
+    );
+  const offlineDetailCompareCodeDeltaAggregateMismatchDescriptors =
+    buildOfflineDetailCompareCodeDeltaPartDescriptors(
+      offlineDetailCompareAggregateMismatchDiff,
+    );
+  const offlineDetailCompareCodeDeltaCriticalVisibleMismatchDescriptors =
+    buildOfflineDetailCompareCodeDeltaPartDescriptors(
+      offlineDetailCompareCriticalVisibleMismatchDiff,
+    );
+  const offlineDetailCompareCodeDeltaHiddenMismatchDescriptors =
+    buildOfflineDetailCompareCodeDeltaPartDescriptors(
       offlineDetailCompareHiddenMismatchDiff,
     );
   checks.push({
@@ -1481,6 +1503,78 @@ async function main() {
         .state === "valid" &&
       buildOfflineDetailCompareCodeSummaryStateDescriptor(offlineDetailCompareCodeAll)
         .tone === "info",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_code_delta_part_descriptors_are_stable",
+    passed:
+      offlineDetailCompareCodeDeltaAllMatchDescriptors.length === 6 &&
+      offlineDetailCompareCodeDeltaAllMatchDescriptors
+        .map((descriptor) => descriptor.key)
+        .join("|") ===
+        [
+          "total_events",
+          "critical_visible_events",
+          "hidden_critical_events",
+          "view_mode",
+          "all_checksum",
+          "view_checksum",
+        ].join("|") &&
+      offlineDetailCompareCodeDeltaAllMatchDescriptors.every(
+        (descriptor) => descriptor.isChanged === false,
+      ) &&
+      offlineDetailCompareCodeDeltaAllMatchDescriptors.every(
+        (descriptor) => buildOfflineDetailCompareCodeDeltaPartLabelKo(descriptor) === "",
+      ) &&
+      offlineDetailCompareCodeDeltaViewMismatchDescriptors[3].isChanged === true &&
+      buildOfflineDetailCompareCodeDeltaPartLabelKo(
+        offlineDetailCompareCodeDeltaViewMismatchDescriptors[3],
+      ) ===
+        buildOfflineDetailCompareCodeDeltaSummaryViewModeChangedLabelKo(
+          "all",
+          "critical",
+        ) &&
+      offlineDetailCompareCodeDeltaViewMismatchDescriptors[5].isChanged === true &&
+      buildOfflineDetailCompareCodeDeltaPartLabelKo(
+        offlineDetailCompareCodeDeltaViewMismatchDescriptors[5],
+      ) === buildOfflineDetailCompareCodeDeltaSummaryViewChecksumChangedLabelKo() &&
+      offlineDetailCompareCodeDeltaAllChecksumMismatchDescriptors[4].isChanged ===
+        true &&
+      buildOfflineDetailCompareCodeDeltaPartLabelKo(
+        offlineDetailCompareCodeDeltaAllChecksumMismatchDescriptors[4],
+      ) === buildOfflineDetailCompareCodeDeltaSummaryAllChecksumChangedLabelKo() &&
+      offlineDetailCompareCodeDeltaAggregateMismatchDescriptors[0].isChanged === true &&
+      buildOfflineDetailCompareCodeDeltaPartLabelKo(
+        offlineDetailCompareCodeDeltaAggregateMismatchDescriptors[0],
+      ) ===
+        buildOfflineDetailCompareCodeDeltaSummaryTotalChangedLabelKo(
+          offlineDetailCompareAggregateMismatchDiff.target.totalEvents -
+            offlineDetailCompareAggregateMismatchDiff.current.totalEvents,
+        ) &&
+      offlineDetailCompareCodeDeltaCriticalVisibleMismatchDescriptors[1].isChanged ===
+        true &&
+      buildOfflineDetailCompareCodeDeltaPartLabelKo(
+        offlineDetailCompareCodeDeltaCriticalVisibleMismatchDescriptors[1],
+      ) ===
+        buildOfflineDetailCompareCodeDeltaSummaryCriticalVisibleChangedLabelKo(
+          offlineDetailCompareCriticalVisibleMismatchDiff.target
+            .criticalVisibleEvents -
+            offlineDetailCompareCriticalVisibleMismatchDiff.current
+              .criticalVisibleEvents,
+        ) &&
+      offlineDetailCompareCodeDeltaHiddenMismatchDescriptors[2].isChanged === true &&
+      buildOfflineDetailCompareCodeDeltaPartLabelKo(
+        offlineDetailCompareCodeDeltaHiddenMismatchDescriptors[2],
+      ) ===
+        buildOfflineDetailCompareCodeDeltaSummaryHiddenChangedLabelKo(
+          offlineDetailCompareHiddenMismatchDiff.target.hiddenCriticalEvents -
+            offlineDetailCompareHiddenMismatchDiff.current.hiddenCriticalEvents,
+        ) &&
+      buildOfflineDetailCompareCodeDeltaPartLabelKo({
+        key: "unknown",
+        isChanged: true,
+        deltaValue: 1,
+      }) === "",
   });
 
   checks.push({
