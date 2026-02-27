@@ -329,6 +329,7 @@ npm run mobile:mvp:check
   - 오프라인 비교 가이드 집계 불일치 라벨(`buildOfflineDetailCompareActionHintAggregateMismatchLabelKo`)이 집계 불일치 경로에서 동일 문구를 일관되게 반환하는지 검증
   - 오프라인 비교 가이드 라벨(`buildOfflineDetailCompareActionHintLabelKo`)이 입력 필요/형식 오류/현재 코드 없음/일치/보기 모드 차이/checksum·집계 차이 케이스를 일관되게 반환하는지 검증
   - 오프라인 비교 가이드 톤(`buildOfflineDetailCompareActionHintTone`)이 입력 필요/형식 오류/현재 코드 없음/일치/보기 모드 차이/checksum·집계 차이 케이스에서 `warn/error/info`를 일관되게 반환하는지 검증
+  - 오프라인 비교 보기 모드 정렬 descriptor 헬퍼(`buildOfflineDetailCompareViewModeAlignmentDescriptors`, `buildOfflineDetailCompareViewModeAlignmentDescriptor`)가 `target_missing/target_invalid/current_invalid/identical/already_aligned/view_only_mismatch/aggregate_mismatch` 상태 매핑과 target mode 결정을 일관되게 반환하는지 검증
   - 오프라인 비교 보기 모드 정렬 타깃(`resolveOfflineDetailCompareViewModeAlignmentTarget`)이 `view-only mismatch`에서만 대상 모드(`all/critical`)를 반환하는지 검증
   - 오프라인 비교 대조(`parseOfflineDetailCompareCode`, `resolveOfflineDetailCompareCodeDiff`, `buildOfflineDetailCompareResultLabelKo`)가 파싱/차이 요약/오류 문구를 일관되게 반환하는지 검증
   - 오프라인 리포트 스냅샷(`buildOfflineDetailReportSnapshot`)이 필터 집계/라벨/숨김 상위 종류 및 kind digest(view 포함)/compareCode를 일관되게 반환하는지 검증

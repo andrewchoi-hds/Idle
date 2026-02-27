@@ -1122,21 +1122,84 @@ export function buildOfflineDetailCompareActionHintFallbackTone(reasonInput) {
     .actionHintTone;
 }
 
-export function resolveOfflineDetailCompareViewModeAlignmentTarget(
+export function buildOfflineDetailCompareViewModeAlignmentDescriptors() {
+  return [
+    {
+      alignmentState: "target_missing",
+      targetMode: "",
+      resolvedMode: "",
+      canAlign: false,
+    },
+    {
+      alignmentState: "target_invalid",
+      targetMode: "",
+      resolvedMode: "",
+      canAlign: false,
+    },
+    {
+      alignmentState: "current_invalid",
+      targetMode: "",
+      resolvedMode: "",
+      canAlign: false,
+    },
+    {
+      alignmentState: "identical",
+      targetMode: "",
+      resolvedMode: "",
+      canAlign: false,
+    },
+    {
+      alignmentState: "already_aligned",
+      targetMode: "",
+      resolvedMode: "",
+      canAlign: false,
+    },
+    {
+      alignmentState: "view_only_mismatch",
+      targetMode: "",
+      resolvedMode: "",
+      canAlign: true,
+    },
+    {
+      alignmentState: "aggregate_mismatch",
+      targetMode: "",
+      resolvedMode: "",
+      canAlign: false,
+    },
+  ];
+}
+
+export function buildOfflineDetailCompareViewModeAlignmentDescriptor(
   currentCodeInput,
   targetCodeInput,
 ) {
+  const descriptorFor = (alignmentStateInput) =>
+    buildOfflineDetailCompareViewModeAlignmentDescriptors().find(
+      (descriptor) => descriptor.alignmentState === alignmentStateInput,
+    ) || {
+      alignmentState: "aggregate_mismatch",
+      targetMode: "",
+      resolvedMode: "",
+      canAlign: false,
+    };
+
   const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
   if (!targetText) {
-    return "";
+    return descriptorFor("target_missing");
   }
   const targetCode = extractOfflineDetailCompareCode(targetText);
   if (!targetCode) {
-    return "";
+    return descriptorFor("target_invalid");
   }
   const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCode);
-  if (!diff.comparable || diff.identical || diff.sameViewMode) {
-    return "";
+  if (!diff.comparable) {
+    return descriptorFor(diff.reason === "target_invalid" ? "target_invalid" : "current_invalid");
+  }
+  if (diff.identical) {
+    return descriptorFor("identical");
+  }
+  if (diff.sameViewMode) {
+    return descriptorFor("already_aligned");
   }
   if (
     diff.sameTotalEvents &&
@@ -1144,9 +1207,29 @@ export function resolveOfflineDetailCompareViewModeAlignmentTarget(
     diff.sameHiddenCriticalEvents &&
     diff.sameAllChecksum
   ) {
-    return diff.target.viewMode;
+    const targetMode = diff.target.viewMode === "critical" ? "critical" : "all";
+    const baseDescriptor = descriptorFor("view_only_mismatch");
+    return {
+      ...baseDescriptor,
+      targetMode,
+      resolvedMode: targetMode,
+    };
   }
-  return "";
+  return descriptorFor("aggregate_mismatch");
+}
+
+export function resolveOfflineDetailCompareViewModeAlignmentTarget(
+  currentCodeInput,
+  targetCodeInput,
+) {
+  const alignmentDescriptor = buildOfflineDetailCompareViewModeAlignmentDescriptor(
+    currentCodeInput,
+    targetCodeInput,
+  );
+  return alignmentDescriptor.resolvedMode === "critical" ||
+    alignmentDescriptor.resolvedMode === "all"
+    ? alignmentDescriptor.resolvedMode
+    : "";
 }
 
 function formatSignedDelta(valueInput) {
