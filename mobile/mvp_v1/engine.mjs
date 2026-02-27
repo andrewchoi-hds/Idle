@@ -466,14 +466,41 @@ export function buildOfflineDetailComparePayloadFailureDescriptor(reasonInput) {
 }
 
 export function resolveOfflineDetailComparePayloadLoadSource(sourceInput) {
+  return buildOfflineDetailComparePayloadLoadSourceDescriptor(sourceInput)
+    .normalizedSource;
+}
+
+export function buildOfflineDetailComparePayloadLoadSourceDescriptors() {
+  return [
+    {
+      source: "detail_view_snapshot",
+      normalizedSource: "detail_view_snapshot",
+    },
+    {
+      source: "detail_report_snapshot",
+      normalizedSource: "detail_report_snapshot",
+    },
+    {
+      source: "text",
+      normalizedSource: "text",
+    },
+    {
+      source: "payload",
+      normalizedSource: "payload",
+    },
+  ];
+}
+
+export function buildOfflineDetailComparePayloadLoadSourceDescriptor(sourceInput) {
   const source = typeof sourceInput === "string" ? sourceInput.trim() : "";
-  if (source === "detail_view_snapshot" || source === "detail_report_snapshot") {
-    return source;
-  }
-  if (source === "text") {
-    return "text";
-  }
-  return "payload";
+  return (
+    buildOfflineDetailComparePayloadLoadSourceDescriptors().find(
+      (descriptor) => descriptor.source === source,
+    ) || {
+      source: "payload",
+      normalizedSource: "payload",
+    }
+  );
 }
 
 export function resolveOfflineDetailCompareInputSource(codeInput) {

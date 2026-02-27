@@ -77,6 +77,8 @@ import {
   buildOfflineDetailComparePayloadFailureDescriptors,
   buildOfflineDetailComparePayloadFailureDescriptor,
   resolveOfflineDetailComparePayloadFailureInfo,
+  buildOfflineDetailComparePayloadLoadSourceDescriptors,
+  buildOfflineDetailComparePayloadLoadSourceDescriptor,
   resolveOfflineDetailComparePayloadLoadSource,
   resolveOfflineDetailCompareCheckSource,
   resolveOfflineDetailCompareInputSource,
@@ -945,16 +947,49 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_payload_load_source_descriptors_are_stable",
+    passed:
+      buildOfflineDetailComparePayloadLoadSourceDescriptors().length === 4 &&
+      buildOfflineDetailComparePayloadLoadSourceDescriptors()
+        .map((descriptor) => descriptor.source)
+        .join("|") ===
+        ["detail_view_snapshot", "detail_report_snapshot", "text", "payload"].join(
+          "|",
+        ) &&
+      buildOfflineDetailComparePayloadLoadSourceDescriptor("detail_view_snapshot")
+        .normalizedSource === "detail_view_snapshot" &&
+      buildOfflineDetailComparePayloadLoadSourceDescriptor("detail_report_snapshot")
+        .normalizedSource === "detail_report_snapshot" &&
+      buildOfflineDetailComparePayloadLoadSourceDescriptor("text")
+        .normalizedSource === "text" &&
+      buildOfflineDetailComparePayloadLoadSourceDescriptor("payload")
+        .normalizedSource === "payload" &&
+      buildOfflineDetailComparePayloadLoadSourceDescriptor("unknown").source ===
+        "payload" &&
+      buildOfflineDetailComparePayloadLoadSourceDescriptor("unknown")
+        .normalizedSource === "payload",
+  });
+
+  checks.push({
     id: "offline_detail_compare_payload_load_source_normalizes_success_source",
     passed:
       resolveOfflineDetailComparePayloadLoadSource("detail_view_snapshot") ===
-        "detail_view_snapshot" &&
+        buildOfflineDetailComparePayloadLoadSourceDescriptor("detail_view_snapshot")
+          .normalizedSource &&
       resolveOfflineDetailComparePayloadLoadSource("detail_report_snapshot") ===
-        "detail_report_snapshot" &&
-      resolveOfflineDetailComparePayloadLoadSource("text") === "text" &&
-      resolveOfflineDetailComparePayloadLoadSource("payload") === "payload" &&
-      resolveOfflineDetailComparePayloadLoadSource(" unknown ") === "payload" &&
-      resolveOfflineDetailComparePayloadLoadSource("") === "payload",
+        buildOfflineDetailComparePayloadLoadSourceDescriptor("detail_report_snapshot")
+          .normalizedSource &&
+      resolveOfflineDetailComparePayloadLoadSource("text") ===
+        buildOfflineDetailComparePayloadLoadSourceDescriptor("text")
+          .normalizedSource &&
+      resolveOfflineDetailComparePayloadLoadSource("payload") ===
+        buildOfflineDetailComparePayloadLoadSourceDescriptor("payload")
+          .normalizedSource &&
+      resolveOfflineDetailComparePayloadLoadSource(" unknown ") ===
+        buildOfflineDetailComparePayloadLoadSourceDescriptor("unknown")
+          .normalizedSource &&
+      resolveOfflineDetailComparePayloadLoadSource("") ===
+        buildOfflineDetailComparePayloadLoadSourceDescriptor("").normalizedSource,
   });
 
   checks.push({
