@@ -108,6 +108,8 @@ import {
   isOfflineDetailCompareResultError,
   buildOfflineDetailCompareResultStateLabelKo,
   buildOfflineDetailCompareResultStateTone,
+  buildOfflineDetailCompareComparableOutcomeDescriptors,
+  buildOfflineDetailCompareComparableOutcomeDescriptor,
   buildOfflineDetailCompareResultStateFallbackLabelKo,
   buildOfflineDetailCompareResultStateFallbackTone,
   resolveOfflineDetailCompareFallbackReason,
@@ -650,6 +652,10 @@ async function main() {
   const offlineDetailCompareAllMatchDiff = resolveOfflineDetailCompareCodeDiff(
     offlineDetailCompareCodeAll,
     offlineDetailCompareCodeAll,
+  );
+  const offlineDetailCompareAllChecksumMismatchDiff = resolveOfflineDetailCompareCodeDiff(
+    offlineDetailCompareCodeAll,
+    offlineDetailCompareCodeAllChecksumMismatch,
   );
   const offlineDetailCompareViewMismatchDiff = resolveOfflineDetailCompareCodeDiff(
     offlineDetailCompareCodeAll,
@@ -2587,19 +2593,77 @@ async function main() {
       buildOfflineDetailCompareResultStateTone(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAll,
-      ) === "info" &&
+      ) ===
+        buildOfflineDetailCompareComparableOutcomeDescriptor(
+          offlineDetailCompareAllMatchDiff,
+        ).resultStateTone &&
       buildOfflineDetailCompareResultStateTone(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
-      ) === "warn" &&
+      ) ===
+        buildOfflineDetailCompareComparableOutcomeDescriptor(
+          offlineDetailCompareViewMismatchDiff,
+        ).resultStateTone &&
       buildOfflineDetailCompareResultStateTone(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAllChecksumMismatch,
-      ) === "warn" &&
+      ) ===
+        buildOfflineDetailCompareComparableOutcomeDescriptor(
+          offlineDetailCompareAllChecksumMismatchDiff,
+        ).resultStateTone &&
       buildOfflineDetailCompareResultStateTone(
         "INVALID",
         offlineDetailCompareCodeAll,
       ) === buildOfflineDetailCompareResultStateFallbackTone("current_missing"),
+  });
+
+  checks.push({
+    id: "offline_detail_compare_comparable_outcome_descriptors_are_stable",
+    passed:
+      buildOfflineDetailCompareComparableOutcomeDescriptors().length === 4 &&
+      buildOfflineDetailCompareComparableOutcomeDescriptors()
+        .map((descriptor) => descriptor.outcome)
+        .join("|") ===
+        [
+          "identical",
+          "view_mode_mismatch",
+          "checksum_mismatch",
+          "aggregate_mismatch",
+        ].join("|") &&
+      buildOfflineDetailCompareComparableOutcomeDescriptor(offlineDetailCompareAllMatchDiff)
+        .outcome === "identical" &&
+      buildOfflineDetailCompareComparableOutcomeDescriptor(offlineDetailCompareAllMatchDiff)
+        .resultStateTone === "info" &&
+      buildOfflineDetailCompareComparableOutcomeDescriptor(offlineDetailCompareAllMatchDiff)
+        .actionHintLabelKo === buildOfflineDetailCompareActionHintIdenticalLabelKo() &&
+      buildOfflineDetailCompareComparableOutcomeDescriptor(offlineDetailCompareAllMatchDiff)
+        .actionHintTone === "info" &&
+      buildOfflineDetailCompareComparableOutcomeDescriptor(offlineDetailCompareViewMismatchDiff)
+        .outcome === "view_mode_mismatch" &&
+      buildOfflineDetailCompareComparableOutcomeDescriptor(offlineDetailCompareViewMismatchDiff)
+        .resultStateTone === "warn" &&
+      buildOfflineDetailCompareComparableOutcomeDescriptor(
+        offlineDetailCompareViewMismatchDiff,
+      ).actionHintLabelKo === buildOfflineDetailCompareActionHintViewMismatchLabelKo() &&
+      buildOfflineDetailCompareComparableOutcomeDescriptor(offlineDetailCompareViewMismatchDiff)
+        .actionHintTone === "warn" &&
+      buildOfflineDetailCompareComparableOutcomeDescriptor(
+        offlineDetailCompareAllChecksumMismatchDiff,
+      ).outcome === "checksum_mismatch" &&
+      buildOfflineDetailCompareComparableOutcomeDescriptor(
+        offlineDetailCompareAllChecksumMismatchDiff,
+      ).actionHintLabelKo === buildOfflineDetailCompareActionHintChecksumMismatchLabelKo() &&
+      buildOfflineDetailCompareComparableOutcomeDescriptor(
+        offlineDetailCompareAggregateMismatchDiff,
+      ).outcome === "aggregate_mismatch" &&
+      buildOfflineDetailCompareComparableOutcomeDescriptor(
+        offlineDetailCompareAggregateMismatchDiff,
+      ).actionHintLabelKo === buildOfflineDetailCompareActionHintAggregateMismatchLabelKo() &&
+      buildOfflineDetailCompareComparableOutcomeDescriptor(
+        offlineDetailCompareAggregateMismatchDiff,
+      ).actionHintTone === "error" &&
+      buildOfflineDetailCompareComparableOutcomeDescriptor(null).outcome ===
+        "aggregate_mismatch",
   });
 
   checks.push({
@@ -2708,19 +2772,31 @@ async function main() {
       buildOfflineDetailCompareActionHintLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAll,
-      ) === buildOfflineDetailCompareActionHintIdenticalLabelKo() &&
+      ) ===
+        buildOfflineDetailCompareComparableOutcomeDescriptor(
+          offlineDetailCompareAllMatchDiff,
+        ).actionHintLabelKo &&
       buildOfflineDetailCompareActionHintLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
-      ) === buildOfflineDetailCompareActionHintViewMismatchLabelKo() &&
+      ) ===
+        buildOfflineDetailCompareComparableOutcomeDescriptor(
+          offlineDetailCompareViewMismatchDiff,
+        ).actionHintLabelKo &&
       buildOfflineDetailCompareActionHintLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAllChecksumMismatch,
-      ) === buildOfflineDetailCompareActionHintChecksumMismatchLabelKo() &&
+      ) ===
+        buildOfflineDetailCompareComparableOutcomeDescriptor(
+          offlineDetailCompareAllChecksumMismatchDiff,
+        ).actionHintLabelKo &&
       buildOfflineDetailCompareActionHintLabelKo(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAggregateMismatch,
-      ) === buildOfflineDetailCompareActionHintAggregateMismatchLabelKo(),
+      ) ===
+        buildOfflineDetailCompareComparableOutcomeDescriptor(
+          offlineDetailCompareAggregateMismatchDiff,
+        ).actionHintLabelKo,
   });
 
   checks.push({
@@ -2735,19 +2811,31 @@ async function main() {
       buildOfflineDetailCompareActionHintTone(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAll,
-      ) === "info" &&
+      ) ===
+        buildOfflineDetailCompareComparableOutcomeDescriptor(
+          offlineDetailCompareAllMatchDiff,
+        ).actionHintTone &&
       buildOfflineDetailCompareActionHintTone(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeCritical,
-      ) === "warn" &&
+      ) ===
+        buildOfflineDetailCompareComparableOutcomeDescriptor(
+          offlineDetailCompareViewMismatchDiff,
+        ).actionHintTone &&
       buildOfflineDetailCompareActionHintTone(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAllChecksumMismatch,
-      ) === "warn" &&
+      ) ===
+        buildOfflineDetailCompareComparableOutcomeDescriptor(
+          offlineDetailCompareAllChecksumMismatchDiff,
+        ).actionHintTone &&
       buildOfflineDetailCompareActionHintTone(
         offlineDetailCompareCodeAll,
         offlineDetailCompareCodeAggregateMismatch,
-      ) === "error",
+      ) ===
+        buildOfflineDetailCompareComparableOutcomeDescriptor(
+          offlineDetailCompareAggregateMismatchDiff,
+        ).actionHintTone,
   });
 
   checks.push({

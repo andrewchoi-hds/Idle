@@ -994,6 +994,68 @@ export function buildOfflineDetailCompareResultStateLabelKo(
   return buildOfflineDetailCompareResultLabelKo(currentCodeInput, targetCodeInput);
 }
 
+export function buildOfflineDetailCompareComparableOutcomeDescriptors() {
+  return [
+    {
+      outcome: "identical",
+      resultStateTone: "info",
+      actionHintLabelKo: buildOfflineDetailCompareActionHintIdenticalLabelKo(),
+      actionHintTone: "info",
+    },
+    {
+      outcome: "view_mode_mismatch",
+      resultStateTone: "warn",
+      actionHintLabelKo: buildOfflineDetailCompareActionHintViewMismatchLabelKo(),
+      actionHintTone: "warn",
+    },
+    {
+      outcome: "checksum_mismatch",
+      resultStateTone: "warn",
+      actionHintLabelKo: buildOfflineDetailCompareActionHintChecksumMismatchLabelKo(),
+      actionHintTone: "warn",
+    },
+    {
+      outcome: "aggregate_mismatch",
+      resultStateTone: "warn",
+      actionHintLabelKo: buildOfflineDetailCompareActionHintAggregateMismatchLabelKo(),
+      actionHintTone: "error",
+    },
+  ];
+}
+
+export function buildOfflineDetailCompareComparableOutcomeDescriptor(diffInput) {
+  const descriptorFor = (outcomeInput) =>
+    buildOfflineDetailCompareComparableOutcomeDescriptors().find(
+      (descriptor) => descriptor.outcome === outcomeInput,
+    ) || {
+      outcome: "aggregate_mismatch",
+      resultStateTone: "warn",
+      actionHintLabelKo: buildOfflineDetailCompareActionHintAggregateMismatchLabelKo(),
+      actionHintTone: "error",
+    };
+
+  const diff = diffInput && typeof diffInput === "object" ? diffInput : null;
+  if (!diff || diff.comparable !== true) {
+    return descriptorFor("aggregate_mismatch");
+  }
+  if (diff.identical) {
+    return descriptorFor("identical");
+  }
+  if (
+    !diff.sameViewMode &&
+    diff.sameTotalEvents &&
+    diff.sameCriticalVisibleEvents &&
+    diff.sameHiddenCriticalEvents &&
+    diff.sameAllChecksum
+  ) {
+    return descriptorFor("view_mode_mismatch");
+  }
+  if (!diff.sameAllChecksum || !diff.sameViewChecksum) {
+    return descriptorFor("checksum_mismatch");
+  }
+  return descriptorFor("aggregate_mismatch");
+}
+
 export function buildOfflineDetailCompareResultStateTone(
   currentCodeInput,
   targetCodeInput,
@@ -1006,22 +1068,7 @@ export function buildOfflineDetailCompareResultStateTone(
     return buildOfflineDetailCompareResultStateFallbackTone(fallbackReason);
   }
   const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
-  if (diff.identical) {
-    return "info";
-  }
-  if (
-    !diff.sameViewMode &&
-    diff.sameTotalEvents &&
-    diff.sameCriticalVisibleEvents &&
-    diff.sameHiddenCriticalEvents &&
-    diff.sameAllChecksum
-  ) {
-    return "warn";
-  }
-  if (!diff.sameAllChecksum || !diff.sameViewChecksum) {
-    return "warn";
-  }
-  return "warn";
+  return buildOfflineDetailCompareComparableOutcomeDescriptor(diff).resultStateTone;
 }
 
 export function buildOfflineDetailCompareActionHintLabelKo(
@@ -1036,22 +1083,7 @@ export function buildOfflineDetailCompareActionHintLabelKo(
     return buildOfflineDetailCompareActionHintFallbackLabelKo(fallbackReason);
   }
   const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
-  if (diff.identical) {
-    return buildOfflineDetailCompareActionHintIdenticalLabelKo();
-  }
-  if (
-    !diff.sameViewMode &&
-    diff.sameTotalEvents &&
-    diff.sameCriticalVisibleEvents &&
-    diff.sameHiddenCriticalEvents &&
-    diff.sameAllChecksum
-  ) {
-    return buildOfflineDetailCompareActionHintViewMismatchLabelKo();
-  }
-  if (!diff.sameAllChecksum || !diff.sameViewChecksum) {
-    return buildOfflineDetailCompareActionHintChecksumMismatchLabelKo();
-  }
-  return buildOfflineDetailCompareActionHintAggregateMismatchLabelKo();
+  return buildOfflineDetailCompareComparableOutcomeDescriptor(diff).actionHintLabelKo;
 }
 
 export function buildOfflineDetailCompareActionHintFallbackLabelKo(reasonInput) {
@@ -1099,22 +1131,7 @@ export function buildOfflineDetailCompareActionHintTone(
     return buildOfflineDetailCompareActionHintFallbackTone(fallbackReason);
   }
   const diff = resolveOfflineDetailCompareCodeDiff(currentCodeInput, targetCodeInput);
-  if (diff.identical) {
-    return "info";
-  }
-  if (
-    !diff.sameViewMode &&
-    diff.sameTotalEvents &&
-    diff.sameCriticalVisibleEvents &&
-    diff.sameHiddenCriticalEvents &&
-    diff.sameAllChecksum
-  ) {
-    return "warn";
-  }
-  if (!diff.sameAllChecksum || !diff.sameViewChecksum) {
-    return "warn";
-  }
-  return "error";
+  return buildOfflineDetailCompareComparableOutcomeDescriptor(diff).actionHintTone;
 }
 
 export function buildOfflineDetailCompareActionHintFallbackTone(reasonInput) {

@@ -2010,3 +2010,11 @@
 
 ## 467) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 보기 모드 정렬 descriptor 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 468) 다음 순차 작업
+1. [완료] 오프라인 비교 comparable outcome descriptor 헬퍼(`buildOfflineDetailCompareComparableOutcomeDescriptors`, `buildOfflineDetailCompareComparableOutcomeDescriptor`)를 추가해 `identical/view_mode_mismatch/checksum_mismatch/aggregate_mismatch` 상태 판정과 결과 톤·가이드 라벨/톤 매핑 경로를 단일 함수로 표준화.
+2. [완료] 오프라인 비교 결과 톤/가이드 라벨·톤 경로(`buildOfflineDetailCompareResultStateTone`, `buildOfflineDetailCompareActionHintLabelKo`, `buildOfflineDetailCompareActionHintTone`)가 직접 분기 비교 대신 comparable outcome descriptor 헬퍼 결과를 사용하도록 통합.
+3. [완료] 모바일 회귀 체크에 comparable outcome descriptor 안정성 시나리오를 추가하고 기존 결과 톤/가이드 라벨·톤 시나리오가 descriptor 결과를 참조하도록 갱신해 상태별 매핑 일관성을 검증.
+
+## 469) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 comparable outcome descriptor 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
