@@ -231,8 +231,10 @@ npm run mobile:mvp:check
   - 오프라인 비교 payload 실패 메타(`resolveOfflineDetailComparePayloadFailureInfo`)가 실패 사유별 source/message 매핑을 일관되게 반환하는지 검증
   - 오프라인 비교 payload 성공 출처 descriptor 헬퍼(`buildOfflineDetailComparePayloadLoadSourceDescriptors`, `buildOfflineDetailComparePayloadLoadSourceDescriptor`)가 source key별 정규화 매핑과 unknown fallback(`payload`)을 일관되게 반환하는지 검증
   - 오프라인 비교 payload 성공 출처 정규화(`resolveOfflineDetailComparePayloadLoadSource`)가 `detail_view_snapshot/detail_report_snapshot/text` 유지 및 기타 입력 fallback(`payload`)을 일관되게 반환하는지 검증
-  - 오프라인 비교 입력 출처 해석(`resolveOfflineDetailCompareInputSource`)이 입력값 공백/유효 문자열에 대해 `none/input`을 일관되게 반환하는지 검증
-  - 오프라인 비교 대조 출처 해석(`resolveOfflineDetailCompareCheckSource`)이 `keep/input/명시 출처` 분기에서 최종 출처를 일관되게 반환하는지 검증
+  - 오프라인 비교 입력 출처 descriptor 헬퍼(`buildOfflineDetailCompareInputSourceDescriptors`, `buildOfflineDetailCompareInputSourceDescriptor`)가 입력값 공백/유효 문자열에 대한 source 정규화(`none/input`)를 일관되게 반환하는지 검증
+  - 오프라인 비교 입력 출처 해석(`resolveOfflineDetailCompareInputSource`)이 descriptor 헬퍼 결과를 일관되게 반영하는지 검증
+  - 오프라인 비교 대조 요청 출처 descriptor 헬퍼(`buildOfflineDetailCompareCheckSourceRequestDescriptors`, `buildOfflineDetailCompareCheckSourceRequestDescriptor`)가 `input/keep/empty/custom` 분기 메타를 일관되게 반환하는지 검증
+  - 오프라인 비교 대조 출처 해석(`resolveOfflineDetailCompareCheckSource`)이 descriptor 기반 `keep/input/명시 출처` 분기에서 최종 출처를 일관되게 반환하는지 검증
   - 오프라인 비교 대상 입력 상태 descriptor 헬퍼(`buildOfflineDetailCompareTargetInputStateDescriptors`, `buildOfflineDetailCompareTargetInputStateDescriptor`)가 상태별 메시지 매핑과 unknown fallback(`invalid`)을 일관되게 반환하는지 검증
   - 오프라인 비교 대상 입력 상태 해석(`resolveOfflineDetailCompareTargetInputState`)이 빈 입력/형식 오류/유효 코드 케이스를 `empty/invalid/valid`로 일관되게 반환하는지 검증
   - 오프라인 비교 대상 입력 상태 메시지(`resolveOfflineDetailCompareTargetInputStateStatusMessageKo`)가 `empty/invalid` 상태를 `비교 코드 입력 필요/비교 코드 형식 오류`로 일관되게 반환하는지 검증

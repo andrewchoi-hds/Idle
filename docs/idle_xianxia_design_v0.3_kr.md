@@ -1978,3 +1978,11 @@
 
 ## 459) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(오프라인 비교 payload 성공 출처 descriptor 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 460) 다음 순차 작업
+1. [완료] 오프라인 비교 입력 출처 descriptor 헬퍼(`buildOfflineDetailCompareInputSourceDescriptors`, `buildOfflineDetailCompareInputSourceDescriptor`)를 추가해 공백/유효 입력 source 정규화(`none/input`) 경로를 단일 함수로 표준화.
+2. [완료] 오프라인 비교 대조 요청 출처 descriptor 헬퍼(`buildOfflineDetailCompareCheckSourceRequestDescriptors`, `buildOfflineDetailCompareCheckSourceRequestDescriptor`)를 추가해 `input/keep/empty/custom` 요청 분기 메타 구성을 단일 함수로 표준화.
+3. [완료] 오프라인 비교 입력/대조 출처 해석 경로(`resolveOfflineDetailCompareInputSource`, `resolveOfflineDetailCompareCheckSource`)가 직접 분기 비교 대신 descriptor 헬퍼를 사용하도록 통합하고, 모바일 회귀 체크에 descriptor 안정성 시나리오 2개를 추가해 매핑 일관성을 검증.
+
+## 461) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(오프라인 비교 입력/대조 요청 출처 descriptor 헬퍼 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

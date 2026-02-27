@@ -80,6 +80,10 @@ import {
   buildOfflineDetailComparePayloadLoadSourceDescriptors,
   buildOfflineDetailComparePayloadLoadSourceDescriptor,
   resolveOfflineDetailComparePayloadLoadSource,
+  buildOfflineDetailCompareInputSourceDescriptors,
+  buildOfflineDetailCompareInputSourceDescriptor,
+  buildOfflineDetailCompareCheckSourceRequestDescriptors,
+  buildOfflineDetailCompareCheckSourceRequestDescriptor,
   resolveOfflineDetailCompareCheckSource,
   resolveOfflineDetailCompareInputSource,
   resolveOfflineDetailCompareTargetInputState,
@@ -993,12 +997,51 @@ async function main() {
   });
 
   checks.push({
+    id: "offline_detail_compare_input_source_descriptors_are_stable",
+    passed:
+      buildOfflineDetailCompareInputSourceDescriptors().length === 2 &&
+      buildOfflineDetailCompareInputSourceDescriptors()
+        .map((descriptor) => descriptor.inputState)
+        .join("|") === ["empty", "filled"].join("|") &&
+      buildOfflineDetailCompareInputSourceDescriptor("").normalizedSource === "none" &&
+      buildOfflineDetailCompareInputSourceDescriptor("   ").normalizedSource ===
+        "none" &&
+      buildOfflineDetailCompareInputSourceDescriptor(
+        "ODR1-T6-C4-H2-VA-A000000-S000000",
+      ).normalizedSource === "input" &&
+      buildOfflineDetailCompareInputSourceDescriptor(null).inputState === "empty" &&
+      buildOfflineDetailCompareInputSourceDescriptor(null).normalizedSource ===
+        "none",
+  });
+
+  checks.push({
     id: "offline_detail_compare_input_source_resolves_none_or_input",
     passed:
       resolveOfflineDetailCompareInputSource("") === "none" &&
       resolveOfflineDetailCompareInputSource("   ") === "none" &&
       resolveOfflineDetailCompareInputSource("ODR1-T6-C4-H2-VA-A000000-S000000") ===
         "input",
+  });
+
+  checks.push({
+    id: "offline_detail_compare_check_source_descriptors_are_stable",
+    passed:
+      buildOfflineDetailCompareCheckSourceRequestDescriptors().length === 3 &&
+      buildOfflineDetailCompareCheckSourceRequestDescriptors()
+        .map((descriptor) => descriptor.requestedSource)
+        .join("|") === ["input", "keep", ""].join("|") &&
+      buildOfflineDetailCompareCheckSourceRequestDescriptor("input").requestKind ===
+        "input" &&
+      buildOfflineDetailCompareCheckSourceRequestDescriptor("keep").requestKind ===
+        "keep" &&
+      buildOfflineDetailCompareCheckSourceRequestDescriptor("").requestKind ===
+        "empty" &&
+      buildOfflineDetailCompareCheckSourceRequestDescriptor("  ").requestKind ===
+        "empty" &&
+      buildOfflineDetailCompareCheckSourceRequestDescriptor("clipboard").requestKind ===
+        "custom" &&
+      buildOfflineDetailCompareCheckSourceRequestDescriptor("clipboard")
+        .normalizedSource === "clipboard",
   });
 
   checks.push({
