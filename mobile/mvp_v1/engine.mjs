@@ -397,37 +397,72 @@ export function buildOfflineDetailCompareStatusLabelKo(
 }
 
 export function resolveOfflineDetailCompareClipboardFailureInfo(reasonInput) {
-  const reason = typeof reasonInput === "string" ? reasonInput.trim() : "";
-  if (reason === "unsupported") {
-    return {
+  return buildOfflineDetailCompareClipboardFailureDescriptor(reasonInput);
+}
+
+export function buildOfflineDetailCompareClipboardFailureDescriptors() {
+  return [
+    {
+      reason: "unsupported",
       source: "clipboard",
       messageKo: "클립보드 읽기 미지원 환경",
-    };
-  }
-  if (reason === "read_failed") {
-    return {
+    },
+    {
+      reason: "read_failed",
       source: "clipboard",
       messageKo: "클립보드 읽기 실패",
-    };
-  }
-  return {
-    source: "clipboard",
-    messageKo: "클립보드에서 비교 코드 인식 실패",
-  };
+    },
+    {
+      reason: "extract_failed",
+      source: "clipboard",
+      messageKo: "클립보드에서 비교 코드 인식 실패",
+    },
+  ];
+}
+
+export function buildOfflineDetailCompareClipboardFailureDescriptor(reasonInput) {
+  const reason = typeof reasonInput === "string" ? reasonInput.trim() : "";
+  return (
+    buildOfflineDetailCompareClipboardFailureDescriptors().find(
+      (descriptor) => descriptor.reason === reason,
+    ) || {
+      reason: "extract_failed",
+      source: "clipboard",
+      messageKo: "클립보드에서 비교 코드 인식 실패",
+    }
+  );
 }
 
 export function resolveOfflineDetailComparePayloadFailureInfo(reasonInput) {
-  const reason = typeof reasonInput === "string" ? reasonInput.trim() : "";
-  if (reason === "missing_payload") {
-    return {
+  return buildOfflineDetailComparePayloadFailureDescriptor(reasonInput);
+}
+
+export function buildOfflineDetailComparePayloadFailureDescriptors() {
+  return [
+    {
+      reason: "missing_payload",
       source: "none",
       messageKo: "savePayload 입력 필요",
-    };
-  }
-  return {
-    source: "payload",
-    messageKo: "savePayload에서 비교 코드 인식 실패",
-  };
+    },
+    {
+      reason: "extract_failed",
+      source: "payload",
+      messageKo: "savePayload에서 비교 코드 인식 실패",
+    },
+  ];
+}
+
+export function buildOfflineDetailComparePayloadFailureDescriptor(reasonInput) {
+  const reason = typeof reasonInput === "string" ? reasonInput.trim() : "";
+  return (
+    buildOfflineDetailComparePayloadFailureDescriptors().find(
+      (descriptor) => descriptor.reason === reason,
+    ) || {
+      reason: "extract_failed",
+      source: "payload",
+      messageKo: "savePayload에서 비교 코드 인식 실패",
+    }
+  );
 }
 
 export function resolveOfflineDetailComparePayloadLoadSource(sourceInput) {
