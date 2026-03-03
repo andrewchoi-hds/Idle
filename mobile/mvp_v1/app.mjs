@@ -454,6 +454,7 @@ const BATTLE_SCENE_ACTOR_FRAME_HOLD_REDUCED_MS = {
   skill: 280,
 };
 const BATTLE_SCENE_AMBIENT_TICK_MS = 820;
+const BATTLE_SCENE_RESULT_PRIORITY_WINDOW_MS = 2600;
 const BATTLE_SCENE_DUEL_MAX_HP = 100;
 const BATTLE_SCENE_DUEL_MAX_CAST = 100;
 const BATTLE_SCENE_TICKER_MAX = 5;
@@ -2272,8 +2273,297 @@ function resetBattleSceneDuelState(options = {}) {
   renderBattleSceneDuelHud();
 }
 
-function syncBattleSceneDuelFromImpact(kind) {
-  if (kind === "battle_win") {
+function applyBattleSceneOutcomeDuelTransitions(options = {}) {
+  const lead = options.lead === "player" || options.lead === "enemy" ? options.lead : "even";
+  const pressure =
+    options.pressure === "high"
+      ? "high"
+      : options.pressure === "medium"
+        ? "medium"
+        : "low";
+  const danger =
+    options.danger === "both"
+      ? "both"
+      : options.danger === "player"
+        ? "player"
+        : options.danger === "enemy"
+          ? "enemy"
+          : "none";
+  const comboTier =
+    options.comboTier === "frenzy"
+      ? "frenzy"
+      : options.comboTier === "flow"
+        ? "flow"
+        : "calm";
+  const comboAction =
+    options.comboAction === "surge"
+      ? "surge"
+      : options.comboAction === "cooldown"
+        ? "cooldown"
+        : "resonance";
+
+  maybeTriggerBattleSceneLeadSwing(lead);
+  triggerBattleSceneLeadResonance(lead, { fromOutcome: true });
+  maybeTriggerBattleScenePressureTransition(pressure);
+  if (pressure !== "low") {
+    triggerBattleScenePressureSpike(pressure === "high" ? "high" : "medium", {
+      fromOutcome: true,
+    });
+  }
+  maybeTriggerBattleSceneDangerTransition(danger);
+  if (danger !== "none") {
+    triggerBattleSceneDangerPulse(danger, { fromOutcome: true });
+  }
+  maybeTriggerBattleSceneComboTierTransition(comboTier, {
+    fromOutcome: true,
+    lead,
+  });
+  if (comboAction === "surge") {
+    triggerBattleSceneComboSurge(comboTier === "calm" ? "flow" : comboTier, {
+      fromOutcome: true,
+      lead,
+    });
+    return;
+  }
+  if (comboAction === "cooldown") {
+    triggerBattleSceneComboCooldown(comboTier === "frenzy" ? "flow" : comboTier, {
+      fromOutcome: true,
+      lead,
+    });
+    return;
+  }
+  if (comboTier !== "calm") {
+    triggerBattleSceneComboResonance(comboTier, {
+      fromOutcome: true,
+      lead,
+    });
+  }
+}
+
+function syncBattleSceneDuelFromImpact(kind, options = {}) {
+  const source =
+    options?.source === "battle" || options?.source === "breakthrough"
+      ? options.source
+      : "ambient";
+  const outcome = options && typeof options.outcome === "object" ? options.outcome : null;
+  let comboAction = "resonance";
+  let tickerText = "";
+  let tickerTone = "info";
+  let bannerText = "";
+  let bannerTone = "info";
+  let applyOutcomeTransition = false;
+
+  if (source === "battle" && outcome) {
+    if (outcome.won) {
+      const qiGain = Math.max(1, Math.round(Number(outcome.qiDelta) || 0));
+      const spiritGain = Math.max(0, Math.round(Number(outcome.spiritCoinDelta) || 0));
+      const essenceGain = Math.max(0, Math.round(Number(outcome.rebirthEssenceDelta) || 0));
+      const enemyDamage = Math.max(
+        14,
+        Math.min(42, Math.round(14 + qiGain * 0.52 + spiritGain * 0.18 + essenceGain * 4)),
+      );
+      const castGain = Math.max(
+        18,
+        Math.min(48, Math.round(16 + qiGain * 0.46 + spiritGain * 0.16)),
+      );
+      const enemyCastDrop = Math.max(4, Math.min(24, Math.round(castGain * 0.38)));
+      battleSceneDuelState.enemyHp = clampBattleSceneGauge(
+        battleSceneDuelState.enemyHp - enemyDamage,
+        BATTLE_SCENE_DUEL_MAX_HP,
+      );
+      battleSceneDuelState.playerHp = clampBattleSceneGauge(
+        battleSceneDuelState.playerHp + Math.max(3, Math.round(spiritGain * 0.12)),
+        BATTLE_SCENE_DUEL_MAX_HP,
+      );
+      battleSceneDuelState.playerCast = clampBattleSceneGauge(
+        battleSceneDuelState.playerCast + castGain,
+        BATTLE_SCENE_DUEL_MAX_CAST,
+      );
+      battleSceneDuelState.enemyCast = clampBattleSceneGauge(
+        battleSceneDuelState.enemyCast - enemyCastDrop,
+        BATTLE_SCENE_DUEL_MAX_CAST,
+      );
+      battleSceneDuelState.combo = Math.min(
+        14,
+        battleSceneDuelState.combo + 2 + (essenceGain > 0 ? 1 : 0),
+      );
+      battleSceneDuelState.maxCombo = Math.max(
+        battleSceneDuelState.maxCombo,
+        battleSceneDuelState.combo,
+      );
+      battleSceneDuelState.dpsMomentum = Math.min(
+        36,
+        battleSceneDuelState.dpsMomentum + enemyDamage * 0.44 + castGain * 0.08,
+      );
+      comboAction = "surge";
+      tickerText = "수동 전투 승리 · 전장 주도권 확보";
+      tickerTone = "success";
+    } else {
+      const qiLoss = Math.max(1, Math.abs(Math.round(Number(outcome.qiDelta) || 0)));
+      const playerDamage = Math.max(16, Math.min(44, Math.round(16 + qiLoss * 0.72)));
+      const enemyCastGain = Math.max(16, Math.min(44, Math.round(14 + qiLoss * 0.55)));
+      const playerCastDrop = Math.max(8, Math.min(28, Math.round(playerDamage * 0.34)));
+      battleSceneDuelState.playerHp = clampBattleSceneGauge(
+        battleSceneDuelState.playerHp - playerDamage,
+        BATTLE_SCENE_DUEL_MAX_HP,
+      );
+      battleSceneDuelState.enemyCast = clampBattleSceneGauge(
+        battleSceneDuelState.enemyCast + enemyCastGain,
+        BATTLE_SCENE_DUEL_MAX_CAST,
+      );
+      battleSceneDuelState.playerCast = clampBattleSceneGauge(
+        battleSceneDuelState.playerCast - playerCastDrop,
+        BATTLE_SCENE_DUEL_MAX_CAST,
+      );
+      battleSceneDuelState.combo = Math.max(0, battleSceneDuelState.combo - 2);
+      battleSceneDuelState.dpsMomentum = Math.max(
+        0,
+        battleSceneDuelState.dpsMomentum - playerDamage * 0.42,
+      );
+      comboAction = "cooldown";
+      tickerText = "수동 전투 패배 · 진형 재정비";
+      tickerTone = "warn";
+    }
+    applyOutcomeTransition = true;
+  } else if (source === "breakthrough" && outcome) {
+    const outcomeCode = String(outcome.outcome || "");
+    const successPct = Math.max(0, Math.min(100, Number(outcome.successPct) || 0));
+    const deathPct = Math.max(0, Math.min(100, Number(outcome.deathPct) || 0));
+    const stageQiRequired = Math.max(1, Math.round(Number(outcome.stage?.qi_required) || 1));
+
+    if (outcome.attempted !== true) {
+      const blockedNoQi = outcomeCode === "blocked_no_qi";
+      battleSceneDuelState.playerCast = clampBattleSceneGauge(
+        battleSceneDuelState.playerCast - (blockedNoQi ? 8 : 12),
+        BATTLE_SCENE_DUEL_MAX_CAST,
+      );
+      battleSceneDuelState.combo = Math.max(0, battleSceneDuelState.combo - 1);
+      battleSceneDuelState.dpsMomentum = Math.max(0, battleSceneDuelState.dpsMomentum * 0.82);
+      comboAction = "cooldown";
+      tickerText = blockedNoQi ? "돌파 기력 부족 · 축기 재정렬" : "돌파 차단 · 준비 조건 미충족";
+      tickerTone = blockedNoQi ? "warn" : "error";
+      applyOutcomeTransition = true;
+    } else if (outcomeCode === "success") {
+      battleSceneDuelState.playerHp = BATTLE_SCENE_DUEL_MAX_HP;
+      battleSceneDuelState.enemyHp = clampBattleSceneGauge(
+        Math.round(76 - successPct * 0.24),
+        BATTLE_SCENE_DUEL_MAX_HP,
+      );
+      battleSceneDuelState.playerCast = clampBattleSceneGauge(
+        58 + Math.round(successPct * 0.34),
+        BATTLE_SCENE_DUEL_MAX_CAST,
+      );
+      battleSceneDuelState.enemyCast = clampBattleSceneGauge(
+        18 + Math.round((100 - successPct) * 0.2),
+        BATTLE_SCENE_DUEL_MAX_CAST,
+      );
+      battleSceneDuelState.combo = Math.min(
+        14,
+        Math.max(battleSceneDuelState.combo + 3, successPct >= 70 ? 9 : 7),
+      );
+      battleSceneDuelState.maxCombo = Math.max(
+        battleSceneDuelState.maxCombo,
+        battleSceneDuelState.combo,
+      );
+      battleSceneDuelState.dpsMomentum = Math.min(36, 18 + successPct * 0.18);
+      comboAction = "surge";
+      tickerText = "돌파 성공 · 기세 급상승";
+      tickerTone = "success";
+      bannerText = "경지 돌파 · 영맥 개화";
+      bannerTone = "success";
+      applyOutcomeTransition = true;
+    } else if (outcomeCode === "minor_fail") {
+      const hpLoss = Math.max(
+        14,
+        Math.min(36, Math.round(12 + stageQiRequired * 0.045 + deathPct * 0.22)),
+      );
+      const enemyCastGain = Math.max(14, Math.min(40, Math.round(10 + hpLoss * 0.72)));
+      const playerCastDrop = Math.max(8, Math.min(24, Math.round(hpLoss * 0.5)));
+      battleSceneDuelState.playerHp = clampBattleSceneGauge(
+        battleSceneDuelState.playerHp - hpLoss,
+        BATTLE_SCENE_DUEL_MAX_HP,
+      );
+      battleSceneDuelState.enemyCast = clampBattleSceneGauge(
+        battleSceneDuelState.enemyCast + enemyCastGain,
+        BATTLE_SCENE_DUEL_MAX_CAST,
+      );
+      battleSceneDuelState.playerCast = clampBattleSceneGauge(
+        battleSceneDuelState.playerCast - playerCastDrop,
+        BATTLE_SCENE_DUEL_MAX_CAST,
+      );
+      battleSceneDuelState.combo = Math.max(0, battleSceneDuelState.combo - 2);
+      battleSceneDuelState.dpsMomentum = Math.max(0, battleSceneDuelState.dpsMomentum - hpLoss * 0.5);
+      comboAction = "cooldown";
+      tickerText = "돌파 경상 실패 · 기맥 요동";
+      tickerTone = "warn";
+      applyOutcomeTransition = true;
+    } else if (outcomeCode === "retreat_fail") {
+      const retreatLayers = Math.max(1, Number(outcome.retreatLayers) || 1);
+      const hpLoss = Math.max(
+        24,
+        Math.min(52, Math.round(22 + retreatLayers * 6 + deathPct * 0.14)),
+      );
+      const enemyCastGain = Math.max(16, Math.min(46, Math.round(12 + hpLoss * 0.52)));
+      const playerCastDrop = Math.max(14, Math.min(40, Math.round(hpLoss * 0.62)));
+      battleSceneDuelState.playerHp = clampBattleSceneGauge(
+        battleSceneDuelState.playerHp - hpLoss,
+        BATTLE_SCENE_DUEL_MAX_HP,
+      );
+      battleSceneDuelState.enemyHp = clampBattleSceneGauge(
+        battleSceneDuelState.enemyHp + Math.max(6, retreatLayers * 4),
+        BATTLE_SCENE_DUEL_MAX_HP,
+      );
+      battleSceneDuelState.enemyCast = clampBattleSceneGauge(
+        battleSceneDuelState.enemyCast + enemyCastGain,
+        BATTLE_SCENE_DUEL_MAX_CAST,
+      );
+      battleSceneDuelState.playerCast = clampBattleSceneGauge(
+        battleSceneDuelState.playerCast - playerCastDrop,
+        BATTLE_SCENE_DUEL_MAX_CAST,
+      );
+      battleSceneDuelState.combo = Math.max(0, battleSceneDuelState.combo - (3 + retreatLayers));
+      battleSceneDuelState.dpsMomentum = Math.max(0, battleSceneDuelState.dpsMomentum * 0.42);
+      comboAction = "cooldown";
+      tickerText = `돌파 후퇴 실패 · ${retreatLayers}단계 경지 하락`;
+      tickerTone = "error";
+      bannerText = `경지 후퇴 ${retreatLayers}단계`;
+      bannerTone = "error";
+      applyOutcomeTransition = true;
+    } else if (outcomeCode === "death_fail") {
+      const reward = Math.max(0, Number(outcome.rebirthReward) || 0);
+      battleSceneDuelState.playerHp = clampBattleSceneGauge(
+        22 + reward * 1.4,
+        BATTLE_SCENE_DUEL_MAX_HP,
+      );
+      battleSceneDuelState.enemyHp = clampBattleSceneGauge(
+        86 + deathPct * 0.08,
+        BATTLE_SCENE_DUEL_MAX_HP,
+      );
+      battleSceneDuelState.playerCast = clampBattleSceneGauge(
+        14 + reward * 2.2,
+        BATTLE_SCENE_DUEL_MAX_CAST,
+      );
+      battleSceneDuelState.enemyCast = clampBattleSceneGauge(
+        62 + deathPct * 0.12,
+        BATTLE_SCENE_DUEL_MAX_CAST,
+      );
+      battleSceneDuelState.combo = 0;
+      battleSceneDuelState.dpsMomentum = Math.max(0, battleSceneDuelState.dpsMomentum * 0.24);
+      comboAction = "cooldown";
+      tickerText = "도겁 사망 · 환생 전환";
+      tickerTone = "error";
+      bannerText = "환생 발동 · 기맥 재정렬";
+      bannerTone = "warn";
+      applyOutcomeTransition = true;
+    } else {
+      battleSceneDuelState.combo = Math.max(0, battleSceneDuelState.combo - 1);
+      battleSceneDuelState.dpsMomentum = Math.max(0, battleSceneDuelState.dpsMomentum * 0.76);
+      comboAction = "resonance";
+      tickerText = "돌파 결과 갱신 · 전장 기세 재계산";
+      tickerTone = "info";
+      applyOutcomeTransition = true;
+    }
+  } else if (kind === "battle_win") {
     battleSceneDuelState.enemyHp = clampBattleSceneGauge(
       battleSceneDuelState.enemyHp - rollBattleSceneInteger(18, 34),
       BATTLE_SCENE_DUEL_MAX_HP,
@@ -2282,6 +2572,8 @@ function syncBattleSceneDuelFromImpact(kind) {
       battleSceneDuelState.playerCast + rollBattleSceneInteger(22, 36),
       BATTLE_SCENE_DUEL_MAX_CAST,
     );
+    tickerText = "수동 전투 승리 · 전장 주도권 확보";
+    tickerTone = "success";
   } else if (kind === "battle_loss") {
     battleSceneDuelState.playerHp = clampBattleSceneGauge(
       battleSceneDuelState.playerHp - rollBattleSceneInteger(18, 34),
@@ -2291,11 +2583,17 @@ function syncBattleSceneDuelFromImpact(kind) {
       battleSceneDuelState.enemyCast + rollBattleSceneInteger(22, 36),
       BATTLE_SCENE_DUEL_MAX_CAST,
     );
+    tickerText = "수동 전투 패배 · 진형 재정비";
+    tickerTone = "warn";
   } else if (kind === "breakthrough_success") {
     battleSceneDuelState.playerHp = BATTLE_SCENE_DUEL_MAX_HP;
     battleSceneDuelState.enemyHp = BATTLE_SCENE_DUEL_MAX_HP;
     battleSceneDuelState.playerCast = rollBattleSceneInteger(34, 72);
     battleSceneDuelState.enemyCast = rollBattleSceneInteger(14, 48);
+    tickerText = "돌파 성공 · 기세 급상승";
+    tickerTone = "success";
+    bannerText = "경지 돌파 · 영맥 개화";
+    bannerTone = "success";
   } else {
     battleSceneDuelState.playerHp = clampBattleSceneGauge(
       battleSceneDuelState.playerHp - rollBattleSceneInteger(10, 22),
@@ -2305,18 +2603,39 @@ function syncBattleSceneDuelFromImpact(kind) {
       battleSceneDuelState.enemyCast + rollBattleSceneInteger(12, 26),
       BATTLE_SCENE_DUEL_MAX_CAST,
     );
+    tickerText = "돌파 실패 · 기세 불안정";
+    tickerTone = "warn";
   }
-  if (kind === "battle_win") {
-    pushBattleSceneTicker("수동 전투 승리 · 전장 주도권 확보", "success");
-  } else if (kind === "battle_loss") {
-    pushBattleSceneTicker("수동 전투 패배 · 진형 재정비", "warn");
-  } else if (kind === "breakthrough_success") {
-    pushBattleSceneTicker("돌파 성공 · 기세 급상승", "success");
-    setBattleSceneSkillBanner("경지 돌파 · 영맥 개화", "success");
-  } else {
-    pushBattleSceneTicker("돌파 실패 · 기세 불안정", "warn");
-  }
+
   battleSceneDuelState.pressure = resolveBattleSceneDuelPressure(resolveBattleSceneAmbientMode());
+  const playerHpPct = Math.round(
+    (clampBattleSceneGauge(battleSceneDuelState.playerHp, BATTLE_SCENE_DUEL_MAX_HP) /
+      BATTLE_SCENE_DUEL_MAX_HP) *
+      100,
+  );
+  const enemyHpPct = Math.round(
+    (clampBattleSceneGauge(battleSceneDuelState.enemyHp, BATTLE_SCENE_DUEL_MAX_HP) /
+      BATTLE_SCENE_DUEL_MAX_HP) *
+      100,
+  );
+  if (applyOutcomeTransition) {
+    const lead = resolveBattleSceneLead(playerHpPct, enemyHpPct);
+    const danger = resolveBattleSceneDangerSide(playerHpPct, enemyHpPct);
+    const comboTier = resolveBattleSceneComboTier(battleSceneDuelState.combo);
+    applyBattleSceneOutcomeDuelTransitions({
+      lead,
+      pressure: battleSceneDuelState.pressure,
+      danger,
+      comboTier,
+      comboAction,
+    });
+  }
+  if (tickerText) {
+    pushBattleSceneTicker(tickerText, tickerTone);
+  }
+  if (bannerText) {
+    setBattleSceneSkillBanner(bannerText, bannerTone);
+  }
   renderBattleSceneDuelHud();
 }
 
@@ -3092,7 +3411,7 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
     });
   }
   if (syncDuel) {
-    syncBattleSceneDuelFromImpact(kind);
+    syncBattleSceneDuelFromImpact(kind, options);
   }
 }
 
@@ -3148,6 +3467,8 @@ function runBattleSceneAmbientTick() {
     pressure: battleSceneDuelState.pressure,
     lead: sceneLead,
   });
+  const quietMs = Date.now() - battleSceneLastExplicitEventAtMs;
+  const prioritizeOutcomeSignals = quietMs < BATTLE_SCENE_RESULT_PRIORITY_WINDOW_MS;
   if (reducedMotion) {
     return;
   }
@@ -3175,7 +3496,11 @@ function runBattleSceneAmbientTick() {
       : mode === "auto"
         ? battleSceneAmbientStep % 3 === 0
         : battleSceneAmbientStep % 5 === 0);
-  if (shouldPulsePressureSpike && Math.random() < (mode === "realtime" ? 0.78 : mode === "auto" ? 0.58 : 0.32)) {
+  if (
+    !prioritizeOutcomeSignals &&
+    shouldPulsePressureSpike &&
+    Math.random() < (mode === "realtime" ? 0.54 : mode === "auto" ? 0.38 : 0.22)
+  ) {
     triggerBattleScenePressureSpike("high", { fromAmbient: true });
   }
   const shouldPulseDanger =
@@ -3185,7 +3510,12 @@ function runBattleSceneAmbientTick() {
       : mode === "auto"
         ? battleSceneAmbientStep % 3 === 0
         : battleSceneAmbientStep % 5 === 0);
-  if (shouldPulseDanger && Math.random() < (dangerSide === "both" ? 0.86 : mode === "realtime" ? 0.68 : mode === "auto" ? 0.54 : 0.34)) {
+  if (
+    !prioritizeOutcomeSignals &&
+    shouldPulseDanger &&
+    Math.random() <
+      (dangerSide === "both" ? 0.62 : mode === "realtime" ? 0.46 : mode === "auto" ? 0.34 : 0.22)
+  ) {
     triggerBattleSceneDangerPulse(dangerSide, { fromAmbient: true });
   }
   const shouldPulseLeadResonance =
@@ -3195,19 +3525,20 @@ function runBattleSceneAmbientTick() {
         ? battleSceneAmbientStep % 3 === 0
         : battleSceneAmbientStep % 5 === 0);
   if (
+    !prioritizeOutcomeSignals &&
     shouldPulseLeadResonance &&
     Math.random() <
       (sceneLead === "even"
         ? mode === "realtime"
-          ? 0.36
+          ? 0.22
           : mode === "auto"
-            ? 0.26
-            : 0.14
+            ? 0.16
+            : 0.08
         : mode === "realtime"
-          ? 0.62
+          ? 0.38
           : mode === "auto"
-            ? 0.48
-            : 0.28)
+            ? 0.28
+            : 0.16)
   ) {
     triggerBattleSceneLeadResonance(sceneLead, { fromAmbient: true });
   }
@@ -3219,19 +3550,20 @@ function runBattleSceneAmbientTick() {
         ? battleSceneAmbientStep % 3 === 0
         : battleSceneAmbientStep % 5 === 0);
   if (
+    !prioritizeOutcomeSignals &&
     shouldPulseComboSurge &&
     Math.random() <
       (sceneComboTier === "frenzy"
         ? mode === "realtime"
-          ? 0.82
-          : mode === "auto"
-            ? 0.64
-            : 0.38
-        : mode === "realtime"
           ? 0.56
           : mode === "auto"
             ? 0.42
-            : 0.24)
+            : 0.24
+        : mode === "realtime"
+          ? 0.36
+          : mode === "auto"
+            ? 0.26
+            : 0.14)
   ) {
     triggerBattleSceneComboSurge(sceneComboTier, { fromAmbient: true });
   }
@@ -3243,19 +3575,20 @@ function runBattleSceneAmbientTick() {
         ? battleSceneAmbientStep % 3 === 0
         : battleSceneAmbientStep % 5 === 0);
   if (
+    !prioritizeOutcomeSignals &&
     shouldPulseComboResonance &&
     Math.random() <
       (sceneComboTier === "frenzy"
         ? mode === "realtime"
-          ? 0.74
+          ? 0.5
           : mode === "auto"
-            ? 0.56
-            : 0.34
+            ? 0.36
+            : 0.2
         : mode === "realtime"
-          ? 0.48
+          ? 0.3
           : mode === "auto"
-            ? 0.34
-            : 0.18)
+            ? 0.22
+            : 0.12)
   ) {
     triggerBattleSceneComboResonance(sceneComboTier, { fromAmbient: true, lead: sceneLead });
   }
@@ -3276,101 +3609,102 @@ function runBattleSceneAmbientTick() {
     castPct: enemyCastPct,
   });
 
-  const tonePool =
-    mode === "realtime"
-      ? ["success", "success", "info", "warn"]
-      : mode === "auto"
-        ? ["success", "info", "info", "warn"]
-        : ["info", "info", "warn"];
-  const sparkCount = mode === "realtime" ? 2 : mode === "auto" ? 2 : 1;
-  for (let i = 0; i < sparkCount; i += 1) {
-    if (Math.random() > 0.7) {
-      continue;
+  if (!prioritizeOutcomeSignals) {
+    const tonePool =
+      mode === "realtime"
+        ? ["success", "success", "info", "warn"]
+        : mode === "auto"
+          ? ["success", "info", "info", "warn"]
+          : ["info", "info", "warn"];
+    const sparkCount = mode === "realtime" ? 2 : mode === "auto" ? 2 : 1;
+    for (let i = 0; i < sparkCount; i += 1) {
+      if (Math.random() > 0.76) {
+        continue;
+      }
+      const anchorRoll = Math.random();
+      const anchor = anchorRoll < 0.33 ? "player" : anchorRoll < 0.66 ? "enemy" : "center";
+      const tone = tonePool[Math.floor(Math.random() * tonePool.length)] || "info";
+      const shapeRoll = Math.random();
+      const shape = shapeRoll < 0.5 ? "dot" : shapeRoll < 0.83 ? "shard" : "ring";
+      spawnBattleSceneSpark({ anchor, tone, shape, scale: 0.9 + Math.random() * 0.5 });
     }
-    const anchorRoll = Math.random();
-    const anchor = anchorRoll < 0.33 ? "player" : anchorRoll < 0.66 ? "enemy" : "center";
-    const tone = tonePool[Math.floor(Math.random() * tonePool.length)] || "info";
-    const shapeRoll = Math.random();
-    const shape = shapeRoll < 0.5 ? "dot" : shapeRoll < 0.83 ? "shard" : "ring";
-    spawnBattleSceneSpark({ anchor, tone, shape, scale: 0.9 + Math.random() * 0.5 });
-  }
-  const trailCount = mode === "realtime" ? 2 : mode === "auto" ? 1 : 0;
-  for (let i = 0; i < trailCount; i += 1) {
-    if (Math.random() > (mode === "realtime" ? 0.82 : 0.72)) {
-      continue;
+    const trailCount = mode === "realtime" ? 2 : mode === "auto" ? 1 : 0;
+    for (let i = 0; i < trailCount; i += 1) {
+      if (Math.random() > (mode === "realtime" ? 0.74 : 0.66)) {
+        continue;
+      }
+      const trailTone = Math.random() < 0.62 ? "success" : "warn";
+      const laneRoll = Math.random();
+      if (laneRoll < 0.38) {
+        spawnBattleSceneTrail({
+          anchor: "center",
+          tone: trailTone,
+          angleDeg: 12 + Math.random() * 8,
+          length: 74 + Math.random() * 24,
+        });
+      } else if (laneRoll < 0.76) {
+        spawnBattleSceneTrail({
+          anchor: "center",
+          tone: trailTone,
+          angleDeg: 164 + Math.random() * 10,
+          length: 70 + Math.random() * 20,
+        });
+      } else {
+        spawnBattleSceneTrail({
+          anchor: "center",
+          tone: "info",
+          shape: "wave",
+          angleDeg: (Math.random() - 0.5) * 26,
+          length: 88 + Math.random() * 16,
+        });
+      }
     }
-    const trailTone = Math.random() < 0.62 ? "success" : "warn";
-    const laneRoll = Math.random();
-    if (laneRoll < 0.38) {
-      spawnBattleSceneTrail({
-        anchor: "center",
-        tone: trailTone,
-        angleDeg: 12 + Math.random() * 8,
-        length: 74 + Math.random() * 24,
-      });
-    } else if (laneRoll < 0.76) {
-      spawnBattleSceneTrail({
-        anchor: "center",
-        tone: trailTone,
-        angleDeg: 164 + Math.random() * 10,
-        length: 70 + Math.random() * 20,
-      });
-    } else {
-      spawnBattleSceneTrail({
-        anchor: "center",
-        tone: "info",
-        shape: "wave",
-        angleDeg: (Math.random() - 0.5) * 26,
-        length: 88 + Math.random() * 16,
+    const shouldSpawnShockwave =
+      (mode === "realtime"
+        ? battleSceneAmbientStep % 2 === 0
+        : mode === "auto"
+          ? battleSceneAmbientStep % 3 === 0
+          : battleSceneAmbientStep % 5 === 0) &&
+      (battleSceneDuelState.pressure === "high" || battleSceneDuelState.combo >= 5) &&
+      Math.random() < (mode === "realtime" ? 0.52 : mode === "auto" ? 0.34 : 0.18);
+    if (shouldSpawnShockwave) {
+      const lead = resolveBattleSceneLead(playerHpPct, enemyHpPct);
+      const anchor = lead === "player" ? "player" : lead === "enemy" ? "enemy" : "center";
+      const tone =
+        lead === "player" ? "success" : lead === "enemy" ? "warn" : battleSceneDuelState.pressure === "high" ? "error" : "info";
+      spawnBattleSceneShockwave({
+        anchor,
+        tone,
+        radiusPx:
+          mode === "realtime" ? 72 + Math.random() * 24 : mode === "auto" ? 62 + Math.random() * 18 : 52 + Math.random() * 12,
+        thicknessPx: mode === "realtime" ? 2.8 : mode === "auto" ? 2.4 : 2,
+        lingerSec: mode === "realtime" ? 0.58 : mode === "auto" ? 0.52 : 0.46,
       });
     }
-  }
-  const shouldSpawnShockwave =
-    (mode === "realtime"
-      ? battleSceneAmbientStep % 2 === 0
-      : mode === "auto"
-        ? battleSceneAmbientStep % 3 === 0
-        : battleSceneAmbientStep % 5 === 0) &&
-    (battleSceneDuelState.pressure === "high" || battleSceneDuelState.combo >= 5) &&
-    Math.random() < (mode === "realtime" ? 0.72 : mode === "auto" ? 0.48 : 0.22);
-  if (shouldSpawnShockwave) {
-    const lead = resolveBattleSceneLead(playerHpPct, enemyHpPct);
-    const anchor = lead === "player" ? "player" : lead === "enemy" ? "enemy" : "center";
-    const tone =
-      lead === "player" ? "success" : lead === "enemy" ? "warn" : battleSceneDuelState.pressure === "high" ? "error" : "info";
-    spawnBattleSceneShockwave({
-      anchor,
-      tone,
-      radiusPx:
-        mode === "realtime" ? 72 + Math.random() * 24 : mode === "auto" ? 62 + Math.random() * 18 : 52 + Math.random() * 12,
-      thicknessPx: mode === "realtime" ? 2.8 : mode === "auto" ? 2.4 : 2,
-      lingerSec: mode === "realtime" ? 0.58 : mode === "auto" ? 0.52 : 0.46,
-    });
-  }
 
-  const quietMs = Date.now() - battleSceneLastExplicitEventAtMs;
-  const shouldPulseImpact =
-    quietMs > 2200 &&
-    (mode === "realtime"
-      ? battleSceneAmbientStep % 2 === 0
-      : mode === "auto"
-        ? battleSceneAmbientStep % 3 === 0
-        : battleSceneAmbientStep % 5 === 0);
-  if (shouldPulseImpact) {
-    if (mode === "realtime") {
-      const random = Math.random();
-      const kind = random < 0.58 ? "battle_win" : random < 0.85 ? "battle_loss" : "breakthrough_success";
-      const tone = kind === "battle_loss" ? "warn" : "success";
-      triggerBattleSceneImpact(kind, tone, { fromAmbient: true });
-    } else if (mode === "auto") {
-      const random = Math.random();
-      const kind = random < 0.62 ? "battle_win" : random < 0.86 ? "battle_loss" : "breakthrough_fail";
-      const tone = kind === "battle_win" ? "success" : kind === "battle_loss" ? "warn" : "error";
-      triggerBattleSceneImpact(kind, tone, { fromAmbient: true });
-    } else {
-      const kind = Math.random() < 0.5 ? "battle_win" : "battle_loss";
-      const tone = kind === "battle_win" ? "info" : "warn";
-      triggerBattleSceneImpact(kind, tone, { fromAmbient: true });
+    const shouldPulseImpact =
+      quietMs > 2200 &&
+      (mode === "realtime"
+        ? battleSceneAmbientStep % 2 === 0
+        : mode === "auto"
+          ? battleSceneAmbientStep % 3 === 0
+          : battleSceneAmbientStep % 5 === 0);
+    if (shouldPulseImpact) {
+      if (mode === "realtime") {
+        const random = Math.random();
+        const kind = random < 0.58 ? "battle_win" : random < 0.85 ? "battle_loss" : "breakthrough_success";
+        const tone = kind === "battle_loss" ? "warn" : "success";
+        triggerBattleSceneImpact(kind, tone, { fromAmbient: true });
+      } else if (mode === "auto") {
+        const random = Math.random();
+        const kind = random < 0.62 ? "battle_win" : random < 0.86 ? "battle_loss" : "breakthrough_fail";
+        const tone = kind === "battle_win" ? "success" : kind === "battle_loss" ? "warn" : "error";
+        triggerBattleSceneImpact(kind, tone, { fromAmbient: true });
+      } else {
+        const kind = Math.random() < 0.5 ? "battle_win" : "battle_loss";
+        const tone = kind === "battle_win" ? "info" : "warn";
+        triggerBattleSceneImpact(kind, tone, { fromAmbient: true });
+      }
     }
   }
 
@@ -3558,7 +3892,10 @@ function playBattleSceneBattleOutcome(outcome) {
       `전투 승리 · 기 ${fmtSignedInteger(outcome.qiDelta)} · 영석 ${fmtSignedInteger(outcome.spiritCoinDelta)}`,
       "success",
     );
-    triggerBattleSceneImpact("battle_win", "success");
+    triggerBattleSceneImpact("battle_win", "success", {
+      source: "battle",
+      outcome,
+    });
     spawnBattleSceneFloat(`기 ${fmtSignedInteger(outcome.qiDelta)}`, { tone: "success", anchor: "player" });
     spawnBattleSceneFloat(`영석 ${fmtSignedInteger(outcome.spiritCoinDelta)}`, {
       tone: "success",
@@ -3575,7 +3912,10 @@ function playBattleSceneBattleOutcome(outcome) {
   }
   setBattleSceneStatus("전투 패배", "error");
   setBattleSceneResult(`전투 패배 · 기 ${fmtSignedInteger(outcome.qiDelta)}`, "error");
-  triggerBattleSceneImpact("battle_loss", "error");
+  triggerBattleSceneImpact("battle_loss", "error", {
+    source: "battle",
+    outcome,
+  });
   spawnBattleSceneFloat(`기 ${fmtSignedInteger(outcome.qiDelta)}`, { tone: "error", anchor: "player" });
   spawnBattleSceneFloat("적 반격", { tone: "warn", anchor: "enemy" });
 }
@@ -3588,7 +3928,10 @@ function playBattleSceneBreakthroughOutcome(outcome) {
     const tone = outcome.outcome === "blocked_no_qi" ? "warn" : "error";
     setBattleSceneStatus("돌파 조건 부족", tone);
     setBattleSceneResult(outcome.message || "돌파를 진행할 수 없습니다.", tone);
-    triggerBattleSceneImpact("breakthrough_fail", tone);
+    triggerBattleSceneImpact("breakthrough_fail", tone, {
+      source: "breakthrough",
+      outcome,
+    });
     spawnBattleSceneFloat("돌파 차단", { tone, anchor: "center" });
     return;
   }
@@ -3596,7 +3939,10 @@ function playBattleSceneBreakthroughOutcome(outcome) {
     const qiConsume = Math.max(1, Math.round((outcome.stage?.qi_required || 0) * 0.85));
     setBattleSceneStatus("돌파 성공", "success");
     setBattleSceneResult(outcome.message || "돌파 성공", "success");
-    triggerBattleSceneImpact("breakthrough_success", "success");
+    triggerBattleSceneImpact("breakthrough_success", "success", {
+      source: "breakthrough",
+      outcome,
+    });
     spawnBattleSceneFloat("경지 상승", { tone: "success", anchor: "center" });
     spawnBattleSceneFloat(`기 ${fmtSignedInteger(-qiConsume)}`, { tone: "warn", anchor: "player" });
     return;
@@ -3605,7 +3951,10 @@ function playBattleSceneBreakthroughOutcome(outcome) {
     const qiLoss = Math.max(1, Math.round((outcome.stage?.qi_required || 0) * 0.22));
     setBattleSceneStatus("돌파 실패(경상)", "warn");
     setBattleSceneResult(outcome.message || "경상 실패", "warn");
-    triggerBattleSceneImpact("breakthrough_fail", "warn");
+    triggerBattleSceneImpact("breakthrough_fail", "warn", {
+      source: "breakthrough",
+      outcome,
+    });
     spawnBattleSceneFloat(`기 ${fmtSignedInteger(-qiLoss)}`, { tone: "error", anchor: "player" });
     spawnBattleSceneFloat("경상", { tone: "warn", anchor: "center" });
     return;
@@ -3615,7 +3964,10 @@ function playBattleSceneBreakthroughOutcome(outcome) {
     const retreatLayers = Math.max(1, Number(outcome.retreatLayers) || 1);
     setBattleSceneStatus("돌파 실패(후퇴)", "error");
     setBattleSceneResult(outcome.message || "경지 후퇴 발생", "error");
-    triggerBattleSceneImpact("breakthrough_fail", "error");
+    triggerBattleSceneImpact("breakthrough_fail", "error", {
+      source: "breakthrough",
+      outcome,
+    });
     spawnBattleSceneFloat(`기 ${fmtSignedInteger(-qiLoss)}`, { tone: "error", anchor: "player" });
     spawnBattleSceneFloat(`${retreatLayers}단계 후퇴`, { tone: "error", anchor: "center" });
     return;
@@ -3624,14 +3976,20 @@ function playBattleSceneBreakthroughOutcome(outcome) {
     const reward = Math.max(0, Number(outcome.rebirthReward) || 0);
     setBattleSceneStatus("도겁 사망", "error");
     setBattleSceneResult(outcome.message || "사망 후 환생 발동", "error");
-    triggerBattleSceneImpact("breakthrough_fail", "error");
+    triggerBattleSceneImpact("breakthrough_fail", "error", {
+      source: "breakthrough",
+      outcome,
+    });
     spawnBattleSceneFloat("환생 발동", { tone: "warn", anchor: "center" });
     spawnBattleSceneFloat(`정수 ${fmtSignedInteger(reward)}`, { tone: "success", anchor: "player" });
     return;
   }
   setBattleSceneStatus("돌파 결과 확인", "info");
   setBattleSceneResult(outcome.message || "돌파 처리 완료", "info");
-  triggerBattleSceneImpact("breakthrough_fail", "info");
+  triggerBattleSceneImpact("breakthrough_fail", "info", {
+    source: "breakthrough",
+    outcome,
+  });
 }
 
 function playBattleSceneAutoSummary(summaryInput, sourceLabel = "자동 진행") {
