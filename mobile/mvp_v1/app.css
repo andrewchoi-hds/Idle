@@ -579,6 +579,61 @@ h2 {
   animation: battle-skill-banner-pop var(--battle-skill-banner-sec) ease-out forwards;
 }
 
+.battle-scene-combo-banner {
+  position: absolute;
+  left: 50%;
+  top: 23%;
+  transform: translate(-50%, -50%) scale(0.88);
+  z-index: 10;
+  pointer-events: none;
+  min-width: 108px;
+  max-width: 86%;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(146, 220, 189, 0.58);
+  background: linear-gradient(180deg, rgba(19, 60, 49, 0.9), rgba(10, 29, 23, 0.9));
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.4);
+  color: #c3f1df;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.28px;
+  text-align: center;
+  text-transform: uppercase;
+  opacity: 0;
+}
+
+.battle-scene-combo-banner.tier-flow {
+  border-color: rgba(129, 236, 195, 0.62);
+}
+
+.battle-scene-combo-banner.tier-surge {
+  border-color: rgba(255, 210, 146, 0.66);
+  color: #ffe2b6;
+  background: linear-gradient(180deg, rgba(61, 43, 18, 0.88), rgba(30, 22, 9, 0.9));
+}
+
+.battle-scene-combo-banner.tier-overdrive {
+  border-color: rgba(255, 164, 154, 0.72);
+  color: #ffd1ca;
+  background: linear-gradient(180deg, rgba(72, 30, 24, 0.9), rgba(34, 14, 11, 0.94));
+}
+
+.battle-scene-combo-banner.tone-success {
+  color: #c6f9e6;
+}
+
+.battle-scene-combo-banner.tone-warn {
+  color: #ffe4b8;
+}
+
+.battle-scene-combo-banner.tone-error {
+  color: #ffd1cb;
+}
+
+.battle-scene-combo-banner.is-active {
+  animation: battle-combo-banner-pop 0.86s cubic-bezier(0.2, 0.6, 0.36, 1) forwards;
+}
+
 .battle-aura {
   position: absolute;
   width: 110px;
@@ -1361,6 +1416,32 @@ h2 {
     opacity: 0;
     transform: translate(-50%, -55%) scale(1.03);
     filter: brightness(0.96);
+  }
+}
+
+@keyframes battle-combo-banner-pop {
+  0% {
+    transform: translate(-50%, -50%) scale(0.76);
+    opacity: 0;
+    filter: brightness(0.94);
+  }
+
+  22% {
+    transform: translate(-50%, -50%) scale(1.08);
+    opacity: 1;
+    filter: brightness(1.1);
+  }
+
+  58% {
+    transform: translate(-50%, -50%) scale(1.01);
+    opacity: 0.96;
+    filter: brightness(1.04);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(0.92);
+    opacity: 0;
+    filter: brightness(1);
   }
 }
 
@@ -2297,6 +2378,7 @@ textarea:focus-visible,
   .battle-spark,
   .battle-trail,
   .battle-scene-skill-banner.is-active,
+  .battle-scene-combo-banner.is-active,
   .battle-float,
   .battle-scene-flash.is-active,
   .battle-scene-arena.scene-shake-light,
@@ -2354,6 +2436,12 @@ textarea:focus-visible,
     top: 32%;
     max-width: 88%;
     font-size: 11px;
+  }
+
+  .battle-scene-combo-banner {
+    top: 21%;
+    max-width: 90%;
+    font-size: 10px;
   }
 
   .battle-actor {
