@@ -1926,6 +1926,23 @@ textarea:focus-visible,
   background: #101b19;
 }
 
+#btnToggleBattleHaptic[aria-pressed="true"] {
+  border-color: #a38235;
+  color: #ffe8a6;
+  background: linear-gradient(180deg, rgba(73, 56, 20, 0.82), rgba(40, 30, 12, 0.92));
+}
+
+#btnToggleBattleHaptic[aria-pressed="false"] {
+  border-color: #6e6a58;
+  color: #d0c8af;
+}
+
+#btnToggleBattleHaptic:disabled {
+  border-color: #4f5048;
+  color: #8d8c84;
+  background: #171914;
+}
+
 .offline-grid {
   margin-top: 10px;
   display: grid;

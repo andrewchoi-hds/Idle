@@ -9,8 +9,10 @@ const REQUIRED_HTML_IDS = [
   "appStatus",
   "btnToggleBattleFocus",
   "btnToggleBattleSfx",
+  "btnToggleBattleHaptic",
   "battleFocusHint",
   "battleSfxHint",
+  "battleHapticHint",
   "stageDisplay",
   "worldTag",
   "difficultyIndex",
@@ -141,8 +143,10 @@ const REQUIRED_HTML_IDS = [
 const REQUIRED_DOM_KEYS = [
   "btnToggleBattleFocus",
   "btnToggleBattleSfx",
+  "btnToggleBattleHaptic",
   "battleFocusHint",
   "battleSfxHint",
+  "battleHapticHint",
   "battleScenePlayer",
   "battleSceneEnemy",
   "battleScenePlayerHpBar",
@@ -280,6 +284,9 @@ async function main() {
   assertIncludes(app, "function resolveBattleSfxAmbientCue(", "app.mjs", failures);
   assertIncludes(app, "function playBattleSfx(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSfxEnabled(", "app.mjs", failures);
+  assertIncludes(app, "function renderBattleHapticControl(", "app.mjs", failures);
+  assertIncludes(app, "function playBattleHaptic(", "app.mjs", failures);
+  assertIncludes(app, "function setBattleHapticEnabled(", "app.mjs", failures);
   assertIncludes(app, "function runBattleSceneDuelTick(", "app.mjs", failures);
   assertIncludes(app, "function pushBattleSceneTicker(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneSkillBanner(", "app.mjs", failures);
@@ -290,6 +297,7 @@ async function main() {
   assertIncludes(app, "function stopRealtimeAuto(", "app.mjs", failures);
   assertIncludes(css, ".focus-controls", "app.css", failures);
   assertIncludes(css, "#btnToggleBattleSfx[aria-pressed=\"true\"]", "app.css", failures);
+  assertIncludes(css, "#btnToggleBattleHaptic[aria-pressed=\"true\"]", "app.css", failures);
   assertIncludes(css, ".app.battle-focus-mode .panel[data-panel-role=\"secondary\"]", "app.css", failures);
   assertIncludes(css, ".battle-actor-hp-track", "app.css", failures);
   assertIncludes(css, ".battle-scene-clash-core", "app.css", failures);

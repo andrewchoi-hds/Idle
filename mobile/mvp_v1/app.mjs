@@ -88,8 +88,10 @@ const dom = {
   appStatus: document.getElementById("appStatus"),
   btnToggleBattleFocus: document.getElementById("btnToggleBattleFocus"),
   btnToggleBattleSfx: document.getElementById("btnToggleBattleSfx"),
+  btnToggleBattleHaptic: document.getElementById("btnToggleBattleHaptic"),
   battleFocusHint: document.getElementById("battleFocusHint"),
   battleSfxHint: document.getElementById("battleSfxHint"),
+  battleHapticHint: document.getElementById("battleHapticHint"),
   stageDisplay: document.getElementById("stageDisplay"),
   worldTag: document.getElementById("worldTag"),
   difficultyIndex: document.getElementById("difficultyIndex"),
@@ -283,11 +285,15 @@ let battleSfxContext = null;
 let battleSfxMasterGain = null;
 let battleSfxLastPlayAtMs = 0;
 let battleSfxAmbientLastPlayAtMs = 0;
+let battleHapticEnabled = false;
+let battleHapticLastPlayAtMs = 0;
 const MOBILE_MVP_BATTLE_SFX_PREF_KEY = "idle_xianxia_mobile_mvp_v1_battle_sfx";
+const MOBILE_MVP_BATTLE_HAPTIC_PREF_KEY = "idle_xianxia_mobile_mvp_v1_battle_haptic";
 const BATTLE_SFX_MIN_INTERVAL_MS = 90;
 const BATTLE_SFX_AMBIENT_MIN_INTERVAL_IDLE_MS = 2100;
 const BATTLE_SFX_AMBIENT_MIN_INTERVAL_AUTO_MS = 1450;
 const BATTLE_SFX_AMBIENT_MIN_INTERVAL_REALTIME_MS = 980;
+const BATTLE_HAPTIC_MIN_INTERVAL_MS = 105;
 const SLOT_QUICK_LOAD_DEBOUNCE_MS = 700;
 const DEFAULT_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC = 6;
 const BATTLE_SCENE_TONES = new Set(["info", "success", "warn", "error"]);
@@ -684,6 +690,128 @@ function setBattleSfxEnabled(enabled, options = {}) {
       : nextEnabled
         ? "전투 효과음 활성화"
         : "전투 효과음 비활성화";
+    setStatus(
+      `${statusLabel}${persisted ? "" : " (브라우저 저장소 제한 가능)"}`,
+      false,
+    );
+  }
+}
+
+function isBattleHapticSupported() {
+  return (
+    typeof navigator === "object" &&
+    navigator !== null &&
+    typeof navigator.vibrate === "function"
+  );
+}
+
+function restoreBattleHapticPreference() {
+  const raw = String(safeLocalGetItem(MOBILE_MVP_BATTLE_HAPTIC_PREF_KEY) || "");
+  battleHapticEnabled = raw === "1" || raw.toLowerCase() === "true";
+}
+
+function persistBattleHapticPreference() {
+  return safeLocalSetItem(
+    MOBILE_MVP_BATTLE_HAPTIC_PREF_KEY,
+    battleHapticEnabled ? "1" : "0",
+  );
+}
+
+function renderBattleHapticControl() {
+  const supported = isBattleHapticSupported();
+  if (dom.btnToggleBattleHaptic) {
+    dom.btnToggleBattleHaptic.disabled = !supported;
+    dom.btnToggleBattleHaptic.setAttribute(
+      "aria-pressed",
+      String(supported && battleHapticEnabled),
+    );
+    dom.btnToggleBattleHaptic.textContent = !supported
+      ? "전투 진동 미지원"
+      : battleHapticEnabled
+        ? "전투 진동 ON"
+        : "전투 진동 OFF";
+  }
+  if (dom.battleHapticHint) {
+    dom.battleHapticHint.textContent = !supported
+      ? "전투 진동: 브라우저 미지원"
+      : battleHapticEnabled
+        ? "전투 진동: 켜짐 (타격/비기/임팩트)"
+        : "전투 진동: 꺼짐";
+  }
+}
+
+function emitBattleHaptic(pattern) {
+  if (!isBattleHapticSupported()) {
+    return false;
+  }
+  try {
+    return navigator.vibrate(pattern);
+  } catch {
+    return false;
+  }
+}
+
+function cancelBattleHaptic() {
+  emitBattleHaptic(0);
+}
+
+function playBattleHaptic(kind, options = {}) {
+  if (!battleHapticEnabled || !isBattleHapticSupported()) {
+    return;
+  }
+  const now = Date.now();
+  if (kind === "strike" && now - battleHapticLastPlayAtMs < BATTLE_HAPTIC_MIN_INTERVAL_MS) {
+    return;
+  }
+  let played = false;
+  if (kind === "strike") {
+    const isCrit = options.isCrit === true;
+    const damage = Math.max(1, Number(options.damage) || 1);
+    if (isCrit || damage >= 11) {
+      played = emitBattleHaptic([12, 16, 12]);
+    } else if (damage >= 6) {
+      played = emitBattleHaptic([10]);
+    } else {
+      played = emitBattleHaptic([8]);
+    }
+  } else if (kind === "burst") {
+    played = emitBattleHaptic([14, 22, 18]);
+  } else if (kind === "impact") {
+    if (options.kind === "battle_win") {
+      played = emitBattleHaptic([16, 20, 14]);
+    } else if (options.kind === "battle_loss") {
+      played = emitBattleHaptic([28, 18, 28]);
+    } else if (options.kind === "breakthrough_success") {
+      played = emitBattleHaptic([12, 14, 12, 14]);
+    } else {
+      played = emitBattleHaptic([22, 14, 20]);
+    }
+  } else if (kind === "toggle_on") {
+    played = emitBattleHaptic([10]);
+  }
+  if (played) {
+    battleHapticLastPlayAtMs = now;
+  }
+}
+
+function setBattleHapticEnabled(enabled, options = {}) {
+  const supported = isBattleHapticSupported();
+  const nextEnabled = supported && enabled === true;
+  battleHapticEnabled = nextEnabled;
+  const persisted = persistBattleHapticPreference();
+  renderBattleHapticControl();
+  if (nextEnabled) {
+    playBattleHaptic("toggle_on");
+  } else {
+    cancelBattleHaptic();
+    battleHapticLastPlayAtMs = 0;
+  }
+  if (options.announce === true) {
+    const statusLabel = !supported
+      ? "전투 진동 미지원"
+      : nextEnabled
+        ? "전투 진동 활성화"
+        : "전투 진동 비활성화";
     setStatus(
       `${statusLabel}${persisted ? "" : " (브라우저 저장소 제한 가능)"}`,
       false,
@@ -1314,6 +1442,10 @@ function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true) {
     attacker,
     mode,
   });
+  playBattleHaptic("burst", {
+    attacker,
+    mode,
+  });
   setBattleSceneActorFrame(attacker, "skill");
   setBattleSceneActorFrame(defenderAnchor, "hit");
   pushBattleSceneTicker(
@@ -1363,6 +1495,12 @@ function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true) {
     BATTLE_SCENE_DUEL_MAX_CAST,
   );
   playBattleSfx("strike", {
+    attacker,
+    isCrit,
+    mode,
+    damage,
+  });
+  playBattleHaptic("strike", {
     attacker,
     isCrit,
     mode,
@@ -1625,6 +1763,10 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
   }, 560);
   triggerBattleSceneFlash(tone);
   playBattleSfx("impact", {
+    kind,
+    tone,
+  });
+  playBattleHaptic("impact", {
     kind,
     tone,
   });
@@ -3492,6 +3634,7 @@ function render() {
   dom.lastActiveAt.textContent = fmtDateTimeFromEpochMs(state.lastActiveEpochMs);
   renderBattleScene(stage, displayName);
   renderBattleSfxControl();
+  renderBattleHapticControl();
 
   const qiRatio = clampPercent((state.currencies.qi / stage.qi_required) * 100);
   dom.qiProgressBar.style.width = `${qiRatio}%`;
@@ -3623,6 +3766,9 @@ function bindEvents() {
   dom.btnToggleBattleSfx?.addEventListener("click", () => {
     setBattleSfxEnabled(!battleSfxEnabled, { announce: true });
   });
+  dom.btnToggleBattleHaptic?.addEventListener("click", () => {
+    setBattleHapticEnabled(!battleHapticEnabled, { announce: true });
+  });
   const resumeBattleSfxFromGesture = () => {
     if (!battleSfxEnabled) {
       return;
@@ -3705,6 +3851,7 @@ function bindEvents() {
     if (document.hidden) {
       stopBattleSceneAmbientLoop();
       suspendBattleSfxContext();
+      cancelBattleHaptic();
       if (isRealtimeAutoRunning()) {
         stopRealtimeAuto("백그라운드 진입");
       }
@@ -3729,6 +3876,7 @@ function bindEvents() {
   window.addEventListener("pagehide", () => {
     stopBattleSceneAmbientLoop();
     suspendBattleSfxContext();
+    cancelBattleHaptic();
     if (isRealtimeAutoRunning()) {
       stopRealtimeAuto("페이지 종료");
     }
@@ -4256,6 +4404,7 @@ async function bootstrap() {
     restoreSlotLocks();
     restoreSaveSlotPreference();
     restoreBattleSfxPreference();
+    restoreBattleHapticPreference();
     let bootstrapStatus = "준비 완료";
 
     const payload = readActiveSlotPayload();
