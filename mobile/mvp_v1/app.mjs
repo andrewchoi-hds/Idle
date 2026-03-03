@@ -117,6 +117,7 @@ const dom = {
   battleSceneComboBanner: document.getElementById("battleSceneComboBanner"),
   battleSceneFlash: document.getElementById("battleSceneFlash"),
   battleSceneFloatLayer: document.getElementById("battleSceneFloatLayer"),
+  battleSceneShockwaveLayer: document.getElementById("battleSceneShockwaveLayer"),
   battleSceneSparkLayer: document.getElementById("battleSceneSparkLayer"),
   battleSceneTrailLayer: document.getElementById("battleSceneTrailLayer"),
   battleSceneResult: document.getElementById("battleSceneResult"),
@@ -1567,6 +1568,13 @@ function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true) {
   spawnBattleSceneFloat(`-${burstDamage}`, { tone, anchor: defenderAnchor });
   spawnBattleSceneSpark({ anchor: "center", tone, shape: "ring", scale: 1.24 });
   spawnBattleSceneTrail({ anchor: "center", tone, shape: "wave", angleDeg: 0, length: 104 });
+  spawnBattleSceneShockwave({
+    anchor: "center",
+    tone,
+    radiusPx: mode === "realtime" ? 90 : mode === "auto" ? 82 : 74,
+    thicknessPx: mode === "realtime" ? 3 : 2.5,
+    lingerSec: mode === "realtime" ? 0.68 : 0.6,
+  });
   setBattleSceneSkillBanner(`${attacker === "player" ? "수련자" : "적수"} · ${skillLabel}`, tone);
 }
 
@@ -1653,6 +1661,13 @@ function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true) {
       tone,
       angleDeg: attacker === "player" ? 12 : 166,
       length: isCrit ? 102 : 84,
+    });
+    spawnBattleSceneShockwave({
+      anchor: "center",
+      tone: isCrit ? "error" : tone,
+      radiusPx: isCrit ? 70 : 48,
+      thicknessPx: isCrit ? 2.8 : 2,
+      lingerSec: isCrit ? 0.56 : 0.42,
     });
   }
   if (battleSceneDuelState[attackerCastKey] >= BATTLE_SCENE_DUEL_MAX_CAST) {
@@ -1831,6 +1846,43 @@ function spawnBattleSceneTrail(options = {}) {
   }
 }
 
+function spawnBattleSceneShockwave(options = {}) {
+  if (!dom.battleSceneShockwaveLayer || shouldReduceBattleSceneMotion()) {
+    return;
+  }
+  const tone = normalizeBattleSceneTone(options.tone || "info");
+  const anchor = options.anchor === "player" || options.anchor === "enemy" ? options.anchor : "center";
+  const anchorPoint =
+    anchor === "player"
+      ? { leftPct: 32, topPct: 66 }
+      : anchor === "enemy"
+        ? { leftPct: 68, topPct: 45 }
+        : { leftPct: 50, topPct: 53 };
+  const jitterX = (Math.random() - 0.5) * 14;
+  const jitterY = (Math.random() - 0.5) * 10;
+  const radiusPx = Math.max(22, Math.min(148, Number(options.radiusPx) || 56));
+  const thicknessPx = Math.max(1, Math.min(4.6, Number(options.thicknessPx) || 2.2));
+  const lingerSec = Math.max(0.24, Math.min(1.4, Number(options.lingerSec) || 0.56));
+  const node = document.createElement("span");
+  node.className = `battle-shockwave tone-${tone}`;
+  node.style.left = `calc(${anchorPoint.leftPct}% + ${jitterX.toFixed(1)}px)`;
+  node.style.top = `calc(${anchorPoint.topPct}% + ${jitterY.toFixed(1)}px)`;
+  node.style.setProperty("--battle-shockwave-radius", `${radiusPx.toFixed(1)}px`);
+  node.style.setProperty("--battle-shockwave-thickness", `${thicknessPx.toFixed(2)}px`);
+  node.style.setProperty("--battle-shockwave-linger-sec", `${lingerSec.toFixed(2)}s`);
+  node.addEventListener(
+    "animationend",
+    () => {
+      node.remove();
+    },
+    { once: true },
+  );
+  dom.battleSceneShockwaveLayer.append(node);
+  while (dom.battleSceneShockwaveLayer.childElementCount > 20) {
+    dom.battleSceneShockwaveLayer.firstElementChild?.remove();
+  }
+}
+
 function triggerBattleSceneFlash(tone = "info") {
   if (!dom.battleSceneFlash) {
     return;
@@ -1973,16 +2025,44 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
     spawnBattleSceneSpark({ anchor: "center", tone, shape: "shard", angleDeg: 16, scale: 1.05 });
     spawnBattleSceneTrail({ anchor: "center", tone, angleDeg: 12, length: 84 });
     spawnBattleSceneTrail({ anchor: "center", tone, angleDeg: -10, length: 76 });
+    spawnBattleSceneShockwave({
+      anchor: "center",
+      tone,
+      radiusPx: fromAmbient ? 88 : 98,
+      thicknessPx: 2.8,
+      lingerSec: fromAmbient ? 0.62 : 0.72,
+    });
   } else if (kind === "battle_loss") {
     spawnBattleSceneSpark({ anchor: "center", tone, shape: "shard", angleDeg: -18, scale: 1.08 });
     spawnBattleSceneTrail({ anchor: "center", tone, angleDeg: 166, length: 82 });
     spawnBattleSceneTrail({ anchor: "center", tone, angleDeg: -164, length: 70 });
+    spawnBattleSceneShockwave({
+      anchor: "center",
+      tone,
+      radiusPx: fromAmbient ? 92 : 106,
+      thicknessPx: 3.1,
+      lingerSec: fromAmbient ? 0.64 : 0.76,
+    });
   } else if (kind === "breakthrough_success") {
     spawnBattleSceneSpark({ anchor: "center", tone, shape: "ring", scale: 1.25 });
     spawnBattleSceneTrail({ anchor: "center", tone, shape: "wave", angleDeg: 0, length: 96 });
+    spawnBattleSceneShockwave({
+      anchor: "center",
+      tone,
+      radiusPx: fromAmbient ? 94 : 108,
+      thicknessPx: 2.9,
+      lingerSec: fromAmbient ? 0.66 : 0.78,
+    });
   } else {
     spawnBattleSceneSpark({ anchor: "player", tone, shape: "ring", scale: 1.15 });
     spawnBattleSceneTrail({ anchor: "player", tone, shape: "wave", angleDeg: -24, length: 88 });
+    spawnBattleSceneShockwave({
+      anchor: "player",
+      tone,
+      radiusPx: fromAmbient ? 72 : 86,
+      thicknessPx: 2.6,
+      lingerSec: fromAmbient ? 0.58 : 0.7,
+    });
   }
   if (syncDuel) {
     syncBattleSceneDuelFromImpact(kind);
@@ -2091,6 +2171,28 @@ function runBattleSceneAmbientTick() {
         length: 88 + Math.random() * 16,
       });
     }
+  }
+  const shouldSpawnShockwave =
+    (mode === "realtime"
+      ? battleSceneAmbientStep % 2 === 0
+      : mode === "auto"
+        ? battleSceneAmbientStep % 3 === 0
+        : battleSceneAmbientStep % 5 === 0) &&
+    (battleSceneDuelState.pressure === "high" || battleSceneDuelState.combo >= 5) &&
+    Math.random() < (mode === "realtime" ? 0.72 : mode === "auto" ? 0.48 : 0.22);
+  if (shouldSpawnShockwave) {
+    const lead = resolveBattleSceneLead(playerHpPct, enemyHpPct);
+    const anchor = lead === "player" ? "player" : lead === "enemy" ? "enemy" : "center";
+    const tone =
+      lead === "player" ? "success" : lead === "enemy" ? "warn" : battleSceneDuelState.pressure === "high" ? "error" : "info";
+    spawnBattleSceneShockwave({
+      anchor,
+      tone,
+      radiusPx:
+        mode === "realtime" ? 72 + Math.random() * 24 : mode === "auto" ? 62 + Math.random() * 18 : 52 + Math.random() * 12,
+      thicknessPx: mode === "realtime" ? 2.8 : mode === "auto" ? 2.4 : 2,
+      lingerSec: mode === "realtime" ? 0.58 : mode === "auto" ? 0.52 : 0.46,
+    });
   }
 
   const quietMs = Date.now() - battleSceneLastExplicitEventAtMs;
@@ -2209,6 +2311,9 @@ function stopBattleSceneAmbientLoop() {
   }
   if (dom.battleSceneTrailLayer) {
     dom.battleSceneTrailLayer.innerHTML = "";
+  }
+  if (dom.battleSceneShockwaveLayer) {
+    dom.battleSceneShockwaveLayer.innerHTML = "";
   }
   resetBattleSceneActorFrames();
   battleSceneDuelState.pressure = "low";

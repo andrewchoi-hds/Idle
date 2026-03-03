@@ -975,6 +975,48 @@ h2 {
   color: rgba(255, 163, 154, 0.95);
 }
 
+.battle-scene-shockwave-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.battle-shockwave {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--battle-shockwave-radius, 56px) * 2);
+  height: calc(var(--battle-shockwave-radius, 56px) * 2);
+  border-radius: 999px;
+  border: var(--battle-shockwave-thickness, 2px) solid currentColor;
+  transform: translate(-50%, -50%) scale(0.36);
+  transform-origin: center;
+  opacity: 0;
+  mix-blend-mode: screen;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 0 26px rgba(0, 0, 0, 0.35);
+  animation: battle-shockwave-expand var(--battle-shockwave-linger-sec, 0.56s) cubic-bezier(0.16, 0.6, 0.24, 1) forwards;
+}
+
+.battle-shockwave.tone-info {
+  color: rgba(186, 238, 219, 0.88);
+}
+
+.battle-shockwave.tone-success {
+  color: rgba(136, 250, 204, 0.92);
+}
+
+.battle-shockwave.tone-warn {
+  color: rgba(255, 216, 146, 0.9);
+}
+
+.battle-shockwave.tone-error {
+  color: rgba(255, 161, 151, 0.9);
+}
+
 .battle-scene-trail-layer {
   position: absolute;
   inset: 0;
@@ -1636,6 +1678,24 @@ h2 {
     opacity: 0;
     transform: translate(-50%, -50%) rotate(var(--battle-trail-angle, 0deg)) scaleX(1.22);
     filter: brightness(0.94);
+  }
+}
+
+@keyframes battle-shockwave-expand {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.36);
+    filter: brightness(1.12);
+  }
+
+  24% {
+    opacity: 0.82;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.1);
+    filter: brightness(0.9);
   }
 }
 
@@ -2376,6 +2436,7 @@ textarea:focus-visible,
   .battle-actor[data-cast-tier="high"] .battle-actor-cast-fill,
   .battle-actor[data-cast-tier="full"] .battle-actor-cast-fill,
   .battle-spark,
+  .battle-shockwave,
   .battle-trail,
   .battle-scene-skill-banner.is-active,
   .battle-scene-combo-banner.is-active,
@@ -2398,6 +2459,7 @@ textarea:focus-visible,
     animation: none !important;
   }
 
+  .battle-scene-shockwave-layer,
   .battle-scene-spark-layer,
   .battle-scene-trail-layer {
     display: none;

@@ -145,6 +145,7 @@ npm run mobile:mvp:serve
   - 전투 spark 레이어(`battleSceneSparkLayer`)를 추가해 클릭 없이도 상시 파티클/충돌 파동이 순환되도록 구성
   - 전장 흐름 레이어(`battle-scene-flow-back/front`)를 추가해 배경 전류가 상시 흐르는 느낌을 유지
   - 타격 궤적 레이어(`battleSceneTrailLayer`, `spawnBattleSceneTrail`)를 추가해 실시간/자동 루프에서 slash/wave 궤적이 지속적으로 발생
+  - 쇼크웨이브 레이어(`battleSceneShockwaveLayer`, `spawnBattleSceneShockwave`)를 추가해 strike/burst/impact 및 고압 상시 루프에 원형 파동 임팩트를 누적 반영
   - 미니 듀얼 HUD(`battleScenePlayerHpBar/EnemyHpBar`, `battleScenePlayerCastBar/EnemyCastBar`, `battleSceneClashCore`)를 추가해 버튼 입력 없이도 HP/기세/충돌 압력이 상시 갱신
   - 상시 듀얼 tick(`runBattleSceneDuelTick`, `applyBattleSceneDuelStrike`, `applyBattleSceneDuelBurst`)을 추가해 `idle/auto/realtime` 모드별 타격 빈도·피해량·비기 주기를 차등 적용
   - 전투 상단 HUD(`battleSceneRoundBadge`, `battleSceneComboBadge`, `battleSceneDpsBadge`)를 추가해 라운드/연격/압력 지표를 상시 노출
@@ -161,7 +162,7 @@ npm run mobile:mvp:serve
   - 연격 배너(`battleSceneComboBanner`, `setBattleSceneComboBanner`)를 추가해 연격 임계치(3/7/11)에서 중앙 배너를 자동 노출하고, 라운드 종료/연격 종료 시 자동 정리
   - 전투 집중 기본 ON(`main.app.battle-focus-mode`)으로 첫 진입부터 실제 게임 화면 비중을 높이고, 토글 해제 시 전체 운영 패널을 다시 노출
   - 상시 루프(`runBattleSceneAmbientTick`)가 `idle/auto/realtime` 모드별로 연출 강도와 임팩트 빈도를 조절해 방치형 전투 화면처럼 지속 동작
-  - `prefers-reduced-motion` 환경에서는 spark/trail 등 모션 이펙트를 비활성화하되 듀얼 HUD 수치(HP/기세)와 배우 프레임 상태 전환은 유지해 상태 가시성을 확보
+  - `prefers-reduced-motion` 환경에서는 shockwave/spark/trail 등 모션 이펙트를 비활성화하되 듀얼 HUD 수치(HP/기세)와 배우 프레임 상태 전환은 유지해 상태 가시성을 확보
   - 상시 연출 애니메이션(오라 드리프트/actor idle/오버레이 pulse)과 임팩트 연출(타격/돌파 burst·collapse)을 분리해 자동 루프 중에도 시각 피드백을 유지하고, `prefers-reduced-motion` 환경에서는 해당 애니메이션을 비활성화
 
 ## 4) 저장 포맷
