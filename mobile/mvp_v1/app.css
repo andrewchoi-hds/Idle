@@ -236,6 +236,7 @@ h2 {
   border: 1px solid #2a4f45;
   overflow: hidden;
   isolation: isolate;
+  will-change: transform, filter;
   background:
     url("./assets/battle_arena_mist.svg") center / cover no-repeat,
     radial-gradient(circle at 24% 24%, rgba(54, 145, 112, 0.24), transparent 44%),
@@ -1099,6 +1100,14 @@ h2 {
   animation: battle-camera-shake-lateral 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
+.battle-scene-arena.scene-zoom-soft {
+  animation: battle-camera-zoom-soft 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.battle-scene-arena.scene-zoom-burst {
+  animation: battle-camera-zoom-burst 0.38s cubic-bezier(0.2, 0.58, 0.36, 1);
+}
+
 @keyframes battle-arena-floor-breathe {
   0% {
     opacity: 0.8;
@@ -1239,6 +1248,37 @@ h2 {
 
   84% {
     transform: translate3d(1.2px, 0, 0);
+  }
+}
+
+@keyframes battle-camera-zoom-soft {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+
+  44% {
+    transform: scale(1.018);
+    filter: brightness(1.05);
+  }
+}
+
+@keyframes battle-camera-zoom-burst {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+
+  26% {
+    transform: scale(1.028);
+    filter: brightness(1.08);
+  }
+
+  58% {
+    transform: scale(1.014);
+    filter: brightness(1.03);
   }
 }
 
@@ -2263,6 +2303,8 @@ textarea:focus-visible,
   .battle-scene-arena.scene-shake-medium,
   .battle-scene-arena.scene-shake-heavy,
   .battle-scene-arena.scene-shake-lateral,
+  .battle-scene-arena.scene-zoom-soft,
+  .battle-scene-arena.scene-zoom-burst,
   .battle-scene-arena.scene-impact-win .battle-actor-player,
   .battle-scene-arena.scene-impact-win .battle-actor-enemy,
   .battle-scene-arena.scene-impact-loss .battle-actor-enemy,
