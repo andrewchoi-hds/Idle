@@ -114,6 +114,7 @@ const dom = {
   battleSceneComboBadge: document.getElementById("battleSceneComboBadge"),
   battleSceneDpsBadge: document.getElementById("battleSceneDpsBadge"),
   battleSceneSkillBanner: document.getElementById("battleSceneSkillBanner"),
+  battleSceneComboBanner: document.getElementById("battleSceneComboBanner"),
   battleSceneFlash: document.getElementById("battleSceneFlash"),
   battleSceneFloatLayer: document.getElementById("battleSceneFloatLayer"),
   battleSceneSparkLayer: document.getElementById("battleSceneSparkLayer"),
@@ -324,6 +325,11 @@ const BATTLE_SCENE_ZOOM_DURATIONS_MS = {
   soft: 300,
   burst: 380,
 };
+const BATTLE_SCENE_COMBO_BANNER_TIER_CLASSES = [
+  "tier-flow",
+  "tier-surge",
+  "tier-overdrive",
+];
 const BATTLE_SCENE_ACTOR_FRAME_HOLD_MS = {
   attack: 360,
   hit: 420,
@@ -361,6 +367,7 @@ let battleSceneLastShakeAtMs = 0;
 let battleSceneZoomTimer = null;
 let battleSceneLastZoomAtMs = 0;
 let battleSceneSkillBannerTimer = null;
+let battleSceneComboBannerTimer = null;
 const battleSceneActorFrameTimers = {
   player: null,
   enemy: null,
@@ -1121,6 +1128,75 @@ function setBattleSceneSkillBanner(label, tone = "info") {
   }, 860);
 }
 
+function resolveBattleSceneComboBannerTier(comboInput) {
+  const combo = Math.max(0, Math.floor(Number(comboInput) || 0));
+  if (combo >= 11) {
+    return "overdrive";
+  }
+  if (combo >= 7) {
+    return "surge";
+  }
+  if (combo >= 3) {
+    return "flow";
+  }
+  return "flow";
+}
+
+function clearBattleSceneComboBanner() {
+  if (battleSceneComboBannerTimer !== null) {
+    window.clearTimeout(battleSceneComboBannerTimer);
+    battleSceneComboBannerTimer = null;
+  }
+  if (!dom.battleSceneComboBanner) {
+    return;
+  }
+  dom.battleSceneComboBanner.classList.remove(
+    "is-active",
+    ...BATTLE_SCENE_TONE_CLASSES,
+    ...BATTLE_SCENE_COMBO_BANNER_TIER_CLASSES,
+  );
+  dom.battleSceneComboBanner.classList.add("tier-flow", "tone-info");
+  dom.battleSceneComboBanner.setAttribute("aria-hidden", "true");
+}
+
+function setBattleSceneComboBanner(comboInput, tone = "info") {
+  if (!dom.battleSceneComboBanner) {
+    return;
+  }
+  const combo = Math.max(0, Math.floor(Number(comboInput) || 0));
+  if (combo < 3) {
+    clearBattleSceneComboBanner();
+    return;
+  }
+  const tier = resolveBattleSceneComboBannerTier(combo);
+  const normalizedTone = normalizeBattleSceneTone(tone);
+  const label =
+    tier === "overdrive"
+      ? `난무 연격 x${combo}`
+      : tier === "surge"
+        ? `폭주 연격 x${combo}`
+        : `연격 x${combo}`;
+  dom.battleSceneComboBanner.textContent = label;
+  dom.battleSceneComboBanner.classList.remove(
+    "is-active",
+    ...BATTLE_SCENE_TONE_CLASSES,
+    ...BATTLE_SCENE_COMBO_BANNER_TIER_CLASSES,
+  );
+  dom.battleSceneComboBanner.classList.add(`tone-${normalizedTone}`, `tier-${tier}`);
+  dom.battleSceneComboBanner.setAttribute("aria-hidden", "false");
+  void dom.battleSceneComboBanner.offsetWidth;
+  dom.battleSceneComboBanner.classList.add("is-active");
+  if (battleSceneComboBannerTimer !== null) {
+    window.clearTimeout(battleSceneComboBannerTimer);
+  }
+  const holdMs = tier === "overdrive" ? 1040 : tier === "surge" ? 920 : 780;
+  battleSceneComboBannerTimer = window.setTimeout(() => {
+    dom.battleSceneComboBanner?.classList.remove("is-active");
+    dom.battleSceneComboBanner?.setAttribute("aria-hidden", "true");
+    battleSceneComboBannerTimer = null;
+  }, holdMs);
+}
+
 function resolveBattleSceneDpsTone(momentum) {
   if (momentum >= 22) {
     return "success";
@@ -1375,6 +1451,7 @@ function resetBattleSceneDuelState(options = {}) {
   battleSceneDuelState.combo = 0;
   battleSceneDuelState.maxCombo = 0;
   battleSceneDuelState.dpsMomentum = 0;
+  clearBattleSceneComboBanner();
   resetBattleSceneActorFrames();
   if (options.clearTicker) {
     clearBattleSceneTicker();
@@ -1476,6 +1553,7 @@ function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true) {
   triggerBattleSceneZoomPulse(
     mode === "realtime" || burstDamage >= 30 ? "burst" : "soft",
   );
+  setBattleSceneComboBanner(battleSceneDuelState.combo, tone);
   setBattleSceneActorFrame(attacker, "skill");
   setBattleSceneActorFrame(defenderAnchor, "hit");
   pushBattleSceneTicker(
@@ -1542,6 +1620,12 @@ function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true) {
   triggerBattleSceneZoomPulse(
     isCrit || mode === "realtime" ? "burst" : "soft",
   );
+  if (battleSceneDuelState.combo >= 3 && (isCrit || battleSceneDuelState.combo % 3 === 0)) {
+    setBattleSceneComboBanner(
+      battleSceneDuelState.combo,
+      isCrit ? "error" : tone,
+    );
+  }
   setBattleSceneActorFrame(attacker, "attack");
   setBattleSceneActorFrame(defenderAnchor, "hit");
   if (isCrit || damage >= 12) {
@@ -1599,6 +1683,9 @@ function runBattleSceneDuelTick(mode = "idle", options = {}) {
     if (battleSceneDuelState.combo === 0 && Math.random() < 0.2) {
       pushBattleSceneTicker("연격 종료 · 기세 재정렬", "info");
     }
+    if (battleSceneDuelState.combo <= 0) {
+      clearBattleSceneComboBanner();
+    }
   }
 
   const playerDown = battleSceneDuelState.playerHp <= 0;
@@ -1626,6 +1713,7 @@ function runBattleSceneDuelTick(mode = "idle", options = {}) {
     battleSceneDuelState.playerCast = rollBattleSceneInteger(12, 34);
     battleSceneDuelState.enemyCast = rollBattleSceneInteger(12, 34);
     battleSceneDuelState.combo = 0;
+    clearBattleSceneComboBanner();
   }
 
   battleSceneDuelState.dpsMomentum = Math.max(
@@ -2115,6 +2203,7 @@ function stopBattleSceneAmbientLoop() {
     battleSceneSkillBannerTimer = null;
   }
   dom.battleSceneSkillBanner?.classList.remove("is-active");
+  clearBattleSceneComboBanner();
   if (dom.battleSceneSparkLayer) {
     dom.battleSceneSparkLayer.innerHTML = "";
   }

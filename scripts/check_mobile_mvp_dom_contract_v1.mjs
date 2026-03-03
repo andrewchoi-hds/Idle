@@ -31,6 +31,7 @@ const REQUIRED_HTML_IDS = [
   "battleSceneComboBadge",
   "battleSceneDpsBadge",
   "battleSceneSkillBanner",
+  "battleSceneComboBanner",
   "battleSceneTicker",
   "statQi",
   "statSpiritCoin",
@@ -160,6 +161,7 @@ const REQUIRED_DOM_KEYS = [
   "battleSceneComboBadge",
   "battleSceneDpsBadge",
   "battleSceneSkillBanner",
+  "battleSceneComboBanner",
   "battleSceneTicker",
   "previewMinorFailPct",
   "previewRetreatFailPct",
@@ -289,6 +291,7 @@ async function main() {
   assertIncludes(app, "function setBattleHapticEnabled(", "app.mjs", failures);
   assertIncludes(app, "function triggerBattleSceneCameraShake(", "app.mjs", failures);
   assertIncludes(app, "function triggerBattleSceneZoomPulse(", "app.mjs", failures);
+  assertIncludes(app, "function setBattleSceneComboBanner(", "app.mjs", failures);
   assertIncludes(app, "function runBattleSceneDuelTick(", "app.mjs", failures);
   assertIncludes(app, "function pushBattleSceneTicker(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneSkillBanner(", "app.mjs", failures);
@@ -305,6 +308,7 @@ async function main() {
   assertIncludes(css, ".battle-scene-clash-core", "app.css", failures);
   assertIncludes(css, ".battle-scene-top-hud", "app.css", failures);
   assertIncludes(css, ".battle-scene-skill-banner", "app.css", failures);
+  assertIncludes(css, ".battle-scene-combo-banner", "app.css", failures);
   assertIncludes(css, ".battle-scene-ticker", "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-shake-heavy", "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-zoom-burst", "app.css", failures);

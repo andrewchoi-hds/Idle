@@ -2178,3 +2178,11 @@
 
 ## 509) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(전장 카메라 zoom pulse 연출 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 510) 다음 순차 작업
+1. [완료] 전투 연출 아레나에 연격 배너(`battleSceneComboBanner`)를 추가해 연격 누적이 임계치(3/7/11)에 도달하면 중앙 배너가 자동 팝업되도록 구성.
+2. [완료] 연격 배너 헬퍼(`setBattleSceneComboBanner`, `clearBattleSceneComboBanner`)를 추가하고 strike/burst/연격 종료/라운드 종료 경로에 연결해 자동 노출과 정리가 일관되게 동작하도록 반영.
+3. [완료] DOM contract 체크에 신규 연격 배너 요소/헬퍼 토큰(`battleSceneComboBanner`, `setBattleSceneComboBanner`)과 스타일 토큰(`.battle-scene-combo-banner`)을 추가해 구조 회귀를 방지.
+
+## 511) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(연격 combo 배너 연출 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
