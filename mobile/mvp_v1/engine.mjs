@@ -3721,6 +3721,35 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
             );
           }
         }
+      } else if (breakthrough.outcome === "blocked_no_qi") {
+        consecutivePolicyBlocks = 0;
+        if (collectEvents) {
+          pushLimited(
+            collectedEvents,
+            {
+              sec: timelineSec,
+              kind: "breakthrough_blocked_no_qi",
+              message: breakthrough.message || "",
+              requiredQi: Math.max(1, Number(breakthrough.stage?.qi_required) || 1),
+              currentQi: Math.max(0, Number(state.currencies.qi) || 0),
+            },
+            maxCollectedEvents,
+          );
+        }
+      } else if (breakthrough.outcome === "blocked_tribulation_setting") {
+        consecutivePolicyBlocks = 0;
+        if (collectEvents) {
+          pushLimited(
+            collectedEvents,
+            {
+              sec: timelineSec,
+              kind: "breakthrough_blocked_tribulation_setting",
+              message: breakthrough.message || "",
+              difficultyIndex: Number(breakthrough.stage?.difficulty_index) || 0,
+            },
+            maxCollectedEvents,
+          );
+        }
       } else {
         consecutivePolicyBlocks = 0;
       }
