@@ -2210,3 +2210,11 @@
 
 ## 517) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(cast 텔레그래프 파동 + urgent 변형 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 518) 다음 순차 작업
+1. [완료] 캐스트 충전 입자 헬퍼(`maybeSpawnBattleSceneChargeMote`)를 추가해 플레이어/적 cast 50%+ 구간에서 배우 주변 orbit mote를 상시 생성하고, cast 96%+에서는 밀도/반경/스윕을 강화.
+2. [완료] spark 레이어에 충전 입자 노드(`battle-charge-mote`) 생성 헬퍼(`spawnBattleSceneChargeMote`)를 추가하고, `runBattleSceneAmbientTick`에서 cast 비율 + `idle/auto/realtime` 모드별 최소 간격으로 과밀 없는 순환을 구성.
+3. [완료] 전투 연출 CSS에 충전 입자 스타일/키프레임(`.battle-charge-mote`, `@keyframes battle-charge-mote-orbit`)을 추가하고 DOM contract 체크 토큰(`maybeSpawnBattleSceneChargeMote`, `.battle-charge-mote`)을 반영해 회귀를 방지.
+
+## 519) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(cast 충전 orbit mote + 고캐스트 밀도 강화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

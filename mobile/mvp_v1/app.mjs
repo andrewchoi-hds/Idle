@@ -339,6 +339,9 @@ const BATTLE_SCENE_HIT_STOP_DURATIONS_MS = {
 const BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_IDLE_MS = 1500;
 const BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_AUTO_MS = 1080;
 const BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_REALTIME_MS = 760;
+const BATTLE_SCENE_CHARGE_MOTE_MIN_INTERVAL_IDLE_MS = 1240;
+const BATTLE_SCENE_CHARGE_MOTE_MIN_INTERVAL_AUTO_MS = 920;
+const BATTLE_SCENE_CHARGE_MOTE_MIN_INTERVAL_REALTIME_MS = 700;
 const BATTLE_SCENE_COMBO_BANNER_TIER_CLASSES = [
   "tier-flow",
   "tier-surge",
@@ -383,6 +386,10 @@ let battleSceneLastZoomAtMs = 0;
 let battleSceneHitStopTimer = null;
 let battleSceneLastHitStopAtMs = 0;
 const battleSceneLastCastTelegraphAtMs = {
+  player: 0,
+  enemy: 0,
+};
+const battleSceneLastChargeMoteAtMs = {
   player: 0,
   enemy: 0,
 };
@@ -1834,6 +1841,47 @@ function spawnBattleSceneSpark(options = {}) {
   }
 }
 
+function spawnBattleSceneChargeMote(options = {}) {
+  if (!dom.battleSceneSparkLayer || shouldReduceBattleSceneMotion()) {
+    return;
+  }
+  const tone = normalizeBattleSceneTone(options.tone || "info");
+  const anchor = options.anchor === "player" || options.anchor === "enemy" ? options.anchor : "center";
+  const anchorPoint =
+    anchor === "player"
+      ? { leftPct: 30, topPct: 68 }
+      : anchor === "enemy"
+        ? { leftPct: 70, topPct: 46 }
+        : { leftPct: 50, topPct: 54 };
+  const radiusPx = Math.max(12, Math.min(40, Number(options.radiusPx) || 22));
+  const sizePx = Math.max(3, Math.min(9, Number(options.sizePx) || 5));
+  const startAngleDeg = Number(options.startAngleDeg) || Math.random() * 360;
+  const sweepDeg = Number(options.sweepDeg) || (Math.random() > 0.5 ? 176 : -176);
+  const lingerSec = Math.max(0.34, Math.min(1.8, Number(options.lingerSec) || 0.88));
+  const jitterX = (Math.random() - 0.5) * 9;
+  const jitterY = (Math.random() - 0.5) * 7;
+  const node = document.createElement("span");
+  node.className = `battle-charge-mote tone-${tone}`;
+  node.style.left = `calc(${anchorPoint.leftPct}% + ${jitterX.toFixed(1)}px)`;
+  node.style.top = `calc(${anchorPoint.topPct}% + ${jitterY.toFixed(1)}px)`;
+  node.style.setProperty("--battle-charge-mote-radius", `${radiusPx.toFixed(1)}px`);
+  node.style.setProperty("--battle-charge-mote-size", `${sizePx.toFixed(1)}px`);
+  node.style.setProperty("--battle-charge-mote-angle-start", `${startAngleDeg.toFixed(1)}deg`);
+  node.style.setProperty("--battle-charge-mote-sweep", `${sweepDeg.toFixed(1)}deg`);
+  node.style.setProperty("--battle-charge-mote-linger-sec", `${lingerSec.toFixed(2)}s`);
+  node.addEventListener(
+    "animationend",
+    () => {
+      node.remove();
+    },
+    { once: true },
+  );
+  dom.battleSceneSparkLayer.append(node);
+  while (dom.battleSceneSparkLayer.childElementCount > 44) {
+    dom.battleSceneSparkLayer.firstElementChild?.remove();
+  }
+}
+
 function spawnBattleSceneTrail(options = {}) {
   if (!dom.battleSceneTrailLayer || shouldReduceBattleSceneMotion()) {
     return;
@@ -1963,6 +2011,76 @@ function maybeSpawnBattleSceneCastTelegraph(actor, options = {}) {
     });
   }
   battleSceneLastCastTelegraphAtMs[actorKey] = now;
+}
+
+function maybeSpawnBattleSceneChargeMote(actor, options = {}) {
+  if (!dom.battleSceneSparkLayer || shouldReduceBattleSceneMotion()) {
+    return;
+  }
+  const actorKey = actor === "enemy" ? "enemy" : "player";
+  const castPct = Math.max(0, Math.min(100, Number(options.castPct) || 0));
+  if (castPct < 52) {
+    return;
+  }
+  const mode = options.mode === "realtime" || options.mode === "auto" ? options.mode : "idle";
+  const minIntervalMs =
+    mode === "realtime"
+      ? castPct >= 96
+        ? BATTLE_SCENE_CHARGE_MOTE_MIN_INTERVAL_REALTIME_MS - 180
+        : BATTLE_SCENE_CHARGE_MOTE_MIN_INTERVAL_REALTIME_MS
+      : mode === "auto"
+        ? castPct >= 96
+          ? BATTLE_SCENE_CHARGE_MOTE_MIN_INTERVAL_AUTO_MS - 160
+          : BATTLE_SCENE_CHARGE_MOTE_MIN_INTERVAL_AUTO_MS
+        : castPct >= 96
+          ? BATTLE_SCENE_CHARGE_MOTE_MIN_INTERVAL_IDLE_MS - 200
+          : BATTLE_SCENE_CHARGE_MOTE_MIN_INTERVAL_IDLE_MS;
+  const now = Date.now();
+  if (now - battleSceneLastChargeMoteAtMs[actorKey] < minIntervalMs) {
+    return;
+  }
+  const spawnChance =
+    castPct >= 96
+      ? mode === "realtime"
+        ? 0.96
+        : mode === "auto"
+          ? 0.88
+          : 0.74
+      : castPct >= 80
+        ? mode === "realtime"
+          ? 0.82
+          : mode === "auto"
+            ? 0.68
+            : 0.56
+        : mode === "realtime"
+          ? 0.62
+          : mode === "auto"
+            ? 0.5
+            : 0.34;
+  if (Math.random() > spawnChance) {
+    return;
+  }
+  const tone = actorKey === "player" ? "success" : "warn";
+  spawnBattleSceneChargeMote({
+    anchor: actorKey,
+    tone,
+    radiusPx:
+      castPct >= 96 ? 31 + Math.random() * 5 : castPct >= 80 ? 26 + Math.random() * 5 : 20 + Math.random() * 5,
+    sizePx: castPct >= 96 ? 7 : castPct >= 80 ? 6 : 4.8,
+    lingerSec:
+      mode === "realtime" ? 0.66 : mode === "auto" ? 0.76 : 0.92,
+    sweepDeg:
+      (actorKey === "player" ? 1 : -1) * (castPct >= 96 ? 232 : castPct >= 80 ? 204 : 172),
+  });
+  if (castPct >= 96 && Math.random() < 0.54) {
+    spawnBattleSceneSpark({
+      anchor: actorKey,
+      tone,
+      shape: "dot",
+      scale: 0.84 + Math.random() * 0.34,
+    });
+  }
+  battleSceneLastChargeMoteAtMs[actorKey] = now;
 }
 
 function triggerBattleSceneFlash(tone = "info") {
@@ -2267,6 +2385,14 @@ function runBattleSceneAmbientTick() {
     mode,
     castPct: enemyCastPct,
   });
+  maybeSpawnBattleSceneChargeMote("player", {
+    mode,
+    castPct: playerCastPct,
+  });
+  maybeSpawnBattleSceneChargeMote("enemy", {
+    mode,
+    castPct: enemyCastPct,
+  });
 
   const tonePool =
     mode === "realtime"
@@ -2450,6 +2576,8 @@ function stopBattleSceneAmbientLoop() {
   battleSceneLastHitStopAtMs = 0;
   battleSceneLastCastTelegraphAtMs.player = 0;
   battleSceneLastCastTelegraphAtMs.enemy = 0;
+  battleSceneLastChargeMoteAtMs.player = 0;
+  battleSceneLastChargeMoteAtMs.enemy = 0;
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_SHAKE_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_ZOOM_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_HIT_STOP_CLASSES);
