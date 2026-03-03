@@ -2747,6 +2747,8 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
       const blockedNoQi = outcomeCode === "blocked_no_qi";
       const blockedTribulationSetting = outcomeCode === "blocked_tribulation_setting";
       const blockedAutoRiskPolicy = outcomeCode === "blocked_auto_risk_policy";
+      const pausedByPolicy =
+        outcome.pausedByPolicy === true || outcome.autoBreakthroughPaused === true;
       const autoPolicyReason = String(
         outcome.autoPolicy?.reason || outcome.reason || "",
       );
@@ -2755,6 +2757,14 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
       );
       const autoPolicyNextActionKo = String(
         outcome.autoPolicy?.nextActionKo || outcome.nextActionKo || "",
+      );
+      const policyConsecutiveBlocks = Math.max(
+        0,
+        Number(outcome.consecutiveBlocks) || 0,
+      );
+      const policyPauseThreshold = Math.max(
+        0,
+        Number(outcome.pauseThreshold || outcome.threshold) || 0,
       );
       if (blockedNoQi) {
         battleSceneDuelState.playerCast = clampBattleSceneGauge(
@@ -2784,7 +2794,33 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
         bannerTone = "info";
         applyOutcomeTransition = true;
       } else if (blockedAutoRiskPolicy) {
-        if (autoPolicyReason === "blocked_extreme_risk") {
+        if (pausedByPolicy) {
+          battleSceneDuelState.playerCast = clampBattleSceneGauge(
+            battleSceneDuelState.playerCast - 16,
+            BATTLE_SCENE_DUEL_MAX_CAST,
+          );
+          battleSceneDuelState.enemyCast = clampBattleSceneGauge(
+            battleSceneDuelState.enemyCast + 8,
+            BATTLE_SCENE_DUEL_MAX_CAST,
+          );
+          battleSceneDuelState.combo = Math.max(0, battleSceneDuelState.combo - 3);
+          battleSceneDuelState.dpsMomentum = Math.max(
+            0,
+            battleSceneDuelState.dpsMomentum * 0.58,
+          );
+          comboAction = "cooldown";
+          tickerText = `자동 돌파 일시정지 · ${autoPolicyReasonLabel}`;
+          tickerTone = "error";
+          const pauseMeta =
+            policyConsecutiveBlocks > 0 || policyPauseThreshold > 0
+              ? `연속 ${Math.max(policyConsecutiveBlocks, policyPauseThreshold)}회 차단`
+              : "연속 차단 임계 도달";
+          bannerText = autoPolicyNextActionKo
+            ? `${pauseMeta} · ${autoPolicyNextActionKo}`
+            : pauseMeta;
+          bannerTone = "error";
+          applyOutcomeTransition = true;
+        } else if (autoPolicyReason === "blocked_extreme_risk") {
           battleSceneDuelState.playerCast = clampBattleSceneGauge(
             battleSceneDuelState.playerCast - 14,
             BATTLE_SCENE_DUEL_MAX_CAST,
@@ -4611,6 +4647,7 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
   if (kind === "auto_breakthrough_paused_by_policy") {
     const reasonLabel = String(event.reasonLabelKo || event.reason || "정책 차단");
     const consecutiveBlocks = Math.max(0, Number(event.consecutiveBlocks) || 0);
+    const pauseThreshold = Math.max(0, Number(event.threshold) || 0);
     const policyReason = String(event.reason || "");
     const nextActionKo = String(event.nextActionKo || "");
     const nextActionText = nextActionKo ? ` · ${nextActionKo}` : "";
@@ -4631,6 +4668,9 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
           reason: policyReason,
           reasonLabelKo: reasonLabel,
           nextActionKo,
+          pausedByPolicy: true,
+          consecutiveBlocks,
+          pauseThreshold,
           autoPolicy: {
             reason: policyReason,
             reasonLabelKo: reasonLabel,

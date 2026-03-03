@@ -4316,6 +4316,8 @@ async function main() {
       autoPauseSummary.collectedEvents.some(
         (event) =>
           event.kind === "auto_breakthrough_paused_by_policy" &&
+          Math.max(1, Number(event.threshold) || 0) === 2 &&
+          Math.max(0, Number(event.consecutiveBlocks) || 0) >= 2 &&
           typeof event.nextActionKo === "string" &&
           event.nextActionKo.length > 0,
       ),
