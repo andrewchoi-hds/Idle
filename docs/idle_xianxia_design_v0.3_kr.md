@@ -2346,3 +2346,11 @@
 
 ## 551) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(정책 차단 사유별 듀얼 전이 + impact payload 확장 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 552) 다음 순차 작업
+1. [완료] `runAutoSliceSeconds` 자동 돌파 일시정지 summary에 `autoBreakthroughPauseNextActionKo`를 추가하고, `auto_breakthrough_paused_by_policy` 이벤트에도 `nextActionKo`를 기록해 차단 후 가이드 문구를 엔진 레벨에서 일관되게 전달.
+2. [완료] 앱 요약/상태 경로(`resolveBattleSceneEventSignalFromCollectedEvent`, `playBattleSceneAutoSummary`, `runRealtimeAutoTick`, `buildOfflineStatus`, `자동 10초 상태 라인`)에 일시정지 next action 문구를 연결해 자동·실시간·오프라인 메시지 정합을 강화.
+3. [완료] DOM contract/회귀 체크에 신규 토큰(`autoBreakthroughPauseNextActionKo`) 및 일시정지 이벤트 `nextActionKo` 검증을 추가해 회귀를 방지.
+
+## 553) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(자동 돌파 일시정지 next action 전파 + 상태 라인 정합 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

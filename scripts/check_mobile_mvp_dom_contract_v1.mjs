@@ -321,6 +321,7 @@ async function main() {
   assertIncludes(app, '"도겁 자동 허용 꺼짐"', "app.mjs", failures);
   assertIncludes(app, "breakthroughNoQiBlocks", "app.mjs", failures);
   assertIncludes(app, "breakthroughTribulationSettingBlocks", "app.mjs", failures);
+  assertIncludes(app, "autoBreakthroughPauseNextActionKo", "app.mjs", failures);
   assertIncludes(app, "const BATTLE_SCENE_RESULT_PRIORITY_WINDOW_MS = 2600;", "app.mjs", failures);
   assertIncludes(app, "function spawnBattleSceneShockwave(", "app.mjs", failures);
   assertIncludes(app, "function maybeSpawnBattleSceneCastTelegraph(", "app.mjs", failures);

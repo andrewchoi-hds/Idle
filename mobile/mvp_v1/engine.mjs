@@ -3582,6 +3582,7 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
     autoBreakthroughPaused: false,
     autoBreakthroughPauseReason: "",
     autoBreakthroughPauseReasonLabelKo: "",
+    autoBreakthroughPauseNextActionKo: "",
     autoBreakthroughPauseAtSec: 0,
     rebirths: 0,
   };
@@ -3700,12 +3701,17 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
             breakthrough.autoPolicy?.reason || "blocked_auto_risk_policy";
           summary.autoBreakthroughPauseReasonLabelKo =
             breakthrough.autoPolicy?.reasonLabelKo || "정책 차단";
+          summary.autoBreakthroughPauseNextActionKo =
+            breakthrough.autoPolicy?.nextActionKo || "";
           summary.autoBreakthroughPauseAtSec = timelineSec;
           if (!suppressLogs) {
+            const nextActionKo = summary.autoBreakthroughPauseNextActionKo;
             addLog(
               state,
               "auto",
-              `자동 돌파 일시정지: 연속 차단 ${consecutivePolicyBlocks}회 (${summary.autoBreakthroughPauseReasonLabelKo})`,
+              `자동 돌파 일시정지: 연속 차단 ${consecutivePolicyBlocks}회 (${summary.autoBreakthroughPauseReasonLabelKo})${
+                nextActionKo ? ` · ${nextActionKo}` : ""
+              }`,
             );
           }
           if (collectEvents) {
@@ -3718,6 +3724,7 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
                 consecutiveBlocks: consecutivePolicyBlocks,
                 reason: summary.autoBreakthroughPauseReason,
                 reasonLabelKo: summary.autoBreakthroughPauseReasonLabelKo,
+                nextActionKo: summary.autoBreakthroughPauseNextActionKo,
               },
               maxCollectedEvents,
             );
@@ -3773,8 +3780,11 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
       summary.breakthroughTribulationSettingBlocks > 0
         ? ` · 도겁 설정 차단 ${summary.breakthroughTribulationSettingBlocks}회`
         : "";
+    const pauseNextActionKo = summary.autoBreakthroughPauseNextActionKo;
     const pauseText = summary.autoBreakthroughPaused
-      ? ` · 자동돌파 일시정지(${summary.autoBreakthroughPauseReasonLabelKo})`
+      ? ` · 자동돌파 일시정지(${summary.autoBreakthroughPauseReasonLabelKo})${
+          pauseNextActionKo ? ` · ${pauseNextActionKo}` : ""
+        }`
       : "";
     addLog(
       state,

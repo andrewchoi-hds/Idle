@@ -4309,11 +4309,15 @@ async function main() {
       autoPauseSummary.autoBreakthroughPaused === true &&
       autoPauseSummary.autoBreakthroughPauseReason.length > 0 &&
       autoPauseSummary.autoBreakthroughPauseReasonLabelKo.length > 0 &&
+      autoPauseSummary.autoBreakthroughPauseNextActionKo.length > 0 &&
       autoPauseSummary.autoBreakthroughPauseAtSec > 0 &&
       autoPauseSummary.breakthroughPolicyBlocks >= 2 &&
       autoPauseState.settings.autoBreakthrough === false &&
       autoPauseSummary.collectedEvents.some(
-        (event) => event.kind === "auto_breakthrough_paused_by_policy",
+        (event) =>
+          event.kind === "auto_breakthrough_paused_by_policy" &&
+          typeof event.nextActionKo === "string" &&
+          event.nextActionKo.length > 0,
       ),
   });
 
