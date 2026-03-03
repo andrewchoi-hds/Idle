@@ -3499,11 +3499,16 @@ async function main() {
     Number(context.stageByDifficulty.get(198)?.qi_required) || 1,
   );
   const forcedMinorEvents = [];
-  runBreakthroughAttempt(context, forcedMinorState, createSeededRng(901), {
+  const forcedMinorResult = runBreakthroughAttempt(
+    context,
+    forcedMinorState,
+    createSeededRng(901),
+    {
     respectAutoTribulation: false,
     debugForcedOutcome: "minor_fail",
     eventCollector: (event) => forcedMinorEvents.push(event),
-  });
+    },
+  );
 
   const forcedRetreatState = createInitialSliceState(context, {
     playerName: "forced-retreat-fail",
@@ -3514,11 +3519,16 @@ async function main() {
     Number(context.stageByDifficulty.get(198)?.qi_required) || 1,
   );
   const forcedRetreatEvents = [];
-  runBreakthroughAttempt(context, forcedRetreatState, createSeededRng(902), {
+  const forcedRetreatResult = runBreakthroughAttempt(
+    context,
+    forcedRetreatState,
+    createSeededRng(902),
+    {
     respectAutoTribulation: false,
     debugForcedOutcome: "retreat_fail",
     eventCollector: (event) => forcedRetreatEvents.push(event),
-  });
+    },
+  );
 
   const forcedDeathState = createInitialSliceState(context, {
     playerName: "forced-death-fail",
@@ -3529,11 +3539,16 @@ async function main() {
     Number(context.stageByDifficulty.get(198)?.qi_required) || 1,
   );
   const forcedDeathEvents = [];
-  runBreakthroughAttempt(context, forcedDeathState, createSeededRng(903), {
+  const forcedDeathResult = runBreakthroughAttempt(
+    context,
+    forcedDeathState,
+    createSeededRng(903),
+    {
     respectAutoTribulation: false,
     debugForcedOutcome: "death_fail",
     eventCollector: (event) => forcedDeathEvents.push(event),
-  });
+    },
+  );
 
   const forcedSuccessState = createInitialSliceState(context, {
     playerName: "forced-success",
@@ -3544,11 +3559,16 @@ async function main() {
     Number(context.stageByDifficulty.get(198)?.qi_required) || 1,
   );
   const forcedSuccessEvents = [];
-  runBreakthroughAttempt(context, forcedSuccessState, createSeededRng(904), {
+  const forcedSuccessResult = runBreakthroughAttempt(
+    context,
+    forcedSuccessState,
+    createSeededRng(904),
+    {
     respectAutoTribulation: false,
     debugForcedOutcome: "success",
     eventCollector: (event) => forcedSuccessEvents.push(event),
-  });
+    },
+  );
 
   checks.push({
     id: "breakthrough_event_collector_includes_stage_and_risk_metadata",
@@ -3584,7 +3604,27 @@ async function main() {
         Math.min(
           Number(context.maxDifficultyIndex) || 0,
           Number(forcedSuccessEvents[0].fromDifficultyIndex) + 1,
-        ),
+        ) &&
+      forcedMinorResult.attempted === true &&
+      forcedMinorResult.outcome === "minor_fail" &&
+      Number(forcedMinorResult.stageQiRequired) ===
+        Number(context.stageByDifficulty.get(198)?.qi_required || 0) &&
+      Number(forcedMinorResult.qiDelta) < 0 &&
+      forcedRetreatResult.attempted === true &&
+      forcedRetreatResult.outcome === "retreat_fail" &&
+      Number(forcedRetreatResult.stageQiRequired) ===
+        Number(context.stageByDifficulty.get(198)?.qi_required || 0) &&
+      Number(forcedRetreatResult.qiDelta) < 0 &&
+      forcedDeathResult.attempted === true &&
+      forcedDeathResult.outcome === "death_fail" &&
+      Number(forcedDeathResult.stageQiRequired) ===
+        Number(context.stageByDifficulty.get(198)?.qi_required || 0) &&
+      Number(forcedDeathResult.qiDelta) === 0 &&
+      forcedSuccessResult.attempted === true &&
+      forcedSuccessResult.outcome === "success" &&
+      Number(forcedSuccessResult.stageQiRequired) ===
+        Number(context.stageByDifficulty.get(198)?.qi_required || 0) &&
+      Number(forcedSuccessResult.qiDelta) < 0,
   });
 
   const previewTribulationState = createInitialSliceState(context, { playerName: "preview-trib" });

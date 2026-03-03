@@ -2386,3 +2386,11 @@
 
 ## 561) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(돌파 성공 qiDelta 기반 surge 전이 + 성공 메타 힌트 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 562) 다음 순차 작업
+1. [완료] `runBreakthroughAttempt` 반환값(`success/minor_fail/retreat_fail/death_fail`)에 `stageQiRequired/qiDelta` 메타를 추가해 수동 돌파 결과 경로도 이벤트 수집 경로와 동일 메타를 제공하도록 통합.
+2. [완료] 수동 돌파 연출(`playBattleSceneBreakthroughOutcome`)과 전장 동기화(`syncBattleSceneDuelFromImpact`)가 `outcome.stageQiRequired/outcome.qiDelta`를 우선 사용해 기 소모/손실 표시와 전이 강도를 계산하도록 정합 강화.
+3. [완료] 회귀 체크에 강제 성공/실패 반환값 메타 검증을 추가하고 DOM contract 토큰(`outcome.stageQiRequired`)을 동기화해 엔진 반환 메타 누락 회귀를 방지.
+
+## 563) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(수동 돌파 반환 메타 확장 + 수동/이벤트 연출 정합 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
