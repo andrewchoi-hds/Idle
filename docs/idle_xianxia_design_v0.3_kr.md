@@ -2130,3 +2130,11 @@
 
 ## 497) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(전투 프레임별 아바타 에셋 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 498) 다음 순차 작업
+1. [완료] 듀얼 HUD 계산값 기반 상태 헬퍼(`resolveBattleSceneCastTier`, `resolveBattleSceneComboTier`, `resolveBattleSceneLead`)를 추가해 기세/연격/우세 진영 판정을 전투 연출 데이터셋으로 표준화.
+2. [완료] 전투 연출 CSS에 상시 상태 스타일(`data-cast-tier`, `data-scene-pressure`, `data-scene-combo-tier`, `data-scene-lead`)과 신규 키프레임(`battle-arena-pressure-wave`, `battle-cast-charge`, `battle-cast-ready-ring`)을 추가해 조작 없이도 전장 반응성을 강화.
+3. [완료] DOM contract 체크에 신규 상태 토큰(`resolveBattleSceneCastTier`, `.battle-actor[data-cast-tier="full"]`, `[data-scene-combo-tier="frenzy"]`)을 반영해 상태 연동 회귀를 방지.
+
+## 499) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(전투 상시 상태 연출 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

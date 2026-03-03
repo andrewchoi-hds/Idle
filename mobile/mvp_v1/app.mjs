@@ -761,6 +761,38 @@ function resolveBattleSceneHpTier(hpPct) {
   return "safe";
 }
 
+function resolveBattleSceneCastTier(castPct) {
+  if (castPct >= 100) {
+    return "full";
+  }
+  if (castPct >= 72) {
+    return "high";
+  }
+  if (castPct >= 36) {
+    return "mid";
+  }
+  return "low";
+}
+
+function resolveBattleSceneComboTier(comboInput) {
+  const combo = Math.max(0, Math.floor(Number(comboInput) || 0));
+  if (combo >= 8) {
+    return "frenzy";
+  }
+  if (combo >= 3) {
+    return "flow";
+  }
+  return "calm";
+}
+
+function resolveBattleSceneLead(playerHpPct, enemyHpPct) {
+  const gap = Math.round(Number(playerHpPct) || 0) - Math.round(Number(enemyHpPct) || 0);
+  if (Math.abs(gap) <= 6) {
+    return "even";
+  }
+  return gap > 0 ? "player" : "enemy";
+}
+
 function resolveBattleSceneDuelPressure(mode = "idle") {
   const playerHpPct = Math.round(
     (clampBattleSceneGauge(battleSceneDuelState.playerHp, BATTLE_SCENE_DUEL_MAX_HP) /
@@ -832,9 +864,21 @@ function renderBattleSceneDuelHud() {
   }
   if (dom.battleScenePlayer) {
     dom.battleScenePlayer.dataset.hpTier = resolveBattleSceneHpTier(playerHpPct);
+    dom.battleScenePlayer.dataset.castTier = resolveBattleSceneCastTier(playerCastPct);
   }
   if (dom.battleSceneEnemy) {
     dom.battleSceneEnemy.dataset.hpTier = resolveBattleSceneHpTier(enemyHpPct);
+    dom.battleSceneEnemy.dataset.castTier = resolveBattleSceneCastTier(enemyCastPct);
+  }
+  if (dom.battleSceneArena) {
+    dom.battleSceneArena.dataset.scenePressure = battleSceneDuelState.pressure;
+    dom.battleSceneArena.dataset.sceneComboTier = resolveBattleSceneComboTier(
+      battleSceneDuelState.combo,
+    );
+    dom.battleSceneArena.dataset.sceneLead = resolveBattleSceneLead(
+      playerHpPct,
+      enemyHpPct,
+    );
   }
   if (dom.battleSceneClashCore) {
     dom.battleSceneClashCore.dataset.pressure = battleSceneDuelState.pressure;
