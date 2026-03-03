@@ -294,6 +294,7 @@ async function main() {
   assertIncludes(app, "function triggerBattleSceneCameraShake(", "app.mjs", failures);
   assertIncludes(app, "function triggerBattleSceneZoomPulse(", "app.mjs", failures);
   assertIncludes(app, "function triggerBattleSceneHitStop(", "app.mjs", failures);
+  assertIncludes(app, "function maybeTriggerBattleSceneLeadSwing(", "app.mjs", failures);
   assertIncludes(app, "function spawnBattleSceneShockwave(", "app.mjs", failures);
   assertIncludes(app, "function maybeSpawnBattleSceneCastTelegraph(", "app.mjs", failures);
   assertIncludes(app, "function maybeSpawnBattleSceneChargeMote(", "app.mjs", failures);
@@ -319,6 +320,7 @@ async function main() {
   assertIncludes(css, ".battle-scene-arena.scene-shake-heavy", "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-zoom-burst", "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-hit-stop-heavy", "app.css", failures);
+  assertIncludes(css, ".battle-scene-arena.scene-lead-swing-player", "app.css", failures);
   assertIncludes(css, ".battle-scene-shockwave-layer", "app.css", failures);
   assertIncludes(css, ".battle-shockwave.variant-telegraph", "app.css", failures);
   assertIncludes(css, ".battle-charge-mote", "app.css", failures);
