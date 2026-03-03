@@ -155,6 +155,7 @@ npm run mobile:mvp:serve
   - 전투 집중 토글(`btnToggleBattleFocus`, `applyBattleFocusMode`)을 추가해 모바일 화면에서 운영 패널(`settings/consumables/save/assets/logs`)을 접고 전투/액션 중심 레이아웃으로 즉시 전환
   - 전투 효과음 토글(`btnToggleBattleSfx`, `setBattleSfxEnabled`)을 추가해 strike/burst/impact 루프에 WebAudio SFX를 연결하고, 브라우저 지원/저장소 상태를 안내 문구(`battleSfxHint`)로 동기화
   - 상시 전장 SFX pulse(`resolveBattleSfxAmbientCue`, `playBattleSfx("ambient")`)를 추가해 `idle/auto/realtime` 루프에서 압력/우세 상태에 따라 저강도 오디오를 지속 출력
+  - 전투 진동 토글(`btnToggleBattleHaptic`, `setBattleHapticEnabled`)을 추가해 strike/burst/impact 경로에 모바일 haptic 패턴을 연결하고, 지원 여부를 안내 문구(`battleHapticHint`)로 동기화
   - 전투 집중 기본 ON(`main.app.battle-focus-mode`)으로 첫 진입부터 실제 게임 화면 비중을 높이고, 토글 해제 시 전체 운영 패널을 다시 노출
   - 상시 루프(`runBattleSceneAmbientTick`)가 `idle/auto/realtime` 모드별로 연출 강도와 임팩트 빈도를 조절해 방치형 전투 화면처럼 지속 동작
   - `prefers-reduced-motion` 환경에서는 spark/trail 등 모션 이펙트를 비활성화하되 듀얼 HUD 수치(HP/기세)와 배우 프레임 상태 전환은 유지해 상태 가시성을 확보
