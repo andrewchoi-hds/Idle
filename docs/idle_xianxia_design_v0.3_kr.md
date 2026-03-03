@@ -2394,3 +2394,11 @@
 
 ## 563) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(수동 돌파 반환 메타 확장 + 수동/이벤트 연출 정합 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 564) 다음 순차 작업
+1. [완료] `runBreakthroughAttempt`의 성공/실패 반환값과 eventCollector payload에 `fromDifficultyIndex/toDifficultyIndex` 메타를 일관되게 포함하고, 사망 실패(`death_fail`)에는 `resetStageNameKo`를 추가해 환생 복귀 단계 정보를 엔진 레벨에서 직접 전달.
+2. [완료] 전투 연출 동기화/로그 경로(`syncBattleSceneDuelFromImpact`, `resolveBattleSceneEventSignalFromCollectedEvent`, `formatOfflineEventLine`)가 `from→to` 난이도 전이와 환생 복귀 스테이지 문구를 우선 반영해 후퇴/사망 연출 정합을 강화.
+3. [완료] 회귀 체크에 강제 성공/실패 반환값·이벤트 메타 검증(`fromDifficultyIndex/toDifficultyIndex/resetStageNameKo`)을 추가하고 DOM contract 토큰(`outcome.toDifficultyIndex`, `resetStageNameKo`)을 동기화.
+
+## 565) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(돌파 난이도 전이 메타 확장 + 환생 복귀 문구 정합 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

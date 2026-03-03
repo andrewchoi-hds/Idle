@@ -3577,12 +3577,16 @@ async function main() {
       forcedMinorEvents[0].kind === "breakthrough_minor_fail" &&
       Number(forcedMinorEvents[0].stageQiRequired) ===
         Number(context.stageByDifficulty.get(198)?.qi_required || 0) &&
+      Number(forcedMinorEvents[0].fromDifficultyIndex) === 198 &&
+      Number(forcedMinorEvents[0].toDifficultyIndex) === 198 &&
       Number(forcedMinorEvents[0].qiDelta) < 0 &&
       Number(forcedMinorEvents[0].deathPct) > 0 &&
       forcedRetreatEvents.length === 1 &&
       forcedRetreatEvents[0].kind === "breakthrough_retreat_fail" &&
       Number(forcedRetreatEvents[0].stageQiRequired) ===
         Number(context.stageByDifficulty.get(198)?.qi_required || 0) &&
+      Number(forcedRetreatEvents[0].fromDifficultyIndex) === 198 &&
+      Number(forcedRetreatEvents[0].toDifficultyIndex) <= 198 &&
       Number(forcedRetreatEvents[0].qiDelta) < 0 &&
       Number(forcedRetreatEvents[0].deathPct) > 0 &&
       Number(forcedRetreatEvents[0].retreatLayers) >= 1 &&
@@ -3590,6 +3594,10 @@ async function main() {
       forcedDeathEvents[0].kind === "breakthrough_death_fail" &&
       Number(forcedDeathEvents[0].stageQiRequired) ===
         Number(context.stageByDifficulty.get(198)?.qi_required || 0) &&
+      Number(forcedDeathEvents[0].fromDifficultyIndex) === 198 &&
+      Number(forcedDeathEvents[0].toDifficultyIndex) === 1 &&
+      typeof forcedDeathEvents[0].resetStageNameKo === "string" &&
+      forcedDeathEvents[0].resetStageNameKo.length > 0 &&
       Number(forcedDeathEvents[0].deathPct) > 0 &&
       Number(forcedDeathEvents[0].rebirthReward) >= 1 &&
       forcedSuccessEvents.length === 1 &&
@@ -3609,21 +3617,32 @@ async function main() {
       forcedMinorResult.outcome === "minor_fail" &&
       Number(forcedMinorResult.stageQiRequired) ===
         Number(context.stageByDifficulty.get(198)?.qi_required || 0) &&
+      Number(forcedMinorResult.fromDifficultyIndex) === 198 &&
+      Number(forcedMinorResult.toDifficultyIndex) === 198 &&
       Number(forcedMinorResult.qiDelta) < 0 &&
       forcedRetreatResult.attempted === true &&
       forcedRetreatResult.outcome === "retreat_fail" &&
       Number(forcedRetreatResult.stageQiRequired) ===
         Number(context.stageByDifficulty.get(198)?.qi_required || 0) &&
+      Number(forcedRetreatResult.fromDifficultyIndex) === 198 &&
+      Number(forcedRetreatResult.toDifficultyIndex) <= 198 &&
       Number(forcedRetreatResult.qiDelta) < 0 &&
       forcedDeathResult.attempted === true &&
       forcedDeathResult.outcome === "death_fail" &&
       Number(forcedDeathResult.stageQiRequired) ===
         Number(context.stageByDifficulty.get(198)?.qi_required || 0) &&
+      Number(forcedDeathResult.fromDifficultyIndex) === 198 &&
+      Number(forcedDeathResult.toDifficultyIndex) === 1 &&
+      typeof forcedDeathResult.resetStageNameKo === "string" &&
+      forcedDeathResult.resetStageNameKo.length > 0 &&
       Number(forcedDeathResult.qiDelta) === 0 &&
       forcedSuccessResult.attempted === true &&
       forcedSuccessResult.outcome === "success" &&
       Number(forcedSuccessResult.stageQiRequired) ===
         Number(context.stageByDifficulty.get(198)?.qi_required || 0) &&
+      Number(forcedSuccessResult.fromDifficultyIndex) === 198 &&
+      Number(forcedSuccessResult.toDifficultyIndex) ===
+        Math.min(Number(context.maxDifficultyIndex) || 0, 199) &&
       Number(forcedSuccessResult.qiDelta) < 0,
   });
 
