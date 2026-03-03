@@ -3456,6 +3456,8 @@ export function runBreakthroughAttempt(context, state, rng, options = {}) {
       outcome,
       stage,
       nextStage,
+      fromDifficultyIndex: stage.difficulty_index,
+      toDifficultyIndex: nextStage.difficulty_index,
       stageQiRequired: stage.qi_required,
       qiDelta: -qiConsume,
       successPct: preview.successPct,
@@ -3478,6 +3480,8 @@ export function runBreakthroughAttempt(context, state, rng, options = {}) {
       eventCollector({
         kind: "breakthrough_minor_fail",
         difficultyIndex: stage.difficulty_index,
+        fromDifficultyIndex: stage.difficulty_index,
+        toDifficultyIndex: stage.difficulty_index,
         qiDelta: -qiLoss,
         successPct: preview.successPct,
         deathPct: preview.deathPct,
@@ -3488,6 +3492,8 @@ export function runBreakthroughAttempt(context, state, rng, options = {}) {
       attempted: true,
       outcome,
       stage,
+      fromDifficultyIndex: stage.difficulty_index,
+      toDifficultyIndex: stage.difficulty_index,
       stageQiRequired: stage.qi_required,
       qiDelta: -qiLoss,
       successPct: preview.successPct,
@@ -3529,6 +3535,8 @@ export function runBreakthroughAttempt(context, state, rng, options = {}) {
       stage,
       nextStage,
       retreatLayers: retreat,
+      fromDifficultyIndex: stage.difficulty_index,
+      toDifficultyIndex: nextStage.difficulty_index,
       stageQiRequired: stage.qi_required,
       qiDelta: -qiLoss,
       successPct: preview.successPct,
@@ -3540,10 +3548,16 @@ export function runBreakthroughAttempt(context, state, rng, options = {}) {
   const rebirth = applyRebirthByDeath(context, state, stage, {
     suppressLogs,
   });
+  const nextStage = getStage(context, state.progression.difficultyIndex);
+  const fromDifficultyIndex = stage.difficulty_index;
+  const toDifficultyIndex = nextStage.difficulty_index;
   if (eventCollector) {
     eventCollector({
       kind: "breakthrough_death_fail",
       difficultyIndex: stage.difficulty_index,
+      fromDifficultyIndex,
+      toDifficultyIndex,
+      resetStageNameKo: rebirth.resetStageNameKo,
       rebirthReward: rebirth.reward,
       successPct: preview.successPct,
       deathPct: preview.deathPct,
@@ -3554,6 +3568,10 @@ export function runBreakthroughAttempt(context, state, rng, options = {}) {
     attempted: true,
     outcome: "death_fail",
     stage,
+    nextStage,
+    fromDifficultyIndex,
+    toDifficultyIndex,
+    resetStageNameKo: rebirth.resetStageNameKo,
     stageQiRequired: stage.qi_required,
     qiDelta: 0,
     successPct: preview.successPct,

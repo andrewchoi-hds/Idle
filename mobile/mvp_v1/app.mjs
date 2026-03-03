@@ -2747,6 +2747,14 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
     );
     const outcomeQiDelta = Math.round(Number(outcome.qiDelta) || 0);
     const outcomeQiLoss = Math.max(0, -outcomeQiDelta);
+    const fromDifficultyIndex = Math.max(
+      0,
+      Math.round(Number(outcome.fromDifficultyIndex || outcome.difficultyIndex || outcome.stage?.difficulty_index) || 0),
+    );
+    const toDifficultyIndex = Math.max(
+      0,
+      Math.round(Number(outcome.toDifficultyIndex || outcome.nextStage?.difficulty_index) || 0),
+    );
 
     if (outcome.attempted !== true) {
       const blockedNoQi = outcomeCode === "blocked_no_qi";
@@ -3007,9 +3015,15 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
         18 + successPct * 0.16 + successQiConsumeRatio * 4,
       );
       comboAction = "surge";
-      tickerText = `돌파 성공 · 기 ${fmtSignedInteger(-successQiConsume)}`;
+      tickerText =
+        fromDifficultyIndex > 0 && toDifficultyIndex > 0
+          ? `돌파 성공 · ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)} · 기 ${fmtSignedInteger(-successQiConsume)}`
+          : `돌파 성공 · 기 ${fmtSignedInteger(-successQiConsume)}`;
       tickerTone = "success";
-      bannerText = `경지 돌파 · 성공률 ${successPct.toFixed(1)}%`;
+      bannerText =
+        fromDifficultyIndex > 0 && toDifficultyIndex > 0
+          ? `경지 돌파 ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)} · 성공률 ${successPct.toFixed(1)}%`
+          : `경지 돌파 · 성공률 ${successPct.toFixed(1)}%`;
       bannerTone = "success";
       applyOutcomeTransition = true;
     } else if (outcomeCode === "minor_fail") {
@@ -3077,9 +3091,15 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
       battleSceneDuelState.combo = Math.max(0, battleSceneDuelState.combo - (3 + retreatLayers));
       battleSceneDuelState.dpsMomentum = Math.max(0, battleSceneDuelState.dpsMomentum * 0.42);
       comboAction = "cooldown";
-      tickerText = `돌파 후퇴 실패 · ${retreatLayers}단계 하락 · 기 ${fmtSignedInteger(-retreatQiLoss)}`;
+      tickerText =
+        fromDifficultyIndex > 0 && toDifficultyIndex > 0
+          ? `돌파 후퇴 실패 · ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)} · 기 ${fmtSignedInteger(-retreatQiLoss)}`
+          : `돌파 후퇴 실패 · ${retreatLayers}단계 하락 · 기 ${fmtSignedInteger(-retreatQiLoss)}`;
       tickerTone = "error";
-      bannerText = `경지 후퇴 ${retreatLayers}단계 · 기 ${fmtSignedInteger(-retreatQiLoss)}`;
+      bannerText =
+        fromDifficultyIndex > 0 && toDifficultyIndex > 0
+          ? `경지 후퇴 ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)} · 기 ${fmtSignedInteger(-retreatQiLoss)}`
+          : `경지 후퇴 ${retreatLayers}단계 · 기 ${fmtSignedInteger(-retreatQiLoss)}`;
       bannerTone = "error";
       applyOutcomeTransition = true;
     } else if (outcomeCode === "death_fail") {
@@ -3103,9 +3123,15 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
       battleSceneDuelState.combo = 0;
       battleSceneDuelState.dpsMomentum = Math.max(0, battleSceneDuelState.dpsMomentum * 0.24);
       comboAction = "cooldown";
-      tickerText = "도겁 사망 · 환생 전환";
+      tickerText =
+        fromDifficultyIndex > 0 && toDifficultyIndex > 0
+          ? `도겁 사망 · ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)} 환생`
+          : "도겁 사망 · 환생 전환";
       tickerTone = "error";
-      bannerText = "환생 발동 · 기맥 재정렬";
+      bannerText =
+        toDifficultyIndex > 0
+          ? `환생 발동 · 난이도 ${fmtNumber(toDifficultyIndex)} 재정렬`
+          : "환생 발동 · 기맥 재정렬";
       bannerTone = "warn";
       applyOutcomeTransition = true;
     } else {
@@ -4585,6 +4611,14 @@ function playBattleSceneBreakthroughOutcome(outcome) {
   if (!outcome) {
     return;
   }
+  const fromDifficultyIndex = Math.max(
+    0,
+    Math.round(Number(outcome.fromDifficultyIndex || outcome.difficultyIndex || outcome.stage?.difficulty_index) || 0),
+  );
+  const toDifficultyIndex = Math.max(
+    0,
+    Math.round(Number(outcome.toDifficultyIndex || outcome.nextStage?.difficulty_index) || 0),
+  );
   if (!outcome.attempted) {
     const outcomeCode = String(outcome.outcome || "");
     const blockedNoQi = outcomeCode === "blocked_no_qi";
@@ -4618,7 +4652,11 @@ function playBattleSceneBreakthroughOutcome(outcome) {
     );
     setBattleSceneStatus("돌파 성공", "success");
     setBattleSceneResult(
-      `${outcome.message || "돌파 성공"} · 기 ${fmtSignedInteger(-qiConsume)}`,
+      `${outcome.message || "돌파 성공"}${
+        fromDifficultyIndex > 0 && toDifficultyIndex > 0
+          ? ` · 난이도 ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)}`
+          : ""
+      } · 기 ${fmtSignedInteger(-qiConsume)}`,
       "success",
     );
     triggerBattleSceneImpact("breakthrough_success", "success", {
@@ -4667,7 +4705,11 @@ function playBattleSceneBreakthroughOutcome(outcome) {
     const retreatLayers = Math.max(1, Number(outcome.retreatLayers) || 1);
     setBattleSceneStatus("돌파 실패(후퇴)", "error");
     setBattleSceneResult(
-      `${outcome.message || "경지 후퇴 발생"} · 기 ${fmtSignedInteger(-qiLoss)}`,
+      `${outcome.message || "경지 후퇴 발생"}${
+        fromDifficultyIndex > 0 && toDifficultyIndex > 0
+          ? ` · 난이도 ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)}`
+          : ` · ${retreatLayers}단계 하락`
+      } · 기 ${fmtSignedInteger(-qiLoss)}`,
       "error",
     );
     triggerBattleSceneImpact("breakthrough_fail", "error", {
@@ -4680,8 +4722,16 @@ function playBattleSceneBreakthroughOutcome(outcome) {
   }
   if (outcome.outcome === "death_fail") {
     const reward = Math.max(0, Number(outcome.rebirthReward) || 0);
+    const resetStageNameKo = String(outcome.resetStageNameKo || "");
     setBattleSceneStatus("도겁 사망", "error");
-    setBattleSceneResult(outcome.message || "사망 후 환생 발동", "error");
+    setBattleSceneResult(
+      `${outcome.message || "사망 후 환생 발동"}${
+        fromDifficultyIndex > 0 && toDifficultyIndex > 0
+          ? ` · 난이도 ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)}`
+          : ""
+      }${resetStageNameKo ? ` · ${resetStageNameKo}` : ""}`,
+      "error",
+    );
     triggerBattleSceneImpact("breakthrough_fail", "error", {
       source: "breakthrough",
       outcome,
@@ -4730,6 +4780,12 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
     const rebirthReward = Math.max(0, Number(event.rebirthReward) || 0);
     const deathPct = Math.max(0, Math.min(95, Number(event.deathPct) || 0));
     const stageQiRequired = resolveBattleSceneBreakthroughStageQiRequiredFromEvent(event, 0.28);
+    const fromDifficultyIndex = Math.max(
+      0,
+      Math.round(Number(event.fromDifficultyIndex || event.difficultyIndex) || 0),
+    );
+    const toDifficultyIndex = Math.max(0, Math.round(Number(event.toDifficultyIndex) || 0));
+    const resetStageNameKo = String(event.resetStageNameKo || "");
     return {
       priority: 100,
       tone: "error",
@@ -4737,6 +4793,12 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
       statusTextKo: "도겁 사망",
       resultHintKo: `도겁 사망 · 환생정수 +${fmtNumber(rebirthReward)}${
         deathPct > 0 ? ` · 사망률 ${deathPct.toFixed(1)}%` : ""
+      }${
+        fromDifficultyIndex > 0 && toDifficultyIndex > 0
+          ? ` · ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)}`
+          : ""
+      }${
+        resetStageNameKo ? ` · ${resetStageNameKo}` : ""
       }`,
       impactOptions: {
         source: "breakthrough",
@@ -4745,6 +4807,9 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
           outcome: "death_fail",
           rebirthReward,
           deathPct,
+          fromDifficultyIndex,
+          toDifficultyIndex,
+          resetStageNameKo,
           stage: {
             qi_required: stageQiRequired,
           },
@@ -4757,14 +4822,21 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
     const qiDelta = Math.round(Number(event.qiDelta) || 0);
     const deathPct = Math.max(0, Math.min(95, Number(event.deathPct) || 0));
     const stageQiRequired = resolveBattleSceneBreakthroughStageQiRequiredFromEvent(event, 0.28);
+    const fromDifficultyIndex = Math.max(0, Math.round(Number(event.fromDifficultyIndex) || 0));
+    const toDifficultyIndex = Math.max(0, Math.round(Number(event.toDifficultyIndex) || 0));
     return {
       priority: 92,
       tone: "error",
       impactKind: "breakthrough_fail",
       statusTextKo: "돌파 후퇴 실패",
-      resultHintKo: `후퇴 ${retreatLayers}단계${
-        qiDelta !== 0 ? ` · 기 ${fmtSignedInteger(qiDelta)}` : ""
-      }`,
+      resultHintKo:
+        fromDifficultyIndex > 0 && toDifficultyIndex > 0
+          ? `후퇴 ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)}${
+              qiDelta !== 0 ? ` · 기 ${fmtSignedInteger(qiDelta)}` : ""
+            }`
+          : `후퇴 ${retreatLayers}단계${
+              qiDelta !== 0 ? ` · 기 ${fmtSignedInteger(qiDelta)}` : ""
+            }`,
       impactOptions: {
         source: "breakthrough",
         outcome: {
@@ -4773,6 +4845,8 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
           retreatLayers,
           deathPct,
           qiDelta,
+          fromDifficultyIndex,
+          toDifficultyIndex,
           stage: {
             qi_required: stageQiRequired,
           },
@@ -4820,6 +4894,14 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
     const qiDelta = Number(event.qiDelta) || 0;
     const deathPct = Math.max(0, Math.min(95, Number(event.deathPct) || 0));
     const stageQiRequired = resolveBattleSceneBreakthroughStageQiRequiredFromEvent(event, 0.22);
+    const fromDifficultyIndex = Math.max(
+      0,
+      Math.round(Number(event.fromDifficultyIndex || event.difficultyIndex) || 0),
+    );
+    const toDifficultyIndex = Math.max(
+      0,
+      Math.round(Number(event.toDifficultyIndex || event.difficultyIndex) || 0),
+    );
     return {
       priority: 84,
       tone: "warn",
@@ -4834,6 +4916,8 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
           successPct: Math.max(0, Math.min(100, Number(event.successPct) || 0)),
           deathPct,
           qiDelta: Number(event.qiDelta) || 0,
+          fromDifficultyIndex,
+          toDifficultyIndex,
           stage: {
             qi_required: stageQiRequired,
           },
@@ -4866,6 +4950,8 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
           successPct,
           deathPct,
           qiDelta,
+          fromDifficultyIndex,
+          toDifficultyIndex,
           stage: {
             qi_required: stageQiRequired,
           },
@@ -5799,21 +5885,51 @@ function formatOfflineEventLine(event) {
     })`;
   }
   if (event.kind === "breakthrough_minor_fail") {
+    const fromDifficultyIndex = Math.max(
+      0,
+      Math.round(Number(event.fromDifficultyIndex || event.difficultyIndex) || 0),
+    );
+    const toDifficultyIndex = Math.max(
+      0,
+      Math.round(Number(event.toDifficultyIndex || event.difficultyIndex) || 0),
+    );
     const deathPct = Math.max(0, Math.min(95, Number(event.deathPct) || 0));
-    return `${secLabel}: 돌파 경상 실패 (기 ${fmtSignedInteger(event.qiDelta)}${
+    return `${secLabel}: 돌파 경상 실패 (${
+      fromDifficultyIndex > 0 && toDifficultyIndex > 0
+        ? `난이도 ${fmtNumber(fromDifficultyIndex)} → ${fmtNumber(toDifficultyIndex)} · `
+        : ""
+    }기 ${fmtSignedInteger(event.qiDelta)}${
       deathPct > 0 ? ` · 사망률 ${deathPct.toFixed(1)}%` : ""
     })`;
   }
   if (event.kind === "breakthrough_retreat_fail") {
+    const fromDifficultyIndex = Math.max(0, Math.round(Number(event.fromDifficultyIndex) || 0));
+    const toDifficultyIndex = Math.max(0, Math.round(Number(event.toDifficultyIndex) || 0));
     const qiDelta = Math.round(Number(event.qiDelta) || 0);
-    return `${secLabel}: 돌파 후퇴 실패 (${event.retreatLayers}단계 하락${
+    return `${secLabel}: 돌파 후퇴 실패 (${
+      fromDifficultyIndex > 0 && toDifficultyIndex > 0
+        ? `난이도 ${fmtNumber(fromDifficultyIndex)} → ${fmtNumber(toDifficultyIndex)}`
+        : `${event.retreatLayers}단계 하락`
+    }${
       qiDelta !== 0 ? ` · 기 ${fmtSignedInteger(qiDelta)}` : ""
     })`;
   }
   if (event.kind === "breakthrough_death_fail") {
+    const fromDifficultyIndex = Math.max(
+      0,
+      Math.round(Number(event.fromDifficultyIndex || event.difficultyIndex) || 0),
+    );
+    const toDifficultyIndex = Math.max(0, Math.round(Number(event.toDifficultyIndex) || 0));
+    const resetStageNameKo = String(event.resetStageNameKo || "");
     const deathPct = Math.max(0, Math.min(95, Number(event.deathPct) || 0));
     return `${secLabel}: 도겁 사망 → 환생 (환생정수 +${fmtNumber(event.rebirthReward)}${
       deathPct > 0 ? ` · 사망률 ${deathPct.toFixed(1)}%` : ""
+    }${
+      fromDifficultyIndex > 0 && toDifficultyIndex > 0
+        ? ` · 난이도 ${fmtNumber(fromDifficultyIndex)} → ${fmtNumber(toDifficultyIndex)}`
+        : ""
+    }${
+      resetStageNameKo ? ` · ${resetStageNameKo}` : ""
     })`;
   }
   if (event.kind === "breakthrough_blocked_auto_policy") {
