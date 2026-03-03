@@ -2354,3 +2354,11 @@
 
 ## 553) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(자동 돌파 일시정지 next action 전파 + 상태 라인 정합 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 554) 다음 순차 작업
+1. [완료] `resolveBattleSceneEventSignalFromCollectedEvent`의 `auto_breakthrough_paused_by_policy` 매핑에 `pausedByPolicy/consecutiveBlocks/pauseThreshold` 메타를 추가해 일시정지 이벤트를 일반 정책 차단과 구분 가능한 impact payload로 확장.
+2. [완료] `syncBattleSceneDuelFromImpact`에서 `blocked_auto_risk_policy` + `pausedByPolicy` 조합을 전용 분기로 처리해 일반 정책 차단보다 강한 전이(`cooldown/error`)와 임계치 배너(`연속 N회 차단`)를 우선 적용.
+3. [완료] DOM contract/회귀 체크에 신규 토큰(`pausedByPolicy`, `pauseThreshold`)과 일시정지 이벤트 threshold/consecutive 검증을 추가해 회귀를 방지.
+
+## 555) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(정책 차단 일시정지 메타 payload + 강화 전장 전이 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

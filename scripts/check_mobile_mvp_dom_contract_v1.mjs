@@ -318,6 +318,8 @@ async function main() {
   assertIncludes(app, 'outcomeCode === "blocked_auto_risk_policy"', "app.mjs", failures);
   assertIncludes(app, 'autoPolicyReason === "blocked_extreme_risk"', "app.mjs", failures);
   assertIncludes(app, 'autoPolicyReason === "blocked_high_qi_cost"', "app.mjs", failures);
+  assertIncludes(app, "pausedByPolicy", "app.mjs", failures);
+  assertIncludes(app, "pauseThreshold", "app.mjs", failures);
   assertIncludes(app, '"도겁 자동 허용 꺼짐"', "app.mjs", failures);
   assertIncludes(app, "breakthroughNoQiBlocks", "app.mjs", failures);
   assertIncludes(app, "breakthroughTribulationSettingBlocks", "app.mjs", failures);
