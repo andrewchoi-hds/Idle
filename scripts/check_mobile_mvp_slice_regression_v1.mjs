@@ -4185,6 +4185,8 @@ async function main() {
       autoRiskSummary.seconds === 4 &&
       autoRiskSummary.breakthroughs === 0 &&
       autoRiskSummary.breakthroughPolicyBlocks > 0 &&
+      autoRiskSummary.breakthroughNoQiBlocks === 0 &&
+      autoRiskSummary.breakthroughTribulationSettingBlocks === 0 &&
       autoRiskSummary.breakthroughPolicyBlocks ===
         ((autoRiskSummary.breakthroughPolicyBlockReasons?.extremeRisk || 0) +
           (autoRiskSummary.breakthroughPolicyBlockReasons?.highRisk || 0) +
@@ -4192,6 +4194,9 @@ async function main() {
       autoRiskSummary.collectedEvents.some(
         (event) =>
           event.kind === "breakthrough_blocked_auto_policy" &&
+          (event.reason === "blocked_extreme_risk" ||
+            event.reason === "blocked_high_risk" ||
+            event.reason === "blocked_high_qi_cost") &&
           typeof event.reasonLabelKo === "string" &&
           event.reasonLabelKo.length > 0 &&
           typeof event.nextActionKo === "string",
