@@ -287,6 +287,7 @@ async function main() {
   assertIncludes(app, "function renderBattleHapticControl(", "app.mjs", failures);
   assertIncludes(app, "function playBattleHaptic(", "app.mjs", failures);
   assertIncludes(app, "function setBattleHapticEnabled(", "app.mjs", failures);
+  assertIncludes(app, "function triggerBattleSceneCameraShake(", "app.mjs", failures);
   assertIncludes(app, "function runBattleSceneDuelTick(", "app.mjs", failures);
   assertIncludes(app, "function pushBattleSceneTicker(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneSkillBanner(", "app.mjs", failures);
@@ -304,6 +305,7 @@ async function main() {
   assertIncludes(css, ".battle-scene-top-hud", "app.css", failures);
   assertIncludes(css, ".battle-scene-skill-banner", "app.css", failures);
   assertIncludes(css, ".battle-scene-ticker", "app.css", failures);
+  assertIncludes(css, ".battle-scene-arena.scene-shake-heavy", "app.css", failures);
   assertIncludes(css, ".battle-actor[data-actor-frame=\"attack\"]", "app.css", failures);
   assertIncludes(css, ".battle-actor[data-cast-tier=\"full\"]", "app.css", failures);
   assertIncludes(css, "[data-scene-combo-tier=\"frenzy\"]", "app.css", failures);

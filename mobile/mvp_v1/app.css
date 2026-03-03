@@ -1083,6 +1083,22 @@ h2 {
   animation: battle-aura-collapse 0.58s ease-out;
 }
 
+.battle-scene-arena.scene-shake-light {
+  animation: battle-camera-shake-light 0.24s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.battle-scene-arena.scene-shake-medium {
+  animation: battle-camera-shake-medium 0.32s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.battle-scene-arena.scene-shake-heavy {
+  animation: battle-camera-shake-heavy 0.4s cubic-bezier(0.2, 0.58, 0.36, 1);
+}
+
+.battle-scene-arena.scene-shake-lateral {
+  animation: battle-camera-shake-lateral 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
 @keyframes battle-arena-floor-breathe {
   0% {
     opacity: 0.8;
@@ -1131,6 +1147,98 @@ h2 {
   100% {
     box-shadow: inset 0 0 0 1px rgba(123, 196, 168, 0.05), inset 0 -26px 46px rgba(0, 0, 0, 0.36);
     filter: brightness(1);
+  }
+}
+
+@keyframes battle-camera-shake-light {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  25% {
+    transform: translate3d(-1.5px, 0.8px, 0);
+  }
+
+  55% {
+    transform: translate3d(1.8px, -1px, 0);
+  }
+
+  80% {
+    transform: translate3d(-0.8px, 0.5px, 0);
+  }
+}
+
+@keyframes battle-camera-shake-medium {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  18% {
+    transform: translate3d(-2.8px, 1.3px, 0);
+  }
+
+  42% {
+    transform: translate3d(3px, -1.6px, 0);
+  }
+
+  65% {
+    transform: translate3d(-1.9px, 1.1px, 0);
+  }
+
+  86% {
+    transform: translate3d(1.3px, -0.6px, 0);
+  }
+}
+
+@keyframes battle-camera-shake-heavy {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  14% {
+    transform: translate3d(-4.2px, 2px, 0);
+  }
+
+  32% {
+    transform: translate3d(4.8px, -2.3px, 0);
+  }
+
+  54% {
+    transform: translate3d(-3.4px, 2.1px, 0);
+  }
+
+  73% {
+    transform: translate3d(2.5px, -1.2px, 0);
+  }
+
+  88% {
+    transform: translate3d(-1.4px, 0.8px, 0);
+  }
+}
+
+@keyframes battle-camera-shake-lateral {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  16% {
+    transform: translate3d(-3.8px, 0, 0);
+  }
+
+  36% {
+    transform: translate3d(4.1px, 0.2px, 0);
+  }
+
+  61% {
+    transform: translate3d(-2.4px, -0.1px, 0);
+  }
+
+  84% {
+    transform: translate3d(1.2px, 0, 0);
   }
 }
 
@@ -2151,6 +2259,10 @@ textarea:focus-visible,
   .battle-scene-skill-banner.is-active,
   .battle-float,
   .battle-scene-flash.is-active,
+  .battle-scene-arena.scene-shake-light,
+  .battle-scene-arena.scene-shake-medium,
+  .battle-scene-arena.scene-shake-heavy,
+  .battle-scene-arena.scene-shake-lateral,
   .battle-scene-arena.scene-impact-win .battle-actor-player,
   .battle-scene-arena.scene-impact-win .battle-actor-enemy,
   .battle-scene-arena.scene-impact-loss .battle-actor-enemy,
