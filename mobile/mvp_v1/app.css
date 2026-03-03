@@ -975,6 +975,40 @@ h2 {
   color: rgba(255, 163, 154, 0.95);
 }
 
+.battle-charge-mote {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--battle-charge-mote-size, 5px);
+  height: var(--battle-charge-mote-size, 5px);
+  border-radius: 999px;
+  opacity: 0;
+  transform-origin: 0 0;
+  mix-blend-mode: screen;
+  animation: battle-charge-mote-orbit var(--battle-charge-mote-linger-sec, 0.9s) linear forwards;
+  filter: drop-shadow(0 0 6px color-mix(in srgb, currentColor 45%, transparent));
+}
+
+.battle-charge-mote.tone-info {
+  background: radial-gradient(circle, rgba(188, 238, 220, 0.98) 0%, rgba(188, 238, 220, 0.24) 85%);
+  color: rgba(188, 238, 220, 0.98);
+}
+
+.battle-charge-mote.tone-success {
+  background: radial-gradient(circle, rgba(137, 250, 205, 0.98) 0%, rgba(137, 250, 205, 0.24) 85%);
+  color: rgba(137, 250, 205, 0.98);
+}
+
+.battle-charge-mote.tone-warn {
+  background: radial-gradient(circle, rgba(255, 216, 145, 0.98) 0%, rgba(255, 216, 145, 0.24) 85%);
+  color: rgba(255, 216, 145, 0.98);
+}
+
+.battle-charge-mote.tone-error {
+  background: radial-gradient(circle, rgba(255, 164, 154, 0.98) 0%, rgba(255, 164, 154, 0.24) 85%);
+  color: rgba(255, 164, 154, 0.98);
+}
+
 .battle-scene-shockwave-layer {
   position: absolute;
   inset: 0;
@@ -1705,6 +1739,24 @@ h2 {
     opacity: 0;
     transform: translate(-50%, -50%) rotate(var(--battle-spark-angle, 0deg)) scale(calc(var(--battle-spark-scale, 1) * 1.22));
     filter: brightness(0.94);
+  }
+}
+
+@keyframes battle-charge-mote-orbit {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--battle-charge-mote-angle-start, 0deg)) translateX(var(--battle-charge-mote-radius, 22px)) scale(0.72);
+    filter: brightness(1.06);
+  }
+
+  18% {
+    opacity: 0.92;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(calc(var(--battle-charge-mote-angle-start, 0deg) + var(--battle-charge-mote-sweep, 172deg))) translateX(var(--battle-charge-mote-radius, 22px)) scale(1.08);
+    filter: brightness(0.9);
   }
 }
 
@@ -2517,6 +2569,7 @@ textarea:focus-visible,
   .battle-actor[data-cast-tier="high"] .battle-actor-cast-fill,
   .battle-actor[data-cast-tier="full"] .battle-actor-cast-fill,
   .battle-spark,
+  .battle-charge-mote,
   .battle-shockwave,
   .battle-trail,
   .battle-scene-skill-banner.is-active,
