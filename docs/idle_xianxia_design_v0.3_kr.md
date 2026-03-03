@@ -2314,3 +2314,11 @@
 
 ## 543) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(collectedEvents 최신성 가중 + 상세 결과 힌트 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 544) 다음 순차 작업
+1. [완료] `runAutoSliceSeconds(..., { collectEvents })` 경로에 자동 돌파 차단 이벤트 2종(`breakthrough_blocked_no_qi`, `breakthrough_blocked_tribulation_setting`)을 추가해 실제 엔진 결과가 이벤트 버퍼에 누락 없이 남도록 확장.
+2. [완료] 전투 연출 이벤트 시그널 해석(`resolveBattleSceneEventSignalFromCollectedEvent`)과 오프라인 상세 라인 포맷(`formatOfflineEventLine`)에 신규 차단 이벤트를 연결하고, `playBattleSceneAutoSummary` early-return 이전에 이벤트 신호를 평가해 집계치 0 구간에서도 실제 차단 결과 기반 연출이 우선 반영되도록 보정.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)에 신규 이벤트 토큰 검증을 추가하고 수직슬라이스 문서 회귀 포인트를 동기화.
+
+## 545) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(자동 돌파 기 부족/도겁 설정 차단 이벤트 연출 연동 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

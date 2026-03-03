@@ -4198,6 +4198,74 @@ async function main() {
       ),
   });
 
+  const autoBlockedNoQiState = createInitialSliceState(context, { playerName: "auto-blocked-no-qi" });
+  autoBlockedNoQiState.settings.autoBattle = false;
+  autoBlockedNoQiState.settings.autoBreakthrough = true;
+  autoBlockedNoQiState.settings.autoTribulation = false;
+  autoBlockedNoQiState.progression.difficultyIndex = 60;
+  autoBlockedNoQiState.currencies.qi = 0;
+  const autoBlockedNoQiSummary = runAutoSliceSeconds(
+    context,
+    autoBlockedNoQiState,
+    createSeededRng(207),
+    {
+      seconds: 3,
+      battleEverySec: 2,
+      breakthroughEverySec: 1,
+      passiveQiRatio: 0.012,
+      collectEvents: true,
+      maxCollectedEvents: 10,
+      suppressLogs: true,
+    },
+  );
+  checks.push({
+    id: "auto_breakthrough_collects_blocked_no_qi_event",
+    passed:
+      autoBlockedNoQiSummary.breakthroughs === 0 &&
+      autoBlockedNoQiSummary.collectedEvents.some(
+        (event) =>
+          event.kind === "breakthrough_blocked_no_qi" &&
+          Number.isFinite(Number(event.requiredQi)) &&
+          Number.isFinite(Number(event.currentQi)),
+      ),
+  });
+
+  const autoBlockedTribulationSettingState = createInitialSliceState(context, {
+    playerName: "auto-blocked-tribulation-setting",
+  });
+  autoBlockedTribulationSettingState.settings.autoBattle = false;
+  autoBlockedTribulationSettingState.settings.autoBreakthrough = true;
+  autoBlockedTribulationSettingState.settings.autoTribulation = false;
+  autoBlockedTribulationSettingState.progression.difficultyIndex = 198;
+  autoBlockedTribulationSettingState.currencies.qi = Math.max(
+    1,
+    (context.stageByDifficulty.get(198)?.qi_required ?? 1) * 2,
+  );
+  const autoBlockedTribulationSettingSummary = runAutoSliceSeconds(
+    context,
+    autoBlockedTribulationSettingState,
+    createSeededRng(211),
+    {
+      seconds: 2,
+      battleEverySec: 2,
+      breakthroughEverySec: 1,
+      passiveQiRatio: 0.012,
+      collectEvents: true,
+      maxCollectedEvents: 10,
+      suppressLogs: true,
+    },
+  );
+  checks.push({
+    id: "auto_breakthrough_collects_blocked_tribulation_setting_event",
+    passed:
+      autoBlockedTribulationSettingSummary.breakthroughs === 0 &&
+      autoBlockedTribulationSettingSummary.collectedEvents.some(
+        (event) =>
+          event.kind === "breakthrough_blocked_tribulation_setting" &&
+          Number(event.difficultyIndex) === 198,
+      ),
+  });
+
   const autoPauseState = createInitialSliceState(context, { playerName: "auto-pause" });
   autoPauseState.settings.autoBattle = false;
   autoPauseState.settings.autoBreakthrough = true;

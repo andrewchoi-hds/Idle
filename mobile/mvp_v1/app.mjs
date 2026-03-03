@@ -4520,6 +4520,51 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
       },
     };
   }
+  if (kind === "breakthrough_blocked_no_qi") {
+    const requiredQi = Math.max(1, Number(event.requiredQi) || 1);
+    const currentQi = Math.max(0, Number(event.currentQi) || 0);
+    return {
+      priority: 68,
+      tone: "warn",
+      impactKind: "breakthrough_fail",
+      statusTextKo: "자동 돌파 기 부족",
+      resultHintKo:
+        typeof event.message === "string" && event.message
+          ? `${event.message} · 기 ${fmtNumber(currentQi)}/${fmtNumber(requiredQi)}`
+          : `기 부족 · 기 ${fmtNumber(currentQi)}/${fmtNumber(requiredQi)}`,
+      impactOptions: {
+        source: "breakthrough",
+        outcome: {
+          attempted: false,
+          outcome: "blocked_no_qi",
+        },
+      },
+    };
+  }
+  if (kind === "breakthrough_blocked_tribulation_setting") {
+    const difficultyIndex = Math.max(0, Number(event.difficultyIndex) || 0);
+    return {
+      priority: 70,
+      tone: "warn",
+      impactKind: "breakthrough_fail",
+      statusTextKo: "자동 돌파 도겁 대기",
+      resultHintKo:
+        typeof event.message === "string" && event.message
+          ? difficultyIndex > 0
+            ? `${event.message} · 난이도 ${difficultyIndex}`
+            : event.message
+          : difficultyIndex > 0
+            ? `도겁 자동 허용 꺼짐 · 난이도 ${difficultyIndex}`
+            : "도겁 자동 허용 꺼짐",
+      impactOptions: {
+        source: "breakthrough",
+        outcome: {
+          attempted: false,
+          outcome: "blocked_tribulation_setting",
+        },
+      },
+    };
+  }
   if (kind === "auto_breakthrough_warmup_skip") {
     const remainingSec = Math.max(0, Number(event.warmupRemainingSec) || 0);
     return {
@@ -4628,18 +4673,19 @@ function playBattleSceneAutoSummary(summaryInput, sourceLabel = "자동 진행")
   const rebirths = Math.max(0, Number(summary.rebirths) || 0);
   const blocked = Math.max(0, Number(summary.breakthroughPolicyBlocks) || 0);
   const warmupSkips = Math.max(0, Number(summary.autoBreakthroughWarmupSkips) || 0);
+  const eventSignal = resolveBattleSceneEventSignalFromCollectedEvents(summary.collectedEvents);
   if (
     battles <= 0 &&
     breakthroughs <= 0 &&
     rebirths <= 0 &&
     blocked <= 0 &&
     warmupSkips <= 0 &&
+    !eventSignal &&
     summary.autoBreakthroughPaused !== true
   ) {
     return;
   }
 
-  const eventSignal = resolveBattleSceneEventSignalFromCollectedEvents(summary.collectedEvents);
   let tone = "info";
   let impactKind = "battle_win";
   let statusText = `${sourceLabel} 갱신`;
@@ -5355,6 +5401,17 @@ function formatOfflineEventLine(event) {
         ? ` · ${event.nextActionKo}`
         : "";
     return `${secLabel}: 자동 돌파 차단 (${reasonLabel})${actionText}`;
+  }
+  if (event.kind === "breakthrough_blocked_no_qi") {
+    const requiredQi = Math.max(1, Number(event.requiredQi) || 1);
+    const currentQi = Math.max(0, Number(event.currentQi) || 0);
+    return `${secLabel}: 자동 돌파 기 부족 (기 ${fmtNumber(currentQi)}/${fmtNumber(requiredQi)})`;
+  }
+  if (event.kind === "breakthrough_blocked_tribulation_setting") {
+    const difficultyIndex = Math.max(0, Number(event.difficultyIndex) || 0);
+    return `${secLabel}: 자동 돌파 도겁 대기 (자동 도겁 허용 꺼짐${
+      difficultyIndex > 0 ? ` · 난이도 ${difficultyIndex}` : ""
+    })`;
   }
   if (event.kind === "auto_breakthrough_paused_by_policy") {
     const reasonLabel = String(event.reasonLabelKo || event.reason || "policy");
