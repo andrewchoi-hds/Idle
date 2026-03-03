@@ -2745,16 +2745,46 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
 
     if (outcome.attempted !== true) {
       const blockedNoQi = outcomeCode === "blocked_no_qi";
-      battleSceneDuelState.playerCast = clampBattleSceneGauge(
-        battleSceneDuelState.playerCast - (blockedNoQi ? 8 : 12),
-        BATTLE_SCENE_DUEL_MAX_CAST,
-      );
-      battleSceneDuelState.combo = Math.max(0, battleSceneDuelState.combo - 1);
-      battleSceneDuelState.dpsMomentum = Math.max(0, battleSceneDuelState.dpsMomentum * 0.82);
-      comboAction = "cooldown";
-      tickerText = blockedNoQi ? "돌파 기력 부족 · 축기 재정렬" : "돌파 차단 · 준비 조건 미충족";
-      tickerTone = blockedNoQi ? "warn" : "error";
-      applyOutcomeTransition = true;
+      const blockedTribulationSetting = outcomeCode === "blocked_tribulation_setting";
+      if (blockedNoQi) {
+        battleSceneDuelState.playerCast = clampBattleSceneGauge(
+          battleSceneDuelState.playerCast - 8,
+          BATTLE_SCENE_DUEL_MAX_CAST,
+        );
+        battleSceneDuelState.combo = Math.max(0, battleSceneDuelState.combo - 1);
+        battleSceneDuelState.dpsMomentum = Math.max(0, battleSceneDuelState.dpsMomentum * 0.82);
+        comboAction = "cooldown";
+        tickerText = "돌파 기력 부족 · 축기 재정렬";
+        tickerTone = "warn";
+        applyOutcomeTransition = true;
+      } else if (blockedTribulationSetting) {
+        battleSceneDuelState.playerCast = clampBattleSceneGauge(
+          battleSceneDuelState.playerCast - 4,
+          BATTLE_SCENE_DUEL_MAX_CAST,
+        );
+        battleSceneDuelState.enemyCast = clampBattleSceneGauge(
+          battleSceneDuelState.enemyCast - 2,
+          BATTLE_SCENE_DUEL_MAX_CAST,
+        );
+        battleSceneDuelState.dpsMomentum = Math.max(0, battleSceneDuelState.dpsMomentum * 0.94);
+        comboAction = "resonance";
+        tickerText = "도겁 자동 대기 · 설정 확인 필요";
+        tickerTone = "warn";
+        bannerText = "도겁 자동 허용 꺼짐";
+        bannerTone = "info";
+        applyOutcomeTransition = true;
+      } else {
+        battleSceneDuelState.playerCast = clampBattleSceneGauge(
+          battleSceneDuelState.playerCast - 12,
+          BATTLE_SCENE_DUEL_MAX_CAST,
+        );
+        battleSceneDuelState.combo = Math.max(0, battleSceneDuelState.combo - 1);
+        battleSceneDuelState.dpsMomentum = Math.max(0, battleSceneDuelState.dpsMomentum * 0.82);
+        comboAction = "cooldown";
+        tickerText = "돌파 차단 · 준비 조건 미충족";
+        tickerTone = "error";
+        applyOutcomeTransition = true;
+      }
     } else if (outcomeCode === "success") {
       battleSceneDuelState.playerHp = BATTLE_SCENE_DUEL_MAX_HP;
       battleSceneDuelState.enemyHp = clampBattleSceneGauge(
@@ -4345,14 +4375,23 @@ function playBattleSceneBreakthroughOutcome(outcome) {
     return;
   }
   if (!outcome.attempted) {
-    const tone = outcome.outcome === "blocked_no_qi" ? "warn" : "error";
-    setBattleSceneStatus("돌파 조건 부족", tone);
+    const outcomeCode = String(outcome.outcome || "");
+    const blockedNoQi = outcomeCode === "blocked_no_qi";
+    const blockedTribulationSetting = outcomeCode === "blocked_tribulation_setting";
+    const tone = blockedNoQi || blockedTribulationSetting ? "warn" : "error";
+    setBattleSceneStatus(
+      blockedTribulationSetting ? "자동 도겁 대기" : "돌파 조건 부족",
+      tone,
+    );
     setBattleSceneResult(outcome.message || "돌파를 진행할 수 없습니다.", tone);
     triggerBattleSceneImpact("breakthrough_fail", tone, {
       source: "breakthrough",
       outcome,
     });
-    spawnBattleSceneFloat("돌파 차단", { tone, anchor: "center" });
+    spawnBattleSceneFloat(
+      blockedTribulationSetting ? "도겁 대기" : "돌파 차단",
+      { tone, anchor: "center" },
+    );
     return;
   }
   if (outcome.outcome === "success") {
