@@ -2402,3 +2402,11 @@
 
 ## 565) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(돌파 난이도 전이 메타 확장 + 환생 복귀 문구 정합 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 566) 다음 순차 작업
+1. [완료] `breakthrough_minor_fail` 경로의 이벤트/반환 메타(`fromDifficultyIndex/toDifficultyIndex`)를 `resolveBattleSceneEventSignalFromCollectedEvent`, `syncBattleSceneDuelFromImpact`, `playBattleSceneBreakthroughOutcome`에 연결해 경상 실패 전이(`N→N`) 표시를 자동/수동 연출에 일관 적용.
+2. [완료] 오프라인 세부 라인(`formatOfflineEventLine`)까지 경상 실패 난이도 전이 메타를 동기화해 상태/결과/세부 로그 문구 간 정합을 강화.
+3. [완료] DOM contract 토큰(`outcome.fromDifficultyIndex`)과 수직슬라이스 회귀 항목을 갱신해 경상 실패 전이 메타 누락 회귀를 방지.
+
+## 567) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(경상 실패 난이도 전이 메타 정합 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

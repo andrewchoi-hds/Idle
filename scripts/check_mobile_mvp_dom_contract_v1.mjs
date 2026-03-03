@@ -325,6 +325,7 @@ async function main() {
   assertIncludes(app, "outcome.requiredQi", "app.mjs", failures);
   assertIncludes(app, "outcome.difficultyIndex", "app.mjs", failures);
   assertIncludes(app, "outcome.stageQiRequired", "app.mjs", failures);
+  assertIncludes(app, "outcome.fromDifficultyIndex", "app.mjs", failures);
   assertIncludes(app, "outcome.toDifficultyIndex", "app.mjs", failures);
   assertIncludes(app, "resetStageNameKo", "app.mjs", failures);
   assertIncludes(app, "event?.stageQiRequired", "app.mjs", failures);

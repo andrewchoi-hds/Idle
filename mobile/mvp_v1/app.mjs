@@ -3052,12 +3052,19 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
       battleSceneDuelState.combo = Math.max(0, battleSceneDuelState.combo - 2);
       battleSceneDuelState.dpsMomentum = Math.max(0, battleSceneDuelState.dpsMomentum - hpLoss * 0.5);
       comboAction = "cooldown";
-      tickerText = `돌파 경상 실패 · 기 ${fmtSignedInteger(-minorQiLoss)}`;
+      tickerText =
+        fromDifficultyIndex > 0 && toDifficultyIndex > 0
+          ? `돌파 경상 실패 · ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)} · 기 ${fmtSignedInteger(-minorQiLoss)}`
+          : `돌파 경상 실패 · 기 ${fmtSignedInteger(-minorQiLoss)}`;
       tickerTone = "warn";
       bannerText =
-        deathPct > 0
-          ? `경상 실패 · 사망률 ${deathPct.toFixed(1)}% 구간`
-          : "경상 실패 · 기맥 요동";
+        fromDifficultyIndex > 0 && toDifficultyIndex > 0
+          ? `경상 실패 · 난이도 ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)}${
+              deathPct > 0 ? ` · 사망률 ${deathPct.toFixed(1)}%` : ""
+            }`
+          : deathPct > 0
+            ? `경상 실패 · 사망률 ${deathPct.toFixed(1)}% 구간`
+            : "경상 실패 · 기맥 요동";
       bannerTone = "warn";
       applyOutcomeTransition = true;
     } else if (outcomeCode === "retreat_fail") {
@@ -4680,7 +4687,11 @@ function playBattleSceneBreakthroughOutcome(outcome) {
     );
     setBattleSceneStatus("돌파 실패(경상)", "warn");
     setBattleSceneResult(
-      `${outcome.message || "경상 실패"} · 기 ${fmtSignedInteger(-qiLoss)}`,
+      `${outcome.message || "경상 실패"}${
+        fromDifficultyIndex > 0 && toDifficultyIndex > 0
+          ? ` · 난이도 ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)}`
+          : ""
+      } · 기 ${fmtSignedInteger(-qiLoss)}`,
       "warn",
     );
     triggerBattleSceneImpact("breakthrough_fail", "warn", {
@@ -4907,7 +4918,10 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
       tone: "warn",
       impactKind: "breakthrough_fail",
       statusTextKo: "돌파 경상 실패",
-      resultHintKo: `돌파 경상 실패 · 기 ${fmtSignedInteger(qiDelta)}`,
+      resultHintKo:
+        fromDifficultyIndex > 0 && toDifficultyIndex > 0
+          ? `돌파 경상 실패 · ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)} · 기 ${fmtSignedInteger(qiDelta)}`
+          : `돌파 경상 실패 · 기 ${fmtSignedInteger(qiDelta)}`,
       impactOptions: {
         source: "breakthrough",
         outcome: {
