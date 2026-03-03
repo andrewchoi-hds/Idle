@@ -2202,3 +2202,11 @@
 
 ## 515) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(hit-stop 프레임 정지 + 전장 고압 연동 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 516) 다음 순차 작업
+1. [완료] 캐스트 텔레그래프 헬퍼(`maybeSpawnBattleSceneCastTelegraph`)를 추가해 플레이어/적 cast 게이지가 70% 이상일 때 배우 주변 준비 파동을 자동 생성하도록 구성.
+2. [완료] 쇼크웨이브 헬퍼를 variant 기반(`default/telegraph/telegraph-urgent`)으로 확장하고, 상시 루프(`runBattleSceneAmbientTick`)에서 cast 비율/모드별 최소 간격을 적용해 텔레그래프 파동이 과밀 없이 순환되도록 반영.
+3. [완료] 전투 연출 CSS에 텔레그래프 스타일(`.battle-shockwave.variant-telegraph`, `.battle-shockwave.variant-telegraph-urgent`)과 키프레임을 추가하고 DOM contract 체크 토큰(`maybeSpawnBattleSceneCastTelegraph`)을 반영해 회귀를 방지.
+
+## 517) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(cast 텔레그래프 파동 + urgent 변형 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
