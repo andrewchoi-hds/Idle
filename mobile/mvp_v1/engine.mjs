@@ -3335,12 +3335,21 @@ export function runBattleOnce(context, state, rng, options = {}) {
       eventCollector({
         kind: "battle_win",
         difficultyIndex: stage.difficulty_index,
+        stageQiRequired: stage.qi_required,
         qiDelta: qiGain,
         spiritCoinDelta: spiritGain,
         rebirthEssenceDelta: essenceGain,
       });
     }
-    return { won: true, qiDelta: qiGain, spiritCoinDelta: spiritGain, rebirthEssenceDelta: essenceGain };
+    return {
+      won: true,
+      kind: "battle_win",
+      difficultyIndex: stage.difficulty_index,
+      stageQiRequired: stage.qi_required,
+      qiDelta: qiGain,
+      spiritCoinDelta: spiritGain,
+      rebirthEssenceDelta: essenceGain,
+    };
   }
 
   const qiLoss = Math.max(1, Math.round(stage.qi_required * 0.035));
@@ -3352,12 +3361,21 @@ export function runBattleOnce(context, state, rng, options = {}) {
     eventCollector({
       kind: "battle_loss",
       difficultyIndex: stage.difficulty_index,
+      stageQiRequired: stage.qi_required,
       qiDelta: -qiLoss,
       spiritCoinDelta: 0,
       rebirthEssenceDelta: 0,
     });
   }
-  return { won: false, qiDelta: -qiLoss, spiritCoinDelta: 0, rebirthEssenceDelta: 0 };
+  return {
+    won: false,
+    kind: "battle_loss",
+    difficultyIndex: stage.difficulty_index,
+    stageQiRequired: stage.qi_required,
+    qiDelta: -qiLoss,
+    spiritCoinDelta: 0,
+    rebirthEssenceDelta: 0,
+  };
 }
 
 export function runBreakthroughAttempt(context, state, rng, options = {}) {
@@ -3629,6 +3647,7 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
     autoBreakthroughPauseReasonLabelKo: "",
     autoBreakthroughPauseNextActionKo: "",
     autoBreakthroughPauseAtSec: 0,
+    lastEngineOutcome: null,
     rebirths: 0,
   };
   const collectedEvents = [];
@@ -3659,6 +3678,11 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
       });
       summary.battles += 1;
       if (battle.won) summary.battleWins += 1;
+      summary.lastEngineOutcome = {
+        source: "battle",
+        sec: timelineSec,
+        outcome: { ...battle },
+      };
     }
 
     if (state.settings.autoBreakthrough && timelineSec % breakthroughEverySec === 0) {
@@ -3826,6 +3850,11 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
       } else {
         consecutivePolicyBlocks = 0;
       }
+      summary.lastEngineOutcome = {
+        source: "breakthrough",
+        sec: timelineSec,
+        outcome: { ...breakthrough },
+      };
     }
   }
 

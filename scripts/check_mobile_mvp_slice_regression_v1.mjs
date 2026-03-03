@@ -4233,6 +4233,41 @@ async function main() {
     passed: chunkA.battles === 0 && chunkB.battles === 0 && chunkC.battles === 1,
   });
 
+  const lastOutcomeState = createInitialSliceState(context, { playerName: "last-outcome" });
+  lastOutcomeState.settings.autoBattle = true;
+  lastOutcomeState.settings.autoBreakthrough = true;
+  lastOutcomeState.settings.autoTribulation = false;
+  lastOutcomeState.progression.difficultyIndex = 1;
+  lastOutcomeState.currencies.qi = 500000;
+  const lastOutcomeSummary = runAutoSliceSeconds(
+    context,
+    lastOutcomeState,
+    createSeededRng(117),
+    {
+      seconds: 6,
+      battleEverySec: 2,
+      breakthroughEverySec: 1,
+      passiveQiRatio: 0.012,
+      collectEvents: false,
+      suppressLogs: true,
+    },
+  );
+  checks.push({
+    id: "auto_summary_tracks_last_engine_outcome_without_collected_events",
+    passed:
+      lastOutcomeSummary.lastEngineOutcome !== null &&
+      (lastOutcomeSummary.lastEngineOutcome.source === "battle" ||
+        lastOutcomeSummary.lastEngineOutcome.source === "breakthrough") &&
+      Math.max(0, Number(lastOutcomeSummary.lastEngineOutcome.sec) || 0) > 0 &&
+      typeof lastOutcomeSummary.lastEngineOutcome.outcome === "object" &&
+      (lastOutcomeSummary.lastEngineOutcome.source !== "battle" ||
+        typeof lastOutcomeSummary.lastEngineOutcome.outcome.won === "boolean") &&
+      (lastOutcomeSummary.lastEngineOutcome.source !== "breakthrough" ||
+        typeof lastOutcomeSummary.lastEngineOutcome.outcome.attempted === "boolean") &&
+      Array.isArray(lastOutcomeSummary.collectedEvents) &&
+      lastOutcomeSummary.collectedEvents.length === 0,
+  });
+
   const warmupBaseState = createInitialSliceState(context, { playerName: "warmup-base" });
   warmupBaseState.settings.autoBattle = false;
   warmupBaseState.settings.autoBreakthrough = true;
