@@ -321,6 +321,7 @@ async function main() {
   assertIncludes(app, "pausedByPolicy", "app.mjs", failures);
   assertIncludes(app, "pauseThreshold", "app.mjs", failures);
   assertIncludes(app, "blockedQiDeficit", "app.mjs", failures);
+  assertIncludes(app, "successQiConsume", "app.mjs", failures);
   assertIncludes(app, "outcome.requiredQi", "app.mjs", failures);
   assertIncludes(app, "outcome.difficultyIndex", "app.mjs", failures);
   assertIncludes(app, "event?.stageQiRequired", "app.mjs", failures);
