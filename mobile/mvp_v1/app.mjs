@@ -326,6 +326,16 @@ const BATTLE_SCENE_ZOOM_DURATIONS_MS = {
   soft: 300,
   burst: 380,
 };
+const BATTLE_SCENE_HIT_STOP_CLASSES = [
+  "scene-hit-stop-light",
+  "scene-hit-stop-medium",
+  "scene-hit-stop-heavy",
+];
+const BATTLE_SCENE_HIT_STOP_DURATIONS_MS = {
+  light: 72,
+  medium: 96,
+  heavy: 124,
+};
 const BATTLE_SCENE_COMBO_BANNER_TIER_CLASSES = [
   "tier-flow",
   "tier-surge",
@@ -367,6 +377,8 @@ let battleSceneShakeTimer = null;
 let battleSceneLastShakeAtMs = 0;
 let battleSceneZoomTimer = null;
 let battleSceneLastZoomAtMs = 0;
+let battleSceneHitStopTimer = null;
+let battleSceneLastHitStopAtMs = 0;
 let battleSceneSkillBannerTimer = null;
 let battleSceneComboBannerTimer = null;
 const battleSceneActorFrameTimers = {
@@ -1554,6 +1566,9 @@ function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true) {
   triggerBattleSceneZoomPulse(
     mode === "realtime" || burstDamage >= 30 ? "burst" : "soft",
   );
+  triggerBattleSceneHitStop(
+    mode === "realtime" || burstDamage >= 30 ? "heavy" : "medium",
+  );
   setBattleSceneComboBanner(battleSceneDuelState.combo, tone);
   setBattleSceneActorFrame(attacker, "skill");
   setBattleSceneActorFrame(defenderAnchor, "hit");
@@ -1627,6 +1642,9 @@ function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true) {
   );
   triggerBattleSceneZoomPulse(
     isCrit || mode === "realtime" ? "burst" : "soft",
+  );
+  triggerBattleSceneHitStop(
+    isCrit ? "medium" : mode === "realtime" ? "medium" : "light",
   );
   if (battleSceneDuelState.combo >= 3 && (isCrit || battleSceneDuelState.combo % 3 === 0)) {
     setBattleSceneComboBanner(
@@ -1963,6 +1981,39 @@ function triggerBattleSceneZoomPulse(preset = "soft", options = {}) {
   battleSceneLastZoomAtMs = now;
 }
 
+function triggerBattleSceneHitStop(preset = "light", options = {}) {
+  if (!dom.battleSceneArena || shouldReduceBattleSceneMotion()) {
+    return;
+  }
+  const normalizedPreset =
+    preset === "heavy"
+      ? "heavy"
+      : preset === "medium"
+        ? "medium"
+        : "light";
+  const now = Date.now();
+  const minIntervalMs = normalizedPreset === "light" ? 88 : 64;
+  if (now - battleSceneLastHitStopAtMs < minIntervalMs) {
+    return;
+  }
+  if (options.fromAmbient === true && normalizedPreset === "light" && Math.random() > 0.42) {
+    return;
+  }
+  const className = `scene-hit-stop-${normalizedPreset}`;
+  dom.battleSceneArena.classList.remove(...BATTLE_SCENE_HIT_STOP_CLASSES);
+  void dom.battleSceneArena.offsetWidth;
+  dom.battleSceneArena.classList.add(className);
+  if (battleSceneHitStopTimer !== null) {
+    window.clearTimeout(battleSceneHitStopTimer);
+  }
+  const durationMs = BATTLE_SCENE_HIT_STOP_DURATIONS_MS[normalizedPreset] || 72;
+  battleSceneHitStopTimer = window.setTimeout(() => {
+    dom.battleSceneArena?.classList.remove(className);
+    battleSceneHitStopTimer = null;
+  }, durationMs);
+  battleSceneLastHitStopAtMs = now;
+}
+
 function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
   if (!dom.battleSceneArena) {
     return;
@@ -2019,6 +2070,14 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
   );
   triggerBattleSceneZoomPulse(
     kind === "battle_loss" || kind === "breakthrough_fail" ? "burst" : "soft",
+    { fromAmbient },
+  );
+  triggerBattleSceneHitStop(
+    kind === "battle_loss" || kind === "breakthrough_fail"
+      ? "heavy"
+      : kind === "breakthrough_success"
+        ? "medium"
+        : "light",
     { fromAmbient },
   );
   if (kind === "battle_win") {
@@ -2119,6 +2178,10 @@ function runBattleSceneAmbientTick() {
   if (shouldPulseZoom) {
     triggerBattleSceneZoomPulse(
       mode === "realtime" || battleSceneDuelState.pressure === "high" ? "burst" : "soft",
+      { fromAmbient: true },
+    );
+    triggerBattleSceneHitStop(
+      mode === "realtime" || battleSceneDuelState.pressure === "high" ? "medium" : "light",
       { fromAmbient: true },
     );
   }
@@ -2295,11 +2358,17 @@ function stopBattleSceneAmbientLoop() {
     window.clearTimeout(battleSceneZoomTimer);
     battleSceneZoomTimer = null;
   }
+  if (battleSceneHitStopTimer !== null) {
+    window.clearTimeout(battleSceneHitStopTimer);
+    battleSceneHitStopTimer = null;
+  }
   battleSfxAmbientLastPlayAtMs = 0;
   battleSceneLastShakeAtMs = 0;
   battleSceneLastZoomAtMs = 0;
+  battleSceneLastHitStopAtMs = 0;
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_SHAKE_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_ZOOM_CLASSES);
+  dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_HIT_STOP_CLASSES);
   if (battleSceneSkillBannerTimer !== null) {
     window.clearTimeout(battleSceneSkillBannerTimer);
     battleSceneSkillBannerTimer = null;

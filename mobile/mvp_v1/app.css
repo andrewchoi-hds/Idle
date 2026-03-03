@@ -1205,6 +1205,33 @@ h2 {
   animation: battle-camera-zoom-burst 0.38s cubic-bezier(0.2, 0.58, 0.36, 1);
 }
 
+.battle-scene-arena.scene-hit-stop-light {
+  filter: brightness(1.08) contrast(1.05) saturate(1.04);
+}
+
+.battle-scene-arena.scene-hit-stop-medium {
+  filter: brightness(1.12) contrast(1.08) saturate(1.08);
+}
+
+.battle-scene-arena.scene-hit-stop-heavy {
+  filter: brightness(1.16) contrast(1.12) saturate(1.12);
+}
+
+.battle-scene-arena:is(.scene-hit-stop-light, .scene-hit-stop-medium, .scene-hit-stop-heavy) .battle-scene-flow,
+.battle-scene-arena:is(.scene-hit-stop-light, .scene-hit-stop-medium, .scene-hit-stop-heavy) .battle-aura,
+.battle-scene-arena:is(.scene-hit-stop-light, .scene-hit-stop-medium, .scene-hit-stop-heavy) .battle-actor,
+.battle-scene-arena:is(.scene-hit-stop-light, .scene-hit-stop-medium, .scene-hit-stop-heavy) .battle-actor::before,
+.battle-scene-arena:is(.scene-hit-stop-light, .scene-hit-stop-medium, .scene-hit-stop-heavy) .battle-spark,
+.battle-scene-arena:is(.scene-hit-stop-light, .scene-hit-stop-medium, .scene-hit-stop-heavy) .battle-trail,
+.battle-scene-arena:is(.scene-hit-stop-light, .scene-hit-stop-medium, .scene-hit-stop-heavy) .battle-shockwave {
+  animation-play-state: paused !important;
+}
+
+.battle-scene-arena:is(.scene-hit-stop-light, .scene-hit-stop-medium, .scene-hit-stop-heavy) .battle-actor-hp-fill,
+.battle-scene-arena:is(.scene-hit-stop-light, .scene-hit-stop-medium, .scene-hit-stop-heavy) .battle-actor-cast-fill {
+  transition-duration: 0s !important;
+}
+
 @keyframes battle-arena-floor-breathe {
   0% {
     opacity: 0.8;
@@ -2448,6 +2475,9 @@ textarea:focus-visible,
   .battle-scene-arena.scene-shake-lateral,
   .battle-scene-arena.scene-zoom-soft,
   .battle-scene-arena.scene-zoom-burst,
+  .battle-scene-arena.scene-hit-stop-light,
+  .battle-scene-arena.scene-hit-stop-medium,
+  .battle-scene-arena.scene-hit-stop-heavy,
   .battle-scene-arena.scene-impact-win .battle-actor-player,
   .battle-scene-arena.scene-impact-win .battle-actor-enemy,
   .battle-scene-arena.scene-impact-loss .battle-actor-enemy,
@@ -2457,6 +2487,12 @@ textarea:focus-visible,
   .battle-scene-arena.scene-impact-breakthrough-fail .battle-actor-player,
   .battle-scene-arena.scene-impact-breakthrough-fail .battle-aura-player {
     animation: none !important;
+  }
+
+  .battle-scene-arena.scene-hit-stop-light,
+  .battle-scene-arena.scene-hit-stop-medium,
+  .battle-scene-arena.scene-hit-stop-heavy {
+    filter: none !important;
   }
 
   .battle-scene-shockwave-layer,
