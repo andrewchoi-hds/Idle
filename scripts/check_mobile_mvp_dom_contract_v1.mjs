@@ -297,8 +297,10 @@ async function main() {
   assertIncludes(app, "function maybeTriggerBattleSceneLeadSwing(", "app.mjs", failures);
   assertIncludes(app, "function triggerBattleSceneLeadResonance(", "app.mjs", failures);
   assertIncludes(app, "function triggerBattleScenePressureSpike(", "app.mjs", failures);
+  assertIncludes(app, "function triggerBattleScenePressureResonance(", "app.mjs", failures);
   assertIncludes(app, "function maybeTriggerBattleScenePressureTransition(", "app.mjs", failures);
   assertIncludes(app, "function triggerBattleSceneDangerPulse(", "app.mjs", failures);
+  assertIncludes(app, "function triggerBattleSceneDangerResonance(", "app.mjs", failures);
   assertIncludes(app, "function maybeTriggerBattleSceneDangerTransition(", "app.mjs", failures);
   assertIncludes(app, "function triggerBattleSceneComboSurge(", "app.mjs", failures);
   assertIncludes(app, "function triggerBattleSceneComboCooldown(", "app.mjs", failures);
@@ -335,7 +337,9 @@ async function main() {
   assertIncludes(css, ".battle-scene-arena.scene-lead-swing-player", "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-lead-resonance-player", "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-pressure-spike-high", "app.css", failures);
+  assertIncludes(css, ".battle-scene-arena.scene-pressure-resonance-high", "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-danger-pulse-both", "app.css", failures);
+  assertIncludes(css, ".battle-scene-arena.scene-danger-resonance-both", "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-combo-surge-frenzy", "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-combo-cooldown-calm", "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-combo-resonance-frenzy", "app.css", failures);

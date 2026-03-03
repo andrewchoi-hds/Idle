@@ -2282,3 +2282,11 @@
 
 ## 535) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(엔진 결과 우선 트리거 + ambient 랜덤 비중 축소 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 536) 다음 순차 작업
+1. [완료] 압력 공명 헬퍼(`triggerBattleScenePressureResonance`)를 추가해 `medium/high` 압력 유지 구간에서 resonance 이벤트를 모드별 최소 간격으로 재트리거하도록 구성.
+2. [완료] 위기 공명 헬퍼(`triggerBattleSceneDangerResonance`)를 추가해 위험 상태(`player/enemy/both`) 유지 구간에서 resonance 이벤트를 모드별 최소 간격으로 재트리거하고, 파동/궤적/스파크/카메라 피드백을 연동.
+3. [완료] 듀얼 초기화/루프 종료 경로에서 pressure/danger resonance 타이머·상태를 정리하고 DOM contract 체크 토큰(`triggerBattleScenePressureResonance`, `triggerBattleSceneDangerResonance`, `.battle-scene-arena.scene-pressure-resonance-high`, `.battle-scene-arena.scene-danger-resonance-both`)을 반영해 회귀를 방지.
+
+## 537) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(pressure/danger resonance 유지 연출 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

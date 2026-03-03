@@ -166,7 +166,9 @@ npm run mobile:mvp:serve
   - 우세 전환 헬퍼(`maybeTriggerBattleSceneLeadSwing`)를 추가해 `player/enemy/even` 리드 전환 순간 전장 swing 클래스(`scene-lead-swing-*`) + 파동/궤적/티커를 자동 트리거
   - 우세 공명 헬퍼(`triggerBattleSceneLeadResonance`)를 추가해 `player/enemy/even` 리드 유지 구간에서 전장 resonance(`scene-lead-resonance-*`)를 상시 재맥동으로 자동 트리거
   - 압력 스파이크 헬퍼(`triggerBattleScenePressureSpike`, `maybeTriggerBattleScenePressureTransition`)를 추가해 압력 `low→medium/high`, `medium→high` 전환과 고압 루프에서 전장/충돌코어 spike(`scene-pressure-spike-*`)를 자동 트리거
+  - 압력 공명 헬퍼(`triggerBattleScenePressureResonance`)를 추가해 `medium/high` 압력 유지 구간에서 전장 resonance(`scene-pressure-resonance-*`)를 모드별 간격으로 재맥동 트리거
   - 위기 맥동 헬퍼(`triggerBattleSceneDangerPulse`, `maybeTriggerBattleSceneDangerTransition`)를 추가해 HP 위험 구간(`player/enemy/both`) 진입 및 유지 루프에서 전장 위기 pulse(`scene-danger-pulse-*`)를 자동 트리거
+  - 위기 공명 헬퍼(`triggerBattleSceneDangerResonance`)를 추가해 위험 상태(`player/enemy/both`) 유지 구간에서 전장 resonance(`scene-danger-resonance-*`)를 모드별 간격으로 재맥동 트리거
   - 콤보 서지 헬퍼(`triggerBattleSceneComboSurge`, `maybeTriggerBattleSceneComboTierTransition`)를 추가해 combo tier(`calm→flow/frenzy`, `flow→frenzy`) 전환 및 상시 루프에서 전장 surge(`scene-combo-surge-*`)를 자동 트리거
   - 콤보 쿨다운 헬퍼(`triggerBattleSceneComboCooldown`)를 추가해 combo tier 하향 전환(`frenzy→flow/calm`, `flow→calm`) 순간 전장 cooldown(`scene-combo-cooldown-*`)을 자동 트리거
   - 콤보 공명 헬퍼(`triggerBattleSceneComboResonance`)를 추가해 `flow/frenzy` 유지 구간에서 전장 resonance(`scene-combo-resonance-*`)를 상시 재맥동으로 자동 트리거
@@ -238,6 +240,7 @@ npm run mobile:mvp:check
   - `runBattleOnce/runBreakthroughAttempt` 결과가 즉시 duel HUD 및 lead/pressure/danger/combo 트리거로 연결되고, 직후 2.6초 동안 ambient 랜덤 트리거 비중이 억제되는지 검증
   - 듀얼 strike/burst/impact 경로에서 배우 프레임(`idle/attack/hit/skill`)이 전환되고 리셋 시 `idle`로 복귀하는지 검증
   - 듀얼 HUD 갱신 시 cast/combo/pressure/lead 상태 데이터가 일관되게 갱신되고 `prefers-reduced-motion` 환경에서도 수치 상태 반영이 유지되는지 검증
+  - pressure/danger 유지 구간에서 resonance(`scene-pressure-resonance-*`, `scene-danger-resonance-*`)가 모드별 최소 간격으로 재트리거되고 결과 우선 윈도우와 상충 없이 동작하는지 검증
   - 기 부족 돌파 차단
   - 사망 실패 → 환생 루프 발동
   - 돌파 확률 프리뷰 4분기 분포(`성공+경상+후퇴+사망=100%`) 일관성 검증
