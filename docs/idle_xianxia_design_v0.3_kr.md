@@ -2234,3 +2234,11 @@
 
 ## 523) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(pressure spike 전환 연출 + 고압 루프 강화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 524) 다음 순차 작업
+1. [완료] 위기 맥동 헬퍼(`triggerBattleSceneDangerPulse`, `maybeTriggerBattleSceneDangerTransition`)를 추가해 HP 위험 상태(`player/enemy/both`) 전환 시 위기 pulse 이벤트를 자동 트리거하도록 구성.
+2. [완료] 상시 루프(`runBattleSceneAmbientTick`)에서 위험 상태 유지 중 모드별 주기로 danger pulse를 재트리거하고, shockwave/spark/trail + 카메라 피드백을 연동해 위기 구간 체감을 강화.
+3. [완료] 듀얼 초기화/루프 종료 경로에서 danger pulse 타이머·상태를 정리하고 DOM contract 체크에 신규 토큰(`triggerBattleSceneDangerPulse`, `maybeTriggerBattleSceneDangerTransition`, `.battle-scene-arena.scene-danger-pulse-both`)을 반영해 회귀를 방지.
+
+## 525) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(danger pulse 위기 연출 + 저체력 루프 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
