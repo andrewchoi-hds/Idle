@@ -277,6 +277,7 @@ async function main() {
   assertIncludes(app, "function setOfflineDetailExpanded(", "app.mjs", failures);
   assertIncludes(app, "function applyBattleFocusMode(", "app.mjs", failures);
   assertIncludes(app, "function renderBattleSfxControl(", "app.mjs", failures);
+  assertIncludes(app, "function resolveBattleSfxAmbientCue(", "app.mjs", failures);
   assertIncludes(app, "function playBattleSfx(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSfxEnabled(", "app.mjs", failures);
   assertIncludes(app, "function runBattleSceneDuelTick(", "app.mjs", failures);

@@ -282,8 +282,12 @@ let battleSfxEnabled = false;
 let battleSfxContext = null;
 let battleSfxMasterGain = null;
 let battleSfxLastPlayAtMs = 0;
+let battleSfxAmbientLastPlayAtMs = 0;
 const MOBILE_MVP_BATTLE_SFX_PREF_KEY = "idle_xianxia_mobile_mvp_v1_battle_sfx";
 const BATTLE_SFX_MIN_INTERVAL_MS = 90;
+const BATTLE_SFX_AMBIENT_MIN_INTERVAL_IDLE_MS = 2100;
+const BATTLE_SFX_AMBIENT_MIN_INTERVAL_AUTO_MS = 1450;
+const BATTLE_SFX_AMBIENT_MIN_INTERVAL_REALTIME_MS = 980;
 const SLOT_QUICK_LOAD_DEBOUNCE_MS = 700;
 const DEFAULT_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC = 6;
 const BATTLE_SCENE_TONES = new Set(["info", "success", "warn", "error"]);
@@ -448,6 +452,45 @@ function requestResumeBattleSfxContext() {
   void contextRef.resume().catch(() => {});
 }
 
+function resolveBattleSfxAmbientCue(mode = "idle", pressure = "low", lead = "even") {
+  const normalizedMode =
+    mode === "realtime" ? "realtime" : mode === "auto" ? "auto" : "idle";
+  const normalizedPressure =
+    pressure === "high" ? "high" : pressure === "medium" ? "medium" : "low";
+  const normalizedLead =
+    lead === "player" || lead === "enemy" ? lead : "even";
+  const baseByMode =
+    normalizedMode === "realtime" ? 166 : normalizedMode === "auto" ? 156 : 146;
+  const pressureOffset =
+    normalizedPressure === "high" ? 22 : normalizedPressure === "medium" ? 12 : 0;
+  const leadOffset =
+    normalizedLead === "player" ? 10 : normalizedLead === "enemy" ? -8 : 0;
+  const startFreq = Math.max(90, baseByMode + pressureOffset + leadOffset);
+  const endRatio =
+    normalizedPressure === "high" ? 0.88 : normalizedPressure === "medium" ? 0.84 : 0.8;
+  const durationSec =
+    normalizedMode === "realtime"
+      ? 0.16
+      : normalizedMode === "auto"
+        ? 0.145
+        : 0.132;
+  const volume =
+    normalizedPressure === "high"
+      ? 0.19
+      : normalizedPressure === "medium"
+        ? 0.15
+        : 0.11;
+  return {
+    wave: normalizedPressure === "high" ? "sawtooth" : "triangle",
+    frequency: startFreq,
+    endFrequency: startFreq * endRatio,
+    durationSec,
+    volume,
+    detuneCents:
+      normalizedLead === "player" ? 4 : normalizedLead === "enemy" ? -4 : 0,
+  };
+}
+
 function suspendBattleSfxContext() {
   if (!battleSfxContext || battleSfxContext.state !== "running") {
     return;
@@ -584,9 +627,40 @@ function playBattleSfx(kind, options = {}) {
         durationSec: 0.09,
         volume: 0.22,
       }) || played;
+  } else if (kind === "ambient") {
+    const mode = options.mode === "realtime" ? "realtime" : options.mode === "auto" ? "auto" : "idle";
+    const pressure =
+      options.pressure === "high" ? "high" : options.pressure === "medium" ? "medium" : "low";
+    const lead = options.lead === "player" || options.lead === "enemy" ? options.lead : "even";
+    const minIntervalMs =
+      mode === "realtime"
+        ? BATTLE_SFX_AMBIENT_MIN_INTERVAL_REALTIME_MS
+        : mode === "auto"
+          ? BATTLE_SFX_AMBIENT_MIN_INTERVAL_AUTO_MS
+          : BATTLE_SFX_AMBIENT_MIN_INTERVAL_IDLE_MS;
+    if (now - battleSfxAmbientLastPlayAtMs < minIntervalMs || now - battleSfxLastPlayAtMs < 220) {
+      return;
+    }
+    played = emitBattleSfxPulse(resolveBattleSfxAmbientCue(mode, pressure, lead)) || played;
+    if (played && (pressure === "high" || mode === "realtime")) {
+      const harmonicMultiplier = pressure === "high" ? 1.33 : 1.25;
+      played =
+        emitBattleSfxPulse({
+          wave: "sine",
+          frequency: (mode === "realtime" ? 182 : 168) * harmonicMultiplier,
+          endFrequency: (mode === "realtime" ? 168 : 154) * harmonicMultiplier,
+          durationSec: 0.11,
+          volume: pressure === "high" ? 0.11 : 0.08,
+          detuneCents: lead === "player" ? 2 : lead === "enemy" ? -2 : 0,
+        }) || played;
+    }
   }
   if (played) {
-    battleSfxLastPlayAtMs = now;
+    if (kind === "ambient") {
+      battleSfxAmbientLastPlayAtMs = now;
+    } else {
+      battleSfxLastPlayAtMs = now;
+    }
   }
 }
 
@@ -601,6 +675,8 @@ function setBattleSfxEnabled(enabled, options = {}) {
     playBattleSfx("toggle_on");
   } else {
     suspendBattleSfxContext();
+    battleSfxAmbientLastPlayAtMs = 0;
+    battleSfxLastPlayAtMs = 0;
   }
   if (options.announce === true) {
     const statusLabel = !supported
@@ -1594,6 +1670,21 @@ function runBattleSceneAmbientTick() {
   const reducedMotion = shouldReduceBattleSceneMotion();
   battleSceneAmbientStep += 1;
   runBattleSceneDuelTick(mode, { visuals: !reducedMotion });
+  const playerHpPct = Math.round(
+    (clampBattleSceneGauge(battleSceneDuelState.playerHp, BATTLE_SCENE_DUEL_MAX_HP) /
+      BATTLE_SCENE_DUEL_MAX_HP) *
+      100,
+  );
+  const enemyHpPct = Math.round(
+    (clampBattleSceneGauge(battleSceneDuelState.enemyHp, BATTLE_SCENE_DUEL_MAX_HP) /
+      BATTLE_SCENE_DUEL_MAX_HP) *
+      100,
+  );
+  playBattleSfx("ambient", {
+    mode,
+    pressure: battleSceneDuelState.pressure,
+    lead: resolveBattleSceneLead(playerHpPct, enemyHpPct),
+  });
   if (reducedMotion) {
     return;
   }
@@ -1675,16 +1766,6 @@ function runBattleSceneAmbientTick() {
   }
 
   if (quietMs > 8000 && battleSceneAmbientStep % 6 === 0) {
-    const playerHpPct = Math.round(
-      (clampBattleSceneGauge(battleSceneDuelState.playerHp, BATTLE_SCENE_DUEL_MAX_HP) /
-        BATTLE_SCENE_DUEL_MAX_HP) *
-        100,
-    );
-    const enemyHpPct = Math.round(
-      (clampBattleSceneGauge(battleSceneDuelState.enemyHp, BATTLE_SCENE_DUEL_MAX_HP) /
-        BATTLE_SCENE_DUEL_MAX_HP) *
-        100,
-    );
     const leadTone = resolveBattleSceneDuelLeadTone();
     if (mode === "realtime") {
       setBattleSceneStatus(`실시간 교전 ${battleSceneDuelState.round}R`, leadTone);
@@ -1750,6 +1831,7 @@ function stopBattleSceneAmbientLoop() {
     window.clearInterval(battleSceneAmbientTimer);
     battleSceneAmbientTimer = null;
   }
+  battleSfxAmbientLastPlayAtMs = 0;
   if (battleSceneSkillBannerTimer !== null) {
     window.clearTimeout(battleSceneSkillBannerTimer);
     battleSceneSkillBannerTimer = null;
