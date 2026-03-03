@@ -304,6 +304,18 @@ const BATTLE_SCENE_IMPACT_CLASSES = [
   "scene-impact-breakthrough-success",
   "scene-impact-breakthrough-fail",
 ];
+const BATTLE_SCENE_SHAKE_CLASSES = [
+  "scene-shake-light",
+  "scene-shake-medium",
+  "scene-shake-heavy",
+  "scene-shake-lateral",
+];
+const BATTLE_SCENE_SHAKE_DURATIONS_MS = {
+  light: 240,
+  medium: 320,
+  heavy: 400,
+  lateral: 280,
+};
 const BATTLE_SCENE_ACTOR_FRAME_HOLD_MS = {
   attack: 360,
   hit: 420,
@@ -336,6 +348,8 @@ let battleSceneFlashTimer = null;
 let battleSceneAmbientTimer = null;
 let battleSceneAmbientStep = 0;
 let battleSceneLastExplicitEventAtMs = 0;
+let battleSceneShakeTimer = null;
+let battleSceneLastShakeAtMs = 0;
 let battleSceneSkillBannerTimer = null;
 const battleSceneActorFrameTimers = {
   player: null,
@@ -1446,6 +1460,9 @@ function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true) {
     attacker,
     mode,
   });
+  triggerBattleSceneCameraShake(
+    mode === "realtime" ? "heavy" : mode === "auto" ? "medium" : "lateral",
+  );
   setBattleSceneActorFrame(attacker, "skill");
   setBattleSceneActorFrame(defenderAnchor, "hit");
   pushBattleSceneTicker(
@@ -1506,6 +1523,9 @@ function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true) {
     mode,
     damage,
   });
+  triggerBattleSceneCameraShake(
+    isCrit ? "medium" : attacker === "enemy" ? "lateral" : mode === "realtime" ? "medium" : "light",
+  );
   setBattleSceneActorFrame(attacker, "attack");
   setBattleSceneActorFrame(defenderAnchor, "hit");
   if (isCrit || damage >= 12) {
@@ -1724,6 +1744,41 @@ function triggerBattleSceneFlash(tone = "info") {
   }, 520);
 }
 
+function triggerBattleSceneCameraShake(preset = "light", options = {}) {
+  if (!dom.battleSceneArena || shouldReduceBattleSceneMotion()) {
+    return;
+  }
+  const normalizedPreset =
+    preset === "heavy"
+      ? "heavy"
+      : preset === "medium"
+        ? "medium"
+        : preset === "lateral"
+          ? "lateral"
+          : "light";
+  const now = Date.now();
+  const minIntervalMs = normalizedPreset === "light" ? 140 : 95;
+  if (now - battleSceneLastShakeAtMs < minIntervalMs) {
+    return;
+  }
+  if (options.fromAmbient === true && normalizedPreset === "light" && Math.random() > 0.58) {
+    return;
+  }
+  const className = `scene-shake-${normalizedPreset}`;
+  dom.battleSceneArena.classList.remove(...BATTLE_SCENE_SHAKE_CLASSES);
+  void dom.battleSceneArena.offsetWidth;
+  dom.battleSceneArena.classList.add(className);
+  if (battleSceneShakeTimer !== null) {
+    window.clearTimeout(battleSceneShakeTimer);
+  }
+  const durationMs = BATTLE_SCENE_SHAKE_DURATIONS_MS[normalizedPreset] || 240;
+  battleSceneShakeTimer = window.setTimeout(() => {
+    dom.battleSceneArena?.classList.remove(className);
+    battleSceneShakeTimer = null;
+  }, durationMs);
+  battleSceneLastShakeAtMs = now;
+}
+
 function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
   if (!dom.battleSceneArena) {
     return;
@@ -1770,6 +1825,14 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
     kind,
     tone,
   });
+  triggerBattleSceneCameraShake(
+    kind === "battle_loss" || kind === "breakthrough_fail"
+      ? "heavy"
+      : kind === "breakthrough_success"
+        ? "medium"
+        : "lateral",
+    { fromAmbient },
+  );
   if (kind === "battle_win") {
     spawnBattleSceneSpark({ anchor: "center", tone, shape: "shard", angleDeg: 16, scale: 1.05 });
     spawnBattleSceneTrail({ anchor: "center", tone, angleDeg: 12, length: 84 });
@@ -1973,7 +2036,13 @@ function stopBattleSceneAmbientLoop() {
     window.clearInterval(battleSceneAmbientTimer);
     battleSceneAmbientTimer = null;
   }
+  if (battleSceneShakeTimer !== null) {
+    window.clearTimeout(battleSceneShakeTimer);
+    battleSceneShakeTimer = null;
+  }
   battleSfxAmbientLastPlayAtMs = 0;
+  battleSceneLastShakeAtMs = 0;
+  dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_SHAKE_CLASSES);
   if (battleSceneSkillBannerTimer !== null) {
     window.clearTimeout(battleSceneSkillBannerTimer);
     battleSceneSkillBannerTimer = null;
