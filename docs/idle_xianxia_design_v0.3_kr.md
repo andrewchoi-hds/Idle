@@ -2370,3 +2370,11 @@
 
 ## 557) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(기 부족/도겁 설정 차단 메타 payload + 메타 기반 전장 피드백 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 558) 다음 순차 작업
+1. [완료] `runBreakthroughAttempt`의 실패 이벤트(`breakthrough_minor_fail/retreat_fail/death_fail`) eventCollector payload에 `stageQiRequired/deathPct/qiDelta` 메타를 추가해 돌파 실패 연출이 추정값 대신 엔진 실결과를 직접 사용하도록 확장.
+2. [완료] `resolveBattleSceneBreakthroughStageQiRequiredFromEvent`가 `event.stageQiRequired`를 우선 사용하도록 보강하고, 이벤트 시그널 해석(`resolveBattleSceneEventSignalFromCollectedEvent`)의 경상/후퇴/사망 분기가 메타 기반 힌트·impact payload를 구성하도록 정합화.
+3. [완료] DOM contract/회귀 체크에 신규 토큰(`event.stageQiRequired`, `breakthrough_retreat_fail`) 및 강제 실패 eventCollector 메타 검증(`stageQiRequired/deathPct/qiDelta`)을 추가해 회귀를 방지.
+
+## 559) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(돌파 실패 eventCollector 메타 확장 + 메타 우선 연출 동기화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
