@@ -2186,3 +2186,11 @@
 
 ## 511) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(연격 combo 배너 연출 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 512) 다음 순차 작업
+1. [완료] 전투 연출 아레나에 쇼크웨이브 레이어(`battleSceneShockwaveLayer`)와 생성 헬퍼(`spawnBattleSceneShockwave`)를 추가해 strike/burst/impact 타이밍의 원형 파동 임팩트를 시각화.
+2. [완료] 쇼크웨이브를 `applyBattleSceneDuelStrike`/`applyBattleSceneDuelBurst`/`triggerBattleSceneImpact` 및 상시 루프(`runBattleSceneAmbientTick`) 고압 구간에 연동하고, 루프 종료(`stopBattleSceneAmbientLoop`) 시 레이어를 정리하도록 반영.
+3. [완료] 전투 연출 CSS에 쇼크웨이브 스타일/키프레임(`.battle-scene-shockwave-layer`, `.battle-shockwave`, `@keyframes battle-shockwave-expand`)과 `prefers-reduced-motion` 대응을 추가하고 DOM contract 체크 토큰(`battleSceneShockwaveLayer`, `spawnBattleSceneShockwave`)을 반영.
+
+## 513) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(쇼크웨이브 레이어 + 상시 고압 파동 연출 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
