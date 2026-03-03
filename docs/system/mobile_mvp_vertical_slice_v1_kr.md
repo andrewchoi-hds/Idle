@@ -145,6 +145,7 @@ npm run mobile:mvp:serve
   - 진영 아이콘에 SVG 아바타(`battle_avatar_cultivator.svg`, `battle_avatar_guardian.svg`)를 적용해 플레이어/적 구분을 즉시 인지 가능하게 개선
   - `전투 1회/자동 10초/실시간 자동/오프라인 정산` 결과를 동일 연출 경로(`playBattleSceneBattleOutcome`, `playBattleSceneAutoSummary`, `playBattleSceneOfflineSummary`)로 통합
   - 엔진 결과 동기화 헬퍼(`syncBattleSceneDuelFromImpact`, `applyBattleSceneOutcomeDuelTransitions`)를 추가해 `runBattleOnce/runBreakthroughAttempt` 결과(`qi/spiritCoin/성공률/사망률/후퇴 단계`)가 듀얼 HUD 수치와 lead/pressure/danger/combo 트리거에 deterministic 반영되도록 구성
+  - 자동/오프라인 요약 경로에서도 `collectedEvents` 기반 우선 이벤트 해석(`resolveBattleSceneEventSignalFromCollectedEvents`)을 적용해, 집계치 fallback보다 실제 최근 이벤트(`전투 승패/돌파 성공·실패/정책 차단`)를 우선 트리거로 반영
   - stage 메타(`world`, `difficulty_index`, `is_tribulation`)를 연출 패널 `data-scene-world`, `data-scene-tier`로 반영해 인간계/신선계/진선계 및 난도 구간별 색감·오라 강도를 차등 적용
   - 전투 spark 레이어(`battleSceneSparkLayer`)를 추가해 클릭 없이도 상시 파티클/충돌 파동이 순환되도록 구성
   - 전장 흐름 레이어(`battle-scene-flow-back/front`)를 추가해 배경 전류가 상시 흐르는 느낌을 유지
@@ -242,6 +243,7 @@ npm run mobile:mvp:check
   - 점검 시나리오:
   - 전투 1회 상태 변화
   - `runBattleOnce/runBreakthroughAttempt` 결과가 즉시 duel HUD 및 lead/pressure/danger/combo 트리거로 연결되고, 직후 2.6초 동안 ambient 랜덤 트리거 비중이 억제되는지 검증
+  - `runAutoSliceSeconds`/오프라인 정산의 `collectedEvents`가 자동/오프라인 요약 연출에서 우선 해석되어, 최근 이벤트 기준 `impact/tone/source(outcome)`로 듀얼 HUD 동기화가 일관되게 반영되는지 검증
   - 저사양 모드 ON/OFF에서 ambient pulse cadence/확률 및 spark·trail·shockwave layer cap이 의도대로 하향/복원되고, 결과 기반 트리거 우선순위가 유지되는지 검증
   - 듀얼 strike/burst/impact 경로에서 배우 프레임(`idle/attack/hit/skill`)이 전환되고 리셋 시 `idle`로 복귀하는지 검증
   - 듀얼 HUD 갱신 시 cast/combo/pressure/lead 상태 데이터가 일관되게 갱신되고 `prefers-reduced-motion` 환경에서도 수치 상태 반영이 유지되는지 검증

@@ -4365,6 +4365,217 @@ function playBattleSceneBreakthroughOutcome(outcome) {
   });
 }
 
+function resolveBattleSceneBreakthroughStageQiRequiredFromEvent(event, lossRatioFallback) {
+  const lossRatio = Math.max(0.01, Number(lossRatioFallback) || 0.22);
+  const qiDelta = Number(event?.qiDelta);
+  if (Number.isFinite(qiDelta) && qiDelta < 0) {
+    return Math.max(1, Math.round(Math.abs(qiDelta) / lossRatio));
+  }
+  if (context && state) {
+    const stage = getStage(context, state.progression?.difficultyIndex);
+    const stageQi = Math.max(1, Math.round(Number(stage?.qi_required) || 1));
+    return stageQi;
+  }
+  return 1;
+}
+
+function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
+  const event =
+    eventInput && typeof eventInput === "object"
+      ? eventInput
+      : null;
+  const kind = String(event?.kind || "");
+  if (!kind) {
+    return null;
+  }
+  if (kind === "breakthrough_death_fail") {
+    const rebirthReward = Math.max(0, Number(event.rebirthReward) || 0);
+    return {
+      priority: 100,
+      tone: "error",
+      impactKind: "breakthrough_fail",
+      statusTextKo: "도겁 사망",
+      resultHintKo: "도겁 사망",
+      impactOptions: {
+        source: "breakthrough",
+        outcome: {
+          attempted: true,
+          outcome: "death_fail",
+          rebirthReward,
+          deathPct: Math.max(0, Math.min(95, Number(event.deathPct) || 0)),
+          stage: {
+            qi_required: resolveBattleSceneBreakthroughStageQiRequiredFromEvent(event, 0.28),
+          },
+        },
+      },
+    };
+  }
+  if (kind === "breakthrough_retreat_fail") {
+    const retreatLayers = Math.max(1, Number(event.retreatLayers) || 1);
+    return {
+      priority: 92,
+      tone: "error",
+      impactKind: "breakthrough_fail",
+      statusTextKo: "돌파 후퇴 실패",
+      resultHintKo: `후퇴 ${retreatLayers}단계`,
+      impactOptions: {
+        source: "breakthrough",
+        outcome: {
+          attempted: true,
+          outcome: "retreat_fail",
+          retreatLayers,
+          deathPct: Math.max(0, Math.min(95, Number(event.deathPct) || 0)),
+          stage: {
+            qi_required: resolveBattleSceneBreakthroughStageQiRequiredFromEvent(event, 0.28),
+          },
+        },
+      },
+    };
+  }
+  if (kind === "auto_breakthrough_paused_by_policy") {
+    return {
+      priority: 88,
+      tone: "error",
+      impactKind: "breakthrough_fail",
+      statusTextKo: "자동돌파 일시정지",
+      resultHintKo: "정책 차단 누적",
+      impactOptions: {
+        source: "breakthrough",
+        outcome: {
+          attempted: false,
+          outcome: "blocked_auto_risk_policy",
+        },
+      },
+    };
+  }
+  if (kind === "breakthrough_minor_fail") {
+    return {
+      priority: 84,
+      tone: "warn",
+      impactKind: "breakthrough_fail",
+      statusTextKo: "돌파 경상 실패",
+      resultHintKo: "돌파 경상 실패",
+      impactOptions: {
+        source: "breakthrough",
+        outcome: {
+          attempted: true,
+          outcome: "minor_fail",
+          successPct: Math.max(0, Math.min(100, Number(event.successPct) || 0)),
+          deathPct: Math.max(0, Math.min(95, Number(event.deathPct) || 0)),
+          qiDelta: Number(event.qiDelta) || 0,
+          stage: {
+            qi_required: resolveBattleSceneBreakthroughStageQiRequiredFromEvent(event, 0.22),
+          },
+        },
+      },
+    };
+  }
+  if (kind === "breakthrough_success") {
+    return {
+      priority: 78,
+      tone: "success",
+      impactKind: "breakthrough_success",
+      statusTextKo: "돌파 성공",
+      resultHintKo: "돌파 성공",
+      impactOptions: {
+        source: "breakthrough",
+        outcome: {
+          attempted: true,
+          outcome: "success",
+          successPct: Math.max(0, Math.min(100, Number(event.successPct) || 0)),
+          deathPct: 0,
+        },
+      },
+    };
+  }
+  if (kind === "breakthrough_blocked_auto_policy") {
+    return {
+      priority: 72,
+      tone: "warn",
+      impactKind: "breakthrough_fail",
+      statusTextKo: "자동 돌파 차단",
+      resultHintKo: String(event.reasonLabelKo || "정책 차단"),
+      impactOptions: {
+        source: "breakthrough",
+        outcome: {
+          attempted: false,
+          outcome: "blocked_auto_risk_policy",
+        },
+      },
+    };
+  }
+  if (kind === "auto_breakthrough_warmup_skip") {
+    return {
+      priority: 66,
+      tone: "warn",
+      impactKind: "breakthrough_fail",
+      statusTextKo: "자동 돌파 워밍업",
+      resultHintKo: "워밍업 차단",
+      impactOptions: {
+        source: "breakthrough",
+        outcome: {
+          attempted: false,
+          outcome: "blocked_auto_risk_policy",
+        },
+      },
+    };
+  }
+  if (kind === "battle_loss") {
+    return {
+      priority: 48,
+      tone: "warn",
+      impactKind: "battle_loss",
+      statusTextKo: "전투 패배",
+      resultHintKo: "전투 패배",
+      impactOptions: {
+        source: "battle",
+        outcome: {
+          won: false,
+          qiDelta: Number(event.qiDelta) || 0,
+          spiritCoinDelta: Number(event.spiritCoinDelta) || 0,
+          rebirthEssenceDelta: Number(event.rebirthEssenceDelta) || 0,
+        },
+      },
+    };
+  }
+  if (kind === "battle_win") {
+    return {
+      priority: 42,
+      tone: "success",
+      impactKind: "battle_win",
+      statusTextKo: "전투 승리",
+      resultHintKo: "전투 승리",
+      impactOptions: {
+        source: "battle",
+        outcome: {
+          won: true,
+          qiDelta: Number(event.qiDelta) || 0,
+          spiritCoinDelta: Number(event.spiritCoinDelta) || 0,
+          rebirthEssenceDelta: Number(event.rebirthEssenceDelta) || 0,
+        },
+      },
+    };
+  }
+  return null;
+}
+
+function resolveBattleSceneEventSignalFromCollectedEvents(eventsInput) {
+  if (!Array.isArray(eventsInput) || eventsInput.length <= 0) {
+    return null;
+  }
+  let picked = null;
+  for (let idx = eventsInput.length - 1; idx >= 0; idx -= 1) {
+    const signal = resolveBattleSceneEventSignalFromCollectedEvent(eventsInput[idx]);
+    if (!signal) {
+      continue;
+    }
+    if (!picked || signal.priority > picked.priority) {
+      picked = signal;
+    }
+  }
+  return picked;
+}
+
 function playBattleSceneAutoSummary(summaryInput, sourceLabel = "자동 진행") {
   const summary =
     summaryInput && typeof summaryInput === "object" ? summaryInput : null;
@@ -4388,10 +4599,15 @@ function playBattleSceneAutoSummary(summaryInput, sourceLabel = "자동 진행")
     return;
   }
 
+  const eventSignal = resolveBattleSceneEventSignalFromCollectedEvents(summary.collectedEvents);
   let tone = "info";
   let impactKind = "battle_win";
   let statusText = `${sourceLabel} 갱신`;
-  if (rebirths > 0) {
+  if (eventSignal) {
+    tone = eventSignal.tone;
+    impactKind = eventSignal.impactKind;
+    statusText = `${sourceLabel} ${eventSignal.statusTextKo}`;
+  } else if (rebirths > 0) {
     tone = "error";
     impactKind = "breakthrough_fail";
     statusText = `${sourceLabel} 환생 발생`;
@@ -4434,13 +4650,20 @@ function playBattleSceneAutoSummary(summaryInput, sourceLabel = "자동 진행")
   if (rebirths > 0) {
     parts.push(`환생 ${rebirths}회`);
   }
+  if (eventSignal?.resultHintKo) {
+    parts.push(`최근 이벤트 ${eventSignal.resultHintKo}`);
+  }
 
   setBattleSceneStatus(statusText, tone);
   setBattleSceneResult(
     `${sourceLabel} · ${parts.length > 0 ? parts.join(" · ") : "변화 없음"}`,
     tone,
   );
-  triggerBattleSceneImpact(impactKind, tone);
+  triggerBattleSceneImpact(
+    impactKind,
+    tone,
+    eventSignal?.impactOptions,
+  );
 
   if (battles > 0) {
     spawnBattleSceneFloat(`전투 +${battles}`, {
@@ -4491,15 +4714,38 @@ function playBattleSceneOfflineSummary(offlineReportInput) {
   const rebirths = Math.max(0, Number(auto.rebirths) || 0);
   const breakthroughs = Math.max(0, Number(auto.breakthroughs) || 0);
   const battles = Math.max(0, Number(auto.battles) || 0);
-  const tone = rebirths > 0 ? "error" : breakthroughs > 0 || battles > 0 ? "success" : "info";
-  const impactKind =
-    rebirths > 0 ? "breakthrough_fail" : breakthroughs > 0 ? "breakthrough_success" : "battle_win";
-  setBattleSceneStatus("오프라인 정산 완료", tone);
-  setBattleSceneResult(
-    `오프라인 ${fmtDurationSec(summary.appliedOfflineSec)} · 전투 ${battles}회 · 돌파 ${breakthroughs}회 · 환생 ${rebirths}회`,
+  const eventSignal = resolveBattleSceneEventSignalFromCollectedEvents(
+    Array.isArray(report?.events) ? report.events : auto.collectedEvents,
+  );
+  const tone = eventSignal
+    ? eventSignal.tone
+    : rebirths > 0
+      ? "error"
+      : breakthroughs > 0 || battles > 0
+        ? "success"
+        : "info";
+  const impactKind = eventSignal
+    ? eventSignal.impactKind
+    : rebirths > 0
+      ? "breakthrough_fail"
+      : breakthroughs > 0
+        ? "breakthrough_success"
+        : "battle_win";
+  setBattleSceneStatus(
+    eventSignal?.statusTextKo ? `오프라인 정산 ${eventSignal.statusTextKo}` : "오프라인 정산 완료",
     tone,
   );
-  triggerBattleSceneImpact(impactKind, tone);
+  setBattleSceneResult(
+    `오프라인 ${fmtDurationSec(summary.appliedOfflineSec)} · 전투 ${battles}회 · 돌파 ${breakthroughs}회 · 환생 ${rebirths}회${
+      eventSignal?.resultHintKo ? ` · 최근 이벤트 ${eventSignal.resultHintKo}` : ""
+    }`,
+    tone,
+  );
+  triggerBattleSceneImpact(
+    impactKind,
+    tone,
+    eventSignal?.impactOptions,
+  );
   if ((Number(delta.qi) || 0) !== 0) {
     spawnBattleSceneFloat(`기 ${fmtSignedInteger(delta.qi)}`, {
       tone: delta.qi >= 0 ? "success" : "error",
@@ -5552,6 +5798,8 @@ function runRealtimeAutoTick() {
     battleEverySec: tuning.battleEverySec,
     breakthroughEverySec: tuning.breakthroughEverySec,
     passiveQiRatio: tuning.passiveQiRatio,
+    collectEvents: true,
+    maxCollectedEvents: 8,
     suppressLogs: true,
     timelineOffsetSec: stats.timelineSec,
     autoBreakthroughWarmupUntilSec: Math.max(
@@ -5689,6 +5937,9 @@ function applyOfflineCatchupNow() {
       spiritCoin: state.currencies.spiritCoin - before.spiritCoin,
       rebirthEssence: state.currencies.rebirthEssence - before.rebirthEssence,
     },
+    events: Array.isArray(result.summary.autoSummary?.collectedEvents)
+      ? result.summary.autoSummary.collectedEvents
+      : [],
   });
   return {
     summary: result.summary,
@@ -6534,6 +6785,8 @@ function bindEvents() {
       battleEverySec: tuning.battleEverySec,
       breakthroughEverySec: tuning.breakthroughEverySec,
       passiveQiRatio: tuning.passiveQiRatio,
+      collectEvents: true,
+      maxCollectedEvents: 28,
       autoBreakthroughWarmupUntilSec: warmupRemainingSecBefore,
     });
     const warmupRemainingSecAfter = resolveAutoBreakthroughWarmupRemainingSec(
