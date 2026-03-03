@@ -2242,3 +2242,11 @@
 
 ## 525) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(danger pulse 위기 연출 + 저체력 루프 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 526) 다음 순차 작업
+1. [완료] 콤보 서지 헬퍼(`triggerBattleSceneComboSurge`, `maybeTriggerBattleSceneComboTierTransition`)를 추가해 combo tier 전환(`calm→flow/frenzy`, `flow→frenzy`) 순간만 surge 이벤트를 감지하도록 구성.
+2. [완료] 듀얼 HUD/상시 루프(`renderBattleSceneDuelHud`, `runBattleSceneAmbientTick`)에 combo tier 전환/재맥동 경로를 연결하고, surge 클래스(`scene-combo-surge-flow|frenzy`) + shockwave/trail/spark/카메라 피드백을 연동해 연격 고조 체감을 강화.
+3. [완료] 듀얼 초기화/루프 종료 경로에서 combo surge 타이머·상태를 정리하고 `prefers-reduced-motion` + DOM contract 체크 토큰(`triggerBattleSceneComboSurge`, `maybeTriggerBattleSceneComboTierTransition`, `.battle-scene-arena.scene-combo-surge-frenzy`)을 반영해 회귀를 방지.
+
+## 527) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(combo tier surge 전환 연출 + 상시 재맥동 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
