@@ -4395,7 +4395,7 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
       tone: "error",
       impactKind: "breakthrough_fail",
       statusTextKo: "도겁 사망",
-      resultHintKo: "도겁 사망",
+      resultHintKo: `도겁 사망 · 환생정수 +${fmtNumber(rebirthReward)}`,
       impactOptions: {
         source: "breakthrough",
         outcome: {
@@ -4433,12 +4433,17 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
     };
   }
   if (kind === "auto_breakthrough_paused_by_policy") {
+    const reasonLabel = String(event.reasonLabelKo || event.reason || "정책 차단");
+    const consecutiveBlocks = Math.max(0, Number(event.consecutiveBlocks) || 0);
     return {
       priority: 88,
       tone: "error",
       impactKind: "breakthrough_fail",
       statusTextKo: "자동돌파 일시정지",
-      resultHintKo: "정책 차단 누적",
+      resultHintKo:
+        consecutiveBlocks > 0
+          ? `${reasonLabel} · 연속 ${consecutiveBlocks}회`
+          : reasonLabel,
       impactOptions: {
         source: "breakthrough",
         outcome: {
@@ -4449,12 +4454,13 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
     };
   }
   if (kind === "breakthrough_minor_fail") {
+    const qiDelta = Number(event.qiDelta) || 0;
     return {
       priority: 84,
       tone: "warn",
       impactKind: "breakthrough_fail",
       statusTextKo: "돌파 경상 실패",
-      resultHintKo: "돌파 경상 실패",
+      resultHintKo: `돌파 경상 실패 · 기 ${fmtSignedInteger(qiDelta)}`,
       impactOptions: {
         source: "breakthrough",
         outcome: {
@@ -4471,12 +4477,17 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
     };
   }
   if (kind === "breakthrough_success") {
+    const fromDifficultyIndex = Math.max(0, Number(event.fromDifficultyIndex) || 0);
+    const toDifficultyIndex = Math.max(0, Number(event.toDifficultyIndex) || 0);
     return {
       priority: 78,
       tone: "success",
       impactKind: "breakthrough_success",
       statusTextKo: "돌파 성공",
-      resultHintKo: "돌파 성공",
+      resultHintKo:
+        fromDifficultyIndex > 0 && toDifficultyIndex > 0
+          ? `돌파 성공 · ${fromDifficultyIndex}→${toDifficultyIndex}`
+          : "돌파 성공",
       impactOptions: {
         source: "breakthrough",
         outcome: {
@@ -4489,12 +4500,17 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
     };
   }
   if (kind === "breakthrough_blocked_auto_policy") {
+    const reasonLabel = String(event.reasonLabelKo || "정책 차단");
+    const nextActionKo =
+      typeof event.nextActionKo === "string" && event.nextActionKo
+        ? ` · ${event.nextActionKo}`
+        : "";
     return {
       priority: 72,
       tone: "warn",
       impactKind: "breakthrough_fail",
       statusTextKo: "자동 돌파 차단",
-      resultHintKo: String(event.reasonLabelKo || "정책 차단"),
+      resultHintKo: `${reasonLabel}${nextActionKo}`,
       impactOptions: {
         source: "breakthrough",
         outcome: {
@@ -4505,12 +4521,14 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
     };
   }
   if (kind === "auto_breakthrough_warmup_skip") {
+    const remainingSec = Math.max(0, Number(event.warmupRemainingSec) || 0);
     return {
       priority: 66,
       tone: "warn",
       impactKind: "breakthrough_fail",
       statusTextKo: "자동 돌파 워밍업",
-      resultHintKo: "워밍업 차단",
+      resultHintKo:
+        remainingSec > 0 ? `워밍업 차단 · 잔여 ${remainingSec}초` : "워밍업 차단",
       impactOptions: {
         source: "breakthrough",
         outcome: {
@@ -4521,12 +4539,13 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
     };
   }
   if (kind === "battle_loss") {
+    const qiDelta = Number(event.qiDelta) || 0;
     return {
       priority: 48,
       tone: "warn",
       impactKind: "battle_loss",
       statusTextKo: "전투 패배",
-      resultHintKo: "전투 패배",
+      resultHintKo: `전투 패배 · 기 ${fmtSignedInteger(qiDelta)}`,
       impactOptions: {
         source: "battle",
         outcome: {
@@ -4539,12 +4558,17 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
     };
   }
   if (kind === "battle_win") {
+    const qiDelta = Number(event.qiDelta) || 0;
+    const spiritCoinDelta = Number(event.spiritCoinDelta) || 0;
+    const rebirthEssenceDelta = Number(event.rebirthEssenceDelta) || 0;
     return {
       priority: 42,
       tone: "success",
       impactKind: "battle_win",
       statusTextKo: "전투 승리",
-      resultHintKo: "전투 승리",
+      resultHintKo: `전투 승리 · 기 ${fmtSignedInteger(qiDelta)} · 영석 ${fmtSignedInteger(spiritCoinDelta)}${
+        rebirthEssenceDelta !== 0 ? ` · 정수 ${fmtSignedInteger(rebirthEssenceDelta)}` : ""
+      }`,
       impactOptions: {
         source: "battle",
         outcome: {
@@ -4559,18 +4583,34 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
   return null;
 }
 
+function resolveBattleSceneEventSignalScore(signalInput, eventInput, orderInput) {
+  const signal = signalInput && typeof signalInput === "object" ? signalInput : null;
+  if (!signal) {
+    return Number.NEGATIVE_INFINITY;
+  }
+  const priorityScore = Math.max(0, Number(signal.priority) || 0) * 1000;
+  const secRaw = Math.max(0, Number(eventInput?.sec) || 0);
+  const secScore = Math.log1p(secRaw) * 24;
+  const orderScore = Math.max(0, Number(orderInput) || 0) * 0.8;
+  return priorityScore + secScore + orderScore;
+}
+
 function resolveBattleSceneEventSignalFromCollectedEvents(eventsInput) {
   if (!Array.isArray(eventsInput) || eventsInput.length <= 0) {
     return null;
   }
   let picked = null;
-  for (let idx = eventsInput.length - 1; idx >= 0; idx -= 1) {
-    const signal = resolveBattleSceneEventSignalFromCollectedEvent(eventsInput[idx]);
+  let pickedScore = Number.NEGATIVE_INFINITY;
+  for (let idx = 0; idx < eventsInput.length; idx += 1) {
+    const event = eventsInput[idx];
+    const signal = resolveBattleSceneEventSignalFromCollectedEvent(event);
     if (!signal) {
       continue;
     }
-    if (!picked || signal.priority > picked.priority) {
+    const score = resolveBattleSceneEventSignalScore(signal, event, idx);
+    if (!picked || score > pickedScore) {
       picked = signal;
+      pickedScore = score;
     }
   }
   return picked;

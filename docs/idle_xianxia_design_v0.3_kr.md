@@ -2306,3 +2306,11 @@
 
 ## 541) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(collectedEvents 기반 자동/오프라인 결과 우선 연출 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 542) 다음 순차 작업
+1. [완료] 이벤트 우선 해석 점수 헬퍼(`resolveBattleSceneEventSignalScore`)를 추가해 `collectedEvents` 선택 기준에 `priority + sec/order 최신성`을 함께 반영.
+2. [완료] 자동/오프라인 요약 연출의 최근 이벤트 힌트를 상세화해 전투/돌파 증감값, 정책 차단 사유·다음 액션, 워밍업 잔여 초를 결과 라인에 직접 노출.
+3. [완료] DOM contract 체크에 신규 토큰(`resolveBattleSceneEventSignalScore`)을 반영하고 수직슬라이스 가이드 회귀 항목을 동기화.
+
+## 543) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(collectedEvents 최신성 가중 + 상세 결과 힌트 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
