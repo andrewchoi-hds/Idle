@@ -348,6 +348,22 @@ const BATTLE_SCENE_LEAD_SWING_DURATIONS_MS = {
 };
 const BATTLE_SCENE_LEAD_SWING_MIN_INTERVAL_MS = 680;
 const BATTLE_SCENE_LEAD_SWING_TICKER_MIN_INTERVAL_MS = 1700;
+const BATTLE_SCENE_LEAD_RESONANCE_CLASSES = [
+  "scene-lead-resonance-player",
+  "scene-lead-resonance-enemy",
+  "scene-lead-resonance-even",
+];
+const BATTLE_SCENE_LEAD_RESONANCE_DURATIONS_MS = {
+  player: 420,
+  enemy: 420,
+  even: 360,
+};
+const BATTLE_SCENE_LEAD_RESONANCE_MIN_INTERVAL_MS = {
+  player: 980,
+  enemy: 980,
+  even: 1240,
+};
+const BATTLE_SCENE_LEAD_RESONANCE_TICKER_MIN_INTERVAL_MS = 2400;
 const BATTLE_SCENE_PRESSURE_SPIKE_CLASSES = [
   "scene-pressure-spike-medium",
   "scene-pressure-spike-high",
@@ -469,6 +485,9 @@ let battleSceneLeadSwingTimer = null;
 let battleSceneLastLeadSwingAtMs = 0;
 let battleSceneLastLeadSwingTickerAtMs = 0;
 let battleSceneLastLeadState = null;
+let battleSceneLeadResonanceTimer = null;
+let battleSceneLastLeadResonanceAtMs = 0;
+let battleSceneLastLeadResonanceTickerAtMs = 0;
 let battleScenePressureSpikeTimer = null;
 let battleSceneLastPressureSpikeAtMs = 0;
 let battleSceneLastPressureTickerAtMs = 0;
@@ -1600,6 +1619,83 @@ function maybeTriggerBattleSceneLeadSwing(nextLeadInput) {
   battleSceneLastLeadSwingAtMs = now;
 }
 
+function triggerBattleSceneLeadResonance(leadInput = "even", options = {}) {
+  if (!dom.battleSceneArena || shouldReduceBattleSceneMotion()) {
+    return;
+  }
+  const lead = leadInput === "player" || leadInput === "enemy" ? leadInput : "even";
+  const now = Date.now();
+  const minIntervalMs = BATTLE_SCENE_LEAD_RESONANCE_MIN_INTERVAL_MS[lead] || 1000;
+  if (now - battleSceneLastLeadResonanceAtMs < minIntervalMs) {
+    return;
+  }
+  if (options.fromAmbient === true && lead === "even" && Math.random() > 0.66) {
+    return;
+  }
+  const className = `scene-lead-resonance-${lead}`;
+  dom.battleSceneArena.classList.remove(...BATTLE_SCENE_LEAD_RESONANCE_CLASSES);
+  void dom.battleSceneArena.offsetWidth;
+  dom.battleSceneArena.classList.add(className);
+  if (battleSceneLeadResonanceTimer !== null) {
+    window.clearTimeout(battleSceneLeadResonanceTimer);
+  }
+  const durationMs = BATTLE_SCENE_LEAD_RESONANCE_DURATIONS_MS[lead] || 380;
+  battleSceneLeadResonanceTimer = window.setTimeout(() => {
+    dom.battleSceneArena?.classList.remove(className);
+    battleSceneLeadResonanceTimer = null;
+  }, durationMs);
+
+  const tone = lead === "player" ? "success" : lead === "enemy" ? "warn" : "info";
+  const anchor = lead === "even" ? "center" : lead;
+  spawnBattleSceneShockwave({
+    anchor,
+    tone,
+    variant: lead === "even" ? "telegraph" : "telegraph-urgent",
+    radiusPx: lead === "even" ? 68 : 82,
+    thicknessPx: lead === "even" ? 2.2 : 2.6,
+    lingerSec: lead === "even" ? 0.54 : 0.62,
+  });
+  spawnBattleSceneTrail({
+    anchor: "center",
+    tone,
+    shape: lead === "even" ? "wave" : "slash",
+    angleDeg: lead === "player" ? 18 : lead === "enemy" ? 162 : 0,
+    length: lead === "even" ? 82 : 92,
+  });
+  spawnBattleSceneSpark({
+    anchor,
+    tone,
+    shape: "ring",
+    scale: lead === "even" ? 0.98 : 1.1,
+  });
+  if (lead === "player" || lead === "enemy") {
+    spawnBattleSceneChargeMote({
+      anchor: lead,
+      tone,
+      radiusPx: 28,
+      sizePx: 6.2,
+      lingerSec: 0.7,
+      sweepDeg: lead === "player" ? 206 : -206,
+    });
+  }
+  triggerBattleSceneCameraShake(lead === "even" ? "light" : "lateral", { fromAmbient: true });
+  triggerBattleSceneZoomPulse("soft", { fromAmbient: true });
+  triggerBattleSceneHitStop("light", { fromAmbient: true });
+
+  if (now - battleSceneLastLeadResonanceTickerAtMs >= BATTLE_SCENE_LEAD_RESONANCE_TICKER_MIN_INTERVAL_MS) {
+    pushBattleSceneTicker(
+      lead === "player"
+        ? "주도권 유지 · 수련자 압박 지속"
+        : lead === "enemy"
+          ? "적수 우세 유지 · 수비 전환 필요"
+          : "균형 교착 유지 · 간격 탐색 중",
+      tone,
+    );
+    battleSceneLastLeadResonanceTickerAtMs = now;
+  }
+  battleSceneLastLeadResonanceAtMs = now;
+}
+
 function triggerBattleScenePressureSpike(level = "medium", options = {}) {
   if (!dom.battleSceneArena || shouldReduceBattleSceneMotion()) {
     return;
@@ -2118,6 +2214,8 @@ function resetBattleSceneDuelState(options = {}) {
   battleSceneLastLeadState = null;
   battleSceneLastLeadSwingAtMs = 0;
   battleSceneLastLeadSwingTickerAtMs = 0;
+  battleSceneLastLeadResonanceAtMs = 0;
+  battleSceneLastLeadResonanceTickerAtMs = 0;
   battleSceneLastPressureState = null;
   battleSceneLastPressureSpikeAtMs = 0;
   battleSceneLastPressureTickerAtMs = 0;
@@ -2134,6 +2232,10 @@ function resetBattleSceneDuelState(options = {}) {
   if (battleSceneLeadSwingTimer !== null) {
     window.clearTimeout(battleSceneLeadSwingTimer);
     battleSceneLeadSwingTimer = null;
+  }
+  if (battleSceneLeadResonanceTimer !== null) {
+    window.clearTimeout(battleSceneLeadResonanceTimer);
+    battleSceneLeadResonanceTimer = null;
   }
   if (battleScenePressureSpikeTimer !== null) {
     window.clearTimeout(battleScenePressureSpikeTimer);
@@ -2161,6 +2263,7 @@ function resetBattleSceneDuelState(options = {}) {
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_COMBO_SURGE_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_COMBO_COOLDOWN_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_COMBO_RESONANCE_CLASSES);
+  dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_LEAD_RESONANCE_CLASSES);
   clearBattleSceneComboBanner();
   resetBattleSceneActorFrames();
   if (options.clearTicker) {
@@ -3085,6 +3188,29 @@ function runBattleSceneAmbientTick() {
   if (shouldPulseDanger && Math.random() < (dangerSide === "both" ? 0.86 : mode === "realtime" ? 0.68 : mode === "auto" ? 0.54 : 0.34)) {
     triggerBattleSceneDangerPulse(dangerSide, { fromAmbient: true });
   }
+  const shouldPulseLeadResonance =
+    (mode === "realtime"
+      ? battleSceneAmbientStep % 2 === 0
+      : mode === "auto"
+        ? battleSceneAmbientStep % 3 === 0
+        : battleSceneAmbientStep % 5 === 0);
+  if (
+    shouldPulseLeadResonance &&
+    Math.random() <
+      (sceneLead === "even"
+        ? mode === "realtime"
+          ? 0.36
+          : mode === "auto"
+            ? 0.26
+            : 0.14
+        : mode === "realtime"
+          ? 0.62
+          : mode === "auto"
+            ? 0.48
+            : 0.28)
+  ) {
+    triggerBattleSceneLeadResonance(sceneLead, { fromAmbient: true });
+  }
   const shouldPulseComboSurge =
     sceneComboTier !== "calm" &&
     (mode === "realtime"
@@ -3330,6 +3456,10 @@ function stopBattleSceneAmbientLoop() {
     window.clearTimeout(battleSceneLeadSwingTimer);
     battleSceneLeadSwingTimer = null;
   }
+  if (battleSceneLeadResonanceTimer !== null) {
+    window.clearTimeout(battleSceneLeadResonanceTimer);
+    battleSceneLeadResonanceTimer = null;
+  }
   if (battleScenePressureSpikeTimer !== null) {
     window.clearTimeout(battleScenePressureSpikeTimer);
     battleScenePressureSpikeTimer = null;
@@ -3357,6 +3487,8 @@ function stopBattleSceneAmbientLoop() {
   battleSceneLastLeadSwingAtMs = 0;
   battleSceneLastLeadSwingTickerAtMs = 0;
   battleSceneLastLeadState = null;
+  battleSceneLastLeadResonanceAtMs = 0;
+  battleSceneLastLeadResonanceTickerAtMs = 0;
   battleSceneLastPressureSpikeAtMs = 0;
   battleSceneLastPressureTickerAtMs = 0;
   battleSceneLastPressureState = null;
@@ -3378,6 +3510,7 @@ function stopBattleSceneAmbientLoop() {
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_ZOOM_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_HIT_STOP_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_LEAD_SWING_CLASSES);
+  dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_LEAD_RESONANCE_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_PRESSURE_SPIKE_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_DANGER_PULSE_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_COMBO_SURGE_CLASSES);

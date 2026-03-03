@@ -163,6 +163,7 @@ npm run mobile:mvp:serve
   - 캐스트 텔레그래프 헬퍼(`maybeSpawnBattleSceneCastTelegraph`)를 추가해 cast 게이지 70%+ 구간에서 배우(anchor) 주변 준비 파동(`battle-shockwave.variant-telegraph`)이 상시 루프 중 자동 순환되도록 구성
   - 캐스트 충전 입자 헬퍼(`maybeSpawnBattleSceneChargeMote`)를 추가해 cast 게이지 50%+ 구간에서 배우 주변 orbit 입자(`battle-charge-mote`)가 상시 발생하고, 96%+에서는 urgent 밀도로 강화
   - 우세 전환 헬퍼(`maybeTriggerBattleSceneLeadSwing`)를 추가해 `player/enemy/even` 리드 전환 순간 전장 swing 클래스(`scene-lead-swing-*`) + 파동/궤적/티커를 자동 트리거
+  - 우세 공명 헬퍼(`triggerBattleSceneLeadResonance`)를 추가해 `player/enemy/even` 리드 유지 구간에서 전장 resonance(`scene-lead-resonance-*`)를 상시 재맥동으로 자동 트리거
   - 압력 스파이크 헬퍼(`triggerBattleScenePressureSpike`, `maybeTriggerBattleScenePressureTransition`)를 추가해 압력 `low→medium/high`, `medium→high` 전환과 고압 루프에서 전장/충돌코어 spike(`scene-pressure-spike-*`)를 자동 트리거
   - 위기 맥동 헬퍼(`triggerBattleSceneDangerPulse`, `maybeTriggerBattleSceneDangerTransition`)를 추가해 HP 위험 구간(`player/enemy/both`) 진입 및 유지 루프에서 전장 위기 pulse(`scene-danger-pulse-*`)를 자동 트리거
   - 콤보 서지 헬퍼(`triggerBattleSceneComboSurge`, `maybeTriggerBattleSceneComboTierTransition`)를 추가해 combo tier(`calm→flow/frenzy`, `flow→frenzy`) 전환 및 상시 루프에서 전장 surge(`scene-combo-surge-*`)를 자동 트리거

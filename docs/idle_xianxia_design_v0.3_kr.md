@@ -2266,3 +2266,11 @@
 
 ## 531) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(combo tier resonance 유지 연출 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 532) 다음 순차 작업
+1. [완료] 우세 공명 헬퍼(`triggerBattleSceneLeadResonance`)를 추가해 `player/enemy/even` 리드 유지 구간에서 resonance 이벤트를 모드별 최소 간격으로 재트리거하도록 구성.
+2. [완료] 상시 루프(`runBattleSceneAmbientTick`)에 lead resonance 맥동 경로를 연결하고, 공명 클래스(`scene-lead-resonance-player|enemy|even`) + shockwave/trail/spark/카메라 피드백을 연동해 주도권 유지 구간의 전장 반응을 강화.
+3. [완료] 듀얼 초기화/루프 종료 경로에서 lead resonance 타이머·상태를 정리하고 `prefers-reduced-motion` + DOM contract 체크 토큰(`triggerBattleSceneLeadResonance`, `.battle-scene-arena.scene-lead-resonance-player`)을 반영해 회귀를 방지.
+
+## 533) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(lead resonance 유지 연출 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
