@@ -160,10 +160,11 @@ npm run mobile:mvp:serve
   - 카메라 흔들림 헬퍼(`triggerBattleSceneCameraShake`)를 추가해 strike/burst/impact 이벤트에 전장 shake(`scene-shake-*`)를 연결하고 충돌 체감을 강화
   - 줌 펄스 헬퍼(`triggerBattleSceneZoomPulse`)를 추가해 strike/burst/impact 및 고압 루프에서 전장 zoom(`scene-zoom-soft|burst`)을 적용해 타격 순간 집중감을 강화
   - 히트스톱 헬퍼(`triggerBattleSceneHitStop`)를 추가해 strike/burst/impact 및 고압 루프에서 70~120ms 프레임 정지(`scene-hit-stop-*`)를 적용하고 타격 순간 무게감을 강화
+  - 캐스트 텔레그래프 헬퍼(`maybeSpawnBattleSceneCastTelegraph`)를 추가해 cast 게이지 70%+ 구간에서 배우(anchor) 주변 준비 파동(`battle-shockwave.variant-telegraph`)이 상시 루프 중 자동 순환되도록 구성
   - 연격 배너(`battleSceneComboBanner`, `setBattleSceneComboBanner`)를 추가해 연격 임계치(3/7/11)에서 중앙 배너를 자동 노출하고, 라운드 종료/연격 종료 시 자동 정리
   - 전투 집중 기본 ON(`main.app.battle-focus-mode`)으로 첫 진입부터 실제 게임 화면 비중을 높이고, 토글 해제 시 전체 운영 패널을 다시 노출
   - 상시 루프(`runBattleSceneAmbientTick`)가 `idle/auto/realtime` 모드별로 연출 강도와 임팩트 빈도를 조절해 방치형 전투 화면처럼 지속 동작
-  - `prefers-reduced-motion` 환경에서는 hit-stop/shockwave/spark/trail 등 모션 이펙트를 비활성화하되 듀얼 HUD 수치(HP/기세)와 배우 프레임 상태 전환은 유지해 상태 가시성을 확보
+  - `prefers-reduced-motion` 환경에서는 hit-stop/telegraph shockwave/spark/trail 등 모션 이펙트를 비활성화하되 듀얼 HUD 수치(HP/기세)와 배우 프레임 상태 전환은 유지해 상태 가시성을 확보
   - 상시 연출 애니메이션(오라 드리프트/actor idle/오버레이 pulse)과 임팩트 연출(타격/돌파 burst·collapse)을 분리해 자동 루프 중에도 시각 피드백을 유지하고, `prefers-reduced-motion` 환경에서는 해당 애니메이션을 비활성화
 
 ## 4) 저장 포맷

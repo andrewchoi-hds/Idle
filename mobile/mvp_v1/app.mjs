@@ -336,6 +336,9 @@ const BATTLE_SCENE_HIT_STOP_DURATIONS_MS = {
   medium: 96,
   heavy: 124,
 };
+const BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_IDLE_MS = 1500;
+const BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_AUTO_MS = 1080;
+const BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_REALTIME_MS = 760;
 const BATTLE_SCENE_COMBO_BANNER_TIER_CLASSES = [
   "tier-flow",
   "tier-surge",
@@ -379,6 +382,10 @@ let battleSceneZoomTimer = null;
 let battleSceneLastZoomAtMs = 0;
 let battleSceneHitStopTimer = null;
 let battleSceneLastHitStopAtMs = 0;
+const battleSceneLastCastTelegraphAtMs = {
+  player: 0,
+  enemy: 0,
+};
 let battleSceneSkillBannerTimer = null;
 let battleSceneComboBannerTimer = null;
 const battleSceneActorFrameTimers = {
@@ -1869,6 +1876,10 @@ function spawnBattleSceneShockwave(options = {}) {
     return;
   }
   const tone = normalizeBattleSceneTone(options.tone || "info");
+  const variant =
+    options.variant === "telegraph" || options.variant === "telegraph-urgent"
+      ? options.variant
+      : "default";
   const anchor = options.anchor === "player" || options.anchor === "enemy" ? options.anchor : "center";
   const anchorPoint =
     anchor === "player"
@@ -1882,7 +1893,7 @@ function spawnBattleSceneShockwave(options = {}) {
   const thicknessPx = Math.max(1, Math.min(4.6, Number(options.thicknessPx) || 2.2));
   const lingerSec = Math.max(0.24, Math.min(1.4, Number(options.lingerSec) || 0.56));
   const node = document.createElement("span");
-  node.className = `battle-shockwave tone-${tone}`;
+  node.className = `battle-shockwave tone-${tone} variant-${variant}`;
   node.style.left = `calc(${anchorPoint.leftPct}% + ${jitterX.toFixed(1)}px)`;
   node.style.top = `calc(${anchorPoint.topPct}% + ${jitterY.toFixed(1)}px)`;
   node.style.setProperty("--battle-shockwave-radius", `${radiusPx.toFixed(1)}px`);
@@ -1899,6 +1910,59 @@ function spawnBattleSceneShockwave(options = {}) {
   while (dom.battleSceneShockwaveLayer.childElementCount > 20) {
     dom.battleSceneShockwaveLayer.firstElementChild?.remove();
   }
+}
+
+function maybeSpawnBattleSceneCastTelegraph(actor, options = {}) {
+  if (!dom.battleSceneShockwaveLayer || shouldReduceBattleSceneMotion()) {
+    return;
+  }
+  const actorKey = actor === "enemy" ? "enemy" : "player";
+  const castPct = Math.max(0, Math.min(100, Number(options.castPct) || 0));
+  if (castPct < 72) {
+    return;
+  }
+  const mode = options.mode === "realtime" || options.mode === "auto" ? options.mode : "idle";
+  const minIntervalMs =
+    mode === "realtime"
+      ? castPct >= 96
+        ? BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_REALTIME_MS - 200
+        : BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_REALTIME_MS
+      : mode === "auto"
+        ? castPct >= 96
+          ? BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_AUTO_MS - 180
+          : BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_AUTO_MS
+        : castPct >= 96
+          ? BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_IDLE_MS - 220
+          : BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_IDLE_MS;
+  const now = Date.now();
+  if (now - battleSceneLastCastTelegraphAtMs[actorKey] < minIntervalMs) {
+    return;
+  }
+  if (castPct < 92 && Math.random() > (mode === "realtime" ? 0.8 : mode === "auto" ? 0.7 : 0.58)) {
+    return;
+  }
+  const tone = actorKey === "player" ? "success" : "warn";
+  const variant = castPct >= 96 ? "telegraph-urgent" : "telegraph";
+  const radiusPx = (castPct >= 96 ? 62 : 54) + (castPct / 100) * 24;
+  const thicknessPx = castPct >= 96 ? 3.1 : 2.4;
+  const lingerSec = castPct >= 96 ? 0.62 : 0.72;
+  spawnBattleSceneShockwave({
+    anchor: actorKey,
+    tone,
+    variant,
+    radiusPx,
+    thicknessPx,
+    lingerSec,
+  });
+  if (castPct >= 96) {
+    spawnBattleSceneSpark({
+      anchor: actorKey,
+      tone,
+      shape: "ring",
+      scale: 1.08,
+    });
+  }
+  battleSceneLastCastTelegraphAtMs[actorKey] = now;
 }
 
 function triggerBattleSceneFlash(tone = "info") {
@@ -2160,6 +2224,16 @@ function runBattleSceneAmbientTick() {
       BATTLE_SCENE_DUEL_MAX_HP) *
       100,
   );
+  const playerCastPct = Math.round(
+    (clampBattleSceneGauge(battleSceneDuelState.playerCast, BATTLE_SCENE_DUEL_MAX_CAST) /
+      BATTLE_SCENE_DUEL_MAX_CAST) *
+      100,
+  );
+  const enemyCastPct = Math.round(
+    (clampBattleSceneGauge(battleSceneDuelState.enemyCast, BATTLE_SCENE_DUEL_MAX_CAST) /
+      BATTLE_SCENE_DUEL_MAX_CAST) *
+      100,
+  );
   playBattleSfx("ambient", {
     mode,
     pressure: battleSceneDuelState.pressure,
@@ -2185,6 +2259,14 @@ function runBattleSceneAmbientTick() {
       { fromAmbient: true },
     );
   }
+  maybeSpawnBattleSceneCastTelegraph("player", {
+    mode,
+    castPct: playerCastPct,
+  });
+  maybeSpawnBattleSceneCastTelegraph("enemy", {
+    mode,
+    castPct: enemyCastPct,
+  });
 
   const tonePool =
     mode === "realtime"
@@ -2366,6 +2448,8 @@ function stopBattleSceneAmbientLoop() {
   battleSceneLastShakeAtMs = 0;
   battleSceneLastZoomAtMs = 0;
   battleSceneLastHitStopAtMs = 0;
+  battleSceneLastCastTelegraphAtMs.player = 0;
+  battleSceneLastCastTelegraphAtMs.enemy = 0;
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_SHAKE_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_ZOOM_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_HIT_STOP_CLASSES);

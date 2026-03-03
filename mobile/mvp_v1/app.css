@@ -1017,6 +1017,24 @@ h2 {
   color: rgba(255, 161, 151, 0.9);
 }
 
+.battle-shockwave.variant-telegraph {
+  border-style: dashed;
+  border-color: color-mix(in srgb, currentColor 88%, rgba(255, 255, 255, 0.12));
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 0 18px color-mix(in srgb, currentColor 34%, transparent);
+  animation: battle-shockwave-telegraph var(--battle-shockwave-linger-sec, 0.72s) cubic-bezier(0.15, 0.6, 0.24, 1) forwards;
+}
+
+.battle-shockwave.variant-telegraph-urgent {
+  border-style: dashed;
+  border-color: color-mix(in srgb, currentColor 92%, rgba(255, 255, 255, 0.16));
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 0 22px color-mix(in srgb, currentColor 44%, transparent);
+  animation: battle-shockwave-telegraph-urgent var(--battle-shockwave-linger-sec, 0.62s) cubic-bezier(0.16, 0.62, 0.24, 1) forwards;
+}
+
 .battle-scene-trail-layer {
   position: absolute;
   inset: 0;
@@ -1723,6 +1741,42 @@ h2 {
     opacity: 0;
     transform: translate(-50%, -50%) scale(1.1);
     filter: brightness(0.9);
+  }
+}
+
+@keyframes battle-shockwave-telegraph {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.42);
+    filter: brightness(1.04);
+  }
+
+  36% {
+    opacity: 0.62;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.03);
+    filter: brightness(0.94);
+  }
+}
+
+@keyframes battle-shockwave-telegraph-urgent {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+    filter: brightness(1.16);
+  }
+
+  30% {
+    opacity: 0.78;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.08);
+    filter: brightness(0.96);
   }
 }
 
