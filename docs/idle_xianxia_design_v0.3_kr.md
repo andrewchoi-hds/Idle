@@ -2218,3 +2218,11 @@
 
 ## 519) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(cast 충전 orbit mote + 고캐스트 밀도 강화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 520) 다음 순차 작업
+1. [완료] 우세 전환 헬퍼(`maybeTriggerBattleSceneLeadSwing`)를 추가해 `player/enemy/even` 리드가 바뀌는 순간만 전환 이벤트를 감지하도록 구성하고, 과밀 방지를 위한 최소 간격/티커 간격을 적용.
+2. [완료] 우세 전환 이벤트에서 swing 클래스(`scene-lead-swing-player|enemy|even`)와 파동/궤적/스파크/충전 입자를 함께 트리거해 주도권 전환 순간의 시각 피드백을 강화.
+3. [완료] 루프 종료/듀얼 초기화 경로에서 lead swing 타이머/상태를 정리하고 DOM contract 체크에 신규 토큰(`maybeTriggerBattleSceneLeadSwing`, `.battle-scene-arena.scene-lead-swing-player`)을 반영해 회귀를 방지.
+
+## 521) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(lead swing 전환 연출 + 주도권 티커 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

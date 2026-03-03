@@ -336,6 +336,18 @@ const BATTLE_SCENE_HIT_STOP_DURATIONS_MS = {
   medium: 96,
   heavy: 124,
 };
+const BATTLE_SCENE_LEAD_SWING_CLASSES = [
+  "scene-lead-swing-player",
+  "scene-lead-swing-enemy",
+  "scene-lead-swing-even",
+];
+const BATTLE_SCENE_LEAD_SWING_DURATIONS_MS = {
+  player: 420,
+  enemy: 420,
+  even: 340,
+};
+const BATTLE_SCENE_LEAD_SWING_MIN_INTERVAL_MS = 680;
+const BATTLE_SCENE_LEAD_SWING_TICKER_MIN_INTERVAL_MS = 1700;
 const BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_IDLE_MS = 1500;
 const BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_AUTO_MS = 1080;
 const BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_REALTIME_MS = 760;
@@ -385,6 +397,10 @@ let battleSceneZoomTimer = null;
 let battleSceneLastZoomAtMs = 0;
 let battleSceneHitStopTimer = null;
 let battleSceneLastHitStopAtMs = 0;
+let battleSceneLeadSwingTimer = null;
+let battleSceneLastLeadSwingAtMs = 0;
+let battleSceneLastLeadSwingTickerAtMs = 0;
+let battleSceneLastLeadState = null;
 const battleSceneLastCastTelegraphAtMs = {
   player: 0,
   enemy: 0,
@@ -1403,6 +1419,86 @@ function resolveBattleSceneDuelLeadTone() {
   return hpGap > 0 ? "success" : "warn";
 }
 
+function maybeTriggerBattleSceneLeadSwing(nextLeadInput) {
+  const nextLead = nextLeadInput === "player" || nextLeadInput === "enemy" ? nextLeadInput : "even";
+  if (battleSceneLastLeadState === nextLead) {
+    return;
+  }
+  const prevLead = battleSceneLastLeadState;
+  battleSceneLastLeadState = nextLead;
+  if (prevLead === null) {
+    return;
+  }
+  const now = Date.now();
+  if (now - battleSceneLastLeadSwingAtMs < BATTLE_SCENE_LEAD_SWING_MIN_INTERVAL_MS) {
+    return;
+  }
+  const tone = nextLead === "player" ? "success" : nextLead === "enemy" ? "warn" : "info";
+  if (dom.battleSceneArena) {
+    const className = `scene-lead-swing-${nextLead}`;
+    dom.battleSceneArena.classList.remove(...BATTLE_SCENE_LEAD_SWING_CLASSES);
+    void dom.battleSceneArena.offsetWidth;
+    dom.battleSceneArena.classList.add(className);
+    if (battleSceneLeadSwingTimer !== null) {
+      window.clearTimeout(battleSceneLeadSwingTimer);
+    }
+    const durationMs = BATTLE_SCENE_LEAD_SWING_DURATIONS_MS[nextLead] || 360;
+    battleSceneLeadSwingTimer = window.setTimeout(() => {
+      dom.battleSceneArena?.classList.remove(className);
+      battleSceneLeadSwingTimer = null;
+    }, durationMs);
+  }
+  if (!shouldReduceBattleSceneMotion()) {
+    const anchor = nextLead === "even" ? "center" : nextLead;
+    spawnBattleSceneShockwave({
+      anchor,
+      tone,
+      variant: nextLead === "even" ? "telegraph" : "telegraph-urgent",
+      radiusPx: nextLead === "even" ? 72 : 86,
+      thicknessPx: nextLead === "even" ? 2.3 : 2.8,
+      lingerSec: nextLead === "even" ? 0.58 : 0.66,
+    });
+    spawnBattleSceneTrail({
+      anchor: "center",
+      tone,
+      shape: nextLead === "even" ? "wave" : "slash",
+      angleDeg: nextLead === "player" ? 14 : nextLead === "enemy" ? 166 : 0,
+      length: nextLead === "even" ? 88 : 96,
+    });
+    spawnBattleSceneSpark({
+      anchor,
+      tone,
+      shape: "ring",
+      scale: nextLead === "even" ? 1.02 : 1.14,
+    });
+    if (nextLead === "player" || nextLead === "enemy") {
+      spawnBattleSceneChargeMote({
+        anchor: nextLead,
+        tone,
+        radiusPx: 30,
+        sizePx: 6.6,
+        lingerSec: 0.78,
+        sweepDeg: nextLead === "player" ? 210 : -210,
+      });
+    }
+    triggerBattleSceneCameraShake(nextLead === "even" ? "light" : "lateral", { fromAmbient: true });
+    triggerBattleSceneZoomPulse("soft", { fromAmbient: true });
+    triggerBattleSceneHitStop("light", { fromAmbient: true });
+  }
+  if (now - battleSceneLastLeadSwingTickerAtMs >= BATTLE_SCENE_LEAD_SWING_TICKER_MIN_INTERVAL_MS) {
+    pushBattleSceneTicker(
+      nextLead === "player"
+        ? "주도권 전환 · 수련자 우세"
+        : nextLead === "enemy"
+          ? "주도권 전환 · 적수 압박"
+          : "전장 균형 재형성 · 진형 재정렬",
+      tone,
+    );
+    battleSceneLastLeadSwingTickerAtMs = now;
+  }
+  battleSceneLastLeadSwingAtMs = now;
+}
+
 function renderBattleSceneDuelHud() {
   const playerHpPct = Math.round(
     (clampBattleSceneGauge(battleSceneDuelState.playerHp, BATTLE_SCENE_DUEL_MAX_HP) /
@@ -1451,14 +1547,16 @@ function renderBattleSceneDuelHud() {
     dom.battleSceneEnemy.dataset.castTier = resolveBattleSceneCastTier(enemyCastPct);
   }
   if (dom.battleSceneArena) {
+    const sceneLead = resolveBattleSceneLead(
+      playerHpPct,
+      enemyHpPct,
+    );
     dom.battleSceneArena.dataset.scenePressure = battleSceneDuelState.pressure;
     dom.battleSceneArena.dataset.sceneComboTier = resolveBattleSceneComboTier(
       battleSceneDuelState.combo,
     );
-    dom.battleSceneArena.dataset.sceneLead = resolveBattleSceneLead(
-      playerHpPct,
-      enemyHpPct,
-    );
+    dom.battleSceneArena.dataset.sceneLead = sceneLead;
+    maybeTriggerBattleSceneLeadSwing(sceneLead);
   }
   if (dom.battleSceneClashCore) {
     dom.battleSceneClashCore.dataset.pressure = battleSceneDuelState.pressure;
@@ -1478,6 +1576,14 @@ function resetBattleSceneDuelState(options = {}) {
   battleSceneDuelState.combo = 0;
   battleSceneDuelState.maxCombo = 0;
   battleSceneDuelState.dpsMomentum = 0;
+  battleSceneLastLeadState = null;
+  battleSceneLastLeadSwingAtMs = 0;
+  battleSceneLastLeadSwingTickerAtMs = 0;
+  if (battleSceneLeadSwingTimer !== null) {
+    window.clearTimeout(battleSceneLeadSwingTimer);
+    battleSceneLeadSwingTimer = null;
+  }
+  dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_LEAD_SWING_CLASSES);
   clearBattleSceneComboBanner();
   resetBattleSceneActorFrames();
   if (options.clearTicker) {
@@ -2570,10 +2676,17 @@ function stopBattleSceneAmbientLoop() {
     window.clearTimeout(battleSceneHitStopTimer);
     battleSceneHitStopTimer = null;
   }
+  if (battleSceneLeadSwingTimer !== null) {
+    window.clearTimeout(battleSceneLeadSwingTimer);
+    battleSceneLeadSwingTimer = null;
+  }
   battleSfxAmbientLastPlayAtMs = 0;
   battleSceneLastShakeAtMs = 0;
   battleSceneLastZoomAtMs = 0;
   battleSceneLastHitStopAtMs = 0;
+  battleSceneLastLeadSwingAtMs = 0;
+  battleSceneLastLeadSwingTickerAtMs = 0;
+  battleSceneLastLeadState = null;
   battleSceneLastCastTelegraphAtMs.player = 0;
   battleSceneLastCastTelegraphAtMs.enemy = 0;
   battleSceneLastChargeMoteAtMs.player = 0;
@@ -2581,6 +2694,7 @@ function stopBattleSceneAmbientLoop() {
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_SHAKE_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_ZOOM_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_HIT_STOP_CLASSES);
+  dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_LEAD_SWING_CLASSES);
   if (battleSceneSkillBannerTimer !== null) {
     window.clearTimeout(battleSceneSkillBannerTimer);
     battleSceneSkillBannerTimer = null;
