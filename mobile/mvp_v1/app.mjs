@@ -403,6 +403,19 @@ const BATTLE_SCENE_COMBO_COOLDOWN_MIN_INTERVAL_MS = {
   calm: 980,
 };
 const BATTLE_SCENE_COMBO_COOLDOWN_TICKER_MIN_INTERVAL_MS = 2300;
+const BATTLE_SCENE_COMBO_RESONANCE_CLASSES = [
+  "scene-combo-resonance-flow",
+  "scene-combo-resonance-frenzy",
+];
+const BATTLE_SCENE_COMBO_RESONANCE_DURATIONS_MS = {
+  flow: 420,
+  frenzy: 500,
+};
+const BATTLE_SCENE_COMBO_RESONANCE_MIN_INTERVAL_MS = {
+  flow: 1120,
+  frenzy: 860,
+};
+const BATTLE_SCENE_COMBO_RESONANCE_TICKER_MIN_INTERVAL_MS = 2500;
 const BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_IDLE_MS = 1500;
 const BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_AUTO_MS = 1080;
 const BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_REALTIME_MS = 760;
@@ -471,6 +484,9 @@ let battleSceneLastComboTierState = null;
 let battleSceneComboCooldownTimer = null;
 let battleSceneLastComboCooldownAtMs = 0;
 let battleSceneLastComboCooldownTickerAtMs = 0;
+let battleSceneComboResonanceTimer = null;
+let battleSceneLastComboResonanceAtMs = 0;
+let battleSceneLastComboResonanceTickerAtMs = 0;
 const battleSceneLastCastTelegraphAtMs = {
   player: 0,
   enemy: 0,
@@ -1907,6 +1923,83 @@ function triggerBattleSceneComboCooldown(tier = "flow", options = {}) {
   battleSceneLastComboCooldownAtMs = now;
 }
 
+function triggerBattleSceneComboResonance(tier = "flow", options = {}) {
+  if (!dom.battleSceneArena || shouldReduceBattleSceneMotion()) {
+    return;
+  }
+  const normalizedTier = tier === "frenzy" ? "frenzy" : "flow";
+  const now = Date.now();
+  const minIntervalMs = BATTLE_SCENE_COMBO_RESONANCE_MIN_INTERVAL_MS[normalizedTier] || 900;
+  if (now - battleSceneLastComboResonanceAtMs < minIntervalMs) {
+    return;
+  }
+  if (options.fromAmbient === true && normalizedTier === "flow" && Math.random() > 0.62) {
+    return;
+  }
+  const className = `scene-combo-resonance-${normalizedTier}`;
+  dom.battleSceneArena.classList.remove(...BATTLE_SCENE_COMBO_COOLDOWN_CLASSES);
+  dom.battleSceneArena.classList.remove(...BATTLE_SCENE_COMBO_RESONANCE_CLASSES);
+  void dom.battleSceneArena.offsetWidth;
+  dom.battleSceneArena.classList.add(className);
+  if (battleSceneComboResonanceTimer !== null) {
+    window.clearTimeout(battleSceneComboResonanceTimer);
+  }
+  const durationMs = BATTLE_SCENE_COMBO_RESONANCE_DURATIONS_MS[normalizedTier] || 440;
+  battleSceneComboResonanceTimer = window.setTimeout(() => {
+    dom.battleSceneArena?.classList.remove(className);
+    battleSceneComboResonanceTimer = null;
+  }, durationMs);
+
+  const lead = options.lead === "player" || options.lead === "enemy" ? options.lead : "center";
+  const anchor = normalizedTier === "frenzy" && lead !== "center" ? lead : "center";
+  const tone = normalizedTier === "frenzy" ? "error" : "success";
+  spawnBattleSceneShockwave({
+    anchor,
+    tone,
+    variant: normalizedTier === "frenzy" ? "telegraph-urgent" : "telegraph",
+    radiusPx: normalizedTier === "frenzy" ? 92 : 74,
+    thicknessPx: normalizedTier === "frenzy" ? 2.9 : 2.3,
+    lingerSec: normalizedTier === "frenzy" ? 0.64 : 0.54,
+  });
+  spawnBattleSceneTrail({
+    anchor: "center",
+    tone,
+    shape: "wave",
+    angleDeg: anchor === "player" ? 20 : anchor === "enemy" ? 160 : 0,
+    length: normalizedTier === "frenzy" ? 96 : 84,
+  });
+  spawnBattleSceneSpark({
+    anchor,
+    tone,
+    shape: "ring",
+    scale: normalizedTier === "frenzy" ? 1.16 : 1.04,
+  });
+  if (normalizedTier === "frenzy") {
+    spawnBattleSceneChargeMote({
+      anchor,
+      tone,
+      radiusPx: 34,
+      sizePx: 6.8,
+      lingerSec: 0.72,
+      sweepDeg: anchor === "enemy" ? -220 : 220,
+    });
+  }
+  triggerBattleSceneCameraShake(normalizedTier === "frenzy" ? "medium" : "light", { fromAmbient: true });
+  triggerBattleSceneZoomPulse(normalizedTier === "frenzy" ? "burst" : "soft", { fromAmbient: true });
+  triggerBattleSceneHitStop(normalizedTier === "frenzy" ? "medium" : "light", { fromAmbient: true });
+
+  if (now - battleSceneLastComboResonanceTickerAtMs >= BATTLE_SCENE_COMBO_RESONANCE_TICKER_MIN_INTERVAL_MS) {
+    pushBattleSceneTicker(
+      normalizedTier === "frenzy"
+        ? "광란 공명 유지 · 연격 파동 증폭"
+        : "연격 공명 유지 · 전장 기류 동조",
+      normalizedTier === "frenzy" ? "error" : "success",
+    );
+    battleSceneLastComboResonanceTickerAtMs = now;
+  }
+  battleSceneLastComboResonanceAtMs = now;
+}
+
 function maybeTriggerBattleSceneComboTierTransition(nextTierInput, options = {}) {
   const nextTier =
     nextTierInput === "frenzy"
@@ -2036,6 +2129,8 @@ function resetBattleSceneDuelState(options = {}) {
   battleSceneLastComboSurgeTickerAtMs = 0;
   battleSceneLastComboCooldownAtMs = 0;
   battleSceneLastComboCooldownTickerAtMs = 0;
+  battleSceneLastComboResonanceAtMs = 0;
+  battleSceneLastComboResonanceTickerAtMs = 0;
   if (battleSceneLeadSwingTimer !== null) {
     window.clearTimeout(battleSceneLeadSwingTimer);
     battleSceneLeadSwingTimer = null;
@@ -2056,11 +2151,16 @@ function resetBattleSceneDuelState(options = {}) {
     window.clearTimeout(battleSceneComboCooldownTimer);
     battleSceneComboCooldownTimer = null;
   }
+  if (battleSceneComboResonanceTimer !== null) {
+    window.clearTimeout(battleSceneComboResonanceTimer);
+    battleSceneComboResonanceTimer = null;
+  }
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_LEAD_SWING_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_PRESSURE_SPIKE_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_DANGER_PULSE_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_COMBO_SURGE_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_COMBO_COOLDOWN_CLASSES);
+  dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_COMBO_RESONANCE_CLASSES);
   clearBattleSceneComboBanner();
   resetBattleSceneActorFrames();
   if (options.clearTicker) {
@@ -2935,6 +3035,7 @@ function runBattleSceneAmbientTick() {
       BATTLE_SCENE_DUEL_MAX_CAST) *
       100,
   );
+  const sceneLead = resolveBattleSceneLead(playerHpPct, enemyHpPct);
   const sceneComboTier = resolveBattleSceneComboTier(battleSceneDuelState.combo);
   const dangerSide = resolveBattleSceneDangerSide(playerHpPct, enemyHpPct);
   maybeTriggerBattleSceneComboTierTransition(sceneComboTier, { fromAmbient: true });
@@ -2942,7 +3043,7 @@ function runBattleSceneAmbientTick() {
   playBattleSfx("ambient", {
     mode,
     pressure: battleSceneDuelState.pressure,
-    lead: resolveBattleSceneLead(playerHpPct, enemyHpPct),
+    lead: sceneLead,
   });
   if (reducedMotion) {
     return;
@@ -3007,6 +3108,30 @@ function runBattleSceneAmbientTick() {
             : 0.24)
   ) {
     triggerBattleSceneComboSurge(sceneComboTier, { fromAmbient: true });
+  }
+  const shouldPulseComboResonance =
+    sceneComboTier !== "calm" &&
+    (mode === "realtime"
+      ? battleSceneAmbientStep % 2 === 0
+      : mode === "auto"
+        ? battleSceneAmbientStep % 3 === 0
+        : battleSceneAmbientStep % 5 === 0);
+  if (
+    shouldPulseComboResonance &&
+    Math.random() <
+      (sceneComboTier === "frenzy"
+        ? mode === "realtime"
+          ? 0.74
+          : mode === "auto"
+            ? 0.56
+            : 0.34
+        : mode === "realtime"
+          ? 0.48
+          : mode === "auto"
+            ? 0.34
+            : 0.18)
+  ) {
+    triggerBattleSceneComboResonance(sceneComboTier, { fromAmbient: true, lead: sceneLead });
   }
   maybeSpawnBattleSceneCastTelegraph("player", {
     mode,
@@ -3221,6 +3346,10 @@ function stopBattleSceneAmbientLoop() {
     window.clearTimeout(battleSceneComboCooldownTimer);
     battleSceneComboCooldownTimer = null;
   }
+  if (battleSceneComboResonanceTimer !== null) {
+    window.clearTimeout(battleSceneComboResonanceTimer);
+    battleSceneComboResonanceTimer = null;
+  }
   battleSfxAmbientLastPlayAtMs = 0;
   battleSceneLastShakeAtMs = 0;
   battleSceneLastZoomAtMs = 0;
@@ -3239,6 +3368,8 @@ function stopBattleSceneAmbientLoop() {
   battleSceneLastComboTierState = null;
   battleSceneLastComboCooldownAtMs = 0;
   battleSceneLastComboCooldownTickerAtMs = 0;
+  battleSceneLastComboResonanceAtMs = 0;
+  battleSceneLastComboResonanceTickerAtMs = 0;
   battleSceneLastCastTelegraphAtMs.player = 0;
   battleSceneLastCastTelegraphAtMs.enemy = 0;
   battleSceneLastChargeMoteAtMs.player = 0;
@@ -3251,6 +3382,7 @@ function stopBattleSceneAmbientLoop() {
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_DANGER_PULSE_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_COMBO_SURGE_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_COMBO_COOLDOWN_CLASSES);
+  dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_COMBO_RESONANCE_CLASSES);
   if (battleSceneSkillBannerTimer !== null) {
     window.clearTimeout(battleSceneSkillBannerTimer);
     battleSceneSkillBannerTimer = null;
