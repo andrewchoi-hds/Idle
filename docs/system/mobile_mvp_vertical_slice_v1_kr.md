@@ -129,13 +129,16 @@ npm run mobile:mvp:serve
 - 옵션:
   - `앱 복귀 시 실시간 자동 재개` (`autoResumeRealtime`, on/off)
   - `자동 재개 돌파 워밍업(초)` (`autoBreakthroughResumeWarmupSec`, `0~30`, 기본 6)
+  - `전투 연출 저사양 모드` (`lowPerformanceBattleScene`, on/off)
+    - ON: 상시 듀얼 시각 이펙트(ambient strike/burst 장식)를 생략하고 pulse 간격/확률/레이어 cap을 하향
+    - OFF: 기존 연출 밀도 유지
   - `전투 속도` (`1=저속, 2=표준, 3=고속`)
     - 저속: `battleEverySec=3`, `breakthroughEverySec=4`, `passiveQiRatio=0.01`
     - 표준: `battleEverySec=2`, `breakthroughEverySec=3`, `passiveQiRatio=0.012`
     - 고속: `battleEverySec=1`, `breakthroughEverySec=2`, `passiveQiRatio=0.014`
   - `오프라인 정산 시간(시간)` (`1~168`)
   - `오프라인 세부 로그 개수` (`5~120`)
-  - 위 5개는 저장 데이터(`settings`)에 영속화되어 다음 접속에도 유지
+  - 위 6개는 저장 데이터(`settings`)에 영속화되어 다음 접속에도 유지
   - `세이브 슬롯` 선택(`optSaveSlot`, 1~3): 저장/불러오기 대상 슬롯 지정
 - 전투 연출 패널:
   - 아레나 배경에 SVG 에셋(`battle_arena_mist.svg`)을 적용해 텍스트 중심 레이아웃 대비 시각 밀도를 강화
@@ -176,6 +179,7 @@ npm run mobile:mvp:serve
   - 전투 집중 기본 ON(`main.app.battle-focus-mode`)으로 첫 진입부터 실제 게임 화면 비중을 높이고, 토글 해제 시 전체 운영 패널을 다시 노출
   - 상시 루프(`runBattleSceneAmbientTick`)가 `idle/auto/realtime` 모드별로 연출 강도와 임팩트 빈도를 조절해 방치형 전투 화면처럼 지속 동작
   - 결과 우선 윈도우(`BATTLE_SCENE_RESULT_PRIORITY_WINDOW_MS=2600ms`)를 추가해 명시적 전투/돌파 결과 직후에는 ambient 랜덤 pulse/장식 트리거 비중을 낮추고 실제 결과 기반 연출을 우선 반영
+  - 저사양 모드(`lowPerformanceBattleScene`)에서는 ambient duel visuals를 비활성화하고 pulse cadence/확률/장식 레이어 cap(`spark/trail/shockwave`)을 하향해 모바일 저사양 기기에서 프레임 드랍을 줄이도록 구성
   - `prefers-reduced-motion` 환경에서는 danger pulse/pressure spike/lead swing/hit-stop/telegraph shockwave/charge mote/spark/trail 등 모션 이펙트를 비활성화하되 듀얼 HUD 수치(HP/기세)와 배우 프레임 상태 전환은 유지해 상태 가시성을 확보
   - 상시 연출 애니메이션(오라 드리프트/actor idle/오버레이 pulse)과 임팩트 연출(타격/돌파 burst·collapse)을 분리해 자동 루프 중에도 시각 피드백을 유지하고, `prefers-reduced-motion` 환경에서는 해당 애니메이션을 비활성화
 
@@ -238,6 +242,7 @@ npm run mobile:mvp:check
   - 점검 시나리오:
   - 전투 1회 상태 변화
   - `runBattleOnce/runBreakthroughAttempt` 결과가 즉시 duel HUD 및 lead/pressure/danger/combo 트리거로 연결되고, 직후 2.6초 동안 ambient 랜덤 트리거 비중이 억제되는지 검증
+  - 저사양 모드 ON/OFF에서 ambient pulse cadence/확률 및 spark·trail·shockwave layer cap이 의도대로 하향/복원되고, 결과 기반 트리거 우선순위가 유지되는지 검증
   - 듀얼 strike/burst/impact 경로에서 배우 프레임(`idle/attack/hit/skill`)이 전환되고 리셋 시 `idle`로 복귀하는지 검증
   - 듀얼 HUD 갱신 시 cast/combo/pressure/lead 상태 데이터가 일관되게 갱신되고 `prefers-reduced-motion` 환경에서도 수치 상태 반영이 유지되는지 검증
   - pressure/danger 유지 구간에서 resonance(`scene-pressure-resonance-*`, `scene-danger-resonance-*`)가 모드별 최소 간격으로 재트리거되고 결과 우선 윈도우와 상충 없이 동작하는지 검증

@@ -150,6 +150,7 @@ const dom = {
   optAutoBreakthrough: document.getElementById("optAutoBreakthrough"),
   optAutoTribulation: document.getElementById("optAutoTribulation"),
   optAutoResumeRealtime: document.getElementById("optAutoResumeRealtime"),
+  optLowPerformanceBattleScene: document.getElementById("optLowPerformanceBattleScene"),
   optAutoBreakthroughResumeWarmupSec: document.getElementById("optAutoBreakthroughResumeWarmupSec"),
   optBattleSpeed: document.getElementById("optBattleSpeed"),
   optOfflineCapHours: document.getElementById("optOfflineCapHours"),
@@ -1106,6 +1107,48 @@ function shouldReduceBattleSceneMotion() {
     typeof window.matchMedia === "function" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches
   );
+}
+
+function isBattleSceneLowPerformanceModeEnabled() {
+  return state?.settings?.lowPerformanceBattleScene === true;
+}
+
+function resolveBattleSceneAmbientPulseDivisor(mode, options = {}) {
+  const lowPerformanceMode = options.lowPerformanceMode === true;
+  const baseDivisor = mode === "realtime" ? 2 : mode === "auto" ? 3 : 5;
+  return lowPerformanceMode ? baseDivisor + 1 : baseDivisor;
+}
+
+function resolveBattleSceneAmbientProbabilityScale(mode, options = {}) {
+  const lowPerformanceMode = options.lowPerformanceMode === true;
+  if (!lowPerformanceMode) {
+    return 1;
+  }
+  if (mode === "realtime") {
+    return 0.58;
+  }
+  if (mode === "auto") {
+    return 0.64;
+  }
+  return 0.72;
+}
+
+function resolveBattleSceneLayerCap(layerKind, options = {}) {
+  const lowPerformanceMode =
+    options.lowPerformanceMode === true || isBattleSceneLowPerformanceModeEnabled();
+  if (layerKind === "spark") {
+    return lowPerformanceMode ? 20 : 36;
+  }
+  if (layerKind === "charge") {
+    return lowPerformanceMode ? 24 : 44;
+  }
+  if (layerKind === "trail") {
+    return lowPerformanceMode ? 16 : 28;
+  }
+  if (layerKind === "shockwave") {
+    return lowPerformanceMode ? 12 : 20;
+  }
+  return lowPerformanceMode ? 14 : 24;
 }
 
 function normalizeBattleSceneActor(actorInput) {
@@ -3163,7 +3206,10 @@ function spawnBattleSceneSpark(options = {}) {
     { once: true },
   );
   dom.battleSceneSparkLayer.append(node);
-  while (dom.battleSceneSparkLayer.childElementCount > 36) {
+  while (
+    dom.battleSceneSparkLayer.childElementCount >
+    resolveBattleSceneLayerCap("spark", options)
+  ) {
     dom.battleSceneSparkLayer.firstElementChild?.remove();
   }
 }
@@ -3204,7 +3250,10 @@ function spawnBattleSceneChargeMote(options = {}) {
     { once: true },
   );
   dom.battleSceneSparkLayer.append(node);
-  while (dom.battleSceneSparkLayer.childElementCount > 44) {
+  while (
+    dom.battleSceneSparkLayer.childElementCount >
+    resolveBattleSceneLayerCap("charge", options)
+  ) {
     dom.battleSceneSparkLayer.firstElementChild?.remove();
   }
 }
@@ -3241,7 +3290,10 @@ function spawnBattleSceneTrail(options = {}) {
     { once: true },
   );
   dom.battleSceneTrailLayer.append(node);
-  while (dom.battleSceneTrailLayer.childElementCount > 28) {
+  while (
+    dom.battleSceneTrailLayer.childElementCount >
+    resolveBattleSceneLayerCap("trail", options)
+  ) {
     dom.battleSceneTrailLayer.firstElementChild?.remove();
   }
 }
@@ -3282,7 +3334,10 @@ function spawnBattleSceneShockwave(options = {}) {
     { once: true },
   );
   dom.battleSceneShockwaveLayer.append(node);
-  while (dom.battleSceneShockwaveLayer.childElementCount > 20) {
+  while (
+    dom.battleSceneShockwaveLayer.childElementCount >
+    resolveBattleSceneLayerCap("shockwave", options)
+  ) {
     dom.battleSceneShockwaveLayer.firstElementChild?.remove();
   }
 }
@@ -3297,8 +3352,11 @@ function maybeSpawnBattleSceneCastTelegraph(actor, options = {}) {
     return;
   }
   const mode = options.mode === "realtime" || options.mode === "auto" ? options.mode : "idle";
+  const lowPerformanceMode =
+    options.lowPerformanceMode === true || isBattleSceneLowPerformanceModeEnabled();
+  const intervalScale = lowPerformanceMode ? 1.45 : 1;
   const minIntervalMs =
-    mode === "realtime"
+    (mode === "realtime"
       ? castPct >= 96
         ? BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_REALTIME_MS - 200
         : BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_REALTIME_MS
@@ -3308,12 +3366,18 @@ function maybeSpawnBattleSceneCastTelegraph(actor, options = {}) {
           : BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_AUTO_MS
         : castPct >= 96
           ? BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_IDLE_MS - 220
-          : BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_IDLE_MS;
+          : BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_IDLE_MS) * intervalScale;
   const now = Date.now();
   if (now - battleSceneLastCastTelegraphAtMs[actorKey] < minIntervalMs) {
     return;
   }
-  if (castPct < 92 && Math.random() > (mode === "realtime" ? 0.8 : mode === "auto" ? 0.7 : 0.58)) {
+  const telegraphChance =
+    (mode === "realtime" ? 0.8 : mode === "auto" ? 0.7 : 0.58) *
+    (lowPerformanceMode ? 0.72 : 1);
+  if (castPct < 92 && Math.random() > telegraphChance) {
+    return;
+  }
+  if (lowPerformanceMode && castPct >= 92 && Math.random() > 0.82) {
     return;
   }
   const tone = actorKey === "player" ? "success" : "warn";
@@ -3328,13 +3392,15 @@ function maybeSpawnBattleSceneCastTelegraph(actor, options = {}) {
     radiusPx,
     thicknessPx,
     lingerSec,
+    lowPerformanceMode,
   });
-  if (castPct >= 96) {
+  if (castPct >= 96 && (!lowPerformanceMode || Math.random() < 0.68)) {
     spawnBattleSceneSpark({
       anchor: actorKey,
       tone,
       shape: "ring",
       scale: 1.08,
+      lowPerformanceMode,
     });
   }
   battleSceneLastCastTelegraphAtMs[actorKey] = now;
@@ -3350,8 +3416,11 @@ function maybeSpawnBattleSceneChargeMote(actor, options = {}) {
     return;
   }
   const mode = options.mode === "realtime" || options.mode === "auto" ? options.mode : "idle";
+  const lowPerformanceMode =
+    options.lowPerformanceMode === true || isBattleSceneLowPerformanceModeEnabled();
+  const intervalScale = lowPerformanceMode ? 1.42 : 1;
   const minIntervalMs =
-    mode === "realtime"
+    (mode === "realtime"
       ? castPct >= 96
         ? BATTLE_SCENE_CHARGE_MOTE_MIN_INTERVAL_REALTIME_MS - 180
         : BATTLE_SCENE_CHARGE_MOTE_MIN_INTERVAL_REALTIME_MS
@@ -3361,7 +3430,7 @@ function maybeSpawnBattleSceneChargeMote(actor, options = {}) {
           : BATTLE_SCENE_CHARGE_MOTE_MIN_INTERVAL_AUTO_MS
         : castPct >= 96
           ? BATTLE_SCENE_CHARGE_MOTE_MIN_INTERVAL_IDLE_MS - 200
-          : BATTLE_SCENE_CHARGE_MOTE_MIN_INTERVAL_IDLE_MS;
+          : BATTLE_SCENE_CHARGE_MOTE_MIN_INTERVAL_IDLE_MS) * intervalScale;
   const now = Date.now();
   if (now - battleSceneLastChargeMoteAtMs[actorKey] < minIntervalMs) {
     return;
@@ -3384,7 +3453,7 @@ function maybeSpawnBattleSceneChargeMote(actor, options = {}) {
           : mode === "auto"
             ? 0.5
             : 0.34;
-  if (Math.random() > spawnChance) {
+  if (Math.random() > spawnChance * (lowPerformanceMode ? 0.68 : 1)) {
     return;
   }
   const tone = actorKey === "player" ? "success" : "warn";
@@ -3398,13 +3467,15 @@ function maybeSpawnBattleSceneChargeMote(actor, options = {}) {
       mode === "realtime" ? 0.66 : mode === "auto" ? 0.76 : 0.92,
     sweepDeg:
       (actorKey === "player" ? 1 : -1) * (castPct >= 96 ? 232 : castPct >= 80 ? 204 : 172),
+    lowPerformanceMode,
   });
-  if (castPct >= 96 && Math.random() < 0.54) {
+  if (castPct >= 96 && Math.random() < (lowPerformanceMode ? 0.36 : 0.54)) {
     spawnBattleSceneSpark({
       anchor: actorKey,
       tone,
       shape: "dot",
       scale: 0.84 + Math.random() * 0.34,
+      lowPerformanceMode,
     });
   }
   battleSceneLastChargeMoteAtMs[actorKey] = now;
@@ -3657,8 +3728,19 @@ function runBattleSceneAmbientTick() {
   const mode = resolveBattleSceneAmbientMode();
   setBattleSceneLoopMode(mode);
   const reducedMotion = shouldReduceBattleSceneMotion();
+  const lowPerformanceMode = isBattleSceneLowPerformanceModeEnabled();
   battleSceneAmbientStep += 1;
-  runBattleSceneDuelTick(mode, { visuals: !reducedMotion });
+  dom.battleSceneArena.dataset.scenePerformance = lowPerformanceMode ? "low" : "normal";
+  const ambientPulseDivisor = resolveBattleSceneAmbientPulseDivisor(mode, {
+    lowPerformanceMode,
+  });
+  const shouldPulseByMode = battleSceneAmbientStep % ambientPulseDivisor === 0;
+  const ambientProbabilityScale = resolveBattleSceneAmbientProbabilityScale(mode, {
+    lowPerformanceMode,
+  });
+  runBattleSceneDuelTick(mode, {
+    visuals: !reducedMotion && !lowPerformanceMode,
+  });
   const playerHpPct = Math.round(
     (clampBattleSceneGauge(battleSceneDuelState.playerHp, BATTLE_SCENE_DUEL_MAX_HP) /
       BATTLE_SCENE_DUEL_MAX_HP) *
@@ -3695,11 +3777,7 @@ function runBattleSceneAmbientTick() {
     return;
   }
   const shouldPulseZoom =
-    (mode === "realtime"
-      ? battleSceneAmbientStep % 2 === 0
-      : mode === "auto"
-        ? battleSceneAmbientStep % 3 === 0
-        : battleSceneAmbientStep % 5 === 0) &&
+    shouldPulseByMode &&
     (battleSceneDuelState.pressure === "high" || battleSceneDuelState.combo >= 6);
   if (shouldPulseZoom) {
     triggerBattleSceneZoomPulse(
@@ -3712,26 +3790,18 @@ function runBattleSceneAmbientTick() {
     );
   }
   const shouldPulsePressureSpike =
-    battleSceneDuelState.pressure === "high" &&
-    (mode === "realtime"
-      ? battleSceneAmbientStep % 2 === 0
-      : mode === "auto"
-        ? battleSceneAmbientStep % 3 === 0
-        : battleSceneAmbientStep % 5 === 0);
+    battleSceneDuelState.pressure === "high" && shouldPulseByMode;
   if (
     !prioritizeOutcomeSignals &&
     shouldPulsePressureSpike &&
-    Math.random() < (mode === "realtime" ? 0.54 : mode === "auto" ? 0.38 : 0.22)
+    Math.random() <
+      (mode === "realtime" ? 0.54 : mode === "auto" ? 0.38 : 0.22) *
+        ambientProbabilityScale
   ) {
     triggerBattleScenePressureSpike("high", { fromAmbient: true });
   }
   const shouldPulsePressureResonance =
-    battleSceneDuelState.pressure !== "low" &&
-    (mode === "realtime"
-      ? battleSceneAmbientStep % 2 === 0
-      : mode === "auto"
-        ? battleSceneAmbientStep % 3 === 0
-        : battleSceneAmbientStep % 5 === 0);
+    battleSceneDuelState.pressure !== "low" && shouldPulseByMode;
   if (
     !prioritizeOutcomeSignals &&
     shouldPulsePressureResonance &&
@@ -3746,35 +3816,25 @@ function runBattleSceneAmbientTick() {
           ? 0.24
           : mode === "auto"
             ? 0.18
-            : 0.1)
+            : 0.1) *
+        ambientProbabilityScale
   ) {
     triggerBattleScenePressureResonance(
       battleSceneDuelState.pressure === "high" ? "high" : "medium",
       { fromAmbient: true },
     );
   }
-  const shouldPulseDanger =
-    dangerSide !== "none" &&
-    (mode === "realtime"
-      ? battleSceneAmbientStep % 2 === 0
-      : mode === "auto"
-        ? battleSceneAmbientStep % 3 === 0
-        : battleSceneAmbientStep % 5 === 0);
+  const shouldPulseDanger = dangerSide !== "none" && shouldPulseByMode;
   if (
     !prioritizeOutcomeSignals &&
     shouldPulseDanger &&
     Math.random() <
-      (dangerSide === "both" ? 0.62 : mode === "realtime" ? 0.46 : mode === "auto" ? 0.34 : 0.22)
+      (dangerSide === "both" ? 0.62 : mode === "realtime" ? 0.46 : mode === "auto" ? 0.34 : 0.22) *
+        ambientProbabilityScale
   ) {
     triggerBattleSceneDangerPulse(dangerSide, { fromAmbient: true });
   }
-  const shouldPulseDangerResonance =
-    dangerSide !== "none" &&
-    (mode === "realtime"
-      ? battleSceneAmbientStep % 2 === 0
-      : mode === "auto"
-        ? battleSceneAmbientStep % 3 === 0
-        : battleSceneAmbientStep % 5 === 0);
+  const shouldPulseDangerResonance = dangerSide !== "none" && shouldPulseByMode;
   if (
     !prioritizeOutcomeSignals &&
     shouldPulseDangerResonance &&
@@ -3789,16 +3849,12 @@ function runBattleSceneAmbientTick() {
           ? 0.28
           : mode === "auto"
             ? 0.2
-            : 0.12)
+            : 0.12) *
+        ambientProbabilityScale
   ) {
     triggerBattleSceneDangerResonance(dangerSide, { fromAmbient: true });
   }
-  const shouldPulseLeadResonance =
-    (mode === "realtime"
-      ? battleSceneAmbientStep % 2 === 0
-      : mode === "auto"
-        ? battleSceneAmbientStep % 3 === 0
-        : battleSceneAmbientStep % 5 === 0);
+  const shouldPulseLeadResonance = shouldPulseByMode;
   if (
     !prioritizeOutcomeSignals &&
     shouldPulseLeadResonance &&
@@ -3813,17 +3869,12 @@ function runBattleSceneAmbientTick() {
           ? 0.38
           : mode === "auto"
             ? 0.28
-            : 0.16)
+            : 0.16) *
+        ambientProbabilityScale
   ) {
     triggerBattleSceneLeadResonance(sceneLead, { fromAmbient: true });
   }
-  const shouldPulseComboSurge =
-    sceneComboTier !== "calm" &&
-    (mode === "realtime"
-      ? battleSceneAmbientStep % 2 === 0
-      : mode === "auto"
-        ? battleSceneAmbientStep % 3 === 0
-        : battleSceneAmbientStep % 5 === 0);
+  const shouldPulseComboSurge = sceneComboTier !== "calm" && shouldPulseByMode;
   if (
     !prioritizeOutcomeSignals &&
     shouldPulseComboSurge &&
@@ -3838,17 +3889,12 @@ function runBattleSceneAmbientTick() {
           ? 0.36
           : mode === "auto"
             ? 0.26
-            : 0.14)
+            : 0.14) *
+        ambientProbabilityScale
   ) {
     triggerBattleSceneComboSurge(sceneComboTier, { fromAmbient: true });
   }
-  const shouldPulseComboResonance =
-    sceneComboTier !== "calm" &&
-    (mode === "realtime"
-      ? battleSceneAmbientStep % 2 === 0
-      : mode === "auto"
-        ? battleSceneAmbientStep % 3 === 0
-        : battleSceneAmbientStep % 5 === 0);
+  const shouldPulseComboResonance = sceneComboTier !== "calm" && shouldPulseByMode;
   if (
     !prioritizeOutcomeSignals &&
     shouldPulseComboResonance &&
@@ -3863,25 +3909,30 @@ function runBattleSceneAmbientTick() {
           ? 0.3
           : mode === "auto"
             ? 0.22
-            : 0.12)
+            : 0.12) *
+        ambientProbabilityScale
   ) {
     triggerBattleSceneComboResonance(sceneComboTier, { fromAmbient: true, lead: sceneLead });
   }
   maybeSpawnBattleSceneCastTelegraph("player", {
     mode,
     castPct: playerCastPct,
+    lowPerformanceMode,
   });
   maybeSpawnBattleSceneCastTelegraph("enemy", {
     mode,
     castPct: enemyCastPct,
+    lowPerformanceMode,
   });
   maybeSpawnBattleSceneChargeMote("player", {
     mode,
     castPct: playerCastPct,
+    lowPerformanceMode,
   });
   maybeSpawnBattleSceneChargeMote("enemy", {
     mode,
     castPct: enemyCastPct,
+    lowPerformanceMode,
   });
 
   if (!prioritizeOutcomeSignals) {
@@ -3891,9 +3942,20 @@ function runBattleSceneAmbientTick() {
         : mode === "auto"
           ? ["success", "info", "info", "warn"]
           : ["info", "info", "warn"];
-    const sparkCount = mode === "realtime" ? 2 : mode === "auto" ? 2 : 1;
+    const sparkCount = lowPerformanceMode
+      ? mode === "realtime"
+        ? 1
+        : mode === "auto"
+          ? 1
+          : 0
+      : mode === "realtime"
+        ? 2
+        : mode === "auto"
+          ? 2
+          : 1;
+    const sparkSpawnChance = (lowPerformanceMode ? 0.62 : 0.76) * ambientProbabilityScale;
     for (let i = 0; i < sparkCount; i += 1) {
-      if (Math.random() > 0.76) {
+      if (Math.random() > sparkSpawnChance) {
         continue;
       }
       const anchorRoll = Math.random();
@@ -3901,11 +3963,29 @@ function runBattleSceneAmbientTick() {
       const tone = tonePool[Math.floor(Math.random() * tonePool.length)] || "info";
       const shapeRoll = Math.random();
       const shape = shapeRoll < 0.5 ? "dot" : shapeRoll < 0.83 ? "shard" : "ring";
-      spawnBattleSceneSpark({ anchor, tone, shape, scale: 0.9 + Math.random() * 0.5 });
+      spawnBattleSceneSpark({
+        anchor,
+        tone,
+        shape,
+        scale: 0.9 + Math.random() * 0.5,
+        lowPerformanceMode,
+      });
     }
-    const trailCount = mode === "realtime" ? 2 : mode === "auto" ? 1 : 0;
+    const trailCount = lowPerformanceMode
+      ? mode === "realtime"
+        ? 1
+        : 0
+      : mode === "realtime"
+        ? 2
+        : mode === "auto"
+          ? 1
+          : 0;
+    const trailSpawnChance =
+      (mode === "realtime" ? 0.74 : 0.66) *
+      (lowPerformanceMode ? 0.74 : 1) *
+      ambientProbabilityScale;
     for (let i = 0; i < trailCount; i += 1) {
-      if (Math.random() > (mode === "realtime" ? 0.74 : 0.66)) {
+      if (Math.random() > trailSpawnChance) {
         continue;
       }
       const trailTone = Math.random() < 0.62 ? "success" : "warn";
@@ -3916,6 +3996,7 @@ function runBattleSceneAmbientTick() {
           tone: trailTone,
           angleDeg: 12 + Math.random() * 8,
           length: 74 + Math.random() * 24,
+          lowPerformanceMode,
         });
       } else if (laneRoll < 0.76) {
         spawnBattleSceneTrail({
@@ -3923,6 +4004,7 @@ function runBattleSceneAmbientTick() {
           tone: trailTone,
           angleDeg: 164 + Math.random() * 10,
           length: 70 + Math.random() * 20,
+          lowPerformanceMode,
         });
       } else {
         spawnBattleSceneTrail({
@@ -3931,17 +4013,17 @@ function runBattleSceneAmbientTick() {
           shape: "wave",
           angleDeg: (Math.random() - 0.5) * 26,
           length: 88 + Math.random() * 16,
+          lowPerformanceMode,
         });
       }
     }
     const shouldSpawnShockwave =
-      (mode === "realtime"
-        ? battleSceneAmbientStep % 2 === 0
-        : mode === "auto"
-          ? battleSceneAmbientStep % 3 === 0
-          : battleSceneAmbientStep % 5 === 0) &&
+      shouldPulseByMode &&
       (battleSceneDuelState.pressure === "high" || battleSceneDuelState.combo >= 5) &&
-      Math.random() < (mode === "realtime" ? 0.52 : mode === "auto" ? 0.34 : 0.18);
+      Math.random() <
+        (mode === "realtime" ? 0.52 : mode === "auto" ? 0.34 : 0.18) *
+          ambientProbabilityScale *
+          (lowPerformanceMode ? 0.82 : 1);
     if (shouldSpawnShockwave) {
       const lead = resolveBattleSceneLead(playerHpPct, enemyHpPct);
       const anchor = lead === "player" ? "player" : lead === "enemy" ? "enemy" : "center";
@@ -3954,17 +4036,16 @@ function runBattleSceneAmbientTick() {
           mode === "realtime" ? 72 + Math.random() * 24 : mode === "auto" ? 62 + Math.random() * 18 : 52 + Math.random() * 12,
         thicknessPx: mode === "realtime" ? 2.8 : mode === "auto" ? 2.4 : 2,
         lingerSec: mode === "realtime" ? 0.58 : mode === "auto" ? 0.52 : 0.46,
+        lowPerformanceMode,
       });
     }
 
     const shouldPulseImpact =
-      quietMs > 2200 &&
-      (mode === "realtime"
-        ? battleSceneAmbientStep % 2 === 0
-        : mode === "auto"
-          ? battleSceneAmbientStep % 3 === 0
-          : battleSceneAmbientStep % 5 === 0);
-    if (shouldPulseImpact) {
+      quietMs > (lowPerformanceMode ? 2800 : 2200) && shouldPulseByMode;
+    const allowAmbientImpact =
+      !lowPerformanceMode ||
+      Math.random() < (mode === "realtime" ? 0.56 : mode === "auto" ? 0.42 : 0.28);
+    if (shouldPulseImpact && allowAmbientImpact) {
       if (mode === "realtime") {
         const random = Math.random();
         const kind = random < 0.58 ? "battle_win" : random < 0.85 ? "battle_loss" : "breakthrough_success";
@@ -3983,7 +4064,10 @@ function runBattleSceneAmbientTick() {
     }
   }
 
-  if (quietMs > 8000 && battleSceneAmbientStep % 6 === 0) {
+  if (
+    quietMs > (lowPerformanceMode ? 10000 : 8000) &&
+    battleSceneAmbientStep % (lowPerformanceMode ? 8 : 6) === 0
+  ) {
     const leadTone = resolveBattleSceneDuelLeadTone();
     if (mode === "realtime") {
       setBattleSceneStatus(`실시간 교전 ${battleSceneDuelState.round}R`, leadTone);
@@ -3991,7 +4075,7 @@ function runBattleSceneAmbientTick() {
         `수련자 ${playerHpPct}% · 적수 ${enemyHpPct}% · 자동 전투 루프가 연출을 갱신 중입니다.`,
         "info",
       );
-      if (Math.random() < 0.44) {
+      if (Math.random() < (lowPerformanceMode ? 0.32 : 0.44)) {
         pushBattleSceneTicker(
           `실시간 ${battleSceneDuelState.round}R · 수련자 ${playerHpPct}% / 적수 ${enemyHpPct}%`,
           leadTone,
@@ -4003,7 +4087,7 @@ function runBattleSceneAmbientTick() {
         `수련자 ${playerHpPct}% · 적수 ${enemyHpPct}% · 자동 옵션 기반 전장 파동 순환 중`,
         "info",
       );
-      if (Math.random() < 0.36) {
+      if (Math.random() < (lowPerformanceMode ? 0.26 : 0.36)) {
         pushBattleSceneTicker(
           `자동 ${battleSceneDuelState.round}R · 압력 ${Math.round(battleSceneDuelState.dpsMomentum * 10)}`,
           leadTone,
@@ -4015,7 +4099,7 @@ function runBattleSceneAmbientTick() {
         `환영 교전 ${battleSceneDuelState.round}R · 수련자 ${playerHpPct}% / 적수 ${enemyHpPct}%`,
         "info",
       );
-      if (Math.random() < 0.28) {
+      if (Math.random() < (lowPerformanceMode ? 0.18 : 0.28)) {
         pushBattleSceneTicker("전장 파동 안정화 · 조작 없이도 교전 지속", "info");
       }
     }
@@ -5836,6 +5920,7 @@ function render() {
   dom.optAutoBreakthrough.checked = state.settings.autoBreakthrough;
   dom.optAutoTribulation.checked = state.settings.autoTribulation;
   dom.optAutoResumeRealtime.checked = state.settings.autoResumeRealtime;
+  dom.optLowPerformanceBattleScene.checked = state.settings.lowPerformanceBattleScene === true;
   dom.optAutoBreakthroughResumeWarmupSec.value = String(
     getConfiguredAutoBreakthroughResumeWarmupSec(),
   );
@@ -6097,6 +6182,11 @@ function bindEvents() {
     if (state.settings.autoResumeRealtime) {
       maybeAutoStartRealtime("옵션 변경");
     }
+    render();
+  });
+  dom.optLowPerformanceBattleScene.addEventListener("change", () => {
+    state.settings.lowPerformanceBattleScene = dom.optLowPerformanceBattleScene.checked;
+    persistLocal();
     render();
   });
   dom.optAutoBreakthroughResumeWarmupSec.addEventListener("change", () => {
@@ -6510,6 +6600,7 @@ function bindEvents() {
       autoBreakthroughResumeWarmupSec:
         state.settings.autoBreakthroughResumeWarmupSec,
       battleSpeed: state.settings.battleSpeed,
+      lowPerformanceBattleScene: state.settings.lowPerformanceBattleScene,
       offlineCapHours: state.settings.offlineCapHours,
       offlineEventLimit: state.settings.offlineEventLimit,
     });

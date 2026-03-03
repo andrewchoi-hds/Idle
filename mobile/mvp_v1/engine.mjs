@@ -3228,6 +3228,7 @@ export function createInitialSliceState(context, options = {}) {
       autoBreakthrough: false,
       autoTribulation: false,
       autoResumeRealtime: pickBoolean(options.autoResumeRealtime, false),
+      lowPerformanceBattleScene: pickBoolean(options.lowPerformanceBattleScene, false),
       autoBreakthroughResumeWarmupSec: normalizeAutoBreakthroughResumeWarmupSec(
         options.autoBreakthroughResumeWarmupSec,
         DEFAULT_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC,
@@ -3930,6 +3931,10 @@ export function parseSliceState(raw, context) {
       autoBreakthrough: pickBoolean(parsed.settings?.autoBreakthrough, false),
       autoTribulation: pickBoolean(parsed.settings?.autoTribulation, false),
       autoResumeRealtime: pickBoolean(parsed.settings?.autoResumeRealtime, false),
+      lowPerformanceBattleScene: pickBoolean(
+        parsed.settings?.lowPerformanceBattleScene,
+        false,
+      ),
       autoBreakthroughResumeWarmupSec: normalizeAutoBreakthroughResumeWarmupSec(
         parsed.settings?.autoBreakthroughResumeWarmupSec,
         DEFAULT_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC,

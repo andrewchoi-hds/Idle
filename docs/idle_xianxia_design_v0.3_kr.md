@@ -2290,3 +2290,11 @@
 
 ## 537) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(pressure/danger resonance 유지 연출 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 538) 다음 순차 작업
+1. [완료] 자동 옵션 패널에 저사양 토글(`optLowPerformanceBattleScene`)을 추가하고, 엔진 상태(`settings.lowPerformanceBattleScene`) 생성/파싱/런 초기화 경로에 영속화 연동.
+2. [완료] 상시 루프(`runBattleSceneAmbientTick`)에 저사양 밀도 스케일을 도입해 ambient duel visuals를 축소하고 pulse cadence/확률 및 장식 spawn(cap)을 모드별로 하향.
+3. [완료] DOM contract/회귀 체크(`check_mobile_mvp_dom_contract_v1`, `check_mobile_mvp_slice_regression_v1`)와 수직슬라이스 문서를 동기화해 저사양 모드 회귀 포인트를 명시.
+
+## 539) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(저사양 전투 연출 밀도 제어 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
