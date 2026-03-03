@@ -151,6 +151,7 @@ npm run mobile:mvp:serve
   - 스킬 배너(`battleSceneSkillBanner`)와 전투 티커(`battleSceneTicker`)를 추가해 치명타/비기/라운드 종료 이벤트를 조작 없이도 지속 피드백
   - 배우 프레임 상태(`data-actor-frame=idle/attack/hit/skill`)와 전환 헬퍼(`setBattleSceneActorFrame`, `resetBattleSceneActorFrames`)를 추가해 타격/피격/비기 타이밍이 즉시 시각 반영
   - 프레임별 아바타 SVG 에셋(`battle_avatar_cultivator_{attack|hit|skill}.svg`, `battle_avatar_guardian_{attack|hit|skill}.svg`)을 연결해 동일 상태 전환에서도 실제 스프라이트 체감이 나도록 강화
+  - 듀얼 HUD 수치와 연동된 상시 상태 데이터(`data-cast-tier`, `data-scene-pressure`, `data-scene-combo-tier`, `data-scene-lead`)를 추가해 기세/연격/압력 변화가 배우·아레나 비주얼에 즉시 반영
   - 전투 집중 토글(`btnToggleBattleFocus`, `applyBattleFocusMode`)을 추가해 모바일 화면에서 운영 패널(`settings/consumables/save/assets/logs`)을 접고 전투/액션 중심 레이아웃으로 즉시 전환
   - 전투 집중 기본 ON(`main.app.battle-focus-mode`)으로 첫 진입부터 실제 게임 화면 비중을 높이고, 토글 해제 시 전체 운영 패널을 다시 노출
   - 상시 루프(`runBattleSceneAmbientTick`)가 `idle/auto/realtime` 모드별로 연출 강도와 임팩트 빈도를 조절해 방치형 전투 화면처럼 지속 동작
@@ -216,6 +217,7 @@ npm run mobile:mvp:check
   - 점검 시나리오:
   - 전투 1회 상태 변화
   - 듀얼 strike/burst/impact 경로에서 배우 프레임(`idle/attack/hit/skill`)이 전환되고 리셋 시 `idle`로 복귀하는지 검증
+  - 듀얼 HUD 갱신 시 cast/combo/pressure/lead 상태 데이터가 일관되게 갱신되고 `prefers-reduced-motion` 환경에서도 수치 상태 반영이 유지되는지 검증
   - 기 부족 돌파 차단
   - 사망 실패 → 환생 루프 발동
   - 돌파 확률 프리뷰 4분기 분포(`성공+경상+후퇴+사망=100%`) 일관성 검증

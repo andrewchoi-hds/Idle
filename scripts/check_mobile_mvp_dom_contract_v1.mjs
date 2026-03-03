@@ -277,6 +277,7 @@ async function main() {
   assertIncludes(app, "function setBattleSceneSkillBanner(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneActorFrame(", "app.mjs", failures);
   assertIncludes(app, "function resetBattleSceneActorFrames(", "app.mjs", failures);
+  assertIncludes(app, "function resolveBattleSceneCastTier(", "app.mjs", failures);
   assertIncludes(app, "function startRealtimeAuto(", "app.mjs", failures);
   assertIncludes(app, "function stopRealtimeAuto(", "app.mjs", failures);
   assertIncludes(css, ".focus-controls", "app.css", failures);
@@ -287,7 +288,10 @@ async function main() {
   assertIncludes(css, ".battle-scene-skill-banner", "app.css", failures);
   assertIncludes(css, ".battle-scene-ticker", "app.css", failures);
   assertIncludes(css, ".battle-actor[data-actor-frame=\"attack\"]", "app.css", failures);
+  assertIncludes(css, ".battle-actor[data-cast-tier=\"full\"]", "app.css", failures);
+  assertIncludes(css, "[data-scene-combo-tier=\"frenzy\"]", "app.css", failures);
   assertIncludes(css, "@keyframes battle-avatar-frame-skill", "app.css", failures);
+  assertIncludes(css, "@keyframes battle-cast-charge", "app.css", failures);
   assertIncludes(css, "battle_avatar_cultivator_skill.svg", "app.css", failures);
   assertIncludes(css, "battle_avatar_guardian_hit.svg", "app.css", failures);
   assertIncludes(css, ".offline-modal", "app.css", failures);

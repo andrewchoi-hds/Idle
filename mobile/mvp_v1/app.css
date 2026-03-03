@@ -349,6 +349,55 @@ h2 {
   --battle-core-pulse-sec: 1.55s;
 }
 
+.battle-scene-arena[data-scene-pressure="medium"] {
+  --battle-flow-opacity: calc(var(--battle-flow-opacity) + 0.03);
+}
+
+.battle-scene-arena[data-scene-pressure="high"] {
+  --battle-flow-opacity: calc(var(--battle-flow-opacity) + 0.08);
+  --battle-core-pulse-sec: calc(var(--battle-core-pulse-sec) * 0.86);
+}
+
+.battle-scene-arena[data-scene-pressure="medium"]::after {
+  animation:
+    battle-arena-overlay-shift var(--battle-overlay-pulse-sec) ease-in-out infinite,
+    battle-arena-pressure-wave 2.4s ease-in-out infinite;
+}
+
+.battle-scene-arena[data-scene-pressure="high"]::after {
+  animation:
+    battle-arena-overlay-shift var(--battle-overlay-pulse-sec) ease-in-out infinite,
+    battle-arena-pressure-wave 1.5s ease-in-out infinite;
+}
+
+.battle-scene-arena[data-scene-combo-tier="flow"] .battle-scene-flow-front {
+  opacity: calc(var(--battle-flow-opacity) * 1.05);
+  filter: saturate(1.1) brightness(1.06);
+}
+
+.battle-scene-arena[data-scene-combo-tier="frenzy"] .battle-scene-flow-front {
+  opacity: calc(var(--battle-flow-opacity) * 1.2);
+  filter: saturate(1.2) brightness(1.14);
+  animation-duration: calc(var(--battle-flow-speed-sec) * 0.76);
+}
+
+.battle-scene-arena[data-scene-combo-tier="frenzy"] .battle-scene-flow-back {
+  opacity: calc(var(--battle-flow-opacity) * 0.98);
+  animation-duration: calc(var(--battle-flow-speed-sec) * 0.9);
+}
+
+.battle-scene-arena[data-scene-lead="player"] .battle-aura-player {
+  opacity: calc(var(--battle-aura-opacity) + 0.12);
+}
+
+.battle-scene-arena[data-scene-lead="enemy"] .battle-aura-enemy {
+  opacity: calc(var(--battle-aura-opacity) + 0.12);
+}
+
+.battle-scene-arena[data-scene-lead="even"] .battle-aura {
+  opacity: calc(var(--battle-aura-opacity) + 0.05);
+}
+
 .battle-scene-flow {
   position: absolute;
   inset: 12% -30% 16%;
@@ -738,6 +787,27 @@ h2 {
 
 .battle-actor-cast-fill {
   background: linear-gradient(90deg, var(--battle-actor-cast-fill-a), var(--battle-actor-cast-fill-b));
+  transform-origin: left center;
+}
+
+.battle-actor[data-cast-tier="mid"] .battle-actor-cast-fill {
+  filter: saturate(1.12) brightness(1.06);
+}
+
+.battle-actor[data-cast-tier="high"] .battle-actor-cast-fill {
+  filter: saturate(1.2) brightness(1.14);
+  animation: battle-cast-charge 0.88s ease-in-out infinite;
+}
+
+.battle-actor[data-cast-tier="full"] .battle-actor-cast-fill {
+  filter: saturate(1.34) brightness(1.22);
+  animation: battle-cast-charge 0.56s ease-in-out infinite;
+}
+
+.battle-actor[data-cast-tier="full"][data-actor-frame="idle"]::before {
+  animation:
+    battle-avatar-glow 2.9s ease-in-out infinite,
+    battle-cast-ready-ring 1.1s ease-in-out infinite;
 }
 
 .battle-actor-vitals {
@@ -1041,6 +1111,23 @@ h2 {
   }
 }
 
+@keyframes battle-arena-pressure-wave {
+  0% {
+    box-shadow: inset 0 0 0 1px rgba(123, 196, 168, 0.05), inset 0 -26px 46px rgba(0, 0, 0, 0.36);
+    filter: brightness(1);
+  }
+
+  50% {
+    box-shadow: inset 0 0 0 1px rgba(154, 229, 196, 0.2), inset 0 -30px 54px rgba(0, 0, 0, 0.42);
+    filter: brightness(1.08);
+  }
+
+  100% {
+    box-shadow: inset 0 0 0 1px rgba(123, 196, 168, 0.05), inset 0 -26px 46px rgba(0, 0, 0, 0.36);
+    filter: brightness(1);
+  }
+}
+
 @keyframes battle-clash-core-pulse {
   0% {
     transform: translate(-50%, -50%) scale(0.96);
@@ -1067,6 +1154,40 @@ h2 {
   100% {
     opacity: 0;
     transform: scale(1.28);
+  }
+}
+
+@keyframes battle-cast-charge {
+  0% {
+    transform: scaleX(0.94);
+    filter: saturate(1.08) brightness(1.04);
+  }
+
+  50% {
+    transform: scaleX(1);
+    filter: saturate(1.36) brightness(1.22);
+  }
+
+  100% {
+    transform: scaleX(0.94);
+    filter: saturate(1.08) brightness(1.04);
+  }
+}
+
+@keyframes battle-cast-ready-ring {
+  0% {
+    box-shadow: 0 0 0 3px rgba(34, 87, 73, 0.44), 0 5px 12px rgba(3, 9, 8, 0.35);
+    filter: brightness(1);
+  }
+
+  50% {
+    box-shadow: 0 0 0 5px rgba(126, 232, 196, 0.36), 0 0 14px rgba(126, 232, 196, 0.28), 0 6px 12px rgba(3, 9, 8, 0.38);
+    filter: brightness(1.18);
+  }
+
+  100% {
+    box-shadow: 0 0 0 3px rgba(34, 87, 73, 0.44), 0 5px 12px rgba(3, 9, 8, 0.35);
+    filter: brightness(1);
   }
 }
 
@@ -1983,6 +2104,8 @@ textarea:focus-visible,
   .battle-actor,
   .battle-actor::before,
   .battle-actor[data-hp-tier="danger"] .battle-actor-hp-fill,
+  .battle-actor[data-cast-tier="high"] .battle-actor-cast-fill,
+  .battle-actor[data-cast-tier="full"] .battle-actor-cast-fill,
   .battle-spark,
   .battle-trail,
   .battle-scene-skill-banner.is-active,
