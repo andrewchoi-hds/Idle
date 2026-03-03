@@ -312,6 +312,14 @@ async function main() {
   assertIncludes(app, "function syncBattleSceneDuelFromImpact(", "app.mjs", failures);
   assertIncludes(app, "function resolveBattleSceneEventSignalScore(", "app.mjs", failures);
   assertIncludes(app, "function resolveBattleSceneEventSignalFromCollectedEvents(", "app.mjs", failures);
+  assertIncludes(
+    app,
+    "function buildBattleSceneCollectedEventFromAutoSummaryLastEngineOutcome(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(app, "function resolveBattleSceneEventSignalFromAutoSummary(", "app.mjs", failures);
+  assertIncludes(app, "summary.lastEngineOutcome", "app.mjs", failures);
   assertIncludes(app, 'kind === "breakthrough_blocked_no_qi"', "app.mjs", failures);
   assertIncludes(app, 'kind === "breakthrough_blocked_tribulation_setting"', "app.mjs", failures);
   assertIncludes(app, 'outcomeCode === "blocked_tribulation_setting"', "app.mjs", failures);
@@ -335,6 +343,13 @@ async function main() {
   assertIncludes(app, "breakthroughTribulationSettingBlocks", "app.mjs", failures);
   assertIncludes(app, "autoBreakthroughPauseNextActionKo", "app.mjs", failures);
   assertIncludes(app, "const BATTLE_SCENE_RESULT_PRIORITY_WINDOW_MS = 2600;", "app.mjs", failures);
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_SUPPRESSION_WINDOW_MS = 6200;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(app, "battleSceneLastResultDrivenImpactAtMs", "app.mjs", failures);
   assertIncludes(app, "function spawnBattleSceneShockwave(", "app.mjs", failures);
   assertIncludes(app, "function maybeSpawnBattleSceneCastTelegraph(", "app.mjs", failures);
   assertIncludes(app, "function maybeSpawnBattleSceneChargeMote(", "app.mjs", failures);

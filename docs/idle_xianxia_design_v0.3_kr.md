@@ -2410,3 +2410,11 @@
 
 ## 567) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(경상 실패 난이도 전이 메타 정합 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 568) 다음 순차 작업
+1. [완료] `runAutoSliceSeconds` summary에 `lastEngineOutcome(source/sec/outcome)`를 추가해 `runBattleOnce`/`runBreakthroughAttempt`의 마지막 실결과를 집계값/이벤트 버퍼와 독립적으로 전달하도록 확장.
+2. [완료] 전투 연출 신호 해석 경로에 `buildBattleSceneCollectedEventFromAutoSummaryLastEngineOutcome` + `resolveBattleSceneEventSignalFromAutoSummary`를 추가해 `playBattleSceneAutoSummary`/`playBattleSceneOfflineSummary`가 `collectedEvents` fallback 전에 마지막 엔진 결과를 직접 반영하도록 정합 강화.
+3. [완료] 상시 루프에 결과 기반 ambient 억제 윈도우(`BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_SUPPRESSION_WINDOW_MS = 6200`)를 도입해 결과 직후 랜덤 pulse 비중을 추가 하향하고 outcome 우선 구간을 확장.
+
+## 569) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(lastEngineOutcome 직접 연동 + 결과 기반 ambient suppression window 확장 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

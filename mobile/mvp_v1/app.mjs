@@ -532,6 +532,7 @@ const BATTLE_SCENE_ACTOR_FRAME_HOLD_REDUCED_MS = {
 };
 const BATTLE_SCENE_AMBIENT_TICK_MS = 820;
 const BATTLE_SCENE_RESULT_PRIORITY_WINDOW_MS = 2600;
+const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_SUPPRESSION_WINDOW_MS = 6200;
 const BATTLE_SCENE_DUEL_MAX_HP = 100;
 const BATTLE_SCENE_DUEL_MAX_CAST = 100;
 const BATTLE_SCENE_TICKER_MAX = 5;
@@ -553,6 +554,7 @@ let battleSceneFlashTimer = null;
 let battleSceneAmbientTimer = null;
 let battleSceneAmbientStep = 0;
 let battleSceneLastExplicitEventAtMs = 0;
+let battleSceneLastResultDrivenImpactAtMs = 0;
 let battleSceneShakeTimer = null;
 let battleSceneLastShakeAtMs = 0;
 let battleSceneZoomTimer = null;
@@ -3920,9 +3922,16 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
     return;
   }
   const fromAmbient = options && options.fromAmbient === true;
+  const source =
+    options?.source === "battle" || options?.source === "breakthrough"
+      ? options.source
+      : "";
   const syncDuel = !(options && options.syncDuel === false);
   if (!fromAmbient) {
     battleSceneLastExplicitEventAtMs = Date.now();
+    if (source) {
+      battleSceneLastResultDrivenImpactAtMs = battleSceneLastExplicitEventAtMs;
+    }
   }
   const impactClass =
     kind === "battle_win"
@@ -4092,8 +4101,12 @@ function runBattleSceneAmbientTick() {
     pressure: battleSceneDuelState.pressure,
     lead: sceneLead,
   });
-  const quietMs = Date.now() - battleSceneLastExplicitEventAtMs;
-  const prioritizeOutcomeSignals = quietMs < BATTLE_SCENE_RESULT_PRIORITY_WINDOW_MS;
+  const now = Date.now();
+  const quietMs = now - battleSceneLastExplicitEventAtMs;
+  const resultDrivenQuietMs = now - battleSceneLastResultDrivenImpactAtMs;
+  const prioritizeOutcomeSignals =
+    quietMs < BATTLE_SCENE_RESULT_PRIORITY_WINDOW_MS ||
+    resultDrivenQuietMs < BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_SUPPRESSION_WINDOW_MS;
   if (reducedMotion) {
     return;
   }
@@ -5149,13 +5162,199 @@ function resolveBattleSceneEventSignalFromCollectedEvents(eventsInput) {
     if (!signal) {
       continue;
     }
+    const eventSec = Math.max(0, Number(event?.sec) || 0);
     const score = resolveBattleSceneEventSignalScore(signal, event, idx);
     if (!picked || score > pickedScore) {
-      picked = signal;
+      picked = {
+        ...signal,
+        eventSec,
+        eventOrder: idx,
+        score,
+      };
       pickedScore = score;
     }
   }
   return picked;
+}
+
+function buildBattleSceneCollectedEventFromAutoSummaryLastEngineOutcome(summaryInput) {
+  const summary = summaryInput && typeof summaryInput === "object" ? summaryInput : null;
+  const lastEngineOutcome =
+    summary?.lastEngineOutcome && typeof summary.lastEngineOutcome === "object"
+      ? summary.lastEngineOutcome
+      : null;
+  if (!lastEngineOutcome) {
+    return null;
+  }
+  const source =
+    lastEngineOutcome.source === "battle" || lastEngineOutcome.source === "breakthrough"
+      ? lastEngineOutcome.source
+      : "";
+  const outcome =
+    lastEngineOutcome.outcome && typeof lastEngineOutcome.outcome === "object"
+      ? lastEngineOutcome.outcome
+      : null;
+  const sec = Math.max(0, Number(lastEngineOutcome.sec) || 0);
+  if (!source || !outcome) {
+    return null;
+  }
+  if (source === "battle") {
+    return {
+      sec,
+      kind: outcome.won ? "battle_win" : "battle_loss",
+      difficultyIndex: Number(outcome.difficultyIndex) || 0,
+      stageQiRequired: Number(outcome.stageQiRequired) || 0,
+      qiDelta: Number(outcome.qiDelta) || 0,
+      spiritCoinDelta: Number(outcome.spiritCoinDelta) || 0,
+      rebirthEssenceDelta: Number(outcome.rebirthEssenceDelta) || 0,
+    };
+  }
+  const outcomeCode = String(outcome.outcome || "");
+  if (outcome.attempted !== true) {
+    if (outcomeCode === "blocked_no_qi") {
+      return {
+        sec,
+        kind: "breakthrough_blocked_no_qi",
+        requiredQi: Number(outcome.requiredQi) || 0,
+        currentQi: Number(outcome.currentQi) || 0,
+        qiDeficit: Number(outcome.qiDeficit) || 0,
+        message: String(outcome.message || ""),
+      };
+    }
+    if (outcomeCode === "blocked_tribulation_setting") {
+      return {
+        sec,
+        kind: "breakthrough_blocked_tribulation_setting",
+        difficultyIndex: Number(outcome.difficultyIndex || outcome.stage?.difficulty_index) || 0,
+        message: String(outcome.message || ""),
+      };
+    }
+    if (outcomeCode === "blocked_auto_risk_policy") {
+      const reason = String(outcome.autoPolicy?.reason || outcome.reason || "");
+      const reasonLabelKo = String(
+        outcome.autoPolicy?.reasonLabelKo || outcome.reasonLabelKo || "",
+      );
+      const nextActionKo = String(
+        outcome.autoPolicy?.nextActionKo || outcome.nextActionKo || "",
+      );
+      return {
+        sec,
+        kind: "breakthrough_blocked_auto_policy",
+        reason,
+        reasonLabelKo,
+        message: String(outcome.message || ""),
+        nextActionKo,
+      };
+    }
+    return null;
+  }
+  if (outcomeCode === "success") {
+    return {
+      sec,
+      kind: "breakthrough_success",
+      successPct: Number(outcome.successPct) || 0,
+      deathPct: Number(outcome.deathPct) || 0,
+      fromDifficultyIndex: Number(outcome.fromDifficultyIndex) || 0,
+      toDifficultyIndex: Number(outcome.toDifficultyIndex) || 0,
+      stageQiRequired: Number(outcome.stageQiRequired || outcome.stage?.qi_required) || 0,
+      qiDelta: Number(outcome.qiDelta) || 0,
+    };
+  }
+  if (outcomeCode === "minor_fail") {
+    return {
+      sec,
+      kind: "breakthrough_minor_fail",
+      difficultyIndex: Number(outcome.difficultyIndex || outcome.stage?.difficulty_index) || 0,
+      fromDifficultyIndex:
+        Number(outcome.fromDifficultyIndex || outcome.stage?.difficulty_index) || 0,
+      toDifficultyIndex:
+        Number(outcome.toDifficultyIndex || outcome.stage?.difficulty_index) || 0,
+      successPct: Number(outcome.successPct) || 0,
+      deathPct: Number(outcome.deathPct) || 0,
+      stageQiRequired: Number(outcome.stageQiRequired || outcome.stage?.qi_required) || 0,
+      qiDelta: Number(outcome.qiDelta) || 0,
+    };
+  }
+  if (outcomeCode === "retreat_fail") {
+    return {
+      sec,
+      kind: "breakthrough_retreat_fail",
+      retreatLayers: Number(outcome.retreatLayers) || 0,
+      fromDifficultyIndex: Number(outcome.fromDifficultyIndex) || 0,
+      toDifficultyIndex: Number(outcome.toDifficultyIndex) || 0,
+      successPct: Number(outcome.successPct) || 0,
+      deathPct: Number(outcome.deathPct) || 0,
+      stageQiRequired: Number(outcome.stageQiRequired || outcome.stage?.qi_required) || 0,
+      qiDelta: Number(outcome.qiDelta) || 0,
+    };
+  }
+  if (outcomeCode === "death_fail") {
+    return {
+      sec,
+      kind: "breakthrough_death_fail",
+      difficultyIndex: Number(outcome.difficultyIndex || outcome.stage?.difficulty_index) || 0,
+      fromDifficultyIndex:
+        Number(outcome.fromDifficultyIndex || outcome.stage?.difficulty_index) || 0,
+      toDifficultyIndex:
+        Number(outcome.toDifficultyIndex || outcome.nextStage?.difficulty_index) || 0,
+      resetStageNameKo: String(outcome.resetStageNameKo || ""),
+      rebirthReward: Number(outcome.rebirthReward) || 0,
+      successPct: Number(outcome.successPct) || 0,
+      deathPct: Number(outcome.deathPct) || 0,
+      stageQiRequired: Number(outcome.stageQiRequired || outcome.stage?.qi_required) || 0,
+      qiDelta: Number(outcome.qiDelta) || 0,
+    };
+  }
+  return null;
+}
+
+function resolveBattleSceneEventSignalFromAutoSummary(summaryInput) {
+  const summary = summaryInput && typeof summaryInput === "object" ? summaryInput : null;
+  if (!summary) {
+    return null;
+  }
+  const collectedSignal = resolveBattleSceneEventSignalFromCollectedEvents(summary.collectedEvents);
+  const directEvent = buildBattleSceneCollectedEventFromAutoSummaryLastEngineOutcome(summary);
+  if (!directEvent) {
+    return collectedSignal;
+  }
+  const directSignal = resolveBattleSceneEventSignalFromCollectedEvent(directEvent);
+  if (!directSignal) {
+    return collectedSignal;
+  }
+  const directSignalWithMeta = {
+    ...directSignal,
+    eventSec: Math.max(0, Number(directEvent.sec) || 0),
+    eventOrder: Math.max(0, Number(collectedSignal?.eventOrder) || 0) + 1,
+  };
+  const lastEngineOutcome =
+    summary.lastEngineOutcome && typeof summary.lastEngineOutcome === "object"
+      ? summary.lastEngineOutcome
+      : null;
+  if (
+    (lastEngineOutcome?.source === "battle" || lastEngineOutcome?.source === "breakthrough") &&
+    lastEngineOutcome.outcome &&
+    typeof lastEngineOutcome.outcome === "object"
+  ) {
+    directSignalWithMeta.impactOptions = {
+      ...(directSignalWithMeta.impactOptions || {}),
+      source: lastEngineOutcome.source,
+      outcome: lastEngineOutcome.outcome,
+    };
+  }
+  const directScore =
+    resolveBattleSceneEventSignalScore(
+      directSignalWithMeta,
+      { sec: directSignalWithMeta.eventSec },
+      directSignalWithMeta.eventOrder,
+    ) + 120;
+  directSignalWithMeta.score = directScore;
+  if (!collectedSignal) {
+    return directSignalWithMeta;
+  }
+  return directScore >= Number(collectedSignal.score || 0)
+    ? directSignalWithMeta
+    : collectedSignal;
 }
 
 function playBattleSceneAutoSummary(summaryInput, sourceLabel = "자동 진행") {
@@ -5170,7 +5369,7 @@ function playBattleSceneAutoSummary(summaryInput, sourceLabel = "자동 진행")
   const rebirths = Math.max(0, Number(summary.rebirths) || 0);
   const blockCounts = resolveAutoBreakthroughBlockCounts(summary);
   const warmupSkips = Math.max(0, Number(summary.autoBreakthroughWarmupSkips) || 0);
-  const eventSignal = resolveBattleSceneEventSignalFromCollectedEvents(summary.collectedEvents);
+  const eventSignal = resolveBattleSceneEventSignalFromAutoSummary(summary);
   if (
     battles <= 0 &&
     breakthroughs <= 0 &&
@@ -5308,9 +5507,10 @@ function playBattleSceneOfflineSummary(offlineReportInput) {
   const breakthroughs = Math.max(0, Number(auto.breakthroughs) || 0);
   const battles = Math.max(0, Number(auto.battles) || 0);
   const blockedLabel = buildAutoBreakthroughBlockSummaryLabelKo(auto);
-  const eventSignal = resolveBattleSceneEventSignalFromCollectedEvents(
-    Array.isArray(report?.events) ? report.events : auto.collectedEvents,
-  );
+  const eventSignal = resolveBattleSceneEventSignalFromAutoSummary({
+    ...auto,
+    collectedEvents: Array.isArray(report?.events) ? report.events : auto.collectedEvents,
+  });
   const tone = eventSignal
     ? eventSignal.tone
     : rebirths > 0
