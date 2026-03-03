@@ -141,6 +141,7 @@ npm run mobile:mvp:serve
   - 아레나 배경에 SVG 에셋(`battle_arena_mist.svg`)을 적용해 텍스트 중심 레이아웃 대비 시각 밀도를 강화
   - 진영 아이콘에 SVG 아바타(`battle_avatar_cultivator.svg`, `battle_avatar_guardian.svg`)를 적용해 플레이어/적 구분을 즉시 인지 가능하게 개선
   - `전투 1회/자동 10초/실시간 자동/오프라인 정산` 결과를 동일 연출 경로(`playBattleSceneBattleOutcome`, `playBattleSceneAutoSummary`, `playBattleSceneOfflineSummary`)로 통합
+  - 엔진 결과 동기화 헬퍼(`syncBattleSceneDuelFromImpact`, `applyBattleSceneOutcomeDuelTransitions`)를 추가해 `runBattleOnce/runBreakthroughAttempt` 결과(`qi/spiritCoin/성공률/사망률/후퇴 단계`)가 듀얼 HUD 수치와 lead/pressure/danger/combo 트리거에 deterministic 반영되도록 구성
   - stage 메타(`world`, `difficulty_index`, `is_tribulation`)를 연출 패널 `data-scene-world`, `data-scene-tier`로 반영해 인간계/신선계/진선계 및 난도 구간별 색감·오라 강도를 차등 적용
   - 전투 spark 레이어(`battleSceneSparkLayer`)를 추가해 클릭 없이도 상시 파티클/충돌 파동이 순환되도록 구성
   - 전장 흐름 레이어(`battle-scene-flow-back/front`)를 추가해 배경 전류가 상시 흐르는 느낌을 유지
@@ -172,6 +173,7 @@ npm run mobile:mvp:serve
   - 연격 배너(`battleSceneComboBanner`, `setBattleSceneComboBanner`)를 추가해 연격 임계치(3/7/11)에서 중앙 배너를 자동 노출하고, 라운드 종료/연격 종료 시 자동 정리
   - 전투 집중 기본 ON(`main.app.battle-focus-mode`)으로 첫 진입부터 실제 게임 화면 비중을 높이고, 토글 해제 시 전체 운영 패널을 다시 노출
   - 상시 루프(`runBattleSceneAmbientTick`)가 `idle/auto/realtime` 모드별로 연출 강도와 임팩트 빈도를 조절해 방치형 전투 화면처럼 지속 동작
+  - 결과 우선 윈도우(`BATTLE_SCENE_RESULT_PRIORITY_WINDOW_MS=2600ms`)를 추가해 명시적 전투/돌파 결과 직후에는 ambient 랜덤 pulse/장식 트리거 비중을 낮추고 실제 결과 기반 연출을 우선 반영
   - `prefers-reduced-motion` 환경에서는 danger pulse/pressure spike/lead swing/hit-stop/telegraph shockwave/charge mote/spark/trail 등 모션 이펙트를 비활성화하되 듀얼 HUD 수치(HP/기세)와 배우 프레임 상태 전환은 유지해 상태 가시성을 확보
   - 상시 연출 애니메이션(오라 드리프트/actor idle/오버레이 pulse)과 임팩트 연출(타격/돌파 burst·collapse)을 분리해 자동 루프 중에도 시각 피드백을 유지하고, `prefers-reduced-motion` 환경에서는 해당 애니메이션을 비활성화
 
@@ -233,6 +235,7 @@ npm run mobile:mvp:check
 ```
   - 점검 시나리오:
   - 전투 1회 상태 변화
+  - `runBattleOnce/runBreakthroughAttempt` 결과가 즉시 duel HUD 및 lead/pressure/danger/combo 트리거로 연결되고, 직후 2.6초 동안 ambient 랜덤 트리거 비중이 억제되는지 검증
   - 듀얼 strike/burst/impact 경로에서 배우 프레임(`idle/attack/hit/skill`)이 전환되고 리셋 시 `idle`로 복귀하는지 검증
   - 듀얼 HUD 갱신 시 cast/combo/pressure/lead 상태 데이터가 일관되게 갱신되고 `prefers-reduced-motion` 환경에서도 수치 상태 반영이 유지되는지 검증
   - 기 부족 돌파 차단

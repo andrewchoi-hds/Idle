@@ -2274,3 +2274,11 @@
 
 ## 533) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(lead resonance 유지 연출 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 534) 다음 순차 작업
+1. [완료] 엔진 결과 동기화 헬퍼(`syncBattleSceneDuelFromImpact`, `applyBattleSceneOutcomeDuelTransitions`)를 추가해 `runBattleOnce/runBreakthroughAttempt` 결과(`qi/spiritCoin/성공률/사망률/후퇴 단계`)가 듀얼 HUD 수치와 lead/pressure/danger/combo 트리거로 즉시 연결되도록 구성.
+2. [완료] 상시 루프(`runBattleSceneAmbientTick`)에 결과 우선 윈도우(`BATTLE_SCENE_RESULT_PRIORITY_WINDOW_MS=2600ms`)를 도입하고, ambient 랜덤 pulse(pressure/danger/lead/combo/장식/impact) 확률을 하향해 실제 결과 기반 연출 반영을 우선하도록 조정.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)에 신규 토큰(`applyBattleSceneOutcomeDuelTransitions`, `syncBattleSceneDuelFromImpact`, `BATTLE_SCENE_RESULT_PRIORITY_WINDOW_MS`)을 추가하고 문서 회귀 포인트를 동기화.
+
+## 535) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(엔진 결과 우선 트리거 + ambient 랜덤 비중 축소 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
