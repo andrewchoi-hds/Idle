@@ -2226,3 +2226,11 @@
 
 ## 521) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(lead swing 전환 연출 + 주도권 티커 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 522) 다음 순차 작업
+1. [완료] 압력 스파이크 헬퍼(`triggerBattleScenePressureSpike`, `maybeTriggerBattleScenePressureTransition`)를 추가해 압력 단계 전환(`low→medium/high`, `medium→high`) 순간에만 spike 이벤트를 감지하도록 구성.
+2. [완료] 압력 스파이크 이벤트에서 전장 클래스(`scene-pressure-spike-medium|high`)와 충돌 코어 강화, 파동/궤적/카메라 피드백을 함께 트리거해 고압 구간 체감을 강화.
+3. [완료] 루프/초기화 정리 경로에서 pressure spike 타이머·상태를 리셋하고 DOM contract 체크에 신규 토큰(`triggerBattleScenePressureSpike`, `maybeTriggerBattleScenePressureTransition`, `.battle-scene-arena.scene-pressure-spike-high`)을 반영해 회귀를 방지.
+
+## 523) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(pressure spike 전환 연출 + 고압 루프 강화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
