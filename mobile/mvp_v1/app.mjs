@@ -377,6 +377,19 @@ const BATTLE_SCENE_DANGER_PULSE_MIN_INTERVAL_MS = {
   both: 700,
 };
 const BATTLE_SCENE_DANGER_TICKER_MIN_INTERVAL_MS = 2300;
+const BATTLE_SCENE_COMBO_SURGE_CLASSES = [
+  "scene-combo-surge-flow",
+  "scene-combo-surge-frenzy",
+];
+const BATTLE_SCENE_COMBO_SURGE_DURATIONS_MS = {
+  flow: 440,
+  frenzy: 540,
+};
+const BATTLE_SCENE_COMBO_SURGE_MIN_INTERVAL_MS = {
+  flow: 760,
+  frenzy: 620,
+};
+const BATTLE_SCENE_COMBO_SURGE_TICKER_MIN_INTERVAL_MS = 2100;
 const BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_IDLE_MS = 1500;
 const BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_AUTO_MS = 1080;
 const BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_REALTIME_MS = 760;
@@ -438,6 +451,10 @@ let battleSceneDangerPulseTimer = null;
 let battleSceneLastDangerPulseAtMs = 0;
 let battleSceneLastDangerTickerAtMs = 0;
 let battleSceneLastDangerState = null;
+let battleSceneComboSurgeTimer = null;
+let battleSceneLastComboSurgeAtMs = 0;
+let battleSceneLastComboSurgeTickerAtMs = 0;
+let battleSceneLastComboTierState = null;
 const battleSceneLastCastTelegraphAtMs = {
   player: 0,
   enemy: 0,
@@ -1727,6 +1744,111 @@ function maybeTriggerBattleSceneDangerTransition(nextDangerInput) {
   }
 }
 
+function triggerBattleSceneComboSurge(tier = "flow", options = {}) {
+  if (!dom.battleSceneArena || shouldReduceBattleSceneMotion()) {
+    return;
+  }
+  const normalizedTier = tier === "frenzy" ? "frenzy" : "flow";
+  const now = Date.now();
+  const minIntervalMs = BATTLE_SCENE_COMBO_SURGE_MIN_INTERVAL_MS[normalizedTier] || 720;
+  if (now - battleSceneLastComboSurgeAtMs < minIntervalMs) {
+    return;
+  }
+  if (options.fromAmbient === true && normalizedTier === "flow" && Math.random() > 0.58) {
+    return;
+  }
+  const className = `scene-combo-surge-${normalizedTier}`;
+  dom.battleSceneArena.classList.remove(...BATTLE_SCENE_COMBO_SURGE_CLASSES);
+  void dom.battleSceneArena.offsetWidth;
+  dom.battleSceneArena.classList.add(className);
+  if (battleSceneComboSurgeTimer !== null) {
+    window.clearTimeout(battleSceneComboSurgeTimer);
+  }
+  const durationMs = BATTLE_SCENE_COMBO_SURGE_DURATIONS_MS[normalizedTier] || 460;
+  battleSceneComboSurgeTimer = window.setTimeout(() => {
+    dom.battleSceneArena?.classList.remove(className);
+    battleSceneComboSurgeTimer = null;
+  }, durationMs);
+
+  const tone = normalizedTier === "frenzy" ? "error" : "success";
+  spawnBattleSceneShockwave({
+    anchor: "center",
+    tone,
+    variant: normalizedTier === "frenzy" ? "telegraph-urgent" : "telegraph",
+    radiusPx: normalizedTier === "frenzy" ? 106 : 84,
+    thicknessPx: normalizedTier === "frenzy" ? 3.1 : 2.5,
+    lingerSec: normalizedTier === "frenzy" ? 0.68 : 0.58,
+  });
+  spawnBattleSceneTrail({
+    anchor: "center",
+    tone,
+    shape: "wave",
+    angleDeg: normalizedTier === "frenzy" ? 0 : 12,
+    length: normalizedTier === "frenzy" ? 112 : 92,
+  });
+  if (normalizedTier === "frenzy") {
+    spawnBattleSceneTrail({
+      anchor: "center",
+      tone: "warn",
+      shape: "wave",
+      angleDeg: 180,
+      length: 102,
+    });
+  }
+  spawnBattleSceneSpark({
+    anchor: "center",
+    tone,
+    shape: "ring",
+    scale: normalizedTier === "frenzy" ? 1.22 : 1.08,
+  });
+  spawnBattleSceneChargeMote({
+    anchor: "center",
+    tone,
+    radiusPx: normalizedTier === "frenzy" ? 38 : 30,
+    sizePx: normalizedTier === "frenzy" ? 7 : 6.1,
+    lingerSec: normalizedTier === "frenzy" ? 0.76 : 0.66,
+    sweepDeg: normalizedTier === "frenzy" ? 260 : 210,
+  });
+  triggerBattleSceneCameraShake(normalizedTier === "frenzy" ? "medium" : "lateral", { fromAmbient: true });
+  triggerBattleSceneZoomPulse(normalizedTier === "frenzy" ? "burst" : "soft", { fromAmbient: true });
+  triggerBattleSceneHitStop(normalizedTier === "frenzy" ? "medium" : "light", { fromAmbient: true });
+
+  if (now - battleSceneLastComboSurgeTickerAtMs >= BATTLE_SCENE_COMBO_SURGE_TICKER_MIN_INTERVAL_MS) {
+    pushBattleSceneTicker(
+      normalizedTier === "frenzy"
+        ? "연격 폭주 점화 · 광란 구간 돌입"
+        : "연격 기류 상승 · 연계 리듬 가속",
+      normalizedTier === "frenzy" ? "error" : "success",
+    );
+    battleSceneLastComboSurgeTickerAtMs = now;
+  }
+  battleSceneLastComboSurgeAtMs = now;
+}
+
+function maybeTriggerBattleSceneComboTierTransition(nextTierInput, options = {}) {
+  const nextTier =
+    nextTierInput === "frenzy"
+      ? "frenzy"
+      : nextTierInput === "flow"
+        ? "flow"
+        : "calm";
+  if (battleSceneLastComboTierState === nextTier) {
+    return;
+  }
+  const prevTier = battleSceneLastComboTierState;
+  battleSceneLastComboTierState = nextTier;
+  if (prevTier === null || shouldReduceBattleSceneMotion()) {
+    return;
+  }
+  const escalation =
+    (prevTier === "calm" && (nextTier === "flow" || nextTier === "frenzy")) ||
+    (prevTier === "flow" && nextTier === "frenzy");
+  if (!escalation) {
+    return;
+  }
+  triggerBattleSceneComboSurge(nextTier, options);
+}
+
 function renderBattleSceneDuelHud() {
   const playerHpPct = Math.round(
     (clampBattleSceneGauge(battleSceneDuelState.playerHp, BATTLE_SCENE_DUEL_MAX_HP) /
@@ -1780,14 +1902,16 @@ function renderBattleSceneDuelHud() {
       enemyHpPct,
     );
     const scenePressure = battleSceneDuelState.pressure;
-    const sceneDanger = resolveBattleSceneDangerSide(playerHpPct, enemyHpPct);
-    dom.battleSceneArena.dataset.scenePressure = battleSceneDuelState.pressure;
-    dom.battleSceneArena.dataset.sceneComboTier = resolveBattleSceneComboTier(
+    const sceneComboTier = resolveBattleSceneComboTier(
       battleSceneDuelState.combo,
     );
+    const sceneDanger = resolveBattleSceneDangerSide(playerHpPct, enemyHpPct);
+    dom.battleSceneArena.dataset.scenePressure = battleSceneDuelState.pressure;
+    dom.battleSceneArena.dataset.sceneComboTier = sceneComboTier;
     dom.battleSceneArena.dataset.sceneLead = sceneLead;
     dom.battleSceneArena.dataset.sceneDanger = sceneDanger;
     maybeTriggerBattleScenePressureTransition(scenePressure);
+    maybeTriggerBattleSceneComboTierTransition(sceneComboTier);
     maybeTriggerBattleSceneDangerTransition(sceneDanger);
     maybeTriggerBattleSceneLeadSwing(sceneLead);
   }
@@ -1818,6 +1942,9 @@ function resetBattleSceneDuelState(options = {}) {
   battleSceneLastDangerState = null;
   battleSceneLastDangerPulseAtMs = 0;
   battleSceneLastDangerTickerAtMs = 0;
+  battleSceneLastComboTierState = null;
+  battleSceneLastComboSurgeAtMs = 0;
+  battleSceneLastComboSurgeTickerAtMs = 0;
   if (battleSceneLeadSwingTimer !== null) {
     window.clearTimeout(battleSceneLeadSwingTimer);
     battleSceneLeadSwingTimer = null;
@@ -1830,9 +1957,14 @@ function resetBattleSceneDuelState(options = {}) {
     window.clearTimeout(battleSceneDangerPulseTimer);
     battleSceneDangerPulseTimer = null;
   }
+  if (battleSceneComboSurgeTimer !== null) {
+    window.clearTimeout(battleSceneComboSurgeTimer);
+    battleSceneComboSurgeTimer = null;
+  }
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_LEAD_SWING_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_PRESSURE_SPIKE_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_DANGER_PULSE_CLASSES);
+  dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_COMBO_SURGE_CLASSES);
   clearBattleSceneComboBanner();
   resetBattleSceneActorFrames();
   if (options.clearTicker) {
@@ -2707,7 +2839,9 @@ function runBattleSceneAmbientTick() {
       BATTLE_SCENE_DUEL_MAX_CAST) *
       100,
   );
+  const sceneComboTier = resolveBattleSceneComboTier(battleSceneDuelState.combo);
   const dangerSide = resolveBattleSceneDangerSide(playerHpPct, enemyHpPct);
+  maybeTriggerBattleSceneComboTierTransition(sceneComboTier, { fromAmbient: true });
   maybeTriggerBattleSceneDangerTransition(dangerSide);
   playBattleSfx("ambient", {
     mode,
@@ -2753,6 +2887,30 @@ function runBattleSceneAmbientTick() {
         : battleSceneAmbientStep % 5 === 0);
   if (shouldPulseDanger && Math.random() < (dangerSide === "both" ? 0.86 : mode === "realtime" ? 0.68 : mode === "auto" ? 0.54 : 0.34)) {
     triggerBattleSceneDangerPulse(dangerSide, { fromAmbient: true });
+  }
+  const shouldPulseComboSurge =
+    sceneComboTier !== "calm" &&
+    (mode === "realtime"
+      ? battleSceneAmbientStep % 2 === 0
+      : mode === "auto"
+        ? battleSceneAmbientStep % 3 === 0
+        : battleSceneAmbientStep % 5 === 0);
+  if (
+    shouldPulseComboSurge &&
+    Math.random() <
+      (sceneComboTier === "frenzy"
+        ? mode === "realtime"
+          ? 0.82
+          : mode === "auto"
+            ? 0.64
+            : 0.38
+        : mode === "realtime"
+          ? 0.56
+          : mode === "auto"
+            ? 0.42
+            : 0.24)
+  ) {
+    triggerBattleSceneComboSurge(sceneComboTier, { fromAmbient: true });
   }
   maybeSpawnBattleSceneCastTelegraph("player", {
     mode,
@@ -2959,6 +3117,10 @@ function stopBattleSceneAmbientLoop() {
     window.clearTimeout(battleSceneDangerPulseTimer);
     battleSceneDangerPulseTimer = null;
   }
+  if (battleSceneComboSurgeTimer !== null) {
+    window.clearTimeout(battleSceneComboSurgeTimer);
+    battleSceneComboSurgeTimer = null;
+  }
   battleSfxAmbientLastPlayAtMs = 0;
   battleSceneLastShakeAtMs = 0;
   battleSceneLastZoomAtMs = 0;
@@ -2972,6 +3134,9 @@ function stopBattleSceneAmbientLoop() {
   battleSceneLastDangerPulseAtMs = 0;
   battleSceneLastDangerTickerAtMs = 0;
   battleSceneLastDangerState = null;
+  battleSceneLastComboSurgeAtMs = 0;
+  battleSceneLastComboSurgeTickerAtMs = 0;
+  battleSceneLastComboTierState = null;
   battleSceneLastCastTelegraphAtMs.player = 0;
   battleSceneLastCastTelegraphAtMs.enemy = 0;
   battleSceneLastChargeMoteAtMs.player = 0;
@@ -2982,6 +3147,7 @@ function stopBattleSceneAmbientLoop() {
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_LEAD_SWING_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_PRESSURE_SPIKE_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_DANGER_PULSE_CLASSES);
+  dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_COMBO_SURGE_CLASSES);
   if (battleSceneSkillBannerTimer !== null) {
     window.clearTimeout(battleSceneSkillBannerTimer);
     battleSceneSkillBannerTimer = null;

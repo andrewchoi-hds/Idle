@@ -1353,6 +1353,46 @@ h2 {
     0 0 22px rgba(255, 142, 130, 0.4);
 }
 
+.battle-scene-arena.scene-combo-surge-flow {
+  border-color: #4ea484;
+  box-shadow:
+    inset 0 0 0 1px rgba(132, 228, 191, 0.34),
+    inset 0 -34px 58px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(64, 132, 105, 0.48);
+}
+
+.battle-scene-arena.scene-combo-surge-frenzy {
+  border-color: #ba6d62;
+  box-shadow:
+    inset 0 0 0 1px rgba(250, 170, 156, 0.38),
+    inset 0 -40px 66px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(149, 86, 76, 0.52);
+  filter: saturate(1.14) brightness(1.16);
+}
+
+.battle-scene-arena.scene-combo-surge-flow .battle-scene-flow-front {
+  opacity: calc(var(--battle-flow-opacity) * 1.22);
+  animation-duration: calc(var(--battle-flow-speed-sec) * 0.68);
+}
+
+.battle-scene-arena.scene-combo-surge-frenzy .battle-scene-flow-front {
+  opacity: calc(var(--battle-flow-opacity) * 1.34);
+  animation-duration: calc(var(--battle-flow-speed-sec) * 0.56);
+  filter: saturate(1.28) brightness(1.22);
+}
+
+.battle-scene-arena.scene-combo-surge-frenzy .battle-scene-flow-back {
+  opacity: calc(var(--battle-flow-opacity) * 1.08);
+  animation-duration: calc(var(--battle-flow-speed-sec) * 0.72);
+}
+
+.battle-scene-arena.scene-combo-surge-frenzy .battle-scene-clash-core {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 196, 184, 0.72),
+    0 0 20px rgba(255, 146, 132, 0.4);
+  animation-duration: calc(var(--battle-core-pulse-sec) * 0.58);
+}
+
 .battle-scene-arena.scene-hit-stop-light {
   filter: brightness(1.08) contrast(1.05) saturate(1.04);
 }
@@ -2690,6 +2730,8 @@ textarea:focus-visible,
   .battle-scene-arena.scene-danger-pulse-player,
   .battle-scene-arena.scene-danger-pulse-enemy,
   .battle-scene-arena.scene-danger-pulse-both,
+  .battle-scene-arena.scene-combo-surge-flow,
+  .battle-scene-arena.scene-combo-surge-frenzy,
   .battle-scene-arena.scene-impact-win .battle-actor-player,
   .battle-scene-arena.scene-impact-win .battle-actor-enemy,
   .battle-scene-arena.scene-impact-loss .battle-actor-enemy,
@@ -2722,6 +2764,12 @@ textarea:focus-visible,
   .battle-scene-arena.scene-danger-pulse-player,
   .battle-scene-arena.scene-danger-pulse-enemy,
   .battle-scene-arena.scene-danger-pulse-both {
+    filter: none !important;
+    box-shadow: inset 0 0 0 1px rgba(123, 196, 168, 0.05), inset 0 -26px 46px rgba(0, 0, 0, 0.36) !important;
+  }
+
+  .battle-scene-arena.scene-combo-surge-flow,
+  .battle-scene-arena.scene-combo-surge-frenzy {
     filter: none !important;
     box-shadow: inset 0 0 0 1px rgba(123, 196, 168, 0.05), inset 0 -26px 46px rgba(0, 0, 0, 0.36) !important;
   }
