@@ -2766,16 +2766,63 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
         0,
         Number(outcome.pauseThreshold || outcome.threshold) || 0,
       );
+      const blockedRequiredQi = Math.max(
+        1,
+        Math.round(Number(outcome.requiredQi || outcome.stage?.qi_required) || 1),
+      );
+      const blockedCurrentQiRaw = Number(outcome.currentQi);
+      const blockedCurrentQi = Math.max(
+        0,
+        Number.isFinite(blockedCurrentQiRaw)
+          ? Math.round(blockedCurrentQiRaw)
+          : Math.round(Number(state?.currencies?.qi) || 0),
+      );
+      const blockedQiDeficit = Math.max(
+        0,
+        Math.round(
+          Number(outcome.qiDeficit) || blockedRequiredQi - blockedCurrentQi,
+        ),
+      );
+      const blockedDifficultyIndex = Math.max(
+        0,
+        Math.round(Number(outcome.difficultyIndex || outcome.stage?.difficulty_index) || 0),
+      );
       if (blockedNoQi) {
+        const deficitRatio = Math.max(
+          0,
+          Math.min(2.4, blockedQiDeficit / Math.max(1, blockedRequiredQi)),
+        );
+        const castPenalty = Math.max(
+          8,
+          Math.min(20, Math.round(8 + deficitRatio * 8)),
+        );
+        const enemyCastGain = Math.max(
+          0,
+          Math.min(8, Math.round(2 + deficitRatio * 4)),
+        );
+        const comboPenalty = deficitRatio >= 1 ? 2 : 1;
+        const momentumScale = Math.max(0.58, 0.86 - deficitRatio * 0.18);
         battleSceneDuelState.playerCast = clampBattleSceneGauge(
-          battleSceneDuelState.playerCast - 8,
+          battleSceneDuelState.playerCast - castPenalty,
           BATTLE_SCENE_DUEL_MAX_CAST,
         );
-        battleSceneDuelState.combo = Math.max(0, battleSceneDuelState.combo - 1);
-        battleSceneDuelState.dpsMomentum = Math.max(0, battleSceneDuelState.dpsMomentum * 0.82);
+        battleSceneDuelState.enemyCast = clampBattleSceneGauge(
+          battleSceneDuelState.enemyCast + enemyCastGain,
+          BATTLE_SCENE_DUEL_MAX_CAST,
+        );
+        battleSceneDuelState.combo = Math.max(0, battleSceneDuelState.combo - comboPenalty);
+        battleSceneDuelState.dpsMomentum = Math.max(
+          0,
+          battleSceneDuelState.dpsMomentum * momentumScale,
+        );
         comboAction = "cooldown";
-        tickerText = "돌파 기력 부족 · 축기 재정렬";
+        tickerText = `돌파 기력 부족 · 기 ${fmtNumber(blockedCurrentQi)}/${fmtNumber(blockedRequiredQi)}`;
         tickerTone = "warn";
+        bannerText =
+          blockedQiDeficit > 0
+            ? `기 ${fmtNumber(blockedQiDeficit)} 부족 · 축기 후 재시도`
+            : "축기 재정렬 후 재시도";
+        bannerTone = "warn";
         applyOutcomeTransition = true;
       } else if (blockedTribulationSetting) {
         battleSceneDuelState.playerCast = clampBattleSceneGauge(
@@ -2788,9 +2835,15 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
         );
         battleSceneDuelState.dpsMomentum = Math.max(0, battleSceneDuelState.dpsMomentum * 0.94);
         comboAction = "resonance";
-        tickerText = "도겁 자동 대기 · 설정 확인 필요";
+        tickerText =
+          blockedDifficultyIndex > 0
+            ? `도겁 자동 대기 · 난이도 ${fmtNumber(blockedDifficultyIndex)}`
+            : "도겁 자동 대기 · 설정 확인 필요";
         tickerTone = "warn";
-        bannerText = "도겁 자동 허용 꺼짐";
+        bannerText =
+          blockedDifficultyIndex > 0
+            ? `도겁 자동 허용 꺼짐 · 난이도 ${fmtNumber(blockedDifficultyIndex)}`
+            : "도겁 자동 허용 꺼짐";
         bannerTone = "info";
         applyOutcomeTransition = true;
       } else if (blockedAutoRiskPolicy) {
@@ -4759,6 +4812,10 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
   if (kind === "breakthrough_blocked_no_qi") {
     const requiredQi = Math.max(1, Number(event.requiredQi) || 1);
     const currentQi = Math.max(0, Number(event.currentQi) || 0);
+    const qiDeficit = Math.max(
+      0,
+      Number(event.qiDeficit) || requiredQi - currentQi,
+    );
     return {
       priority: 68,
       tone: "warn",
@@ -4773,6 +4830,12 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
         outcome: {
           attempted: false,
           outcome: "blocked_no_qi",
+          requiredQi,
+          currentQi,
+          qiDeficit,
+          stage: {
+            qi_required: requiredQi,
+          },
         },
       },
     };
@@ -4797,6 +4860,10 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
         outcome: {
           attempted: false,
           outcome: "blocked_tribulation_setting",
+          difficultyIndex,
+          stage: {
+            difficulty_index: difficultyIndex,
+          },
         },
       },
     };

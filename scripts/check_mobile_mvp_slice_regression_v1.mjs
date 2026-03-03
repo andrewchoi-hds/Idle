@@ -3457,7 +3457,37 @@ async function main() {
   });
   checks.push({
     id: "breakthrough_blocked_when_qi_insufficient",
-    passed: blocked.attempted === false && blocked.outcome === "blocked_no_qi",
+    passed:
+      blocked.attempted === false &&
+      blocked.outcome === "blocked_no_qi" &&
+      Number(blocked.requiredQi) > 0 &&
+      Number(blocked.currentQi) === 0 &&
+      Number(blocked.qiDeficit) >= Number(blocked.requiredQi),
+  });
+
+  const blockedTribulationSettingState = createInitialSliceState(context, {
+    playerName: "blocked-tribulation-setting",
+  });
+  blockedTribulationSettingState.progression.difficultyIndex = 198;
+  blockedTribulationSettingState.settings.autoTribulation = false;
+  blockedTribulationSettingState.currencies.qi = Math.max(
+    1,
+    Number(context.stageByDifficulty.get(198)?.qi_required) || 1,
+  );
+  const blockedTribulationSetting = runBreakthroughAttempt(
+    context,
+    blockedTribulationSettingState,
+    createSeededRng(1001),
+    {
+      respectAutoTribulation: true,
+    },
+  );
+  checks.push({
+    id: "breakthrough_blocked_tribulation_setting_contains_difficulty_metadata",
+    passed:
+      blockedTribulationSetting.attempted === false &&
+      blockedTribulationSetting.outcome === "blocked_tribulation_setting" &&
+      Number(blockedTribulationSetting.difficultyIndex) === 198,
   });
 
   const previewTribulationState = createInitialSliceState(context, { playerName: "preview-trib" });
@@ -4234,7 +4264,9 @@ async function main() {
         (event) =>
           event.kind === "breakthrough_blocked_no_qi" &&
           Number.isFinite(Number(event.requiredQi)) &&
-          Number.isFinite(Number(event.currentQi)),
+          Number.isFinite(Number(event.currentQi)) &&
+          Number(event.requiredQi) > Number(event.currentQi) &&
+          Number(event.qiDeficit) >= Number(event.requiredQi) - Number(event.currentQi),
       ),
   });
 

@@ -2362,3 +2362,11 @@
 
 ## 555) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(정책 차단 일시정지 메타 payload + 강화 전장 전이 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 556) 다음 순차 작업
+1. [완료] `runBreakthroughAttempt`의 `blocked_no_qi`/`blocked_tribulation_setting` 반환값에 `requiredQi/currentQi/qiDeficit/difficultyIndex` 메타를 추가하고, `runAutoSliceSeconds` collected event에도 동일 메타를 동기화해 엔진 차단 결과를 연출 계층으로 직접 전달.
+2. [완료] `resolveBattleSceneEventSignalFromCollectedEvent`가 차단 메타를 impact payload로 보존하고, `syncBattleSceneDuelFromImpact`에서 `blocked_no_qi`/`blocked_tribulation_setting` ticker·banner를 실제 부족량/난이도 기반으로 구성해 고정 문구 의존도를 축소.
+3. [완료] DOM contract/회귀 체크에 신규 토큰(`blockedQiDeficit`, `outcome.requiredQi`, `outcome.difficultyIndex`) 및 엔진 차단 메타 검증(`qiDeficit`, `difficultyIndex`)을 추가해 회귀를 방지.
+
+## 557) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(기 부족/도겁 설정 차단 메타 payload + 메타 기반 전장 피드백 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
