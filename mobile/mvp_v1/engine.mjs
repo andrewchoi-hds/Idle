@@ -3372,14 +3372,21 @@ export function runBreakthroughAttempt(context, state, rng, options = {}) {
       attempted: false,
       outcome: "blocked_tribulation_setting",
       stage,
+      difficultyIndex: stage.difficulty_index,
+      autoTribulationEnabled: false,
       message: "도겁 자동 설정이 꺼져 있어 자동 돌파를 건너뜀",
     };
   }
   if (state.currencies.qi < stage.qi_required) {
+    const requiredQi = Math.max(1, Math.round(stage.qi_required));
+    const currentQi = Math.max(0, Math.round(state.currencies.qi));
     return {
       attempted: false,
       outcome: "blocked_no_qi",
       stage,
+      requiredQi,
+      currentQi,
+      qiDeficit: Math.max(0, requiredQi - currentQi),
       message: `돌파 실패: 필요 기(${stage.qi_required})가 부족`,
     };
   }
@@ -3733,6 +3740,18 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
       } else if (breakthrough.outcome === "blocked_no_qi") {
         summary.breakthroughNoQiBlocks += 1;
         consecutivePolicyBlocks = 0;
+        const requiredQi = Math.max(
+          1,
+          Number(breakthrough.requiredQi || breakthrough.stage?.qi_required) || 1,
+        );
+        const currentQi = Math.max(
+          0,
+          Number(breakthrough.currentQi ?? state.currencies.qi) || 0,
+        );
+        const qiDeficit = Math.max(
+          0,
+          Number(breakthrough.qiDeficit) || requiredQi - currentQi,
+        );
         if (collectEvents) {
           pushLimited(
             collectedEvents,
@@ -3740,8 +3759,9 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
               sec: timelineSec,
               kind: "breakthrough_blocked_no_qi",
               message: breakthrough.message || "",
-              requiredQi: Math.max(1, Number(breakthrough.stage?.qi_required) || 1),
-              currentQi: Math.max(0, Number(state.currencies.qi) || 0),
+              requiredQi,
+              currentQi,
+              qiDeficit,
             },
             maxCollectedEvents,
           );
@@ -3749,6 +3769,10 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
       } else if (breakthrough.outcome === "blocked_tribulation_setting") {
         summary.breakthroughTribulationSettingBlocks += 1;
         consecutivePolicyBlocks = 0;
+        const difficultyIndex = Math.max(
+          0,
+          Number(breakthrough.difficultyIndex || breakthrough.stage?.difficulty_index) || 0,
+        );
         if (collectEvents) {
           pushLimited(
             collectedEvents,
@@ -3756,7 +3780,7 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
               sec: timelineSec,
               kind: "breakthrough_blocked_tribulation_setting",
               message: breakthrough.message || "",
-              difficultyIndex: Number(breakthrough.stage?.difficulty_index) || 0,
+              difficultyIndex,
             },
             maxCollectedEvents,
           );
