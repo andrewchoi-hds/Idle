@@ -62,6 +62,7 @@ const REQUIRED_HTML_IDS = [
   "optAutoBreakthrough",
   "optAutoTribulation",
   "optAutoResumeRealtime",
+  "optLowPerformanceBattleScene",
   "optAutoBreakthroughResumeWarmupSec",
   "optBattleSpeed",
   "optOfflineCapHours",
@@ -182,6 +183,7 @@ const REQUIRED_DOM_KEYS = [
   "autoBreakthroughResumeHint",
   "btnResumeAutoBreakthrough",
   "optAutoResumeRealtime",
+  "optLowPerformanceBattleScene",
   "optAutoBreakthroughResumeWarmupSec",
   "optBattleSpeed",
   "optOfflineCapHours",
@@ -319,6 +321,8 @@ async function main() {
   assertIncludes(app, "function setBattleSceneActorFrame(", "app.mjs", failures);
   assertIncludes(app, "function resetBattleSceneActorFrames(", "app.mjs", failures);
   assertIncludes(app, "function resolveBattleSceneCastTier(", "app.mjs", failures);
+  assertIncludes(app, "function isBattleSceneLowPerformanceModeEnabled(", "app.mjs", failures);
+  assertIncludes(app, "function resolveBattleSceneAmbientPulseDivisor(", "app.mjs", failures);
   assertIncludes(app, "function startRealtimeAuto(", "app.mjs", failures);
   assertIncludes(app, "function stopRealtimeAuto(", "app.mjs", failures);
   assertIncludes(css, ".focus-controls", "app.css", failures);

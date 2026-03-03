@@ -397,6 +397,7 @@ async function main() {
     playerName: "resume",
     autoResumeRealtime: true,
     autoBreakthroughResumeWarmupSec: 9,
+    lowPerformanceBattleScene: true,
   });
   const warmupClampBase = createInitialSliceState(context, {
     playerName: "warmup-clamp",
@@ -426,6 +427,7 @@ async function main() {
     passed:
       initWithResume.settings.autoResumeRealtime === true &&
       initWithResume.settings.autoBreakthroughResumeWarmupSec === 9 &&
+      initWithResume.settings.lowPerformanceBattleScene === true &&
       warmupClampHigh.settings.autoBreakthroughResumeWarmupSec === 30 &&
       warmupClampLow.settings.autoBreakthroughResumeWarmupSec === 0,
   });
@@ -4242,6 +4244,7 @@ async function main() {
   state.settings.autoResumeRealtime = true;
   state.settings.autoBreakthroughResumeWarmupSec = 9;
   state.settings.battleSpeed = 3;
+  state.settings.lowPerformanceBattleScene = true;
   state.settings.offlineCapHours = 18;
   state.settings.offlineEventLimit = 40;
   state.currencies.qi = 50000;
@@ -4434,6 +4437,8 @@ async function main() {
       restored.settings.autoBreakthroughResumeWarmupSec ===
         state.settings.autoBreakthroughResumeWarmupSec &&
       restored.settings.battleSpeed === state.settings.battleSpeed &&
+      restored.settings.lowPerformanceBattleScene ===
+        state.settings.lowPerformanceBattleScene &&
       restored.settings.offlineCapHours === state.settings.offlineCapHours &&
       restored.settings.offlineEventLimit === state.settings.offlineEventLimit &&
       typeof restored.realtimeStats === "object" &&
