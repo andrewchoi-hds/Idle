@@ -4613,6 +4613,7 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
     const consecutiveBlocks = Math.max(0, Number(event.consecutiveBlocks) || 0);
     const policyReason = String(event.reason || "");
     const nextActionKo = String(event.nextActionKo || "");
+    const nextActionText = nextActionKo ? ` · ${nextActionKo}` : "";
     return {
       priority: 88,
       tone: "error",
@@ -4620,8 +4621,8 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
       statusTextKo: "자동돌파 일시정지",
       resultHintKo:
         consecutiveBlocks > 0
-          ? `${reasonLabel} · 연속 ${consecutiveBlocks}회`
-          : reasonLabel,
+          ? `${reasonLabel} · 연속 ${consecutiveBlocks}회${nextActionText}`
+          : `${reasonLabel}${nextActionText}`,
       impactOptions: {
         source: "breakthrough",
         outcome: {
@@ -4932,7 +4933,11 @@ function playBattleSceneAutoSummary(summaryInput, sourceLabel = "자동 진행")
     parts.push(`도겁 설정 차단 ${blockCounts.tribulationSettingBlocks}회`);
   }
   if (summary.autoBreakthroughPaused) {
-    parts.push(`자동돌파 일시정지(${String(summary.autoBreakthroughPauseReasonLabelKo || "정책")})`);
+    const pauseReasonLabel = String(summary.autoBreakthroughPauseReasonLabelKo || "정책");
+    const pauseNextActionKo = String(summary.autoBreakthroughPauseNextActionKo || "");
+    parts.push(
+      `자동돌파 일시정지(${pauseReasonLabel}${pauseNextActionKo ? ` · ${pauseNextActionKo}` : ""})`,
+    );
   }
   if (rebirths > 0) {
     parts.push(`환생 ${rebirths}회`);
@@ -5620,7 +5625,11 @@ function formatOfflineEventLine(event) {
   if (event.kind === "auto_breakthrough_paused_by_policy") {
     const reasonLabel = String(event.reasonLabelKo || event.reason || "policy");
     const threshold = Math.max(1, Number(event.threshold) || 1);
-    return `${secLabel}: 자동 돌파 일시정지 (${reasonLabel}, 연속 ${threshold}회 차단)`;
+    const nextActionText =
+      typeof event.nextActionKo === "string" && event.nextActionKo
+        ? ` · ${event.nextActionKo}`
+        : "";
+    return `${secLabel}: 자동 돌파 일시정지 (${reasonLabel}, 연속 ${threshold}회 차단)${nextActionText}`;
   }
   if (event.kind === "offline_warmup_summary") {
     const label = String(
@@ -6009,8 +6018,10 @@ function buildOfflineStatus(prefix, summary) {
   const capText = summary.cappedByMaxOffline ? ` · ${maxOfflineHours}시간 cap 적용` : "";
   const blockedLabel = buildAutoBreakthroughBlockSummaryLabelKo(auto);
   const blockedText = blockedLabel ? ` · ${blockedLabel}` : "";
+  const pausedReasonLabel = String(auto?.autoBreakthroughPauseReasonLabelKo || "정책");
+  const pausedNextActionKo = String(auto?.autoBreakthroughPauseNextActionKo || "");
   const pausedText = auto?.autoBreakthroughPaused
-    ? ` · 자동돌파 일시정지(${String(auto.autoBreakthroughPauseReasonLabelKo || "정책")})`
+    ? ` · 자동돌파 일시정지(${pausedReasonLabel}${pausedNextActionKo ? ` · ${pausedNextActionKo}` : ""})`
     : "";
   return `${prefix}: ${fmtDurationSec(summary.appliedOfflineSec)} 정산 (전투 ${auto?.battles ?? 0}회 · 돌파 ${auto?.breakthroughs ?? 0}회${warmupText}${blockedText}${pausedText} · 환생 ${auto?.rebirths ?? 0}회${capText})`;
 }
@@ -6152,11 +6163,13 @@ function runRealtimeAutoTick() {
 
   if (summary.autoBreakthroughPaused) {
     const reasonLabel = String(summary.autoBreakthroughPauseReasonLabelKo || "정책");
+    const nextActionKo = String(summary.autoBreakthroughPauseNextActionKo || "");
+    const nextActionText = nextActionKo ? ` · ${nextActionKo}` : "";
     addClientLog(
       "auto",
-      `실시간 자동: 자동 돌파 일시정지 (${reasonLabel})`,
+      `실시간 자동: 자동 돌파 일시정지 (${reasonLabel})${nextActionText}`,
     );
-    setStatus(`실시간 자동: 자동 돌파 일시정지 (${reasonLabel})`, true);
+    setStatus(`실시간 자동: 자동 돌파 일시정지 (${reasonLabel})${nextActionText}`, true);
   }
 
   if (
@@ -7134,8 +7147,10 @@ function bindEvents() {
       breakthroughPolicyBlockReasons: summary.breakthroughPolicyBlockReasons,
     });
     const blockedText = blockedLabel ? ` · ${blockedLabel}` : "";
+    const pausedReasonLabel = String(summary.autoBreakthroughPauseReasonLabelKo || "정책");
+    const pausedNextActionKo = String(summary.autoBreakthroughPauseNextActionKo || "");
     const pausedText = summary.autoBreakthroughPaused
-      ? ` · 자동돌파 일시정지(${String(summary.autoBreakthroughPauseReasonLabelKo || "정책")})`
+      ? ` · 자동돌파 일시정지(${pausedReasonLabel}${pausedNextActionKo ? ` · ${pausedNextActionKo}` : ""})`
       : "";
     const warmupRemainingText =
       warmupRemainingSecAfter > 0

@@ -155,6 +155,7 @@ npm run mobile:mvp:serve
   - 수동 돌파 연출(`playBattleSceneBreakthroughOutcome`)에서도 `blocked_tribulation_setting`을 `warn` 톤과 `자동 도겁 대기` 상태로 표시해 실제 차단 원인(설정 대기)과 UI 톤을 일치
   - 정책 차단 이벤트(`breakthrough_blocked_auto_policy`, `auto_breakthrough_paused_by_policy`)의 `reason/reasonLabelKo/nextActionKo`를 impact payload에 전달해 `blocked_auto_risk_policy`도 사유별(`치명/고위험/고기소모`) 듀얼 전이로 직접 반영
   - `syncBattleSceneDuelFromImpact`에서 `blocked_auto_risk_policy`를 사유별로 분기해 `치명=강한 cooldown/error`, `고위험=중간 cooldown/warn`, `고기소모=resonance/warn` 전이와 안내 배너를 차등 적용
+  - 자동 돌파 일시정지 이벤트(`auto_breakthrough_paused_by_policy`)에 `nextActionKo`를 함께 기록하고, 자동/실시간/오프라인 상태 라인과 이벤트 힌트에 동일 액션 문구를 노출해 차단 후 다음 조치 가이드를 일관되게 유지
   - stage 메타(`world`, `difficulty_index`, `is_tribulation`)를 연출 패널 `data-scene-world`, `data-scene-tier`로 반영해 인간계/신선계/진선계 및 난도 구간별 색감·오라 강도를 차등 적용
   - 전투 spark 레이어(`battleSceneSparkLayer`)를 추가해 클릭 없이도 상시 파티클/충돌 파동이 순환되도록 구성
   - 전장 흐름 레이어(`battle-scene-flow-back/front`)를 추가해 배경 전류가 상시 흐르는 느낌을 유지
@@ -258,6 +259,7 @@ npm run mobile:mvp:check
   - `runAutoSliceSeconds` summary의 분리 집계(`breakthroughNoQiBlocks`, `breakthroughTribulationSettingBlocks`)가 차단 이벤트와 일관되게 누적되고 정책 차단 카운트와 상호 독립적으로 유지되는지 검증
   - `syncBattleSceneDuelFromImpact`에서 `blocked_tribulation_setting`이 `blocked_no_qi`/기타 차단과 구분되어 `resonance + warn + 설정 배너` 전환으로 반영되고 과도한 cooldown/error 전환이 발생하지 않는지 검증
   - `syncBattleSceneDuelFromImpact`에서 `blocked_auto_risk_policy`가 `reason`(`blocked_extreme_risk/high_risk/high_qi_cost`)별로 분기되어 ticker/banner/전장 전이가 차등 적용되는지 검증
+  - `auto_breakthrough_paused_by_policy` 이벤트와 `runAutoSliceSeconds` summary가 `nextActionKo`/`autoBreakthroughPauseNextActionKo`를 일관되게 포함하고, 자동·실시간·오프라인 상태 라인에 동일 액션 문구가 반영되는지 검증
   - 저사양 모드 ON/OFF에서 ambient pulse cadence/확률 및 spark·trail·shockwave layer cap이 의도대로 하향/복원되고, 결과 기반 트리거 우선순위가 유지되는지 검증
   - 듀얼 strike/burst/impact 경로에서 배우 프레임(`idle/attack/hit/skill`)이 전환되고 리셋 시 `idle`로 복귀하는지 검증
   - 듀얼 HUD 갱신 시 cast/combo/pressure/lead 상태 데이터가 일관되게 갱신되고 `prefers-reduced-motion` 환경에서도 수치 상태 반영이 유지되는지 검증
