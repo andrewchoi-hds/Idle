@@ -163,10 +163,11 @@ npm run mobile:mvp:serve
   - 캐스트 텔레그래프 헬퍼(`maybeSpawnBattleSceneCastTelegraph`)를 추가해 cast 게이지 70%+ 구간에서 배우(anchor) 주변 준비 파동(`battle-shockwave.variant-telegraph`)이 상시 루프 중 자동 순환되도록 구성
   - 캐스트 충전 입자 헬퍼(`maybeSpawnBattleSceneChargeMote`)를 추가해 cast 게이지 50%+ 구간에서 배우 주변 orbit 입자(`battle-charge-mote`)가 상시 발생하고, 96%+에서는 urgent 밀도로 강화
   - 우세 전환 헬퍼(`maybeTriggerBattleSceneLeadSwing`)를 추가해 `player/enemy/even` 리드 전환 순간 전장 swing 클래스(`scene-lead-swing-*`) + 파동/궤적/티커를 자동 트리거
+  - 압력 스파이크 헬퍼(`triggerBattleScenePressureSpike`, `maybeTriggerBattleScenePressureTransition`)를 추가해 압력 `low→medium/high`, `medium→high` 전환과 고압 루프에서 전장/충돌코어 spike(`scene-pressure-spike-*`)를 자동 트리거
   - 연격 배너(`battleSceneComboBanner`, `setBattleSceneComboBanner`)를 추가해 연격 임계치(3/7/11)에서 중앙 배너를 자동 노출하고, 라운드 종료/연격 종료 시 자동 정리
   - 전투 집중 기본 ON(`main.app.battle-focus-mode`)으로 첫 진입부터 실제 게임 화면 비중을 높이고, 토글 해제 시 전체 운영 패널을 다시 노출
   - 상시 루프(`runBattleSceneAmbientTick`)가 `idle/auto/realtime` 모드별로 연출 강도와 임팩트 빈도를 조절해 방치형 전투 화면처럼 지속 동작
-  - `prefers-reduced-motion` 환경에서는 lead swing/hit-stop/telegraph shockwave/charge mote/spark/trail 등 모션 이펙트를 비활성화하되 듀얼 HUD 수치(HP/기세)와 배우 프레임 상태 전환은 유지해 상태 가시성을 확보
+  - `prefers-reduced-motion` 환경에서는 pressure spike/lead swing/hit-stop/telegraph shockwave/charge mote/spark/trail 등 모션 이펙트를 비활성화하되 듀얼 HUD 수치(HP/기세)와 배우 프레임 상태 전환은 유지해 상태 가시성을 확보
   - 상시 연출 애니메이션(오라 드리프트/actor idle/오버레이 pulse)과 임팩트 연출(타격/돌파 burst·collapse)을 분리해 자동 루프 중에도 시각 피드백을 유지하고, `prefers-reduced-motion` 환경에서는 해당 애니메이션을 비활성화
 
 ## 4) 저장 포맷
