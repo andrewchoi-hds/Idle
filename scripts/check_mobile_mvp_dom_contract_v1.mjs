@@ -314,6 +314,8 @@ async function main() {
   assertIncludes(app, "function resolveBattleSceneEventSignalFromCollectedEvents(", "app.mjs", failures);
   assertIncludes(app, 'kind === "breakthrough_blocked_no_qi"', "app.mjs", failures);
   assertIncludes(app, 'kind === "breakthrough_blocked_tribulation_setting"', "app.mjs", failures);
+  assertIncludes(app, 'outcomeCode === "blocked_tribulation_setting"', "app.mjs", failures);
+  assertIncludes(app, '"도겁 자동 허용 꺼짐"', "app.mjs", failures);
   assertIncludes(app, "breakthroughNoQiBlocks", "app.mjs", failures);
   assertIncludes(app, "breakthroughTribulationSettingBlocks", "app.mjs", failures);
   assertIncludes(app, "const BATTLE_SCENE_RESULT_PRIORITY_WINDOW_MS = 2600;", "app.mjs", failures);

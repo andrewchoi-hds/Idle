@@ -2330,3 +2330,11 @@
 
 ## 547) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(자동 돌파 차단 집계 분리 + 실시간 요약 동기화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 548) 다음 순차 작업
+1. [완료] 전투 연출 듀얼 동기화(`syncBattleSceneDuelFromImpact`)의 비시도 분기를 세분화해 `blocked_tribulation_setting`을 별도 처리(`resonance/warn`, 설정 배너 노출)하고 `blocked_no_qi`와 다른 전장 전이를 적용.
+2. [완료] 수동 돌파 결과 연출(`playBattleSceneBreakthroughOutcome`)에서 `blocked_tribulation_setting` 톤을 `warn`으로 조정하고 상태 문구를 `자동 도겁 대기`로 분리해 차단 원인과 UI 피드백 정합을 강화.
+3. [완료] DOM contract 체크에 신규 토큰(`outcomeCode === "blocked_tribulation_setting"`, `도겁 자동 허용 꺼짐`)을 추가하고 회귀 체크에서 비정책 차단 이벤트(`no_qi/tribulation_setting`)가 `breakthroughPolicyBlocks`와 독립 누적되는지 검증.
+
+## 549) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(도겁 설정 차단 전용 듀얼 전이 + 수동 톤 정합 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

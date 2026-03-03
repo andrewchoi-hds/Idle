@@ -151,6 +151,8 @@ npm run mobile:mvp:serve
   - `playBattleSceneAutoSummary`가 이벤트 신호를 early-return 이전에 평가해 집계치(전투/돌파/환생/차단)가 0인 프레임에서도 실제 최신 차단 이벤트가 있으면 상태/결과/impact를 즉시 갱신
   - 자동 루프 summary에 차단 집계를 `위험 차단/기 부족 차단/도겁 설정 차단`으로 분리해 실시간 상태 문구·오프라인 정산 상태 라인이 정책 차단 외 차단 원인도 동일 포맷으로 반영
   - 실시간 1초 루프 요약 로그와 자동 10초 상태 라인에서 분리 차단 집계를 동일 문구로 사용해 `collectedEvents` 기반 연출 힌트와 누적 로그 숫자가 일치하도록 정합화
+  - `syncBattleSceneDuelFromImpact`의 비시도 분기에서 `blocked_tribulation_setting`을 별도 처리해 실패 붕괴(cooldown/error) 대신 대기 공명(resonance/warn) 전환과 배너(`도겁 자동 허용 꺼짐`)를 직접 반영
+  - 수동 돌파 연출(`playBattleSceneBreakthroughOutcome`)에서도 `blocked_tribulation_setting`을 `warn` 톤과 `자동 도겁 대기` 상태로 표시해 실제 차단 원인(설정 대기)과 UI 톤을 일치
   - stage 메타(`world`, `difficulty_index`, `is_tribulation`)를 연출 패널 `data-scene-world`, `data-scene-tier`로 반영해 인간계/신선계/진선계 및 난도 구간별 색감·오라 강도를 차등 적용
   - 전투 spark 레이어(`battleSceneSparkLayer`)를 추가해 클릭 없이도 상시 파티클/충돌 파동이 순환되도록 구성
   - 전장 흐름 레이어(`battle-scene-flow-back/front`)를 추가해 배경 전류가 상시 흐르는 느낌을 유지
@@ -252,6 +254,7 @@ npm run mobile:mvp:check
   - `resolveBattleSceneEventSignalScore`가 동일 계열 이벤트에서 최신 이벤트를 우선 선택하고, 고우선 이벤트(`도겁 사망/후퇴/일시정지`)가 집계치 fallback보다 먼저 반영되는지 검증
   - `breakthrough_blocked_no_qi`/`breakthrough_blocked_tribulation_setting` collected event가 자동/오프라인 요약 연출에서 각각 `blocked_no_qi`/`blocked_tribulation_setting` outcome으로 연결되고, 집계치 0이어도 상태/결과 라인이 갱신되는지 검증
   - `runAutoSliceSeconds` summary의 분리 집계(`breakthroughNoQiBlocks`, `breakthroughTribulationSettingBlocks`)가 차단 이벤트와 일관되게 누적되고 정책 차단 카운트와 상호 독립적으로 유지되는지 검증
+  - `syncBattleSceneDuelFromImpact`에서 `blocked_tribulation_setting`이 `blocked_no_qi`/기타 차단과 구분되어 `resonance + warn + 설정 배너` 전환으로 반영되고 과도한 cooldown/error 전환이 발생하지 않는지 검증
   - 저사양 모드 ON/OFF에서 ambient pulse cadence/확률 및 spark·trail·shockwave layer cap이 의도대로 하향/복원되고, 결과 기반 트리거 우선순위가 유지되는지 검증
   - 듀얼 strike/burst/impact 경로에서 배우 프레임(`idle/attack/hit/skill`)이 전환되고 리셋 시 `idle`로 복귀하는지 검증
   - 듀얼 HUD 갱신 시 cast/combo/pressure/lead 상태 데이터가 일관되게 갱신되고 `prefers-reduced-motion` 환경에서도 수치 상태 반영이 유지되는지 검증
