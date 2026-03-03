@@ -2742,6 +2742,8 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
     const successPct = Math.max(0, Math.min(100, Number(outcome.successPct) || 0));
     const deathPct = Math.max(0, Math.min(100, Number(outcome.deathPct) || 0));
     const stageQiRequired = Math.max(1, Math.round(Number(outcome.stage?.qi_required) || 1));
+    const outcomeQiDelta = Math.round(Number(outcome.qiDelta) || 0);
+    const outcomeQiLoss = Math.max(0, -outcomeQiDelta);
 
     if (outcome.attempted !== true) {
       const blockedNoQi = outcomeCode === "blocked_no_qi";
@@ -2965,38 +2967,56 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
         applyOutcomeTransition = true;
       }
     } else if (outcomeCode === "success") {
+      const successQiConsume = Math.max(
+        1,
+        outcomeQiLoss || Math.round(stageQiRequired * 0.85),
+      );
+      const successQiConsumeRatio = Math.max(
+        0,
+        Math.min(1.4, successQiConsume / Math.max(1, stageQiRequired)),
+      );
       battleSceneDuelState.playerHp = BATTLE_SCENE_DUEL_MAX_HP;
       battleSceneDuelState.enemyHp = clampBattleSceneGauge(
-        Math.round(76 - successPct * 0.24),
+        Math.round(76 - successPct * 0.24 - successQiConsumeRatio * 6),
         BATTLE_SCENE_DUEL_MAX_HP,
       );
       battleSceneDuelState.playerCast = clampBattleSceneGauge(
-        58 + Math.round(successPct * 0.34),
+        58 + Math.round(successPct * 0.34 + successQiConsumeRatio * 8),
         BATTLE_SCENE_DUEL_MAX_CAST,
       );
       battleSceneDuelState.enemyCast = clampBattleSceneGauge(
-        18 + Math.round((100 - successPct) * 0.2),
+        18 + Math.round((100 - successPct) * 0.2 - successQiConsumeRatio * 4),
         BATTLE_SCENE_DUEL_MAX_CAST,
       );
       battleSceneDuelState.combo = Math.min(
         14,
-        Math.max(battleSceneDuelState.combo + 3, successPct >= 70 ? 9 : 7),
+        Math.max(
+          battleSceneDuelState.combo + 3 + (successQiConsumeRatio >= 0.85 ? 1 : 0),
+          successPct >= 70 ? 9 : 7,
+        ),
       );
       battleSceneDuelState.maxCombo = Math.max(
         battleSceneDuelState.maxCombo,
         battleSceneDuelState.combo,
       );
-      battleSceneDuelState.dpsMomentum = Math.min(36, 18 + successPct * 0.18);
+      battleSceneDuelState.dpsMomentum = Math.min(
+        36,
+        18 + successPct * 0.16 + successQiConsumeRatio * 4,
+      );
       comboAction = "surge";
-      tickerText = "돌파 성공 · 기세 급상승";
+      tickerText = `돌파 성공 · 기 ${fmtSignedInteger(-successQiConsume)}`;
       tickerTone = "success";
-      bannerText = "경지 돌파 · 영맥 개화";
+      bannerText = `경지 돌파 · 성공률 ${successPct.toFixed(1)}%`;
       bannerTone = "success";
       applyOutcomeTransition = true;
     } else if (outcomeCode === "minor_fail") {
+      const minorQiLoss = Math.max(
+        1,
+        outcomeQiLoss || Math.round(stageQiRequired * 0.22),
+      );
       const hpLoss = Math.max(
         14,
-        Math.min(36, Math.round(12 + stageQiRequired * 0.045 + deathPct * 0.22)),
+        Math.min(36, Math.round(12 + minorQiLoss * 0.22 + deathPct * 0.22)),
       );
       const enemyCastGain = Math.max(14, Math.min(40, Math.round(10 + hpLoss * 0.72)));
       const playerCastDrop = Math.max(8, Math.min(24, Math.round(hpLoss * 0.5)));
@@ -3015,14 +3035,23 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
       battleSceneDuelState.combo = Math.max(0, battleSceneDuelState.combo - 2);
       battleSceneDuelState.dpsMomentum = Math.max(0, battleSceneDuelState.dpsMomentum - hpLoss * 0.5);
       comboAction = "cooldown";
-      tickerText = "돌파 경상 실패 · 기맥 요동";
+      tickerText = `돌파 경상 실패 · 기 ${fmtSignedInteger(-minorQiLoss)}`;
       tickerTone = "warn";
+      bannerText =
+        deathPct > 0
+          ? `경상 실패 · 사망률 ${deathPct.toFixed(1)}% 구간`
+          : "경상 실패 · 기맥 요동";
+      bannerTone = "warn";
       applyOutcomeTransition = true;
     } else if (outcomeCode === "retreat_fail") {
       const retreatLayers = Math.max(1, Number(outcome.retreatLayers) || 1);
+      const retreatQiLoss = Math.max(
+        1,
+        outcomeQiLoss || Math.round(stageQiRequired * 0.28),
+      );
       const hpLoss = Math.max(
         24,
-        Math.min(52, Math.round(22 + retreatLayers * 6 + deathPct * 0.14)),
+        Math.min(52, Math.round(22 + retreatLayers * 6 + retreatQiLoss * 0.16 + deathPct * 0.14)),
       );
       const enemyCastGain = Math.max(16, Math.min(46, Math.round(12 + hpLoss * 0.52)));
       const playerCastDrop = Math.max(14, Math.min(40, Math.round(hpLoss * 0.62)));
@@ -3045,9 +3074,9 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
       battleSceneDuelState.combo = Math.max(0, battleSceneDuelState.combo - (3 + retreatLayers));
       battleSceneDuelState.dpsMomentum = Math.max(0, battleSceneDuelState.dpsMomentum * 0.42);
       comboAction = "cooldown";
-      tickerText = `돌파 후퇴 실패 · ${retreatLayers}단계 경지 하락`;
+      tickerText = `돌파 후퇴 실패 · ${retreatLayers}단계 하락 · 기 ${fmtSignedInteger(-retreatQiLoss)}`;
       tickerTone = "error";
-      bannerText = `경지 후퇴 ${retreatLayers}단계`;
+      bannerText = `경지 후퇴 ${retreatLayers}단계 · 기 ${fmtSignedInteger(-retreatQiLoss)}`;
       bannerTone = "error";
       applyOutcomeTransition = true;
     } else if (outcomeCode === "death_fail") {
@@ -4780,6 +4809,7 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
     const deathPct = Math.max(0, Math.min(95, Number(event.deathPct) || 0));
     const stageQiRequired = resolveBattleSceneBreakthroughStageQiRequiredFromEvent(event, 0.85);
     const qiDelta = Math.round(Number(event.qiDelta) || 0);
+    const qiHintText = qiDelta !== 0 ? ` · 기 ${fmtSignedInteger(qiDelta)}` : "";
     return {
       priority: 78,
       tone: "success",
@@ -4787,8 +4817,8 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
       statusTextKo: "돌파 성공",
       resultHintKo:
         fromDifficultyIndex > 0 && toDifficultyIndex > 0
-          ? `돌파 성공 · ${fromDifficultyIndex}→${toDifficultyIndex}`
-          : "돌파 성공",
+          ? `돌파 성공 · ${fromDifficultyIndex}→${toDifficultyIndex}${qiHintText}`
+          : `돌파 성공${qiHintText}`,
       impactOptions: {
         source: "breakthrough",
         outcome: {
@@ -5724,7 +5754,10 @@ function formatOfflineEventLine(event) {
     return `${secLabel}: 전투 패배 (기 ${fmtSignedInteger(event.qiDelta)})`;
   }
   if (event.kind === "breakthrough_success") {
-    return `${secLabel}: 돌파 성공 (난이도 ${event.fromDifficultyIndex} → ${event.toDifficultyIndex})`;
+    const qiDelta = Math.round(Number(event.qiDelta) || 0);
+    return `${secLabel}: 돌파 성공 (난이도 ${event.fromDifficultyIndex} → ${event.toDifficultyIndex}${
+      qiDelta !== 0 ? ` · 기 ${fmtSignedInteger(qiDelta)}` : ""
+    })`;
   }
   if (event.kind === "breakthrough_minor_fail") {
     const deathPct = Math.max(0, Math.min(95, Number(event.deathPct) || 0));

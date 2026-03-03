@@ -3535,6 +3535,21 @@ async function main() {
     eventCollector: (event) => forcedDeathEvents.push(event),
   });
 
+  const forcedSuccessState = createInitialSliceState(context, {
+    playerName: "forced-success",
+  });
+  forcedSuccessState.progression.difficultyIndex = 198;
+  forcedSuccessState.currencies.qi = Math.max(
+    1,
+    Number(context.stageByDifficulty.get(198)?.qi_required) || 1,
+  );
+  const forcedSuccessEvents = [];
+  runBreakthroughAttempt(context, forcedSuccessState, createSeededRng(904), {
+    respectAutoTribulation: false,
+    debugForcedOutcome: "success",
+    eventCollector: (event) => forcedSuccessEvents.push(event),
+  });
+
   checks.push({
     id: "breakthrough_event_collector_includes_stage_and_risk_metadata",
     passed:
@@ -3556,7 +3571,20 @@ async function main() {
       Number(forcedDeathEvents[0].stageQiRequired) ===
         Number(context.stageByDifficulty.get(198)?.qi_required || 0) &&
       Number(forcedDeathEvents[0].deathPct) > 0 &&
-      Number(forcedDeathEvents[0].rebirthReward) >= 1,
+      Number(forcedDeathEvents[0].rebirthReward) >= 1 &&
+      forcedSuccessEvents.length === 1 &&
+      forcedSuccessEvents[0].kind === "breakthrough_success" &&
+      Number(forcedSuccessEvents[0].stageQiRequired) ===
+        Number(context.stageByDifficulty.get(198)?.qi_required || 0) &&
+      Number(forcedSuccessEvents[0].qiDelta) < 0 &&
+      Number(forcedSuccessEvents[0].successPct) > 0 &&
+      Number(forcedSuccessEvents[0].deathPct) > 0 &&
+      Number(forcedSuccessEvents[0].fromDifficultyIndex) === 198 &&
+      Number(forcedSuccessEvents[0].toDifficultyIndex) ===
+        Math.min(
+          Number(context.maxDifficultyIndex) || 0,
+          Number(forcedSuccessEvents[0].fromDifficultyIndex) + 1,
+        ),
   });
 
   const previewTribulationState = createInitialSliceState(context, { playerName: "preview-trib" });

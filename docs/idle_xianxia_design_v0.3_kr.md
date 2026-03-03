@@ -2378,3 +2378,11 @@
 
 ## 559) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(돌파 실패 eventCollector 메타 확장 + 메타 우선 연출 동기화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 560) 다음 순차 작업
+1. [완료] `syncBattleSceneDuelFromImpact`의 `breakthrough success/minor_fail/retreat_fail` 분기가 `outcome.qiDelta/stage.qi_required` 메타를 직접 사용해 성공 surge 강도와 실패 손실 전장 전이를 계산하도록 보강.
+2. [완료] 이벤트 시그널/오프라인 라인(`resolveBattleSceneEventSignalFromCollectedEvent`, `formatOfflineEventLine`)의 `breakthrough_success` 힌트에 `qiDelta`를 반영해 엔진 결과와 상태 문구 정합을 강화.
+3. [완료] 회귀 체크에 강제 성공 eventCollector 메타 검증(`stageQiRequired/qiDelta/fromDifficultyIndex/toDifficultyIndex`)을 추가하고 DOM contract 토큰(`successQiConsume`)을 동기화.
+
+## 561) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(돌파 성공 qiDelta 기반 surge 전이 + 성공 메타 힌트 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
