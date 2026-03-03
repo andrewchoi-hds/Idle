@@ -2138,3 +2138,11 @@
 
 ## 499) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(전투 상시 상태 연출 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 500) 다음 순차 작업
+1. [완료] 전투 집중 패널에 효과음 토글(`btnToggleBattleSfx`, `battleSfxHint`)을 추가해 모바일 화면에서 전투 루프 SFX on/off를 즉시 제어할 수 있도록 구성.
+2. [완료] WebAudio 기반 전투 효과음 헬퍼(`renderBattleSfxControl`, `playBattleSfx`, `setBattleSfxEnabled`)를 추가하고 strike/burst/impact 경로(`applyBattleSceneDuelStrike`, `applyBattleSceneDuelBurst`, `triggerBattleSceneImpact`)에 연결해 조작 없이도 상시 동적 사운드 피드백이 유지되도록 반영.
+3. [완료] DOM contract 체크에 신규 SFX 요소/헬퍼 토큰(`btnToggleBattleSfx`, `battleSfxHint`, `setBattleSfxEnabled`)과 스타일 토큰(`#btnToggleBattleSfx[aria-pressed="true"]`)을 추가해 구조 회귀를 방지.
+
+## 501) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(전투 루프 효과음 토글 + WebAudio 훅 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

@@ -104,6 +104,12 @@ h2 {
   display: flex;
   gap: 8px;
   align-items: center;
+  flex-wrap: wrap;
+}
+
+.focus-controls-row .ghost-btn {
+  flex: 1 1 150px;
+  min-height: 40px;
 }
 
 .app.battle-focus-mode .panel[data-panel-role="secondary"] {
@@ -1901,6 +1907,23 @@ textarea:focus-visible,
 #btnToggleBattleFocus[aria-pressed="false"] {
   border-color: #6a7b76;
   color: #c2d5cf;
+}
+
+#btnToggleBattleSfx[aria-pressed="true"] {
+  border-color: #3a79bb;
+  color: #cfe8ff;
+  background: linear-gradient(180deg, rgba(18, 46, 72, 0.84), rgba(10, 26, 40, 0.92));
+}
+
+#btnToggleBattleSfx[aria-pressed="false"] {
+  border-color: #5f7370;
+  color: #bbceca;
+}
+
+#btnToggleBattleSfx:disabled {
+  border-color: #4b5a57;
+  color: #839793;
+  background: #101b19;
 }
 
 .offline-grid {

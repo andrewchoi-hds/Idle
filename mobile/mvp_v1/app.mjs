@@ -87,7 +87,9 @@ const dom = {
   appRoot: document.querySelector("main.app"),
   appStatus: document.getElementById("appStatus"),
   btnToggleBattleFocus: document.getElementById("btnToggleBattleFocus"),
+  btnToggleBattleSfx: document.getElementById("btnToggleBattleSfx"),
   battleFocusHint: document.getElementById("battleFocusHint"),
+  battleSfxHint: document.getElementById("battleSfxHint"),
   stageDisplay: document.getElementById("stageDisplay"),
   worldTag: document.getElementById("worldTag"),
   difficultyIndex: document.getElementById("difficultyIndex"),
@@ -276,6 +278,12 @@ let slotSummaryDirty = true;
 let slotSummaryLastRenderedAtMs = 0;
 let slotQuickLoadLastAcceptedAtMs = 0;
 let battleFocusMode = true;
+let battleSfxEnabled = false;
+let battleSfxContext = null;
+let battleSfxMasterGain = null;
+let battleSfxLastPlayAtMs = 0;
+const MOBILE_MVP_BATTLE_SFX_PREF_KEY = "idle_xianxia_mobile_mvp_v1_battle_sfx";
+const BATTLE_SFX_MIN_INTERVAL_MS = 90;
 const SLOT_QUICK_LOAD_DEBOUNCE_MS = 700;
 const DEFAULT_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC = 6;
 const BATTLE_SCENE_TONES = new Set(["info", "success", "warn", "error"]);
@@ -362,6 +370,247 @@ function applyBattleFocusMode(enabled, options = {}) {
       battleFocusMode
         ? "전투 집중 모드 활성화"
         : "전투 집중 모드 해제",
+    );
+  }
+}
+
+function isBattleSfxSupported() {
+  return (
+    typeof window.AudioContext === "function" ||
+    typeof window.webkitAudioContext === "function"
+  );
+}
+
+function restoreBattleSfxPreference() {
+  const raw = String(safeLocalGetItem(MOBILE_MVP_BATTLE_SFX_PREF_KEY) || "");
+  battleSfxEnabled = raw === "1" || raw.toLowerCase() === "true";
+}
+
+function persistBattleSfxPreference() {
+  return safeLocalSetItem(
+    MOBILE_MVP_BATTLE_SFX_PREF_KEY,
+    battleSfxEnabled ? "1" : "0",
+  );
+}
+
+function renderBattleSfxControl() {
+  const supported = isBattleSfxSupported();
+  if (dom.btnToggleBattleSfx) {
+    dom.btnToggleBattleSfx.disabled = !supported;
+    dom.btnToggleBattleSfx.setAttribute(
+      "aria-pressed",
+      String(supported && battleSfxEnabled),
+    );
+    dom.btnToggleBattleSfx.textContent = !supported
+      ? "전투 효과음 미지원"
+      : battleSfxEnabled
+        ? "전투 효과음 ON"
+        : "전투 효과음 OFF";
+  }
+  if (dom.battleSfxHint) {
+    dom.battleSfxHint.textContent = !supported
+      ? "전투 효과음: 브라우저 미지원"
+      : battleSfxEnabled
+        ? "전투 효과음: 켜짐 (타격/비기/임팩트)"
+        : "전투 효과음: 꺼짐";
+  }
+}
+
+function ensureBattleSfxContext() {
+  if (!battleSfxEnabled || !isBattleSfxSupported()) {
+    return null;
+  }
+  if (battleSfxContext) {
+    return battleSfxContext;
+  }
+  const AudioContextCtor = window.AudioContext || window.webkitAudioContext;
+  if (typeof AudioContextCtor !== "function") {
+    return null;
+  }
+  try {
+    battleSfxContext = new AudioContextCtor();
+    battleSfxMasterGain = battleSfxContext.createGain();
+    battleSfxMasterGain.gain.value = 0.04;
+    battleSfxMasterGain.connect(battleSfxContext.destination);
+    return battleSfxContext;
+  } catch {
+    battleSfxContext = null;
+    battleSfxMasterGain = null;
+    return null;
+  }
+}
+
+function requestResumeBattleSfxContext() {
+  const contextRef = ensureBattleSfxContext();
+  if (!contextRef || contextRef.state !== "suspended") {
+    return;
+  }
+  void contextRef.resume().catch(() => {});
+}
+
+function suspendBattleSfxContext() {
+  if (!battleSfxContext || battleSfxContext.state !== "running") {
+    return;
+  }
+  void battleSfxContext.suspend().catch(() => {});
+}
+
+function emitBattleSfxPulse({
+  wave = "triangle",
+  frequency = 220,
+  endFrequency = 180,
+  durationSec = 0.08,
+  volume = 0.42,
+  detuneCents = 0,
+} = {}) {
+  const contextRef = ensureBattleSfxContext();
+  if (
+    !contextRef ||
+    contextRef.state !== "running" ||
+    !battleSfxMasterGain
+  ) {
+    return false;
+  }
+  const startAt = contextRef.currentTime + 0.001;
+  const endAt = startAt + Math.max(0.03, Number(durationSec) || 0.08);
+  const oscillator = contextRef.createOscillator();
+  const gainNode = contextRef.createGain();
+  oscillator.type = wave;
+  oscillator.frequency.setValueAtTime(Math.max(40, Number(frequency) || 220), startAt);
+  oscillator.frequency.exponentialRampToValueAtTime(
+    Math.max(40, Number(endFrequency) || 160),
+    endAt,
+  );
+  oscillator.detune.setValueAtTime(Number(detuneCents) || 0, startAt);
+  gainNode.gain.setValueAtTime(0.0001, startAt);
+  gainNode.gain.exponentialRampToValueAtTime(
+    Math.max(0.0002, Math.min(1, Number(volume) || 0.42)),
+    startAt + 0.01,
+  );
+  gainNode.gain.exponentialRampToValueAtTime(0.0001, endAt);
+  oscillator.connect(gainNode);
+  gainNode.connect(battleSfxMasterGain);
+  oscillator.start(startAt);
+  oscillator.stop(endAt + 0.02);
+  return true;
+}
+
+function playBattleSfx(kind, options = {}) {
+  if (!battleSfxEnabled) {
+    return;
+  }
+  requestResumeBattleSfxContext();
+  const now = Date.now();
+  if (kind === "strike" && now - battleSfxLastPlayAtMs < BATTLE_SFX_MIN_INTERVAL_MS) {
+    return;
+  }
+  let played = false;
+  if (kind === "strike") {
+    const attacker = options.attacker === "enemy" ? "enemy" : "player";
+    const isCrit = options.isCrit === true;
+    const baseFreq = attacker === "player" ? 268 : 212;
+    played =
+      emitBattleSfxPulse({
+        wave: isCrit ? "square" : "triangle",
+        frequency: baseFreq,
+        endFrequency: baseFreq * (isCrit ? 0.72 : 0.82),
+        durationSec: isCrit ? 0.1 : 0.072,
+        volume: isCrit ? 0.52 : 0.38,
+      }) || played;
+    if (isCrit) {
+      played =
+        emitBattleSfxPulse({
+          wave: "sawtooth",
+          frequency: baseFreq * 1.55,
+          endFrequency: baseFreq,
+          durationSec: 0.06,
+          volume: 0.24,
+          detuneCents: attacker === "player" ? 8 : -8,
+        }) || played;
+    }
+  } else if (kind === "burst") {
+    const attacker = options.attacker === "enemy" ? "enemy" : "player";
+    const startFreq = attacker === "player" ? 236 : 184;
+    played =
+      emitBattleSfxPulse({
+        wave: "sawtooth",
+        frequency: startFreq,
+        endFrequency: startFreq * 1.26,
+        durationSec: 0.14,
+        volume: 0.48,
+      }) || played;
+    played =
+      emitBattleSfxPulse({
+        wave: "triangle",
+        frequency: startFreq * 0.62,
+        endFrequency: startFreq * 0.52,
+        durationSec: 0.18,
+        volume: 0.3,
+      }) || played;
+  } else if (kind === "impact") {
+    const tone = normalizeBattleSceneTone(options.tone || "info");
+    const baseFreq =
+      tone === "success"
+        ? 252
+        : tone === "warn"
+          ? 202
+          : tone === "error"
+            ? 176
+            : 224;
+    played =
+      emitBattleSfxPulse({
+        wave: tone === "error" ? "square" : "triangle",
+        frequency: baseFreq,
+        endFrequency: baseFreq * 0.78,
+        durationSec: 0.11,
+        volume: 0.44,
+      }) || played;
+    if (options.kind === "breakthrough_success") {
+      played =
+        emitBattleSfxPulse({
+          wave: "sine",
+          frequency: baseFreq * 1.08,
+          endFrequency: baseFreq * 1.82,
+          durationSec: 0.16,
+          volume: 0.22,
+        }) || played;
+    }
+  } else if (kind === "toggle_on") {
+    played =
+      emitBattleSfxPulse({
+        wave: "sine",
+        frequency: 280,
+        endFrequency: 360,
+        durationSec: 0.09,
+        volume: 0.22,
+      }) || played;
+  }
+  if (played) {
+    battleSfxLastPlayAtMs = now;
+  }
+}
+
+function setBattleSfxEnabled(enabled, options = {}) {
+  const supported = isBattleSfxSupported();
+  const nextEnabled = supported && enabled === true;
+  battleSfxEnabled = nextEnabled;
+  const persisted = persistBattleSfxPreference();
+  renderBattleSfxControl();
+  if (nextEnabled) {
+    requestResumeBattleSfxContext();
+    playBattleSfx("toggle_on");
+  } else {
+    suspendBattleSfxContext();
+  }
+  if (options.announce === true) {
+    const statusLabel = !supported
+      ? "전투 효과음 미지원"
+      : nextEnabled
+        ? "전투 효과음 활성화"
+        : "전투 효과음 비활성화";
+    setStatus(
+      `${statusLabel}${persisted ? "" : " (브라우저 저장소 제한 가능)"}`,
+      false,
     );
   }
 }
@@ -985,6 +1234,10 @@ function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true) {
     36,
     battleSceneDuelState.dpsMomentum + burstDamage * 0.5,
   );
+  playBattleSfx("burst", {
+    attacker,
+    mode,
+  });
   setBattleSceneActorFrame(attacker, "skill");
   setBattleSceneActorFrame(defenderAnchor, "hit");
   pushBattleSceneTicker(
@@ -1033,6 +1286,12 @@ function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true) {
     battleSceneDuelState[attackerCastKey] + castGain,
     BATTLE_SCENE_DUEL_MAX_CAST,
   );
+  playBattleSfx("strike", {
+    attacker,
+    isCrit,
+    mode,
+    damage,
+  });
   setBattleSceneActorFrame(attacker, "attack");
   setBattleSceneActorFrame(defenderAnchor, "hit");
   if (isCrit || damage >= 12) {
@@ -1289,6 +1548,10 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
     battleSceneImpactTimer = null;
   }, 560);
   triggerBattleSceneFlash(tone);
+  playBattleSfx("impact", {
+    kind,
+    tone,
+  });
   if (kind === "battle_win") {
     spawnBattleSceneSpark({ anchor: "center", tone, shape: "shard", angleDeg: 16, scale: 1.05 });
     spawnBattleSceneTrail({ anchor: "center", tone, angleDeg: 12, length: 84 });
@@ -3146,6 +3409,7 @@ function render() {
   dom.lastSavedAt.textContent = fmtDateTimeFromIso(state.lastSavedAtIso);
   dom.lastActiveAt.textContent = fmtDateTimeFromEpochMs(state.lastActiveEpochMs);
   renderBattleScene(stage, displayName);
+  renderBattleSfxControl();
 
   const qiRatio = clampPercent((state.currencies.qi / stage.qi_required) * 100);
   dom.qiProgressBar.style.width = `${qiRatio}%`;
@@ -3274,6 +3538,17 @@ function bindEvents() {
   dom.btnToggleBattleFocus.addEventListener("click", () => {
     applyBattleFocusMode(!battleFocusMode, { announce: true });
   });
+  dom.btnToggleBattleSfx?.addEventListener("click", () => {
+    setBattleSfxEnabled(!battleSfxEnabled, { announce: true });
+  });
+  const resumeBattleSfxFromGesture = () => {
+    if (!battleSfxEnabled) {
+      return;
+    }
+    requestResumeBattleSfxContext();
+  };
+  document.addEventListener("pointerdown", resumeBattleSfxFromGesture, { passive: true });
+  document.addEventListener("keydown", resumeBattleSfxFromGesture);
   dom.btnCloseOfflineModal.addEventListener("click", hideOfflineModal);
   dom.btnToggleOfflineDetail.addEventListener("click", () => {
     setOfflineDetailExpanded(!offlineDetailExpanded);
@@ -3347,6 +3622,7 @@ function bindEvents() {
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
       stopBattleSceneAmbientLoop();
+      suspendBattleSfxContext();
       if (isRealtimeAutoRunning()) {
         stopRealtimeAuto("백그라운드 진입");
       }
@@ -3357,6 +3633,7 @@ function bindEvents() {
 
     if (!document.hidden && state && context) {
       startBattleSceneAmbientLoop();
+      requestResumeBattleSfxContext();
       const resumed = applyResumeCatchupIfNeeded();
       const restarted = maybeAutoStartRealtime("포그라운드 복귀");
       if (!resumed) {
@@ -3369,6 +3646,7 @@ function bindEvents() {
   });
   window.addEventListener("pagehide", () => {
     stopBattleSceneAmbientLoop();
+    suspendBattleSfxContext();
     if (isRealtimeAutoRunning()) {
       stopRealtimeAuto("페이지 종료");
     }
@@ -3895,6 +4173,7 @@ async function bootstrap() {
     resetRealtimeAutoSession();
     restoreSlotLocks();
     restoreSaveSlotPreference();
+    restoreBattleSfxPreference();
     let bootstrapStatus = "준비 완료";
 
     const payload = readActiveSlotPayload();
