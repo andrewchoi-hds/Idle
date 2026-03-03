@@ -316,6 +316,14 @@ const BATTLE_SCENE_SHAKE_DURATIONS_MS = {
   heavy: 400,
   lateral: 280,
 };
+const BATTLE_SCENE_ZOOM_CLASSES = [
+  "scene-zoom-soft",
+  "scene-zoom-burst",
+];
+const BATTLE_SCENE_ZOOM_DURATIONS_MS = {
+  soft: 300,
+  burst: 380,
+};
 const BATTLE_SCENE_ACTOR_FRAME_HOLD_MS = {
   attack: 360,
   hit: 420,
@@ -350,6 +358,8 @@ let battleSceneAmbientStep = 0;
 let battleSceneLastExplicitEventAtMs = 0;
 let battleSceneShakeTimer = null;
 let battleSceneLastShakeAtMs = 0;
+let battleSceneZoomTimer = null;
+let battleSceneLastZoomAtMs = 0;
 let battleSceneSkillBannerTimer = null;
 const battleSceneActorFrameTimers = {
   player: null,
@@ -1463,6 +1473,9 @@ function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true) {
   triggerBattleSceneCameraShake(
     mode === "realtime" ? "heavy" : mode === "auto" ? "medium" : "lateral",
   );
+  triggerBattleSceneZoomPulse(
+    mode === "realtime" || burstDamage >= 30 ? "burst" : "soft",
+  );
   setBattleSceneActorFrame(attacker, "skill");
   setBattleSceneActorFrame(defenderAnchor, "hit");
   pushBattleSceneTicker(
@@ -1525,6 +1538,9 @@ function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true) {
   });
   triggerBattleSceneCameraShake(
     isCrit ? "medium" : attacker === "enemy" ? "lateral" : mode === "realtime" ? "medium" : "light",
+  );
+  triggerBattleSceneZoomPulse(
+    isCrit || mode === "realtime" ? "burst" : "soft",
   );
   setBattleSceneActorFrame(attacker, "attack");
   setBattleSceneActorFrame(defenderAnchor, "hit");
@@ -1779,6 +1795,34 @@ function triggerBattleSceneCameraShake(preset = "light", options = {}) {
   battleSceneLastShakeAtMs = now;
 }
 
+function triggerBattleSceneZoomPulse(preset = "soft", options = {}) {
+  if (!dom.battleSceneArena || shouldReduceBattleSceneMotion()) {
+    return;
+  }
+  const normalizedPreset = preset === "burst" ? "burst" : "soft";
+  const now = Date.now();
+  const minIntervalMs = normalizedPreset === "burst" ? 220 : 320;
+  if (now - battleSceneLastZoomAtMs < minIntervalMs) {
+    return;
+  }
+  if (options.fromAmbient === true && normalizedPreset === "soft" && Math.random() > 0.46) {
+    return;
+  }
+  const className = `scene-zoom-${normalizedPreset}`;
+  dom.battleSceneArena.classList.remove(...BATTLE_SCENE_ZOOM_CLASSES);
+  void dom.battleSceneArena.offsetWidth;
+  dom.battleSceneArena.classList.add(className);
+  if (battleSceneZoomTimer !== null) {
+    window.clearTimeout(battleSceneZoomTimer);
+  }
+  const durationMs = BATTLE_SCENE_ZOOM_DURATIONS_MS[normalizedPreset] || 300;
+  battleSceneZoomTimer = window.setTimeout(() => {
+    dom.battleSceneArena?.classList.remove(className);
+    battleSceneZoomTimer = null;
+  }, durationMs);
+  battleSceneLastZoomAtMs = now;
+}
+
 function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
   if (!dom.battleSceneArena) {
     return;
@@ -1831,6 +1875,10 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
       : kind === "breakthrough_success"
         ? "medium"
         : "lateral",
+    { fromAmbient },
+  );
+  triggerBattleSceneZoomPulse(
+    kind === "battle_loss" || kind === "breakthrough_fail" ? "burst" : "soft",
     { fromAmbient },
   );
   if (kind === "battle_win") {
@@ -1892,6 +1940,19 @@ function runBattleSceneAmbientTick() {
   });
   if (reducedMotion) {
     return;
+  }
+  const shouldPulseZoom =
+    (mode === "realtime"
+      ? battleSceneAmbientStep % 2 === 0
+      : mode === "auto"
+        ? battleSceneAmbientStep % 3 === 0
+        : battleSceneAmbientStep % 5 === 0) &&
+    (battleSceneDuelState.pressure === "high" || battleSceneDuelState.combo >= 6);
+  if (shouldPulseZoom) {
+    triggerBattleSceneZoomPulse(
+      mode === "realtime" || battleSceneDuelState.pressure === "high" ? "burst" : "soft",
+      { fromAmbient: true },
+    );
   }
 
   const tonePool =
@@ -2040,9 +2101,15 @@ function stopBattleSceneAmbientLoop() {
     window.clearTimeout(battleSceneShakeTimer);
     battleSceneShakeTimer = null;
   }
+  if (battleSceneZoomTimer !== null) {
+    window.clearTimeout(battleSceneZoomTimer);
+    battleSceneZoomTimer = null;
+  }
   battleSfxAmbientLastPlayAtMs = 0;
   battleSceneLastShakeAtMs = 0;
+  battleSceneLastZoomAtMs = 0;
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_SHAKE_CLASSES);
+  dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_ZOOM_CLASSES);
   if (battleSceneSkillBannerTimer !== null) {
     window.clearTimeout(battleSceneSkillBannerTimer);
     battleSceneSkillBannerTimer = null;

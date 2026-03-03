@@ -2170,3 +2170,11 @@
 
 ## 507) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(전장 카메라 shake 연출 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 508) 다음 순차 작업
+1. [완료] 전장 줌 펄스 헬퍼(`triggerBattleSceneZoomPulse`)를 추가해 strike/burst/impact 이벤트에서 `soft/burst` zoom 프리셋이 적용되도록 구성.
+2. [완료] 전투 연출 CSS에 zoom 상태 클래스(`scene-zoom-soft|burst`)와 카메라 키프레임(`battle-camera-zoom-soft|burst`)을 추가해 임팩트 순간 집중감을 강화.
+3. [완료] DOM contract 체크에 신규 zoom 헬퍼/스타일 토큰(`triggerBattleSceneZoomPulse`, `.battle-scene-arena.scene-zoom-burst`)을 반영해 연출 회귀를 방지.
+
+## 509) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(전장 카메라 zoom pulse 연출 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
