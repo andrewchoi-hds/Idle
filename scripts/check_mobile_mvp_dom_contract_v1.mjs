@@ -310,6 +310,7 @@ async function main() {
   assertIncludes(app, "function maybeTriggerBattleSceneComboTierTransition(", "app.mjs", failures);
   assertIncludes(app, "function applyBattleSceneOutcomeDuelTransitions(", "app.mjs", failures);
   assertIncludes(app, "function syncBattleSceneDuelFromImpact(", "app.mjs", failures);
+  assertIncludes(app, "function resolveBattleSceneEventSignalFromCollectedEvents(", "app.mjs", failures);
   assertIncludes(app, "const BATTLE_SCENE_RESULT_PRIORITY_WINDOW_MS = 2600;", "app.mjs", failures);
   assertIncludes(app, "function spawnBattleSceneShockwave(", "app.mjs", failures);
   assertIncludes(app, "function maybeSpawnBattleSceneCastTelegraph(", "app.mjs", failures);

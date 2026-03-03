@@ -2298,3 +2298,11 @@
 
 ## 539) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(저사양 전투 연출 밀도 제어 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 540) 다음 순차 작업
+1. [완료] 자동/오프라인 요약 연출용 이벤트 시그널 해석 헬퍼(`resolveBattleSceneEventSignalFromCollectedEvents`)를 추가해 `collectedEvents`에서 최근·고우선 이벤트(전투 승패/돌파 성공·실패/정책 차단)를 우선 선택하도록 구성.
+2. [완료] `playBattleSceneAutoSummary`/`playBattleSceneOfflineSummary`가 집계치 fallback 전에 이벤트 시그널을 우선 사용하고, `triggerBattleSceneImpact`에 `source/outcome` 옵션을 전달해 듀얼 HUD 동기화를 더 직접 연결.
+3. [완료] 자동 10초/실시간 1초 루프에서 `runAutoSliceSeconds(..., { collectEvents })`를 활성화해 요약 연출이 실제 엔진 이벤트 버퍼를 항상 확보하도록 반영.
+
+## 541) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(collectedEvents 기반 자동/오프라인 결과 우선 연출 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
