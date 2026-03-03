@@ -2250,3 +2250,11 @@
 
 ## 527) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(combo tier surge 전환 연출 + 상시 재맥동 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 528) 다음 순차 작업
+1. [완료] 콤보 쿨다운 헬퍼(`triggerBattleSceneComboCooldown`)를 추가해 combo tier 하향 전환(`frenzy→flow/calm`, `flow→calm`) 순간에만 cooldown 이벤트를 감지하도록 구성.
+2. [완료] combo tier 전환 헬퍼(`maybeTriggerBattleSceneComboTierTransition`)를 상승/하강 양방향으로 확장하고, cooldown 클래스(`scene-combo-cooldown-flow|calm`) + shockwave/trail/spark/카메라 피드백을 연동해 연격 완화 구간의 전장 반응을 강화.
+3. [완료] 듀얼 초기화/루프 종료 경로에서 combo cooldown 타이머·상태를 정리하고 `prefers-reduced-motion` + DOM contract 체크 토큰(`triggerBattleSceneComboCooldown`, `.battle-scene-arena.scene-combo-cooldown-calm`)을 반영해 회귀를 방지.
+
+## 529) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(combo tier cooldown 하향 전환 연출 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

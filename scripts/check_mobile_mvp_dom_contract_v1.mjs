@@ -300,6 +300,7 @@ async function main() {
   assertIncludes(app, "function triggerBattleSceneDangerPulse(", "app.mjs", failures);
   assertIncludes(app, "function maybeTriggerBattleSceneDangerTransition(", "app.mjs", failures);
   assertIncludes(app, "function triggerBattleSceneComboSurge(", "app.mjs", failures);
+  assertIncludes(app, "function triggerBattleSceneComboCooldown(", "app.mjs", failures);
   assertIncludes(app, "function maybeTriggerBattleSceneComboTierTransition(", "app.mjs", failures);
   assertIncludes(app, "function spawnBattleSceneShockwave(", "app.mjs", failures);
   assertIncludes(app, "function maybeSpawnBattleSceneCastTelegraph(", "app.mjs", failures);
@@ -330,6 +331,7 @@ async function main() {
   assertIncludes(css, ".battle-scene-arena.scene-pressure-spike-high", "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-danger-pulse-both", "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-combo-surge-frenzy", "app.css", failures);
+  assertIncludes(css, ".battle-scene-arena.scene-combo-cooldown-calm", "app.css", failures);
   assertIncludes(css, ".battle-scene-shockwave-layer", "app.css", failures);
   assertIncludes(css, ".battle-shockwave.variant-telegraph", "app.css", failures);
   assertIncludes(css, ".battle-charge-mote", "app.css", failures);
