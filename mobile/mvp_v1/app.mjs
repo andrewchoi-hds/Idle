@@ -361,6 +361,22 @@ const BATTLE_SCENE_PRESSURE_SPIKE_MIN_INTERVAL_MS = {
   high: 560,
 };
 const BATTLE_SCENE_PRESSURE_TICKER_MIN_INTERVAL_MS = 2100;
+const BATTLE_SCENE_DANGER_PULSE_CLASSES = [
+  "scene-danger-pulse-player",
+  "scene-danger-pulse-enemy",
+  "scene-danger-pulse-both",
+];
+const BATTLE_SCENE_DANGER_PULSE_DURATIONS_MS = {
+  player: 420,
+  enemy: 420,
+  both: 520,
+};
+const BATTLE_SCENE_DANGER_PULSE_MIN_INTERVAL_MS = {
+  player: 860,
+  enemy: 860,
+  both: 700,
+};
+const BATTLE_SCENE_DANGER_TICKER_MIN_INTERVAL_MS = 2300;
 const BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_IDLE_MS = 1500;
 const BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_AUTO_MS = 1080;
 const BATTLE_SCENE_CAST_TELEGRAPH_MIN_INTERVAL_REALTIME_MS = 760;
@@ -418,6 +434,10 @@ let battleScenePressureSpikeTimer = null;
 let battleSceneLastPressureSpikeAtMs = 0;
 let battleSceneLastPressureTickerAtMs = 0;
 let battleSceneLastPressureState = null;
+let battleSceneDangerPulseTimer = null;
+let battleSceneLastDangerPulseAtMs = 0;
+let battleSceneLastDangerTickerAtMs = 0;
+let battleSceneLastDangerState = null;
 const battleSceneLastCastTelegraphAtMs = {
   player: 0,
   enemy: 0,
@@ -1406,6 +1426,21 @@ function resolveBattleSceneLead(playerHpPct, enemyHpPct) {
   return gap > 0 ? "player" : "enemy";
 }
 
+function resolveBattleSceneDangerSide(playerHpPct, enemyHpPct) {
+  const playerDanger = Math.round(Number(playerHpPct) || 0) <= 30;
+  const enemyDanger = Math.round(Number(enemyHpPct) || 0) <= 30;
+  if (playerDanger && enemyDanger) {
+    return "both";
+  }
+  if (playerDanger) {
+    return "player";
+  }
+  if (enemyDanger) {
+    return "enemy";
+  }
+  return "none";
+}
+
 function resolveBattleSceneDuelPressure(mode = "idle") {
   const playerHpPct = Math.round(
     (clampBattleSceneGauge(battleSceneDuelState.playerHp, BATTLE_SCENE_DUEL_MAX_HP) /
@@ -1595,6 +1630,103 @@ function maybeTriggerBattleScenePressureTransition(nextPressureInput) {
   }
 }
 
+function triggerBattleSceneDangerPulse(side = "player", options = {}) {
+  if (!dom.battleSceneArena || shouldReduceBattleSceneMotion()) {
+    return;
+  }
+  const normalizedSide =
+    side === "both"
+      ? "both"
+      : side === "enemy"
+        ? "enemy"
+        : "player";
+  const now = Date.now();
+  const minIntervalMs = BATTLE_SCENE_DANGER_PULSE_MIN_INTERVAL_MS[normalizedSide] || 820;
+  if (now - battleSceneLastDangerPulseAtMs < minIntervalMs) {
+    return;
+  }
+  if (options.fromAmbient === true && normalizedSide !== "both" && Math.random() > 0.62) {
+    return;
+  }
+  const className = `scene-danger-pulse-${normalizedSide}`;
+  dom.battleSceneArena.classList.remove(...BATTLE_SCENE_DANGER_PULSE_CLASSES);
+  void dom.battleSceneArena.offsetWidth;
+  dom.battleSceneArena.classList.add(className);
+  if (battleSceneDangerPulseTimer !== null) {
+    window.clearTimeout(battleSceneDangerPulseTimer);
+  }
+  const durationMs = BATTLE_SCENE_DANGER_PULSE_DURATIONS_MS[normalizedSide] || 420;
+  battleSceneDangerPulseTimer = window.setTimeout(() => {
+    dom.battleSceneArena?.classList.remove(className);
+    battleSceneDangerPulseTimer = null;
+  }, durationMs);
+
+  const tone = normalizedSide === "enemy" ? "success" : normalizedSide === "both" ? "error" : "warn";
+  const anchor = normalizedSide === "both" ? "center" : normalizedSide;
+  spawnBattleSceneShockwave({
+    anchor,
+    tone,
+    variant: normalizedSide === "both" ? "telegraph-urgent" : "telegraph",
+    radiusPx: normalizedSide === "both" ? 96 : 78,
+    thicknessPx: normalizedSide === "both" ? 3 : 2.4,
+    lingerSec: normalizedSide === "both" ? 0.66 : 0.58,
+  });
+  spawnBattleSceneSpark({
+    anchor,
+    tone,
+    shape: "ring",
+    scale: normalizedSide === "both" ? 1.16 : 1.02,
+  });
+  if (normalizedSide === "both") {
+    spawnBattleSceneTrail({ anchor: "center", tone: "error", shape: "wave", angleDeg: 0, length: 104 });
+    spawnBattleSceneTrail({ anchor: "center", tone: "warn", shape: "wave", angleDeg: 180, length: 96 });
+  }
+  triggerBattleSceneCameraShake(normalizedSide === "both" ? "medium" : "light", { fromAmbient: true });
+  triggerBattleSceneZoomPulse(normalizedSide === "both" ? "burst" : "soft", { fromAmbient: true });
+  triggerBattleSceneHitStop(normalizedSide === "both" ? "medium" : "light", { fromAmbient: true });
+
+  if (now - battleSceneLastDangerTickerAtMs >= BATTLE_SCENE_DANGER_TICKER_MIN_INTERVAL_MS) {
+    pushBattleSceneTicker(
+      normalizedSide === "player"
+        ? "수련자 위기 · 방어 집중 필요"
+        : normalizedSide === "enemy"
+          ? "적수 위기 · 마무리 기회"
+          : "쌍방 위기 · 전장 붕괴 직전",
+      tone,
+    );
+    battleSceneLastDangerTickerAtMs = now;
+  }
+  battleSceneLastDangerPulseAtMs = now;
+}
+
+function maybeTriggerBattleSceneDangerTransition(nextDangerInput) {
+  const nextDanger =
+    nextDangerInput === "both"
+      ? "both"
+      : nextDangerInput === "enemy"
+        ? "enemy"
+        : nextDangerInput === "player"
+          ? "player"
+          : "none";
+  if (battleSceneLastDangerState === nextDanger) {
+    return;
+  }
+  const prevDanger = battleSceneLastDangerState;
+  battleSceneLastDangerState = nextDanger;
+  if (prevDanger === null || shouldReduceBattleSceneMotion()) {
+    return;
+  }
+  if (nextDanger === "none") {
+    return;
+  }
+  const escalation =
+    prevDanger === "none" ||
+    (prevDanger !== "both" && nextDanger === "both");
+  if (escalation) {
+    triggerBattleSceneDangerPulse(nextDanger, { fromAmbient: true });
+  }
+}
+
 function renderBattleSceneDuelHud() {
   const playerHpPct = Math.round(
     (clampBattleSceneGauge(battleSceneDuelState.playerHp, BATTLE_SCENE_DUEL_MAX_HP) /
@@ -1648,12 +1780,15 @@ function renderBattleSceneDuelHud() {
       enemyHpPct,
     );
     const scenePressure = battleSceneDuelState.pressure;
+    const sceneDanger = resolveBattleSceneDangerSide(playerHpPct, enemyHpPct);
     dom.battleSceneArena.dataset.scenePressure = battleSceneDuelState.pressure;
     dom.battleSceneArena.dataset.sceneComboTier = resolveBattleSceneComboTier(
       battleSceneDuelState.combo,
     );
     dom.battleSceneArena.dataset.sceneLead = sceneLead;
+    dom.battleSceneArena.dataset.sceneDanger = sceneDanger;
     maybeTriggerBattleScenePressureTransition(scenePressure);
+    maybeTriggerBattleSceneDangerTransition(sceneDanger);
     maybeTriggerBattleSceneLeadSwing(sceneLead);
   }
   if (dom.battleSceneClashCore) {
@@ -1680,6 +1815,9 @@ function resetBattleSceneDuelState(options = {}) {
   battleSceneLastPressureState = null;
   battleSceneLastPressureSpikeAtMs = 0;
   battleSceneLastPressureTickerAtMs = 0;
+  battleSceneLastDangerState = null;
+  battleSceneLastDangerPulseAtMs = 0;
+  battleSceneLastDangerTickerAtMs = 0;
   if (battleSceneLeadSwingTimer !== null) {
     window.clearTimeout(battleSceneLeadSwingTimer);
     battleSceneLeadSwingTimer = null;
@@ -1688,8 +1826,13 @@ function resetBattleSceneDuelState(options = {}) {
     window.clearTimeout(battleScenePressureSpikeTimer);
     battleScenePressureSpikeTimer = null;
   }
+  if (battleSceneDangerPulseTimer !== null) {
+    window.clearTimeout(battleSceneDangerPulseTimer);
+    battleSceneDangerPulseTimer = null;
+  }
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_LEAD_SWING_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_PRESSURE_SPIKE_CLASSES);
+  dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_DANGER_PULSE_CLASSES);
   clearBattleSceneComboBanner();
   resetBattleSceneActorFrames();
   if (options.clearTicker) {
@@ -2564,6 +2707,8 @@ function runBattleSceneAmbientTick() {
       BATTLE_SCENE_DUEL_MAX_CAST) *
       100,
   );
+  const dangerSide = resolveBattleSceneDangerSide(playerHpPct, enemyHpPct);
+  maybeTriggerBattleSceneDangerTransition(dangerSide);
   playBattleSfx("ambient", {
     mode,
     pressure: battleSceneDuelState.pressure,
@@ -2598,6 +2743,16 @@ function runBattleSceneAmbientTick() {
         : battleSceneAmbientStep % 5 === 0);
   if (shouldPulsePressureSpike && Math.random() < (mode === "realtime" ? 0.78 : mode === "auto" ? 0.58 : 0.32)) {
     triggerBattleScenePressureSpike("high", { fromAmbient: true });
+  }
+  const shouldPulseDanger =
+    dangerSide !== "none" &&
+    (mode === "realtime"
+      ? battleSceneAmbientStep % 2 === 0
+      : mode === "auto"
+        ? battleSceneAmbientStep % 3 === 0
+        : battleSceneAmbientStep % 5 === 0);
+  if (shouldPulseDanger && Math.random() < (dangerSide === "both" ? 0.86 : mode === "realtime" ? 0.68 : mode === "auto" ? 0.54 : 0.34)) {
+    triggerBattleSceneDangerPulse(dangerSide, { fromAmbient: true });
   }
   maybeSpawnBattleSceneCastTelegraph("player", {
     mode,
@@ -2800,6 +2955,10 @@ function stopBattleSceneAmbientLoop() {
     window.clearTimeout(battleScenePressureSpikeTimer);
     battleScenePressureSpikeTimer = null;
   }
+  if (battleSceneDangerPulseTimer !== null) {
+    window.clearTimeout(battleSceneDangerPulseTimer);
+    battleSceneDangerPulseTimer = null;
+  }
   battleSfxAmbientLastPlayAtMs = 0;
   battleSceneLastShakeAtMs = 0;
   battleSceneLastZoomAtMs = 0;
@@ -2810,6 +2969,9 @@ function stopBattleSceneAmbientLoop() {
   battleSceneLastPressureSpikeAtMs = 0;
   battleSceneLastPressureTickerAtMs = 0;
   battleSceneLastPressureState = null;
+  battleSceneLastDangerPulseAtMs = 0;
+  battleSceneLastDangerTickerAtMs = 0;
+  battleSceneLastDangerState = null;
   battleSceneLastCastTelegraphAtMs.player = 0;
   battleSceneLastCastTelegraphAtMs.enemy = 0;
   battleSceneLastChargeMoteAtMs.player = 0;
@@ -2819,6 +2981,7 @@ function stopBattleSceneAmbientLoop() {
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_HIT_STOP_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_LEAD_SWING_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_PRESSURE_SPIKE_CLASSES);
+  dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_DANGER_PULSE_CLASSES);
   if (battleSceneSkillBannerTimer !== null) {
     window.clearTimeout(battleSceneSkillBannerTimer);
     battleSceneSkillBannerTimer = null;
