@@ -2338,3 +2338,11 @@
 
 ## 549) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(도겁 설정 차단 전용 듀얼 전이 + 수동 톤 정합 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 550) 다음 순차 작업
+1. [완료] 이벤트 시그널 해석(`resolveBattleSceneEventSignalFromCollectedEvent`)에서 정책 차단 계열(`breakthrough_blocked_auto_policy`, `auto_breakthrough_paused_by_policy`)의 사유 메타(`reason/reasonLabelKo/nextActionKo`)를 `triggerBattleSceneImpact` payload로 전달하도록 확장.
+2. [완료] 듀얼 동기화(`syncBattleSceneDuelFromImpact`)의 `blocked_auto_risk_policy` 분기를 사유별(`blocked_extreme_risk`, `blocked_high_risk`, `blocked_high_qi_cost`)로 세분화해 ticker/banner/전장 전이(`cooldown/resonance`, `error/warn/info`)를 차등 적용.
+3. [완료] DOM contract/회귀 체크에 정책 차단 사유 분기 토큰 및 비정책 차단 독립 집계 검증을 동기화.
+
+## 551) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(정책 차단 사유별 듀얼 전이 + impact payload 확장 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

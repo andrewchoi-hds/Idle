@@ -2746,6 +2746,16 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
     if (outcome.attempted !== true) {
       const blockedNoQi = outcomeCode === "blocked_no_qi";
       const blockedTribulationSetting = outcomeCode === "blocked_tribulation_setting";
+      const blockedAutoRiskPolicy = outcomeCode === "blocked_auto_risk_policy";
+      const autoPolicyReason = String(
+        outcome.autoPolicy?.reason || outcome.reason || "",
+      );
+      const autoPolicyReasonLabel = String(
+        outcome.autoPolicy?.reasonLabelKo || outcome.reasonLabelKo || "정책 차단",
+      );
+      const autoPolicyNextActionKo = String(
+        outcome.autoPolicy?.nextActionKo || outcome.nextActionKo || "",
+      );
       if (blockedNoQi) {
         battleSceneDuelState.playerCast = clampBattleSceneGauge(
           battleSceneDuelState.playerCast - 8,
@@ -2773,6 +2783,86 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
         bannerText = "도겁 자동 허용 꺼짐";
         bannerTone = "info";
         applyOutcomeTransition = true;
+      } else if (blockedAutoRiskPolicy) {
+        if (autoPolicyReason === "blocked_extreme_risk") {
+          battleSceneDuelState.playerCast = clampBattleSceneGauge(
+            battleSceneDuelState.playerCast - 14,
+            BATTLE_SCENE_DUEL_MAX_CAST,
+          );
+          battleSceneDuelState.enemyCast = clampBattleSceneGauge(
+            battleSceneDuelState.enemyCast + 6,
+            BATTLE_SCENE_DUEL_MAX_CAST,
+          );
+          battleSceneDuelState.combo = Math.max(0, battleSceneDuelState.combo - 2);
+          battleSceneDuelState.dpsMomentum = Math.max(
+            0,
+            battleSceneDuelState.dpsMomentum * 0.68,
+          );
+          comboAction = "cooldown";
+          tickerText = `자동 돌파 차단 · ${autoPolicyReasonLabel}`;
+          tickerTone = "error";
+          bannerText = autoPolicyNextActionKo || "치명 위험 구간 · 수동 판단 필요";
+          bannerTone = "error";
+          applyOutcomeTransition = true;
+        } else if (autoPolicyReason === "blocked_high_risk") {
+          battleSceneDuelState.playerCast = clampBattleSceneGauge(
+            battleSceneDuelState.playerCast - 10,
+            BATTLE_SCENE_DUEL_MAX_CAST,
+          );
+          battleSceneDuelState.enemyCast = clampBattleSceneGauge(
+            battleSceneDuelState.enemyCast + 4,
+            BATTLE_SCENE_DUEL_MAX_CAST,
+          );
+          battleSceneDuelState.combo = Math.max(0, battleSceneDuelState.combo - 1);
+          battleSceneDuelState.dpsMomentum = Math.max(
+            0,
+            battleSceneDuelState.dpsMomentum * 0.8,
+          );
+          comboAction = "cooldown";
+          tickerText = `자동 돌파 차단 · ${autoPolicyReasonLabel}`;
+          tickerTone = "warn";
+          bannerText = autoPolicyNextActionKo || "고위험 구간 · 보정 후 수동 시도";
+          bannerTone = "warn";
+          applyOutcomeTransition = true;
+        } else if (autoPolicyReason === "blocked_high_qi_cost") {
+          battleSceneDuelState.playerCast = clampBattleSceneGauge(
+            battleSceneDuelState.playerCast - 6,
+            BATTLE_SCENE_DUEL_MAX_CAST,
+          );
+          battleSceneDuelState.enemyCast = clampBattleSceneGauge(
+            battleSceneDuelState.enemyCast + 2,
+            BATTLE_SCENE_DUEL_MAX_CAST,
+          );
+          battleSceneDuelState.combo = Math.max(0, battleSceneDuelState.combo - 1);
+          battleSceneDuelState.dpsMomentum = Math.max(
+            0,
+            battleSceneDuelState.dpsMomentum * 0.9,
+          );
+          comboAction = "resonance";
+          tickerText = `자동 돌파 차단 · ${autoPolicyReasonLabel}`;
+          tickerTone = "warn";
+          bannerText = autoPolicyNextActionKo || "기(氣) 비축 후 재시도";
+          bannerTone = "info";
+          applyOutcomeTransition = true;
+        } else {
+          battleSceneDuelState.playerCast = clampBattleSceneGauge(
+            battleSceneDuelState.playerCast - 11,
+            BATTLE_SCENE_DUEL_MAX_CAST,
+          );
+          battleSceneDuelState.combo = Math.max(0, battleSceneDuelState.combo - 1);
+          battleSceneDuelState.dpsMomentum = Math.max(
+            0,
+            battleSceneDuelState.dpsMomentum * 0.82,
+          );
+          comboAction = "cooldown";
+          tickerText = `자동 돌파 차단 · ${autoPolicyReasonLabel}`;
+          tickerTone = "warn";
+          if (autoPolicyNextActionKo) {
+            bannerText = autoPolicyNextActionKo;
+            bannerTone = "info";
+          }
+          applyOutcomeTransition = true;
+        }
       } else {
         battleSceneDuelState.playerCast = clampBattleSceneGauge(
           battleSceneDuelState.playerCast - 12,
@@ -4521,6 +4611,8 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
   if (kind === "auto_breakthrough_paused_by_policy") {
     const reasonLabel = String(event.reasonLabelKo || event.reason || "정책 차단");
     const consecutiveBlocks = Math.max(0, Number(event.consecutiveBlocks) || 0);
+    const policyReason = String(event.reason || "");
+    const nextActionKo = String(event.nextActionKo || "");
     return {
       priority: 88,
       tone: "error",
@@ -4535,6 +4627,14 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
         outcome: {
           attempted: false,
           outcome: "blocked_auto_risk_policy",
+          reason: policyReason,
+          reasonLabelKo: reasonLabel,
+          nextActionKo,
+          autoPolicy: {
+            reason: policyReason,
+            reasonLabelKo: reasonLabel,
+            nextActionKo,
+          },
         },
       },
     };
@@ -4587,6 +4687,7 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
   }
   if (kind === "breakthrough_blocked_auto_policy") {
     const reasonLabel = String(event.reasonLabelKo || "정책 차단");
+    const policyReason = String(event.reason || "");
     const nextActionKo =
       typeof event.nextActionKo === "string" && event.nextActionKo
         ? ` · ${event.nextActionKo}`
@@ -4602,6 +4703,14 @@ function resolveBattleSceneEventSignalFromCollectedEvent(eventInput) {
         outcome: {
           attempted: false,
           outcome: "blocked_auto_risk_policy",
+          reason: policyReason,
+          reasonLabelKo: reasonLabel,
+          nextActionKo: String(event.nextActionKo || ""),
+          autoPolicy: {
+            reason: policyReason,
+            reasonLabelKo: reasonLabel,
+            nextActionKo: String(event.nextActionKo || ""),
+          },
         },
       },
     };
