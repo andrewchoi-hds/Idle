@@ -324,6 +324,7 @@ async function main() {
   assertIncludes(app, "successQiConsume", "app.mjs", failures);
   assertIncludes(app, "outcome.requiredQi", "app.mjs", failures);
   assertIncludes(app, "outcome.difficultyIndex", "app.mjs", failures);
+  assertIncludes(app, "outcome.stageQiRequired", "app.mjs", failures);
   assertIncludes(app, "event?.stageQiRequired", "app.mjs", failures);
   assertIncludes(app, "kind === \"breakthrough_retreat_fail\"", "app.mjs", failures);
   assertIncludes(app, '"도겁 자동 허용 꺼짐"', "app.mjs", failures);

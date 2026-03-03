@@ -160,6 +160,7 @@ npm run mobile:mvp:serve
   - `blocked_no_qi`/`blocked_tribulation_setting` 경로의 impact payload에 `requiredQi/currentQi/qiDeficit/difficultyIndex` 메타를 전달하고, `syncBattleSceneDuelFromImpact`에서 실제 기 부족량·난이도 기반 ticker/banner 전이를 우선 적용
   - 돌파 시도 실패 이벤트(`breakthrough_minor_fail/retreat_fail/death_fail`) 수집 payload에 `stageQiRequired/deathPct/qiDelta` 메타를 확장하고, 시그널 해석에서 추정치 대신 실메타를 사용해 돌파 연출(경상/후퇴/사망) 전이 강도를 정합화
   - 돌파 성공/실패 전이(`syncBattleSceneDuelFromImpact`)가 `outcome.qiDelta/stage.qi_required`를 직접 사용해 성공 surge 강도와 실패 손실(경상/후퇴) 전장을 계산하고, `breakthrough_success` 이벤트 힌트/오프라인 라인에도 동일 기 소모 메타를 노출
+  - `runBreakthroughAttempt` 반환값 자체에도 `stageQiRequired/qiDelta`를 포함해 수동 돌파 결과 연출(`playBattleSceneBreakthroughOutcome`)과 impact 동기화가 이벤트 경로와 동일 메타를 사용하도록 정합화
   - stage 메타(`world`, `difficulty_index`, `is_tribulation`)를 연출 패널 `data-scene-world`, `data-scene-tier`로 반영해 인간계/신선계/진선계 및 난도 구간별 색감·오라 강도를 차등 적용
   - 전투 spark 레이어(`battleSceneSparkLayer`)를 추가해 클릭 없이도 상시 파티클/충돌 파동이 순환되도록 구성
   - 전장 흐름 레이어(`battle-scene-flow-back/front`)를 추가해 배경 전류가 상시 흐르는 느낌을 유지
@@ -268,6 +269,7 @@ npm run mobile:mvp:check
   - `breakthrough_blocked_no_qi`/`breakthrough_blocked_tribulation_setting` 이벤트와 `runBreakthroughAttempt` 차단 결과가 `requiredQi/currentQi/qiDeficit/difficultyIndex` 메타를 일관되게 포함하고, `syncBattleSceneDuelFromImpact`가 고정 문구 대신 메타 기반 ticker/banner를 반영하는지 검증
   - `runBreakthroughAttempt`의 강제 실패(`minor_fail/retreat_fail/death_fail`)에서 eventCollector payload가 `stageQiRequired/deathPct/qiDelta` 메타를 일관되게 포함하고, 이벤트 시그널 해석이 해당 메타를 우선 사용해 fallback 추정 경로를 최소화하는지 검증
   - `runBreakthroughAttempt`의 강제 성공(`success`)에서도 eventCollector payload가 `stageQiRequired/qiDelta/from→to` 메타를 일관되게 포함하고, `syncBattleSceneDuelFromImpact` 성공 분기가 `qiDelta` 기반 surge 강도를 반영하는지 검증
+  - `runBreakthroughAttempt`의 강제 성공/실패 반환값(`success/minor_fail/retreat_fail/death_fail`)이 `stageQiRequired/qiDelta` 메타를 일관되게 포함하고, 수동 돌파 결과 라인과 impact 동기화가 해당 메타를 우선 사용하는지 검증
   - 저사양 모드 ON/OFF에서 ambient pulse cadence/확률 및 spark·trail·shockwave layer cap이 의도대로 하향/복원되고, 결과 기반 트리거 우선순위가 유지되는지 검증
   - 듀얼 strike/burst/impact 경로에서 배우 프레임(`idle/attack/hit/skill`)이 전환되고 리셋 시 `idle`로 복귀하는지 검증
   - 듀얼 HUD 갱신 시 cast/combo/pressure/lead 상태 데이터가 일관되게 갱신되고 `prefers-reduced-motion` 환경에서도 수치 상태 반영이 유지되는지 검증

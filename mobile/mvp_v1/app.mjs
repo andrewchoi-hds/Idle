@@ -2741,7 +2741,10 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
     const outcomeCode = String(outcome.outcome || "");
     const successPct = Math.max(0, Math.min(100, Number(outcome.successPct) || 0));
     const deathPct = Math.max(0, Math.min(100, Number(outcome.deathPct) || 0));
-    const stageQiRequired = Math.max(1, Math.round(Number(outcome.stage?.qi_required) || 1));
+    const stageQiRequired = Math.max(
+      1,
+      Math.round(Number(outcome.stageQiRequired || outcome.stage?.qi_required) || 1),
+    );
     const outcomeQiDelta = Math.round(Number(outcome.qiDelta) || 0);
     const outcomeQiLoss = Math.max(0, -outcomeQiDelta);
 
@@ -4603,9 +4606,21 @@ function playBattleSceneBreakthroughOutcome(outcome) {
     return;
   }
   if (outcome.outcome === "success") {
-    const qiConsume = Math.max(1, Math.round((outcome.stage?.qi_required || 0) * 0.85));
+    const qiConsume = Math.max(
+      1,
+      Math.round(
+        Math.max(
+          0,
+          -Number(outcome.qiDelta) ||
+            Number(outcome.stageQiRequired || outcome.stage?.qi_required || 0) * 0.85,
+        ),
+      ),
+    );
     setBattleSceneStatus("돌파 성공", "success");
-    setBattleSceneResult(outcome.message || "돌파 성공", "success");
+    setBattleSceneResult(
+      `${outcome.message || "돌파 성공"} · 기 ${fmtSignedInteger(-qiConsume)}`,
+      "success",
+    );
     triggerBattleSceneImpact("breakthrough_success", "success", {
       source: "breakthrough",
       outcome,
@@ -4615,9 +4630,21 @@ function playBattleSceneBreakthroughOutcome(outcome) {
     return;
   }
   if (outcome.outcome === "minor_fail") {
-    const qiLoss = Math.max(1, Math.round((outcome.stage?.qi_required || 0) * 0.22));
+    const qiLoss = Math.max(
+      1,
+      Math.round(
+        Math.max(
+          0,
+          -Number(outcome.qiDelta) ||
+            Number(outcome.stageQiRequired || outcome.stage?.qi_required || 0) * 0.22,
+        ),
+      ),
+    );
     setBattleSceneStatus("돌파 실패(경상)", "warn");
-    setBattleSceneResult(outcome.message || "경상 실패", "warn");
+    setBattleSceneResult(
+      `${outcome.message || "경상 실패"} · 기 ${fmtSignedInteger(-qiLoss)}`,
+      "warn",
+    );
     triggerBattleSceneImpact("breakthrough_fail", "warn", {
       source: "breakthrough",
       outcome,
@@ -4627,10 +4654,22 @@ function playBattleSceneBreakthroughOutcome(outcome) {
     return;
   }
   if (outcome.outcome === "retreat_fail") {
-    const qiLoss = Math.max(1, Math.round((outcome.stage?.qi_required || 0) * 0.28));
+    const qiLoss = Math.max(
+      1,
+      Math.round(
+        Math.max(
+          0,
+          -Number(outcome.qiDelta) ||
+            Number(outcome.stageQiRequired || outcome.stage?.qi_required || 0) * 0.28,
+        ),
+      ),
+    );
     const retreatLayers = Math.max(1, Number(outcome.retreatLayers) || 1);
     setBattleSceneStatus("돌파 실패(후퇴)", "error");
-    setBattleSceneResult(outcome.message || "경지 후퇴 발생", "error");
+    setBattleSceneResult(
+      `${outcome.message || "경지 후퇴 발생"} · 기 ${fmtSignedInteger(-qiLoss)}`,
+      "error",
+    );
     triggerBattleSceneImpact("breakthrough_fail", "error", {
       source: "breakthrough",
       outcome,
