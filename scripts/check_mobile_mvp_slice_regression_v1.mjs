@@ -3490,6 +3490,75 @@ async function main() {
       Number(blockedTribulationSetting.difficultyIndex) === 198,
   });
 
+  const forcedMinorState = createInitialSliceState(context, {
+    playerName: "forced-minor-fail",
+  });
+  forcedMinorState.progression.difficultyIndex = 198;
+  forcedMinorState.currencies.qi = Math.max(
+    1,
+    Number(context.stageByDifficulty.get(198)?.qi_required) || 1,
+  );
+  const forcedMinorEvents = [];
+  runBreakthroughAttempt(context, forcedMinorState, createSeededRng(901), {
+    respectAutoTribulation: false,
+    debugForcedOutcome: "minor_fail",
+    eventCollector: (event) => forcedMinorEvents.push(event),
+  });
+
+  const forcedRetreatState = createInitialSliceState(context, {
+    playerName: "forced-retreat-fail",
+  });
+  forcedRetreatState.progression.difficultyIndex = 198;
+  forcedRetreatState.currencies.qi = Math.max(
+    1,
+    Number(context.stageByDifficulty.get(198)?.qi_required) || 1,
+  );
+  const forcedRetreatEvents = [];
+  runBreakthroughAttempt(context, forcedRetreatState, createSeededRng(902), {
+    respectAutoTribulation: false,
+    debugForcedOutcome: "retreat_fail",
+    eventCollector: (event) => forcedRetreatEvents.push(event),
+  });
+
+  const forcedDeathState = createInitialSliceState(context, {
+    playerName: "forced-death-fail",
+  });
+  forcedDeathState.progression.difficultyIndex = 198;
+  forcedDeathState.currencies.qi = Math.max(
+    1,
+    Number(context.stageByDifficulty.get(198)?.qi_required) || 1,
+  );
+  const forcedDeathEvents = [];
+  runBreakthroughAttempt(context, forcedDeathState, createSeededRng(903), {
+    respectAutoTribulation: false,
+    debugForcedOutcome: "death_fail",
+    eventCollector: (event) => forcedDeathEvents.push(event),
+  });
+
+  checks.push({
+    id: "breakthrough_event_collector_includes_stage_and_risk_metadata",
+    passed:
+      forcedMinorEvents.length === 1 &&
+      forcedMinorEvents[0].kind === "breakthrough_minor_fail" &&
+      Number(forcedMinorEvents[0].stageQiRequired) ===
+        Number(context.stageByDifficulty.get(198)?.qi_required || 0) &&
+      Number(forcedMinorEvents[0].qiDelta) < 0 &&
+      Number(forcedMinorEvents[0].deathPct) > 0 &&
+      forcedRetreatEvents.length === 1 &&
+      forcedRetreatEvents[0].kind === "breakthrough_retreat_fail" &&
+      Number(forcedRetreatEvents[0].stageQiRequired) ===
+        Number(context.stageByDifficulty.get(198)?.qi_required || 0) &&
+      Number(forcedRetreatEvents[0].qiDelta) < 0 &&
+      Number(forcedRetreatEvents[0].deathPct) > 0 &&
+      Number(forcedRetreatEvents[0].retreatLayers) >= 1 &&
+      forcedDeathEvents.length === 1 &&
+      forcedDeathEvents[0].kind === "breakthrough_death_fail" &&
+      Number(forcedDeathEvents[0].stageQiRequired) ===
+        Number(context.stageByDifficulty.get(198)?.qi_required || 0) &&
+      Number(forcedDeathEvents[0].deathPct) > 0 &&
+      Number(forcedDeathEvents[0].rebirthReward) >= 1,
+  });
+
   const previewTribulationState = createInitialSliceState(context, { playerName: "preview-trib" });
   previewTribulationState.progression.difficultyIndex = 198;
   const previewTribulationBase = previewBreakthroughChance(context, previewTribulationState, {

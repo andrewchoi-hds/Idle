@@ -3446,6 +3446,9 @@ export function runBreakthroughAttempt(context, state, rng, options = {}) {
         fromDifficultyIndex: stage.difficulty_index,
         toDifficultyIndex: nextStage.difficulty_index,
         successPct: preview.successPct,
+        deathPct: preview.deathPct,
+        stageQiRequired: stage.qi_required,
+        qiDelta: -qiConsume,
       });
     }
     return {
@@ -3475,6 +3478,8 @@ export function runBreakthroughAttempt(context, state, rng, options = {}) {
         difficultyIndex: stage.difficulty_index,
         qiDelta: -qiLoss,
         successPct: preview.successPct,
+        deathPct: preview.deathPct,
+        stageQiRequired: stage.qi_required,
       });
     }
     return {
@@ -3508,6 +3513,10 @@ export function runBreakthroughAttempt(context, state, rng, options = {}) {
         fromDifficultyIndex: stage.difficulty_index,
         toDifficultyIndex: nextStage.difficulty_index,
         retreatLayers: retreat,
+        qiDelta: -qiLoss,
+        successPct: preview.successPct,
+        deathPct: preview.deathPct,
+        stageQiRequired: stage.qi_required,
       });
     }
     return {
@@ -3530,6 +3539,9 @@ export function runBreakthroughAttempt(context, state, rng, options = {}) {
       kind: "breakthrough_death_fail",
       difficultyIndex: stage.difficulty_index,
       rebirthReward: rebirth.reward,
+      successPct: preview.successPct,
+      deathPct: preview.deathPct,
+      stageQiRequired: stage.qi_required,
     });
   }
   return {
