@@ -2194,3 +2194,11 @@
 
 ## 513) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(쇼크웨이브 레이어 + 상시 고압 파동 연출 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 514) 다음 순차 작업
+1. [완료] 전장 히트스톱 헬퍼(`triggerBattleSceneHitStop`)를 추가해 strike/burst/impact 및 상시 고압 tick에서 짧은 프레임 정지(`scene-hit-stop-light|medium|heavy`)가 동작하도록 구성.
+2. [완료] 전투 연출 CSS에 hit-stop 상태 클래스/정지 규칙을 추가해 flow/aura/actor/spark/trail/shockwave 애니메이션을 70~120ms 동안 일시 정지시키고, HP/기세 바 전환도 같은 구간에서 즉시 고정되도록 반영.
+3. [완료] 루프 종료(`stopBattleSceneAmbientLoop`) 시 hit-stop 타이머/클래스를 정리하고 DOM contract 체크에 신규 토큰(`triggerBattleSceneHitStop`, `.battle-scene-arena.scene-hit-stop-heavy`)을 추가해 회귀를 방지.
+
+## 515) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(hit-stop 프레임 정지 + 전장 고압 연동 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
