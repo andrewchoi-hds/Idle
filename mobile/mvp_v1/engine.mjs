@@ -3572,6 +3572,8 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
     autoBreakthroughWarmupSkips: 0,
     autoBreakthroughWarmupRemainingSec: 0,
     breakthroughPolicyBlocks: 0,
+    breakthroughNoQiBlocks: 0,
+    breakthroughTribulationSettingBlocks: 0,
     breakthroughPolicyBlockReasons: {
       extremeRisk: 0,
       highRisk: 0,
@@ -3722,6 +3724,7 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
           }
         }
       } else if (breakthrough.outcome === "blocked_no_qi") {
+        summary.breakthroughNoQiBlocks += 1;
         consecutivePolicyBlocks = 0;
         if (collectEvents) {
           pushLimited(
@@ -3737,6 +3740,7 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
           );
         }
       } else if (breakthrough.outcome === "blocked_tribulation_setting") {
+        summary.breakthroughTribulationSettingBlocks += 1;
         consecutivePolicyBlocks = 0;
         if (collectEvents) {
           pushLimited(
@@ -3761,13 +3765,21 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
       summary.autoBreakthroughWarmupSkips > 0
         ? ` · 돌파 워밍업 차단 ${summary.autoBreakthroughWarmupSkips}회`
         : "";
+    const noQiText =
+      summary.breakthroughNoQiBlocks > 0
+        ? ` · 기 부족 차단 ${summary.breakthroughNoQiBlocks}회`
+        : "";
+    const tribulationSettingText =
+      summary.breakthroughTribulationSettingBlocks > 0
+        ? ` · 도겁 설정 차단 ${summary.breakthroughTribulationSettingBlocks}회`
+        : "";
     const pauseText = summary.autoBreakthroughPaused
       ? ` · 자동돌파 일시정지(${summary.autoBreakthroughPauseReasonLabelKo})`
       : "";
     addLog(
       state,
       "auto",
-      `자동 ${seconds}초 진행 완료 (전투 ${summary.battles}회, 돌파 ${summary.breakthroughs}회${warmupText}, 위험 차단 ${summary.breakthroughPolicyBlocks}회, 환생 ${summary.rebirths}회${pauseText})`,
+      `자동 ${seconds}초 진행 완료 (전투 ${summary.battles}회, 돌파 ${summary.breakthroughs}회${warmupText}, 위험 차단 ${summary.breakthroughPolicyBlocks}회${noQiText}${tribulationSettingText}, 환생 ${summary.rebirths}회${pauseText})`,
     );
   }
 

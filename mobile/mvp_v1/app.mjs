@@ -266,6 +266,51 @@ function formatPolicyBlockReasonSummary(summary) {
   return parts.join(", ");
 }
 
+function resolveAutoBreakthroughBlockCounts(summaryInput) {
+  const summary =
+    summaryInput && typeof summaryInput === "object"
+      ? summaryInput
+      : {};
+  const policyBlocks = Math.max(0, Number(summary.breakthroughPolicyBlocks) || 0);
+  const noQiBlocks = Math.max(0, Number(summary.breakthroughNoQiBlocks) || 0);
+  const tribulationSettingBlocks = Math.max(
+    0,
+    Number(summary.breakthroughTribulationSettingBlocks) || 0,
+  );
+  return {
+    policyBlocks,
+    noQiBlocks,
+    tribulationSettingBlocks,
+    totalBlocks: policyBlocks + noQiBlocks + tribulationSettingBlocks,
+  };
+}
+
+function buildAutoBreakthroughBlockSummaryLabelKo(summaryInput) {
+  const counts = resolveAutoBreakthroughBlockCounts(summaryInput);
+  const summary =
+    summaryInput && typeof summaryInput === "object"
+      ? summaryInput
+      : {};
+  const policyReasonText = formatPolicyBlockReasonSummary(
+    summary.breakthroughPolicyBlockReasons,
+  );
+  const parts = [];
+  if (counts.policyBlocks > 0) {
+    parts.push(
+      `위험 차단 ${counts.policyBlocks}회${
+        policyReasonText ? `(${policyReasonText})` : ""
+      }`,
+    );
+  }
+  if (counts.noQiBlocks > 0) {
+    parts.push(`기 부족 차단 ${counts.noQiBlocks}회`);
+  }
+  if (counts.tribulationSettingBlocks > 0) {
+    parts.push(`도겁 설정 차단 ${counts.tribulationSettingBlocks}회`);
+  }
+  return parts.join(" · ");
+}
+
 let context = null;
 let state = null;
 let rng = createSeededRng(Date.now());
@@ -278,6 +323,8 @@ let offlineCompareSource = "none";
 let realtimeAutoTimer = null;
 let realtimePersistTicks = 0;
 let realtimePolicyBlockAccum = 0;
+let realtimeNoQiBlockAccum = 0;
+let realtimeTribulationSettingBlockAccum = 0;
 let realtimePolicyReasonAccum = createEmptyPolicyBlockReasonSummary();
 let slotSummaryDirty = true;
 let slotSummaryLastRenderedAtMs = 0;
@@ -4671,14 +4718,14 @@ function playBattleSceneAutoSummary(summaryInput, sourceLabel = "자동 진행")
   const battleWins = Math.max(0, Number(summary.battleWins) || 0);
   const breakthroughs = Math.max(0, Number(summary.breakthroughs) || 0);
   const rebirths = Math.max(0, Number(summary.rebirths) || 0);
-  const blocked = Math.max(0, Number(summary.breakthroughPolicyBlocks) || 0);
+  const blockCounts = resolveAutoBreakthroughBlockCounts(summary);
   const warmupSkips = Math.max(0, Number(summary.autoBreakthroughWarmupSkips) || 0);
   const eventSignal = resolveBattleSceneEventSignalFromCollectedEvents(summary.collectedEvents);
   if (
     battles <= 0 &&
     breakthroughs <= 0 &&
     rebirths <= 0 &&
-    blocked <= 0 &&
+    blockCounts.totalBlocks <= 0 &&
     warmupSkips <= 0 &&
     !eventSignal &&
     summary.autoBreakthroughPaused !== true
@@ -4710,7 +4757,7 @@ function playBattleSceneAutoSummary(summaryInput, sourceLabel = "자동 진행")
     tone = battleWins > losses ? "success" : losses > 0 ? "warn" : "info";
     impactKind = battleWins > 0 ? "battle_win" : "battle_loss";
     statusText = `${sourceLabel} 전투 진행`;
-  } else if (blocked > 0 || warmupSkips > 0) {
+  } else if (blockCounts.totalBlocks > 0 || warmupSkips > 0) {
     tone = "warn";
     impactKind = "breakthrough_fail";
     statusText = `${sourceLabel} 돌파 대기`;
@@ -4727,8 +4774,14 @@ function playBattleSceneAutoSummary(summaryInput, sourceLabel = "자동 진행")
   if (warmupSkips > 0) {
     parts.push(`워밍업 차단 ${warmupSkips}회`);
   }
-  if (blocked > 0) {
-    parts.push(`위험 차단 ${blocked}회`);
+  if (blockCounts.policyBlocks > 0) {
+    parts.push(`위험 차단 ${blockCounts.policyBlocks}회`);
+  }
+  if (blockCounts.noQiBlocks > 0) {
+    parts.push(`기 부족 차단 ${blockCounts.noQiBlocks}회`);
+  }
+  if (blockCounts.tribulationSettingBlocks > 0) {
+    parts.push(`도겁 설정 차단 ${blockCounts.tribulationSettingBlocks}회`);
   }
   if (summary.autoBreakthroughPaused) {
     parts.push(`자동돌파 일시정지(${String(summary.autoBreakthroughPauseReasonLabelKo || "정책")})`);
@@ -4763,8 +4816,8 @@ function playBattleSceneAutoSummary(summaryInput, sourceLabel = "자동 진행")
       anchor: "center",
     });
   }
-  if (blocked > 0) {
-    spawnBattleSceneFloat(`차단 ${blocked}`, {
+  if (blockCounts.totalBlocks > 0) {
+    spawnBattleSceneFloat(`차단 ${blockCounts.totalBlocks}`, {
       tone: "warn",
       anchor: "enemy",
     });
@@ -4800,6 +4853,7 @@ function playBattleSceneOfflineSummary(offlineReportInput) {
   const rebirths = Math.max(0, Number(auto.rebirths) || 0);
   const breakthroughs = Math.max(0, Number(auto.breakthroughs) || 0);
   const battles = Math.max(0, Number(auto.battles) || 0);
+  const blockedLabel = buildAutoBreakthroughBlockSummaryLabelKo(auto);
   const eventSignal = resolveBattleSceneEventSignalFromCollectedEvents(
     Array.isArray(report?.events) ? report.events : auto.collectedEvents,
   );
@@ -4822,7 +4876,9 @@ function playBattleSceneOfflineSummary(offlineReportInput) {
     tone,
   );
   setBattleSceneResult(
-    `오프라인 ${fmtDurationSec(summary.appliedOfflineSec)} · 전투 ${battles}회 · 돌파 ${breakthroughs}회 · 환생 ${rebirths}회${
+    `오프라인 ${fmtDurationSec(summary.appliedOfflineSec)} · 전투 ${battles}회 · 돌파 ${breakthroughs}회${
+      blockedLabel ? ` · ${blockedLabel}` : ""
+    } · 환생 ${rebirths}회${
       eventSignal?.resultHintKo ? ` · 최근 이벤트 ${eventSignal.resultHintKo}` : ""
     }`,
     tone,
@@ -5803,13 +5859,8 @@ function buildOfflineStatus(prefix, summary) {
     warmupLabelKo === "워밍업 없음" ? "" : ` · ${warmupLabelKo}`;
   const maxOfflineHours = Math.floor((summary.maxOfflineSec || 0) / 3600);
   const capText = summary.cappedByMaxOffline ? ` · ${maxOfflineHours}시간 cap 적용` : "";
-  const reasonText = formatPolicyBlockReasonSummary(auto?.breakthroughPolicyBlockReasons);
-  const blockedText =
-    (auto?.breakthroughPolicyBlocks ?? 0) > 0
-      ? ` · 위험 차단 ${auto.breakthroughPolicyBlocks}회${
-          reasonText ? `(${reasonText})` : ""
-        }`
-      : "";
+  const blockedLabel = buildAutoBreakthroughBlockSummaryLabelKo(auto);
+  const blockedText = blockedLabel ? ` · ${blockedLabel}` : "";
   const pausedText = auto?.autoBreakthroughPaused
     ? ` · 자동돌파 일시정지(${String(auto.autoBreakthroughPauseReasonLabelKo || "정책")})`
     : "";
@@ -5839,6 +5890,8 @@ function resetRealtimeAutoSession() {
   stats.anchorRebirthEssence = currency.rebirthEssence;
   realtimePersistTicks = 0;
   realtimePolicyBlockAccum = 0;
+  realtimeNoQiBlockAccum = 0;
+  realtimeTribulationSettingBlockAccum = 0;
   realtimePolicyReasonAccum = createEmptyPolicyBlockReasonSummary();
 }
 
@@ -5911,6 +5964,11 @@ function runRealtimeAutoTick() {
   stats.breakthroughs += summary.breakthroughs;
   stats.rebirths += summary.rebirths;
   realtimePolicyBlockAccum += summary.breakthroughPolicyBlocks;
+  realtimeNoQiBlockAccum += Math.max(0, Number(summary.breakthroughNoQiBlocks) || 0);
+  realtimeTribulationSettingBlockAccum += Math.max(
+    0,
+    Number(summary.breakthroughTribulationSettingBlocks) || 0,
+  );
   accumulatePolicyBlockReasonSummary(
     realtimePolicyReasonAccum,
     summary.breakthroughPolicyBlockReasons,
@@ -5918,13 +5976,29 @@ function runRealtimeAutoTick() {
 
   if (stats.elapsedSec % 10 === 0) {
     const reasonText = formatPolicyBlockReasonSummary(realtimePolicyReasonAccum);
+    const blockedParts = [];
+    if (realtimePolicyBlockAccum > 0) {
+      blockedParts.push(
+        `위험 차단 ${realtimePolicyBlockAccum}회${
+          reasonText ? `(${reasonText})` : ""
+        }`,
+      );
+    }
+    if (realtimeNoQiBlockAccum > 0) {
+      blockedParts.push(`기 부족 차단 ${realtimeNoQiBlockAccum}회`);
+    }
+    if (realtimeTribulationSettingBlockAccum > 0) {
+      blockedParts.push(`도겁 설정 차단 ${realtimeTribulationSettingBlockAccum}회`);
+    }
     addClientLog(
       "auto",
-      `실시간 자동 ${fmtDurationSec(stats.elapsedSec)} 누적 (전투 ${stats.battles}회 · 돌파 ${stats.breakthroughs}회 · 위험 차단 ${realtimePolicyBlockAccum}회${
-        reasonText ? `(${reasonText})` : ""
+      `실시간 자동 ${fmtDurationSec(stats.elapsedSec)} 누적 (전투 ${stats.battles}회 · 돌파 ${stats.breakthroughs}회 · ${
+        blockedParts.length > 0 ? blockedParts.join(" · ") : "차단 0회"
       } · 환생 ${stats.rebirths}회)`,
     );
     realtimePolicyBlockAccum = 0;
+    realtimeNoQiBlockAccum = 0;
+    realtimeTribulationSettingBlockAccum = 0;
     realtimePolicyReasonAccum = createEmptyPolicyBlockReasonSummary();
   }
 
@@ -5942,6 +6016,9 @@ function runRealtimeAutoTick() {
     summary.breakthroughs > 0 ||
     summary.rebirths > 0 ||
     summary.breakthroughPolicyBlocks > 0 ||
+    summary.breakthroughNoQiBlocks > 0 ||
+    summary.breakthroughTribulationSettingBlocks > 0 ||
+    (Array.isArray(summary.collectedEvents) && summary.collectedEvents.length > 0) ||
     summary.autoBreakthroughPaused
   ) {
     playBattleSceneAutoSummary(summary, "실시간 자동");
@@ -5970,6 +6047,8 @@ function startRealtimeAuto() {
   }
   ensureRealtimeAnchor();
   realtimePolicyBlockAccum = 0;
+  realtimeNoQiBlockAccum = 0;
+  realtimeTribulationSettingBlockAccum = 0;
   realtimePolicyReasonAccum = createEmptyPolicyBlockReasonSummary();
   const tuning = getCurrentSpeedTuning();
   realtimeAutoTimer = window.setInterval(runRealtimeAutoTick, 1000);
@@ -5987,6 +6066,8 @@ function maybeAutoStartRealtime(sourceLabel = "자동 재개") {
   }
   ensureRealtimeAnchor();
   realtimePolicyBlockAccum = 0;
+  realtimeNoQiBlockAccum = 0;
+  realtimeTribulationSettingBlockAccum = 0;
   realtimePolicyReasonAccum = createEmptyPolicyBlockReasonSummary();
   const tuning = getCurrentSpeedTuning();
   realtimeAutoTimer = window.setInterval(runRealtimeAutoTick, 1000);
@@ -6898,15 +6979,13 @@ function bindEvents() {
       summary.autoBreakthroughWarmupSkips > 0
         ? ` · 워밍업 차단 ${summary.autoBreakthroughWarmupSkips}회`
         : "";
-    const blockedReasonText = formatPolicyBlockReasonSummary(
-      summary.breakthroughPolicyBlockReasons,
-    );
-    const blockedText =
-      summary.breakthroughPolicyBlocks > 0
-        ? ` · 위험 차단 ${summary.breakthroughPolicyBlocks}회${
-            blockedReasonText ? `(${blockedReasonText})` : ""
-          }`
-        : "";
+    const blockedLabel = buildAutoBreakthroughBlockSummaryLabelKo({
+      breakthroughPolicyBlocks: summary.breakthroughPolicyBlocks,
+      breakthroughNoQiBlocks: summary.breakthroughNoQiBlocks,
+      breakthroughTribulationSettingBlocks: summary.breakthroughTribulationSettingBlocks,
+      breakthroughPolicyBlockReasons: summary.breakthroughPolicyBlockReasons,
+    });
+    const blockedText = blockedLabel ? ` · ${blockedLabel}` : "";
     const pausedText = summary.autoBreakthroughPaused
       ? ` · 자동돌파 일시정지(${String(summary.autoBreakthroughPauseReasonLabelKo || "정책")})`
       : "";

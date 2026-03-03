@@ -2322,3 +2322,11 @@
 
 ## 545) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(자동 돌파 기 부족/도겁 설정 차단 이벤트 연출 연동 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 546) 다음 순차 작업
+1. [완료] `runAutoSliceSeconds` summary에 차단 집계 필드(`breakthroughNoQiBlocks`, `breakthroughTribulationSettingBlocks`)를 추가하고 `blocked_no_qi`/`blocked_tribulation_setting` 분기를 분리 누적해 정책 차단 카운트와 독립된 수치를 확보.
+2. [완료] 자동/실시간/오프라인 상태 라인(`playBattleSceneAutoSummary`, `buildOfflineStatus`, `btnAuto10s`, `runRealtimeAutoTick`)에 분리 차단 집계 문구(`위험/기 부족/도겁 설정 차단`)를 동기화하고, 실시간 1초 루프에서도 신규 차단 이벤트만 발생한 틱을 즉시 전투 연출 요약으로 반영.
+3. [완료] 회귀 체크(`check_mobile_mvp_slice_regression_v1`)에 분리 차단 집계 검증을 추가하고 DOM contract 체크(`check_mobile_mvp_dom_contract_v1`) 토큰을 동기화.
+
+## 547) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(자동 돌파 차단 집계 분리 + 실시간 요약 동기화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

@@ -4222,6 +4222,8 @@ async function main() {
     id: "auto_breakthrough_collects_blocked_no_qi_event",
     passed:
       autoBlockedNoQiSummary.breakthroughs === 0 &&
+      autoBlockedNoQiSummary.breakthroughNoQiBlocks > 0 &&
+      autoBlockedNoQiSummary.breakthroughTribulationSettingBlocks === 0 &&
       autoBlockedNoQiSummary.collectedEvents.some(
         (event) =>
           event.kind === "breakthrough_blocked_no_qi" &&
@@ -4259,6 +4261,8 @@ async function main() {
     id: "auto_breakthrough_collects_blocked_tribulation_setting_event",
     passed:
       autoBlockedTribulationSettingSummary.breakthroughs === 0 &&
+      autoBlockedTribulationSettingSummary.breakthroughNoQiBlocks === 0 &&
+      autoBlockedTribulationSettingSummary.breakthroughTribulationSettingBlocks > 0 &&
       autoBlockedTribulationSettingSummary.collectedEvents.some(
         (event) =>
           event.kind === "breakthrough_blocked_tribulation_setting" &&
