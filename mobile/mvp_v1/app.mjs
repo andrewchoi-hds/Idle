@@ -2419,6 +2419,14 @@ function setBattleSceneAmbientImpactSource(source = "idle") {
   dom.battleSceneArena.dataset.sceneAmbientImpact = String(source || "idle");
 }
 
+function setBattleSceneAmbientImpactLock(lockInput = "free") {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  const lock = lockInput === "result" ? "result" : "free";
+  dom.battleSceneArena.dataset.sceneAmbientImpactLock = lock;
+}
+
 function setBattleSceneAmbientImpactSignal(signalInput, sourceInput = "idle") {
   if (!dom.battleSceneArena) {
     return;
@@ -3558,6 +3566,7 @@ function resetBattleSceneDuelState(options = {}) {
   setBattleSceneImpactKinetic("normal");
   setBattleSceneImpactVfx("normal");
   setBattleSceneAmbientImpactSource("idle");
+  setBattleSceneAmbientImpactLock("free");
   setBattleSceneAmbientImpactSignal(null, "idle");
   setBattleSceneAmbientImpactReplay(0);
   battleSceneLastResultDrivenImpactSignal = null;
@@ -5055,6 +5064,7 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
             : undefined,
       };
       setBattleSceneAmbientImpactSource("result");
+      setBattleSceneAmbientImpactLock("result");
       setBattleSceneAmbientImpactSignal(
         battleSceneLastResultDrivenImpactSignal,
         source,
@@ -5512,12 +5522,15 @@ function runBattleSceneAmbientTick() {
   }
 
   const resultDrivenImpactSignal = resolveBattleSceneResultDrivenAmbientImpactSignal(now);
-  const useResultDrivenAmbientImpact =
-    prioritizeOutcomeSignals && !!resultDrivenImpactSignal;
+  const hasResultDrivenAmbientImpactSignal = !!resultDrivenImpactSignal;
+  const useResultDrivenAmbientImpact = hasResultDrivenAmbientImpactSignal;
   const resultDrivenAmbientReplayMax = resolveBattleSceneResultDrivenAmbientImpactReplayMax(
     resultDrivenImpactSignal,
   );
-  const allowRandomAmbientImpact = !prioritizeOutcomeSignals;
+  const allowRandomAmbientImpact = !hasResultDrivenAmbientImpactSignal;
+  setBattleSceneAmbientImpactLock(
+    hasResultDrivenAmbientImpactSignal ? "result" : "free",
+  );
   const ambientImpactCadenceDivisor = useResultDrivenAmbientImpact
     ? 1
     : BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR;
@@ -5780,6 +5793,7 @@ function stopBattleSceneAmbientLoop() {
   setBattleSceneImpactKinetic("normal");
   setBattleSceneImpactVfx("normal");
   setBattleSceneAmbientImpactSource("idle");
+  setBattleSceneAmbientImpactLock("free");
   setBattleSceneAmbientImpactSignal(null, "idle");
   setBattleSceneAmbientImpactReplay(0);
   battleSceneLastResultDrivenImpactSignal = null;
