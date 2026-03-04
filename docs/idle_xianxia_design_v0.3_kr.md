@@ -2418,3 +2418,11 @@
 
 ## 569) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(lastEngineOutcome 직접 연동 + 결과 기반 ambient suppression window 확장 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 570) 다음 순차 작업
+1. [완료] `runAutoSliceSeconds` 일시정지 summary 메타에 `autoBreakthroughPauseThreshold`를 추가해 자동 돌파 중단 임계치가 엔진 결과 객체에 직접 기록되도록 확장.
+2. [완료] `buildBattleSceneCollectedEventFromAutoSummaryLastEngineOutcome`의 `blocked_auto_risk_policy` 분기를 보강해 `collectEvents=false` 경로에서도 `autoBreakthroughPaused + autoBreakthroughPauseThreshold` 조합으로 `auto_breakthrough_paused_by_policy` 신호를 직접 복원하도록 정합 강화.
+3. [완료] `resolveBattleSceneEventSignalFromAutoSummary`가 direct signal의 기존 `impactOptions.outcome` 메타(`pausedByPolicy/pauseThreshold`)를 유지하면서 실제 `lastEngineOutcome.outcome`을 병합하도록 보정해 듀얼 전장 분기 손실을 방지.
+
+## 571) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(자동 일시정지 임계치 메타 + no-events direct signal 복원 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

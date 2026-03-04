@@ -3646,6 +3646,7 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
     autoBreakthroughPauseReason: "",
     autoBreakthroughPauseReasonLabelKo: "",
     autoBreakthroughPauseNextActionKo: "",
+    autoBreakthroughPauseThreshold: 0,
     autoBreakthroughPauseAtSec: 0,
     lastEngineOutcome: null,
     rebirths: 0,
@@ -3772,6 +3773,8 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
             breakthrough.autoPolicy?.reasonLabelKo || "정책 차단";
           summary.autoBreakthroughPauseNextActionKo =
             breakthrough.autoPolicy?.nextActionKo || "";
+          summary.autoBreakthroughPauseThreshold =
+            autoBreakthroughPausePolicyBlockThreshold;
           summary.autoBreakthroughPauseAtSec = timelineSec;
           if (!suppressLogs) {
             const nextActionKo = summary.autoBreakthroughPauseNextActionKo;

@@ -4533,6 +4533,7 @@ async function main() {
       autoPauseSummary.autoBreakthroughPauseReason.length > 0 &&
       autoPauseSummary.autoBreakthroughPauseReasonLabelKo.length > 0 &&
       autoPauseSummary.autoBreakthroughPauseNextActionKo.length > 0 &&
+      autoPauseSummary.autoBreakthroughPauseThreshold === 2 &&
       autoPauseSummary.autoBreakthroughPauseAtSec > 0 &&
       autoPauseSummary.breakthroughPolicyBlocks >= 2 &&
       autoPauseState.settings.autoBreakthrough === false &&
@@ -4544,6 +4545,48 @@ async function main() {
           typeof event.nextActionKo === "string" &&
           event.nextActionKo.length > 0,
       ),
+  });
+
+  const autoPauseNoEventsState = createInitialSliceState(context, {
+    playerName: "auto-pause-no-events",
+  });
+  autoPauseNoEventsState.settings.autoBattle = false;
+  autoPauseNoEventsState.settings.autoBreakthrough = true;
+  autoPauseNoEventsState.settings.autoTribulation = true;
+  autoPauseNoEventsState.progression.difficultyIndex = 198;
+  autoPauseNoEventsState.inventory.breakthroughElixir = 0;
+  autoPauseNoEventsState.inventory.tribulationTalisman = 0;
+  autoPauseNoEventsState.currencies.qi = Math.max(
+    1,
+    (context.stageByDifficulty.get(198)?.qi_required ?? 1) * 8,
+  );
+  const autoPauseNoEventsSummary = runAutoSliceSeconds(
+    context,
+    autoPauseNoEventsState,
+    createSeededRng(79),
+    {
+      seconds: 6,
+      battleEverySec: 2,
+      breakthroughEverySec: 1,
+      passiveQiRatio: 0.012,
+      collectEvents: false,
+      autoBreakthroughPausePolicyBlockThreshold: 2,
+      suppressLogs: true,
+    },
+  );
+  checks.push({
+    id: "auto_pause_summary_keeps_threshold_and_last_outcome_without_events",
+    passed:
+      autoPauseNoEventsSummary.autoBreakthroughPaused === true &&
+      autoPauseNoEventsSummary.autoBreakthroughPauseThreshold === 2 &&
+      autoPauseNoEventsSummary.breakthroughPolicyBlocks >= 2 &&
+      Array.isArray(autoPauseNoEventsSummary.collectedEvents) &&
+      autoPauseNoEventsSummary.collectedEvents.length === 0 &&
+      autoPauseNoEventsSummary.lastEngineOutcome !== null &&
+      autoPauseNoEventsSummary.lastEngineOutcome.source === "breakthrough" &&
+      String(autoPauseNoEventsSummary.lastEngineOutcome.outcome?.outcome || "") ===
+        "blocked_auto_risk_policy" &&
+      autoPauseNoEventsState.settings.autoBreakthrough === false,
   });
 
   state.settings.autoBattle = true;
