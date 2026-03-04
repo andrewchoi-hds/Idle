@@ -541,6 +541,8 @@ const BATTLE_SCENE_RESULT_PRIORITY_DUEL_HOLD_WINDOW_MS = 1800;
 const BATTLE_SCENE_RESULT_PRIORITY_AMBIENT_NARRATIVE_SUPPRESSION_WINDOW_MS = 5200;
 const BATTLE_SCENE_RESULT_PRIORITY_AMBIENT_SFX_SUPPRESSION_WINDOW_MS = 5600;
 const BATTLE_SCENE_RESULT_PRIORITY_AMBIENT_SFX_DIVISOR = 3;
+const BATTLE_SCENE_RESULT_PRIORITY_TRANSITION_DIVISOR = 4;
+const BATTLE_SCENE_RESULT_PRIORITY_COMBO_BANNER_MIN_COMBO = 9;
 const BATTLE_SCENE_DUEL_MAX_HP = 100;
 const BATTLE_SCENE_DUEL_MAX_CAST = 100;
 const BATTLE_SCENE_TICKER_MAX = 5;
@@ -3301,7 +3303,13 @@ function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true, opti
       { fromAmbient },
     );
   }
-  if (!resultPrioritySuppressed || battleSceneDuelState.combo % 5 === 0) {
+  const shouldShowComboBanner =
+    !suppressAmbientNarrative
+      ? !resultPrioritySuppressed || battleSceneDuelState.combo % 5 === 0
+      : battleSceneDuelState.combo >= BATTLE_SCENE_RESULT_PRIORITY_COMBO_BANNER_MIN_COMBO &&
+        battleSceneDuelState.combo % 3 === 0 &&
+        Math.random() < 0.18;
+  if (shouldShowComboBanner) {
     setBattleSceneComboBanner(battleSceneDuelState.combo, tone);
   }
   setBattleSceneActorFrame(attacker, "skill");
@@ -3401,10 +3409,16 @@ function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true, opt
       { fromAmbient },
     );
   }
-  if (
+  const shouldOpenComboBanner =
     battleSceneDuelState.combo >= 3 &&
-    (isCrit || battleSceneDuelState.combo % (resultPrioritySuppressed ? 5 : 3) === 0)
-  ) {
+    (isCrit || battleSceneDuelState.combo % (resultPrioritySuppressed ? 5 : 3) === 0);
+  const shouldShowComboBanner =
+    !suppressAmbientNarrative
+      ? shouldOpenComboBanner
+      : shouldOpenComboBanner &&
+        battleSceneDuelState.combo >= BATTLE_SCENE_RESULT_PRIORITY_COMBO_BANNER_MIN_COMBO &&
+        Math.random() < 0.16;
+  if (shouldShowComboBanner) {
     setBattleSceneComboBanner(
       battleSceneDuelState.combo,
       isCrit ? "error" : tone,
@@ -4243,8 +4257,13 @@ function runBattleSceneAmbientTick() {
   const sceneLead = resolveBattleSceneLead(playerHpPct, enemyHpPct);
   const sceneComboTier = resolveBattleSceneComboTier(battleSceneDuelState.combo);
   const dangerSide = resolveBattleSceneDangerSide(playerHpPct, enemyHpPct);
-  maybeTriggerBattleSceneComboTierTransition(sceneComboTier, { fromAmbient: true });
-  maybeTriggerBattleSceneDangerTransition(dangerSide);
+  const allowAmbientTransitions =
+    !suppressAmbientNarrative ||
+    battleSceneAmbientStep % BATTLE_SCENE_RESULT_PRIORITY_TRANSITION_DIVISOR === 0;
+  if (allowAmbientTransitions) {
+    maybeTriggerBattleSceneComboTierTransition(sceneComboTier, { fromAmbient: true });
+    maybeTriggerBattleSceneDangerTransition(dangerSide);
+  }
   const shouldPlayAmbientSfx =
     !holdDuelTickByOutcome &&
     (!suppressAmbientSfx ||

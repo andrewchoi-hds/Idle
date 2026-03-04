@@ -2482,3 +2482,11 @@
 
 ## 585) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(결과 우선 ambient SFX cadence suppression 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 586) 다음 순차 작업
+1. [완료] 결과 우선 전이 cadence 상수(`BATTLE_SCENE_RESULT_PRIORITY_TRANSITION_DIVISOR=4`)를 추가하고, `runBattleSceneAmbientTick`의 combo/danger 전이 트리거를 `allowAmbientTransitions` 분기로 제한해 내러티브 suppression 구간의 전이 빈도를 추가 하향.
+2. [완료] 결과 우선 combo 배너 최소 연격 상수(`BATTLE_SCENE_RESULT_PRIORITY_COMBO_BANNER_MIN_COMBO=9`)를 추가하고, `applyBattleSceneDuelStrike`/`applyBattleSceneDuelBurst`의 배너 노출을 최소 연격+확률 게이트로 제한해 결과 직후 배너 노이즈를 축소.
+3. [완료] DOM contract/수직슬라이스 문서에 신규 토큰(`allowAmbientTransitions`, `...TRANSITION_DIVISOR`, `...COMBO_BANNER_MIN_COMBO`, `shouldShowComboBanner`)과 회귀 시나리오(전이 cadence + 배너 최소 연격)를 동기화.
+
+## 587) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(결과 우선 전이 cadence + combo 배너 최소 연격 게이트 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
