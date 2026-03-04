@@ -2522,3 +2522,11 @@
 
 ## 595) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(결과 메타 기반 impact VFX deterministic cue + `data-scene-impact-vfx` 관찰 포인트 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 596) 다음 순차 작업
+1. [완료] `triggerBattleSceneImpact`가 비-ambient 실결과(`source=battle|breakthrough`)를 수신하면 `battleSceneLastResultDrivenImpactSignal(kind/tone/source/outcome)`을 저장하고, ambient 경로에서 재사용 가능한 결과 기반 임팩트 신호를 유지하도록 확장.
+2. [완료] `runBattleSceneAmbientTick`에 결과 우선 ambient impact 규칙(`BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS=6800`)을 추가해 해당 윈도우에서는 랜덤 kind 대신 마지막 엔진 결과 임팩트를 `syncDuel:false`로 재생하고, 결과가 없을 때 랜덤 ambient impact는 cadence 게이트(`BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR=2`)로 빈도를 하향.
+3. [완료] arena dataset(`data-scene-ambient-impact=result/random/idle`) + DOM contract/수직슬라이스 문서를 동기화해 ambient 임팩트 출처(결과 기반 vs 랜덤 vs 유휴)를 DOM 레벨에서 직접 관찰 가능하게 정합화.
+
+## 597) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(결과 우선 ambient impact 재사용 + 랜덤 cadence 하향 + `data-scene-ambient-impact` 출처 관찰 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

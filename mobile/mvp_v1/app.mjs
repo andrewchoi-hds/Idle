@@ -544,6 +544,8 @@ const BATTLE_SCENE_RESULT_PRIORITY_AMBIENT_SFX_DIVISOR = 3;
 const BATTLE_SCENE_RESULT_PRIORITY_TRANSITION_DIVISOR = 4;
 const BATTLE_SCENE_RESULT_PRIORITY_COMBO_BANNER_MIN_COMBO = 9;
 const BATTLE_SCENE_RESULT_PRIORITY_ACTOR_FRAME_SUPPRESSION_WINDOW_MS = 5400;
+const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS = 6800;
+const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR = 2;
 const BATTLE_SCENE_DUEL_MAX_HP = 100;
 const BATTLE_SCENE_DUEL_MAX_CAST = 100;
 const BATTLE_SCENE_TICKER_MAX = 5;
@@ -566,6 +568,7 @@ let battleSceneAmbientTimer = null;
 let battleSceneAmbientStep = 0;
 let battleSceneLastExplicitEventAtMs = 0;
 let battleSceneLastResultDrivenImpactAtMs = 0;
+let battleSceneLastResultDrivenImpactSignal = null;
 let battleSceneShakeTimer = null;
 let battleSceneLastShakeAtMs = 0;
 let battleSceneZoomTimer = null;
@@ -2403,6 +2406,29 @@ function setBattleSceneImpactVfx(cue = "normal") {
   dom.battleSceneArena.dataset.sceneImpactVfx = String(cue || "normal");
 }
 
+function setBattleSceneAmbientImpactSource(source = "idle") {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  dom.battleSceneArena.dataset.sceneAmbientImpact = String(source || "idle");
+}
+
+function resolveBattleSceneResultDrivenAmbientImpactSignal(nowMs = Date.now()) {
+  const signal =
+    battleSceneLastResultDrivenImpactSignal &&
+    typeof battleSceneLastResultDrivenImpactSignal === "object"
+      ? battleSceneLastResultDrivenImpactSignal
+      : null;
+  if (!signal) {
+    return null;
+  }
+  const elapsedMs = Math.max(0, Number(nowMs) || Date.now()) - battleSceneLastResultDrivenImpactAtMs;
+  if (elapsedMs > BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS) {
+    return null;
+  }
+  return signal;
+}
+
 function normalizeBattleSceneWorld(worldInput) {
   if (worldInput === "mortal" || worldInput === "immortal") {
     return worldInput;
@@ -3460,6 +3486,8 @@ function resetBattleSceneDuelState(options = {}) {
   setBattleSceneImpactCue("idle");
   setBattleSceneImpactKinetic("normal");
   setBattleSceneImpactVfx("normal");
+  setBattleSceneAmbientImpactSource("idle");
+  battleSceneLastResultDrivenImpactSignal = null;
   if (options.clearTicker) {
     clearBattleSceneTicker();
   }
@@ -4942,6 +4970,16 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
     battleSceneLastExplicitEventAtMs = Date.now();
     if (source) {
       battleSceneLastResultDrivenImpactAtMs = battleSceneLastExplicitEventAtMs;
+      battleSceneLastResultDrivenImpactSignal = {
+        kind,
+        tone: normalizeBattleSceneTone(tone),
+        source,
+        outcome:
+          options?.outcome && typeof options.outcome === "object"
+            ? options.outcome
+            : undefined,
+      };
+      setBattleSceneAmbientImpactSource("result");
     }
   }
   const impactClass =
@@ -5384,27 +5422,58 @@ function runBattleSceneAmbientTick() {
       });
     }
 
+    const resultDrivenImpactSignal = resolveBattleSceneResultDrivenAmbientImpactSignal(now);
+    const useResultDrivenAmbientImpact =
+      prioritizeOutcomeSignals && !!resultDrivenImpactSignal;
+    const ambientImpactCadenceDivisor = useResultDrivenAmbientImpact
+      ? 1
+      : BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR;
     const shouldPulseImpact =
-      quietMs > (lowPerformanceMode ? 2800 : 2200) && shouldPulseByMode;
-    const allowAmbientImpact =
-      !lowPerformanceMode ||
-      Math.random() < (mode === "realtime" ? 0.56 : mode === "auto" ? 0.42 : 0.28);
+      quietMs > (lowPerformanceMode ? 2800 : 2200) &&
+      shouldPulseByMode &&
+      battleSceneAmbientStep % ambientImpactCadenceDivisor === 0;
+    const allowAmbientImpact = useResultDrivenAmbientImpact
+      ? !lowPerformanceMode ||
+        Math.random() < (mode === "realtime" ? 0.92 : mode === "auto" ? 0.78 : 0.64)
+      : !lowPerformanceMode ||
+        Math.random() < (mode === "realtime" ? 0.56 : mode === "auto" ? 0.42 : 0.28);
     if (shouldPulseImpact && allowAmbientImpact) {
-      if (mode === "realtime") {
+      if (useResultDrivenAmbientImpact && resultDrivenImpactSignal) {
+        triggerBattleSceneImpact(
+          resultDrivenImpactSignal.kind,
+          resultDrivenImpactSignal.tone,
+          {
+            fromAmbient: true,
+            source: resultDrivenImpactSignal.source,
+            outcome: resultDrivenImpactSignal.outcome,
+            syncDuel: false,
+          },
+        );
+        setBattleSceneAmbientImpactSource("result");
+      } else if (mode === "realtime") {
         const random = Math.random();
         const kind = random < 0.58 ? "battle_win" : random < 0.85 ? "battle_loss" : "breakthrough_success";
         const tone = kind === "battle_loss" ? "warn" : "success";
         triggerBattleSceneImpact(kind, tone, { fromAmbient: true });
+        setBattleSceneAmbientImpactSource("random");
       } else if (mode === "auto") {
         const random = Math.random();
         const kind = random < 0.62 ? "battle_win" : random < 0.86 ? "battle_loss" : "breakthrough_fail";
         const tone = kind === "battle_win" ? "success" : kind === "battle_loss" ? "warn" : "error";
         triggerBattleSceneImpact(kind, tone, { fromAmbient: true });
+        setBattleSceneAmbientImpactSource("random");
       } else {
         const kind = Math.random() < 0.5 ? "battle_win" : "battle_loss";
         const tone = kind === "battle_win" ? "info" : "warn";
         triggerBattleSceneImpact(kind, tone, { fromAmbient: true });
+        setBattleSceneAmbientImpactSource("random");
       }
+    } else if (
+      !resultDrivenImpactSignal &&
+      quietMs > (lowPerformanceMode ? 5200 : 4200) &&
+      battleSceneAmbientStep % (lowPerformanceMode ? 6 : 4) === 0
+    ) {
+      setBattleSceneAmbientImpactSource("idle");
     }
   }
 
@@ -5587,6 +5656,8 @@ function stopBattleSceneAmbientLoop() {
   setBattleSceneImpactCue("idle");
   setBattleSceneImpactKinetic("normal");
   setBattleSceneImpactVfx("normal");
+  setBattleSceneAmbientImpactSource("idle");
+  battleSceneLastResultDrivenImpactSignal = null;
   battleSceneDuelState.pressure = "low";
   renderBattleSceneDuelHud();
 }
