@@ -1465,6 +1465,208 @@ function applyBattleSceneImpactActorFrames(kind, options = {}) {
   return cue.cue;
 }
 
+function resolveBattleSceneImpactKineticCue(kind, options = {}) {
+  const source =
+    options?.source === "battle" || options?.source === "breakthrough"
+      ? options.source
+      : "";
+  const outcome = options?.outcome && typeof options.outcome === "object" ? options.outcome : null;
+  if (source === "battle" && outcome) {
+    if (outcome.won === true) {
+      const qiGain = Math.max(0, Math.round(Number(outcome.qiDelta) || 0));
+      const spiritGain = Math.max(0, Math.round(Number(outcome.spiritCoinDelta) || 0));
+      const essenceGain = Math.max(0, Math.round(Number(outcome.rebirthEssenceDelta) || 0));
+      if (qiGain >= 20 || essenceGain > 0) {
+        return {
+          cue: "battle_win_dominant",
+          shakePreset: "medium",
+          zoomPreset: "burst",
+          hitStopPreset: "medium",
+        };
+      }
+      if (qiGain >= 10 || spiritGain >= 5) {
+        return {
+          cue: "battle_win_surge",
+          shakePreset: "lateral",
+          zoomPreset: "soft",
+          hitStopPreset: "medium",
+        };
+      }
+      return {
+        cue: "battle_win_clean",
+        shakePreset: "lateral",
+        zoomPreset: "soft",
+        hitStopPreset: "light",
+      };
+    }
+    const qiLoss = Math.max(0, Math.abs(Math.round(Number(outcome.qiDelta) || 0)));
+    if (qiLoss >= 22) {
+      return {
+        cue: "battle_loss_crushing",
+        shakePreset: "heavy",
+        zoomPreset: "burst",
+        hitStopPreset: "heavy",
+      };
+    }
+    if (qiLoss >= 10) {
+      return {
+        cue: "battle_loss_heavy",
+        shakePreset: "medium",
+        zoomPreset: "burst",
+        hitStopPreset: "medium",
+      };
+    }
+    return {
+      cue: "battle_loss_brief",
+      shakePreset: "lateral",
+      zoomPreset: "soft",
+      hitStopPreset: "light",
+    };
+  }
+  if (source === "breakthrough" && outcome) {
+    const outcomeCode = String(outcome.outcome || "");
+    const pausedByPolicy =
+      outcome.pausedByPolicy === true || outcome.autoBreakthroughPaused === true;
+    if (outcome.attempted === true) {
+      if (outcomeCode === "success") {
+        const successPct = Math.max(0, Math.min(100, Number(outcome.successPct) || 0));
+        if (successPct >= 78) {
+          return {
+            cue: "breakthrough_success_peak",
+            shakePreset: "medium",
+            zoomPreset: "burst",
+            hitStopPreset: "medium",
+          };
+        }
+        return {
+          cue: "breakthrough_success_stable",
+          shakePreset: "lateral",
+          zoomPreset: "soft",
+          hitStopPreset: "medium",
+        };
+      }
+      if (outcomeCode === "minor_fail") {
+        const deathPct = Math.max(0, Math.min(100, Number(outcome.deathPct) || 0));
+        return {
+          cue: deathPct >= 45 ? "breakthrough_minor_fail_heavy" : "breakthrough_minor_fail",
+          shakePreset: deathPct >= 45 ? "heavy" : "medium",
+          zoomPreset: "burst",
+          hitStopPreset: deathPct >= 45 ? "heavy" : "medium",
+        };
+      }
+      if (outcomeCode === "retreat_fail") {
+        return {
+          cue: "breakthrough_retreat_fail",
+          shakePreset: "heavy",
+          zoomPreset: "burst",
+          hitStopPreset: "heavy",
+        };
+      }
+      if (outcomeCode === "death_fail") {
+        return {
+          cue: "breakthrough_death_fail",
+          shakePreset: "heavy",
+          zoomPreset: "burst",
+          hitStopPreset: "heavy",
+        };
+      }
+      return {
+        cue: "breakthrough_fail_generic",
+        shakePreset: "medium",
+        zoomPreset: "burst",
+        hitStopPreset: "medium",
+      };
+    }
+    if (outcomeCode === "blocked_no_qi") {
+      return {
+        cue: "breakthrough_blocked_no_qi",
+        shakePreset: "light",
+        zoomPreset: "soft",
+        hitStopPreset: "light",
+      };
+    }
+    if (outcomeCode === "blocked_tribulation_setting") {
+      return {
+        cue: "breakthrough_blocked_tribulation_setting",
+        shakePreset: "light",
+        zoomPreset: "soft",
+        hitStopPreset: "light",
+      };
+    }
+    if (outcomeCode === "blocked_auto_risk_policy" && pausedByPolicy) {
+      return {
+        cue: "breakthrough_blocked_auto_risk_pause",
+        shakePreset: "heavy",
+        zoomPreset: "burst",
+        hitStopPreset: "heavy",
+      };
+    }
+    if (outcomeCode === "blocked_auto_risk_policy") {
+      const policyReason = String(outcome.autoPolicy?.reason || outcome.reason || "");
+      if (policyReason === "blocked_extreme_risk") {
+        return {
+          cue: "breakthrough_blocked_auto_risk_heavy",
+          shakePreset: "heavy",
+          zoomPreset: "burst",
+          hitStopPreset: "heavy",
+        };
+      }
+      if (policyReason === "blocked_high_risk") {
+        return {
+          cue: "breakthrough_blocked_auto_risk_warn",
+          shakePreset: "medium",
+          zoomPreset: "soft",
+          hitStopPreset: "medium",
+        };
+      }
+      if (policyReason === "blocked_high_qi_cost") {
+        return {
+          cue: "breakthrough_blocked_auto_qi_cost",
+          shakePreset: "light",
+          zoomPreset: "soft",
+          hitStopPreset: "light",
+        };
+      }
+    }
+    return {
+      cue: "breakthrough_blocked_generic",
+      shakePreset: "medium",
+      zoomPreset: "soft",
+      hitStopPreset: "medium",
+    };
+  }
+  if (kind === "battle_win") {
+    return {
+      cue: "battle_win_default",
+      shakePreset: "lateral",
+      zoomPreset: "soft",
+      hitStopPreset: "light",
+    };
+  }
+  if (kind === "battle_loss") {
+    return {
+      cue: "battle_loss_default",
+      shakePreset: "heavy",
+      zoomPreset: "burst",
+      hitStopPreset: "heavy",
+    };
+  }
+  if (kind === "breakthrough_success") {
+    return {
+      cue: "breakthrough_success_default",
+      shakePreset: "medium",
+      zoomPreset: "soft",
+      hitStopPreset: "medium",
+    };
+  }
+  return {
+    cue: "breakthrough_fail_default",
+    shakePreset: "heavy",
+    zoomPreset: "burst",
+    hitStopPreset: "heavy",
+  };
+}
+
 function setBattleSceneLoopMode(loopMode = "idle") {
   if (!dom.battleSceneArena) {
     return;
@@ -1695,6 +1897,13 @@ function setBattleSceneImpactCue(cue = "idle") {
     return;
   }
   dom.battleSceneArena.dataset.sceneImpactCue = String(cue || "idle");
+}
+
+function setBattleSceneImpactKinetic(cue = "normal") {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  dom.battleSceneArena.dataset.sceneImpactKinetic = String(cue || "normal");
 }
 
 function normalizeBattleSceneWorld(worldInput) {
@@ -2752,6 +2961,7 @@ function resetBattleSceneDuelState(options = {}) {
   clearBattleSceneComboBanner();
   resetBattleSceneActorFrames();
   setBattleSceneImpactCue("idle");
+  setBattleSceneImpactKinetic("normal");
   if (options.clearTicker) {
     clearBattleSceneTicker();
   }
@@ -4253,7 +4463,9 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
           ? "breakthrough_success"
           : "breakthrough_fail";
   const impactActorFrameCue = applyBattleSceneImpactActorFrames(kind, options);
+  const impactKineticCue = resolveBattleSceneImpactKineticCue(kind, options);
   setBattleSceneImpactCue(impactActorFrameCue);
+  setBattleSceneImpactKinetic(impactKineticCue.cue);
   dom.battleSceneArena.classList.remove(...BATTLE_SCENE_IMPACT_CLASSES);
   void dom.battleSceneArena.offsetWidth;
   dom.battleSceneArena.classList.add(impactClass);
@@ -4274,26 +4486,9 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
     kind,
     tone,
   });
-  triggerBattleSceneCameraShake(
-    kind === "battle_loss" || kind === "breakthrough_fail"
-      ? "heavy"
-      : kind === "breakthrough_success"
-        ? "medium"
-        : "lateral",
-    { fromAmbient },
-  );
-  triggerBattleSceneZoomPulse(
-    kind === "battle_loss" || kind === "breakthrough_fail" ? "burst" : "soft",
-    { fromAmbient },
-  );
-  triggerBattleSceneHitStop(
-    kind === "battle_loss" || kind === "breakthrough_fail"
-      ? "heavy"
-      : kind === "breakthrough_success"
-        ? "medium"
-        : "light",
-    { fromAmbient },
-  );
+  triggerBattleSceneCameraShake(impactKineticCue.shakePreset, { fromAmbient });
+  triggerBattleSceneZoomPulse(impactKineticCue.zoomPreset, { fromAmbient });
+  triggerBattleSceneHitStop(impactKineticCue.hitStopPreset, { fromAmbient });
   if (kind === "battle_win") {
     spawnBattleSceneSpark({ anchor: "center", tone, shape: "shard", angleDeg: 16, scale: 1.05 });
     spawnBattleSceneTrail({ anchor: "center", tone, angleDeg: 12, length: 84 });
@@ -4930,6 +5125,7 @@ function stopBattleSceneAmbientLoop() {
   }
   resetBattleSceneActorFrames();
   setBattleSceneImpactCue("idle");
+  setBattleSceneImpactKinetic("normal");
   battleSceneDuelState.pressure = "low";
   renderBattleSceneDuelHud();
 }

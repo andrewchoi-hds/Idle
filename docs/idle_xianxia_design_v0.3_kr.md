@@ -2506,3 +2506,11 @@
 
 ## 591) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(결과 메타 기반 actor frame deterministic cue + `data-scene-impact-cue` DOM 관찰 포인트 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 592) 다음 순차 작업
+1. [완료] `resolveBattleSceneImpactKineticCue`를 추가해 `triggerBattleSceneImpact(source/outcome)`가 `runBattleOnce/runBreakthroughAttempt` 실결과 메타(`qiDelta/successPct/deathPct/policyReason`)를 기준으로 shake/zoom/hit-stop preset을 직접 결정하도록 확장.
+2. [완료] arena dataset(`data-scene-impact-kinetic`)을 도입하고 `triggerBattleSceneImpact`에서 kinetic cue(`battle_win_dominant`, `battle_loss_crushing`, `breakthrough_retreat_fail`, `breakthrough_death_fail` 등)를 기록해 결과 기반 kinetic 강도를 DOM 레벨에서 직접 관찰 가능하게 정합화.
+3. [완료] DOM contract/수직슬라이스 문서에 신규 토큰(`resolveBattleSceneImpactKineticCue`, `setBattleSceneImpactKinetic`, `data-scene-impact-kinetic`)과 결과 메타 기반 kinetic 분기 회귀 포인트를 동기화.
+
+## 593) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(결과 메타 기반 impact kinetic deterministic cue + `data-scene-impact-kinetic` 관찰 포인트 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
