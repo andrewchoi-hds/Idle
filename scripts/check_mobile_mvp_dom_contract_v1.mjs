@@ -309,6 +309,18 @@ async function main() {
     "index.html",
     failures,
   );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-replay="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-replay-max="3"',
+    "index.html",
+    failures,
+  );
 
   for (const id of REQUIRED_HTML_IDS) {
     assertIncludes(html, `id="${id}"`, "index.html", failures);
@@ -534,13 +546,31 @@ async function main() {
   assertIncludes(app, "const impactVfxCue = resolveBattleSceneImpactVfxCue(kind, options);", "app.mjs", failures);
   assertIncludes(app, "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS = 6800;", "app.mjs", failures);
   assertIncludes(app, "const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR = 2;", "app.mjs", failures);
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS = 3;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS = 960;",
+    "app.mjs",
+    failures,
+  );
   assertIncludes(app, "syncDuel: false", "app.mjs", failures);
+  assertIncludes(app, "function setBattleSceneAmbientImpactReplay(", "app.mjs", failures);
+  assertIncludes(app, "battleSceneLastResultDrivenImpactReplayCount += 1;", "app.mjs", failures);
+  assertIncludes(app, "battleSceneLastResultDrivenImpactReplayAtMs = now;", "app.mjs", failures);
+  assertIncludes(app, "setBattleSceneAmbientImpactReplay(0);", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneImpactCue", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneImpactKinetic", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneImpactVfx", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpact", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactSource", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactKind", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactReplay", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactReplayMax", "app.mjs", failures);
   assertIncludes(app, 'cue: "breakthrough_retreat_fail"', "app.mjs", failures);
   assertIncludes(app, 'cue: "breakthrough_death_fail"', "app.mjs", failures);
   assertIncludes(app, 'cue: "battle_win_dominant"', "app.mjs", failures);
