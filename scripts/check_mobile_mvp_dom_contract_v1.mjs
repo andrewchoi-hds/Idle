@@ -285,6 +285,12 @@ async function main() {
     "index.html",
     failures,
   );
+  assertIncludes(
+    html,
+    'data-scene-impact-vfx="normal"',
+    "index.html",
+    failures,
+  );
 
   for (const id of REQUIRED_HTML_IDS) {
     assertIncludes(html, `id="${id}"`, "index.html", failures);
@@ -496,17 +502,24 @@ async function main() {
   assertIncludes(app, "function setBattleSceneActorFrame(", "app.mjs", failures);
   assertIncludes(app, "function resolveBattleSceneImpactActorFrameCue(", "app.mjs", failures);
   assertIncludes(app, "function resolveBattleSceneImpactKineticCue(", "app.mjs", failures);
+  assertIncludes(app, "function resolveBattleSceneImpactVfxCue(", "app.mjs", failures);
   assertIncludes(app, "function resetBattleSceneActorFrames(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneImpactCue(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneImpactKinetic(", "app.mjs", failures);
+  assertIncludes(app, "function setBattleSceneImpactVfx(", "app.mjs", failures);
+  assertIncludes(app, "function triggerBattleSceneImpactVfxFromCue(", "app.mjs", failures);
   assertIncludes(app, "const impactActorFrameCue = applyBattleSceneImpactActorFrames(kind, options);", "app.mjs", failures);
   assertIncludes(app, "const impactKineticCue = resolveBattleSceneImpactKineticCue(kind, options);", "app.mjs", failures);
+  assertIncludes(app, "const impactVfxCue = resolveBattleSceneImpactVfxCue(kind, options);", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneImpactCue", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneImpactKinetic", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneImpactVfx", "app.mjs", failures);
   assertIncludes(app, 'cue: "breakthrough_retreat_fail"', "app.mjs", failures);
   assertIncludes(app, 'cue: "breakthrough_death_fail"', "app.mjs", failures);
   assertIncludes(app, 'cue: "battle_win_dominant"', "app.mjs", failures);
   assertIncludes(app, 'cue: "battle_loss_crushing"', "app.mjs", failures);
+  assertIncludes(app, 'cue: "breakthrough_success_peak"', "app.mjs", failures);
+  assertIncludes(app, 'cue: "breakthrough_blocked_auto_risk_pause"', "app.mjs", failures);
   assertIncludes(app, "function resolveBattleSceneCastTier(", "app.mjs", failures);
   assertIncludes(app, "function isBattleSceneLowPerformanceModeEnabled(", "app.mjs", failures);
   assertIncludes(app, "function resolveBattleSceneAmbientPulseDivisor(", "app.mjs", failures);
