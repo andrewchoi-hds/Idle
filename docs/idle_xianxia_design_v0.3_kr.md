@@ -2450,3 +2450,11 @@
 
 ## 577) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(결과 우선 구간 ambient duel tick 강도 하향 + strike/burst suppression 옵션 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 578) 다음 순차 작업
+1. [완료] 결과 우선 ambient cadence 상수(`BATTLE_SCENE_RESULT_PRIORITY_DUEL_TICK_DIVISOR=2`)를 도입해 `runBattleSceneAmbientTick`가 outcome 우선 구간에서 `runBattleSceneDuelTick` 호출 빈도를 절반으로 제한하도록 보강.
+2. [완료] `runBattleSceneDuelTick`에 strike 확률 스케일(`BATTLE_SCENE_RESULT_PRIORITY_STRIKE_CHANCE_SCALE=0.42`)을 추가하고, 결과 우선 구간에서는 `strikeAttempts=1` + `comboDecayStep=0` + ambient 라운드 리셋 지연(HP floor)으로 랜덤 전장 변동을 추가 하향.
+3. [완료] DOM contract/수직슬라이스 문서에 신규 토큰(`BATTLE_SCENE_RESULT_PRIORITY_DUEL_TICK_DIVISOR`, `BATTLE_SCENE_RESULT_PRIORITY_STRIKE_CHANCE_SCALE`) 및 회귀 시나리오(duel tick cadence/strike chance 동시 하향 + 라운드 리셋 지연)를 동기화.
+
+## 579) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(결과 우선 구간 duel tick cadence + strike chance scale 동시 하향 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

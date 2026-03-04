@@ -363,6 +363,18 @@ async function main() {
     "app.mjs",
     failures,
   );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_PRIORITY_DUEL_TICK_DIVISOR = 2;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_PRIORITY_STRIKE_CHANCE_SCALE = 0.42;",
+    "app.mjs",
+    failures,
+  );
   assertIncludes(app, "battleSceneLastResultDrivenImpactAtMs", "app.mjs", failures);
   assertIncludes(
     app,
@@ -390,6 +402,18 @@ async function main() {
   );
   assertIncludes(app, "function runBattleSceneDuelTick(", "app.mjs", failures);
   assertIncludes(app, "resultPrioritySuppressed: prioritizeOutcomeSignals", "app.mjs", failures);
+  assertIncludes(
+    app,
+    "battleSceneAmbientStep % BATTLE_SCENE_RESULT_PRIORITY_DUEL_TICK_DIVISOR === 0",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "baseStrikeChance * BATTLE_SCENE_RESULT_PRIORITY_STRIKE_CHANCE_SCALE",
+    "app.mjs",
+    failures,
+  );
   assertIncludes(app, "function pushBattleSceneTicker(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneSkillBanner(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneActorFrame(", "app.mjs", failures);

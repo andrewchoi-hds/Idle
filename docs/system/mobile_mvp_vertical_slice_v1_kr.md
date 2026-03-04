@@ -201,6 +201,7 @@ npm run mobile:mvp:serve
   - 결과 우선 윈도우(`BATTLE_SCENE_RESULT_PRIORITY_WINDOW_MS=2600ms`)를 추가해 명시적 전투/돌파 결과 직후에는 ambient 랜덤 pulse/장식 트리거 비중을 낮추고 실제 결과 기반 연출을 우선 반영
   - 결과 기반 장식 suppression window(`BATTLE_SCENE_RESULT_DRIVEN_DECORATION_SUPPRESSION_WINDOW_MS=3800ms`)를 추가해 outcome 우선 구간에서 ambient zoom/hitstop/cast telegraph/charge mote 발생 조건을 추가 하향하고 랜덤 장식 체감을 더 낮춤
   - `runBattleSceneDuelTick(..., { resultPrioritySuppressed })`를 도입해 결과 우선 구간에서 ambient strike/burst의 kinetic 연출(camera/zoom/hitstop/impact/ticker/banner) 빈도를 추가로 하향하고, `fromAmbient` 플래그 경로로만 제한적 재생되도록 정합화
+  - 결과 우선 cadence 제어(`BATTLE_SCENE_RESULT_PRIORITY_DUEL_TICK_DIVISOR=2`, `BATTLE_SCENE_RESULT_PRIORITY_STRIKE_CHANCE_SCALE=0.42`)를 추가해 outcome 우선 구간에서는 duel tick 실행 주기와 strike 확률을 동시에 하향하고, ambient 라운드 리셋을 지연해 엔진 실결과 연출 비중을 유지
   - 저사양 모드(`lowPerformanceBattleScene`)에서는 ambient duel visuals를 비활성화하고 pulse cadence/확률/장식 레이어 cap(`spark/trail/shockwave`)을 하향해 모바일 저사양 기기에서 프레임 드랍을 줄이도록 구성
   - `prefers-reduced-motion` 환경에서는 danger pulse/pressure spike/lead swing/hit-stop/telegraph shockwave/charge mote/spark/trail 등 모션 이펙트를 비활성화하되 듀얼 HUD 수치(HP/기세)와 배우 프레임 상태 전환은 유지해 상태 가시성을 확보
   - 상시 연출 애니메이션(오라 드리프트/actor idle/오버레이 pulse)과 임팩트 연출(타격/돌파 burst·collapse)을 분리해 자동 루프 중에도 시각 피드백을 유지하고, `prefers-reduced-motion` 환경에서는 해당 애니메이션을 비활성화
@@ -289,6 +290,7 @@ npm run mobile:mvp:check
   - pressure/danger 유지 구간에서 resonance(`scene-pressure-resonance-*`, `scene-danger-resonance-*`)가 모드별 최소 간격으로 재트리거되고 결과 우선 윈도우와 상충 없이 동작하는지 검증
   - 결과 우선 구간(`3.8초`)에서 ambient 장식 트리거(`cast telegraph/charge mote/zoom·hitstop`)가 과도하게 재발하지 않고, `96%+ cast` 같은 긴급 텔레그래프만 제한적으로 유지되는지 검증
   - 결과 우선 구간(`2.6~6.2초`)에서 `runBattleSceneDuelTick`의 strike/burst가 `resultPrioritySuppressed`로 동작해 ambient kinetic 연출(impact/ticker/banner)이 평시 대비 낮은 빈도로만 발생하는지 검증
+  - 결과 우선 구간에서 duel tick cadence(`1/2`)와 strike chance scale(`0.42`)이 동시에 적용되어 라운드 종료(ambient reset) 빈도가 감소하고, HP 0 도달 시 즉시 라운드 리셋 대신 지연 처리되는지 검증
   - 기 부족 돌파 차단
   - 사망 실패 → 환생 루프 발동
   - 돌파 확률 프리뷰 4분기 분포(`성공+경상+후퇴+사망=100%`) 일관성 검증
