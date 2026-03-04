@@ -5246,7 +5246,9 @@ function buildBattleSceneCollectedEventFromAutoSummaryLastEngineOutcome(summaryI
       );
       const pauseConsecutiveBlocks = Math.max(
         pauseThreshold,
-        Number(summary?.breakthroughPolicyBlocks || outcome.consecutiveBlocks) || pauseThreshold,
+        Number(
+          summary?.autoBreakthroughPauseConsecutiveBlocks || outcome.consecutiveBlocks,
+        ) || pauseThreshold,
       );
       if (
         summary?.autoBreakthroughPaused === true &&
@@ -6201,11 +6203,17 @@ function formatOfflineEventLine(event) {
   if (event.kind === "auto_breakthrough_paused_by_policy") {
     const reasonLabel = String(event.reasonLabelKo || event.reason || "policy");
     const threshold = Math.max(1, Number(event.threshold) || 1);
+    const consecutiveBlocks = Math.max(
+      threshold,
+      Number(event.consecutiveBlocks) || threshold,
+    );
     const nextActionText =
       typeof event.nextActionKo === "string" && event.nextActionKo
         ? ` · ${event.nextActionKo}`
         : "";
-    return `${secLabel}: 자동 돌파 일시정지 (${reasonLabel}, 연속 ${threshold}회 차단)${nextActionText}`;
+    return `${secLabel}: 자동 돌파 일시정지 (${reasonLabel}, 연속 ${consecutiveBlocks}회 차단${
+      consecutiveBlocks !== threshold ? ` · 임계 ${threshold}회` : ""
+    })${nextActionText}`;
   }
   if (event.kind === "offline_warmup_summary") {
     const label = String(

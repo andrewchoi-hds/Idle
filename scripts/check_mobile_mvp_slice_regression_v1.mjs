@@ -4526,6 +4526,10 @@ async function main() {
       suppressLogs: true,
     },
   );
+  const autoPauseEvent =
+    autoPauseSummary.collectedEvents.find(
+      (event) => event.kind === "auto_breakthrough_paused_by_policy",
+    ) || null;
   checks.push({
     id: "auto_breakthrough_pauses_after_consecutive_policy_blocks",
     passed:
@@ -4534,17 +4538,18 @@ async function main() {
       autoPauseSummary.autoBreakthroughPauseReasonLabelKo.length > 0 &&
       autoPauseSummary.autoBreakthroughPauseNextActionKo.length > 0 &&
       autoPauseSummary.autoBreakthroughPauseThreshold === 2 &&
+      autoPauseSummary.autoBreakthroughPauseConsecutiveBlocks >=
+        autoPauseSummary.autoBreakthroughPauseThreshold &&
       autoPauseSummary.autoBreakthroughPauseAtSec > 0 &&
       autoPauseSummary.breakthroughPolicyBlocks >= 2 &&
       autoPauseState.settings.autoBreakthrough === false &&
-      autoPauseSummary.collectedEvents.some(
-        (event) =>
-          event.kind === "auto_breakthrough_paused_by_policy" &&
-          Math.max(1, Number(event.threshold) || 0) === 2 &&
-          Math.max(0, Number(event.consecutiveBlocks) || 0) >= 2 &&
-          typeof event.nextActionKo === "string" &&
-          event.nextActionKo.length > 0,
-      ),
+      autoPauseEvent !== null &&
+      Math.max(1, Number(autoPauseEvent.threshold) || 0) === 2 &&
+      Math.max(0, Number(autoPauseEvent.consecutiveBlocks) || 0) >= 2 &&
+      Number(autoPauseSummary.autoBreakthroughPauseConsecutiveBlocks) ===
+        Number(autoPauseEvent.consecutiveBlocks) &&
+      typeof autoPauseEvent.nextActionKo === "string" &&
+      autoPauseEvent.nextActionKo.length > 0,
   });
 
   const autoPauseNoEventsState = createInitialSliceState(context, {
@@ -4579,6 +4584,7 @@ async function main() {
     passed:
       autoPauseNoEventsSummary.autoBreakthroughPaused === true &&
       autoPauseNoEventsSummary.autoBreakthroughPauseThreshold === 2 &&
+      autoPauseNoEventsSummary.autoBreakthroughPauseConsecutiveBlocks >= 2 &&
       autoPauseNoEventsSummary.breakthroughPolicyBlocks >= 2 &&
       Array.isArray(autoPauseNoEventsSummary.collectedEvents) &&
       autoPauseNoEventsSummary.collectedEvents.length === 0 &&
@@ -4586,6 +4592,11 @@ async function main() {
       autoPauseNoEventsSummary.lastEngineOutcome.source === "breakthrough" &&
       String(autoPauseNoEventsSummary.lastEngineOutcome.outcome?.outcome || "") ===
         "blocked_auto_risk_policy" &&
+      autoPauseNoEventsSummary.lastEngineOutcome.outcome?.pausedByPolicy === true &&
+      Number(autoPauseNoEventsSummary.lastEngineOutcome.outcome?.pauseThreshold || 0) ===
+        2 &&
+      Number(autoPauseNoEventsSummary.lastEngineOutcome.outcome?.consecutiveBlocks || 0) ===
+        Number(autoPauseNoEventsSummary.autoBreakthroughPauseConsecutiveBlocks) &&
       autoPauseNoEventsState.settings.autoBreakthrough === false,
   });
 
