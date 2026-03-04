@@ -1667,6 +1667,496 @@ function resolveBattleSceneImpactKineticCue(kind, options = {}) {
   };
 }
 
+function resolveBattleSceneImpactVfxCue(kind, options = {}) {
+  const source =
+    options?.source === "battle" || options?.source === "breakthrough"
+      ? options.source
+      : "";
+  const outcome = options?.outcome && typeof options.outcome === "object" ? options.outcome : null;
+  if (source === "battle" && outcome) {
+    if (outcome.won === true) {
+      const qiGain = Math.max(0, Math.round(Number(outcome.qiDelta) || 0));
+      const essenceGain = Math.max(0, Math.round(Number(outcome.rebirthEssenceDelta) || 0));
+      if (qiGain >= 20 || essenceGain > 0) {
+        return {
+          cue: "battle_win_dominant",
+          spark: { anchor: "center", shape: "ring", angleDeg: 12, scale: 1.26 },
+          trails: [
+            { anchor: "center", shape: "wave", angleDeg: 16, length: 104 },
+            { anchor: "center", shape: "wave", angleDeg: -12, length: 94 },
+          ],
+          shockwave: {
+            anchor: "center",
+            radiusPx: 118,
+            thicknessPx: 3.2,
+            lingerSec: 0.82,
+            ambientRadiusReduce: 16,
+            ambientLingerReduce: 0.12,
+          },
+        };
+      }
+      if (qiGain >= 10) {
+        return {
+          cue: "battle_win_surge",
+          spark: { anchor: "center", shape: "shard", angleDeg: 18, scale: 1.1 },
+          trails: [
+            { anchor: "center", shape: "slash", angleDeg: 14, length: 90 },
+            { anchor: "center", shape: "slash", angleDeg: -10, length: 82 },
+          ],
+          shockwave: {
+            anchor: "center",
+            radiusPx: 104,
+            thicknessPx: 2.9,
+            lingerSec: 0.76,
+            ambientRadiusReduce: 14,
+            ambientLingerReduce: 0.1,
+          },
+        };
+      }
+      return {
+        cue: "battle_win_clean",
+        spark: { anchor: "center", shape: "shard", angleDeg: 16, scale: 1.05 },
+        trails: [
+          { anchor: "center", shape: "slash", angleDeg: 12, length: 84 },
+          { anchor: "center", shape: "slash", angleDeg: -10, length: 76 },
+        ],
+        shockwave: {
+          anchor: "center",
+          radiusPx: 98,
+          thicknessPx: 2.8,
+          lingerSec: 0.72,
+          ambientRadiusReduce: 10,
+          ambientLingerReduce: 0.1,
+        },
+      };
+    }
+    const qiLoss = Math.max(0, Math.abs(Math.round(Number(outcome.qiDelta) || 0)));
+    if (qiLoss >= 22) {
+      return {
+        cue: "battle_loss_crushing",
+        spark: { anchor: "center", shape: "shard", angleDeg: -22, scale: 1.24 },
+        trails: [
+          { anchor: "center", shape: "slash", angleDeg: 170, length: 94 },
+          { anchor: "center", shape: "slash", angleDeg: -166, length: 86 },
+        ],
+        shockwave: {
+          anchor: "center",
+          radiusPx: 122,
+          thicknessPx: 3.4,
+          lingerSec: 0.84,
+          ambientRadiusReduce: 18,
+          ambientLingerReduce: 0.12,
+        },
+      };
+    }
+    if (qiLoss >= 10) {
+      return {
+        cue: "battle_loss_heavy",
+        spark: { anchor: "center", shape: "shard", angleDeg: -18, scale: 1.12 },
+        trails: [
+          { anchor: "center", shape: "slash", angleDeg: 166, length: 84 },
+          { anchor: "center", shape: "slash", angleDeg: -164, length: 74 },
+        ],
+        shockwave: {
+          anchor: "center",
+          radiusPx: 108,
+          thicknessPx: 3.2,
+          lingerSec: 0.78,
+          ambientRadiusReduce: 14,
+          ambientLingerReduce: 0.12,
+        },
+      };
+    }
+    return {
+      cue: "battle_loss_brief",
+      spark: { anchor: "center", shape: "dot", angleDeg: -12, scale: 0.98 },
+      trails: [
+        { anchor: "center", shape: "slash", angleDeg: 162, length: 72 },
+      ],
+      shockwave: {
+        anchor: "center",
+        radiusPx: 94,
+        thicknessPx: 2.8,
+        lingerSec: 0.7,
+        ambientRadiusReduce: 12,
+        ambientLingerReduce: 0.1,
+      },
+    };
+  }
+  if (source === "breakthrough" && outcome) {
+    const outcomeCode = String(outcome.outcome || "");
+    const pausedByPolicy =
+      outcome.pausedByPolicy === true || outcome.autoBreakthroughPaused === true;
+    if (outcome.attempted === true) {
+      if (outcomeCode === "success") {
+        const successPct = Math.max(0, Math.min(100, Number(outcome.successPct) || 0));
+        if (successPct >= 78) {
+          return {
+            cue: "breakthrough_success_peak",
+            spark: { anchor: "center", shape: "ring", angleDeg: 0, scale: 1.34 },
+            trails: [
+              { anchor: "center", shape: "wave", angleDeg: 0, length: 108 },
+              { anchor: "center", shape: "wave", angleDeg: 180, length: 86 },
+            ],
+            shockwave: {
+              anchor: "center",
+              radiusPx: 122,
+              thicknessPx: 3.2,
+              lingerSec: 0.84,
+              ambientRadiusReduce: 16,
+              ambientLingerReduce: 0.14,
+            },
+          };
+        }
+        return {
+          cue: "breakthrough_success_stable",
+          spark: { anchor: "center", shape: "ring", angleDeg: 0, scale: 1.25 },
+          trails: [
+            { anchor: "center", shape: "wave", angleDeg: 0, length: 96 },
+          ],
+          shockwave: {
+            anchor: "center",
+            radiusPx: 108,
+            thicknessPx: 2.9,
+            lingerSec: 0.78,
+            ambientRadiusReduce: 14,
+            ambientLingerReduce: 0.12,
+          },
+        };
+      }
+      if (outcomeCode === "minor_fail") {
+        const deathPct = Math.max(0, Math.min(100, Number(outcome.deathPct) || 0));
+        if (deathPct >= 45) {
+          return {
+            cue: "breakthrough_minor_fail_heavy",
+            spark: { anchor: "player", shape: "ring", angleDeg: -24, scale: 1.24 },
+            trails: [
+              { anchor: "player", shape: "wave", angleDeg: -28, length: 98 },
+              { anchor: "player", shape: "slash", angleDeg: -162, length: 80 },
+            ],
+            shockwave: {
+              anchor: "player",
+              radiusPx: 98,
+              thicknessPx: 3.0,
+              lingerSec: 0.78,
+              ambientRadiusReduce: 12,
+              ambientLingerReduce: 0.12,
+            },
+          };
+        }
+        return {
+          cue: "breakthrough_minor_fail",
+          spark: { anchor: "player", shape: "ring", angleDeg: -24, scale: 1.15 },
+          trails: [
+            { anchor: "player", shape: "wave", angleDeg: -24, length: 88 },
+          ],
+          shockwave: {
+            anchor: "player",
+            radiusPx: 86,
+            thicknessPx: 2.7,
+            lingerSec: 0.7,
+            ambientRadiusReduce: 10,
+            ambientLingerReduce: 0.1,
+          },
+        };
+      }
+      if (outcomeCode === "retreat_fail") {
+        return {
+          cue: "breakthrough_retreat_fail",
+          spark: { anchor: "player", shape: "shard", angleDeg: -32, scale: 1.22 },
+          trails: [
+            { anchor: "player", shape: "wave", angleDeg: -34, length: 102 },
+            { anchor: "player", shape: "slash", angleDeg: -156, length: 88 },
+          ],
+          shockwave: {
+            anchor: "player",
+            radiusPx: 104,
+            thicknessPx: 3.2,
+            lingerSec: 0.82,
+            ambientRadiusReduce: 14,
+            ambientLingerReduce: 0.14,
+          },
+        };
+      }
+      if (outcomeCode === "death_fail") {
+        return {
+          cue: "breakthrough_death_fail",
+          spark: { anchor: "player", shape: "ring", angleDeg: -20, scale: 1.32 },
+          trails: [
+            { anchor: "player", shape: "wave", angleDeg: -36, length: 108 },
+            { anchor: "center", shape: "slash", angleDeg: 162, length: 86 },
+          ],
+          shockwave: {
+            anchor: "center",
+            radiusPx: 116,
+            thicknessPx: 3.4,
+            lingerSec: 0.86,
+            ambientRadiusReduce: 16,
+            ambientLingerReduce: 0.16,
+          },
+        };
+      }
+      return {
+        cue: "breakthrough_fail_generic",
+        spark: { anchor: "player", shape: "ring", angleDeg: -24, scale: 1.15 },
+        trails: [
+          { anchor: "player", shape: "wave", angleDeg: -24, length: 88 },
+        ],
+        shockwave: {
+          anchor: "player",
+          radiusPx: 86,
+          thicknessPx: 2.6,
+          lingerSec: 0.7,
+          ambientRadiusReduce: 10,
+          ambientLingerReduce: 0.12,
+        },
+      };
+    }
+    if (outcomeCode === "blocked_no_qi") {
+      return {
+        cue: "breakthrough_blocked_no_qi",
+        spark: { anchor: "player", shape: "dot", angleDeg: -12, scale: 0.92 },
+        trails: [
+          { anchor: "player", shape: "slash", angleDeg: -20, length: 64 },
+        ],
+        shockwave: {
+          anchor: "player",
+          radiusPx: 72,
+          thicknessPx: 2.2,
+          lingerSec: 0.62,
+          ambientRadiusReduce: 8,
+          ambientLingerReduce: 0.08,
+        },
+      };
+    }
+    if (outcomeCode === "blocked_tribulation_setting") {
+      return {
+        cue: "breakthrough_blocked_tribulation_setting",
+        spark: { anchor: "center", shape: "dot", angleDeg: 0, scale: 0.9 },
+        trails: [
+          { anchor: "center", shape: "wave", angleDeg: 0, length: 58 },
+        ],
+        shockwave: {
+          anchor: "center",
+          radiusPx: 68,
+          thicknessPx: 2.1,
+          lingerSec: 0.58,
+          ambientRadiusReduce: 8,
+          ambientLingerReduce: 0.08,
+        },
+      };
+    }
+    if (outcomeCode === "blocked_auto_risk_policy" && pausedByPolicy) {
+      return {
+        cue: "breakthrough_blocked_auto_risk_pause",
+        spark: { anchor: "player", shape: "ring", angleDeg: -24, scale: 1.26 },
+        trails: [
+          { anchor: "player", shape: "wave", angleDeg: -30, length: 102 },
+          { anchor: "player", shape: "slash", angleDeg: -160, length: 86 },
+        ],
+        shockwave: {
+          anchor: "player",
+          radiusPx: 108,
+          thicknessPx: 3.2,
+          lingerSec: 0.82,
+          ambientRadiusReduce: 14,
+          ambientLingerReduce: 0.14,
+        },
+      };
+    }
+    if (outcomeCode === "blocked_auto_risk_policy") {
+      const policyReason = String(outcome.autoPolicy?.reason || outcome.reason || "");
+      if (policyReason === "blocked_extreme_risk") {
+        return {
+          cue: "breakthrough_blocked_auto_risk_heavy",
+          spark: { anchor: "player", shape: "ring", angleDeg: -24, scale: 1.22 },
+          trails: [
+            { anchor: "player", shape: "wave", angleDeg: -28, length: 98 },
+            { anchor: "player", shape: "slash", angleDeg: -160, length: 82 },
+          ],
+          shockwave: {
+            anchor: "player",
+            radiusPx: 102,
+            thicknessPx: 3.0,
+            lingerSec: 0.78,
+            ambientRadiusReduce: 14,
+            ambientLingerReduce: 0.12,
+          },
+        };
+      }
+      if (policyReason === "blocked_high_risk") {
+        return {
+          cue: "breakthrough_blocked_auto_risk_warn",
+          spark: { anchor: "player", shape: "ring", angleDeg: -20, scale: 1.08 },
+          trails: [
+            { anchor: "player", shape: "wave", angleDeg: -24, length: 84 },
+          ],
+          shockwave: {
+            anchor: "player",
+            radiusPx: 84,
+            thicknessPx: 2.6,
+            lingerSec: 0.7,
+            ambientRadiusReduce: 10,
+            ambientLingerReduce: 0.1,
+          },
+        };
+      }
+      if (policyReason === "blocked_high_qi_cost") {
+        return {
+          cue: "breakthrough_blocked_auto_qi_cost",
+          spark: { anchor: "player", shape: "dot", angleDeg: -12, scale: 0.94 },
+          trails: [
+            { anchor: "player", shape: "slash", angleDeg: -18, length: 68 },
+          ],
+          shockwave: {
+            anchor: "player",
+            radiusPx: 74,
+            thicknessPx: 2.2,
+            lingerSec: 0.62,
+            ambientRadiusReduce: 8,
+            ambientLingerReduce: 0.08,
+          },
+        };
+      }
+    }
+    return {
+      cue: "breakthrough_blocked_generic",
+      spark: { anchor: "player", shape: "ring", angleDeg: -20, scale: 1.04 },
+      trails: [
+        { anchor: "player", shape: "wave", angleDeg: -22, length: 80 },
+      ],
+      shockwave: {
+        anchor: "player",
+        radiusPx: 80,
+        thicknessPx: 2.4,
+        lingerSec: 0.66,
+        ambientRadiusReduce: 10,
+        ambientLingerReduce: 0.08,
+      },
+    };
+  }
+  if (kind === "battle_win") {
+    return {
+      cue: "battle_win_default",
+      spark: { anchor: "center", shape: "shard", angleDeg: 16, scale: 1.05 },
+      trails: [
+        { anchor: "center", shape: "slash", angleDeg: 12, length: 84 },
+        { anchor: "center", shape: "slash", angleDeg: -10, length: 76 },
+      ],
+      shockwave: {
+        anchor: "center",
+        radiusPx: 98,
+        thicknessPx: 2.8,
+        lingerSec: 0.72,
+        ambientRadiusReduce: 10,
+        ambientLingerReduce: 0.1,
+      },
+    };
+  }
+  if (kind === "battle_loss") {
+    return {
+      cue: "battle_loss_default",
+      spark: { anchor: "center", shape: "shard", angleDeg: -18, scale: 1.08 },
+      trails: [
+        { anchor: "center", shape: "slash", angleDeg: 166, length: 82 },
+        { anchor: "center", shape: "slash", angleDeg: -164, length: 70 },
+      ],
+      shockwave: {
+        anchor: "center",
+        radiusPx: 106,
+        thicknessPx: 3.1,
+        lingerSec: 0.76,
+        ambientRadiusReduce: 14,
+        ambientLingerReduce: 0.12,
+      },
+    };
+  }
+  if (kind === "breakthrough_success") {
+    return {
+      cue: "breakthrough_success_default",
+      spark: { anchor: "center", shape: "ring", angleDeg: 0, scale: 1.25 },
+      trails: [
+        { anchor: "center", shape: "wave", angleDeg: 0, length: 96 },
+      ],
+      shockwave: {
+        anchor: "center",
+        radiusPx: 108,
+        thicknessPx: 2.9,
+        lingerSec: 0.78,
+        ambientRadiusReduce: 14,
+        ambientLingerReduce: 0.12,
+      },
+    };
+  }
+  return {
+    cue: "breakthrough_fail_default",
+    spark: { anchor: "player", shape: "ring", angleDeg: -24, scale: 1.15 },
+    trails: [
+      { anchor: "player", shape: "wave", angleDeg: -24, length: 88 },
+    ],
+    shockwave: {
+      anchor: "player",
+      radiusPx: 86,
+      thicknessPx: 2.6,
+      lingerSec: 0.7,
+      ambientRadiusReduce: 14,
+      ambientLingerReduce: 0.12,
+    },
+  };
+}
+
+function triggerBattleSceneImpactVfxFromCue(cueInput, tone = "info", options = {}) {
+  const cue = cueInput && typeof cueInput === "object" ? cueInput : null;
+  if (!cue) {
+    return;
+  }
+  const fromAmbient = options.fromAmbient === true;
+  const spark = cue.spark && typeof cue.spark === "object" ? cue.spark : null;
+  if (spark) {
+    spawnBattleSceneSpark({
+      anchor: spark.anchor,
+      tone,
+      shape: spark.shape,
+      angleDeg: spark.angleDeg,
+      scale: spark.scale,
+    });
+  }
+  const trails = Array.isArray(cue.trails) ? cue.trails : [];
+  for (const trail of trails) {
+    if (!trail || typeof trail !== "object") {
+      continue;
+    }
+    spawnBattleSceneTrail({
+      anchor: trail.anchor,
+      tone,
+      shape: trail.shape,
+      angleDeg: trail.angleDeg,
+      length: trail.length,
+    });
+  }
+  const shockwave =
+    cue.shockwave && typeof cue.shockwave === "object" ? cue.shockwave : null;
+  if (!shockwave) {
+    return;
+  }
+  const radiusBase = Math.max(22, Number(shockwave.radiusPx) || 86);
+  const thicknessBase = Math.max(1, Number(shockwave.thicknessPx) || 2.6);
+  const lingerBase = Math.max(0.24, Number(shockwave.lingerSec) || 0.7);
+  const radiusPx = fromAmbient
+    ? Math.max(22, radiusBase - Math.max(0, Number(shockwave.ambientRadiusReduce) || 12))
+    : radiusBase;
+  const lingerSec = fromAmbient
+    ? Math.max(0.24, lingerBase - Math.max(0, Number(shockwave.ambientLingerReduce) || 0.1))
+    : lingerBase;
+  spawnBattleSceneShockwave({
+    anchor: shockwave.anchor,
+    tone,
+    radiusPx,
+    thicknessPx: thicknessBase,
+    lingerSec,
+  });
+}
+
 function setBattleSceneLoopMode(loopMode = "idle") {
   if (!dom.battleSceneArena) {
     return;
@@ -1904,6 +2394,13 @@ function setBattleSceneImpactKinetic(cue = "normal") {
     return;
   }
   dom.battleSceneArena.dataset.sceneImpactKinetic = String(cue || "normal");
+}
+
+function setBattleSceneImpactVfx(cue = "normal") {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  dom.battleSceneArena.dataset.sceneImpactVfx = String(cue || "normal");
 }
 
 function normalizeBattleSceneWorld(worldInput) {
@@ -2962,6 +3459,7 @@ function resetBattleSceneDuelState(options = {}) {
   resetBattleSceneActorFrames();
   setBattleSceneImpactCue("idle");
   setBattleSceneImpactKinetic("normal");
+  setBattleSceneImpactVfx("normal");
   if (options.clearTicker) {
     clearBattleSceneTicker();
   }
@@ -4464,8 +4962,10 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
           : "breakthrough_fail";
   const impactActorFrameCue = applyBattleSceneImpactActorFrames(kind, options);
   const impactKineticCue = resolveBattleSceneImpactKineticCue(kind, options);
+  const impactVfxCue = resolveBattleSceneImpactVfxCue(kind, options);
   setBattleSceneImpactCue(impactActorFrameCue);
   setBattleSceneImpactKinetic(impactKineticCue.cue);
+  setBattleSceneImpactVfx(impactVfxCue.cue);
   dom.battleSceneArena.classList.remove(...BATTLE_SCENE_IMPACT_CLASSES);
   void dom.battleSceneArena.offsetWidth;
   dom.battleSceneArena.classList.add(impactClass);
@@ -4489,49 +4989,9 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
   triggerBattleSceneCameraShake(impactKineticCue.shakePreset, { fromAmbient });
   triggerBattleSceneZoomPulse(impactKineticCue.zoomPreset, { fromAmbient });
   triggerBattleSceneHitStop(impactKineticCue.hitStopPreset, { fromAmbient });
-  if (kind === "battle_win") {
-    spawnBattleSceneSpark({ anchor: "center", tone, shape: "shard", angleDeg: 16, scale: 1.05 });
-    spawnBattleSceneTrail({ anchor: "center", tone, angleDeg: 12, length: 84 });
-    spawnBattleSceneTrail({ anchor: "center", tone, angleDeg: -10, length: 76 });
-    spawnBattleSceneShockwave({
-      anchor: "center",
-      tone,
-      radiusPx: fromAmbient ? 88 : 98,
-      thicknessPx: 2.8,
-      lingerSec: fromAmbient ? 0.62 : 0.72,
-    });
-  } else if (kind === "battle_loss") {
-    spawnBattleSceneSpark({ anchor: "center", tone, shape: "shard", angleDeg: -18, scale: 1.08 });
-    spawnBattleSceneTrail({ anchor: "center", tone, angleDeg: 166, length: 82 });
-    spawnBattleSceneTrail({ anchor: "center", tone, angleDeg: -164, length: 70 });
-    spawnBattleSceneShockwave({
-      anchor: "center",
-      tone,
-      radiusPx: fromAmbient ? 92 : 106,
-      thicknessPx: 3.1,
-      lingerSec: fromAmbient ? 0.64 : 0.76,
-    });
-  } else if (kind === "breakthrough_success") {
-    spawnBattleSceneSpark({ anchor: "center", tone, shape: "ring", scale: 1.25 });
-    spawnBattleSceneTrail({ anchor: "center", tone, shape: "wave", angleDeg: 0, length: 96 });
-    spawnBattleSceneShockwave({
-      anchor: "center",
-      tone,
-      radiusPx: fromAmbient ? 94 : 108,
-      thicknessPx: 2.9,
-      lingerSec: fromAmbient ? 0.66 : 0.78,
-    });
-  } else {
-    spawnBattleSceneSpark({ anchor: "player", tone, shape: "ring", scale: 1.15 });
-    spawnBattleSceneTrail({ anchor: "player", tone, shape: "wave", angleDeg: -24, length: 88 });
-    spawnBattleSceneShockwave({
-      anchor: "player",
-      tone,
-      radiusPx: fromAmbient ? 72 : 86,
-      thicknessPx: 2.6,
-      lingerSec: fromAmbient ? 0.58 : 0.7,
-    });
-  }
+  triggerBattleSceneImpactVfxFromCue(impactVfxCue, tone, {
+    fromAmbient,
+  });
   if (syncDuel) {
     syncBattleSceneDuelFromImpact(kind, options);
   }
@@ -5126,6 +5586,7 @@ function stopBattleSceneAmbientLoop() {
   resetBattleSceneActorFrames();
   setBattleSceneImpactCue("idle");
   setBattleSceneImpactKinetic("normal");
+  setBattleSceneImpactVfx("normal");
   battleSceneDuelState.pressure = "low";
   renderBattleSceneDuelHud();
 }
