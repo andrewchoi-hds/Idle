@@ -2538,3 +2538,11 @@
 
 ## 599) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient impact 출처 분해 + 신호 kind DOM 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 600) 다음 순차 작업
+1. [완료] `runBattleSceneAmbientTick`의 ambient impact 트리거 분기를 결과 우선 구간과 직접 연결해, `prioritizeOutcomeSignals`가 활성화된 동안에는 랜덤 fallback 대신 마지막 엔진 결과 신호만 재반영하도록 정합화.
+2. [완료] result-driven ambient impact 재생에 replay 예산/간격 상수(`BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS=3`, `BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS=960`)를 적용하고, replay 카운터를 arena dataset(`data-scene-ambient-impact-replay`, `data-scene-ambient-impact-replay-max`)으로 계측해 DOM 관찰성을 강화.
+3. [완료] 전장 초기화/리셋 경로(`clearBattleSceneDuelTransitions`, `resetBattleSceneVisualState`)와 idle 전환 경로에서 result-driven replay 상태를 0으로 정리해, 다음 엔진 결과 연출에 잔여 카운터가 누수되지 않도록 보강.
+
+## 601) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(결과 기반 ambient impact replay 예산/간격 제어 + DOM replay 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
