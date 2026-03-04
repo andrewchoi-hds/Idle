@@ -2442,3 +2442,11 @@
 
 ## 575) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(단기 요약 direct signal 우선 + lastEngineOutcome impact fallback + 장식 suppression window 확장 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 576) 다음 순차 작업
+1. [완료] `runBattleSceneAmbientTick`이 결과 우선 판단(`quietMs/resultDrivenQuietMs`)을 `runBattleSceneDuelTick` 호출 전에 계산하고 `resultPrioritySuppressed` 옵션을 전달하도록 조정해, outcome 직후 ambient duel tick 자체를 낮은 강도로 운용하도록 정합 강화.
+2. [완료] `applyBattleSceneDuelStrike`/`applyBattleSceneDuelBurst`에 `options(fromAmbient/resultPrioritySuppressed)`를 추가해 결과 우선 구간에서 kinetic 연출(`camera/zoom/hitstop/ticker/banner`) 확률을 하향하고, 장식성 파티클은 기본적으로 억제되도록 보정.
+3. [완료] DOM contract 체크에 신규 함수 시그니처/토큰(`applyBattleSceneDuelStrike(..., options)`, `applyBattleSceneDuelBurst(..., options)`, `resultPrioritySuppressed: prioritizeOutcomeSignals`)을 추가하고 수직슬라이스 회귀 시나리오를 동기화.
+
+## 577) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(결과 우선 구간 ambient duel tick 강도 하향 + strike/burst suppression 옵션 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

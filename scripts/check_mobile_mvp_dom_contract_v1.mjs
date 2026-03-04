@@ -376,7 +376,20 @@ async function main() {
   assertIncludes(app, "function maybeSpawnBattleSceneCastTelegraph(", "app.mjs", failures);
   assertIncludes(app, "function maybeSpawnBattleSceneChargeMote(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneComboBanner(", "app.mjs", failures);
+  assertIncludes(
+    app,
+    "function applyBattleSceneDuelBurst(attacker, mode = \"idle\", visuals = true, options = {})",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function applyBattleSceneDuelStrike(attacker, mode = \"idle\", visuals = true, options = {})",
+    "app.mjs",
+    failures,
+  );
   assertIncludes(app, "function runBattleSceneDuelTick(", "app.mjs", failures);
+  assertIncludes(app, "resultPrioritySuppressed: prioritizeOutcomeSignals", "app.mjs", failures);
   assertIncludes(app, "function pushBattleSceneTicker(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneSkillBanner(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneActorFrame(", "app.mjs", failures);
