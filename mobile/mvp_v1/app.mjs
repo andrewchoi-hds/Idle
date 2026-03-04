@@ -3229,11 +3229,18 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
   renderBattleSceneDuelHud();
 }
 
-function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true) {
+function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true, options = {}) {
   const attackerKey = attacker === "player" ? "playerCast" : "enemyCast";
   const defenderKey = attacker === "player" ? "enemyHp" : "playerHp";
   const attackerAnchor = attacker === "player" ? "player" : "enemy";
   const defenderAnchor = attacker === "player" ? "enemy" : "player";
+  const fromAmbient = options.fromAmbient === true;
+  const resultPrioritySuppressed = options.resultPrioritySuppressed === true;
+  const allowKineticFx =
+    !resultPrioritySuppressed ||
+    Math.random() < (mode === "realtime" ? 0.34 : mode === "auto" ? 0.26 : 0.2);
+  const allowAmbientTicker = !resultPrioritySuppressed || Math.random() < 0.52;
+  const allowAmbientBanner = !resultPrioritySuppressed || Math.random() < 0.38;
   const tone = attacker === "player" ? "success" : "warn";
   const skillPool =
     attacker === "player"
@@ -3269,23 +3276,38 @@ function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true) {
     attacker,
     mode,
   });
-  triggerBattleSceneCameraShake(
-    mode === "realtime" ? "heavy" : mode === "auto" ? "medium" : "lateral",
-  );
-  triggerBattleSceneZoomPulse(
-    mode === "realtime" || burstDamage >= 30 ? "burst" : "soft",
-  );
-  triggerBattleSceneHitStop(
-    mode === "realtime" || burstDamage >= 30 ? "heavy" : "medium",
-  );
-  setBattleSceneComboBanner(battleSceneDuelState.combo, tone);
+  if (allowKineticFx) {
+    triggerBattleSceneCameraShake(
+      mode === "realtime" ? "heavy" : mode === "auto" ? "medium" : "lateral",
+      { fromAmbient },
+    );
+    triggerBattleSceneZoomPulse(
+      mode === "realtime" || burstDamage >= 30 ? "burst" : "soft",
+      { fromAmbient },
+    );
+    triggerBattleSceneHitStop(
+      mode === "realtime" || burstDamage >= 30 ? "heavy" : "medium",
+      { fromAmbient },
+    );
+  }
+  if (!resultPrioritySuppressed || battleSceneDuelState.combo % 5 === 0) {
+    setBattleSceneComboBanner(battleSceneDuelState.combo, tone);
+  }
   setBattleSceneActorFrame(attacker, "skill");
   setBattleSceneActorFrame(defenderAnchor, "hit");
-  pushBattleSceneTicker(
-    `${attacker === "player" ? "수련자" : "적수"} 비기 ${skillLabel} · ${burstDamage}`,
-    tone,
-  );
-  if (!visuals) {
+  if (allowAmbientTicker) {
+    pushBattleSceneTicker(
+      `${attacker === "player" ? "수련자" : "적수"} 비기 ${skillLabel} · ${burstDamage}`,
+      tone,
+    );
+  }
+  if (allowAmbientBanner) {
+    setBattleSceneSkillBanner(
+      `${attacker === "player" ? "수련자" : "적수"} · ${skillLabel}`,
+      tone,
+    );
+  }
+  if (!visuals || resultPrioritySuppressed) {
     return;
   }
   spawnBattleSceneFloat("비기", { tone, anchor: attackerAnchor });
@@ -3299,14 +3321,19 @@ function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true) {
     thicknessPx: mode === "realtime" ? 3 : 2.5,
     lingerSec: mode === "realtime" ? 0.68 : 0.6,
   });
-  setBattleSceneSkillBanner(`${attacker === "player" ? "수련자" : "적수"} · ${skillLabel}`, tone);
 }
 
-function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true) {
+function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true, options = {}) {
   const defenderKey = attacker === "player" ? "enemyHp" : "playerHp";
   const attackerCastKey = attacker === "player" ? "playerCast" : "enemyCast";
   const defenderAnchor = attacker === "player" ? "enemy" : "player";
   const attackerAnchor = attacker === "player" ? "player" : "enemy";
+  const fromAmbient = options.fromAmbient === true;
+  const resultPrioritySuppressed = options.resultPrioritySuppressed === true;
+  const allowKineticFx =
+    !resultPrioritySuppressed ||
+    Math.random() < (mode === "realtime" ? 0.42 : mode === "auto" ? 0.34 : 0.26);
+  const allowAmbientTicker = !resultPrioritySuppressed || Math.random() < 0.48;
   const tone = attacker === "player" ? "success" : "warn";
   const [minDamage, maxDamage] =
     mode === "realtime" ? [7, 13] : mode === "auto" ? [5, 9] : [3, 6];
@@ -3346,16 +3373,24 @@ function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true) {
     mode,
     damage,
   });
-  triggerBattleSceneCameraShake(
-    isCrit ? "medium" : attacker === "enemy" ? "lateral" : mode === "realtime" ? "medium" : "light",
-  );
-  triggerBattleSceneZoomPulse(
-    isCrit || mode === "realtime" ? "burst" : "soft",
-  );
-  triggerBattleSceneHitStop(
-    isCrit ? "medium" : mode === "realtime" ? "medium" : "light",
-  );
-  if (battleSceneDuelState.combo >= 3 && (isCrit || battleSceneDuelState.combo % 3 === 0)) {
+  if (allowKineticFx) {
+    triggerBattleSceneCameraShake(
+      isCrit ? "medium" : attacker === "enemy" ? "lateral" : mode === "realtime" ? "medium" : "light",
+      { fromAmbient },
+    );
+    triggerBattleSceneZoomPulse(
+      isCrit || mode === "realtime" ? "burst" : "soft",
+      { fromAmbient },
+    );
+    triggerBattleSceneHitStop(
+      isCrit ? "medium" : mode === "realtime" ? "medium" : "light",
+      { fromAmbient },
+    );
+  }
+  if (
+    battleSceneDuelState.combo >= 3 &&
+    (isCrit || battleSceneDuelState.combo % (resultPrioritySuppressed ? 5 : 3) === 0)
+  ) {
     setBattleSceneComboBanner(
       battleSceneDuelState.combo,
       isCrit ? "error" : tone,
@@ -3363,13 +3398,13 @@ function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true) {
   }
   setBattleSceneActorFrame(attacker, "attack");
   setBattleSceneActorFrame(defenderAnchor, "hit");
-  if (isCrit || damage >= 12) {
+  if ((isCrit || damage >= 12) && allowAmbientTicker) {
     pushBattleSceneTicker(
       `${attacker === "player" ? "수련자" : "적수"} ${isCrit ? "치명타" : "강타"} · ${damage}`,
       isCrit ? "error" : tone,
     );
   }
-  if (visuals) {
+  if (visuals && !resultPrioritySuppressed) {
     spawnBattleSceneFloat(`-${damage}`, {
       tone: isCrit ? "error" : tone,
       anchor: defenderAnchor,
@@ -3398,12 +3433,13 @@ function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true) {
     });
   }
   if (battleSceneDuelState[attackerCastKey] >= BATTLE_SCENE_DUEL_MAX_CAST) {
-    applyBattleSceneDuelBurst(attacker, mode, visuals);
+    applyBattleSceneDuelBurst(attacker, mode, visuals, options);
   }
 }
 
 function runBattleSceneDuelTick(mode = "idle", options = {}) {
   const visuals = options.visuals !== false;
+  const resultPrioritySuppressed = options.resultPrioritySuppressed === true;
   const strikeAttempts = mode === "realtime" ? 2 : 1;
   const strikeChance = mode === "realtime" ? 0.92 : mode === "auto" ? 0.76 : 0.52;
   let strikeHappened = false;
@@ -3414,7 +3450,10 @@ function runBattleSceneDuelTick(mode = "idle", options = {}) {
     const momentum = battleSceneDuelState.playerHp - battleSceneDuelState.enemyHp;
     const playerBias = momentum < 0 ? 0.58 : momentum > 0 ? 0.42 : 0.5;
     const attacker = Math.random() < playerBias ? "player" : "enemy";
-    applyBattleSceneDuelStrike(attacker, mode, visuals);
+    applyBattleSceneDuelStrike(attacker, mode, visuals, {
+      fromAmbient: true,
+      resultPrioritySuppressed,
+    });
     strikeHappened = true;
   }
   if (!strikeHappened && battleSceneDuelState.combo > 0) {
@@ -3422,7 +3461,10 @@ function runBattleSceneDuelTick(mode = "idle", options = {}) {
       0,
       battleSceneDuelState.combo - (mode === "realtime" ? 2 : 1),
     );
-    if (battleSceneDuelState.combo === 0 && Math.random() < 0.2) {
+    if (
+      battleSceneDuelState.combo === 0 &&
+      Math.random() < (resultPrioritySuppressed ? 0.08 : 0.2)
+    ) {
       pushBattleSceneTicker("연격 종료 · 기세 재정렬", "info");
     }
     if (battleSceneDuelState.combo <= 0) {
@@ -3435,7 +3477,7 @@ function runBattleSceneDuelTick(mode = "idle", options = {}) {
   if (playerDown || enemyDown) {
     const playerWon = enemyDown && !playerDown ? true : playerDown && !enemyDown ? false : Math.random() < 0.5;
     const tone = playerWon ? "success" : "warn";
-    if (visuals) {
+    if (visuals && !resultPrioritySuppressed) {
       triggerBattleSceneImpact(playerWon ? "battle_win" : "battle_loss", tone, {
         fromAmbient: true,
         syncDuel: false,
@@ -3445,10 +3487,12 @@ function runBattleSceneDuelTick(mode = "idle", options = {}) {
         anchor: "center",
       });
     }
-    pushBattleSceneTicker(
-      `${battleSceneDuelState.round}R 종료 · ${playerWon ? "수련자 우세" : "적수 우세"}`,
-      tone,
-    );
+    if (!resultPrioritySuppressed || Math.random() < 0.4) {
+      pushBattleSceneTicker(
+        `${battleSceneDuelState.round}R 종료 · ${playerWon ? "수련자 우세" : "적수 우세"}`,
+        tone,
+      );
+    }
     battleSceneDuelState.round += 1;
     battleSceneDuelState.playerHp = BATTLE_SCENE_DUEL_MAX_HP;
     battleSceneDuelState.enemyHp = BATTLE_SCENE_DUEL_MAX_HP;
@@ -4105,8 +4149,18 @@ function runBattleSceneAmbientTick() {
   const ambientProbabilityScale = resolveBattleSceneAmbientProbabilityScale(mode, {
     lowPerformanceMode,
   });
+  const now = Date.now();
+  const quietMs = now - battleSceneLastExplicitEventAtMs;
+  const resultDrivenQuietMs = now - battleSceneLastResultDrivenImpactAtMs;
+  const prioritizeOutcomeSignals =
+    quietMs < BATTLE_SCENE_RESULT_PRIORITY_WINDOW_MS ||
+    resultDrivenQuietMs < BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_SUPPRESSION_WINDOW_MS;
+  const suppressAmbientDecorations =
+    prioritizeOutcomeSignals &&
+    resultDrivenQuietMs < BATTLE_SCENE_RESULT_DRIVEN_DECORATION_SUPPRESSION_WINDOW_MS;
   runBattleSceneDuelTick(mode, {
     visuals: !reducedMotion && !lowPerformanceMode,
+    resultPrioritySuppressed: prioritizeOutcomeSignals,
   });
   const playerHpPct = Math.round(
     (clampBattleSceneGauge(battleSceneDuelState.playerHp, BATTLE_SCENE_DUEL_MAX_HP) /
@@ -4138,15 +4192,6 @@ function runBattleSceneAmbientTick() {
     pressure: battleSceneDuelState.pressure,
     lead: sceneLead,
   });
-  const now = Date.now();
-  const quietMs = now - battleSceneLastExplicitEventAtMs;
-  const resultDrivenQuietMs = now - battleSceneLastResultDrivenImpactAtMs;
-  const prioritizeOutcomeSignals =
-    quietMs < BATTLE_SCENE_RESULT_PRIORITY_WINDOW_MS ||
-    resultDrivenQuietMs < BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_SUPPRESSION_WINDOW_MS;
-  const suppressAmbientDecorations =
-    prioritizeOutcomeSignals &&
-    resultDrivenQuietMs < BATTLE_SCENE_RESULT_DRIVEN_DECORATION_SUPPRESSION_WINDOW_MS;
   if (reducedMotion) {
     return;
   }
