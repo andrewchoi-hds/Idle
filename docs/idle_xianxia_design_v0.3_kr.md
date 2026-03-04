@@ -2458,3 +2458,11 @@
 
 ## 579) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(결과 우선 구간 duel tick cadence + strike chance scale 동시 하향 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 580) 다음 순차 작업
+1. [완료] 결과 우선 duel hold 상수(`BATTLE_SCENE_RESULT_PRIORITY_DUEL_HOLD_WINDOW_MS=1800`)를 추가하고 `runBattleSceneAmbientTick`에서 `holdDuelTickByOutcome` 분기를 도입해, explicit 결과 직후 초반 구간에서는 ambient duel tick 실행을 일시 중단하도록 보강.
+2. [완료] arena dataset(`data-scene-outcome-priority`)을 `hold/suppressed/normal`로 갱신해 결과 우선 모드 상태를 DOM 레벨에서 직접 관찰 가능하게 정합화.
+3. [완료] DOM contract/수직슬라이스 문서에 신규 토큰(`BATTLE_SCENE_RESULT_PRIORITY_DUEL_HOLD_WINDOW_MS`, `holdDuelTickByOutcome`, `sceneOutcomePriority`)과 hold→suppressed 전환 회귀 포인트를 동기화.
+
+## 581) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(결과 직후 duel hold window + outcome-priority dataset 상태 동기화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

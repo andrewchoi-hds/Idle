@@ -537,6 +537,7 @@ const BATTLE_SCENE_RESULT_DRIVEN_DECORATION_SUPPRESSION_WINDOW_MS = 3800;
 const BATTLE_SCENE_SHORT_SUMMARY_DIRECT_SIGNAL_MAX_SECONDS = 12;
 const BATTLE_SCENE_RESULT_PRIORITY_DUEL_TICK_DIVISOR = 2;
 const BATTLE_SCENE_RESULT_PRIORITY_STRIKE_CHANCE_SCALE = 0.42;
+const BATTLE_SCENE_RESULT_PRIORITY_DUEL_HOLD_WINDOW_MS = 1800;
 const BATTLE_SCENE_DUEL_MAX_HP = 100;
 const BATTLE_SCENE_DUEL_MAX_CAST = 100;
 const BATTLE_SCENE_TICKER_MAX = 5;
@@ -4172,12 +4173,21 @@ function runBattleSceneAmbientTick() {
   const prioritizeOutcomeSignals =
     quietMs < BATTLE_SCENE_RESULT_PRIORITY_WINDOW_MS ||
     resultDrivenQuietMs < BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_SUPPRESSION_WINDOW_MS;
+  const holdDuelTickByOutcome =
+    prioritizeOutcomeSignals &&
+    resultDrivenQuietMs < BATTLE_SCENE_RESULT_PRIORITY_DUEL_HOLD_WINDOW_MS;
   const suppressAmbientDecorations =
     prioritizeOutcomeSignals &&
     resultDrivenQuietMs < BATTLE_SCENE_RESULT_DRIVEN_DECORATION_SUPPRESSION_WINDOW_MS;
+  dom.battleSceneArena.dataset.sceneOutcomePriority = holdDuelTickByOutcome
+    ? "hold"
+    : prioritizeOutcomeSignals
+      ? "suppressed"
+      : "normal";
   const shouldRunDuelTick =
-    !prioritizeOutcomeSignals ||
-    battleSceneAmbientStep % BATTLE_SCENE_RESULT_PRIORITY_DUEL_TICK_DIVISOR === 0;
+    !holdDuelTickByOutcome &&
+    (!prioritizeOutcomeSignals ||
+      battleSceneAmbientStep % BATTLE_SCENE_RESULT_PRIORITY_DUEL_TICK_DIVISOR === 0);
   if (shouldRunDuelTick) {
     runBattleSceneDuelTick(mode, {
       visuals: !reducedMotion && !lowPerformanceMode && !prioritizeOutcomeSignals,

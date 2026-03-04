@@ -375,6 +375,12 @@ async function main() {
     "app.mjs",
     failures,
   );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_PRIORITY_DUEL_HOLD_WINDOW_MS = 1800;",
+    "app.mjs",
+    failures,
+  );
   assertIncludes(app, "battleSceneLastResultDrivenImpactAtMs", "app.mjs", failures);
   assertIncludes(
     app,
@@ -414,6 +420,8 @@ async function main() {
     "app.mjs",
     failures,
   );
+  assertIncludes(app, "holdDuelTickByOutcome", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneOutcomePriority", "app.mjs", failures);
   assertIncludes(app, "function pushBattleSceneTicker(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneSkillBanner(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneActorFrame(", "app.mjs", failures);
