@@ -554,11 +554,29 @@ async function main() {
   );
   assertIncludes(
     app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BATTLE = 2;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BREAKTHROUGH = 4;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS = 960;",
     "app.mjs",
     failures,
   );
   assertIncludes(app, "syncDuel: false", "app.mjs", failures);
+  assertIncludes(
+    app,
+    "function resolveBattleSceneResultDrivenAmbientImpactReplayMax(",
+    "app.mjs",
+    failures,
+  );
   assertIncludes(app, "function setBattleSceneAmbientImpactReplay(", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastResultDrivenImpactReplayCount += 1;", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastResultDrivenImpactReplayAtMs = now;", "app.mjs", failures);
