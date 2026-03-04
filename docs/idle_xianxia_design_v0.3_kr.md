@@ -2554,3 +2554,11 @@
 
 ## 603) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(결과 기반 ambient impact source-aware replay budget 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 604) 다음 순차 작업
+1. [완료] `runBattleSceneAmbientTick`의 ambient impact 우선순위를 `prioritizeOutcomeSignals`에서 결과 신호 존재 여부(`hasResultDrivenAmbientImpactSignal`) 중심으로 재정렬해, 결과 신호가 살아있는 동안에는 랜덤 fallback이 동작하지 않도록 보강.
+2. [완료] ambient impact 잠금 헬퍼(`setBattleSceneAmbientImpactLock`)를 추가하고, 실결과 수신·ambient tick·전장 리셋 경로에 연결해 arena dataset(`data-scene-ambient-impact-lock=free|result`)으로 랜덤 차단 상태를 직접 계측.
+3. [완료] DOM contract/수직슬라이스 문서에 잠금 토큰(`data-scene-ambient-impact-lock`, `sceneAmbientImpactLock`, `hasResultDrivenAmbientImpactSignal`)과 회귀 포인트(결과 신호 active 시 random 차단, idle 전환 시 lock 해제)를 동기화.
+
+## 605) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(결과 신호 기반 ambient random lock + `data-scene-ambient-impact-lock` DOM 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
