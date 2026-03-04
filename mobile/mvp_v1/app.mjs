@@ -533,6 +533,8 @@ const BATTLE_SCENE_ACTOR_FRAME_HOLD_REDUCED_MS = {
 const BATTLE_SCENE_AMBIENT_TICK_MS = 820;
 const BATTLE_SCENE_RESULT_PRIORITY_WINDOW_MS = 2600;
 const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_SUPPRESSION_WINDOW_MS = 6200;
+const BATTLE_SCENE_RESULT_DRIVEN_DECORATION_SUPPRESSION_WINDOW_MS = 3800;
+const BATTLE_SCENE_SHORT_SUMMARY_DIRECT_SIGNAL_MAX_SECONDS = 12;
 const BATTLE_SCENE_DUEL_MAX_HP = 100;
 const BATTLE_SCENE_DUEL_MAX_CAST = 100;
 const BATTLE_SCENE_TICKER_MAX = 5;
@@ -3674,10 +3676,17 @@ function maybeSpawnBattleSceneCastTelegraph(actor, options = {}) {
   if (castPct < 72) {
     return;
   }
+  const resultPrioritySuppressed = options.resultPrioritySuppressed === true;
+  if (resultPrioritySuppressed && castPct < 96) {
+    return;
+  }
   const mode = options.mode === "realtime" || options.mode === "auto" ? options.mode : "idle";
   const lowPerformanceMode =
     options.lowPerformanceMode === true || isBattleSceneLowPerformanceModeEnabled();
-  const intervalScale = lowPerformanceMode ? 1.45 : 1;
+  const suppressionScale = resultPrioritySuppressed ? 0.56 : 1;
+  const intervalScale =
+    (lowPerformanceMode ? 1.45 : 1) *
+    (resultPrioritySuppressed ? 1.42 : 1);
   const minIntervalMs =
     (mode === "realtime"
       ? castPct >= 96
@@ -3696,8 +3705,12 @@ function maybeSpawnBattleSceneCastTelegraph(actor, options = {}) {
   }
   const telegraphChance =
     (mode === "realtime" ? 0.8 : mode === "auto" ? 0.7 : 0.58) *
-    (lowPerformanceMode ? 0.72 : 1);
+    (lowPerformanceMode ? 0.72 : 1) *
+    suppressionScale;
   if (castPct < 92 && Math.random() > telegraphChance) {
+    return;
+  }
+  if (resultPrioritySuppressed && Math.random() > 0.64) {
     return;
   }
   if (lowPerformanceMode && castPct >= 92 && Math.random() > 0.82) {
@@ -3717,7 +3730,11 @@ function maybeSpawnBattleSceneCastTelegraph(actor, options = {}) {
     lingerSec,
     lowPerformanceMode,
   });
-  if (castPct >= 96 && (!lowPerformanceMode || Math.random() < 0.68)) {
+  if (
+    castPct >= 96 &&
+    (!lowPerformanceMode ||
+      Math.random() < (resultPrioritySuppressed ? 0.42 : 0.68))
+  ) {
     spawnBattleSceneSpark({
       anchor: actorKey,
       tone,
@@ -3738,10 +3755,17 @@ function maybeSpawnBattleSceneChargeMote(actor, options = {}) {
   if (castPct < 52) {
     return;
   }
+  const resultPrioritySuppressed = options.resultPrioritySuppressed === true;
+  if (resultPrioritySuppressed && castPct < 96) {
+    return;
+  }
   const mode = options.mode === "realtime" || options.mode === "auto" ? options.mode : "idle";
   const lowPerformanceMode =
     options.lowPerformanceMode === true || isBattleSceneLowPerformanceModeEnabled();
-  const intervalScale = lowPerformanceMode ? 1.42 : 1;
+  const suppressionScale = resultPrioritySuppressed ? 0.52 : 1;
+  const intervalScale =
+    (lowPerformanceMode ? 1.42 : 1) *
+    (resultPrioritySuppressed ? 1.36 : 1);
   const minIntervalMs =
     (mode === "realtime"
       ? castPct >= 96
@@ -3776,7 +3800,10 @@ function maybeSpawnBattleSceneChargeMote(actor, options = {}) {
           : mode === "auto"
             ? 0.5
             : 0.34;
-  if (Math.random() > spawnChance * (lowPerformanceMode ? 0.68 : 1)) {
+  if (
+    Math.random() >
+    spawnChance * (lowPerformanceMode ? 0.68 : 1) * suppressionScale
+  ) {
     return;
   }
   const tone = actorKey === "player" ? "success" : "warn";
@@ -3792,7 +3819,17 @@ function maybeSpawnBattleSceneChargeMote(actor, options = {}) {
       (actorKey === "player" ? 1 : -1) * (castPct >= 96 ? 232 : castPct >= 80 ? 204 : 172),
     lowPerformanceMode,
   });
-  if (castPct >= 96 && Math.random() < (lowPerformanceMode ? 0.36 : 0.54)) {
+  if (
+    castPct >= 96 &&
+    Math.random() <
+      (lowPerformanceMode
+        ? resultPrioritySuppressed
+          ? 0.24
+          : 0.36
+        : resultPrioritySuppressed
+          ? 0.34
+          : 0.54)
+  ) {
     spawnBattleSceneSpark({
       anchor: actorKey,
       tone,
@@ -4107,13 +4144,21 @@ function runBattleSceneAmbientTick() {
   const prioritizeOutcomeSignals =
     quietMs < BATTLE_SCENE_RESULT_PRIORITY_WINDOW_MS ||
     resultDrivenQuietMs < BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_SUPPRESSION_WINDOW_MS;
+  const suppressAmbientDecorations =
+    prioritizeOutcomeSignals &&
+    resultDrivenQuietMs < BATTLE_SCENE_RESULT_DRIVEN_DECORATION_SUPPRESSION_WINDOW_MS;
   if (reducedMotion) {
     return;
   }
   const shouldPulseZoom =
     shouldPulseByMode &&
     (battleSceneDuelState.pressure === "high" || battleSceneDuelState.combo >= 6);
-  if (shouldPulseZoom) {
+  const allowOutcomePriorityPulse =
+    !prioritizeOutcomeSignals ||
+    (mode === "realtime" &&
+      battleSceneDuelState.pressure === "high" &&
+      Math.random() < 0.2 * ambientProbabilityScale);
+  if (shouldPulseZoom && allowOutcomePriorityPulse) {
     triggerBattleSceneZoomPulse(
       mode === "realtime" || battleSceneDuelState.pressure === "high" ? "burst" : "soft",
       { fromAmbient: true },
@@ -4252,21 +4297,25 @@ function runBattleSceneAmbientTick() {
     mode,
     castPct: playerCastPct,
     lowPerformanceMode,
+    resultPrioritySuppressed: suppressAmbientDecorations,
   });
   maybeSpawnBattleSceneCastTelegraph("enemy", {
     mode,
     castPct: enemyCastPct,
     lowPerformanceMode,
+    resultPrioritySuppressed: suppressAmbientDecorations,
   });
   maybeSpawnBattleSceneChargeMote("player", {
     mode,
     castPct: playerCastPct,
     lowPerformanceMode,
+    resultPrioritySuppressed: suppressAmbientDecorations,
   });
   maybeSpawnBattleSceneChargeMote("enemy", {
     mode,
     castPct: enemyCastPct,
     lowPerformanceMode,
+    resultPrioritySuppressed: suppressAmbientDecorations,
   });
 
   if (!prioritizeOutcomeSignals) {
@@ -5387,9 +5436,48 @@ function resolveBattleSceneEventSignalFromAutoSummary(summaryInput) {
   if (!collectedSignal) {
     return directSignalWithMeta;
   }
+  const summarySeconds = Math.max(0, Number(summary.seconds) || 0);
+  const directSec = Math.max(0, Number(directSignalWithMeta.eventSec) || 0);
+  const collectedSec = Math.max(0, Number(collectedSignal.eventSec) || 0);
+  if (
+    summarySeconds > 0 &&
+    summarySeconds <= BATTLE_SCENE_SHORT_SUMMARY_DIRECT_SIGNAL_MAX_SECONDS &&
+    directSec >= collectedSec
+  ) {
+    return directSignalWithMeta;
+  }
   return directScore >= Number(collectedSignal.score || 0)
     ? directSignalWithMeta
     : collectedSignal;
+}
+
+function resolveBattleSceneImpactOptionsFromAutoSummary(summaryInput, eventSignalInput) {
+  const eventSignal =
+    eventSignalInput && typeof eventSignalInput === "object"
+      ? eventSignalInput
+      : null;
+  if (
+    eventSignal?.impactOptions &&
+    typeof eventSignal.impactOptions === "object"
+  ) {
+    return eventSignal.impactOptions;
+  }
+  const summary = summaryInput && typeof summaryInput === "object" ? summaryInput : null;
+  const lastEngineOutcome =
+    summary?.lastEngineOutcome && typeof summary.lastEngineOutcome === "object"
+      ? summary.lastEngineOutcome
+      : null;
+  if (
+    (lastEngineOutcome?.source === "battle" || lastEngineOutcome?.source === "breakthrough") &&
+    lastEngineOutcome.outcome &&
+    typeof lastEngineOutcome.outcome === "object"
+  ) {
+    return {
+      source: lastEngineOutcome.source,
+      outcome: lastEngineOutcome.outcome,
+    };
+  }
+  return undefined;
 }
 
 function playBattleSceneAutoSummary(summaryInput, sourceLabel = "자동 진행") {
@@ -5480,17 +5568,17 @@ function playBattleSceneAutoSummary(summaryInput, sourceLabel = "자동 진행")
   if (eventSignal?.resultHintKo) {
     parts.push(`최근 이벤트 ${eventSignal.resultHintKo}`);
   }
+  const impactOptions = resolveBattleSceneImpactOptionsFromAutoSummary(
+    summary,
+    eventSignal,
+  );
 
   setBattleSceneStatus(statusText, tone);
   setBattleSceneResult(
     `${sourceLabel} · ${parts.length > 0 ? parts.join(" · ") : "변화 없음"}`,
     tone,
   );
-  triggerBattleSceneImpact(
-    impactKind,
-    tone,
-    eventSignal?.impactOptions,
-  );
+  triggerBattleSceneImpact(impactKind, tone, impactOptions);
 
   if (battles > 0) {
     spawnBattleSceneFloat(`전투 +${battles}`, {
@@ -5542,10 +5630,15 @@ function playBattleSceneOfflineSummary(offlineReportInput) {
   const breakthroughs = Math.max(0, Number(auto.breakthroughs) || 0);
   const battles = Math.max(0, Number(auto.battles) || 0);
   const blockedLabel = buildAutoBreakthroughBlockSummaryLabelKo(auto);
-  const eventSignal = resolveBattleSceneEventSignalFromAutoSummary({
+  const autoSummaryForSignal = {
     ...auto,
     collectedEvents: Array.isArray(report?.events) ? report.events : auto.collectedEvents,
-  });
+  };
+  const eventSignal = resolveBattleSceneEventSignalFromAutoSummary(autoSummaryForSignal);
+  const impactOptions = resolveBattleSceneImpactOptionsFromAutoSummary(
+    autoSummaryForSignal,
+    eventSignal,
+  );
   const tone = eventSignal
     ? eventSignal.tone
     : rebirths > 0
@@ -5572,11 +5665,7 @@ function playBattleSceneOfflineSummary(offlineReportInput) {
     }`,
     tone,
   );
-  triggerBattleSceneImpact(
-    impactKind,
-    tone,
-    eventSignal?.impactOptions,
-  );
+  triggerBattleSceneImpact(impactKind, tone, impactOptions);
   if ((Number(delta.qi) || 0) !== 0) {
     spawnBattleSceneFloat(`기 ${fmtSignedInteger(delta.qi)}`, {
       tone: delta.qi >= 0 ? "success" : "error",

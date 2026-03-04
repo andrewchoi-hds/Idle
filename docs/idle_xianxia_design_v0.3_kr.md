@@ -2434,3 +2434,11 @@
 
 ## 573) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(일시정지 연속 차단 횟수 메타 + direct outcome 복원 정합 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 574) 다음 순차 작업
+1. [완료] `resolveBattleSceneEventSignalFromAutoSummary`에 단기 요약 우선 규칙(`summary.seconds <= 12`)을 추가해 `lastEngineOutcome` direct signal이 최신 `sec` 기준으로 `collectedEvents`보다 먼저 선택되도록 보정하고, 실시간/자동 10초 경로에서 직전 `runBattleOnce/runBreakthroughAttempt` 결과 반영 지연을 줄임.
+2. [완료] 요약 신호 fallback 헬퍼(`resolveBattleSceneImpactOptionsFromAutoSummary`)를 추가해 `playBattleSceneAutoSummary`/`playBattleSceneOfflineSummary`가 `eventSignal`이 비어도 `lastEngineOutcome(source/outcome)`를 `triggerBattleSceneImpact`에 직접 전달하도록 정합 강화.
+3. [완료] 결과 기반 장식 suppression window(`BATTLE_SCENE_RESULT_DRIVEN_DECORATION_SUPPRESSION_WINDOW_MS = 3800`)를 도입해 outcome 우선 구간에서 ambient `zoom/hitstop/cast telegraph/charge mote` 트리거 빈도를 추가 하향하고 랜덤 장식 비중을 축소.
+
+## 575) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(단기 요약 direct signal 우선 + lastEngineOutcome impact fallback + 장식 suppression window 확장 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
