@@ -381,6 +381,12 @@ async function main() {
     "app.mjs",
     failures,
   );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_PRIORITY_AMBIENT_NARRATIVE_SUPPRESSION_WINDOW_MS = 5200;",
+    "app.mjs",
+    failures,
+  );
   assertIncludes(app, "battleSceneLastResultDrivenImpactAtMs", "app.mjs", failures);
   assertIncludes(
     app,
@@ -421,7 +427,9 @@ async function main() {
     failures,
   );
   assertIncludes(app, "holdDuelTickByOutcome", "app.mjs", failures);
+  assertIncludes(app, "suppressAmbientNarrative", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneOutcomePriority", "app.mjs", failures);
+  assertIncludes(app, '? "narrative"', "app.mjs", failures);
   assertIncludes(app, "function pushBattleSceneTicker(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneSkillBanner(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneActorFrame(", "app.mjs", failures);

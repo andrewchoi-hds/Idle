@@ -538,6 +538,7 @@ const BATTLE_SCENE_SHORT_SUMMARY_DIRECT_SIGNAL_MAX_SECONDS = 12;
 const BATTLE_SCENE_RESULT_PRIORITY_DUEL_TICK_DIVISOR = 2;
 const BATTLE_SCENE_RESULT_PRIORITY_STRIKE_CHANCE_SCALE = 0.42;
 const BATTLE_SCENE_RESULT_PRIORITY_DUEL_HOLD_WINDOW_MS = 1800;
+const BATTLE_SCENE_RESULT_PRIORITY_AMBIENT_NARRATIVE_SUPPRESSION_WINDOW_MS = 5200;
 const BATTLE_SCENE_DUEL_MAX_HP = 100;
 const BATTLE_SCENE_DUEL_MAX_CAST = 100;
 const BATTLE_SCENE_TICKER_MAX = 5;
@@ -3239,11 +3240,16 @@ function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true, opti
   const defenderAnchor = attacker === "player" ? "enemy" : "player";
   const fromAmbient = options.fromAmbient === true;
   const resultPrioritySuppressed = options.resultPrioritySuppressed === true;
+  const suppressAmbientNarrative = options.suppressAmbientNarrative === true;
   const allowKineticFx =
     !resultPrioritySuppressed ||
     Math.random() < (mode === "realtime" ? 0.34 : mode === "auto" ? 0.26 : 0.2);
-  const allowAmbientTicker = !resultPrioritySuppressed || Math.random() < 0.52;
-  const allowAmbientBanner = !resultPrioritySuppressed || Math.random() < 0.38;
+  const allowAmbientTicker =
+    !suppressAmbientNarrative &&
+    (!resultPrioritySuppressed || Math.random() < 0.52);
+  const allowAmbientBanner =
+    !suppressAmbientNarrative &&
+    (!resultPrioritySuppressed || Math.random() < 0.38);
   const tone = attacker === "player" ? "success" : "warn";
   const skillPool =
     attacker === "player"
@@ -3333,10 +3339,13 @@ function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true, opt
   const attackerAnchor = attacker === "player" ? "player" : "enemy";
   const fromAmbient = options.fromAmbient === true;
   const resultPrioritySuppressed = options.resultPrioritySuppressed === true;
+  const suppressAmbientNarrative = options.suppressAmbientNarrative === true;
   const allowKineticFx =
     !resultPrioritySuppressed ||
     Math.random() < (mode === "realtime" ? 0.42 : mode === "auto" ? 0.34 : 0.26);
-  const allowAmbientTicker = !resultPrioritySuppressed || Math.random() < 0.48;
+  const allowAmbientTicker =
+    !suppressAmbientNarrative &&
+    (!resultPrioritySuppressed || Math.random() < 0.48);
   const tone = attacker === "player" ? "success" : "warn";
   const [minDamage, maxDamage] =
     mode === "realtime" ? [7, 13] : mode === "auto" ? [5, 9] : [3, 6];
@@ -3443,6 +3452,7 @@ function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true, opt
 function runBattleSceneDuelTick(mode = "idle", options = {}) {
   const visuals = options.visuals !== false;
   const resultPrioritySuppressed = options.resultPrioritySuppressed === true;
+  const suppressAmbientNarrative = options.suppressAmbientNarrative === true;
   const baseStrikeAttempts = mode === "realtime" ? 2 : 1;
   const strikeAttempts = resultPrioritySuppressed ? 1 : baseStrikeAttempts;
   const baseStrikeChance = mode === "realtime" ? 0.92 : mode === "auto" ? 0.76 : 0.52;
@@ -3460,6 +3470,7 @@ function runBattleSceneDuelTick(mode = "idle", options = {}) {
     applyBattleSceneDuelStrike(attacker, mode, visuals, {
       fromAmbient: true,
       resultPrioritySuppressed,
+      suppressAmbientNarrative,
     });
     strikeHappened = true;
   }
@@ -3472,6 +3483,7 @@ function runBattleSceneDuelTick(mode = "idle", options = {}) {
       );
       if (
         battleSceneDuelState.combo === 0 &&
+        !suppressAmbientNarrative &&
         Math.random() < (resultPrioritySuppressed ? 0.08 : 0.2)
       ) {
         pushBattleSceneTicker("연격 종료 · 기세 재정렬", "info");
@@ -3504,7 +3516,10 @@ function runBattleSceneDuelTick(mode = "idle", options = {}) {
           anchor: "center",
         });
       }
-      if (!resultPrioritySuppressed || Math.random() < 0.4) {
+      if (
+        !suppressAmbientNarrative &&
+        (!resultPrioritySuppressed || Math.random() < 0.4)
+      ) {
         pushBattleSceneTicker(
           `${battleSceneDuelState.round}R 종료 · ${playerWon ? "수련자 우세" : "적수 우세"}`,
           tone,
@@ -4176,11 +4191,16 @@ function runBattleSceneAmbientTick() {
   const holdDuelTickByOutcome =
     prioritizeOutcomeSignals &&
     resultDrivenQuietMs < BATTLE_SCENE_RESULT_PRIORITY_DUEL_HOLD_WINDOW_MS;
+  const suppressAmbientNarrative =
+    prioritizeOutcomeSignals &&
+    resultDrivenQuietMs < BATTLE_SCENE_RESULT_PRIORITY_AMBIENT_NARRATIVE_SUPPRESSION_WINDOW_MS;
   const suppressAmbientDecorations =
     prioritizeOutcomeSignals &&
     resultDrivenQuietMs < BATTLE_SCENE_RESULT_DRIVEN_DECORATION_SUPPRESSION_WINDOW_MS;
   dom.battleSceneArena.dataset.sceneOutcomePriority = holdDuelTickByOutcome
     ? "hold"
+    : suppressAmbientNarrative
+      ? "narrative"
     : prioritizeOutcomeSignals
       ? "suppressed"
       : "normal";
@@ -4192,6 +4212,7 @@ function runBattleSceneAmbientTick() {
     runBattleSceneDuelTick(mode, {
       visuals: !reducedMotion && !lowPerformanceMode && !prioritizeOutcomeSignals,
       resultPrioritySuppressed: prioritizeOutcomeSignals,
+      suppressAmbientNarrative,
     });
   }
   const playerHpPct = Math.round(
@@ -4525,6 +4546,7 @@ function runBattleSceneAmbientTick() {
   }
 
   if (
+    !suppressAmbientNarrative &&
     quietMs > (lowPerformanceMode ? 10000 : 8000) &&
     battleSceneAmbientStep % (lowPerformanceMode ? 8 : 6) === 0
   ) {

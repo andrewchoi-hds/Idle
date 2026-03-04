@@ -203,6 +203,7 @@ npm run mobile:mvp:serve
   - `runBattleSceneDuelTick(..., { resultPrioritySuppressed })`를 도입해 결과 우선 구간에서 ambient strike/burst의 kinetic 연출(camera/zoom/hitstop/impact/ticker/banner) 빈도를 추가로 하향하고, `fromAmbient` 플래그 경로로만 제한적 재생되도록 정합화
   - 결과 우선 cadence 제어(`BATTLE_SCENE_RESULT_PRIORITY_DUEL_TICK_DIVISOR=2`, `BATTLE_SCENE_RESULT_PRIORITY_STRIKE_CHANCE_SCALE=0.42`)를 추가해 outcome 우선 구간에서는 duel tick 실행 주기와 strike 확률을 동시에 하향하고, ambient 라운드 리셋을 지연해 엔진 실결과 연출 비중을 유지
   - 결과 우선 hold window(`BATTLE_SCENE_RESULT_PRIORITY_DUEL_HOLD_WINDOW_MS=1800ms`)를 추가해 explicit 결과 직후 초반 구간은 duel tick을 일시 중단하고, arena dataset(`data-scene-outcome-priority=hold/suppressed/normal`)으로 현재 우선 모드를 명시
+  - 결과 우선 내러티브 suppression window(`BATTLE_SCENE_RESULT_PRIORITY_AMBIENT_NARRATIVE_SUPPRESSION_WINDOW_MS=5200ms`)를 추가해 hold 이후 suppressed 구간에서도 ambient ticker/banner/status 갱신을 억제하고, arena dataset을 `hold/narrative/suppressed/normal`로 확장
   - 저사양 모드(`lowPerformanceBattleScene`)에서는 ambient duel visuals를 비활성화하고 pulse cadence/확률/장식 레이어 cap(`spark/trail/shockwave`)을 하향해 모바일 저사양 기기에서 프레임 드랍을 줄이도록 구성
   - `prefers-reduced-motion` 환경에서는 danger pulse/pressure spike/lead swing/hit-stop/telegraph shockwave/charge mote/spark/trail 등 모션 이펙트를 비활성화하되 듀얼 HUD 수치(HP/기세)와 배우 프레임 상태 전환은 유지해 상태 가시성을 확보
   - 상시 연출 애니메이션(오라 드리프트/actor idle/오버레이 pulse)과 임팩트 연출(타격/돌파 burst·collapse)을 분리해 자동 루프 중에도 시각 피드백을 유지하고, `prefers-reduced-motion` 환경에서는 해당 애니메이션을 비활성화
@@ -293,6 +294,7 @@ npm run mobile:mvp:check
   - 결과 우선 구간(`2.6~6.2초`)에서 `runBattleSceneDuelTick`의 strike/burst가 `resultPrioritySuppressed`로 동작해 ambient kinetic 연출(impact/ticker/banner)이 평시 대비 낮은 빈도로만 발생하는지 검증
   - 결과 우선 구간에서 duel tick cadence(`1/2`)와 strike chance scale(`0.42`)이 동시에 적용되어 라운드 종료(ambient reset) 빈도가 감소하고, HP 0 도달 시 즉시 라운드 리셋 대신 지연 처리되는지 검증
   - 결과 직후 hold 구간(`1.8초`)에서 duel tick이 실제로 스킵되고(`data-scene-outcome-priority=hold`), 이후 suppressed 단계로 전환되어 cadence 기반으로 재개되는지 검증
+  - 결과 우선 내러티브 구간(`5.2초`)에서 ambient strike/burst ticker/banner 및 주기적 상태 문구 갱신이 억제되고(`data-scene-outcome-priority=narrative`), 윈도우 종료 후에만 순환 문구가 재개되는지 검증
   - 기 부족 돌파 차단
   - 사망 실패 → 환생 루프 발동
   - 돌파 확률 프리뷰 4분기 분포(`성공+경상+후퇴+사망=100%`) 일관성 검증
