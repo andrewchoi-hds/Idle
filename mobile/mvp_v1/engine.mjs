@@ -3647,6 +3647,7 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
     autoBreakthroughPauseReasonLabelKo: "",
     autoBreakthroughPauseNextActionKo: "",
     autoBreakthroughPauseThreshold: 0,
+    autoBreakthroughPauseConsecutiveBlocks: 0,
     autoBreakthroughPauseAtSec: 0,
     lastEngineOutcome: null,
     rebirths: 0,
@@ -3775,6 +3776,7 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
             breakthrough.autoPolicy?.nextActionKo || "";
           summary.autoBreakthroughPauseThreshold =
             autoBreakthroughPausePolicyBlockThreshold;
+          summary.autoBreakthroughPauseConsecutiveBlocks = consecutivePolicyBlocks;
           summary.autoBreakthroughPauseAtSec = timelineSec;
           if (!suppressLogs) {
             const nextActionKo = summary.autoBreakthroughPauseNextActionKo;
@@ -3853,10 +3855,33 @@ export function runAutoSliceSeconds(context, state, rng, options = {}) {
       } else {
         consecutivePolicyBlocks = 0;
       }
+      const lastBreakthroughOutcome = { ...breakthrough };
+      if (
+        summary.autoBreakthroughPaused &&
+        breakthrough.outcome === "blocked_auto_risk_policy" &&
+        (!summary.autoBreakthroughPauseReason ||
+          !lastBreakthroughOutcome.autoPolicy?.reason ||
+          summary.autoBreakthroughPauseReason === lastBreakthroughOutcome.autoPolicy.reason)
+      ) {
+        lastBreakthroughOutcome.pausedByPolicy = true;
+        lastBreakthroughOutcome.autoBreakthroughPaused = true;
+        lastBreakthroughOutcome.pauseThreshold =
+          summary.autoBreakthroughPauseThreshold;
+        lastBreakthroughOutcome.consecutiveBlocks =
+          summary.autoBreakthroughPauseConsecutiveBlocks;
+        lastBreakthroughOutcome.reason =
+          summary.autoBreakthroughPauseReason || lastBreakthroughOutcome.reason;
+        lastBreakthroughOutcome.reasonLabelKo =
+          summary.autoBreakthroughPauseReasonLabelKo ||
+          lastBreakthroughOutcome.reasonLabelKo;
+        lastBreakthroughOutcome.nextActionKo =
+          summary.autoBreakthroughPauseNextActionKo ||
+          lastBreakthroughOutcome.nextActionKo;
+      }
       summary.lastEngineOutcome = {
         source: "breakthrough",
         sec: timelineSec,
-        outcome: { ...breakthrough },
+        outcome: lastBreakthroughOutcome,
       };
     }
   }

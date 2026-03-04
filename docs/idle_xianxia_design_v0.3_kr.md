@@ -2426,3 +2426,11 @@
 
 ## 571) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(자동 일시정지 임계치 메타 + no-events direct signal 복원 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 572) 다음 순차 작업
+1. [완료] `runAutoSliceSeconds` summary에 `autoBreakthroughPauseConsecutiveBlocks`를 추가하고, 일시정지 시점의 실제 연속 차단 횟수를 임계치(`autoBreakthroughPauseThreshold`)와 분리 기록하도록 확장.
+2. [완료] `lastEngineOutcome(source=breakthrough)` 생성 시 일시정지 케이스에 `pausedByPolicy/autoBreakthroughPaused/pauseThreshold/consecutiveBlocks`를 병합해 `collectEvents=false` 경로에서도 일시정지 outcome 메타를 직접 복원 가능하도록 보강.
+3. [완료] 앱 direct signal 복원(`buildBattleSceneCollectedEventFromAutoSummaryLastEngineOutcome`)과 오프라인 라인(`formatOfflineEventLine`)에서 연속 차단 횟수(`consecutiveBlocks`)를 우선 사용하고 임계치(`threshold`)는 보조 표기로 분리해 결과 수치 정합을 강화.
+
+## 573) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(일시정지 연속 차단 횟수 메타 + direct outcome 복원 정합 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
