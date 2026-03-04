@@ -535,6 +535,8 @@ const BATTLE_SCENE_RESULT_PRIORITY_WINDOW_MS = 2600;
 const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_SUPPRESSION_WINDOW_MS = 6200;
 const BATTLE_SCENE_RESULT_DRIVEN_DECORATION_SUPPRESSION_WINDOW_MS = 3800;
 const BATTLE_SCENE_SHORT_SUMMARY_DIRECT_SIGNAL_MAX_SECONDS = 12;
+const BATTLE_SCENE_RESULT_PRIORITY_DUEL_TICK_DIVISOR = 2;
+const BATTLE_SCENE_RESULT_PRIORITY_STRIKE_CHANCE_SCALE = 0.42;
 const BATTLE_SCENE_DUEL_MAX_HP = 100;
 const BATTLE_SCENE_DUEL_MAX_CAST = 100;
 const BATTLE_SCENE_TICKER_MAX = 5;
@@ -3440,8 +3442,12 @@ function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true, opt
 function runBattleSceneDuelTick(mode = "idle", options = {}) {
   const visuals = options.visuals !== false;
   const resultPrioritySuppressed = options.resultPrioritySuppressed === true;
-  const strikeAttempts = mode === "realtime" ? 2 : 1;
-  const strikeChance = mode === "realtime" ? 0.92 : mode === "auto" ? 0.76 : 0.52;
+  const baseStrikeAttempts = mode === "realtime" ? 2 : 1;
+  const strikeAttempts = resultPrioritySuppressed ? 1 : baseStrikeAttempts;
+  const baseStrikeChance = mode === "realtime" ? 0.92 : mode === "auto" ? 0.76 : 0.52;
+  const strikeChance = resultPrioritySuppressed
+    ? baseStrikeChance * BATTLE_SCENE_RESULT_PRIORITY_STRIKE_CHANCE_SCALE
+    : baseStrikeChance;
   let strikeHappened = false;
   for (let i = 0; i < strikeAttempts; i += 1) {
     if (Math.random() > strikeChance) {
@@ -3457,15 +3463,18 @@ function runBattleSceneDuelTick(mode = "idle", options = {}) {
     strikeHappened = true;
   }
   if (!strikeHappened && battleSceneDuelState.combo > 0) {
-    battleSceneDuelState.combo = Math.max(
-      0,
-      battleSceneDuelState.combo - (mode === "realtime" ? 2 : 1),
-    );
-    if (
-      battleSceneDuelState.combo === 0 &&
-      Math.random() < (resultPrioritySuppressed ? 0.08 : 0.2)
-    ) {
-      pushBattleSceneTicker("연격 종료 · 기세 재정렬", "info");
+    const comboDecayStep = resultPrioritySuppressed ? 0 : mode === "realtime" ? 2 : 1;
+    if (comboDecayStep > 0) {
+      battleSceneDuelState.combo = Math.max(
+        0,
+        battleSceneDuelState.combo - comboDecayStep,
+      );
+      if (
+        battleSceneDuelState.combo === 0 &&
+        Math.random() < (resultPrioritySuppressed ? 0.08 : 0.2)
+      ) {
+        pushBattleSceneTicker("연격 종료 · 기세 재정렬", "info");
+      }
     }
     if (battleSceneDuelState.combo <= 0) {
       clearBattleSceneComboBanner();
@@ -3475,31 +3484,39 @@ function runBattleSceneDuelTick(mode = "idle", options = {}) {
   const playerDown = battleSceneDuelState.playerHp <= 0;
   const enemyDown = battleSceneDuelState.enemyHp <= 0;
   if (playerDown || enemyDown) {
-    const playerWon = enemyDown && !playerDown ? true : playerDown && !enemyDown ? false : Math.random() < 0.5;
-    const tone = playerWon ? "success" : "warn";
-    if (visuals && !resultPrioritySuppressed) {
-      triggerBattleSceneImpact(playerWon ? "battle_win" : "battle_loss", tone, {
-        fromAmbient: true,
-        syncDuel: false,
-      });
-      spawnBattleSceneFloat(playerWon ? "환영 승리" : "환영 패배", {
-        tone,
-        anchor: "center",
-      });
+    if (resultPrioritySuppressed) {
+      // 결과 우선 구간에서는 ambient 라운드 리셋을 지연해 엔진 실결과 연출 비중을 유지한다.
+      battleSceneDuelState.playerHp = Math.max(12, battleSceneDuelState.playerHp);
+      battleSceneDuelState.enemyHp = Math.max(12, battleSceneDuelState.enemyHp);
+      battleSceneDuelState.combo = Math.max(0, battleSceneDuelState.combo - 1);
+      clearBattleSceneComboBanner();
+    } else {
+      const playerWon = enemyDown && !playerDown ? true : playerDown && !enemyDown ? false : Math.random() < 0.5;
+      const tone = playerWon ? "success" : "warn";
+      if (visuals && !resultPrioritySuppressed) {
+        triggerBattleSceneImpact(playerWon ? "battle_win" : "battle_loss", tone, {
+          fromAmbient: true,
+          syncDuel: false,
+        });
+        spawnBattleSceneFloat(playerWon ? "환영 승리" : "환영 패배", {
+          tone,
+          anchor: "center",
+        });
+      }
+      if (!resultPrioritySuppressed || Math.random() < 0.4) {
+        pushBattleSceneTicker(
+          `${battleSceneDuelState.round}R 종료 · ${playerWon ? "수련자 우세" : "적수 우세"}`,
+          tone,
+        );
+      }
+      battleSceneDuelState.round += 1;
+      battleSceneDuelState.playerHp = BATTLE_SCENE_DUEL_MAX_HP;
+      battleSceneDuelState.enemyHp = BATTLE_SCENE_DUEL_MAX_HP;
+      battleSceneDuelState.playerCast = rollBattleSceneInteger(12, 34);
+      battleSceneDuelState.enemyCast = rollBattleSceneInteger(12, 34);
+      battleSceneDuelState.combo = 0;
+      clearBattleSceneComboBanner();
     }
-    if (!resultPrioritySuppressed || Math.random() < 0.4) {
-      pushBattleSceneTicker(
-        `${battleSceneDuelState.round}R 종료 · ${playerWon ? "수련자 우세" : "적수 우세"}`,
-        tone,
-      );
-    }
-    battleSceneDuelState.round += 1;
-    battleSceneDuelState.playerHp = BATTLE_SCENE_DUEL_MAX_HP;
-    battleSceneDuelState.enemyHp = BATTLE_SCENE_DUEL_MAX_HP;
-    battleSceneDuelState.playerCast = rollBattleSceneInteger(12, 34);
-    battleSceneDuelState.enemyCast = rollBattleSceneInteger(12, 34);
-    battleSceneDuelState.combo = 0;
-    clearBattleSceneComboBanner();
   }
 
   battleSceneDuelState.dpsMomentum = Math.max(
@@ -4158,10 +4175,15 @@ function runBattleSceneAmbientTick() {
   const suppressAmbientDecorations =
     prioritizeOutcomeSignals &&
     resultDrivenQuietMs < BATTLE_SCENE_RESULT_DRIVEN_DECORATION_SUPPRESSION_WINDOW_MS;
-  runBattleSceneDuelTick(mode, {
-    visuals: !reducedMotion && !lowPerformanceMode,
-    resultPrioritySuppressed: prioritizeOutcomeSignals,
-  });
+  const shouldRunDuelTick =
+    !prioritizeOutcomeSignals ||
+    battleSceneAmbientStep % BATTLE_SCENE_RESULT_PRIORITY_DUEL_TICK_DIVISOR === 0;
+  if (shouldRunDuelTick) {
+    runBattleSceneDuelTick(mode, {
+      visuals: !reducedMotion && !lowPerformanceMode && !prioritizeOutcomeSignals,
+      resultPrioritySuppressed: prioritizeOutcomeSignals,
+    });
+  }
   const playerHpPct = Math.round(
     (clampBattleSceneGauge(battleSceneDuelState.playerHp, BATTLE_SCENE_DUEL_MAX_HP) /
       BATTLE_SCENE_DUEL_MAX_HP) *
