@@ -351,7 +351,27 @@ async function main() {
     "app.mjs",
     failures,
   );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_DECORATION_SUPPRESSION_WINDOW_MS = 3800;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_SHORT_SUMMARY_DIRECT_SIGNAL_MAX_SECONDS = 12;",
+    "app.mjs",
+    failures,
+  );
   assertIncludes(app, "battleSceneLastResultDrivenImpactAtMs", "app.mjs", failures);
+  assertIncludes(
+    app,
+    "summarySeconds <= BATTLE_SCENE_SHORT_SUMMARY_DIRECT_SIGNAL_MAX_SECONDS",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(app, "function resolveBattleSceneImpactOptionsFromAutoSummary(", "app.mjs", failures);
+  assertIncludes(app, "resultPrioritySuppressed", "app.mjs", failures);
   assertIncludes(app, "function spawnBattleSceneShockwave(", "app.mjs", failures);
   assertIncludes(app, "function maybeSpawnBattleSceneCastTelegraph(", "app.mjs", failures);
   assertIncludes(app, "function maybeSpawnBattleSceneChargeMote(", "app.mjs", failures);
