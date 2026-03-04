@@ -261,6 +261,7 @@ npm run mobile:mvp:check
   - 전투 1회 상태 변화
   - `runBattleOnce/runBreakthroughAttempt` 결과가 즉시 duel HUD 및 lead/pressure/danger/combo 트리거로 연결되고, 결과 기반 suppression window(`6.2초`) 동안 ambient 랜덤 트리거 비중이 억제되는지 검증
   - `runAutoSliceSeconds` summary가 `lastEngineOutcome(source/sec/outcome)`를 항상 제공하고, `playBattleSceneAutoSummary`가 `collectedEvents` fallback 전에 마지막 엔진 결과를 직접 해석해 impact/source/outcome을 우선 반영하는지 검증
+  - 자동 돌파 일시정지 summary 메타(`autoBreakthroughPauseThreshold`)가 임계치와 일치하고, `collectEvents=false` 경로에서도 `lastEngineOutcome + pauseThreshold` 조합으로 일시정지 결과 기반 연출 신호를 복원할 수 있는지 검증
   - `runAutoSliceSeconds`/오프라인 정산의 `collectedEvents`가 자동/오프라인 요약 연출에서 우선 해석되어, 최근 이벤트 기준 `impact/tone/source(outcome)`로 듀얼 HUD 동기화가 일관되게 반영되는지 검증
   - `resolveBattleSceneEventSignalScore`가 동일 계열 이벤트에서 최신 이벤트를 우선 선택하고, 고우선 이벤트(`도겁 사망/후퇴/일시정지`)가 집계치 fallback보다 먼저 반영되는지 검증
   - `breakthrough_blocked_no_qi`/`breakthrough_blocked_tribulation_setting` collected event가 자동/오프라인 요약 연출에서 각각 `blocked_no_qi`/`blocked_tribulation_setting` outcome으로 연결되고, 집계치 0이어도 상태/결과 라인이 갱신되는지 검증

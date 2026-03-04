@@ -342,6 +342,7 @@ async function main() {
   assertIncludes(app, "breakthroughNoQiBlocks", "app.mjs", failures);
   assertIncludes(app, "breakthroughTribulationSettingBlocks", "app.mjs", failures);
   assertIncludes(app, "autoBreakthroughPauseNextActionKo", "app.mjs", failures);
+  assertIncludes(app, "autoBreakthroughPauseThreshold", "app.mjs", failures);
   assertIncludes(app, "const BATTLE_SCENE_RESULT_PRIORITY_WINDOW_MS = 2600;", "app.mjs", failures);
   assertIncludes(
     app,

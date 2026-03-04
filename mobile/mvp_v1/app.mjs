@@ -5237,6 +5237,31 @@ function buildBattleSceneCollectedEventFromAutoSummaryLastEngineOutcome(summaryI
       const nextActionKo = String(
         outcome.autoPolicy?.nextActionKo || outcome.nextActionKo || "",
       );
+      const pauseReason = String(summary?.autoBreakthroughPauseReason || "");
+      const pauseReasonLabelKo = String(summary?.autoBreakthroughPauseReasonLabelKo || "");
+      const pauseNextActionKo = String(summary?.autoBreakthroughPauseNextActionKo || "");
+      const pauseThreshold = Math.max(
+        1,
+        Number(summary?.autoBreakthroughPauseThreshold || outcome.pauseThreshold || outcome.threshold) || 1,
+      );
+      const pauseConsecutiveBlocks = Math.max(
+        pauseThreshold,
+        Number(summary?.breakthroughPolicyBlocks || outcome.consecutiveBlocks) || pauseThreshold,
+      );
+      if (
+        summary?.autoBreakthroughPaused === true &&
+        (!pauseReason || !reason || pauseReason === reason)
+      ) {
+        return {
+          sec,
+          kind: "auto_breakthrough_paused_by_policy",
+          threshold: pauseThreshold,
+          consecutiveBlocks: pauseConsecutiveBlocks,
+          reason: pauseReason || reason,
+          reasonLabelKo: pauseReasonLabelKo || reasonLabelKo,
+          nextActionKo: pauseNextActionKo || nextActionKo,
+        };
+      }
       return {
         sec,
         kind: "breakthrough_blocked_auto_policy",
@@ -5336,10 +5361,18 @@ function resolveBattleSceneEventSignalFromAutoSummary(summaryInput) {
     lastEngineOutcome.outcome &&
     typeof lastEngineOutcome.outcome === "object"
   ) {
+    const existingOutcome =
+      directSignalWithMeta.impactOptions?.outcome &&
+      typeof directSignalWithMeta.impactOptions.outcome === "object"
+        ? directSignalWithMeta.impactOptions.outcome
+        : {};
     directSignalWithMeta.impactOptions = {
       ...(directSignalWithMeta.impactOptions || {}),
       source: lastEngineOutcome.source,
-      outcome: lastEngineOutcome.outcome,
+      outcome: {
+        ...existingOutcome,
+        ...lastEngineOutcome.outcome,
+      },
     };
   }
   const directScore =
