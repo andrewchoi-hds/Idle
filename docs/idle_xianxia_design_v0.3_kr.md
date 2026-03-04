@@ -2546,3 +2546,11 @@
 
 ## 601) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(결과 기반 ambient impact replay 예산/간격 제어 + DOM replay 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 602) 다음 순차 작업
+1. [완료] result-driven ambient impact replay 예산을 source-aware 규칙으로 확장해 `battle` 결과는 짧은 재반영(`max=2`), `breakthrough` 결과는 긴 재반영(`max=4`)을 적용하고 기본값(`3`)을 유지.
+2. [완료] `resolveBattleSceneResultDrivenAmbientImpactReplayMax` 헬퍼를 추가해 signal source 기반 replay 상한을 `resolveBattleSceneResultDrivenAmbientImpactSignal`/`setBattleSceneAmbientImpactReplay`/`triggerBattleSceneImpact`/ambient tick 경로에 일관되게 연결.
+3. [완료] DOM contract 및 수직슬라이스 문서에 source-aware replay 예산 토큰(`...MAX_REPLAYS_BATTLE`, `...MAX_REPLAYS_BREAKTHROUGH`, `resolveBattleSceneResultDrivenAmbientImpactReplayMax`)과 회귀 포인트를 동기화.
+
+## 603) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(결과 기반 ambient impact source-aware replay budget 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

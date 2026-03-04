@@ -547,6 +547,8 @@ const BATTLE_SCENE_RESULT_PRIORITY_ACTOR_FRAME_SUPPRESSION_WINDOW_MS = 5400;
 const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS = 6800;
 const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR = 2;
 const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS = 3;
+const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BATTLE = 2;
+const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BREAKTHROUGH = 4;
 const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS = 960;
 const BATTLE_SCENE_DUEL_MAX_HP = 100;
 const BATTLE_SCENE_DUEL_MAX_CAST = 100;
@@ -2437,15 +2439,34 @@ function setBattleSceneAmbientImpactSignal(signalInput, sourceInput = "idle") {
   dom.battleSceneArena.dataset.sceneAmbientImpactKind = kind;
 }
 
-function setBattleSceneAmbientImpactReplay(countInput = 0) {
+function resolveBattleSceneResultDrivenAmbientImpactReplayMax(signalInput) {
+  const signal =
+    signalInput && typeof signalInput === "object" ? signalInput : null;
+  if (signal?.source === "battle") {
+    return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BATTLE;
+  }
+  if (signal?.source === "breakthrough") {
+    return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BREAKTHROUGH;
+  }
+  return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS;
+}
+
+function setBattleSceneAmbientImpactReplay(
+  countInput = 0,
+  maxInput = BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS,
+) {
   if (!dom.battleSceneArena) {
     return;
   }
   const count = Math.max(0, Math.round(Number(countInput) || 0));
-  dom.battleSceneArena.dataset.sceneAmbientImpactReplay = String(count);
-  dom.battleSceneArena.dataset.sceneAmbientImpactReplayMax = String(
-    BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS,
+  const replayMax = Math.max(
+    1,
+    Math.round(
+      Number(maxInput) || BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS,
+    ),
   );
+  dom.battleSceneArena.dataset.sceneAmbientImpactReplay = String(count);
+  dom.battleSceneArena.dataset.sceneAmbientImpactReplayMax = String(replayMax);
 }
 
 function resolveBattleSceneResultDrivenAmbientImpactSignal(nowMs = Date.now()) {
@@ -2461,9 +2482,10 @@ function resolveBattleSceneResultDrivenAmbientImpactSignal(nowMs = Date.now()) {
   if (elapsedMs > BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS) {
     return null;
   }
+  const replayMax = resolveBattleSceneResultDrivenAmbientImpactReplayMax(signal);
   if (
     battleSceneLastResultDrivenImpactReplayCount >=
-    BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS
+    replayMax
   ) {
     return null;
   }
@@ -5039,7 +5061,12 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
       );
       battleSceneLastResultDrivenImpactReplayCount = 0;
       battleSceneLastResultDrivenImpactReplayAtMs = 0;
-      setBattleSceneAmbientImpactReplay(0);
+      setBattleSceneAmbientImpactReplay(
+        0,
+        resolveBattleSceneResultDrivenAmbientImpactReplayMax(
+          battleSceneLastResultDrivenImpactSignal,
+        ),
+      );
     }
   }
   const impactClass =
@@ -5487,6 +5514,9 @@ function runBattleSceneAmbientTick() {
   const resultDrivenImpactSignal = resolveBattleSceneResultDrivenAmbientImpactSignal(now);
   const useResultDrivenAmbientImpact =
     prioritizeOutcomeSignals && !!resultDrivenImpactSignal;
+  const resultDrivenAmbientReplayMax = resolveBattleSceneResultDrivenAmbientImpactReplayMax(
+    resultDrivenImpactSignal,
+  );
   const allowRandomAmbientImpact = !prioritizeOutcomeSignals;
   const ambientImpactCadenceDivisor = useResultDrivenAmbientImpact
     ? 1
@@ -5518,6 +5548,7 @@ function runBattleSceneAmbientTick() {
       battleSceneLastResultDrivenImpactReplayAtMs = now;
       setBattleSceneAmbientImpactReplay(
         battleSceneLastResultDrivenImpactReplayCount,
+        resultDrivenAmbientReplayMax,
       );
       setBattleSceneAmbientImpactSource("result");
       setBattleSceneAmbientImpactSignal(
