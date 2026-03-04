@@ -2530,3 +2530,11 @@
 
 ## 597) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(결과 우선 ambient impact 재사용 + 랜덤 cadence 하향 + `data-scene-ambient-impact` 출처 관찰 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 598) 다음 순차 작업
+1. [완료] ambient impact 계측 함수를 `setBattleSceneAmbientImpactSignal`로 확장해 arena dataset에 출처 분해(`data-scene-ambient-impact-source`)와 신호 kind(`data-scene-ambient-impact-kind`)를 직접 기록하도록 보강.
+2. [완료] `triggerBattleSceneImpact`의 실결과 신호 저장 및 `runBattleSceneAmbientTick`의 result/random/idle 분기에서 ambient impact 세부 신호를 함께 갱신해, 결과 재사용/랜덤 fallback/유휴 전환이 DOM 레벨에서 추적 가능하도록 정합화.
+3. [완료] DOM contract/수직슬라이스 문서에 신규 토큰(`setBattleSceneAmbientImpactSignal`, `sceneAmbientImpactSource`, `sceneAmbientImpactKind`)과 출처/신호 kind 회귀 포인트를 동기화.
+
+## 599) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient impact 출처 분해 + 신호 kind DOM 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

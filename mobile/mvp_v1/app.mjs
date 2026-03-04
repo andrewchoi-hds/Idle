@@ -2413,6 +2413,26 @@ function setBattleSceneAmbientImpactSource(source = "idle") {
   dom.battleSceneArena.dataset.sceneAmbientImpact = String(source || "idle");
 }
 
+function setBattleSceneAmbientImpactSignal(signalInput, sourceInput = "idle") {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  const signal =
+    signalInput && typeof signalInput === "object" ? signalInput : null;
+  const source =
+    signal?.source === "battle" || signal?.source === "breakthrough"
+      ? signal.source
+      : sourceInput === "random"
+        ? "random"
+        : "idle";
+  const kind =
+    typeof signal?.kind === "string" && signal.kind
+      ? signal.kind
+      : "none";
+  dom.battleSceneArena.dataset.sceneAmbientImpactSource = source;
+  dom.battleSceneArena.dataset.sceneAmbientImpactKind = kind;
+}
+
 function resolveBattleSceneResultDrivenAmbientImpactSignal(nowMs = Date.now()) {
   const signal =
     battleSceneLastResultDrivenImpactSignal &&
@@ -3487,6 +3507,7 @@ function resetBattleSceneDuelState(options = {}) {
   setBattleSceneImpactKinetic("normal");
   setBattleSceneImpactVfx("normal");
   setBattleSceneAmbientImpactSource("idle");
+  setBattleSceneAmbientImpactSignal(null, "idle");
   battleSceneLastResultDrivenImpactSignal = null;
   if (options.clearTicker) {
     clearBattleSceneTicker();
@@ -4980,6 +5001,10 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
             : undefined,
       };
       setBattleSceneAmbientImpactSource("result");
+      setBattleSceneAmbientImpactSignal(
+        battleSceneLastResultDrivenImpactSignal,
+        source,
+      );
     }
   }
   const impactClass =
@@ -5450,23 +5475,39 @@ function runBattleSceneAmbientTick() {
           },
         );
         setBattleSceneAmbientImpactSource("result");
+        setBattleSceneAmbientImpactSignal(
+          resultDrivenImpactSignal,
+          resultDrivenImpactSignal.source,
+        );
       } else if (mode === "realtime") {
         const random = Math.random();
         const kind = random < 0.58 ? "battle_win" : random < 0.85 ? "battle_loss" : "breakthrough_success";
         const tone = kind === "battle_loss" ? "warn" : "success";
         triggerBattleSceneImpact(kind, tone, { fromAmbient: true });
         setBattleSceneAmbientImpactSource("random");
+        setBattleSceneAmbientImpactSignal(
+          { kind, tone, source: "random" },
+          "random",
+        );
       } else if (mode === "auto") {
         const random = Math.random();
         const kind = random < 0.62 ? "battle_win" : random < 0.86 ? "battle_loss" : "breakthrough_fail";
         const tone = kind === "battle_win" ? "success" : kind === "battle_loss" ? "warn" : "error";
         triggerBattleSceneImpact(kind, tone, { fromAmbient: true });
         setBattleSceneAmbientImpactSource("random");
+        setBattleSceneAmbientImpactSignal(
+          { kind, tone, source: "random" },
+          "random",
+        );
       } else {
         const kind = Math.random() < 0.5 ? "battle_win" : "battle_loss";
         const tone = kind === "battle_win" ? "info" : "warn";
         triggerBattleSceneImpact(kind, tone, { fromAmbient: true });
         setBattleSceneAmbientImpactSource("random");
+        setBattleSceneAmbientImpactSignal(
+          { kind, tone, source: "random" },
+          "random",
+        );
       }
     } else if (
       !resultDrivenImpactSignal &&
@@ -5474,6 +5515,7 @@ function runBattleSceneAmbientTick() {
       battleSceneAmbientStep % (lowPerformanceMode ? 6 : 4) === 0
     ) {
       setBattleSceneAmbientImpactSource("idle");
+      setBattleSceneAmbientImpactSignal(null, "idle");
     }
   }
 
@@ -5657,6 +5699,7 @@ function stopBattleSceneAmbientLoop() {
   setBattleSceneImpactKinetic("normal");
   setBattleSceneImpactVfx("normal");
   setBattleSceneAmbientImpactSource("idle");
+  setBattleSceneAmbientImpactSignal(null, "idle");
   battleSceneLastResultDrivenImpactSignal = null;
   battleSceneDuelState.pressure = "low";
   renderBattleSceneDuelHud();
