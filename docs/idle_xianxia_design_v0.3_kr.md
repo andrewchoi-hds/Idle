@@ -2474,3 +2474,11 @@
 
 ## 583) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(결과 우선 내러티브 suppression window + ambient ticker/status 억제 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 584) 다음 순차 작업
+1. [완료] 결과 우선 ambient SFX suppression 상수(`BATTLE_SCENE_RESULT_PRIORITY_AMBIENT_SFX_SUPPRESSION_WINDOW_MS=5600`, `BATTLE_SCENE_RESULT_PRIORITY_AMBIENT_SFX_DIVISOR=3`)를 추가해 결과 직후 구간의 ambient 오디오 pulse를 cadence 기반으로 제한.
+2. [완료] `runBattleSceneAmbientTick`에 `suppressAmbientSfx`/`shouldPlayAmbientSfx` 분기를 추가해 hold 구간에서는 ambient SFX를 스킵하고, 이후 suppression 구간에서는 1/3 cadence로만 재생되도록 정합화.
+3. [완료] DOM contract/수직슬라이스 문서에 신규 토큰(`suppressAmbientSfx`, `shouldPlayAmbientSfx`, `...AMBIENT_SFX_DIVISOR`)과 회귀 시나리오(hold skip + cadence 재생)를 동기화.
+
+## 585) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(결과 우선 ambient SFX cadence suppression 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
