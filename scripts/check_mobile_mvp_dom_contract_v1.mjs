@@ -411,6 +411,12 @@ async function main() {
     "app.mjs",
     failures,
   );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_PRIORITY_ACTOR_FRAME_SUPPRESSION_WINDOW_MS = 5400;",
+    "app.mjs",
+    failures,
+  );
   assertIncludes(app, "battleSceneLastResultDrivenImpactAtMs", "app.mjs", failures);
   assertIncludes(
     app,
@@ -455,6 +461,7 @@ async function main() {
   assertIncludes(app, "suppressAmbientSfx", "app.mjs", failures);
   assertIncludes(app, "shouldPlayAmbientSfx", "app.mjs", failures);
   assertIncludes(app, "allowAmbientTransitions", "app.mjs", failures);
+  assertIncludes(app, "suppressAmbientActorFrames", "app.mjs", failures);
   assertIncludes(
     app,
     "battleSceneAmbientStep % BATTLE_SCENE_RESULT_PRIORITY_TRANSITION_DIVISOR === 0",

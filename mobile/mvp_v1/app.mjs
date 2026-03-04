@@ -543,6 +543,7 @@ const BATTLE_SCENE_RESULT_PRIORITY_AMBIENT_SFX_SUPPRESSION_WINDOW_MS = 5600;
 const BATTLE_SCENE_RESULT_PRIORITY_AMBIENT_SFX_DIVISOR = 3;
 const BATTLE_SCENE_RESULT_PRIORITY_TRANSITION_DIVISOR = 4;
 const BATTLE_SCENE_RESULT_PRIORITY_COMBO_BANNER_MIN_COMBO = 9;
+const BATTLE_SCENE_RESULT_PRIORITY_ACTOR_FRAME_SUPPRESSION_WINDOW_MS = 5400;
 const BATTLE_SCENE_DUEL_MAX_HP = 100;
 const BATTLE_SCENE_DUEL_MAX_CAST = 100;
 const BATTLE_SCENE_TICKER_MAX = 5;
@@ -3245,6 +3246,7 @@ function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true, opti
   const fromAmbient = options.fromAmbient === true;
   const resultPrioritySuppressed = options.resultPrioritySuppressed === true;
   const suppressAmbientNarrative = options.suppressAmbientNarrative === true;
+  const suppressAmbientActorFrames = options.suppressAmbientActorFrames === true;
   const allowKineticFx =
     !resultPrioritySuppressed ||
     Math.random() < (mode === "realtime" ? 0.34 : mode === "auto" ? 0.26 : 0.2);
@@ -3312,8 +3314,10 @@ function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true, opti
   if (shouldShowComboBanner) {
     setBattleSceneComboBanner(battleSceneDuelState.combo, tone);
   }
-  setBattleSceneActorFrame(attacker, "skill");
-  setBattleSceneActorFrame(defenderAnchor, "hit");
+  if (!suppressAmbientActorFrames) {
+    setBattleSceneActorFrame(attacker, "skill");
+    setBattleSceneActorFrame(defenderAnchor, "hit");
+  }
   if (allowAmbientTicker) {
     pushBattleSceneTicker(
       `${attacker === "player" ? "수련자" : "적수"} 비기 ${skillLabel} · ${burstDamage}`,
@@ -3350,6 +3354,7 @@ function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true, opt
   const fromAmbient = options.fromAmbient === true;
   const resultPrioritySuppressed = options.resultPrioritySuppressed === true;
   const suppressAmbientNarrative = options.suppressAmbientNarrative === true;
+  const suppressAmbientActorFrames = options.suppressAmbientActorFrames === true;
   const allowKineticFx =
     !resultPrioritySuppressed ||
     Math.random() < (mode === "realtime" ? 0.42 : mode === "auto" ? 0.34 : 0.26);
@@ -3424,8 +3429,10 @@ function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true, opt
       isCrit ? "error" : tone,
     );
   }
-  setBattleSceneActorFrame(attacker, "attack");
-  setBattleSceneActorFrame(defenderAnchor, "hit");
+  if (!suppressAmbientActorFrames) {
+    setBattleSceneActorFrame(attacker, "attack");
+    setBattleSceneActorFrame(defenderAnchor, "hit");
+  }
   if ((isCrit || damage >= 12) && allowAmbientTicker) {
     pushBattleSceneTicker(
       `${attacker === "player" ? "수련자" : "적수"} ${isCrit ? "치명타" : "강타"} · ${damage}`,
@@ -3469,6 +3476,7 @@ function runBattleSceneDuelTick(mode = "idle", options = {}) {
   const visuals = options.visuals !== false;
   const resultPrioritySuppressed = options.resultPrioritySuppressed === true;
   const suppressAmbientNarrative = options.suppressAmbientNarrative === true;
+  const suppressAmbientActorFrames = options.suppressAmbientActorFrames === true;
   const baseStrikeAttempts = mode === "realtime" ? 2 : 1;
   const strikeAttempts = resultPrioritySuppressed ? 1 : baseStrikeAttempts;
   const baseStrikeChance = mode === "realtime" ? 0.92 : mode === "auto" ? 0.76 : 0.52;
@@ -3487,6 +3495,7 @@ function runBattleSceneDuelTick(mode = "idle", options = {}) {
       fromAmbient: true,
       resultPrioritySuppressed,
       suppressAmbientNarrative,
+      suppressAmbientActorFrames,
     });
     strikeHappened = true;
   }
@@ -4213,6 +4222,9 @@ function runBattleSceneAmbientTick() {
   const suppressAmbientSfx =
     prioritizeOutcomeSignals &&
     resultDrivenQuietMs < BATTLE_SCENE_RESULT_PRIORITY_AMBIENT_SFX_SUPPRESSION_WINDOW_MS;
+  const suppressAmbientActorFrames =
+    prioritizeOutcomeSignals &&
+    resultDrivenQuietMs < BATTLE_SCENE_RESULT_PRIORITY_ACTOR_FRAME_SUPPRESSION_WINDOW_MS;
   const suppressAmbientDecorations =
     prioritizeOutcomeSignals &&
     resultDrivenQuietMs < BATTLE_SCENE_RESULT_DRIVEN_DECORATION_SUPPRESSION_WINDOW_MS;
@@ -4232,6 +4244,7 @@ function runBattleSceneAmbientTick() {
       visuals: !reducedMotion && !lowPerformanceMode && !prioritizeOutcomeSignals,
       resultPrioritySuppressed: prioritizeOutcomeSignals,
       suppressAmbientNarrative,
+      suppressAmbientActorFrames,
     });
   }
   const playerHpPct = Math.round(

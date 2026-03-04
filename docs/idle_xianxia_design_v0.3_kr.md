@@ -2490,3 +2490,11 @@
 
 ## 587) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(결과 우선 전이 cadence + combo 배너 최소 연격 게이트 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 588) 다음 순차 작업
+1. [완료] 결과 우선 actor frame suppression 상수(`BATTLE_SCENE_RESULT_PRIORITY_ACTOR_FRAME_SUPPRESSION_WINDOW_MS=5400`)를 추가하고 `runBattleSceneAmbientTick`에서 `suppressAmbientActorFrames`를 계산해 outcome 우선 구간에 ambient 배우 프레임 갱신 억제를 적용.
+2. [완료] `applyBattleSceneDuelStrike`/`applyBattleSceneDuelBurst`에 `suppressAmbientActorFrames` 옵션을 연결해 ambient strike/burst 경로가 결과 우선 구간에서는 `setBattleSceneActorFrame(attack/hit/skill)` 호출을 생략하도록 정합화.
+3. [완료] DOM contract/수직슬라이스 문서에 신규 토큰(`BATTLE_SCENE_RESULT_PRIORITY_ACTOR_FRAME_SUPPRESSION_WINDOW_MS`, `suppressAmbientActorFrames`)과 회귀 포인트(5.4초 actor frame suppression window)를 동기화.
+
+## 589) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(결과 우선 actor frame suppression window + ambient 배우 프레임 덮어쓰기 억제 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
