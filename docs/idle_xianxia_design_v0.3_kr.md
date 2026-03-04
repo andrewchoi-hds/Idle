@@ -2466,3 +2466,11 @@
 
 ## 581) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(결과 직후 duel hold window + outcome-priority dataset 상태 동기화 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 582) 다음 순차 작업
+1. [완료] 결과 우선 내러티브 suppression 상수(`BATTLE_SCENE_RESULT_PRIORITY_AMBIENT_NARRATIVE_SUPPRESSION_WINDOW_MS=5200`)를 추가해 explicit 결과 이후 구간에서 ambient ticker/banner/status 자동 갱신이 제한되도록 확장.
+2. [완료] `runBattleSceneAmbientTick`에서 `suppressAmbientNarrative`를 계산해 duel tick 옵션(`suppressAmbientNarrative`)과 arena dataset(`data-scene-outcome-priority`)에 반영하고, 상태값을 `hold/narrative/suppressed/normal`로 세분화.
+3. [완료] `applyBattleSceneDuelStrike`/`applyBattleSceneDuelBurst`/`runBattleSceneDuelTick`의 ambient ticker 분기를 `suppressAmbientNarrative`로 게이트하고, 주기 상태 문구 블록도 동일 윈도우에서 억제되도록 정합화.
+
+## 583) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(결과 우선 내러티브 suppression window + ambient ticker/status 억제 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
