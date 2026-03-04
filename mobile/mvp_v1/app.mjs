@@ -1289,24 +1289,180 @@ function resetBattleSceneActorFrames() {
   }
 }
 
-function applyBattleSceneImpactActorFrames(kind) {
+function resolveBattleSceneImpactActorFrameCue(kind, options = {}) {
+  const source =
+    options?.source === "battle" || options?.source === "breakthrough"
+      ? options.source
+      : "";
+  const outcome = options?.outcome && typeof options.outcome === "object" ? options.outcome : null;
+  if (source === "battle" && outcome) {
+    if (outcome.won === true) {
+      const qiGain = Math.max(0, Math.round(Number(outcome.qiDelta) || 0));
+      const essenceGain = Math.max(0, Math.round(Number(outcome.rebirthEssenceDelta) || 0));
+      const playerFrame = qiGain >= 14 || essenceGain > 0 ? "skill" : "attack";
+      const playerHoldMs = playerFrame === "skill" ? 720 : 420;
+      const enemyHoldMs = playerFrame === "skill" ? 540 : 460;
+      return {
+        cue: playerFrame === "skill" ? "battle_win_skill_finisher" : "battle_win_attack_finisher",
+        playerFrame,
+        playerHoldMs,
+        enemyFrame: "hit",
+        enemyHoldMs,
+      };
+    }
+    const qiLoss = Math.max(0, Math.abs(Math.round(Number(outcome.qiDelta) || 0)));
+    const enemyFrame = qiLoss >= 10 ? "skill" : "attack";
+    return {
+      cue: enemyFrame === "skill" ? "battle_loss_heavy_counter" : "battle_loss_counter",
+      playerFrame: "hit",
+      playerHoldMs: enemyFrame === "skill" ? 620 : 500,
+      enemyFrame,
+      enemyHoldMs: enemyFrame === "skill" ? 640 : 420,
+    };
+  }
+  if (source === "breakthrough" && outcome) {
+    const outcomeCode = String(outcome.outcome || "");
+    const pausedByPolicy =
+      outcome.pausedByPolicy === true || outcome.autoBreakthroughPaused === true;
+    if (outcome.attempted === true) {
+      if (outcomeCode === "success") {
+        return {
+          cue: "breakthrough_success",
+          playerFrame: "skill",
+          playerHoldMs: 680,
+          enemyFrame: "hit",
+          enemyHoldMs: 420,
+        };
+      }
+      if (outcomeCode === "minor_fail") {
+        return {
+          cue: "breakthrough_minor_fail",
+          playerFrame: "hit",
+          playerHoldMs: 560,
+          enemyFrame: "attack",
+          enemyHoldMs: 420,
+        };
+      }
+      if (outcomeCode === "retreat_fail") {
+        return {
+          cue: "breakthrough_retreat_fail",
+          playerFrame: "hit",
+          playerHoldMs: 640,
+          enemyFrame: "skill",
+          enemyHoldMs: 620,
+        };
+      }
+      if (outcomeCode === "death_fail") {
+        return {
+          cue: "breakthrough_death_fail",
+          playerFrame: "hit",
+          playerHoldMs: 760,
+          enemyFrame: "skill",
+          enemyHoldMs: 760,
+        };
+      }
+      return {
+        cue: "breakthrough_fail_generic",
+        playerFrame: "hit",
+        playerHoldMs: 520,
+        enemyFrame: "idle",
+        enemyHoldMs: 0,
+      };
+    }
+    if (outcomeCode === "blocked_no_qi") {
+      return {
+        cue: "breakthrough_blocked_no_qi",
+        playerFrame: "idle",
+        playerHoldMs: 0,
+        enemyFrame: "idle",
+        enemyHoldMs: 0,
+      };
+    }
+    if (outcomeCode === "blocked_tribulation_setting") {
+      return {
+        cue: "breakthrough_blocked_tribulation_setting",
+        playerFrame: "idle",
+        playerHoldMs: 0,
+        enemyFrame: "idle",
+        enemyHoldMs: 0,
+      };
+    }
+    if (outcomeCode === "blocked_auto_risk_policy" && pausedByPolicy) {
+      return {
+        cue: "breakthrough_blocked_auto_risk_pause",
+        playerFrame: "hit",
+        playerHoldMs: 660,
+        enemyFrame: "skill",
+        enemyHoldMs: 640,
+      };
+    }
+    if (outcomeCode === "blocked_auto_risk_policy") {
+      const policyReason = String(outcome.autoPolicy?.reason || outcome.reason || "");
+      const enemyFrame = policyReason === "blocked_extreme_risk" ? "skill" : "attack";
+      return {
+        cue:
+          enemyFrame === "skill"
+            ? "breakthrough_blocked_auto_risk_heavy"
+            : "breakthrough_blocked_auto_risk",
+        playerFrame: "hit",
+        playerHoldMs: enemyFrame === "skill" ? 620 : 500,
+        enemyFrame,
+        enemyHoldMs: enemyFrame === "skill" ? 600 : 420,
+      };
+    }
+    return {
+      cue: "breakthrough_blocked_generic",
+      playerFrame: "hit",
+      playerHoldMs: 520,
+      enemyFrame: "idle",
+      enemyHoldMs: 0,
+    };
+  }
   if (kind === "battle_win") {
-    setBattleSceneActorFrame("player", "attack", { holdMs: 380 });
-    setBattleSceneActorFrame("enemy", "hit", { holdMs: 460 });
-    return;
+    return {
+      cue: "battle_win_default",
+      playerFrame: "attack",
+      playerHoldMs: 380,
+      enemyFrame: "hit",
+      enemyHoldMs: 460,
+    };
   }
   if (kind === "battle_loss") {
-    setBattleSceneActorFrame("enemy", "attack", { holdMs: 380 });
-    setBattleSceneActorFrame("player", "hit", { holdMs: 460 });
-    return;
+    return {
+      cue: "battle_loss_default",
+      playerFrame: "hit",
+      playerHoldMs: 460,
+      enemyFrame: "attack",
+      enemyHoldMs: 380,
+    };
   }
   if (kind === "breakthrough_success") {
-    setBattleSceneActorFrame("player", "skill", { holdMs: 680 });
-    setBattleSceneActorFrame("enemy", "hit", { holdMs: 420 });
-    return;
+    return {
+      cue: "breakthrough_success_default",
+      playerFrame: "skill",
+      playerHoldMs: 680,
+      enemyFrame: "hit",
+      enemyHoldMs: 420,
+    };
   }
-  setBattleSceneActorFrame("player", "hit", { holdMs: 520 });
-  setBattleSceneActorFrame("enemy", "idle");
+  return {
+    cue: "breakthrough_fail_default",
+    playerFrame: "hit",
+    playerHoldMs: 520,
+    enemyFrame: "idle",
+    enemyHoldMs: 0,
+  };
+}
+
+function applyBattleSceneImpactActorFrames(kind, options = {}) {
+  const cue = resolveBattleSceneImpactActorFrameCue(kind, options);
+  setBattleSceneActorFrame("player", cue.playerFrame, {
+    holdMs: cue.playerHoldMs,
+  });
+  setBattleSceneActorFrame("enemy", cue.enemyFrame, {
+    holdMs: cue.enemyHoldMs,
+  });
+  return cue.cue;
 }
 
 function setBattleSceneLoopMode(loopMode = "idle") {
@@ -1532,6 +1688,13 @@ function setBattleSceneState(sceneState = "idle") {
     return;
   }
   dom.battleSceneArena.dataset.sceneState = String(sceneState || "idle");
+}
+
+function setBattleSceneImpactCue(cue = "idle") {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  dom.battleSceneArena.dataset.sceneImpactCue = String(cue || "idle");
 }
 
 function normalizeBattleSceneWorld(worldInput) {
@@ -2588,6 +2751,7 @@ function resetBattleSceneDuelState(options = {}) {
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_LEAD_RESONANCE_CLASSES);
   clearBattleSceneComboBanner();
   resetBattleSceneActorFrames();
+  setBattleSceneImpactCue("idle");
   if (options.clearTicker) {
     clearBattleSceneTicker();
   }
@@ -4088,7 +4252,8 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
         : kind === "breakthrough_success"
           ? "breakthrough_success"
           : "breakthrough_fail";
-  applyBattleSceneImpactActorFrames(kind);
+  const impactActorFrameCue = applyBattleSceneImpactActorFrames(kind, options);
+  setBattleSceneImpactCue(impactActorFrameCue);
   dom.battleSceneArena.classList.remove(...BATTLE_SCENE_IMPACT_CLASSES);
   void dom.battleSceneArena.offsetWidth;
   dom.battleSceneArena.classList.add(impactClass);
@@ -4764,6 +4929,7 @@ function stopBattleSceneAmbientLoop() {
     dom.battleSceneShockwaveLayer.innerHTML = "";
   }
   resetBattleSceneActorFrames();
+  setBattleSceneImpactCue("idle");
   battleSceneDuelState.pressure = "low";
   renderBattleSceneDuelHud();
 }
