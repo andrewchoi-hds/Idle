@@ -539,6 +539,8 @@ const BATTLE_SCENE_RESULT_PRIORITY_DUEL_TICK_DIVISOR = 2;
 const BATTLE_SCENE_RESULT_PRIORITY_STRIKE_CHANCE_SCALE = 0.42;
 const BATTLE_SCENE_RESULT_PRIORITY_DUEL_HOLD_WINDOW_MS = 1800;
 const BATTLE_SCENE_RESULT_PRIORITY_AMBIENT_NARRATIVE_SUPPRESSION_WINDOW_MS = 5200;
+const BATTLE_SCENE_RESULT_PRIORITY_AMBIENT_SFX_SUPPRESSION_WINDOW_MS = 5600;
+const BATTLE_SCENE_RESULT_PRIORITY_AMBIENT_SFX_DIVISOR = 3;
 const BATTLE_SCENE_DUEL_MAX_HP = 100;
 const BATTLE_SCENE_DUEL_MAX_CAST = 100;
 const BATTLE_SCENE_TICKER_MAX = 5;
@@ -4194,6 +4196,9 @@ function runBattleSceneAmbientTick() {
   const suppressAmbientNarrative =
     prioritizeOutcomeSignals &&
     resultDrivenQuietMs < BATTLE_SCENE_RESULT_PRIORITY_AMBIENT_NARRATIVE_SUPPRESSION_WINDOW_MS;
+  const suppressAmbientSfx =
+    prioritizeOutcomeSignals &&
+    resultDrivenQuietMs < BATTLE_SCENE_RESULT_PRIORITY_AMBIENT_SFX_SUPPRESSION_WINDOW_MS;
   const suppressAmbientDecorations =
     prioritizeOutcomeSignals &&
     resultDrivenQuietMs < BATTLE_SCENE_RESULT_DRIVEN_DECORATION_SUPPRESSION_WINDOW_MS;
@@ -4240,11 +4245,17 @@ function runBattleSceneAmbientTick() {
   const dangerSide = resolveBattleSceneDangerSide(playerHpPct, enemyHpPct);
   maybeTriggerBattleSceneComboTierTransition(sceneComboTier, { fromAmbient: true });
   maybeTriggerBattleSceneDangerTransition(dangerSide);
-  playBattleSfx("ambient", {
-    mode,
-    pressure: battleSceneDuelState.pressure,
-    lead: sceneLead,
-  });
+  const shouldPlayAmbientSfx =
+    !holdDuelTickByOutcome &&
+    (!suppressAmbientSfx ||
+      battleSceneAmbientStep % BATTLE_SCENE_RESULT_PRIORITY_AMBIENT_SFX_DIVISOR === 0);
+  if (shouldPlayAmbientSfx) {
+    playBattleSfx("ambient", {
+      mode,
+      pressure: battleSceneDuelState.pressure,
+      lead: sceneLead,
+    });
+  }
   if (reducedMotion) {
     return;
   }
