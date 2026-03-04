@@ -297,6 +297,18 @@ async function main() {
     "index.html",
     failures,
   );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-source="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-kind="none"',
+    "index.html",
+    failures,
+  );
 
   for (const id of REQUIRED_HTML_IDS) {
     assertIncludes(html, `id="${id}"`, "index.html", failures);
@@ -514,6 +526,7 @@ async function main() {
   assertIncludes(app, "function setBattleSceneImpactKinetic(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneImpactVfx(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneAmbientImpactSource(", "app.mjs", failures);
+  assertIncludes(app, "function setBattleSceneAmbientImpactSignal(", "app.mjs", failures);
   assertIncludes(app, "function resolveBattleSceneResultDrivenAmbientImpactSignal(", "app.mjs", failures);
   assertIncludes(app, "function triggerBattleSceneImpactVfxFromCue(", "app.mjs", failures);
   assertIncludes(app, "const impactActorFrameCue = applyBattleSceneImpactActorFrames(kind, options);", "app.mjs", failures);
@@ -526,6 +539,8 @@ async function main() {
   assertIncludes(app, "dataset.sceneImpactKinetic", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneImpactVfx", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpact", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactSource", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactKind", "app.mjs", failures);
   assertIncludes(app, 'cue: "breakthrough_retreat_fail"', "app.mjs", failures);
   assertIncludes(app, 'cue: "breakthrough_death_fail"', "app.mjs", failures);
   assertIncludes(app, 'cue: "battle_win_dominant"', "app.mjs", failures);
@@ -534,6 +549,7 @@ async function main() {
   assertIncludes(app, 'cue: "breakthrough_blocked_auto_risk_pause"', "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactSource("result")', "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactSource("random")', "app.mjs", failures);
+  assertIncludes(app, 'setBattleSceneAmbientImpactSignal(null, "idle")', "app.mjs", failures);
   assertIncludes(app, "function resolveBattleSceneCastTier(", "app.mjs", failures);
   assertIncludes(app, "function isBattleSceneLowPerformanceModeEnabled(", "app.mjs", failures);
   assertIncludes(app, "function resolveBattleSceneAmbientPulseDivisor(", "app.mjs", failures);
