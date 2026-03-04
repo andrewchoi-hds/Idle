@@ -399,6 +399,18 @@ async function main() {
     "app.mjs",
     failures,
   );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_PRIORITY_TRANSITION_DIVISOR = 4;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_PRIORITY_COMBO_BANNER_MIN_COMBO = 9;",
+    "app.mjs",
+    failures,
+  );
   assertIncludes(app, "battleSceneLastResultDrivenImpactAtMs", "app.mjs", failures);
   assertIncludes(
     app,
@@ -442,6 +454,14 @@ async function main() {
   assertIncludes(app, "suppressAmbientNarrative", "app.mjs", failures);
   assertIncludes(app, "suppressAmbientSfx", "app.mjs", failures);
   assertIncludes(app, "shouldPlayAmbientSfx", "app.mjs", failures);
+  assertIncludes(app, "allowAmbientTransitions", "app.mjs", failures);
+  assertIncludes(
+    app,
+    "battleSceneAmbientStep % BATTLE_SCENE_RESULT_PRIORITY_TRANSITION_DIVISOR === 0",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(app, "shouldShowComboBanner", "app.mjs", failures);
   assertIncludes(
     app,
     "battleSceneAmbientStep % BATTLE_SCENE_RESULT_PRIORITY_AMBIENT_SFX_DIVISOR === 0",
