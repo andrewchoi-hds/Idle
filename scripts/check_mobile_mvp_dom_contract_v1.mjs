@@ -18,6 +18,7 @@ const REQUIRED_HTML_IDS = [
   "difficultyIndex",
   "qiRequired",
   "qiProgressBar",
+  "battleSceneArena",
   "battleScenePlayer",
   "battleSceneEnemy",
   "battleScenePlayerHpBar",
@@ -150,6 +151,7 @@ const REQUIRED_DOM_KEYS = [
   "battleFocusHint",
   "battleSfxHint",
   "battleHapticHint",
+  "battleSceneArena",
   "battleScenePlayer",
   "battleSceneEnemy",
   "battleScenePlayerHpBar",
@@ -268,6 +270,12 @@ async function main() {
   assertIncludes(
     html,
     'data-actor-frame="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-impact-cue="idle"',
     "index.html",
     failures,
   );
@@ -480,7 +488,13 @@ async function main() {
   assertIncludes(app, "function pushBattleSceneTicker(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneSkillBanner(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneActorFrame(", "app.mjs", failures);
+  assertIncludes(app, "function resolveBattleSceneImpactActorFrameCue(", "app.mjs", failures);
   assertIncludes(app, "function resetBattleSceneActorFrames(", "app.mjs", failures);
+  assertIncludes(app, "function setBattleSceneImpactCue(", "app.mjs", failures);
+  assertIncludes(app, "const impactActorFrameCue = applyBattleSceneImpactActorFrames(kind, options);", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneImpactCue", "app.mjs", failures);
+  assertIncludes(app, 'cue: "breakthrough_retreat_fail"', "app.mjs", failures);
+  assertIncludes(app, 'cue: "breakthrough_death_fail"', "app.mjs", failures);
   assertIncludes(app, "function resolveBattleSceneCastTier(", "app.mjs", failures);
   assertIncludes(app, "function isBattleSceneLowPerformanceModeEnabled(", "app.mjs", failures);
   assertIncludes(app, "function resolveBattleSceneAmbientPulseDivisor(", "app.mjs", failures);

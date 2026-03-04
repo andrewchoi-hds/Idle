@@ -2498,3 +2498,11 @@
 
 ## 589) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(결과 우선 actor frame suppression window + ambient 배우 프레임 덮어쓰기 억제 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 590) 다음 순차 작업
+1. [완료] `resolveBattleSceneImpactActorFrameCue`를 추가해 `triggerBattleSceneImpact(source/outcome)`가 `runBattleOnce/runBreakthroughAttempt` 실결과 메타를 기준으로 배우 프레임 조합을 결정하도록 보강(전투 승패 + 돌파 `success/minor_fail/retreat_fail/death_fail/blocked_*` 분기).
+2. [완료] `applyBattleSceneImpactActorFrames(kind, options)`가 cue를 반환하도록 확장하고, `triggerBattleSceneImpact`에서 해당 cue를 arena dataset(`data-scene-impact-cue`)에 반영해 결과 기반 scene cue를 DOM 레벨에서 직접 관찰 가능하게 정합화.
+3. [완료] DOM contract/수직슬라이스 문서에 신규 토큰(`resolveBattleSceneImpactActorFrameCue`, `setBattleSceneImpactCue`, `data-scene-impact-cue`)과 고위험 결과 전용 cue(`breakthrough_retreat_fail`, `breakthrough_death_fail`) 회귀 포인트를 동기화.
+
+## 591) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(결과 메타 기반 actor frame deterministic cue + `data-scene-impact-cue` DOM 관찰 포인트 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
