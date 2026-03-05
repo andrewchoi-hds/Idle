@@ -353,6 +353,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-ambient-impact-replay-remaining="3"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact-cooldown-ms="0"',
     "index.html",
     failures,
@@ -360,6 +366,18 @@ async function main() {
   assertIncludes(
     html,
     'data-scene-ambient-impact-cooldown-max-ms="960"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-priority-remaining-ms="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-priority-max-ms="6800"',
     "index.html",
     failures,
   );
@@ -655,10 +673,12 @@ async function main() {
   );
   assertIncludes(app, "function setBattleSceneAmbientImpactReplay(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneAmbientImpactCooldown(", "app.mjs", failures);
+  assertIncludes(app, "function setBattleSceneAmbientImpactPriorityWindow(", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastResultDrivenImpactReplayCount += 1;", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastResultDrivenImpactReplayAtMs = now;", "app.mjs", failures);
   assertIncludes(app, "setBattleSceneAmbientImpactReplay(0);", "app.mjs", failures);
   assertIncludes(app, "setBattleSceneAmbientImpactCooldown(0);", "app.mjs", failures);
+  assertIncludes(app, "setBattleSceneAmbientImpactPriorityWindow(0);", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneImpactCue", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneImpactKinetic", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneImpactVfx", "app.mjs", failures);
@@ -672,8 +692,11 @@ async function main() {
   assertIncludes(app, "dataset.sceneAmbientImpactKind", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactReplay", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactReplayMax", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactReplayRemaining", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactCooldownMs", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactCooldownMaxMs", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactPriorityRemainingMs", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactPriorityMaxMs", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastResultDrivenImpactSignalExplicitAtMs", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastExplicitEventSeq", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastResultDrivenImpactSignalExplicitSeq", "app.mjs", failures);
@@ -695,6 +718,8 @@ async function main() {
   assertIncludes(app, "!hasResultDrivenAmbientImpactSignal && !suppressRandomByResultGate", "app.mjs", failures);
   assertIncludes(app, "resultDrivenImpactGate.cooldownRemainingMs", "app.mjs", failures);
   assertIncludes(app, "resultDrivenImpactGate.cooldownMaxMs", "app.mjs", failures);
+  assertIncludes(app, "resultDrivenImpactGate.priorityRemainingMs", "app.mjs", failures);
+  assertIncludes(app, "resultDrivenImpactGate.priorityMaxMs", "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactLock("result")', "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactLock("free")', "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactGate("fresh")', "app.mjs", failures);

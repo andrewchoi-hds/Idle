@@ -2602,3 +2602,11 @@
 
 ## 615) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient result replay source-aware cooldown 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 616) 다음 순차 작업
+1. [완료] result-driven ambient replay 계측을 `replay count/max`에서 `remaining`까지 확장해 arena dataset(`data-scene-ambient-impact-replay-remaining`)으로 잔여 replay budget을 직접 노출.
+2. [완료] `resolveBattleSceneResultDrivenAmbientImpactGate` 반환값에 priority window 잔여/최대값(`priorityRemainingMs`, `priorityMaxMs`)을 추가하고, `runBattleSceneAmbientTick`/explicit trigger/리셋 경로에서 priority 계측(`data-scene-ambient-impact-priority-remaining-ms`, `data-scene-ambient-impact-priority-max-ms`)을 동기화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 replay remaining + priority telemetry 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 617) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient result replay remaining + priority window telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
