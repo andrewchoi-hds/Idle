@@ -550,6 +550,8 @@ const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS = 3;
 const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BATTLE = 2;
 const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BREAKTHROUGH = 4;
 const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS = 960;
+const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BATTLE = 1080;
+const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BREAKTHROUGH = 840;
 const BATTLE_SCENE_DUEL_MAX_HP = 100;
 const BATTLE_SCENE_DUEL_MAX_CAST = 100;
 const BATTLE_SCENE_TICKER_MAX = 5;
@@ -2494,6 +2496,20 @@ function resolveBattleSceneResultDrivenAmbientImpactReplayMax(signalInput) {
   return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS;
 }
 
+function resolveBattleSceneResultDrivenAmbientImpactReplayMinIntervalMs(
+  signalInput,
+) {
+  const signal =
+    signalInput && typeof signalInput === "object" ? signalInput : null;
+  if (signal?.source === "battle") {
+    return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BATTLE;
+  }
+  if (signal?.source === "breakthrough") {
+    return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BREAKTHROUGH;
+  }
+  return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS;
+}
+
 function setBattleSceneAmbientImpactReplay(
   countInput = 0,
   maxInput = BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS,
@@ -2510,6 +2526,27 @@ function setBattleSceneAmbientImpactReplay(
   );
   dom.battleSceneArena.dataset.sceneAmbientImpactReplay = String(count);
   dom.battleSceneArena.dataset.sceneAmbientImpactReplayMax = String(replayMax);
+}
+
+function setBattleSceneAmbientImpactCooldown(
+  cooldownMsInput = 0,
+  cooldownMaxMsInput = BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS,
+) {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  const cooldownMs = Math.max(0, Math.round(Number(cooldownMsInput) || 0));
+  const cooldownMaxMs = Math.max(
+    0,
+    Math.round(
+      Number(cooldownMaxMsInput) ||
+        BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS,
+    ),
+  );
+  dom.battleSceneArena.dataset.sceneAmbientImpactCooldownMs =
+    String(cooldownMs);
+  dom.battleSceneArena.dataset.sceneAmbientImpactCooldownMaxMs =
+    String(cooldownMaxMs);
 }
 
 function setBattleSceneAmbientImpactSequence(
@@ -2563,31 +2600,64 @@ function resolveBattleSceneResultDrivenAmbientImpactGate(nowMs = Date.now()) {
       ? battleSceneLastResultDrivenImpactSignal
       : null;
   if (!signal) {
-    return { signal: null, reason: "no_signal" };
+    return {
+      signal: null,
+      reason: "no_signal",
+      cooldownRemainingMs: 0,
+      cooldownMaxMs: BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS,
+    };
   }
+  const replayMinIntervalMs =
+    resolveBattleSceneResultDrivenAmbientImpactReplayMinIntervalMs(signal);
   if (isBattleSceneResultDrivenAmbientImpactSignalStale()) {
-    return { signal: null, reason: "stale_sequence" };
+    return {
+      signal: null,
+      reason: "stale_sequence",
+      cooldownRemainingMs: 0,
+      cooldownMaxMs: replayMinIntervalMs,
+    };
   }
   const elapsedMs = Math.max(0, Number(nowMs) || Date.now()) - battleSceneLastResultDrivenImpactAtMs;
   if (elapsedMs > BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS) {
-    return { signal: null, reason: "stale_window" };
+    return {
+      signal: null,
+      reason: "stale_window",
+      cooldownRemainingMs: 0,
+      cooldownMaxMs: replayMinIntervalMs,
+    };
   }
   const replayMax = resolveBattleSceneResultDrivenAmbientImpactReplayMax(signal);
   if (
     battleSceneLastResultDrivenImpactReplayCount >=
     replayMax
   ) {
-    return { signal: null, reason: "replay_exhausted" };
+    return {
+      signal: null,
+      reason: "replay_exhausted",
+      cooldownRemainingMs: 0,
+      cooldownMaxMs: replayMinIntervalMs,
+    };
   }
   const replayQuietMs =
     Math.max(0, Number(nowMs) || Date.now()) - battleSceneLastResultDrivenImpactReplayAtMs;
+  const replayCooldownRemainingMs = Math.max(0, replayMinIntervalMs - replayQuietMs);
   if (
     battleSceneLastResultDrivenImpactReplayAtMs > 0 &&
-    replayQuietMs < BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS
+    replayQuietMs < replayMinIntervalMs
   ) {
-    return { signal: null, reason: "replay_cooldown" };
+    return {
+      signal: null,
+      reason: "replay_cooldown",
+      cooldownRemainingMs: replayCooldownRemainingMs,
+      cooldownMaxMs: replayMinIntervalMs,
+    };
   }
-  return { signal, reason: "fresh" };
+  return {
+    signal,
+    reason: "fresh",
+    cooldownRemainingMs: 0,
+    cooldownMaxMs: replayMinIntervalMs,
+  };
 }
 
 function resolveBattleSceneResultDrivenAmbientImpactSignal(nowMs = Date.now()) {
@@ -3657,6 +3727,7 @@ function resetBattleSceneDuelState(options = {}) {
   setBattleSceneAmbientImpactFresh("none");
   setBattleSceneAmbientImpactSignal(null, "idle");
   setBattleSceneAmbientImpactReplay(0);
+  setBattleSceneAmbientImpactCooldown(0);
   setBattleSceneAmbientImpactSequence(0, 0);
   battleSceneLastResultDrivenImpactSignal = null;
   battleSceneLastResultDrivenImpactSignalExplicitAtMs = 0;
@@ -5173,12 +5244,19 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
       );
       battleSceneLastResultDrivenImpactReplayCount = 0;
       battleSceneLastResultDrivenImpactReplayAtMs = 0;
-      setBattleSceneAmbientImpactReplay(
-        0,
+      const resultDrivenAmbientReplayMax =
         resolveBattleSceneResultDrivenAmbientImpactReplayMax(
           battleSceneLastResultDrivenImpactSignal,
-        ),
+        );
+      const resultDrivenAmbientReplayMinIntervalMs =
+        resolveBattleSceneResultDrivenAmbientImpactReplayMinIntervalMs(
+          battleSceneLastResultDrivenImpactSignal,
+        );
+      setBattleSceneAmbientImpactReplay(
+        0,
+        resultDrivenAmbientReplayMax,
       );
+      setBattleSceneAmbientImpactCooldown(0, resultDrivenAmbientReplayMinIntervalMs);
       setBattleSceneAmbientImpactSequence(
         battleSceneLastExplicitEventSeq,
         battleSceneLastResultDrivenImpactSignalExplicitSeq,
@@ -5187,9 +5265,16 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
       if (battleSceneLastResultDrivenImpactSignal) {
         setBattleSceneAmbientImpactGate("stale_sequence");
         setBattleSceneAmbientImpactFresh("stale");
+        setBattleSceneAmbientImpactCooldown(
+          0,
+          resolveBattleSceneResultDrivenAmbientImpactReplayMinIntervalMs(
+            battleSceneLastResultDrivenImpactSignal,
+          ),
+        );
       } else {
         setBattleSceneAmbientImpactGate("no_signal");
         setBattleSceneAmbientImpactFresh("none");
+        setBattleSceneAmbientImpactCooldown(0);
       }
     }
   }
@@ -5640,6 +5725,10 @@ function runBattleSceneAmbientTick() {
   const resultDrivenImpactSignal = resultDrivenImpactGate.signal;
   const resultDrivenImpactGateReason =
     resultDrivenImpactGate?.reason || "no_signal";
+  const resultDrivenAmbientReplayMinIntervalMs =
+    resolveBattleSceneResultDrivenAmbientImpactReplayMinIntervalMs(
+      resultDrivenImpactSignal,
+    );
   const staleResultDrivenImpactSignal =
     resultDrivenImpactGateReason === "stale_sequence";
   if (staleResultDrivenImpactSignal && !resultDrivenImpactSignal) {
@@ -5672,6 +5761,10 @@ function runBattleSceneAmbientTick() {
     battleSceneLastExplicitEventSeq,
     battleSceneLastResultDrivenImpactSignalExplicitSeq,
   );
+  setBattleSceneAmbientImpactCooldown(
+    resultDrivenImpactGate.cooldownRemainingMs,
+    resultDrivenImpactGate.cooldownMaxMs,
+  );
   const ambientImpactCadenceDivisor = useResultDrivenAmbientImpact
     ? 1
     : BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR;
@@ -5703,6 +5796,10 @@ function runBattleSceneAmbientTick() {
       setBattleSceneAmbientImpactReplay(
         battleSceneLastResultDrivenImpactReplayCount,
         resultDrivenAmbientReplayMax,
+      );
+      setBattleSceneAmbientImpactCooldown(
+        resultDrivenAmbientReplayMinIntervalMs,
+        resultDrivenAmbientReplayMinIntervalMs,
       );
       setBattleSceneAmbientImpactSource("result");
       setBattleSceneAmbientImpactSignal(
@@ -5758,6 +5855,7 @@ function runBattleSceneAmbientTick() {
     battleSceneLastResultDrivenImpactReplayCount = 0;
     battleSceneLastResultDrivenImpactReplayAtMs = 0;
     setBattleSceneAmbientImpactReplay(0);
+    setBattleSceneAmbientImpactCooldown(0);
     setBattleSceneAmbientImpactSequence(0, 0);
   }
 
@@ -5946,6 +6044,7 @@ function stopBattleSceneAmbientLoop() {
   setBattleSceneAmbientImpactFresh("none");
   setBattleSceneAmbientImpactSignal(null, "idle");
   setBattleSceneAmbientImpactReplay(0);
+  setBattleSceneAmbientImpactCooldown(0);
   setBattleSceneAmbientImpactSequence(0, 0);
   battleSceneLastResultDrivenImpactSignal = null;
   battleSceneLastResultDrivenImpactSignalExplicitAtMs = 0;
