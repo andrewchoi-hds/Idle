@@ -2610,3 +2610,11 @@
 
 ## 617) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient result replay remaining + priority window telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 618) 다음 순차 작업
+1. [완료] ambient 신호 계측에 outcome code(`data-scene-ambient-impact-outcome-code`)를 추가해 `runBattleOnce`/`runBreakthroughAttempt` 실결과(`success/minor_fail/retreat_fail/death_fail/blocked_*`)가 result-driven 재생 경로에서 DOM으로 직접 추적되도록 확장.
+2. [완료] `resolveBattleSceneResultDrivenAmbientImpactGate`에 signal age(`signalAgeMs`, `signalAgeMaxMs`)를 추가하고 ambient tick/explicit trigger/리셋 경로에 `setBattleSceneAmbientImpactSignalAge`를 연결해 priority window 내 신호 노후화 추이를 DOM 계측(`data-scene-ambient-impact-signal-age-ms`, `data-scene-ambient-impact-signal-age-max-ms`)으로 노출.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 outcome code + signal age telemetry 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 619) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient outcome code + signal age telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
