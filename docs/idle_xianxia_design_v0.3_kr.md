@@ -2570,3 +2570,11 @@
 
 ## 607) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(결과 기반 ambient signal freshness/stale 차단 + `data-scene-ambient-impact-fresh` DOM 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 608) 다음 순차 작업
+1. [완료] explicit 이벤트 마커를 timestamp 단독에서 `timestamp + sequence`로 확장해, 동일 ms에 연속 발생한 non-ambient 결과에서도 최신 엔진 결과 신호만 ambient replay 후보로 유지되도록 보강.
+2. [완료] `isBattleSceneResultDrivenAmbientImpactSignalStale`가 explicit sequence 불일치를 stale로 판정하도록 개선하고, stale 신호는 ambient tick에서 즉시 정리해 이전 결과 재생 꼬임을 차단.
+3. [완료] arena dataset freshness(`data-scene-ambient-impact-fresh`)와 DOM contract/수직슬라이스 문서를 sequence 기반 stale 판정 기준으로 동기화.
+
+## 609) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient 결과 신호 freshness의 explicit sequence 가드 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

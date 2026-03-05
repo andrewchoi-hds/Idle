@@ -612,6 +612,11 @@ async function main() {
   assertIncludes(app, "dataset.sceneAmbientImpactReplay", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactReplayMax", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastResultDrivenImpactSignalExplicitAtMs", "app.mjs", failures);
+  assertIncludes(app, "battleSceneLastExplicitEventSeq", "app.mjs", failures);
+  assertIncludes(app, "battleSceneLastResultDrivenImpactSignalExplicitSeq", "app.mjs", failures);
+  assertIncludes(app, "battleSceneLastExplicitEventSeq += 1;", "app.mjs", failures);
+  assertIncludes(app, "battleSceneLastResultDrivenImpactSignalExplicitSeq =", "app.mjs", failures);
+  assertIncludes(app, "battleSceneLastResultDrivenImpactSignalExplicitSeq !==", "app.mjs", failures);
   assertIncludes(app, "const staleResultDrivenImpactSignal = isBattleSceneResultDrivenAmbientImpactSignalStale();", "app.mjs", failures);
   assertIncludes(app, "const hasResultDrivenAmbientImpactSignal = !!resultDrivenImpactSignal;", "app.mjs", failures);
   assertIncludes(app, "const allowRandomAmbientImpact = !hasResultDrivenAmbientImpactSignal;", "app.mjs", failures);
