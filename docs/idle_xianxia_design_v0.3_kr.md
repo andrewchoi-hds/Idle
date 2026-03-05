@@ -2578,3 +2578,11 @@
 
 ## 609) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient 결과 신호 freshness의 explicit sequence 가드 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 610) 다음 순차 작업
+1. [완료] ambient 결과 신호 sequence 계측 헬퍼(`setBattleSceneAmbientImpactSequence`)를 추가해 explicit 이벤트 시퀀스와 결과 신호 시퀀스를 arena dataset(`data-scene-ambient-impact-explicit-seq`, `data-scene-ambient-impact-signal-seq`)으로 직접 노출.
+2. [완료] `triggerBattleSceneImpact`/ambient tick/리셋 경로에서 sequence 데이터를 동기화해, stale 판정 직후 신호 정리 및 idle 전환 시 sequence가 함께 초기화되도록 정합화.
+3. [완료] DOM contract/수직슬라이스 문서에 sequence 계측 토큰(`sceneAmbientImpactExplicitSeq`, `sceneAmbientImpactSignalSeq`, `setBattleSceneAmbientImpactSequence`)과 회귀 포인트를 동기화.
+
+## 611) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient 결과 신호 explicit/signal sequence DOM 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

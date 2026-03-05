@@ -311,6 +311,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-ambient-impact-explicit-seq="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-signal-seq="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact-source="idle"',
     "index.html",
     failures,
@@ -552,6 +564,7 @@ async function main() {
   assertIncludes(app, "function setBattleSceneAmbientImpactSource(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneAmbientImpactLock(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneAmbientImpactFresh(", "app.mjs", failures);
+  assertIncludes(app, "function setBattleSceneAmbientImpactSequence(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneAmbientImpactSignal(", "app.mjs", failures);
   assertIncludes(
     app,
@@ -607,6 +620,8 @@ async function main() {
   assertIncludes(app, "dataset.sceneAmbientImpact", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactLock", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactFresh", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactExplicitSeq", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactSignalSeq", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactSource", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactKind", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactReplay", "app.mjs", failures);
@@ -617,6 +632,8 @@ async function main() {
   assertIncludes(app, "battleSceneLastExplicitEventSeq += 1;", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastResultDrivenImpactSignalExplicitSeq =", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastResultDrivenImpactSignalExplicitSeq !==", "app.mjs", failures);
+  assertIncludes(app, "setBattleSceneAmbientImpactSequence(", "app.mjs", failures);
+  assertIncludes(app, "setBattleSceneAmbientImpactSequence(0, 0);", "app.mjs", failures);
   assertIncludes(app, "const staleResultDrivenImpactSignal = isBattleSceneResultDrivenAmbientImpactSignalStale();", "app.mjs", failures);
   assertIncludes(app, "const hasResultDrivenAmbientImpactSignal = !!resultDrivenImpactSignal;", "app.mjs", failures);
   assertIncludes(app, "const allowRandomAmbientImpact = !hasResultDrivenAmbientImpactSignal;", "app.mjs", failures);
