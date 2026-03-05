@@ -2562,3 +2562,11 @@
 
 ## 605) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(결과 신호 기반 ambient random lock + `data-scene-ambient-impact-lock` DOM 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 606) 다음 순차 작업
+1. [완료] 결과 기반 ambient 신호의 freshness 계층(`fresh/stale/none`)을 도입하고 `battleSceneLastResultDrivenImpactSignalExplicitAtMs`를 저장해, 최신 explicit 이벤트와 불일치하는 오래된 신호는 ambient 재생 후보에서 제외.
+2. [완료] `setBattleSceneAmbientImpactFresh` + `isBattleSceneResultDrivenAmbientImpactSignalStale` 헬퍼를 추가해 `triggerBattleSceneImpact`/ambient tick/리셋 경로에서 freshness를 일관되게 갱신하고 arena dataset(`data-scene-ambient-impact-fresh`)으로 관찰 가능하게 정합화.
+3. [완료] stale 신호 감지 시 result-driven replay를 중단하고 유휴 전환 경로에서 signal/freshness/replay 상태를 함께 정리해, 이전 엔진 결과가 다음 explicit 이벤트 이후에도 재사용되는 꼬임을 방지.
+
+## 607) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(결과 기반 ambient signal freshness/stale 차단 + `data-scene-ambient-impact-fresh` DOM 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
