@@ -305,6 +305,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-ambient-impact-gate="no_signal"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact-fresh="none"',
     "index.html",
     failures,
@@ -563,12 +569,19 @@ async function main() {
   assertIncludes(app, "function setBattleSceneImpactVfx(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneAmbientImpactSource(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneAmbientImpactLock(", "app.mjs", failures);
+  assertIncludes(app, "function setBattleSceneAmbientImpactGate(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneAmbientImpactFresh(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneAmbientImpactSequence(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneAmbientImpactSignal(", "app.mjs", failures);
   assertIncludes(
     app,
     "function isBattleSceneResultDrivenAmbientImpactSignalStale(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function resolveBattleSceneResultDrivenAmbientImpactGate(",
     "app.mjs",
     failures,
   );
@@ -619,6 +632,7 @@ async function main() {
   assertIncludes(app, "dataset.sceneImpactVfx", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpact", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactLock", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactGate", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactFresh", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactExplicitSeq", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactSignalSeq", "app.mjs", failures);
@@ -634,11 +648,21 @@ async function main() {
   assertIncludes(app, "battleSceneLastResultDrivenImpactSignalExplicitSeq !==", "app.mjs", failures);
   assertIncludes(app, "setBattleSceneAmbientImpactSequence(", "app.mjs", failures);
   assertIncludes(app, "setBattleSceneAmbientImpactSequence(0, 0);", "app.mjs", failures);
-  assertIncludes(app, "const staleResultDrivenImpactSignal = isBattleSceneResultDrivenAmbientImpactSignalStale();", "app.mjs", failures);
+  assertIncludes(app, "const resultDrivenImpactGate =", "app.mjs", failures);
+  assertIncludes(app, "const resultDrivenImpactGateReason =", "app.mjs", failures);
+  assertIncludes(app, "const staleResultDrivenImpactSignal =", "app.mjs", failures);
+  assertIncludes(app, 'resultDrivenImpactGateReason === "stale_sequence"', "app.mjs", failures);
+  assertIncludes(app, "const suppressRandomByResultGate =", "app.mjs", failures);
+  assertIncludes(app, 'resultDrivenImpactGateReason === "replay_cooldown"', "app.mjs", failures);
+  assertIncludes(app, 'resultDrivenImpactGateReason === "replay_exhausted"', "app.mjs", failures);
   assertIncludes(app, "const hasResultDrivenAmbientImpactSignal = !!resultDrivenImpactSignal;", "app.mjs", failures);
-  assertIncludes(app, "const allowRandomAmbientImpact = !hasResultDrivenAmbientImpactSignal;", "app.mjs", failures);
+  assertIncludes(app, "const allowRandomAmbientImpact =", "app.mjs", failures);
+  assertIncludes(app, "!hasResultDrivenAmbientImpactSignal && !suppressRandomByResultGate", "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactLock("result")', "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactLock("free")', "app.mjs", failures);
+  assertIncludes(app, 'setBattleSceneAmbientImpactGate("fresh")', "app.mjs", failures);
+  assertIncludes(app, 'setBattleSceneAmbientImpactGate("stale_sequence")', "app.mjs", failures);
+  assertIncludes(app, 'setBattleSceneAmbientImpactGate("no_signal")', "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactFresh("fresh")', "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactFresh("stale")', "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactFresh("none")', "app.mjs", failures);

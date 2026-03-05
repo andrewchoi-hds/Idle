@@ -2586,3 +2586,11 @@
 
 ## 611) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient 결과 신호 explicit/signal sequence DOM 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 612) 다음 순차 작업
+1. [완료] result-driven ambient 신호 판정 헬퍼를 `resolveBattleSceneResultDrivenAmbientImpactGate`로 확장해 `fresh/stale_sequence/stale_window/replay_exhausted/replay_cooldown/no_signal` gate reason을 반환하도록 보강.
+2. [완료] arena dataset(`data-scene-ambient-impact-gate`) 계측을 추가하고 `triggerBattleSceneImpact`/ambient tick/리셋 경로에서 gate 상태를 동기화해, 결과 재생 가능/차단 근거를 DOM 레벨에서 직접 추적 가능하게 정합화.
+3. [완료] ambient tick의 랜덤 fallback 허용 규칙을 gate-aware로 조정해 `replay_cooldown/replay_exhausted` 구간에서는 랜덤 fallback을 억제하고, `stale_window/no_signal` 구간에서만 랜덤 fallback이 재개되도록 보강.
+
+## 613) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient result gate reason 계측 + replay gate 구간 랜덤 fallback 억제 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
