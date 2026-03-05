@@ -351,6 +351,18 @@ async function main() {
     "index.html",
     failures,
   );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-cooldown-ms="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-cooldown-max-ms="960"',
+    "index.html",
+    failures,
+  );
 
   for (const id of REQUIRED_HTML_IDS) {
     assertIncludes(html, `id="${id}"`, "index.html", failures);
@@ -616,6 +628,18 @@ async function main() {
     "app.mjs",
     failures,
   );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BATTLE = 1080;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BREAKTHROUGH = 840;",
+    "app.mjs",
+    failures,
+  );
   assertIncludes(app, "syncDuel: false", "app.mjs", failures);
   assertIncludes(
     app,
@@ -623,10 +647,18 @@ async function main() {
     "app.mjs",
     failures,
   );
+  assertIncludes(
+    app,
+    "function resolveBattleSceneResultDrivenAmbientImpactReplayMinIntervalMs(",
+    "app.mjs",
+    failures,
+  );
   assertIncludes(app, "function setBattleSceneAmbientImpactReplay(", "app.mjs", failures);
+  assertIncludes(app, "function setBattleSceneAmbientImpactCooldown(", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastResultDrivenImpactReplayCount += 1;", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastResultDrivenImpactReplayAtMs = now;", "app.mjs", failures);
   assertIncludes(app, "setBattleSceneAmbientImpactReplay(0);", "app.mjs", failures);
+  assertIncludes(app, "setBattleSceneAmbientImpactCooldown(0);", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneImpactCue", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneImpactKinetic", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneImpactVfx", "app.mjs", failures);
@@ -640,6 +672,8 @@ async function main() {
   assertIncludes(app, "dataset.sceneAmbientImpactKind", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactReplay", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactReplayMax", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactCooldownMs", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactCooldownMaxMs", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastResultDrivenImpactSignalExplicitAtMs", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastExplicitEventSeq", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastResultDrivenImpactSignalExplicitSeq", "app.mjs", failures);
@@ -650,6 +684,7 @@ async function main() {
   assertIncludes(app, "setBattleSceneAmbientImpactSequence(0, 0);", "app.mjs", failures);
   assertIncludes(app, "const resultDrivenImpactGate =", "app.mjs", failures);
   assertIncludes(app, "const resultDrivenImpactGateReason =", "app.mjs", failures);
+  assertIncludes(app, "const resultDrivenAmbientReplayMinIntervalMs =", "app.mjs", failures);
   assertIncludes(app, "const staleResultDrivenImpactSignal =", "app.mjs", failures);
   assertIncludes(app, 'resultDrivenImpactGateReason === "stale_sequence"', "app.mjs", failures);
   assertIncludes(app, "const suppressRandomByResultGate =", "app.mjs", failures);
@@ -658,6 +693,8 @@ async function main() {
   assertIncludes(app, "const hasResultDrivenAmbientImpactSignal = !!resultDrivenImpactSignal;", "app.mjs", failures);
   assertIncludes(app, "const allowRandomAmbientImpact =", "app.mjs", failures);
   assertIncludes(app, "!hasResultDrivenAmbientImpactSignal && !suppressRandomByResultGate", "app.mjs", failures);
+  assertIncludes(app, "resultDrivenImpactGate.cooldownRemainingMs", "app.mjs", failures);
+  assertIncludes(app, "resultDrivenImpactGate.cooldownMaxMs", "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactLock("result")', "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactLock("free")', "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactGate("fresh")', "app.mjs", failures);

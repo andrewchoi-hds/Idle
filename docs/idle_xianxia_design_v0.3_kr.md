@@ -2594,3 +2594,11 @@
 
 ## 613) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient result gate reason 계측 + replay gate 구간 랜덤 fallback 억제 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 614) 다음 순차 작업
+1. [완료] result-driven ambient impact 최소 간격을 source-aware 규칙(`battle=1080ms`, `breakthrough=840ms`, default `960ms`)으로 분리하고, `resolveBattleSceneResultDrivenAmbientImpactGate`가 cooldown 잔여/최대값을 함께 반환하도록 확장.
+2. [완료] `triggerBattleSceneImpact`/`runBattleSceneAmbientTick`/리셋 경로에 cooldown 계측(`setBattleSceneAmbientImpactCooldown`)을 연결해 `runBattleOnce`/`runBreakthroughAttempt` 실결과 기반 재생 직후 cooldown 상태가 arena dataset(`data-scene-ambient-impact-cooldown-ms`, `data-scene-ambient-impact-cooldown-max-ms`)에 즉시 반영되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 cooldown/source-aware 간격 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 615) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient result replay source-aware cooldown 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
