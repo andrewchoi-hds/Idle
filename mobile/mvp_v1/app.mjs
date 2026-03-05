@@ -2475,6 +2475,25 @@ function setBattleSceneAmbientImpactActive(activeInput = "none") {
   dom.battleSceneArena.dataset.sceneAmbientImpactActive = active;
 }
 
+function setBattleSceneAmbientImpactRandomState(stateInput = "idle") {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  const state =
+    stateInput === "suppressed_result_signal"
+      ? "suppressed_result_signal"
+      : stateInput === "suppressed_replay_cooldown"
+        ? "suppressed_replay_cooldown"
+        : stateInput === "suppressed_replay_exhausted"
+          ? "suppressed_replay_exhausted"
+          : stateInput === "ready"
+            ? "ready"
+            : stateInput === "triggered"
+              ? "triggered"
+              : "idle";
+  dom.battleSceneArena.dataset.sceneAmbientImpactRandomState = state;
+}
+
 function setBattleSceneAmbientImpactSignal(signalInput, sourceInput = "idle") {
   if (!dom.battleSceneArena) {
     return;
@@ -3831,6 +3850,7 @@ function resetBattleSceneDuelState(options = {}) {
   setBattleSceneAmbientImpactGate("no_signal");
   setBattleSceneAmbientImpactFresh("none");
   setBattleSceneAmbientImpactActive("none");
+  setBattleSceneAmbientImpactRandomState("idle");
   setBattleSceneAmbientImpactSignal(null, "idle");
   setBattleSceneAmbientImpactReplay(0);
   setBattleSceneAmbientImpactCooldown(0);
@@ -5347,6 +5367,7 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
       setBattleSceneAmbientImpactGate("fresh");
       setBattleSceneAmbientImpactFresh("fresh");
       setBattleSceneAmbientImpactActive("signal");
+      setBattleSceneAmbientImpactRandomState("suppressed_result_signal");
       setBattleSceneAmbientImpactSignal(
         battleSceneLastResultDrivenImpactSignal,
         source,
@@ -5384,6 +5405,7 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
         setBattleSceneAmbientImpactGate("stale_sequence");
         setBattleSceneAmbientImpactFresh("stale");
         setBattleSceneAmbientImpactActive("none");
+        setBattleSceneAmbientImpactRandomState("idle");
         setBattleSceneAmbientImpactSignal(null, "idle");
         setBattleSceneAmbientImpactCooldown(
           0,
@@ -5404,6 +5426,7 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
         setBattleSceneAmbientImpactGate("no_signal");
         setBattleSceneAmbientImpactFresh("none");
         setBattleSceneAmbientImpactActive("none");
+        setBattleSceneAmbientImpactRandomState("idle");
         setBattleSceneAmbientImpactSignal(null, "idle");
         setBattleSceneAmbientImpactCooldown(0);
         setBattleSceneAmbientImpactPriorityWindow(0);
@@ -5884,6 +5907,17 @@ function runBattleSceneAmbientTick() {
     resultDrivenImpactGateReason === "replay_exhausted";
   const allowRandomAmbientImpact =
     !hasResultDrivenAmbientImpactSignal && !suppressRandomByResultGate;
+  setBattleSceneAmbientImpactRandomState(
+    hasResultDrivenAmbientImpactSignal
+      ? "suppressed_result_signal"
+      : resultDrivenImpactGateReason === "replay_cooldown"
+        ? "suppressed_replay_cooldown"
+        : resultDrivenImpactGateReason === "replay_exhausted"
+          ? "suppressed_replay_exhausted"
+          : allowRandomAmbientImpact
+            ? "ready"
+            : "idle",
+  );
   setBattleSceneAmbientImpactLock(
     hasResultDrivenAmbientImpactSignal ? "result" : "free",
   );
@@ -5956,6 +5990,7 @@ function runBattleSceneAmbientTick() {
         resultDrivenImpactSignal.source,
       );
       setBattleSceneAmbientImpactActive("signal");
+      setBattleSceneAmbientImpactRandomState("suppressed_result_signal");
     } else if (mode === "realtime") {
       const random = Math.random();
       const kind = random < 0.58 ? "battle_win" : random < 0.85 ? "battle_loss" : "breakthrough_success";
@@ -5967,6 +6002,7 @@ function runBattleSceneAmbientTick() {
         "random",
       );
       setBattleSceneAmbientImpactActive("none");
+      setBattleSceneAmbientImpactRandomState("triggered");
       setBattleSceneAmbientImpactReplay(0);
     } else if (mode === "auto") {
       const random = Math.random();
@@ -5979,6 +6015,7 @@ function runBattleSceneAmbientTick() {
         "random",
       );
       setBattleSceneAmbientImpactActive("none");
+      setBattleSceneAmbientImpactRandomState("triggered");
       setBattleSceneAmbientImpactReplay(0);
     } else {
       const kind = Math.random() < 0.5 ? "battle_win" : "battle_loss";
@@ -5990,6 +6027,7 @@ function runBattleSceneAmbientTick() {
         "random",
       );
       setBattleSceneAmbientImpactActive("none");
+      setBattleSceneAmbientImpactRandomState("triggered");
       setBattleSceneAmbientImpactReplay(0);
     }
   } else if (
@@ -6002,6 +6040,7 @@ function runBattleSceneAmbientTick() {
     setBattleSceneAmbientImpactSignal(null, "idle");
     setBattleSceneAmbientImpactFresh("none");
     setBattleSceneAmbientImpactActive("none");
+    setBattleSceneAmbientImpactRandomState("idle");
     battleSceneLastResultDrivenImpactSignal = null;
     battleSceneLastResultDrivenImpactSignalExplicitAtMs = 0;
     battleSceneLastResultDrivenImpactSignalExplicitSeq = 0;
@@ -6199,6 +6238,7 @@ function stopBattleSceneAmbientLoop() {
   setBattleSceneAmbientImpactGate("no_signal");
   setBattleSceneAmbientImpactFresh("none");
   setBattleSceneAmbientImpactActive("none");
+  setBattleSceneAmbientImpactRandomState("idle");
   setBattleSceneAmbientImpactSignal(null, "idle");
   setBattleSceneAmbientImpactReplay(0);
   setBattleSceneAmbientImpactCooldown(0);

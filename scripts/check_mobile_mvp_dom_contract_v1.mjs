@@ -323,6 +323,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-ambient-impact-random-state="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact-explicit-seq="0"',
     "index.html",
     failures,
@@ -627,6 +633,7 @@ async function main() {
   assertIncludes(app, "function setBattleSceneAmbientImpactFresh(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneAmbientImpactSequence(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneAmbientImpactSignal(", "app.mjs", failures);
+  assertIncludes(app, "function setBattleSceneAmbientImpactRandomState(", "app.mjs", failures);
   assertIncludes(
     app,
     "function isBattleSceneResultDrivenAmbientImpactSignalStale(",
@@ -732,6 +739,7 @@ async function main() {
   assertIncludes(app, "dataset.sceneAmbientImpactGate", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactFresh", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactActive", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactRandomState", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactExplicitSeq", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactSignalSeq", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactSource", "app.mjs", failures);
@@ -781,6 +789,27 @@ async function main() {
   assertIncludes(app, 'setBattleSceneAmbientImpactFresh("none")', "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactActive("signal")', "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactActive("none")', "app.mjs", failures);
+  assertIncludes(
+    app,
+    'setBattleSceneAmbientImpactRandomState("suppressed_result_signal")',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    '"suppressed_replay_cooldown"',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    '"suppressed_replay_exhausted"',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(app, 'stateInput === "ready"', "app.mjs", failures);
+  assertIncludes(app, 'setBattleSceneAmbientImpactRandomState("triggered")', "app.mjs", failures);
+  assertIncludes(app, 'setBattleSceneAmbientImpactRandomState("idle")', "app.mjs", failures);
   assertIncludes(app, 'cue: "breakthrough_retreat_fail"', "app.mjs", failures);
   assertIncludes(app, 'cue: "breakthrough_death_fail"', "app.mjs", failures);
   assertIncludes(app, 'cue: "battle_win_dominant"', "app.mjs", failures);

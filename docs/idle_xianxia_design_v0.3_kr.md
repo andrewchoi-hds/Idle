@@ -2634,3 +2634,11 @@
 
 ## 623) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient active state + stale signal immediate clear 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 624) 다음 순차 작업
+1. [완료] ambient 랜덤 fallback 관찰 계층(`idle|ready|triggered|suppressed_result_signal|suppressed_replay_cooldown|suppressed_replay_exhausted`)을 도입하고 `setBattleSceneAmbientImpactRandomState` 헬퍼를 추가해, 결과 우선/쿨다운/예산 소진/랜덤 발동 상태를 arena dataset(`data-scene-ambient-impact-random-state`)에서 직접 추적 가능하게 확장.
+2. [완료] `triggerBattleSceneImpact`/`runBattleSceneAmbientTick`/리셋 경로에서 random-state를 동기화해, 실결과 신호 active 시 suppress 상태 유지, replay gate 억제 구간 노출, 랜덤 fallback 실제 발동 시 `triggered` 전환이 일관되게 반영되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 random-state 계측 토큰 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 625) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient random suppression state 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
