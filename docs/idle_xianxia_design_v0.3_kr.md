@@ -2618,3 +2618,11 @@
 
 ## 619) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient outcome code + signal age telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 620) 다음 순차 작업
+1. [완료] result-driven ambient priority window를 source-aware 규칙(`battle=6200ms`, `breakthrough=7600ms`, default `6800ms`)으로 분리하고 `resolveBattleSceneResultDrivenAmbientImpactPriorityWindowMs` 헬퍼를 추가해 gate 판정(`stale_window`, priorityRemaining, signalAge`)이 결과 source를 직접 반영하도록 확장.
+2. [완료] `triggerBattleSceneImpact`의 실결과 저장 경로에서 priority/age 계측 초기화 시 source-aware window max를 함께 설정해, `runBattleOnce`/`runBreakthroughAttempt` 결과 직후 DOM 계측(`priority-max-ms`, `signal-age-max-ms`)이 battle/breakthrough별로 즉시 분기되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 source-aware priority window 토큰 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 621) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient source-aware priority window 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

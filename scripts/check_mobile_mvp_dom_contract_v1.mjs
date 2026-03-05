@@ -639,6 +639,18 @@ async function main() {
   assertIncludes(app, "const impactKineticCue = resolveBattleSceneImpactKineticCue(kind, options);", "app.mjs", failures);
   assertIncludes(app, "const impactVfxCue = resolveBattleSceneImpactVfxCue(kind, options);", "app.mjs", failures);
   assertIncludes(app, "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS = 6800;", "app.mjs", failures);
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BATTLE = 6200;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BREAKTHROUGH =",
+    "app.mjs",
+    failures,
+  );
   assertIncludes(app, "const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR = 2;", "app.mjs", failures);
   assertIncludes(
     app,
@@ -686,6 +698,12 @@ async function main() {
   assertIncludes(
     app,
     "function resolveBattleSceneResultDrivenAmbientImpactReplayMinIntervalMs(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function resolveBattleSceneResultDrivenAmbientImpactPriorityWindowMs(",
     "app.mjs",
     failures,
   );
