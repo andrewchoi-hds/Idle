@@ -317,6 +317,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-ambient-impact-active="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact-explicit-seq="0"',
     "index.html",
     failures,
@@ -711,6 +717,7 @@ async function main() {
   assertIncludes(app, "function setBattleSceneAmbientImpactCooldown(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneAmbientImpactPriorityWindow(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneAmbientImpactSignalAge(", "app.mjs", failures);
+  assertIncludes(app, "function setBattleSceneAmbientImpactActive(", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastResultDrivenImpactReplayCount += 1;", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastResultDrivenImpactReplayAtMs = now;", "app.mjs", failures);
   assertIncludes(app, "setBattleSceneAmbientImpactReplay(0);", "app.mjs", failures);
@@ -724,6 +731,7 @@ async function main() {
   assertIncludes(app, "dataset.sceneAmbientImpactLock", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactGate", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactFresh", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactActive", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactExplicitSeq", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactSignalSeq", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactSource", "app.mjs", failures);
@@ -771,6 +779,8 @@ async function main() {
   assertIncludes(app, 'setBattleSceneAmbientImpactFresh("fresh")', "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactFresh("stale")', "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactFresh("none")', "app.mjs", failures);
+  assertIncludes(app, 'setBattleSceneAmbientImpactActive("signal")', "app.mjs", failures);
+  assertIncludes(app, 'setBattleSceneAmbientImpactActive("none")', "app.mjs", failures);
   assertIncludes(app, 'cue: "breakthrough_retreat_fail"', "app.mjs", failures);
   assertIncludes(app, 'cue: "breakthrough_death_fail"', "app.mjs", failures);
   assertIncludes(app, 'cue: "battle_win_dominant"', "app.mjs", failures);

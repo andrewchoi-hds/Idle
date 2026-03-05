@@ -2626,3 +2626,11 @@
 
 ## 621) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient source-aware priority window 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 622) 다음 순차 작업
+1. [완료] ambient 결과 신호 활성 상태 계층(`signal|none`)을 도입하고 `setBattleSceneAmbientImpactActive` 헬퍼를 추가해, 결과 기반 신호 활성 여부를 arena dataset(`data-scene-ambient-impact-active`)에서 직접 관찰 가능하게 확장.
+2. [완료] `triggerBattleSceneImpact`/`runBattleSceneAmbientTick` 경로에서 stale sequence 감지 시 `setBattleSceneAmbientImpactSignal(null, "idle")` + replay 카운터 초기화를 즉시 수행해 오래된 결과 kind/outcome payload가 DOM에 잔존하지 않도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 active 상태 + stale 즉시 정리 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 623) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient active state + stale signal immediate clear 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
