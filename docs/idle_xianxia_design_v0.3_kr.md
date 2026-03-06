@@ -2642,3 +2642,11 @@
 
 ## 625) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient random suppression state 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 626) 다음 순차 작업
+1. [완료] explicit 결과 직후 랜덤 fallback 즉시 복귀를 줄이기 위해 recovery 윈도우(`BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS=1400`)와 계측 헬퍼(`setBattleSceneAmbientImpactRandomRecovery`)를 추가하고 arena dataset(`data-scene-ambient-impact-random-recovery-ms`, `data-scene-ambient-impact-random-recovery-max-ms`)을 도입.
+2. [완료] `triggerBattleSceneImpact`/`runBattleSceneAmbientTick`/리셋 경로에서 random recovery 상태를 동기화하고 random-state를 `suppressed_recovery_window`까지 확장해, 결과·명시 이벤트 직후에는 랜덤 fallback이 recovery 종료 전까지 억제되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 random recovery telemetry 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 627) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient random recovery window + suppression state 확장 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
