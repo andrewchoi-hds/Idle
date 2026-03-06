@@ -549,6 +549,8 @@ const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BATTLE = 6200
 const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BREAKTHROUGH =
   7600;
 const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR = 2;
+const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BATTLE = 3;
+const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BREAKTHROUGH = 4;
 const BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS = 1400;
 const BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BATTLE = 1200;
 const BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BREAKTHROUGH = 1800;
@@ -2511,6 +2513,38 @@ function setBattleSceneAmbientImpactRandomRecoverySource(sourceInput = "none") {
   dom.battleSceneArena.dataset.sceneAmbientImpactRandomRecoverySource = source;
 }
 
+function setBattleSceneAmbientImpactRandomCadence(
+  divisorInput = BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR,
+  sourceInput = "none",
+) {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  const divisor = Math.max(
+    1,
+    Math.round(
+      Number(divisorInput) || BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR,
+    ),
+  );
+  const source =
+    sourceInput === "battle" || sourceInput === "breakthrough"
+      ? sourceInput
+      : "none";
+  dom.battleSceneArena.dataset.sceneAmbientImpactRandomCadenceDivisor =
+    String(divisor);
+  dom.battleSceneArena.dataset.sceneAmbientImpactRandomCadenceSource = source;
+}
+
+function resolveBattleSceneAmbientRandomImpactDivisor(sourceInput) {
+  if (sourceInput === "battle") {
+    return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BATTLE;
+  }
+  if (sourceInput === "breakthrough") {
+    return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BREAKTHROUGH;
+  }
+  return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR;
+}
+
 function resolveBattleSceneAmbientRandomRecoveryWindowMs(sourceInput) {
   if (sourceInput === "battle") {
     return BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BATTLE;
@@ -3900,6 +3934,10 @@ function resetBattleSceneDuelState(options = {}) {
   setBattleSceneAmbientImpactActive("none");
   setBattleSceneAmbientImpactRandomState("idle");
   setBattleSceneAmbientImpactRandomRecoverySource("none");
+  setBattleSceneAmbientImpactRandomCadence(
+    BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR,
+    "none",
+  );
   setBattleSceneAmbientImpactRandomRecovery(0);
   setBattleSceneAmbientImpactSignal(null, "idle");
   setBattleSceneAmbientImpactReplay(0);
@@ -5403,6 +5441,12 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
     setBattleSceneAmbientImpactRandomRecoverySource(
       battleSceneLastExplicitEventSource || "none",
     );
+    setBattleSceneAmbientImpactRandomCadence(
+      resolveBattleSceneAmbientRandomImpactDivisor(
+        battleSceneLastExplicitEventSource,
+      ),
+      battleSceneLastExplicitEventSource || "none",
+    );
     const randomRecoveryWindowMs =
       resolveBattleSceneAmbientRandomRecoveryWindowMs(
         battleSceneLastExplicitEventSource,
@@ -5972,6 +6016,8 @@ function runBattleSceneAmbientTick() {
     hasResultDrivenAmbientImpactSignal
       ? resultDrivenImpactSignal?.source
       : battleSceneLastExplicitEventSource;
+  const randomImpactCadenceDivisor =
+    resolveBattleSceneAmbientRandomImpactDivisor(randomRecoverySource);
   const randomRecoveryMaxMs = resolveBattleSceneAmbientRandomRecoveryWindowMs(
     randomRecoverySource,
   );
@@ -5990,6 +6036,10 @@ function runBattleSceneAmbientTick() {
     randomRecoveryMaxMs,
   );
   setBattleSceneAmbientImpactRandomRecoverySource(
+    randomRecoverySource || "none",
+  );
+  setBattleSceneAmbientImpactRandomCadence(
+    randomImpactCadenceDivisor,
     randomRecoverySource || "none",
   );
   setBattleSceneAmbientImpactRandomState(
@@ -6037,7 +6087,7 @@ function runBattleSceneAmbientTick() {
   );
   const ambientImpactCadenceDivisor = useResultDrivenAmbientImpact
     ? 1
-    : BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR;
+    : randomImpactCadenceDivisor;
   const shouldPulseImpact =
     quietMs > (lowPerformanceMode ? 2800 : 2200) &&
     shouldPulseByMode &&
@@ -6129,6 +6179,10 @@ function runBattleSceneAmbientTick() {
     setBattleSceneAmbientImpactActive("none");
     setBattleSceneAmbientImpactRandomState("idle");
     setBattleSceneAmbientImpactRandomRecoverySource("none");
+    setBattleSceneAmbientImpactRandomCadence(
+      BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR,
+      "none",
+    );
     setBattleSceneAmbientImpactRandomRecovery(0);
     battleSceneLastResultDrivenImpactSignal = null;
     battleSceneLastResultDrivenImpactSignalExplicitAtMs = 0;
@@ -6330,6 +6384,10 @@ function stopBattleSceneAmbientLoop() {
   setBattleSceneAmbientImpactActive("none");
   setBattleSceneAmbientImpactRandomState("idle");
   setBattleSceneAmbientImpactRandomRecoverySource("none");
+  setBattleSceneAmbientImpactRandomCadence(
+    BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR,
+    "none",
+  );
   setBattleSceneAmbientImpactRandomRecovery(0);
   setBattleSceneAmbientImpactSignal(null, "idle");
   setBattleSceneAmbientImpactReplay(0);
