@@ -2666,3 +2666,11 @@
 
 ## 631) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient random cadence source-aware 분리 + cadence 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 632) 다음 순차 작업
+1. [완료] ambient 랜덤 fallback 확률 스케일을 source-aware 규칙(`battle=82%`, `breakthrough=64%`, default `100%`)으로 분리하고 `resolveBattleSceneAmbientRandomImpactProbabilityScale` 헬퍼를 추가해 최근 `runBattleOnce`/`runBreakthroughAttempt` 결과 source가 랜덤 임팩트 허용 확률에도 직접 반영되도록 확장.
+2. [완료] random probability 계측(`setBattleSceneAmbientImpactRandomProbability`)을 추가해 arena dataset(`data-scene-ambient-impact-random-probability-source`, `data-scene-ambient-impact-random-probability-scale-pct`)에서 현재 랜덤 fallback 확률 기준 source/스케일을 직접 관찰 가능하게 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 source-aware random probability telemetry 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 633) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient random probability source-aware 분리 + probability 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

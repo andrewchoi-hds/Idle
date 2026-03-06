@@ -551,6 +551,9 @@ const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BREAKTHROUGH 
 const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR = 2;
 const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BATTLE = 3;
 const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BREAKTHROUGH = 4;
+const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE = 1;
+const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BATTLE = 0.82;
+const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BREAKTHROUGH = 0.64;
 const BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS = 1400;
 const BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BATTLE = 1200;
 const BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BREAKTHROUGH = 1800;
@@ -2545,6 +2548,35 @@ function resolveBattleSceneAmbientRandomImpactDivisor(sourceInput) {
   return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR;
 }
 
+function setBattleSceneAmbientImpactRandomProbability(
+  scaleInput = BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE,
+  sourceInput = "none",
+) {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  const scale = Math.max(0, Number(scaleInput) || 0);
+  const source =
+    sourceInput === "battle" || sourceInput === "breakthrough"
+      ? sourceInput
+      : "none";
+  const scalePct = Math.max(0, Math.round(scale * 100));
+  dom.battleSceneArena.dataset.sceneAmbientImpactRandomProbabilitySource =
+    source;
+  dom.battleSceneArena.dataset.sceneAmbientImpactRandomProbabilityScalePct =
+    String(scalePct);
+}
+
+function resolveBattleSceneAmbientRandomImpactProbabilityScale(sourceInput) {
+  if (sourceInput === "battle") {
+    return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BATTLE;
+  }
+  if (sourceInput === "breakthrough") {
+    return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BREAKTHROUGH;
+  }
+  return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE;
+}
+
 function resolveBattleSceneAmbientRandomRecoveryWindowMs(sourceInput) {
   if (sourceInput === "battle") {
     return BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BATTLE;
@@ -3936,6 +3968,10 @@ function resetBattleSceneDuelState(options = {}) {
   setBattleSceneAmbientImpactRandomRecoverySource("none");
   setBattleSceneAmbientImpactRandomCadence(
     BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR,
+    "none",
+  );
+  setBattleSceneAmbientImpactRandomProbability(
+    BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE,
     "none",
   );
   setBattleSceneAmbientImpactRandomRecovery(0);
@@ -5447,6 +5483,12 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
       ),
       battleSceneLastExplicitEventSource || "none",
     );
+    setBattleSceneAmbientImpactRandomProbability(
+      resolveBattleSceneAmbientRandomImpactProbabilityScale(
+        battleSceneLastExplicitEventSource,
+      ),
+      battleSceneLastExplicitEventSource || "none",
+    );
     const randomRecoveryWindowMs =
       resolveBattleSceneAmbientRandomRecoveryWindowMs(
         battleSceneLastExplicitEventSource,
@@ -6018,6 +6060,10 @@ function runBattleSceneAmbientTick() {
       : battleSceneLastExplicitEventSource;
   const randomImpactCadenceDivisor =
     resolveBattleSceneAmbientRandomImpactDivisor(randomRecoverySource);
+  const randomImpactProbabilityScale =
+    resolveBattleSceneAmbientRandomImpactProbabilityScale(
+      randomRecoverySource,
+    );
   const randomRecoveryMaxMs = resolveBattleSceneAmbientRandomRecoveryWindowMs(
     randomRecoverySource,
   );
@@ -6040,6 +6086,10 @@ function runBattleSceneAmbientTick() {
   );
   setBattleSceneAmbientImpactRandomCadence(
     randomImpactCadenceDivisor,
+    randomRecoverySource || "none",
+  );
+  setBattleSceneAmbientImpactRandomProbability(
+    randomImpactProbabilityScale,
     randomRecoverySource || "none",
   );
   setBattleSceneAmbientImpactRandomState(
@@ -6093,12 +6143,21 @@ function runBattleSceneAmbientTick() {
     shouldPulseByMode &&
     battleSceneAmbientStep % ambientImpactCadenceDivisor === 0 &&
     (useResultDrivenAmbientImpact || allowRandomAmbientImpact);
+  const randomAmbientImpactChance = Math.min(
+    1,
+    (lowPerformanceMode
+      ? mode === "realtime"
+        ? 0.56
+        : mode === "auto"
+          ? 0.42
+          : 0.28
+      : 1) * randomImpactProbabilityScale,
+  );
   const allowAmbientImpact = useResultDrivenAmbientImpact
     ? !lowPerformanceMode ||
       Math.random() < (mode === "realtime" ? 0.92 : mode === "auto" ? 0.78 : 0.64)
     : allowRandomAmbientImpact &&
-      (!lowPerformanceMode ||
-        Math.random() < (mode === "realtime" ? 0.56 : mode === "auto" ? 0.42 : 0.28));
+      Math.random() < randomAmbientImpactChance;
   if (shouldPulseImpact && allowAmbientImpact) {
     if (useResultDrivenAmbientImpact && resultDrivenImpactSignal) {
       triggerBattleSceneImpact(
@@ -6181,6 +6240,10 @@ function runBattleSceneAmbientTick() {
     setBattleSceneAmbientImpactRandomRecoverySource("none");
     setBattleSceneAmbientImpactRandomCadence(
       BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR,
+      "none",
+    );
+    setBattleSceneAmbientImpactRandomProbability(
+      BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE,
       "none",
     );
     setBattleSceneAmbientImpactRandomRecovery(0);
@@ -6386,6 +6449,10 @@ function stopBattleSceneAmbientLoop() {
   setBattleSceneAmbientImpactRandomRecoverySource("none");
   setBattleSceneAmbientImpactRandomCadence(
     BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR,
+    "none",
+  );
+  setBattleSceneAmbientImpactRandomProbability(
+    BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE,
     "none",
   );
   setBattleSceneAmbientImpactRandomRecovery(0);
