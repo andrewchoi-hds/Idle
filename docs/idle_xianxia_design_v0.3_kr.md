@@ -2674,3 +2674,11 @@
 
 ## 633) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient random probability source-aware 분리 + probability 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 634) 다음 순차 작업
+1. [완료] ambient 랜덤 fallback quiet threshold를 source-aware 규칙(`battle=2600ms`, `breakthrough=3200ms`, default `2200ms`)으로 분리하고 `resolveBattleSceneAmbientRandomQuietThresholdMs` 헬퍼를 추가해 최근 `runBattleOnce`/`runBreakthroughAttempt` 결과 source가 랜덤 pulse 재개 시점에도 직접 반영되도록 확장.
+2. [완료] random quiet-threshold 계측(`setBattleSceneAmbientImpactRandomQuietThreshold`)을 추가해 arena dataset(`data-scene-ambient-impact-random-quiet-source`, `data-scene-ambient-impact-random-quiet-threshold-ms`)에서 현재 랜덤 fallback 정숙 구간 기준 source/임계치를 직접 관찰 가능하게 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 source-aware random quiet-threshold telemetry 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 635) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient random quiet-threshold source-aware 분리 + quiet-threshold 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
