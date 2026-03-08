@@ -359,6 +359,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-ambient-impact-random-quiet-source="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-random-quiet-threshold-ms="2200"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact-random-recovery-ms="0"',
     "index.html",
     failures,
@@ -679,8 +691,10 @@ async function main() {
   assertIncludes(app, "function setBattleSceneAmbientImpactRandomRecoverySource(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneAmbientImpactRandomCadence(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneAmbientImpactRandomProbability(", "app.mjs", failures);
+  assertIncludes(app, "function setBattleSceneAmbientImpactRandomQuietThreshold(", "app.mjs", failures);
   assertIncludes(app, "function resolveBattleSceneAmbientRandomImpactDivisor(", "app.mjs", failures);
   assertIncludes(app, "function resolveBattleSceneAmbientRandomImpactProbabilityScale(", "app.mjs", failures);
+  assertIncludes(app, "function resolveBattleSceneAmbientRandomQuietThresholdMs(", "app.mjs", failures);
   assertIncludes(app, "function resolveBattleSceneAmbientRandomRecoveryWindowMs(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneAmbientImpactRandomRecovery(", "app.mjs", failures);
   assertIncludes(
@@ -741,6 +755,24 @@ async function main() {
   assertIncludes(
     app,
     "const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BREAKTHROUGH = 0.64;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS = 2200;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS_BATTLE = 2600;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS_BREAKTHROUGH = 3200;",
     "app.mjs",
     failures,
   );
@@ -935,6 +967,31 @@ async function main() {
   assertIncludes(app, 'setBattleSceneAmbientImpactRandomRecoverySource("none")', "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactRandomCadence(', "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactRandomProbability(', "app.mjs", failures);
+  assertIncludes(app, 'setBattleSceneAmbientImpactRandomQuietThreshold(', "app.mjs", failures);
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactRandomQuietSource = source;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactRandomQuietThresholdMs =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'const randomQuietThresholdMs = resolveBattleSceneAmbientRandomQuietThresholdMs(',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'const ambientImpactQuietThresholdMs = useResultDrivenAmbientImpact',
+    "app.mjs",
+    failures,
+  );
   assertIncludes(app, 'cue: "breakthrough_retreat_fail"', "app.mjs", failures);
   assertIncludes(app, 'cue: "breakthrough_death_fail"', "app.mjs", failures);
   assertIncludes(app, 'cue: "battle_win_dominant"', "app.mjs", failures);
