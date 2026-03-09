@@ -560,6 +560,13 @@ const BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS_BREAKTHROUGH = 3200;
 const BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS = 1400;
 const BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BATTLE = 1200;
 const BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BREAKTHROUGH = 1800;
+const BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BATTLE_WIN = 1000;
+const BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BATTLE_LOSS = 1600;
+const BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BATTLE_LOSS_HEAVY = 2200;
+const BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BREAKTHROUGH_SUCCESS = 1500;
+const BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BREAKTHROUGH_FAIL_MINOR = 2400;
+const BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BREAKTHROUGH_FAIL_HEAVY = 3200;
+const BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BREAKTHROUGH_BLOCKED = 2600;
 const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS = 3;
 const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BATTLE = 2;
 const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BREAKTHROUGH = 4;
@@ -589,6 +596,7 @@ let battleSceneAmbientStep = 0;
 let battleSceneLastExplicitEventAtMs = 0;
 let battleSceneLastExplicitEventSeq = 0;
 let battleSceneLastExplicitEventSource = "";
+let battleSceneLastExplicitEventOutcomeProfile = "neutral";
 let battleSceneLastResultDrivenImpactAtMs = 0;
 let battleSceneLastResultDrivenImpactSignal = null;
 let battleSceneLastResultDrivenImpactSignalExplicitAtMs = 0;
@@ -2925,11 +2933,51 @@ function resolveBattleSceneAmbientRandomSyncDuel(sourceInput) {
   return sourceInput === "breakthrough" ? false : true;
 }
 
-function resolveBattleSceneAmbientRandomRecoveryWindowMs(sourceInput) {
+function resolveBattleSceneAmbientRandomRecoveryWindowMs(
+  sourceInput,
+  outcomeProfileInput = "neutral",
+) {
+  const outcomeProfile =
+    outcomeProfileInput === "battle_win"
+      ? "battle_win"
+      : outcomeProfileInput === "battle_loss"
+        ? "battle_loss"
+        : outcomeProfileInput === "battle_loss_heavy"
+          ? "battle_loss_heavy"
+          : outcomeProfileInput === "breakthrough_success"
+            ? "breakthrough_success"
+            : outcomeProfileInput === "breakthrough_fail_minor"
+              ? "breakthrough_fail_minor"
+              : outcomeProfileInput === "breakthrough_fail_heavy"
+                ? "breakthrough_fail_heavy"
+                : outcomeProfileInput === "breakthrough_blocked"
+                  ? "breakthrough_blocked"
+                  : "neutral";
   if (sourceInput === "battle") {
+    if (outcomeProfile === "battle_win") {
+      return BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BATTLE_WIN;
+    }
+    if (outcomeProfile === "battle_loss") {
+      return BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BATTLE_LOSS;
+    }
+    if (outcomeProfile === "battle_loss_heavy") {
+      return BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BATTLE_LOSS_HEAVY;
+    }
     return BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BATTLE;
   }
   if (sourceInput === "breakthrough") {
+    if (outcomeProfile === "breakthrough_success") {
+      return BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BREAKTHROUGH_SUCCESS;
+    }
+    if (outcomeProfile === "breakthrough_fail_minor") {
+      return BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BREAKTHROUGH_FAIL_MINOR;
+    }
+    if (outcomeProfile === "breakthrough_fail_heavy") {
+      return BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BREAKTHROUGH_FAIL_HEAVY;
+    }
+    if (outcomeProfile === "breakthrough_blocked") {
+      return BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BREAKTHROUGH_BLOCKED;
+    }
     return BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BREAKTHROUGH;
   }
   return BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS;
@@ -2938,6 +2986,7 @@ function resolveBattleSceneAmbientRandomRecoveryWindowMs(sourceInput) {
 function setBattleSceneAmbientImpactRandomRecovery(
   remainingMsInput = 0,
   maxMsInput = BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS,
+  outcomeProfileInput = "neutral",
 ) {
   if (!dom.battleSceneArena) {
     return;
@@ -2950,10 +2999,28 @@ function setBattleSceneAmbientImpactRandomRecovery(
         BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS,
     ),
   );
+  const outcomeProfile =
+    outcomeProfileInput === "battle_win"
+      ? "battle_win"
+      : outcomeProfileInput === "battle_loss"
+        ? "battle_loss"
+        : outcomeProfileInput === "battle_loss_heavy"
+          ? "battle_loss_heavy"
+          : outcomeProfileInput === "breakthrough_success"
+            ? "breakthrough_success"
+            : outcomeProfileInput === "breakthrough_fail_minor"
+              ? "breakthrough_fail_minor"
+              : outcomeProfileInput === "breakthrough_fail_heavy"
+                ? "breakthrough_fail_heavy"
+                : outcomeProfileInput === "breakthrough_blocked"
+                  ? "breakthrough_blocked"
+                  : "neutral";
   dom.battleSceneArena.dataset.sceneAmbientImpactRandomRecoveryMs =
     String(remainingMs);
   dom.battleSceneArena.dataset.sceneAmbientImpactRandomRecoveryMaxMs =
     String(maxMs);
+  dom.battleSceneArena.dataset.sceneAmbientImpactRandomRecoveryOutcomeProfile =
+    outcomeProfile;
 }
 
 function setBattleSceneAmbientImpactRandomResidue(
@@ -4399,6 +4466,7 @@ function resetBattleSceneDuelState(options = {}) {
   battleSceneLastResultDrivenImpactSignalExplicitSeq = 0;
   battleSceneLastExplicitEventSeq = 0;
   battleSceneLastExplicitEventSource = "";
+  battleSceneLastExplicitEventOutcomeProfile = "neutral";
   battleSceneLastResultDrivenImpactReplayCount = 0;
   battleSceneLastResultDrivenImpactReplayAtMs = 0;
   if (options.clearTicker) {
@@ -5883,6 +5951,18 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
     battleSceneLastExplicitEventAtMs = Date.now();
     battleSceneLastExplicitEventSeq += 1;
     battleSceneLastExplicitEventSource = source || "";
+    const explicitRandomOutcomeProfile =
+      resolveBattleSceneAmbientRandomOutcomeProfile(
+        {
+          source: battleSceneLastExplicitEventSource,
+          outcome:
+            options?.outcome && typeof options.outcome === "object"
+              ? options.outcome
+              : null,
+        },
+        battleSceneLastExplicitEventSource,
+      );
+    battleSceneLastExplicitEventOutcomeProfile = explicitRandomOutcomeProfile;
     setBattleSceneAmbientImpactSequence(
       battleSceneLastExplicitEventSeq,
       battleSceneLastResultDrivenImpactSignalExplicitSeq,
@@ -5909,16 +5989,7 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
       battleSceneLastExplicitEventSource || "none",
     );
     setBattleSceneAmbientImpactRandomOutcomeProfile(
-      resolveBattleSceneAmbientRandomOutcomeProfile(
-        {
-          source: battleSceneLastExplicitEventSource,
-          outcome:
-            options?.outcome && typeof options.outcome === "object"
-              ? options.outcome
-              : null,
-        },
-        battleSceneLastExplicitEventSource,
-      ),
+      explicitRandomOutcomeProfile,
       battleSceneLastExplicitEventSource || "none",
     );
     setBattleSceneAmbientImpactRandomSyncPolicy(
@@ -5936,10 +6007,12 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
     const randomRecoveryWindowMs =
       resolveBattleSceneAmbientRandomRecoveryWindowMs(
         battleSceneLastExplicitEventSource,
+        explicitRandomOutcomeProfile,
       );
     setBattleSceneAmbientImpactRandomRecovery(
       randomRecoveryWindowMs,
       randomRecoveryWindowMs,
+      explicitRandomOutcomeProfile,
     );
     if (source) {
       battleSceneLastResultDrivenImpactAtMs = battleSceneLastExplicitEventAtMs;
@@ -6511,10 +6584,15 @@ function runBattleSceneAmbientTick() {
   const randomKindProfile = resolveBattleSceneAmbientRandomImpactKindProfile(
     randomRecoverySource,
   );
-  const randomOutcomeProfile = resolveBattleSceneAmbientRandomOutcomeProfile(
-    battleSceneLastResultDrivenImpactSignal,
-    randomRecoverySource,
-  );
+  const randomOutcomeProfile =
+    hasResultDrivenAmbientImpactSignal && resultDrivenImpactSignal
+      ? resolveBattleSceneAmbientRandomOutcomeProfile(
+          resultDrivenImpactSignal,
+          randomRecoverySource,
+        )
+      : randomRecoverySource
+        ? battleSceneLastExplicitEventOutcomeProfile
+        : "neutral";
   const randomSyncDuel = resolveBattleSceneAmbientRandomSyncDuel(
     randomRecoverySource,
   );
@@ -6523,6 +6601,7 @@ function runBattleSceneAmbientTick() {
   );
   const randomRecoveryMaxMs = resolveBattleSceneAmbientRandomRecoveryWindowMs(
     randomRecoverySource,
+    randomOutcomeProfile,
   );
   const randomRecoveryRemainingMs = Math.max(
     0,
@@ -6537,6 +6616,7 @@ function runBattleSceneAmbientTick() {
   setBattleSceneAmbientImpactRandomRecovery(
     randomRecoveryRemainingMs,
     randomRecoveryMaxMs,
+    randomOutcomeProfile,
   );
   setBattleSceneAmbientImpactRandomRecoverySource(
     randomRecoverySource || "none",
@@ -6782,6 +6862,7 @@ function runBattleSceneAmbientTick() {
     battleSceneLastResultDrivenImpactSignalExplicitSeq = 0;
     battleSceneLastExplicitEventSeq = 0;
     battleSceneLastExplicitEventSource = "";
+    battleSceneLastExplicitEventOutcomeProfile = "neutral";
     battleSceneLastResultDrivenImpactReplayCount = 0;
     battleSceneLastResultDrivenImpactReplayAtMs = 0;
     setBattleSceneAmbientImpactReplay(0);
@@ -7004,6 +7085,7 @@ function stopBattleSceneAmbientLoop() {
   battleSceneLastResultDrivenImpactSignalExplicitSeq = 0;
   battleSceneLastExplicitEventSeq = 0;
   battleSceneLastExplicitEventSource = "";
+  battleSceneLastExplicitEventOutcomeProfile = "neutral";
   battleSceneLastResultDrivenImpactReplayCount = 0;
   battleSceneLastResultDrivenImpactReplayAtMs = 0;
   battleSceneDuelState.pressure = "low";
