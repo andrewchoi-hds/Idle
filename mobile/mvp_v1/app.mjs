@@ -2612,6 +2612,121 @@ function resolveBattleSceneAmbientRandomQuietThresholdMs(sourceInput) {
   return BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS;
 }
 
+function setBattleSceneAmbientImpactRandomKindProfile(
+  profileInput = "neutral",
+  sourceInput = "none",
+) {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  const profile =
+    profileInput === "battle_bias" || profileInput === "breakthrough_bias"
+      ? profileInput
+      : "neutral";
+  const source =
+    sourceInput === "battle" || sourceInput === "breakthrough"
+      ? sourceInput
+      : "none";
+  dom.battleSceneArena.dataset.sceneAmbientImpactRandomKindProfile = profile;
+  dom.battleSceneArena.dataset.sceneAmbientImpactRandomKindSource = source;
+}
+
+function resolveBattleSceneAmbientRandomImpactKindProfile(sourceInput) {
+  if (sourceInput === "battle") {
+    return "battle_bias";
+  }
+  if (sourceInput === "breakthrough") {
+    return "breakthrough_bias";
+  }
+  return "neutral";
+}
+
+function rollBattleSceneAmbientRandomImpact(modeInput, sourceInput) {
+  const mode =
+    modeInput === "realtime" || modeInput === "auto" ? modeInput : "idle";
+  const profile = resolveBattleSceneAmbientRandomImpactKindProfile(sourceInput);
+  const random = Math.random();
+  if (profile === "battle_bias") {
+    if (mode === "realtime") {
+      return {
+        kind: random < 0.68 ? "battle_win" : "battle_loss",
+        tone: random < 0.68 ? "success" : "warn",
+        profile,
+      };
+    }
+    if (mode === "auto") {
+      return {
+        kind: random < 0.72 ? "battle_win" : "battle_loss",
+        tone: random < 0.72 ? "success" : "warn",
+        profile,
+      };
+    }
+    return {
+      kind: random < 0.52 ? "battle_win" : "battle_loss",
+      tone: random < 0.52 ? "info" : "warn",
+      profile,
+    };
+  }
+  if (profile === "breakthrough_bias") {
+    if (mode === "realtime") {
+      return {
+        kind: random < 0.58 ? "breakthrough_success" : "breakthrough_fail",
+        tone: random < 0.58 ? "success" : "warn",
+        profile,
+      };
+    }
+    if (mode === "auto") {
+      return {
+        kind: random < 0.34 ? "breakthrough_success" : "breakthrough_fail",
+        tone: random < 0.34 ? "success" : "error",
+        profile,
+      };
+    }
+    return {
+      kind: random < 0.42 ? "breakthrough_success" : "breakthrough_fail",
+      tone: random < 0.42 ? "info" : "warn",
+      profile,
+    };
+  }
+  if (mode === "realtime") {
+    const kind =
+      random < 0.58
+        ? "battle_win"
+        : random < 0.85
+          ? "battle_loss"
+          : "breakthrough_success";
+    return {
+      kind,
+      tone: kind === "battle_loss" ? "warn" : "success",
+      profile,
+    };
+  }
+  if (mode === "auto") {
+    const kind =
+      random < 0.62
+        ? "battle_win"
+        : random < 0.86
+          ? "battle_loss"
+          : "breakthrough_fail";
+    return {
+      kind,
+      tone:
+        kind === "battle_win"
+          ? "success"
+          : kind === "battle_loss"
+            ? "warn"
+            : "error",
+      profile,
+    };
+  }
+  const kind = random < 0.5 ? "battle_win" : "battle_loss";
+  return {
+    kind,
+    tone: kind === "battle_win" ? "info" : "warn",
+    profile,
+  };
+}
+
 function resolveBattleSceneAmbientRandomRecoveryWindowMs(sourceInput) {
   if (sourceInput === "battle") {
     return BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS_BATTLE;
@@ -4009,6 +4124,7 @@ function resetBattleSceneDuelState(options = {}) {
     BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE,
     "none",
   );
+  setBattleSceneAmbientImpactRandomKindProfile("neutral", "none");
   setBattleSceneAmbientImpactRandomQuietThreshold(
     BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS,
     "none",
@@ -5528,6 +5644,12 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
       ),
       battleSceneLastExplicitEventSource || "none",
     );
+    setBattleSceneAmbientImpactRandomKindProfile(
+      resolveBattleSceneAmbientRandomImpactKindProfile(
+        battleSceneLastExplicitEventSource,
+      ),
+      battleSceneLastExplicitEventSource || "none",
+    );
     setBattleSceneAmbientImpactRandomQuietThreshold(
       resolveBattleSceneAmbientRandomQuietThresholdMs(
         battleSceneLastExplicitEventSource,
@@ -6109,6 +6231,9 @@ function runBattleSceneAmbientTick() {
     resolveBattleSceneAmbientRandomImpactProbabilityScale(
       randomRecoverySource,
     );
+  const randomKindProfile = resolveBattleSceneAmbientRandomImpactKindProfile(
+    randomRecoverySource,
+  );
   const randomQuietThresholdMs = resolveBattleSceneAmbientRandomQuietThresholdMs(
     randomRecoverySource,
   );
@@ -6138,6 +6263,10 @@ function runBattleSceneAmbientTick() {
   );
   setBattleSceneAmbientImpactRandomProbability(
     randomImpactProbabilityScale,
+    randomRecoverySource || "none",
+  );
+  setBattleSceneAmbientImpactRandomKindProfile(
+    randomKindProfile,
     randomRecoverySource || "none",
   );
   setBattleSceneAmbientImpactRandomQuietThreshold(
@@ -6247,9 +6376,11 @@ function runBattleSceneAmbientTick() {
       setBattleSceneAmbientImpactActive("signal");
       setBattleSceneAmbientImpactRandomState("suppressed_result_signal");
     } else if (mode === "realtime") {
-      const random = Math.random();
-      const kind = random < 0.58 ? "battle_win" : random < 0.85 ? "battle_loss" : "breakthrough_success";
-      const tone = kind === "battle_loss" ? "warn" : "success";
+      const randomImpactDescriptor = rollBattleSceneAmbientRandomImpact(
+        mode,
+        randomRecoverySource,
+      );
+      const { kind, tone } = randomImpactDescriptor;
       triggerBattleSceneImpact(kind, tone, { fromAmbient: true });
       setBattleSceneAmbientImpactSource("random");
       setBattleSceneAmbientImpactSignal(
@@ -6260,9 +6391,11 @@ function runBattleSceneAmbientTick() {
       setBattleSceneAmbientImpactRandomState("triggered");
       setBattleSceneAmbientImpactReplay(0);
     } else if (mode === "auto") {
-      const random = Math.random();
-      const kind = random < 0.62 ? "battle_win" : random < 0.86 ? "battle_loss" : "breakthrough_fail";
-      const tone = kind === "battle_win" ? "success" : kind === "battle_loss" ? "warn" : "error";
+      const randomImpactDescriptor = rollBattleSceneAmbientRandomImpact(
+        mode,
+        randomRecoverySource,
+      );
+      const { kind, tone } = randomImpactDescriptor;
       triggerBattleSceneImpact(kind, tone, { fromAmbient: true });
       setBattleSceneAmbientImpactSource("random");
       setBattleSceneAmbientImpactSignal(
@@ -6273,8 +6406,11 @@ function runBattleSceneAmbientTick() {
       setBattleSceneAmbientImpactRandomState("triggered");
       setBattleSceneAmbientImpactReplay(0);
     } else {
-      const kind = Math.random() < 0.5 ? "battle_win" : "battle_loss";
-      const tone = kind === "battle_win" ? "info" : "warn";
+      const randomImpactDescriptor = rollBattleSceneAmbientRandomImpact(
+        mode,
+        randomRecoverySource,
+      );
+      const { kind, tone } = randomImpactDescriptor;
       triggerBattleSceneImpact(kind, tone, { fromAmbient: true });
       setBattleSceneAmbientImpactSource("random");
       setBattleSceneAmbientImpactSignal(
@@ -6305,6 +6441,7 @@ function runBattleSceneAmbientTick() {
       BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE,
       "none",
     );
+    setBattleSceneAmbientImpactRandomKindProfile("neutral", "none");
     setBattleSceneAmbientImpactRandomQuietThreshold(
       BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS,
       "none",
@@ -6518,6 +6655,7 @@ function stopBattleSceneAmbientLoop() {
     BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE,
     "none",
   );
+  setBattleSceneAmbientImpactRandomKindProfile("neutral", "none");
   setBattleSceneAmbientImpactRandomQuietThreshold(
     BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS,
     "none",

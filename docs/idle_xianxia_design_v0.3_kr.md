@@ -2682,3 +2682,11 @@
 
 ## 635) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient random quiet-threshold source-aware 분리 + quiet-threshold 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 636) 다음 순차 작업
+1. [완료] ambient 랜덤 fallback kind pool을 source-aware 규칙(`battle -> battle_bias`, `breakthrough -> breakthrough_bias`, default `neutral`)으로 분리하고 `resolveBattleSceneAmbientRandomImpactKindProfile` 및 `rollBattleSceneAmbientRandomImpact` 헬퍼를 추가해 최근 `runBattleOnce`/`runBreakthroughAttempt` 결과 source가 랜덤 fallback 종류 선택에도 직접 반영되도록 확장.
+2. [완료] random kind-profile 계측(`setBattleSceneAmbientImpactRandomKindProfile`)을 추가해 arena dataset(`data-scene-ambient-impact-random-kind-source`, `data-scene-ambient-impact-random-kind-profile`)에서 현재 랜덤 fallback kind bias 기준 source/profile을 직접 관찰 가능하게 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 source-aware random kind-profile telemetry 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 637) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient random kind-profile source-aware 분리 + kind-profile 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

@@ -359,6 +359,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-ambient-impact-random-kind-source="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-random-kind-profile="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact-random-quiet-source="none"',
     "index.html",
     failures,
@@ -691,9 +703,12 @@ async function main() {
   assertIncludes(app, "function setBattleSceneAmbientImpactRandomRecoverySource(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneAmbientImpactRandomCadence(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneAmbientImpactRandomProbability(", "app.mjs", failures);
+  assertIncludes(app, "function setBattleSceneAmbientImpactRandomKindProfile(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneAmbientImpactRandomQuietThreshold(", "app.mjs", failures);
   assertIncludes(app, "function resolveBattleSceneAmbientRandomImpactDivisor(", "app.mjs", failures);
   assertIncludes(app, "function resolveBattleSceneAmbientRandomImpactProbabilityScale(", "app.mjs", failures);
+  assertIncludes(app, "function resolveBattleSceneAmbientRandomImpactKindProfile(", "app.mjs", failures);
+  assertIncludes(app, "function rollBattleSceneAmbientRandomImpact(", "app.mjs", failures);
   assertIncludes(app, "function resolveBattleSceneAmbientRandomQuietThresholdMs(", "app.mjs", failures);
   assertIncludes(app, "function resolveBattleSceneAmbientRandomRecoveryWindowMs(", "app.mjs", failures);
   assertIncludes(app, "function setBattleSceneAmbientImpactRandomRecovery(", "app.mjs", failures);
@@ -967,7 +982,34 @@ async function main() {
   assertIncludes(app, 'setBattleSceneAmbientImpactRandomRecoverySource("none")', "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactRandomCadence(', "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactRandomProbability(', "app.mjs", failures);
+  assertIncludes(app, 'setBattleSceneAmbientImpactRandomKindProfile(', "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactRandomQuietThreshold(', "app.mjs", failures);
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactRandomKindProfile = profile;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactRandomKindSource = source;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'const randomKindProfile = resolveBattleSceneAmbientRandomImpactKindProfile(',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'const randomImpactDescriptor = rollBattleSceneAmbientRandomImpact(',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(app, 'profile === "battle_bias"', "app.mjs", failures);
+  assertIncludes(app, 'profile === "breakthrough_bias"', "app.mjs", failures);
   assertIncludes(
     app,
     'dom.battleSceneArena.dataset.sceneAmbientImpactRandomQuietSource = source;',
