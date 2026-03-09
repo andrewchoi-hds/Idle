@@ -2690,3 +2690,11 @@
 
 ## 637) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient random kind-profile source-aware 분리 + kind-profile 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 638) 다음 순차 작업
+1. [완료] ambient 랜덤 fallback trigger option을 source-aware sync 정책(`battle/neutral -> syncDuel:on`, `breakthrough -> syncDuel:off`)으로 분리하고 `resolveBattleSceneAmbientRandomSyncDuel` 헬퍼를 추가해 최근 `runBattleOnce`/`runBreakthroughAttempt` 결과 source가 `triggerBattleSceneImpact(..., { source, syncDuel })` 호출에도 직접 반영되도록 확장.
+2. [완료] random sync 계측(`setBattleSceneAmbientImpactRandomSyncPolicy`)을 추가해 arena dataset(`data-scene-ambient-impact-random-sync-source`, `data-scene-ambient-impact-random-sync-duel`)에서 현재 랜덤 fallback sync 기준 source/duel sync 정책을 직접 관찰 가능하게 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 source-aware random sync telemetry 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 639) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient random sync source-aware 분리 + sync 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
