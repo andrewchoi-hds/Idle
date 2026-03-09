@@ -2730,3 +2730,11 @@
 
 ## 647) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient random probability outcome severity-aware 확장 + probability outcome telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 648) 다음 순차 작업
+1. [완료] ambient random cadence를 outcome severity-aware 규칙(`battle_win=1/4`, `battle_loss=1/5`, `battle_loss_heavy=1/6`, `breakthrough_success=1/5`, `breakthrough_fail_minor=1/6`, `breakthrough_fail_heavy=1/7`, `breakthrough_blocked=1/6`, fallback `battle=1/3`, `breakthrough=1/4`, default `1/2`)으로 확장하고 `resolveBattleSceneAmbientRandomImpactDivisor(source, outcomeProfile)` 헬퍼를 보강해, 마지막 엔진 결과 강도가 random fallback cadence에도 직접 반영되도록 정합화.
+2. [완료] random cadence outcome telemetry(`data-scene-ambient-impact-random-cadence-outcome-profile`)를 추가하고 explicit trigger/ambient tick 경로에 연결해, 결과 신호가 stale로 내려간 뒤에도 마지막 explicit outcome severity 기준 cadence bias가 DOM과 실제 cadence 양쪽에 유지되도록 보강.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 outcome-aware random cadence 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 649) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient random cadence outcome severity-aware 확장 + cadence outcome telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
