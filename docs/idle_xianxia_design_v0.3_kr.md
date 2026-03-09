@@ -2738,3 +2738,11 @@
 
 ## 649) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient random cadence outcome severity-aware 확장 + cadence outcome telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 650) 다음 순차 작업
+1. [완료] ambient random quiet threshold를 outcome severity-aware 규칙(`battle_win=2800ms`, `battle_loss=3400ms`, `battle_loss_heavy=4000ms`, `breakthrough_success=3600ms`, `breakthrough_fail_minor=4300ms`, `breakthrough_fail_heavy=5200ms`, `breakthrough_blocked=4600ms`, fallback `battle=2600ms`, `breakthrough=3200ms`, default `2200ms`)으로 확장하고 `resolveBattleSceneAmbientRandomQuietThresholdMs(source, outcomeProfile)` 헬퍼를 보강해, 마지막 엔진 결과 강도가 random fallback 재개 시점에도 직접 반영되도록 정합화.
+2. [완료] random quiet outcome telemetry(`data-scene-ambient-impact-random-quiet-outcome-profile`)를 추가하고 explicit trigger/ambient tick 경로에 연결해, 결과 신호가 stale로 내려간 뒤에도 마지막 explicit outcome severity 기준 quiet threshold가 DOM과 실제 재개 시점 양쪽에 유지되도록 보강.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 outcome-aware random quiet-threshold 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 651) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient random quiet-threshold outcome severity-aware 확장 + quiet outcome telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

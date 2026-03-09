@@ -431,6 +431,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-ambient-impact-random-quiet-outcome-profile="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact-random-quiet-threshold-ms="2200"',
     "index.html",
     failures,
@@ -942,6 +948,48 @@ async function main() {
   );
   assertIncludes(
     app,
+    "const BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS_BATTLE_WIN = 2800;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS_BATTLE_LOSS = 3400;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS_BATTLE_LOSS_HEAVY = 4000;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS_BREAKTHROUGH_SUCCESS = 3600;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS_BREAKTHROUGH_FAIL_MINOR =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS_BREAKTHROUGH_FAIL_HEAVY =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS_BREAKTHROUGH_BLOCKED =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS = 3;",
     "app.mjs",
     failures,
@@ -1082,6 +1130,7 @@ async function main() {
   assertIncludes(app, "dataset.sceneAmbientImpactRandomProbabilitySource", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomProbabilityOutcomeProfile", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomProbabilityScalePct", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactRandomQuietOutcomeProfile", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomRecoveryOutcomeProfile", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomRecoveryMs", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomRecoveryMaxMs", "app.mjs", failures);
@@ -1228,6 +1277,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneArena.dataset.sceneAmbientImpactRandomProbabilityOutcomeProfile =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactRandomQuietOutcomeProfile =',
     "app.mjs",
     failures,
   );
