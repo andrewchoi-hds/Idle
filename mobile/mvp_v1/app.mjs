@@ -554,6 +554,17 @@ const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BREAKTHROUGH = 4;
 const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE = 1;
 const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BATTLE = 0.82;
 const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BREAKTHROUGH = 0.64;
+const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BATTLE_WIN = 0.76;
+const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BATTLE_LOSS = 0.58;
+const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BATTLE_LOSS_HEAVY = 0.36;
+const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BREAKTHROUGH_SUCCESS =
+  0.52;
+const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BREAKTHROUGH_FAIL_MINOR =
+  0.34;
+const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BREAKTHROUGH_FAIL_HEAVY =
+  0.18;
+const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BREAKTHROUGH_BLOCKED =
+  0.24;
 const BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS = 2200;
 const BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS_BATTLE = 2600;
 const BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS_BREAKTHROUGH = 3200;
@@ -2562,6 +2573,7 @@ function resolveBattleSceneAmbientRandomImpactDivisor(sourceInput) {
 function setBattleSceneAmbientImpactRandomProbability(
   scaleInput = BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE,
   sourceInput = "none",
+  outcomeProfileInput = "neutral",
 ) {
   if (!dom.battleSceneArena) {
     return;
@@ -2571,9 +2583,27 @@ function setBattleSceneAmbientImpactRandomProbability(
     sourceInput === "battle" || sourceInput === "breakthrough"
       ? sourceInput
       : "none";
+  const outcomeProfile =
+    outcomeProfileInput === "battle_win"
+      ? "battle_win"
+      : outcomeProfileInput === "battle_loss"
+        ? "battle_loss"
+        : outcomeProfileInput === "battle_loss_heavy"
+          ? "battle_loss_heavy"
+          : outcomeProfileInput === "breakthrough_success"
+            ? "breakthrough_success"
+            : outcomeProfileInput === "breakthrough_fail_minor"
+              ? "breakthrough_fail_minor"
+              : outcomeProfileInput === "breakthrough_fail_heavy"
+                ? "breakthrough_fail_heavy"
+                : outcomeProfileInput === "breakthrough_blocked"
+                  ? "breakthrough_blocked"
+                  : "neutral";
   const scalePct = Math.max(0, Math.round(scale * 100));
   dom.battleSceneArena.dataset.sceneAmbientImpactRandomProbabilitySource =
     source;
+  dom.battleSceneArena.dataset.sceneAmbientImpactRandomProbabilityOutcomeProfile =
+    outcomeProfile;
   dom.battleSceneArena.dataset.sceneAmbientImpactRandomProbabilityScalePct =
     String(scalePct);
 }
@@ -2600,11 +2630,51 @@ function setBattleSceneAmbientImpactRandomQuietThreshold(
     String(thresholdMs);
 }
 
-function resolveBattleSceneAmbientRandomImpactProbabilityScale(sourceInput) {
+function resolveBattleSceneAmbientRandomImpactProbabilityScale(
+  sourceInput,
+  outcomeProfileInput = "neutral",
+) {
+  const outcomeProfile =
+    outcomeProfileInput === "battle_win"
+      ? "battle_win"
+      : outcomeProfileInput === "battle_loss"
+        ? "battle_loss"
+        : outcomeProfileInput === "battle_loss_heavy"
+          ? "battle_loss_heavy"
+          : outcomeProfileInput === "breakthrough_success"
+            ? "breakthrough_success"
+            : outcomeProfileInput === "breakthrough_fail_minor"
+              ? "breakthrough_fail_minor"
+              : outcomeProfileInput === "breakthrough_fail_heavy"
+                ? "breakthrough_fail_heavy"
+                : outcomeProfileInput === "breakthrough_blocked"
+                  ? "breakthrough_blocked"
+                  : "neutral";
   if (sourceInput === "battle") {
+    if (outcomeProfile === "battle_win") {
+      return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BATTLE_WIN;
+    }
+    if (outcomeProfile === "battle_loss") {
+      return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BATTLE_LOSS;
+    }
+    if (outcomeProfile === "battle_loss_heavy") {
+      return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BATTLE_LOSS_HEAVY;
+    }
     return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BATTLE;
   }
   if (sourceInput === "breakthrough") {
+    if (outcomeProfile === "breakthrough_success") {
+      return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BREAKTHROUGH_SUCCESS;
+    }
+    if (outcomeProfile === "breakthrough_fail_minor") {
+      return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BREAKTHROUGH_FAIL_MINOR;
+    }
+    if (outcomeProfile === "breakthrough_fail_heavy") {
+      return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BREAKTHROUGH_FAIL_HEAVY;
+    }
+    if (outcomeProfile === "breakthrough_blocked") {
+      return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BREAKTHROUGH_BLOCKED;
+    }
     return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BREAKTHROUGH;
   }
   return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE;
@@ -5979,8 +6049,10 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
     setBattleSceneAmbientImpactRandomProbability(
       resolveBattleSceneAmbientRandomImpactProbabilityScale(
         battleSceneLastExplicitEventSource,
+        explicitRandomOutcomeProfile,
       ),
       battleSceneLastExplicitEventSource || "none",
+      explicitRandomOutcomeProfile,
     );
     setBattleSceneAmbientImpactRandomKindProfile(
       resolveBattleSceneAmbientRandomImpactKindProfile(
@@ -6580,6 +6652,7 @@ function runBattleSceneAmbientTick() {
   const randomImpactProbabilityScale =
     resolveBattleSceneAmbientRandomImpactProbabilityScale(
       randomRecoverySource,
+      randomOutcomeProfile,
     );
   const randomKindProfile = resolveBattleSceneAmbientRandomImpactKindProfile(
     randomRecoverySource,
@@ -6628,6 +6701,7 @@ function runBattleSceneAmbientTick() {
   setBattleSceneAmbientImpactRandomProbability(
     randomImpactProbabilityScale,
     randomRecoverySource || "none",
+    randomOutcomeProfile,
   );
   setBattleSceneAmbientImpactRandomKindProfile(
     randomKindProfile,
