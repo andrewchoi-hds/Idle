@@ -2778,6 +2778,23 @@ function setBattleSceneAmbientImpactRandomRecovery(
     String(maxMs);
 }
 
+function setBattleSceneAmbientImpactRandomResidue(
+  sourceInput = "none",
+  syncDuelInput = true,
+) {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  const source =
+    sourceInput === "battle" || sourceInput === "breakthrough"
+      ? sourceInput
+      : "none";
+  const syncDuel = syncDuelInput === false ? "off" : "on";
+  dom.battleSceneArena.dataset.sceneAmbientImpactRandomResidueSource = source;
+  dom.battleSceneArena.dataset.sceneAmbientImpactRandomResidueSyncDuel =
+    syncDuel;
+}
+
 function setBattleSceneAmbientImpactSignal(signalInput, sourceInput = "idle") {
   if (!dom.battleSceneArena) {
     return;
@@ -2798,9 +2815,16 @@ function setBattleSceneAmbientImpactSignal(signalInput, sourceInput = "idle") {
     typeof signal?.outcome?.outcome === "string" && signal.outcome.outcome
       ? signal.outcome.outcome
       : "none";
+  const residueSource =
+    source === "random" &&
+    (signal?.residueSource === "battle" || signal?.residueSource === "breakthrough")
+      ? signal.residueSource
+      : "none";
+  const residueSyncDuel = source === "random" ? signal?.syncDuel !== false : true;
   dom.battleSceneArena.dataset.sceneAmbientImpactSource = source;
   dom.battleSceneArena.dataset.sceneAmbientImpactKind = kind;
   dom.battleSceneArena.dataset.sceneAmbientImpactOutcomeCode = outcomeCode;
+  setBattleSceneAmbientImpactRandomResidue(residueSource, residueSyncDuel);
 }
 
 function resolveBattleSceneResultDrivenAmbientImpactReplayMax(signalInput) {
@@ -6422,7 +6446,13 @@ function runBattleSceneAmbientTick() {
       });
       setBattleSceneAmbientImpactSource("random");
       setBattleSceneAmbientImpactSignal(
-        { kind, tone, source: "random" },
+        {
+          kind,
+          tone,
+          source: "random",
+          residueSource: randomRecoverySource || "none",
+          syncDuel: randomSyncDuel,
+        },
         "random",
       );
       setBattleSceneAmbientImpactActive("none");
@@ -6441,7 +6471,13 @@ function runBattleSceneAmbientTick() {
       });
       setBattleSceneAmbientImpactSource("random");
       setBattleSceneAmbientImpactSignal(
-        { kind, tone, source: "random" },
+        {
+          kind,
+          tone,
+          source: "random",
+          residueSource: randomRecoverySource || "none",
+          syncDuel: randomSyncDuel,
+        },
         "random",
       );
       setBattleSceneAmbientImpactActive("none");
@@ -6460,7 +6496,13 @@ function runBattleSceneAmbientTick() {
       });
       setBattleSceneAmbientImpactSource("random");
       setBattleSceneAmbientImpactSignal(
-        { kind, tone, source: "random" },
+        {
+          kind,
+          tone,
+          source: "random",
+          residueSource: randomRecoverySource || "none",
+          syncDuel: randomSyncDuel,
+        },
         "random",
       );
       setBattleSceneAmbientImpactActive("none");
