@@ -2833,7 +2833,15 @@ function setBattleSceneAmbientImpactRandomKindProfile(
     return;
   }
   const profile =
-    profileInput === "battle_bias" || profileInput === "breakthrough_bias"
+    profileInput === "battle_bias" ||
+    profileInput === "battle_win_bias" ||
+    profileInput === "battle_loss_bias" ||
+    profileInput === "battle_loss_heavy_bias" ||
+    profileInput === "breakthrough_bias" ||
+    profileInput === "breakthrough_success_bias" ||
+    profileInput === "breakthrough_fail_minor_bias" ||
+    profileInput === "breakthrough_fail_heavy_bias" ||
+    profileInput === "breakthrough_blocked_bias"
       ? profileInput
       : "neutral";
   const source =
@@ -2844,11 +2852,51 @@ function setBattleSceneAmbientImpactRandomKindProfile(
   dom.battleSceneArena.dataset.sceneAmbientImpactRandomKindSource = source;
 }
 
-function resolveBattleSceneAmbientRandomImpactKindProfile(sourceInput) {
+function resolveBattleSceneAmbientRandomImpactKindProfile(
+  sourceInput,
+  outcomeProfileInput = "neutral",
+) {
+  const outcomeProfile =
+    outcomeProfileInput === "battle_win"
+      ? "battle_win"
+      : outcomeProfileInput === "battle_loss"
+        ? "battle_loss"
+        : outcomeProfileInput === "battle_loss_heavy"
+          ? "battle_loss_heavy"
+          : outcomeProfileInput === "breakthrough_success"
+            ? "breakthrough_success"
+            : outcomeProfileInput === "breakthrough_fail_minor"
+              ? "breakthrough_fail_minor"
+              : outcomeProfileInput === "breakthrough_fail_heavy"
+                ? "breakthrough_fail_heavy"
+                : outcomeProfileInput === "breakthrough_blocked"
+                  ? "breakthrough_blocked"
+                  : "neutral";
   if (sourceInput === "battle") {
+    if (outcomeProfile === "battle_win") {
+      return "battle_win_bias";
+    }
+    if (outcomeProfile === "battle_loss") {
+      return "battle_loss_bias";
+    }
+    if (outcomeProfile === "battle_loss_heavy") {
+      return "battle_loss_heavy_bias";
+    }
     return "battle_bias";
   }
   if (sourceInput === "breakthrough") {
+    if (outcomeProfile === "breakthrough_success") {
+      return "breakthrough_success_bias";
+    }
+    if (outcomeProfile === "breakthrough_fail_minor") {
+      return "breakthrough_fail_minor_bias";
+    }
+    if (outcomeProfile === "breakthrough_fail_heavy") {
+      return "breakthrough_fail_heavy_bias";
+    }
+    if (outcomeProfile === "breakthrough_blocked") {
+      return "breakthrough_blocked_bias";
+    }
     return "breakthrough_bias";
   }
   return "neutral";
@@ -2934,7 +2982,10 @@ function rollBattleSceneAmbientRandomImpact(
 ) {
   const mode =
     modeInput === "realtime" || modeInput === "auto" ? modeInput : "idle";
-  const profile = resolveBattleSceneAmbientRandomImpactKindProfile(sourceInput);
+  const profile = resolveBattleSceneAmbientRandomImpactKindProfile(
+    sourceInput,
+    outcomeProfileInput,
+  );
   const outcomeProfile =
     outcomeProfileInput === "battle_win" ||
     outcomeProfileInput === "battle_loss" ||
@@ -2946,7 +2997,12 @@ function rollBattleSceneAmbientRandomImpact(
       ? outcomeProfileInput
       : "neutral";
   const random = Math.random();
-  if (profile === "battle_bias") {
+  if (
+    profile === "battle_bias" ||
+    profile === "battle_win_bias" ||
+    profile === "battle_loss_bias" ||
+    profile === "battle_loss_heavy_bias"
+  ) {
     const winChance =
       outcomeProfile === "battle_win"
         ? mode === "realtime"
@@ -3005,7 +3061,13 @@ function rollBattleSceneAmbientRandomImpact(
       outcomeProfile,
     };
   }
-  if (profile === "breakthrough_bias") {
+  if (
+    profile === "breakthrough_bias" ||
+    profile === "breakthrough_success_bias" ||
+    profile === "breakthrough_fail_minor_bias" ||
+    profile === "breakthrough_fail_heavy_bias" ||
+    profile === "breakthrough_blocked_bias"
+  ) {
     const successChance =
       outcomeProfile === "breakthrough_success"
         ? mode === "realtime"
@@ -6194,6 +6256,7 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
     setBattleSceneAmbientImpactRandomKindProfile(
       resolveBattleSceneAmbientRandomImpactKindProfile(
         battleSceneLastExplicitEventSource,
+        explicitRandomOutcomeProfile,
       ),
       battleSceneLastExplicitEventSource || "none",
     );
@@ -6807,6 +6870,7 @@ function runBattleSceneAmbientTick() {
     );
   const randomKindProfile = resolveBattleSceneAmbientRandomImpactKindProfile(
     randomRecoverySource,
+    randomOutcomeProfile,
   );
   const randomSyncDuel = resolveBattleSceneAmbientRandomSyncDuel(
     randomRecoverySource,
