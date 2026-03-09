@@ -551,6 +551,13 @@ const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BREAKTHROUGH 
 const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR = 2;
 const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BATTLE = 3;
 const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BREAKTHROUGH = 4;
+const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BATTLE_WIN = 4;
+const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BATTLE_LOSS = 5;
+const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BATTLE_LOSS_HEAVY = 6;
+const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BREAKTHROUGH_SUCCESS = 5;
+const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BREAKTHROUGH_FAIL_MINOR = 6;
+const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BREAKTHROUGH_FAIL_HEAVY = 7;
+const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BREAKTHROUGH_BLOCKED = 6;
 const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE = 1;
 const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BATTLE = 0.82;
 const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_PROBABILITY_SCALE_BREAKTHROUGH = 0.64;
@@ -2541,6 +2548,7 @@ function setBattleSceneAmbientImpactRandomRecoverySource(sourceInput = "none") {
 function setBattleSceneAmbientImpactRandomCadence(
   divisorInput = BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR,
   sourceInput = "none",
+  outcomeProfileInput = "neutral",
 ) {
   if (!dom.battleSceneArena) {
     return;
@@ -2555,16 +2563,74 @@ function setBattleSceneAmbientImpactRandomCadence(
     sourceInput === "battle" || sourceInput === "breakthrough"
       ? sourceInput
       : "none";
+  const outcomeProfile =
+    outcomeProfileInput === "battle_win"
+      ? "battle_win"
+      : outcomeProfileInput === "battle_loss"
+        ? "battle_loss"
+        : outcomeProfileInput === "battle_loss_heavy"
+          ? "battle_loss_heavy"
+          : outcomeProfileInput === "breakthrough_success"
+            ? "breakthrough_success"
+            : outcomeProfileInput === "breakthrough_fail_minor"
+              ? "breakthrough_fail_minor"
+              : outcomeProfileInput === "breakthrough_fail_heavy"
+                ? "breakthrough_fail_heavy"
+                : outcomeProfileInput === "breakthrough_blocked"
+                  ? "breakthrough_blocked"
+                  : "neutral";
   dom.battleSceneArena.dataset.sceneAmbientImpactRandomCadenceDivisor =
     String(divisor);
+  dom.battleSceneArena.dataset.sceneAmbientImpactRandomCadenceOutcomeProfile =
+    outcomeProfile;
   dom.battleSceneArena.dataset.sceneAmbientImpactRandomCadenceSource = source;
 }
 
-function resolveBattleSceneAmbientRandomImpactDivisor(sourceInput) {
+function resolveBattleSceneAmbientRandomImpactDivisor(
+  sourceInput,
+  outcomeProfileInput = "neutral",
+) {
+  const outcomeProfile =
+    outcomeProfileInput === "battle_win"
+      ? "battle_win"
+      : outcomeProfileInput === "battle_loss"
+        ? "battle_loss"
+        : outcomeProfileInput === "battle_loss_heavy"
+          ? "battle_loss_heavy"
+          : outcomeProfileInput === "breakthrough_success"
+            ? "breakthrough_success"
+            : outcomeProfileInput === "breakthrough_fail_minor"
+              ? "breakthrough_fail_minor"
+              : outcomeProfileInput === "breakthrough_fail_heavy"
+                ? "breakthrough_fail_heavy"
+                : outcomeProfileInput === "breakthrough_blocked"
+                  ? "breakthrough_blocked"
+                  : "neutral";
   if (sourceInput === "battle") {
+    if (outcomeProfile === "battle_win") {
+      return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BATTLE_WIN;
+    }
+    if (outcomeProfile === "battle_loss") {
+      return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BATTLE_LOSS;
+    }
+    if (outcomeProfile === "battle_loss_heavy") {
+      return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BATTLE_LOSS_HEAVY;
+    }
     return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BATTLE;
   }
   if (sourceInput === "breakthrough") {
+    if (outcomeProfile === "breakthrough_success") {
+      return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BREAKTHROUGH_SUCCESS;
+    }
+    if (outcomeProfile === "breakthrough_fail_minor") {
+      return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BREAKTHROUGH_FAIL_MINOR;
+    }
+    if (outcomeProfile === "breakthrough_fail_heavy") {
+      return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BREAKTHROUGH_FAIL_HEAVY;
+    }
+    if (outcomeProfile === "breakthrough_blocked") {
+      return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BREAKTHROUGH_BLOCKED;
+    }
     return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BREAKTHROUGH;
   }
   return BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR;
@@ -6043,8 +6109,10 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
     setBattleSceneAmbientImpactRandomCadence(
       resolveBattleSceneAmbientRandomImpactDivisor(
         battleSceneLastExplicitEventSource,
+        explicitRandomOutcomeProfile,
       ),
       battleSceneLastExplicitEventSource || "none",
+      explicitRandomOutcomeProfile,
     );
     setBattleSceneAmbientImpactRandomProbability(
       resolveBattleSceneAmbientRandomImpactProbabilityScale(
@@ -6647,16 +6715,6 @@ function runBattleSceneAmbientTick() {
     hasResultDrivenAmbientImpactSignal
       ? resultDrivenImpactSignal?.source
       : battleSceneLastExplicitEventSource;
-  const randomImpactCadenceDivisor =
-    resolveBattleSceneAmbientRandomImpactDivisor(randomRecoverySource);
-  const randomImpactProbabilityScale =
-    resolveBattleSceneAmbientRandomImpactProbabilityScale(
-      randomRecoverySource,
-      randomOutcomeProfile,
-    );
-  const randomKindProfile = resolveBattleSceneAmbientRandomImpactKindProfile(
-    randomRecoverySource,
-  );
   const randomOutcomeProfile =
     hasResultDrivenAmbientImpactSignal && resultDrivenImpactSignal
       ? resolveBattleSceneAmbientRandomOutcomeProfile(
@@ -6666,6 +6724,19 @@ function runBattleSceneAmbientTick() {
       : randomRecoverySource
         ? battleSceneLastExplicitEventOutcomeProfile
         : "neutral";
+  const randomImpactCadenceDivisor =
+    resolveBattleSceneAmbientRandomImpactDivisor(
+      randomRecoverySource,
+      randomOutcomeProfile,
+    );
+  const randomImpactProbabilityScale =
+    resolveBattleSceneAmbientRandomImpactProbabilityScale(
+      randomRecoverySource,
+      randomOutcomeProfile,
+    );
+  const randomKindProfile = resolveBattleSceneAmbientRandomImpactKindProfile(
+    randomRecoverySource,
+  );
   const randomSyncDuel = resolveBattleSceneAmbientRandomSyncDuel(
     randomRecoverySource,
   );
@@ -6697,6 +6768,7 @@ function runBattleSceneAmbientTick() {
   setBattleSceneAmbientImpactRandomCadence(
     randomImpactCadenceDivisor,
     randomRecoverySource || "none",
+    randomOutcomeProfile,
   );
   setBattleSceneAmbientImpactRandomProbability(
     randomImpactProbabilityScale,
