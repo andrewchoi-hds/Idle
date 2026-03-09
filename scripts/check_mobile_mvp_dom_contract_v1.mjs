@@ -1371,7 +1371,14 @@ async function main() {
     failures,
   );
   assertIncludes(app, 'profile === "battle_bias"', "app.mjs", failures);
+  assertIncludes(app, '"battle_win_bias"', "app.mjs", failures);
+  assertIncludes(app, '"battle_loss_bias"', "app.mjs", failures);
+  assertIncludes(app, '"battle_loss_heavy_bias"', "app.mjs", failures);
   assertIncludes(app, 'profile === "breakthrough_bias"', "app.mjs", failures);
+  assertIncludes(app, '"breakthrough_success_bias"', "app.mjs", failures);
+  assertIncludes(app, '"breakthrough_fail_minor_bias"', "app.mjs", failures);
+  assertIncludes(app, '"breakthrough_fail_heavy_bias"', "app.mjs", failures);
+  assertIncludes(app, '"breakthrough_blocked_bias"', "app.mjs", failures);
   assertIncludes(app, 'outcomeProfile === "battle_loss_heavy"', "app.mjs", failures);
   assertIncludes(app, 'outcomeProfile === "breakthrough_fail_heavy"', "app.mjs", failures);
   assertIncludes(app, 'outcomeProfile === "breakthrough_blocked"', "app.mjs", failures);

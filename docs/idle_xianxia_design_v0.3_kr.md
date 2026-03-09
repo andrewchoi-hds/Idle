@@ -2746,3 +2746,11 @@
 
 ## 651) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient random quiet-threshold outcome severity-aware 확장 + quiet outcome telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 652) 다음 순차 작업
+1. [완료] ambient random kind profile을 outcome severity-aware 규칙(`battle_win_bias`, `battle_loss_bias`, `battle_loss_heavy_bias`, `breakthrough_success_bias`, `breakthrough_fail_minor_bias`, `breakthrough_fail_heavy_bias`, `breakthrough_blocked_bias`, fallback `battle_bias`, `breakthrough_bias`, default `neutral`)으로 확장하고 `resolveBattleSceneAmbientRandomImpactKindProfile(source, outcomeProfile)` 헬퍼를 보강해, 마지막 엔진 결과 강도가 random kind-profile 분류와 roller branch 양쪽에 직접 반영되도록 정합화.
+2. [완료] explicit trigger/ambient tick이 동일한 outcome severity 기준 kind profile을 기록하도록 `setBattleSceneAmbientImpactRandomKindProfile` 경로를 보강해, DOM의 `data-scene-ambient-impact-random-kind-profile`이 source 단위 잔향뿐 아니라 heavy loss/blocked breakthrough 같은 실제 bias 클래스를 직접 노출하도록 확장.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 outcome-aware random kind-profile 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 653) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient random kind-profile outcome severity-aware 확장 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
