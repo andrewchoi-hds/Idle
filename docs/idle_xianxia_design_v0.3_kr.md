@@ -2706,3 +2706,11 @@
 
 ## 641) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient random residue source/sync telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 642) 다음 순차 작업
+1. [완료] ambient random fallback에 outcome severity bias 규칙(`battle_win`, `battle_loss`, `battle_loss_heavy`, `breakthrough_success`, `breakthrough_fail_minor`, `breakthrough_fail_heavy`, `breakthrough_blocked`)을 추가하고 `resolveBattleSceneAmbientRandomOutcomeProfile` 헬퍼를 도입해 마지막 엔진 outcome 강도가 random kind/tone 선택에도 직접 반영되도록 확장.
+2. [완료] random outcome/residue outcome 계측(`setBattleSceneAmbientImpactRandomOutcomeProfile`, `data-scene-ambient-impact-random-outcome-source`, `data-scene-ambient-impact-random-outcome-profile`, `data-scene-ambient-impact-random-residue-outcome-profile`)을 추가해 현재 bias 기준과 마지막 random pulse의 residue severity profile을 DOM에서 직접 추적 가능하게 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 random outcome severity telemetry 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 643) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient random outcome severity bias + residue outcome telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
