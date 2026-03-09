@@ -2698,3 +2698,11 @@
 
 ## 639) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient random sync source-aware 분리 + sync 계측 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 640) 다음 순차 작업
+1. [완료] ambient random signal payload에 residue source/sync 메타를 추가하고 `setBattleSceneAmbientImpactRandomResidue` 헬퍼를 도입해, random fallback이 실제 어떤 `battle`/`breakthrough` 잔향 source와 sync 정책으로 발동했는지 DOM에서 직접 추적 가능하게 확장.
+2. [완료] random residue 계측(`data-scene-ambient-impact-random-residue-source`, `data-scene-ambient-impact-random-residue-sync-duel`)을 추가하고 `setBattleSceneAmbientImpactSignal` 경로와 연결해, result-driven 신호/idle reset에서는 `none/on`으로 정리되고 random trigger 시에는 실제 residue source/sync가 즉시 기록되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 random residue telemetry 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 641) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient random residue source/sync telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
