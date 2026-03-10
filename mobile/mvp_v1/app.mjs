@@ -608,6 +608,13 @@ const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BREAKTHROUGH_BLOCKED
 const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS = 960;
 const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BATTLE = 1080;
 const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BREAKTHROUGH = 840;
+const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BATTLE_WIN = 900;
+const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BATTLE_LOSS = 1200;
+const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BATTLE_LOSS_HEAVY = 1500;
+const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BREAKTHROUGH_SUCCESS = 720;
+const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BREAKTHROUGH_FAIL_MINOR = 960;
+const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BREAKTHROUGH_FAIL_HEAVY = 1260;
+const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BREAKTHROUGH_BLOCKED = 1320;
 const BATTLE_SCENE_DUEL_MAX_HP = 100;
 const BATTLE_SCENE_DUEL_MAX_CAST = 100;
 const BATTLE_SCENE_TICKER_MAX = 5;
@@ -3474,10 +3481,33 @@ function resolveBattleSceneResultDrivenAmbientImpactReplayMinIntervalMs(
 ) {
   const signal =
     signalInput && typeof signalInput === "object" ? signalInput : null;
+  const outcomeProfile =
+    resolveBattleSceneResultDrivenAmbientImpactOutcomeProfile(signal);
   if (signal?.source === "battle") {
+    if (outcomeProfile === "battle_win") {
+      return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BATTLE_WIN;
+    }
+    if (outcomeProfile === "battle_loss") {
+      return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BATTLE_LOSS;
+    }
+    if (outcomeProfile === "battle_loss_heavy") {
+      return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BATTLE_LOSS_HEAVY;
+    }
     return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BATTLE;
   }
   if (signal?.source === "breakthrough") {
+    if (outcomeProfile === "breakthrough_success") {
+      return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BREAKTHROUGH_SUCCESS;
+    }
+    if (outcomeProfile === "breakthrough_fail_minor") {
+      return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BREAKTHROUGH_FAIL_MINOR;
+    }
+    if (outcomeProfile === "breakthrough_fail_heavy") {
+      return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BREAKTHROUGH_FAIL_HEAVY;
+    }
+    if (outcomeProfile === "breakthrough_blocked") {
+      return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BREAKTHROUGH_BLOCKED;
+    }
     return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BREAKTHROUGH;
   }
   return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS;
@@ -3544,6 +3574,8 @@ function setBattleSceneAmbientImpactReplay(
 function setBattleSceneAmbientImpactCooldown(
   cooldownMsInput = 0,
   cooldownMaxMsInput = BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS,
+  sourceInput = "none",
+  outcomeProfileInput = "neutral",
 ) {
   if (!dom.battleSceneArena) {
     return;
@@ -3556,10 +3588,33 @@ function setBattleSceneAmbientImpactCooldown(
         BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS,
     ),
   );
+  const source =
+    sourceInput === "battle" || sourceInput === "breakthrough"
+      ? sourceInput
+      : "none";
+  const outcomeProfile =
+    outcomeProfileInput === "battle_win"
+      ? "battle_win"
+      : outcomeProfileInput === "battle_loss"
+        ? "battle_loss"
+        : outcomeProfileInput === "battle_loss_heavy"
+          ? "battle_loss_heavy"
+          : outcomeProfileInput === "breakthrough_success"
+            ? "breakthrough_success"
+            : outcomeProfileInput === "breakthrough_fail_minor"
+              ? "breakthrough_fail_minor"
+              : outcomeProfileInput === "breakthrough_fail_heavy"
+                ? "breakthrough_fail_heavy"
+                : outcomeProfileInput === "breakthrough_blocked"
+                  ? "breakthrough_blocked"
+                  : "neutral";
   dom.battleSceneArena.dataset.sceneAmbientImpactCooldownMs =
     String(cooldownMs);
   dom.battleSceneArena.dataset.sceneAmbientImpactCooldownMaxMs =
     String(cooldownMaxMs);
+  dom.battleSceneArena.dataset.sceneAmbientImpactCooldownSource = source;
+  dom.battleSceneArena.dataset.sceneAmbientImpactCooldownOutcomeProfile =
+    outcomeProfile;
 }
 
 function setBattleSceneAmbientImpactPriorityWindow(
@@ -6447,7 +6502,12 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
         source,
         resultDrivenAmbientReplayOutcomeProfile,
       );
-      setBattleSceneAmbientImpactCooldown(0, resultDrivenAmbientReplayMinIntervalMs);
+      setBattleSceneAmbientImpactCooldown(
+        0,
+        resultDrivenAmbientReplayMinIntervalMs,
+        source,
+        resultDrivenAmbientReplayOutcomeProfile,
+      );
       setBattleSceneAmbientImpactPriorityWindow(
         resultDrivenAmbientPriorityWindowMs,
         resultDrivenAmbientPriorityWindowMs,
@@ -6467,6 +6527,10 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
         setBattleSceneAmbientImpactCooldown(
           0,
           resolveBattleSceneResultDrivenAmbientImpactReplayMinIntervalMs(
+            battleSceneLastResultDrivenImpactSignal,
+          ),
+          battleSceneLastResultDrivenImpactSignal.source,
+          resolveBattleSceneResultDrivenAmbientImpactOutcomeProfile(
             battleSceneLastResultDrivenImpactSignal,
           ),
         );
@@ -6962,6 +7026,21 @@ function runBattleSceneAmbientTick() {
           resultDrivenImpactSignal,
         )
       : "neutral";
+  const resultDrivenAmbientCooldownSource =
+    resultDrivenImpactSignal?.source === "battle" ||
+    resultDrivenImpactSignal?.source === "breakthrough"
+      ? resultDrivenImpactSignal.source
+      : battleSceneLastResultDrivenImpactSignal?.source === "battle" ||
+          battleSceneLastResultDrivenImpactSignal?.source === "breakthrough"
+        ? battleSceneLastResultDrivenImpactSignal.source
+        : "none";
+  const resultDrivenAmbientCooldownOutcomeProfile =
+    resultDrivenAmbientCooldownSource !== "none" &&
+    battleSceneLastResultDrivenImpactSignal
+      ? resolveBattleSceneResultDrivenAmbientImpactOutcomeProfile(
+          battleSceneLastResultDrivenImpactSignal,
+        )
+      : resultDrivenAmbientReplayOutcomeProfile;
   const resultDrivenAmbientReplayMax = resolveBattleSceneResultDrivenAmbientImpactReplayMax(
     resultDrivenImpactSignal,
   );
@@ -7087,6 +7166,8 @@ function runBattleSceneAmbientTick() {
   setBattleSceneAmbientImpactCooldown(
     resultDrivenImpactGate.cooldownRemainingMs,
     resultDrivenImpactGate.cooldownMaxMs,
+    resultDrivenAmbientCooldownSource,
+    resultDrivenAmbientCooldownOutcomeProfile,
   );
   setBattleSceneAmbientImpactPriorityWindow(
     resultDrivenImpactGate.priorityRemainingMs,
@@ -7149,6 +7230,8 @@ function runBattleSceneAmbientTick() {
       setBattleSceneAmbientImpactCooldown(
         resultDrivenAmbientReplayMinIntervalMs,
         resultDrivenAmbientReplayMinIntervalMs,
+        resultDrivenImpactSignal.source,
+        resultDrivenAmbientReplayOutcomeProfile,
       );
       setBattleSceneAmbientImpactSource("result");
       setBattleSceneAmbientImpactSignal(

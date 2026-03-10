@@ -533,6 +533,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-ambient-impact-cooldown-source="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-cooldown-outcome-profile="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact-cooldown-max-ms="960"',
     "index.html",
     failures,
@@ -1086,6 +1098,48 @@ async function main() {
   );
   assertIncludes(
     app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BATTLE_WIN = 900;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BATTLE_LOSS = 1200;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BATTLE_LOSS_HEAVY = 1500;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BREAKTHROUGH_SUCCESS = 720;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BREAKTHROUGH_FAIL_MINOR = 960;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BREAKTHROUGH_FAIL_HEAVY = 1260;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BREAKTHROUGH_BLOCKED = 1320;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "const BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS = 1400;",
     "app.mjs",
     failures,
@@ -1212,6 +1266,8 @@ async function main() {
   assertIncludes(app, "dataset.sceneAmbientImpactReplayMax", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactReplayRemaining", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactCooldownMs", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactCooldownSource", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactCooldownOutcomeProfile", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactCooldownMaxMs", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactPriorityRemainingMs", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactPriorityMaxMs", "app.mjs", failures);
@@ -1399,6 +1455,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactCooldownSource = source;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactCooldownOutcomeProfile =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'const explicitRandomOutcomeProfile =',
     "app.mjs",
     failures,
@@ -1475,6 +1543,10 @@ async function main() {
     "app.mjs",
     failures,
   );
+  assertIncludes(app, 'return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BATTLE_WIN;', "app.mjs", failures);
+  assertIncludes(app, 'return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BATTLE_LOSS_HEAVY;', "app.mjs", failures);
+  assertIncludes(app, 'return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BREAKTHROUGH_SUCCESS;', "app.mjs", failures);
+  assertIncludes(app, 'return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS_BREAKTHROUGH_BLOCKED;', "app.mjs", failures);
   assertIncludes(app, 'return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BATTLE_WIN;', "app.mjs", failures);
   assertIncludes(app, 'return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BATTLE_LOSS_HEAVY;', "app.mjs", failures);
   assertIncludes(app, 'return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BREAKTHROUGH_SUCCESS;', "app.mjs", failures);
