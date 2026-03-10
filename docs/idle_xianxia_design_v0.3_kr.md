@@ -2754,3 +2754,11 @@
 
 ## 653) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient random kind-profile outcome severity-aware 확장 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 654) 다음 순차 작업
+1. [완료] ambient random sync 정책을 outcome severity-aware 규칙(`battle_win|battle_loss|neutral -> on`, `battle_loss_heavy -> off`, `breakthrough_success -> on`, `breakthrough_fail_minor|breakthrough_fail_heavy|breakthrough_blocked -> off`, fallback `battle -> on`, `breakthrough -> off`)으로 확장하고 `resolveBattleSceneAmbientRandomSyncDuel(source, outcomeProfile)` 헬퍼를 보강해, 마지막 엔진 결과 강도가 random fallback duel sync 여부에도 직접 반영되도록 정합화.
+2. [완료] random sync outcome telemetry(`data-scene-ambient-impact-random-sync-outcome-profile`)를 추가하고 explicit trigger/ambient tick 경로에 연결해, 결과 신호가 stale로 내려간 뒤에도 마지막 explicit outcome severity 기준 sync 정책이 DOM과 실제 `triggerBattleSceneImpact(..., { syncDuel })` 호출 양쪽에 유지되도록 보강.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 outcome-aware random sync 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 655) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient random sync outcome severity-aware 확장 + sync outcome telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

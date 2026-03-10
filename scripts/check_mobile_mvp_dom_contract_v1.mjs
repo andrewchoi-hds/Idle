@@ -401,6 +401,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-ambient-impact-random-sync-outcome-profile="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact-random-sync-duel="on"',
     "index.html",
     failures,
@@ -1130,6 +1136,7 @@ async function main() {
   assertIncludes(app, "dataset.sceneAmbientImpactRandomProbabilitySource", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomProbabilityOutcomeProfile", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomProbabilityScalePct", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactRandomSyncOutcomeProfile", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomQuietOutcomeProfile", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomRecoveryOutcomeProfile", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomRecoveryMs", "app.mjs", failures);
@@ -1270,6 +1277,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactRandomSyncOutcomeProfile =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneArena.dataset.sceneAmbientImpactRandomCadenceOutcomeProfile =',
     "app.mjs",
     failures,
@@ -1382,7 +1395,8 @@ async function main() {
   assertIncludes(app, 'outcomeProfile === "battle_loss_heavy"', "app.mjs", failures);
   assertIncludes(app, 'outcomeProfile === "breakthrough_fail_heavy"', "app.mjs", failures);
   assertIncludes(app, 'outcomeProfile === "breakthrough_blocked"', "app.mjs", failures);
-  assertIncludes(app, 'return sourceInput === "breakthrough" ? false : true;', "app.mjs", failures);
+  assertIncludes(app, 'return outcomeProfile === "battle_loss_heavy" ? false : true;', "app.mjs", failures);
+  assertIncludes(app, 'return outcomeProfile === "breakthrough_success";', "app.mjs", failures);
   assertIncludes(
     app,
     'signal?.residueSource === "battle" || signal?.residueSource === "breakthrough"',
