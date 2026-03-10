@@ -575,6 +575,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-ambient-impact-signal-age-source="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-signal-age-outcome-profile="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact-signal-age-ms="0"',
     "index.html",
     failures,
@@ -1327,6 +1339,8 @@ async function main() {
   assertIncludes(app, "dataset.sceneAmbientImpactPrioritySource", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactPriorityOutcomeProfile", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactPriorityMaxMs", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactSignalAgeSource", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactSignalAgeOutcomeProfile", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactSignalAgeMs", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactSignalAgeMaxMs", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastResultDrivenImpactSignalExplicitAtMs", "app.mjs", failures);
@@ -1366,6 +1380,10 @@ async function main() {
   assertIncludes(app, "resultDrivenImpactGate.cooldownMaxMs", "app.mjs", failures);
   assertIncludes(app, "resultDrivenImpactGate.priorityRemainingMs", "app.mjs", failures);
   assertIncludes(app, "resultDrivenImpactGate.priorityMaxMs", "app.mjs", failures);
+  assertIncludes(app, "const resultDrivenAmbientPrioritySource =", "app.mjs", failures);
+  assertIncludes(app, "const resultDrivenAmbientPriorityOutcomeProfile =", "app.mjs", failures);
+  assertIncludes(app, "const resultDrivenAmbientSignalAgeSource =", "app.mjs", failures);
+  assertIncludes(app, "const resultDrivenAmbientSignalAgeOutcomeProfile =", "app.mjs", failures);
   assertIncludes(app, "resultDrivenImpactGate.signalAgeMs", "app.mjs", failures);
   assertIncludes(app, "resultDrivenImpactGate.signalAgeMaxMs", "app.mjs", failures);
   assertIncludes(app, 'setBattleSceneAmbientImpactLock("result")', "app.mjs", failures);
@@ -1530,6 +1548,18 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneArena.dataset.sceneAmbientImpactPriorityOutcomeProfile =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactSignalAgeSource = source;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactSignalAgeOutcomeProfile =',
     "app.mjs",
     failures,
   );

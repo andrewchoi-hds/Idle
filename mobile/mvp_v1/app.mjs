@@ -3699,6 +3699,8 @@ function setBattleSceneAmbientImpactPriorityWindow(
 function setBattleSceneAmbientImpactSignalAge(
   ageMsInput = 0,
   maxMsInput = BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS,
+  sourceInput = "none",
+  outcomeProfileInput = "neutral",
 ) {
   if (!dom.battleSceneArena) {
     return;
@@ -3711,8 +3713,31 @@ function setBattleSceneAmbientImpactSignalAge(
         BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS,
     ),
   );
+  const source =
+    sourceInput === "battle" || sourceInput === "breakthrough"
+      ? sourceInput
+      : "none";
+  const outcomeProfile =
+    outcomeProfileInput === "battle_win"
+      ? "battle_win"
+      : outcomeProfileInput === "battle_loss"
+        ? "battle_loss"
+        : outcomeProfileInput === "battle_loss_heavy"
+          ? "battle_loss_heavy"
+          : outcomeProfileInput === "breakthrough_success"
+            ? "breakthrough_success"
+            : outcomeProfileInput === "breakthrough_fail_minor"
+              ? "breakthrough_fail_minor"
+              : outcomeProfileInput === "breakthrough_fail_heavy"
+                ? "breakthrough_fail_heavy"
+                : outcomeProfileInput === "breakthrough_blocked"
+                  ? "breakthrough_blocked"
+                  : "neutral";
   dom.battleSceneArena.dataset.sceneAmbientImpactSignalAgeMs = String(ageMs);
   dom.battleSceneArena.dataset.sceneAmbientImpactSignalAgeMaxMs = String(maxMs);
+  dom.battleSceneArena.dataset.sceneAmbientImpactSignalAgeSource = source;
+  dom.battleSceneArena.dataset.sceneAmbientImpactSignalAgeOutcomeProfile =
+    outcomeProfile;
 }
 
 function setBattleSceneAmbientImpactSequence(
@@ -6573,7 +6598,12 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
         source,
         resultDrivenAmbientReplayOutcomeProfile,
       );
-      setBattleSceneAmbientImpactSignalAge(0, resultDrivenAmbientPriorityWindowMs);
+      setBattleSceneAmbientImpactSignalAge(
+        0,
+        resultDrivenAmbientPriorityWindowMs,
+        source,
+        resultDrivenAmbientReplayOutcomeProfile,
+      );
       setBattleSceneAmbientImpactSequence(
         battleSceneLastExplicitEventSeq,
         battleSceneLastResultDrivenImpactSignalExplicitSeq,
@@ -6607,7 +6637,14 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
             battleSceneLastResultDrivenImpactSignal,
           ),
         );
-        setBattleSceneAmbientImpactSignalAge(0, resultDrivenAmbientPriorityWindowMs);
+        setBattleSceneAmbientImpactSignalAge(
+          0,
+          resultDrivenAmbientPriorityWindowMs,
+          battleSceneLastResultDrivenImpactSignal.source,
+          resolveBattleSceneResultDrivenAmbientImpactOutcomeProfile(
+            battleSceneLastResultDrivenImpactSignal,
+          ),
+        );
       } else {
         setBattleSceneAmbientImpactGate("no_signal");
         setBattleSceneAmbientImpactFresh("none");
@@ -7109,6 +7146,9 @@ function runBattleSceneAmbientTick() {
   const resultDrivenAmbientPrioritySource = resultDrivenAmbientCooldownSource;
   const resultDrivenAmbientPriorityOutcomeProfile =
     resultDrivenAmbientCooldownOutcomeProfile;
+  const resultDrivenAmbientSignalAgeSource = resultDrivenAmbientPrioritySource;
+  const resultDrivenAmbientSignalAgeOutcomeProfile =
+    resultDrivenAmbientPriorityOutcomeProfile;
   const resultDrivenAmbientReplayMax = resolveBattleSceneResultDrivenAmbientImpactReplayMax(
     resultDrivenImpactSignal,
   );
@@ -7246,6 +7286,8 @@ function runBattleSceneAmbientTick() {
   setBattleSceneAmbientImpactSignalAge(
     resultDrivenImpactGate.signalAgeMs,
     resultDrivenImpactGate.signalAgeMaxMs,
+    resultDrivenAmbientSignalAgeSource,
+    resultDrivenAmbientSignalAgeOutcomeProfile,
   );
   const ambientImpactCadenceDivisor = useResultDrivenAmbientImpact
     ? 1

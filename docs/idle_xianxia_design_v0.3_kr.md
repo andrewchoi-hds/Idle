@@ -2786,3 +2786,11 @@
 
 ## 661) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(result-driven ambient priority outcome severity-aware 확장 + priority telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 662) 다음 순차 작업
+1. [완료] result-driven ambient signal age telemetry에 source/outcome severity 기준을 추가하고 `setBattleSceneAmbientImpactSignalAge(...)` 경로를 보강해, 현재 signal age window가 어떤 마지막 엔진 결과 기준으로 유지되는지 DOM에서 직접 추적 가능하도록 정합화.
+2. [완료] explicit result trigger, stale sequence 정리, ambient tick이 동일한 source/outcome severity 기준 signal age 메타를 기록하도록 연결해, priority window와 age telemetry가 같은 결과 근거를 공유하도록 보강.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 signal age telemetry 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 663) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(result-driven ambient signal age telemetry source/outcome 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
