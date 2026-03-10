@@ -3183,6 +3183,7 @@ function rollBattleSceneAmbientRandomImpact(
 function setBattleSceneAmbientImpactRandomSyncPolicy(
   syncDuelInput = true,
   sourceInput = "none",
+  outcomeProfileInput = "neutral",
 ) {
   if (!dom.battleSceneArena) {
     return;
@@ -3192,12 +3193,55 @@ function setBattleSceneAmbientImpactRandomSyncPolicy(
     sourceInput === "battle" || sourceInput === "breakthrough"
       ? sourceInput
       : "none";
+  const outcomeProfile =
+    outcomeProfileInput === "battle_win"
+      ? "battle_win"
+      : outcomeProfileInput === "battle_loss"
+        ? "battle_loss"
+        : outcomeProfileInput === "battle_loss_heavy"
+          ? "battle_loss_heavy"
+          : outcomeProfileInput === "breakthrough_success"
+            ? "breakthrough_success"
+            : outcomeProfileInput === "breakthrough_fail_minor"
+              ? "breakthrough_fail_minor"
+              : outcomeProfileInput === "breakthrough_fail_heavy"
+                ? "breakthrough_fail_heavy"
+                : outcomeProfileInput === "breakthrough_blocked"
+                  ? "breakthrough_blocked"
+                  : "neutral";
   dom.battleSceneArena.dataset.sceneAmbientImpactRandomSyncDuel = syncDuel;
   dom.battleSceneArena.dataset.sceneAmbientImpactRandomSyncSource = source;
+  dom.battleSceneArena.dataset.sceneAmbientImpactRandomSyncOutcomeProfile =
+    outcomeProfile;
 }
 
-function resolveBattleSceneAmbientRandomSyncDuel(sourceInput) {
-  return sourceInput === "breakthrough" ? false : true;
+function resolveBattleSceneAmbientRandomSyncDuel(
+  sourceInput,
+  outcomeProfileInput = "neutral",
+) {
+  const outcomeProfile =
+    outcomeProfileInput === "battle_win"
+      ? "battle_win"
+      : outcomeProfileInput === "battle_loss"
+        ? "battle_loss"
+        : outcomeProfileInput === "battle_loss_heavy"
+          ? "battle_loss_heavy"
+          : outcomeProfileInput === "breakthrough_success"
+            ? "breakthrough_success"
+            : outcomeProfileInput === "breakthrough_fail_minor"
+              ? "breakthrough_fail_minor"
+              : outcomeProfileInput === "breakthrough_fail_heavy"
+                ? "breakthrough_fail_heavy"
+                : outcomeProfileInput === "breakthrough_blocked"
+                  ? "breakthrough_blocked"
+                  : "neutral";
+  if (sourceInput === "battle") {
+    return outcomeProfile === "battle_loss_heavy" ? false : true;
+  }
+  if (sourceInput === "breakthrough") {
+    return outcomeProfile === "breakthrough_success";
+  }
+  return true;
 }
 
 function resolveBattleSceneAmbientRandomRecoveryWindowMs(
@@ -6267,8 +6311,10 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
     setBattleSceneAmbientImpactRandomSyncPolicy(
       resolveBattleSceneAmbientRandomSyncDuel(
         battleSceneLastExplicitEventSource,
+        explicitRandomOutcomeProfile,
       ),
       battleSceneLastExplicitEventSource || "none",
+      explicitRandomOutcomeProfile,
     );
     setBattleSceneAmbientImpactRandomQuietThreshold(
       resolveBattleSceneAmbientRandomQuietThresholdMs(
@@ -6874,6 +6920,7 @@ function runBattleSceneAmbientTick() {
   );
   const randomSyncDuel = resolveBattleSceneAmbientRandomSyncDuel(
     randomRecoverySource,
+    randomOutcomeProfile,
   );
   const randomQuietThresholdMs = resolveBattleSceneAmbientRandomQuietThresholdMs(
     randomRecoverySource,
@@ -6922,6 +6969,7 @@ function runBattleSceneAmbientTick() {
   setBattleSceneAmbientImpactRandomSyncPolicy(
     randomSyncDuel,
     randomRecoverySource || "none",
+    randomOutcomeProfile,
   );
   setBattleSceneAmbientImpactRandomQuietThreshold(
     randomQuietThresholdMs,
