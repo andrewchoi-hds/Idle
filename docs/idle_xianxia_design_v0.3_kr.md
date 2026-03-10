@@ -2762,3 +2762,11 @@
 
 ## 655) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient random sync outcome severity-aware 확장 + sync outcome telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 656) 다음 순차 작업
+1. [완료] result-driven ambient replay budget을 outcome severity-aware 규칙(`battle_win=3`, `battle_loss=2`, `battle_loss_heavy=1`, `breakthrough_success=5`, `breakthrough_fail_minor=4`, `breakthrough_fail_heavy=2`, `breakthrough_blocked=1`, fallback `battle=2`, `breakthrough=4`, default `3`)으로 확장하고 `resolveBattleSceneResultDrivenAmbientImpactReplayMax(signal)`를 보강해, 마지막 엔진 결과 강도가 result replay 유지 길이에도 직접 반영되도록 정합화.
+2. [완료] replay telemetry(`data-scene-ambient-impact-replay-source`, `data-scene-ambient-impact-replay-outcome-profile`)를 추가하고 result-driven trigger/ambient tick 경로에 연결해, 현재 replay budget이 어떤 source와 outcome severity 기준으로 계산됐는지 DOM에서 직접 추적 가능하도록 보강.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 outcome-aware result replay 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 657) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(result-driven ambient replay outcome severity-aware 확장 + replay telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

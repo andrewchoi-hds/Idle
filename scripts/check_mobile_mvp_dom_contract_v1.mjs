@@ -503,6 +503,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-ambient-impact-replay-source="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-replay-outcome-profile="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact-replay-max="3"',
     "index.html",
     failures,
@@ -1014,6 +1026,48 @@ async function main() {
   );
   assertIncludes(
     app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BATTLE_WIN = 3;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BATTLE_LOSS = 2;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BATTLE_LOSS_HEAVY = 1;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BREAKTHROUGH_SUCCESS = 5;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BREAKTHROUGH_FAIL_MINOR = 4;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BREAKTHROUGH_FAIL_HEAVY = 2;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BREAKTHROUGH_BLOCKED = 1;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MIN_INTERVAL_MS = 960;",
     "app.mjs",
     failures,
@@ -1099,6 +1153,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function resolveBattleSceneResultDrivenAmbientImpactOutcomeProfile(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function resolveBattleSceneResultDrivenAmbientImpactReplayMinIntervalMs(",
     "app.mjs",
     failures,
@@ -1147,6 +1207,8 @@ async function main() {
   assertIncludes(app, "dataset.sceneAmbientImpactKind", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactOutcomeCode", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactReplay", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactReplaySource", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactReplayOutcomeProfile", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactReplayMax", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactReplayRemaining", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactCooldownMs", "app.mjs", failures);
@@ -1325,6 +1387,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactReplaySource = source;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactReplayOutcomeProfile =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'const explicitRandomOutcomeProfile =',
     "app.mjs",
     failures,
@@ -1395,6 +1469,16 @@ async function main() {
   assertIncludes(app, 'outcomeProfile === "battle_loss_heavy"', "app.mjs", failures);
   assertIncludes(app, 'outcomeProfile === "breakthrough_fail_heavy"', "app.mjs", failures);
   assertIncludes(app, 'outcomeProfile === "breakthrough_blocked"', "app.mjs", failures);
+  assertIncludes(
+    app,
+    'const outcomeProfile =\n    resolveBattleSceneResultDrivenAmbientImpactOutcomeProfile(signal);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(app, 'return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BATTLE_WIN;', "app.mjs", failures);
+  assertIncludes(app, 'return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BATTLE_LOSS_HEAVY;', "app.mjs", failures);
+  assertIncludes(app, 'return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BREAKTHROUGH_SUCCESS;', "app.mjs", failures);
+  assertIncludes(app, 'return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_MAX_REPLAYS_BREAKTHROUGH_BLOCKED;', "app.mjs", failures);
   assertIncludes(app, 'return outcomeProfile === "battle_loss_heavy" ? false : true;', "app.mjs", failures);
   assertIncludes(app, 'return outcomeProfile === "breakthrough_success";', "app.mjs", failures);
   assertIncludes(
