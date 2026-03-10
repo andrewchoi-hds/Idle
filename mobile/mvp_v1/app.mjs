@@ -548,6 +548,17 @@ const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS = 6800;
 const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BATTLE = 6200;
 const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BREAKTHROUGH =
   7600;
+const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BATTLE_WIN = 6800;
+const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BATTLE_LOSS = 6200;
+const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BATTLE_LOSS_HEAVY = 5400;
+const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BREAKTHROUGH_SUCCESS =
+  8200;
+const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BREAKTHROUGH_FAIL_MINOR =
+  7600;
+const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BREAKTHROUGH_FAIL_HEAVY =
+  7000;
+const BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BREAKTHROUGH_BLOCKED =
+  6400;
 const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR = 2;
 const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BATTLE = 3;
 const BATTLE_SCENE_AMBIENT_RANDOM_IMPACT_DIVISOR_BREAKTHROUGH = 4;
@@ -3516,10 +3527,33 @@ function resolveBattleSceneResultDrivenAmbientImpactReplayMinIntervalMs(
 function resolveBattleSceneResultDrivenAmbientImpactPriorityWindowMs(signalInput) {
   const signal =
     signalInput && typeof signalInput === "object" ? signalInput : null;
+  const outcomeProfile =
+    resolveBattleSceneResultDrivenAmbientImpactOutcomeProfile(signal);
   if (signal?.source === "battle") {
+    if (outcomeProfile === "battle_win") {
+      return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BATTLE_WIN;
+    }
+    if (outcomeProfile === "battle_loss") {
+      return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BATTLE_LOSS;
+    }
+    if (outcomeProfile === "battle_loss_heavy") {
+      return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BATTLE_LOSS_HEAVY;
+    }
     return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BATTLE;
   }
   if (signal?.source === "breakthrough") {
+    if (outcomeProfile === "breakthrough_success") {
+      return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BREAKTHROUGH_SUCCESS;
+    }
+    if (outcomeProfile === "breakthrough_fail_minor") {
+      return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BREAKTHROUGH_FAIL_MINOR;
+    }
+    if (outcomeProfile === "breakthrough_fail_heavy") {
+      return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BREAKTHROUGH_FAIL_HEAVY;
+    }
+    if (outcomeProfile === "breakthrough_blocked") {
+      return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BREAKTHROUGH_BLOCKED;
+    }
     return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS_BREAKTHROUGH;
   }
   return BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS;
@@ -3620,6 +3654,8 @@ function setBattleSceneAmbientImpactCooldown(
 function setBattleSceneAmbientImpactPriorityWindow(
   remainingMsInput = 0,
   maxMsInput = BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS,
+  sourceInput = "none",
+  outcomeProfileInput = "neutral",
 ) {
   if (!dom.battleSceneArena) {
     return;
@@ -3632,9 +3668,32 @@ function setBattleSceneAmbientImpactPriorityWindow(
         BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS,
     ),
   );
+  const source =
+    sourceInput === "battle" || sourceInput === "breakthrough"
+      ? sourceInput
+      : "none";
+  const outcomeProfile =
+    outcomeProfileInput === "battle_win"
+      ? "battle_win"
+      : outcomeProfileInput === "battle_loss"
+        ? "battle_loss"
+        : outcomeProfileInput === "battle_loss_heavy"
+          ? "battle_loss_heavy"
+          : outcomeProfileInput === "breakthrough_success"
+            ? "breakthrough_success"
+            : outcomeProfileInput === "breakthrough_fail_minor"
+              ? "breakthrough_fail_minor"
+              : outcomeProfileInput === "breakthrough_fail_heavy"
+                ? "breakthrough_fail_heavy"
+                : outcomeProfileInput === "breakthrough_blocked"
+                  ? "breakthrough_blocked"
+                  : "neutral";
   dom.battleSceneArena.dataset.sceneAmbientImpactPriorityRemainingMs =
     String(remainingMs);
   dom.battleSceneArena.dataset.sceneAmbientImpactPriorityMaxMs = String(maxMs);
+  dom.battleSceneArena.dataset.sceneAmbientImpactPrioritySource = source;
+  dom.battleSceneArena.dataset.sceneAmbientImpactPriorityOutcomeProfile =
+    outcomeProfile;
 }
 
 function setBattleSceneAmbientImpactSignalAge(
@@ -6511,6 +6570,8 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
       setBattleSceneAmbientImpactPriorityWindow(
         resultDrivenAmbientPriorityWindowMs,
         resultDrivenAmbientPriorityWindowMs,
+        source,
+        resultDrivenAmbientReplayOutcomeProfile,
       );
       setBattleSceneAmbientImpactSignalAge(0, resultDrivenAmbientPriorityWindowMs);
       setBattleSceneAmbientImpactSequence(
@@ -6541,6 +6602,10 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
         setBattleSceneAmbientImpactPriorityWindow(
           0,
           resultDrivenAmbientPriorityWindowMs,
+          battleSceneLastResultDrivenImpactSignal.source,
+          resolveBattleSceneResultDrivenAmbientImpactOutcomeProfile(
+            battleSceneLastResultDrivenImpactSignal,
+          ),
         );
         setBattleSceneAmbientImpactSignalAge(0, resultDrivenAmbientPriorityWindowMs);
       } else {
@@ -7041,6 +7106,9 @@ function runBattleSceneAmbientTick() {
           battleSceneLastResultDrivenImpactSignal,
         )
       : resultDrivenAmbientReplayOutcomeProfile;
+  const resultDrivenAmbientPrioritySource = resultDrivenAmbientCooldownSource;
+  const resultDrivenAmbientPriorityOutcomeProfile =
+    resultDrivenAmbientCooldownOutcomeProfile;
   const resultDrivenAmbientReplayMax = resolveBattleSceneResultDrivenAmbientImpactReplayMax(
     resultDrivenImpactSignal,
   );
@@ -7172,6 +7240,8 @@ function runBattleSceneAmbientTick() {
   setBattleSceneAmbientImpactPriorityWindow(
     resultDrivenImpactGate.priorityRemainingMs,
     resultDrivenImpactGate.priorityMaxMs,
+    resultDrivenAmbientPrioritySource,
+    resultDrivenAmbientPriorityOutcomeProfile,
   );
   setBattleSceneAmbientImpactSignalAge(
     resultDrivenImpactGate.signalAgeMs,

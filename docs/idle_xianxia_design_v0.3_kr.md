@@ -2778,3 +2778,11 @@
 
 ## 659) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(result-driven ambient replay cooldown outcome severity-aware 확장 + cooldown telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 660) 다음 순차 작업
+1. [완료] result-driven ambient priority window를 outcome severity-aware 규칙(`battle_win=6800ms`, `battle_loss=6200ms`, `battle_loss_heavy=5400ms`, `breakthrough_success=8200ms`, `breakthrough_fail_minor=7600ms`, `breakthrough_fail_heavy=7000ms`, `breakthrough_blocked=6400ms`, fallback `battle=6200ms`, `breakthrough=7600ms`, default `6800ms`)으로 확장하고 `resolveBattleSceneResultDrivenAmbientImpactPriorityWindowMs(signal)`를 보강해, 마지막 엔진 결과 강도가 result replay 우선 유지 길이에도 직접 반영되도록 정합화.
+2. [완료] priority telemetry(`data-scene-ambient-impact-priority-source`, `data-scene-ambient-impact-priority-outcome-profile`)를 추가하고 result-driven trigger/ambient tick 경로에 연결해, 현재 priority window 정책이 어떤 source와 outcome severity 기준으로 계산됐는지 DOM에서 직접 추적 가능하도록 보강.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 outcome-aware result priority 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 661) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(result-driven ambient priority outcome severity-aware 확장 + priority telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
