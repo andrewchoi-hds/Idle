@@ -649,6 +649,7 @@ let battleSceneAmbientStep = 0;
 let battleSceneLastExplicitEventAtMs = 0;
 let battleSceneLastExplicitEventSeq = 0;
 let battleSceneLastExplicitEventSource = "";
+let battleSceneLastExplicitEventKind = "none";
 let battleSceneLastExplicitEventOutcomeCode = "none";
 let battleSceneLastExplicitEventOutcomeProfile = "neutral";
 let battleSceneLastResultDrivenImpactAtMs = 0;
@@ -3426,6 +3427,12 @@ function setBattleSceneAmbientImpactSignal(signalInput, sourceInput = "idle") {
     signal.residueOutcomeCode
       ? signal.residueOutcomeCode
       : "none";
+  const residueOriginKind =
+    source === "random" &&
+    typeof signal?.residueOriginKind === "string" &&
+    signal.residueOriginKind
+      ? signal.residueOriginKind
+      : "none";
   const residueSource =
     source === "random" &&
     (signal?.residueSource === "battle" || signal?.residueSource === "breakthrough")
@@ -3461,8 +3468,15 @@ function setBattleSceneAmbientImpactSignal(signalInput, sourceInput = "idle") {
       : source === "random"
         ? residueOutcomeCode
         : "none";
+  const originKind =
+    source === "battle" || source === "breakthrough"
+      ? kind
+      : source === "random"
+        ? residueOriginKind
+        : "none";
   dom.battleSceneArena.dataset.sceneAmbientImpactSource = source;
   dom.battleSceneArena.dataset.sceneAmbientImpactOriginSource = originSource;
+  dom.battleSceneArena.dataset.sceneAmbientImpactOriginKind = originKind;
   dom.battleSceneArena.dataset.sceneAmbientImpactOriginOutcomeCode =
     originOutcomeCode;
   dom.battleSceneArena.dataset.sceneAmbientImpactKind = kind;
@@ -5017,6 +5031,7 @@ function resetBattleSceneDuelState(options = {}) {
   battleSceneLastResultDrivenImpactSignalExplicitSeq = 0;
   battleSceneLastExplicitEventSeq = 0;
   battleSceneLastExplicitEventSource = "";
+  battleSceneLastExplicitEventKind = "none";
   battleSceneLastExplicitEventOutcomeCode = "none";
   battleSceneLastExplicitEventOutcomeProfile = "neutral";
   battleSceneLastResultDrivenImpactReplayCount = 0;
@@ -6503,6 +6518,8 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
     battleSceneLastExplicitEventAtMs = Date.now();
     battleSceneLastExplicitEventSeq += 1;
     battleSceneLastExplicitEventSource = source || "";
+    battleSceneLastExplicitEventKind =
+      typeof kind === "string" && kind ? kind : "none";
     battleSceneLastExplicitEventOutcomeCode =
       typeof options?.outcome?.outcome === "string" && options.outcome.outcome
         ? options.outcome.outcome
@@ -7213,6 +7230,9 @@ function runBattleSceneAmbientTick() {
   const randomOutcomeCode = randomRecoverySource
     ? battleSceneLastExplicitEventOutcomeCode
     : "none";
+  const randomOriginKind = randomRecoverySource
+    ? battleSceneLastExplicitEventKind
+    : "none";
   const randomImpactCadenceDivisor =
     resolveBattleSceneAmbientRandomImpactDivisor(
       randomRecoverySource,
@@ -7416,6 +7436,7 @@ function runBattleSceneAmbientTick() {
           tone,
           source: "random",
           residueSource: randomRecoverySource || "none",
+          residueOriginKind: randomOriginKind,
           residueOutcomeCode: randomOutcomeCode,
           residueOutcomeProfile: outcomeProfile,
           syncDuel: randomSyncDuel,
@@ -7444,6 +7465,7 @@ function runBattleSceneAmbientTick() {
           tone,
           source: "random",
           residueSource: randomRecoverySource || "none",
+          residueOriginKind: randomOriginKind,
           residueOutcomeCode: randomOutcomeCode,
           residueOutcomeProfile: outcomeProfile,
           syncDuel: randomSyncDuel,
@@ -7472,6 +7494,7 @@ function runBattleSceneAmbientTick() {
           tone,
           source: "random",
           residueSource: randomRecoverySource || "none",
+          residueOriginKind: randomOriginKind,
           residueOutcomeCode: randomOutcomeCode,
           residueOutcomeProfile: outcomeProfile,
           syncDuel: randomSyncDuel,
@@ -7515,6 +7538,7 @@ function runBattleSceneAmbientTick() {
     battleSceneLastResultDrivenImpactSignalExplicitSeq = 0;
     battleSceneLastExplicitEventSeq = 0;
     battleSceneLastExplicitEventSource = "";
+    battleSceneLastExplicitEventKind = "none";
     battleSceneLastExplicitEventOutcomeCode = "none";
     battleSceneLastExplicitEventOutcomeProfile = "neutral";
     battleSceneLastResultDrivenImpactReplayCount = 0;
@@ -7739,6 +7763,7 @@ function stopBattleSceneAmbientLoop() {
   battleSceneLastResultDrivenImpactSignalExplicitSeq = 0;
   battleSceneLastExplicitEventSeq = 0;
   battleSceneLastExplicitEventSource = "";
+  battleSceneLastExplicitEventKind = "none";
   battleSceneLastExplicitEventOutcomeCode = "none";
   battleSceneLastExplicitEventOutcomeProfile = "neutral";
   battleSceneLastResultDrivenImpactReplayCount = 0;
