@@ -3442,7 +3442,14 @@ function setBattleSceneAmbientImpactSignal(signalInput, sourceInput = "idle") {
       : residueOutcomeProfile;
   const signalSyncDuel =
     source === "idle" ? "off" : signal?.syncDuel === false ? "off" : "on";
+  const originSource =
+    source === "battle" || source === "breakthrough"
+      ? source
+      : source === "random"
+        ? residueSource
+        : "none";
   dom.battleSceneArena.dataset.sceneAmbientImpactSource = source;
+  dom.battleSceneArena.dataset.sceneAmbientImpactOriginSource = originSource;
   dom.battleSceneArena.dataset.sceneAmbientImpactKind = kind;
   dom.battleSceneArena.dataset.sceneAmbientImpactTone = signalTone;
   dom.battleSceneArena.dataset.sceneAmbientImpactOutcomeCode = outcomeCode;
