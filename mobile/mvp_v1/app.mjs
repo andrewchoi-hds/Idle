@@ -3436,11 +3436,14 @@ function setBattleSceneAmbientImpactSignal(signalInput, sourceInput = "idle") {
     source === "battle" || source === "breakthrough"
       ? resolveBattleSceneResultDrivenAmbientImpactOutcomeProfile(signal)
       : residueOutcomeProfile;
+  const signalSyncDuel =
+    source === "idle" ? "off" : signal?.syncDuel === false ? "off" : "on";
   dom.battleSceneArena.dataset.sceneAmbientImpactSource = source;
   dom.battleSceneArena.dataset.sceneAmbientImpactKind = kind;
   dom.battleSceneArena.dataset.sceneAmbientImpactOutcomeCode = outcomeCode;
   dom.battleSceneArena.dataset.sceneAmbientImpactOutcomeProfile =
     outcomeProfile;
+  dom.battleSceneArena.dataset.sceneAmbientImpactSyncDuel = signalSyncDuel;
   setBattleSceneAmbientImpactRandomResidue(
     residueSource,
     residueSyncDuel,
@@ -6550,6 +6553,7 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
         kind,
         tone: normalizeBattleSceneTone(tone),
         source,
+        syncDuel,
         outcome:
           options?.outcome && typeof options.outcome === "object"
             ? options.outcome

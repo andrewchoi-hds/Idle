@@ -2802,3 +2802,11 @@
 
 ## 665) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient signal outcome-profile telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 666) 다음 순차 작업
+1. [완료] ambient signal 본체에 실제 duel sync 적용값(`data-scene-ambient-impact-sync-duel=on|off`)을 추가해, 현재 pulse가 배우/듀얼 상태 동기화를 탔는지 DOM에서 직접 읽을 수 있도록 보강.
+2. [완료] result signal 객체에도 `syncDuel` 메타를 같이 기록하도록 `triggerBattleSceneImpact(...)` 경로를 보강해, explicit result replay와 random residue pulse가 모두 실제 실행된 sync 정책을 같은 contract로 노출하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ambient signal sync-duel telemetry 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 667) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient signal sync-duel telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
