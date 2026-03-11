@@ -2810,3 +2810,11 @@
 
 ## 667) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient signal sync-duel telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 668) 다음 순차 작업
+1. [완료] ambient signal 본체에 tone telemetry(`data-scene-ambient-impact-tone=none|info|success|warn|error`)를 추가해, 현재 pulse의 정서/강조 톤을 DOM에서 직접 읽을 수 있도록 보강.
+2. [완료] `setBattleSceneAmbientImpactSignal(...)`가 signal payload의 `tone`을 정규화해 result signal과 random residue pulse 모두 동일한 tone contract로 기록하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ambient signal tone telemetry 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 669) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient signal tone telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

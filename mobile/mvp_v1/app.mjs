@@ -3411,6 +3411,10 @@ function setBattleSceneAmbientImpactSignal(signalInput, sourceInput = "idle") {
     typeof signal?.kind === "string" && signal.kind
       ? signal.kind
       : "none";
+  const signalTone =
+    typeof signal?.tone === "string" && signal.tone
+      ? normalizeBattleSceneTone(signal.tone)
+      : "none";
   const outcomeCode =
     typeof signal?.outcome?.outcome === "string" && signal.outcome.outcome
       ? signal.outcome.outcome
@@ -3440,6 +3444,7 @@ function setBattleSceneAmbientImpactSignal(signalInput, sourceInput = "idle") {
     source === "idle" ? "off" : signal?.syncDuel === false ? "off" : "on";
   dom.battleSceneArena.dataset.sceneAmbientImpactSource = source;
   dom.battleSceneArena.dataset.sceneAmbientImpactKind = kind;
+  dom.battleSceneArena.dataset.sceneAmbientImpactTone = signalTone;
   dom.battleSceneArena.dataset.sceneAmbientImpactOutcomeCode = outcomeCode;
   dom.battleSceneArena.dataset.sceneAmbientImpactOutcomeProfile =
     outcomeProfile;

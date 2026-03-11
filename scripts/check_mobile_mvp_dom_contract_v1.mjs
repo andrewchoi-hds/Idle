@@ -491,6 +491,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-ambient-impact-tone="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact-outcome-code="none"',
     "index.html",
     failures,
@@ -1337,6 +1343,7 @@ async function main() {
   assertIncludes(app, "dataset.sceneAmbientImpactSignalSeq", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactSource", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactKind", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactTone", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactOutcomeCode", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactOutcomeProfile", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactSyncDuel", "app.mjs", failures);
@@ -1574,6 +1581,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneArena.dataset.sceneAmbientImpactSignalAgeOutcomeProfile =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactTone = signalTone;',
     "app.mjs",
     failures,
   );
