@@ -3432,9 +3432,15 @@ function setBattleSceneAmbientImpactSignal(signalInput, sourceInput = "idle") {
       signal?.residueOutcomeProfile === "breakthrough_blocked")
       ? signal.residueOutcomeProfile
       : "neutral";
+  const outcomeProfile =
+    source === "battle" || source === "breakthrough"
+      ? resolveBattleSceneResultDrivenAmbientImpactOutcomeProfile(signal)
+      : residueOutcomeProfile;
   dom.battleSceneArena.dataset.sceneAmbientImpactSource = source;
   dom.battleSceneArena.dataset.sceneAmbientImpactKind = kind;
   dom.battleSceneArena.dataset.sceneAmbientImpactOutcomeCode = outcomeCode;
+  dom.battleSceneArena.dataset.sceneAmbientImpactOutcomeProfile =
+    outcomeProfile;
   setBattleSceneAmbientImpactRandomResidue(
     residueSource,
     residueSyncDuel,

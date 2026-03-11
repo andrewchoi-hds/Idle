@@ -2794,3 +2794,11 @@
 
 ## 663) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(result-driven ambient signal age telemetry source/outcome 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 664) 다음 순차 작업
+1. [완료] ambient signal 본체에 outcome severity profile(`battle_win`, `battle_loss`, `battle_loss_heavy`, `breakthrough_success`, `breakthrough_fail_minor`, `breakthrough_fail_heavy`, `breakthrough_blocked`, `neutral`)을 추가해, 현재 pulse가 어떤 결과 강도 분류를 반영하는지 DOM에서 바로 읽을 수 있도록 보강.
+2. [완료] `setBattleSceneAmbientImpactSignal(...)`가 result signal에서는 `resolveBattleSceneResultDrivenAmbientImpactOutcomeProfile(signal)`를, random signal에서는 residue outcome profile을 사용하도록 연결해, explicit/random pulse 양쪽이 동일한 severity 분류를 공유하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ambient signal outcome-profile 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check` 검증을 통과.
+
+## 665) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ambient signal outcome-profile telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

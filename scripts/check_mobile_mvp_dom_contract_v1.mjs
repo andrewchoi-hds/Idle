@@ -497,6 +497,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-ambient-impact-outcome-profile="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact-replay="0"',
     "index.html",
     failures,
@@ -1326,6 +1332,7 @@ async function main() {
   assertIncludes(app, "dataset.sceneAmbientImpactSource", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactKind", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactOutcomeCode", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactOutcomeProfile", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactReplay", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactReplaySource", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactReplayOutcomeProfile", "app.mjs", failures);
@@ -1560,6 +1567,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneArena.dataset.sceneAmbientImpactSignalAgeOutcomeProfile =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactOutcomeProfile =',
     "app.mjs",
     failures,
   );
