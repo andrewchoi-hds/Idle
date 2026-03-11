@@ -497,6 +497,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-ambient-impact-origin-tone="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact-origin-outcome-code="none"',
     "index.html",
     failures,
@@ -1362,6 +1368,7 @@ async function main() {
   assertIncludes(app, "dataset.sceneAmbientImpactSource", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactOriginSource", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactOriginKind", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactOriginTone", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactOriginOutcomeCode", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactKind", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactTone", "app.mjs", failures);
@@ -1388,6 +1395,7 @@ async function main() {
   assertIncludes(app, "battleSceneLastResultDrivenImpactSignalExplicitAtMs", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastExplicitEventSeq", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastExplicitEventKind", "app.mjs", failures);
+  assertIncludes(app, "battleSceneLastExplicitEventTone", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastExplicitEventOutcomeCode", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastExplicitEventOutcomeProfile", "app.mjs", failures);
   assertIncludes(app, "battleSceneLastResultDrivenImpactSignalExplicitSeq", "app.mjs", failures);
@@ -1560,6 +1568,7 @@ async function main() {
     failures,
   );
   assertIncludes(app, "residueOriginKind:", "app.mjs", failures);
+  assertIncludes(app, "residueOriginTone:", "app.mjs", failures);
   assertIncludes(app, "residueOutcomeCode:", "app.mjs", failures);
   assertIncludes(
     app,
@@ -1618,6 +1627,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneArena.dataset.sceneAmbientImpactOriginKind = originKind;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactOriginTone = originTone;',
     "app.mjs",
     failures,
   );

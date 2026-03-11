@@ -650,6 +650,7 @@ let battleSceneLastExplicitEventAtMs = 0;
 let battleSceneLastExplicitEventSeq = 0;
 let battleSceneLastExplicitEventSource = "";
 let battleSceneLastExplicitEventKind = "none";
+let battleSceneLastExplicitEventTone = "none";
 let battleSceneLastExplicitEventOutcomeCode = "none";
 let battleSceneLastExplicitEventOutcomeProfile = "neutral";
 let battleSceneLastResultDrivenImpactAtMs = 0;
@@ -3433,6 +3434,12 @@ function setBattleSceneAmbientImpactSignal(signalInput, sourceInput = "idle") {
     signal.residueOriginKind
       ? signal.residueOriginKind
       : "none";
+  const residueOriginTone =
+    source === "random" &&
+    typeof signal?.residueOriginTone === "string" &&
+    signal.residueOriginTone
+      ? normalizeBattleSceneTone(signal.residueOriginTone)
+      : "none";
   const residueSource =
     source === "random" &&
     (signal?.residueSource === "battle" || signal?.residueSource === "breakthrough")
@@ -3474,9 +3481,16 @@ function setBattleSceneAmbientImpactSignal(signalInput, sourceInput = "idle") {
       : source === "random"
         ? residueOriginKind
         : "none";
+  const originTone =
+    source === "battle" || source === "breakthrough"
+      ? signalTone
+      : source === "random"
+        ? residueOriginTone
+        : "none";
   dom.battleSceneArena.dataset.sceneAmbientImpactSource = source;
   dom.battleSceneArena.dataset.sceneAmbientImpactOriginSource = originSource;
   dom.battleSceneArena.dataset.sceneAmbientImpactOriginKind = originKind;
+  dom.battleSceneArena.dataset.sceneAmbientImpactOriginTone = originTone;
   dom.battleSceneArena.dataset.sceneAmbientImpactOriginOutcomeCode =
     originOutcomeCode;
   dom.battleSceneArena.dataset.sceneAmbientImpactKind = kind;
@@ -5032,6 +5046,7 @@ function resetBattleSceneDuelState(options = {}) {
   battleSceneLastExplicitEventSeq = 0;
   battleSceneLastExplicitEventSource = "";
   battleSceneLastExplicitEventKind = "none";
+  battleSceneLastExplicitEventTone = "none";
   battleSceneLastExplicitEventOutcomeCode = "none";
   battleSceneLastExplicitEventOutcomeProfile = "neutral";
   battleSceneLastResultDrivenImpactReplayCount = 0;
@@ -6520,6 +6535,7 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
     battleSceneLastExplicitEventSource = source || "";
     battleSceneLastExplicitEventKind =
       typeof kind === "string" && kind ? kind : "none";
+    battleSceneLastExplicitEventTone = normalizeBattleSceneTone(tone);
     battleSceneLastExplicitEventOutcomeCode =
       typeof options?.outcome?.outcome === "string" && options.outcome.outcome
         ? options.outcome.outcome
@@ -7233,6 +7249,9 @@ function runBattleSceneAmbientTick() {
   const randomOriginKind = randomRecoverySource
     ? battleSceneLastExplicitEventKind
     : "none";
+  const randomOriginTone = randomRecoverySource
+    ? battleSceneLastExplicitEventTone
+    : "none";
   const randomImpactCadenceDivisor =
     resolveBattleSceneAmbientRandomImpactDivisor(
       randomRecoverySource,
@@ -7437,6 +7456,7 @@ function runBattleSceneAmbientTick() {
           source: "random",
           residueSource: randomRecoverySource || "none",
           residueOriginKind: randomOriginKind,
+          residueOriginTone: randomOriginTone,
           residueOutcomeCode: randomOutcomeCode,
           residueOutcomeProfile: outcomeProfile,
           syncDuel: randomSyncDuel,
@@ -7466,6 +7486,7 @@ function runBattleSceneAmbientTick() {
           source: "random",
           residueSource: randomRecoverySource || "none",
           residueOriginKind: randomOriginKind,
+          residueOriginTone: randomOriginTone,
           residueOutcomeCode: randomOutcomeCode,
           residueOutcomeProfile: outcomeProfile,
           syncDuel: randomSyncDuel,
@@ -7495,6 +7516,7 @@ function runBattleSceneAmbientTick() {
           source: "random",
           residueSource: randomRecoverySource || "none",
           residueOriginKind: randomOriginKind,
+          residueOriginTone: randomOriginTone,
           residueOutcomeCode: randomOutcomeCode,
           residueOutcomeProfile: outcomeProfile,
           syncDuel: randomSyncDuel,
@@ -7539,6 +7561,7 @@ function runBattleSceneAmbientTick() {
     battleSceneLastExplicitEventSeq = 0;
     battleSceneLastExplicitEventSource = "";
     battleSceneLastExplicitEventKind = "none";
+    battleSceneLastExplicitEventTone = "none";
     battleSceneLastExplicitEventOutcomeCode = "none";
     battleSceneLastExplicitEventOutcomeProfile = "neutral";
     battleSceneLastResultDrivenImpactReplayCount = 0;
@@ -7764,6 +7787,7 @@ function stopBattleSceneAmbientLoop() {
   battleSceneLastExplicitEventSeq = 0;
   battleSceneLastExplicitEventSource = "";
   battleSceneLastExplicitEventKind = "none";
+  battleSceneLastExplicitEventTone = "none";
   battleSceneLastExplicitEventOutcomeCode = "none";
   battleSceneLastExplicitEventOutcomeProfile = "neutral";
   battleSceneLastResultDrivenImpactReplayCount = 0;
