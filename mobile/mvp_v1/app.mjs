@@ -3367,6 +3367,7 @@ function setBattleSceneAmbientImpactRandomResidue(
   syncDuelInput = true,
   outcomeProfileInput = "neutral",
   kindInput = "none",
+  toneInput = "none",
 ) {
   if (!dom.battleSceneArena) {
     return;
@@ -3396,8 +3397,13 @@ function setBattleSceneAmbientImpactRandomResidue(
     typeof kindInput === "string" && kindInput
       ? kindInput
       : "none";
+  const tone =
+    typeof toneInput === "string" && toneInput
+      ? normalizeBattleSceneTone(toneInput)
+      : "none";
   dom.battleSceneArena.dataset.sceneAmbientImpactRandomResidueSource = source;
   dom.battleSceneArena.dataset.sceneAmbientImpactRandomResidueKind = kind;
+  dom.battleSceneArena.dataset.sceneAmbientImpactRandomResidueTone = tone;
   dom.battleSceneArena.dataset.sceneAmbientImpactRandomResidueSyncDuel =
     syncDuel;
   dom.battleSceneArena.dataset.sceneAmbientImpactRandomResidueOutcomeProfile =
@@ -3510,6 +3516,7 @@ function setBattleSceneAmbientImpactSignal(signalInput, sourceInput = "idle") {
     residueSyncDuel,
     residueOutcomeProfile,
     residueOriginKind,
+    residueOriginTone,
   );
 }
 
