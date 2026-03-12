@@ -3366,6 +3366,7 @@ function setBattleSceneAmbientImpactRandomResidue(
   sourceInput = "none",
   syncDuelInput = true,
   outcomeProfileInput = "neutral",
+  kindInput = "none",
 ) {
   if (!dom.battleSceneArena) {
     return;
@@ -3389,9 +3390,14 @@ function setBattleSceneAmbientImpactRandomResidue(
               : outcomeProfileInput === "breakthrough_fail_heavy"
                 ? "breakthrough_fail_heavy"
                 : outcomeProfileInput === "breakthrough_blocked"
-                  ? "breakthrough_blocked"
+                ? "breakthrough_blocked"
                   : "neutral";
+  const kind =
+    typeof kindInput === "string" && kindInput
+      ? kindInput
+      : "none";
   dom.battleSceneArena.dataset.sceneAmbientImpactRandomResidueSource = source;
+  dom.battleSceneArena.dataset.sceneAmbientImpactRandomResidueKind = kind;
   dom.battleSceneArena.dataset.sceneAmbientImpactRandomResidueSyncDuel =
     syncDuel;
   dom.battleSceneArena.dataset.sceneAmbientImpactRandomResidueOutcomeProfile =
@@ -3503,6 +3509,7 @@ function setBattleSceneAmbientImpactSignal(signalInput, sourceInput = "idle") {
     residueSource,
     residueSyncDuel,
     residueOutcomeProfile,
+    residueOriginKind,
   );
 }
 
