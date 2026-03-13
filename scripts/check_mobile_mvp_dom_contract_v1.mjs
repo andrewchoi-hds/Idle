@@ -527,6 +527,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-ambient-impact-origin-outcome-profile="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact-kind="none"',
     "index.html",
     failures,
@@ -1391,6 +1397,7 @@ async function main() {
   assertIncludes(app, "dataset.sceneAmbientImpactOriginKind", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactOriginTone", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactOriginOutcomeCode", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactOriginOutcomeProfile", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactKind", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactTone", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactOutcomeCode", "app.mjs", failures);
@@ -1609,6 +1616,12 @@ async function main() {
   assertIncludes(app, "residueOriginKind:", "app.mjs", failures);
   assertIncludes(app, "residueOriginTone:", "app.mjs", failures);
   assertIncludes(app, "residueOutcomeCode:", "app.mjs", failures);
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactOriginOutcomeProfile =',
+    "app.mjs",
+    failures,
+  );
   assertIncludes(
     app,
     'dom.battleSceneArena.dataset.sceneAmbientImpactReplaySource = source;',
