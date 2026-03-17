@@ -2890,3 +2890,11 @@
 
 ## 687) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ambient signal origin-sync-duel telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 688) 다음 순차 작업
+1. [완료] random outcome telemetry에 outcome code dataset(`data-scene-ambient-impact-random-outcome-code`)을 추가해, random bias 기준이 어떤 실제 엔진 outcome code에서 왔는지 DOM에서 직접 읽을 수 있도록 보강.
+2. [완료] `setBattleSceneAmbientImpactRandomOutcomeProfile(...)` helper를 확장해 explicit 결과 기반 경로와 random recovery 경로 모두 `battleSceneLastExplicitEventOutcomeCode`/`randomOutcomeCode`를 같이 기록하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 random outcome code 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 689) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(random outcome-code telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
