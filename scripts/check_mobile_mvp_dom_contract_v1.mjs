@@ -395,6 +395,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-ambient-impact-random-outcome-code="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact-random-sync-source="none"',
     "index.html",
     failures,
@@ -1405,6 +1411,7 @@ async function main() {
   assertIncludes(app, "dataset.sceneAmbientImpactOriginOutcomeCode", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactOriginOutcomeProfile", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactOriginSyncDuel", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactRandomOutcomeCode", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactKind", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactTone", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactOutcomeCode", "app.mjs", failures);
@@ -1632,6 +1639,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneArena.dataset.sceneAmbientImpactOriginSyncDuel =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactRandomOutcomeCode =',
     "app.mjs",
     failures,
   );

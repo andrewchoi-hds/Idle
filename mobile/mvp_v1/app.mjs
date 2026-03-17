@@ -2933,6 +2933,7 @@ function resolveBattleSceneAmbientRandomImpactKindProfile(
 function setBattleSceneAmbientImpactRandomOutcomeProfile(
   profileInput = "neutral",
   sourceInput = "none",
+  outcomeCodeInput = "none",
 ) {
   if (!dom.battleSceneArena) {
     return;
@@ -2957,8 +2958,26 @@ function setBattleSceneAmbientImpactRandomOutcomeProfile(
     sourceInput === "battle" || sourceInput === "breakthrough"
       ? sourceInput
       : "none";
+  const outcomeCode =
+    outcomeCodeInput === "success"
+      ? "success"
+      : outcomeCodeInput === "minor_fail"
+        ? "minor_fail"
+        : outcomeCodeInput === "retreat_fail"
+          ? "retreat_fail"
+          : outcomeCodeInput === "death_fail"
+            ? "death_fail"
+            : outcomeCodeInput === "blocked_no_qi"
+              ? "blocked_no_qi"
+              : outcomeCodeInput === "blocked_tribulation_setting"
+                ? "blocked_tribulation_setting"
+                : outcomeCodeInput === "blocked_auto_risk_policy"
+                  ? "blocked_auto_risk_policy"
+                  : "none";
   dom.battleSceneArena.dataset.sceneAmbientImpactRandomOutcomeProfile = profile;
   dom.battleSceneArena.dataset.sceneAmbientImpactRandomOutcomeSource = source;
+  dom.battleSceneArena.dataset.sceneAmbientImpactRandomOutcomeCode =
+    outcomeCode;
 }
 
 function resolveBattleSceneAmbientRandomOutcomeProfile(
@@ -5075,7 +5094,7 @@ function resetBattleSceneDuelState(options = {}) {
     "none",
   );
   setBattleSceneAmbientImpactRandomKindProfile("neutral", "none");
-  setBattleSceneAmbientImpactRandomOutcomeProfile("neutral", "none");
+  setBattleSceneAmbientImpactRandomOutcomeProfile("neutral", "none", "none");
   setBattleSceneAmbientImpactRandomSyncPolicy(true, "none");
   setBattleSceneAmbientImpactRandomQuietThreshold(
     BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS,
@@ -6633,6 +6652,7 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
     setBattleSceneAmbientImpactRandomOutcomeProfile(
       explicitRandomOutcomeProfile,
       battleSceneLastExplicitEventSource || "none",
+      battleSceneLastExplicitEventOutcomeCode,
     );
     setBattleSceneAmbientImpactRandomSyncPolicy(
       resolveBattleSceneAmbientRandomSyncDuel(
@@ -7361,6 +7381,7 @@ function runBattleSceneAmbientTick() {
   setBattleSceneAmbientImpactRandomOutcomeProfile(
     randomOutcomeProfile,
     randomRecoverySource || "none",
+    randomOutcomeCode,
   );
   setBattleSceneAmbientImpactRandomSyncPolicy(
     randomSyncDuel,
@@ -7596,7 +7617,7 @@ function runBattleSceneAmbientTick() {
       "none",
     );
     setBattleSceneAmbientImpactRandomKindProfile("neutral", "none");
-    setBattleSceneAmbientImpactRandomOutcomeProfile("neutral", "none");
+    setBattleSceneAmbientImpactRandomOutcomeProfile("neutral", "none", "none");
     setBattleSceneAmbientImpactRandomSyncPolicy(true, "none");
     setBattleSceneAmbientImpactRandomQuietThreshold(
       BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS,
@@ -7816,7 +7837,7 @@ function stopBattleSceneAmbientLoop() {
     "none",
   );
   setBattleSceneAmbientImpactRandomKindProfile("neutral", "none");
-  setBattleSceneAmbientImpactRandomOutcomeProfile("neutral", "none");
+  setBattleSceneAmbientImpactRandomOutcomeProfile("neutral", "none", "none");
   setBattleSceneAmbientImpactRandomSyncPolicy(true, "none");
   setBattleSceneAmbientImpactRandomQuietThreshold(
     BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS,
