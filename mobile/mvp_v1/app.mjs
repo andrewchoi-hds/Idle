@@ -2880,6 +2880,25 @@ function setBattleSceneAmbientImpactRandomKindProfile(
   dom.battleSceneArena.dataset.sceneAmbientImpactRandomKindSource = source;
 }
 
+function setBattleSceneAmbientImpactRandomSignal(
+  kindInput = "none",
+  toneInput = "none",
+) {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  const kind =
+    typeof kindInput === "string" && kindInput
+      ? kindInput
+      : "none";
+  const tone =
+    typeof toneInput === "string" && toneInput
+      ? normalizeBattleSceneTone(toneInput)
+      : "none";
+  dom.battleSceneArena.dataset.sceneAmbientImpactRandomKind = kind;
+  dom.battleSceneArena.dataset.sceneAmbientImpactRandomTone = tone;
+}
+
 function resolveBattleSceneAmbientRandomImpactKindProfile(
   sourceInput,
   outcomeProfileInput = "neutral",
@@ -3557,6 +3576,10 @@ function setBattleSceneAmbientImpactSignal(signalInput, sourceInput = "idle") {
     originOutcomeProfile;
   dom.battleSceneArena.dataset.sceneAmbientImpactOriginSyncDuel =
     originSyncDuel;
+  setBattleSceneAmbientImpactRandomSignal(
+    source === "random" ? kind : "none",
+    source === "random" ? signalTone : "none",
+  );
   dom.battleSceneArena.dataset.sceneAmbientImpactKind = kind;
   dom.battleSceneArena.dataset.sceneAmbientImpactTone = signalTone;
   dom.battleSceneArena.dataset.sceneAmbientImpactOutcomeCode = outcomeCode;

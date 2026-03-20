@@ -2898,3 +2898,11 @@
 
 ## 689) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(random outcome-code telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 690) 다음 순차 작업
+1. [완료] random 전용 telemetry에 실제 pulse kind/tone dataset(`data-scene-ambient-impact-random-kind`, `data-scene-ambient-impact-random-tone`)을 추가해, bias profile과 실제 발동 결과를 DOM에서 바로 비교할 수 있도록 보강.
+2. [완료] `setBattleSceneAmbientImpactSignal(...)`가 source=`random`일 때 현재 pulse의 `kind/tone`을 random contract로 기록하고, non-random 경로에서는 `none/none`으로 정리하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 random kind/tone telemetry 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 691) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(random pulse kind/tone telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
