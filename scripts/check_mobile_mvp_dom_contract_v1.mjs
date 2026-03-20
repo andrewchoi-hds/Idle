@@ -383,6 +383,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-ambient-impact-random-kind="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact-random-outcome-source="none"',
     "index.html",
     failures,
@@ -396,6 +402,12 @@ async function main() {
   assertIncludes(
     html,
     'data-scene-ambient-impact-random-outcome-code="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-random-tone="none"',
     "index.html",
     failures,
   );
@@ -1399,6 +1411,8 @@ async function main() {
   assertIncludes(app, "dataset.sceneAmbientImpactRandomRecoveryOutcomeProfile", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomRecoveryMs", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomRecoveryMaxMs", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactRandomKind", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactRandomTone", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomResidueKind", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomResidueTone", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomResidueOutcomeCode", "app.mjs", failures);
@@ -1546,6 +1560,18 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneArena.dataset.sceneAmbientImpactRandomKindSource = source;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactRandomKind = kind;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactRandomTone = tone;',
     "app.mjs",
     failures,
   );
