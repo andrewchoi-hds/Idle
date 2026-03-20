@@ -545,6 +545,24 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-ambient-impact-explicit-age-ms="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-explicit-recovery-max-ms="1400"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-explicit-quiet-threshold-ms="2200"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact-result-source="none"',
     "index.html",
     failures,
@@ -1519,6 +1537,9 @@ async function main() {
   assertIncludes(app, "dataset.sceneAmbientImpactExplicitOutcomeCode", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactExplicitOutcomeProfile", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactExplicitSyncDuel", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactExplicitAgeMs", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactExplicitRecoveryMaxMs", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactExplicitQuietThresholdMs", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactResultSource", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactResultKind", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactResultTone", "app.mjs", failures);
@@ -1802,6 +1823,24 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneArena.dataset.sceneAmbientImpactExplicitSyncDuel = syncDuel;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactExplicitAgeMs = String(ageMs);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactExplicitRecoveryMaxMs =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactExplicitQuietThresholdMs =',
     "app.mjs",
     failures,
   );
