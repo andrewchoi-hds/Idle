@@ -3975,6 +3975,36 @@ function setBattleSceneAmbientImpactExplicitSnapshot(
   dom.battleSceneArena.dataset.sceneAmbientImpactExplicitSyncDuel = syncDuel;
 }
 
+function setBattleSceneAmbientImpactExplicitSnapshotLifecycle(
+  ageMsInput = 0,
+  recoveryMaxMsInput = BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS,
+  quietThresholdMsInput = BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS,
+) {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  const ageMs = Math.max(0, Math.round(Number(ageMsInput) || 0));
+  const recoveryMaxMs = Math.max(
+    0,
+    Math.round(
+      Number(recoveryMaxMsInput) ||
+        BATTLE_SCENE_AMBIENT_RANDOM_RECOVERY_WINDOW_MS,
+    ),
+  );
+  const quietThresholdMs = Math.max(
+    0,
+    Math.round(
+      Number(quietThresholdMsInput) ||
+        BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS,
+    ),
+  );
+  dom.battleSceneArena.dataset.sceneAmbientImpactExplicitAgeMs = String(ageMs);
+  dom.battleSceneArena.dataset.sceneAmbientImpactExplicitRecoveryMaxMs =
+    String(recoveryMaxMs);
+  dom.battleSceneArena.dataset.sceneAmbientImpactExplicitQuietThresholdMs =
+    String(quietThresholdMs);
+}
+
 function setBattleSceneAmbientImpactResultSnapshot(signalInput = null) {
   if (!dom.battleSceneArena) {
     return;
@@ -5277,6 +5307,7 @@ function resetBattleSceneDuelState(options = {}) {
   battleSceneLastResultDrivenImpactReplayCount = 0;
   battleSceneLastResultDrivenImpactReplayAtMs = 0;
   setBattleSceneAmbientImpactExplicitSnapshot();
+  setBattleSceneAmbientImpactExplicitSnapshotLifecycle();
   setBattleSceneAmbientImpactResultSnapshot();
   setBattleSceneAmbientImpactResultSnapshotLifecycle();
   if (options.clearTicker) {
@@ -6789,6 +6820,17 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
       battleSceneLastExplicitEventOutcomeProfile,
       battleSceneLastExplicitEventSyncDuel,
     );
+    setBattleSceneAmbientImpactExplicitSnapshotLifecycle(
+      0,
+      resolveBattleSceneAmbientRandomRecoveryWindowMs(
+        battleSceneLastExplicitEventSource,
+        battleSceneLastExplicitEventOutcomeProfile,
+      ),
+      resolveBattleSceneAmbientRandomQuietThresholdMs(
+        battleSceneLastExplicitEventSource,
+        battleSceneLastExplicitEventOutcomeProfile,
+      ),
+    );
     setBattleSceneAmbientImpactSequence(
       battleSceneLastExplicitEventSeq,
       battleSceneLastResultDrivenImpactSignalExplicitSeq,
@@ -7535,6 +7577,8 @@ function runBattleSceneAmbientTick() {
     randomRecoverySource,
     randomOutcomeProfile,
   );
+  const explicitAgeMs =
+    battleSceneLastExplicitEventAtMs > 0 ? Math.max(0, quietMs) : 0;
   const randomRecoveryRemainingMs = Math.max(
     0,
     randomRecoveryMaxMs - Math.max(0, quietMs),
@@ -7581,6 +7625,11 @@ function runBattleSceneAmbientTick() {
     randomQuietThresholdMs,
     randomRecoverySource || "none",
     randomOutcomeProfile,
+  );
+  setBattleSceneAmbientImpactExplicitSnapshotLifecycle(
+    explicitAgeMs,
+    randomRecoveryMaxMs,
+    randomQuietThresholdMs,
   );
   setBattleSceneAmbientImpactRandomState(
     hasResultDrivenAmbientImpactSignal
@@ -7832,6 +7881,7 @@ function runBattleSceneAmbientTick() {
     battleSceneLastResultDrivenImpactReplayCount = 0;
     battleSceneLastResultDrivenImpactReplayAtMs = 0;
     setBattleSceneAmbientImpactExplicitSnapshot();
+    setBattleSceneAmbientImpactExplicitSnapshotLifecycle();
     setBattleSceneAmbientImpactResultSnapshot();
     setBattleSceneAmbientImpactResultSnapshotLifecycle();
     setBattleSceneAmbientImpactReplay(0);
@@ -8062,6 +8112,7 @@ function stopBattleSceneAmbientLoop() {
   battleSceneLastResultDrivenImpactReplayCount = 0;
   battleSceneLastResultDrivenImpactReplayAtMs = 0;
   setBattleSceneAmbientImpactExplicitSnapshot();
+  setBattleSceneAmbientImpactExplicitSnapshotLifecycle();
   setBattleSceneAmbientImpactResultSnapshot();
   setBattleSceneAmbientImpactResultSnapshotLifecycle();
   battleSceneDuelState.pressure = "low";
