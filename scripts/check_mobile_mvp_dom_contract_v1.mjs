@@ -581,6 +581,30 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-ambient-impact-result-explicit-seq="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-result-signal-age-ms="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-result-signal-age-max-ms="6800"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-result-replay-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact-signal-seq="0"',
     "index.html",
     failures,
@@ -1501,6 +1525,10 @@ async function main() {
   assertIncludes(app, "dataset.sceneAmbientImpactResultOutcomeCode", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactResultOutcomeProfile", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactResultSyncDuel", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactResultExplicitSeq", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactResultSignalAgeMs", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactResultSignalAgeMaxMs", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactResultReplayCount", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactSignalSeq", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactSource", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactOriginSource", "app.mjs", failures);
@@ -1810,6 +1838,30 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneArena.dataset.sceneAmbientImpactResultSyncDuel = syncDuel;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactResultExplicitSeq =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactResultSignalAgeMs =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactResultSignalAgeMaxMs =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactResultReplayCount =',
     "app.mjs",
     failures,
   );
