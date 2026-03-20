@@ -2914,3 +2914,11 @@
 
 ## 693) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(explicit result snapshot telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 694) 다음 순차 작업
+1. [완료] last result-driven signal snapshot telemetry(`data-scene-ambient-impact-result-source`, `...-result-kind`, `...-result-tone`, `...-result-outcome-code`, `...-result-outcome-profile`, `...-result-sync-duel`)를 추가해, active ambient signal과 분리된 마지막 result-driven cue를 DOM에서 직접 추적할 수 있도록 보강.
+2. [완료] `setBattleSceneAmbientImpactResultSnapshot(...)` helper를 추가하고 explicit 결과 직후/stale reset/idle reset 경로를 함께 연결해 result snapshot 수명주기를 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 result snapshot 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 695) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(result-driven signal snapshot telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
