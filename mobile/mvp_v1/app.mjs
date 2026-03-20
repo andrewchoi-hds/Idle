@@ -653,6 +653,7 @@ let battleSceneLastExplicitEventKind = "none";
 let battleSceneLastExplicitEventTone = "none";
 let battleSceneLastExplicitEventOutcomeCode = "none";
 let battleSceneLastExplicitEventOutcomeProfile = "neutral";
+let battleSceneLastExplicitEventSyncDuel = "off";
 let battleSceneLastResultDrivenImpactAtMs = 0;
 let battleSceneLastResultDrivenImpactSignal = null;
 let battleSceneLastResultDrivenImpactSignalExplicitAtMs = 0;
@@ -3908,6 +3909,72 @@ function setBattleSceneAmbientImpactSequence(
   dom.battleSceneArena.dataset.sceneAmbientImpactSignalSeq = String(signalSeq);
 }
 
+function setBattleSceneAmbientImpactExplicitSnapshot(
+  sourceInput = "none",
+  kindInput = "none",
+  toneInput = "none",
+  outcomeCodeInput = "none",
+  outcomeProfileInput = "neutral",
+  syncDuelInput = "off",
+) {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  const source =
+    sourceInput === "battle" || sourceInput === "breakthrough"
+      ? sourceInput
+      : "none";
+  const kind =
+    typeof kindInput === "string" && kindInput
+      ? kindInput
+      : "none";
+  const tone =
+    typeof toneInput === "string" && toneInput
+      ? normalizeBattleSceneTone(toneInput)
+      : "none";
+  const outcomeCode =
+    outcomeCodeInput === "success"
+      ? "success"
+      : outcomeCodeInput === "minor_fail"
+        ? "minor_fail"
+        : outcomeCodeInput === "retreat_fail"
+          ? "retreat_fail"
+          : outcomeCodeInput === "death_fail"
+            ? "death_fail"
+            : outcomeCodeInput === "blocked_no_qi"
+              ? "blocked_no_qi"
+              : outcomeCodeInput === "blocked_tribulation_setting"
+                ? "blocked_tribulation_setting"
+                : outcomeCodeInput === "blocked_auto_risk_policy"
+                  ? "blocked_auto_risk_policy"
+                  : "none";
+  const outcomeProfile =
+    outcomeProfileInput === "battle_win"
+      ? "battle_win"
+      : outcomeProfileInput === "battle_loss"
+        ? "battle_loss"
+        : outcomeProfileInput === "battle_loss_heavy"
+          ? "battle_loss_heavy"
+          : outcomeProfileInput === "breakthrough_success"
+            ? "breakthrough_success"
+            : outcomeProfileInput === "breakthrough_fail_minor"
+              ? "breakthrough_fail_minor"
+              : outcomeProfileInput === "breakthrough_fail_heavy"
+                ? "breakthrough_fail_heavy"
+                : outcomeProfileInput === "breakthrough_blocked"
+                  ? "breakthrough_blocked"
+                  : "neutral";
+  const syncDuel = syncDuelInput === "on" || syncDuelInput === true ? "on" : "off";
+  dom.battleSceneArena.dataset.sceneAmbientImpactExplicitSource = source;
+  dom.battleSceneArena.dataset.sceneAmbientImpactExplicitKind = kind;
+  dom.battleSceneArena.dataset.sceneAmbientImpactExplicitTone = tone;
+  dom.battleSceneArena.dataset.sceneAmbientImpactExplicitOutcomeCode =
+    outcomeCode;
+  dom.battleSceneArena.dataset.sceneAmbientImpactExplicitOutcomeProfile =
+    outcomeProfile;
+  dom.battleSceneArena.dataset.sceneAmbientImpactExplicitSyncDuel = syncDuel;
+}
+
 function isBattleSceneResultDrivenAmbientImpactSignalStale() {
   const signal =
     battleSceneLastResultDrivenImpactSignal &&
@@ -5139,8 +5206,10 @@ function resetBattleSceneDuelState(options = {}) {
   battleSceneLastExplicitEventTone = "none";
   battleSceneLastExplicitEventOutcomeCode = "none";
   battleSceneLastExplicitEventOutcomeProfile = "neutral";
+  battleSceneLastExplicitEventSyncDuel = "off";
   battleSceneLastResultDrivenImpactReplayCount = 0;
   battleSceneLastResultDrivenImpactReplayAtMs = 0;
+  setBattleSceneAmbientImpactExplicitSnapshot();
   if (options.clearTicker) {
     clearBattleSceneTicker();
   }
@@ -6642,6 +6711,15 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
         battleSceneLastExplicitEventSource,
       );
     battleSceneLastExplicitEventOutcomeProfile = explicitRandomOutcomeProfile;
+    battleSceneLastExplicitEventSyncDuel = syncDuel ? "on" : "off";
+    setBattleSceneAmbientImpactExplicitSnapshot(
+      battleSceneLastExplicitEventSource || "none",
+      battleSceneLastExplicitEventKind,
+      battleSceneLastExplicitEventTone,
+      battleSceneLastExplicitEventOutcomeCode,
+      battleSceneLastExplicitEventOutcomeProfile,
+      battleSceneLastExplicitEventSyncDuel,
+    );
     setBattleSceneAmbientImpactSequence(
       battleSceneLastExplicitEventSeq,
       battleSceneLastResultDrivenImpactSignalExplicitSeq,
@@ -7656,8 +7734,10 @@ function runBattleSceneAmbientTick() {
     battleSceneLastExplicitEventTone = "none";
     battleSceneLastExplicitEventOutcomeCode = "none";
     battleSceneLastExplicitEventOutcomeProfile = "neutral";
+    battleSceneLastExplicitEventSyncDuel = "off";
     battleSceneLastResultDrivenImpactReplayCount = 0;
     battleSceneLastResultDrivenImpactReplayAtMs = 0;
+    setBattleSceneAmbientImpactExplicitSnapshot();
     setBattleSceneAmbientImpactReplay(0);
     setBattleSceneAmbientImpactCooldown(0);
     setBattleSceneAmbientImpactPriorityWindow(0);
@@ -7882,8 +7962,10 @@ function stopBattleSceneAmbientLoop() {
   battleSceneLastExplicitEventTone = "none";
   battleSceneLastExplicitEventOutcomeCode = "none";
   battleSceneLastExplicitEventOutcomeProfile = "neutral";
+  battleSceneLastExplicitEventSyncDuel = "off";
   battleSceneLastResultDrivenImpactReplayCount = 0;
   battleSceneLastResultDrivenImpactReplayAtMs = 0;
+  setBattleSceneAmbientImpactExplicitSnapshot();
   battleSceneDuelState.pressure = "low";
   renderBattleSceneDuelHud();
 }
