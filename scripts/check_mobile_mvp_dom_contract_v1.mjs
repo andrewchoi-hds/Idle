@@ -623,6 +623,30 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-ambient-impact-result-cooldown-ms="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-result-cooldown-max-ms="960"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-result-priority-remaining-ms="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-result-priority-max-ms="6800"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact-signal-seq="0"',
     "index.html",
     failures,
@@ -1550,6 +1574,10 @@ async function main() {
   assertIncludes(app, "dataset.sceneAmbientImpactResultSignalAgeMs", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactResultSignalAgeMaxMs", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactResultReplayCount", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactResultCooldownMs", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactResultCooldownMaxMs", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactResultPriorityRemainingMs", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactResultPriorityMaxMs", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactSignalSeq", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactSource", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactOriginSource", "app.mjs", failures);
@@ -1901,6 +1929,30 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneArena.dataset.sceneAmbientImpactResultReplayCount =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactResultCooldownMs =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactResultCooldownMaxMs =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactResultPriorityRemainingMs =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactResultPriorityMaxMs =',
     "app.mjs",
     failures,
   );
