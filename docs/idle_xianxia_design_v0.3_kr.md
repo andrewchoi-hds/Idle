@@ -2938,3 +2938,11 @@
 
 ## 699) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(explicit snapshot lifecycle telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 700) 다음 순차 작업
+1. [완료] result snapshot window telemetry(`data-scene-ambient-impact-result-cooldown-ms`, `...-result-cooldown-max-ms`, `...-result-priority-remaining-ms`, `...-result-priority-max-ms`)를 추가해 마지막 result-driven cue가 현재 어떤 cooldown/priority 윈도우 안에 있는지 DOM에서 직접 추적할 수 있도록 보강.
+2. [완료] `setBattleSceneAmbientImpactResultSnapshotWindows(...)` helper를 추가하고 explicit 결과 직후/stale reset/ambient tick/replay 증가 경로를 함께 연결해 result window 메타를 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 result snapshot window 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 701) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(result snapshot window telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
