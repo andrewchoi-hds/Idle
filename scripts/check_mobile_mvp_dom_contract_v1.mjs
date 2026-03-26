@@ -563,6 +563,24 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-ambient-impact-explicit-gate="no_signal"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-explicit-fresh="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-ambient-impact-explicit-active="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact-result-source="none"',
     "index.html",
     failures,
@@ -1582,6 +1600,9 @@ async function main() {
   assertIncludes(app, "dataset.sceneAmbientImpactExplicitAgeMs", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactExplicitRecoveryMaxMs", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactExplicitQuietThresholdMs", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactExplicitGate", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactExplicitFresh", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneAmbientImpactExplicitActive", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactResultSource", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactResultKind", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactResultTone", "app.mjs", failures);
@@ -1890,6 +1911,24 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneArena.dataset.sceneAmbientImpactExplicitQuietThresholdMs =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactExplicitGate = gate;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactExplicitFresh = fresh;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneAmbientImpactExplicitActive = active;',
     "app.mjs",
     failures,
   );

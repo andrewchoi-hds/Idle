@@ -4005,6 +4005,38 @@ function setBattleSceneAmbientImpactExplicitSnapshotLifecycle(
     String(quietThresholdMs);
 }
 
+function setBattleSceneAmbientImpactExplicitSnapshotState(
+  gateInput = "no_signal",
+  freshInput = "none",
+  activeInput = "none",
+) {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  const gate =
+    gateInput === "fresh"
+      ? "fresh"
+      : gateInput === "stale_sequence"
+        ? "stale_sequence"
+        : gateInput === "stale_window"
+          ? "stale_window"
+          : gateInput === "replay_exhausted"
+            ? "replay_exhausted"
+            : gateInput === "replay_cooldown"
+              ? "replay_cooldown"
+              : "no_signal";
+  const fresh =
+    freshInput === "fresh"
+      ? "fresh"
+      : freshInput === "stale"
+        ? "stale"
+        : "none";
+  const active = activeInput === "signal" ? "signal" : "none";
+  dom.battleSceneArena.dataset.sceneAmbientImpactExplicitGate = gate;
+  dom.battleSceneArena.dataset.sceneAmbientImpactExplicitFresh = fresh;
+  dom.battleSceneArena.dataset.sceneAmbientImpactExplicitActive = active;
+}
+
 function setBattleSceneAmbientImpactResultSnapshot(signalInput = null) {
   if (!dom.battleSceneArena) {
     return;
@@ -5378,6 +5410,7 @@ function resetBattleSceneDuelState(options = {}) {
   battleSceneLastResultDrivenImpactReplayAtMs = 0;
   setBattleSceneAmbientImpactExplicitSnapshot();
   setBattleSceneAmbientImpactExplicitSnapshotLifecycle();
+  setBattleSceneAmbientImpactExplicitSnapshotState();
   setBattleSceneAmbientImpactResultSnapshot();
   setBattleSceneAmbientImpactResultSnapshotLifecycle();
   setBattleSceneAmbientImpactResultSnapshotWindows();
@@ -6903,6 +6936,7 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
         battleSceneLastExplicitEventOutcomeProfile,
       ),
     );
+    setBattleSceneAmbientImpactExplicitSnapshotState("fresh", "fresh", "signal");
     setBattleSceneAmbientImpactSequence(
       battleSceneLastExplicitEventSeq,
       battleSceneLastResultDrivenImpactSignalExplicitSeq,
@@ -7734,6 +7768,16 @@ function runBattleSceneAmbientTick() {
     randomRecoveryMaxMs,
     randomQuietThresholdMs,
   );
+  setBattleSceneAmbientImpactExplicitSnapshotState(
+    resultDrivenImpactGateReason,
+    hasResultDrivenAmbientImpactSignal
+      ? "fresh"
+      : resultDrivenImpactGateReason === "stale_sequence" ||
+          resultDrivenImpactGateReason === "stale_window"
+        ? "stale"
+        : "none",
+    hasResultDrivenAmbientImpactSignal ? "signal" : "none",
+  );
   setBattleSceneAmbientImpactRandomState(
     hasResultDrivenAmbientImpactSignal
       ? "suppressed_result_signal"
@@ -7996,6 +8040,7 @@ function runBattleSceneAmbientTick() {
     battleSceneLastResultDrivenImpactReplayAtMs = 0;
     setBattleSceneAmbientImpactExplicitSnapshot();
     setBattleSceneAmbientImpactExplicitSnapshotLifecycle();
+    setBattleSceneAmbientImpactExplicitSnapshotState();
     setBattleSceneAmbientImpactResultSnapshot();
     setBattleSceneAmbientImpactResultSnapshotLifecycle();
     setBattleSceneAmbientImpactResultSnapshotWindows();
@@ -8229,6 +8274,7 @@ function stopBattleSceneAmbientLoop() {
   battleSceneLastResultDrivenImpactReplayAtMs = 0;
   setBattleSceneAmbientImpactExplicitSnapshot();
   setBattleSceneAmbientImpactExplicitSnapshotLifecycle();
+  setBattleSceneAmbientImpactExplicitSnapshotState();
   setBattleSceneAmbientImpactResultSnapshot();
   setBattleSceneAmbientImpactResultSnapshotLifecycle();
   setBattleSceneAmbientImpactResultSnapshotWindows();
