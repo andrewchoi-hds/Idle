@@ -4110,6 +4110,38 @@ function setBattleSceneAmbientImpactResultSnapshotWindows(
     String(priorityMaxMs);
 }
 
+function setBattleSceneAmbientImpactResultSnapshotState(
+  gateInput = "no_signal",
+  freshInput = "none",
+  activeInput = "none",
+) {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  const gate =
+    gateInput === "fresh"
+      ? "fresh"
+      : gateInput === "stale_sequence"
+        ? "stale_sequence"
+        : gateInput === "stale_window"
+          ? "stale_window"
+          : gateInput === "replay_exhausted"
+            ? "replay_exhausted"
+            : gateInput === "replay_cooldown"
+              ? "replay_cooldown"
+              : "no_signal";
+  const fresh =
+    freshInput === "fresh"
+      ? "fresh"
+      : freshInput === "stale"
+        ? "stale"
+        : "none";
+  const active = activeInput === "signal" ? "signal" : "none";
+  dom.battleSceneArena.dataset.sceneAmbientImpactResultGate = gate;
+  dom.battleSceneArena.dataset.sceneAmbientImpactResultFresh = fresh;
+  dom.battleSceneArena.dataset.sceneAmbientImpactResultActive = active;
+}
+
 function isBattleSceneResultDrivenAmbientImpactSignalStale() {
   const signal =
     battleSceneLastResultDrivenImpactSignal &&
@@ -5349,6 +5381,7 @@ function resetBattleSceneDuelState(options = {}) {
   setBattleSceneAmbientImpactResultSnapshot();
   setBattleSceneAmbientImpactResultSnapshotLifecycle();
   setBattleSceneAmbientImpactResultSnapshotWindows();
+  setBattleSceneAmbientImpactResultSnapshotState();
   if (options.clearTicker) {
     clearBattleSceneTicker();
   }
@@ -6969,6 +7002,7 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
           battleSceneLastResultDrivenImpactSignal,
         ),
       );
+      setBattleSceneAmbientImpactResultSnapshotState("fresh", "fresh", "signal");
       setBattleSceneAmbientImpactSource("result");
       setBattleSceneAmbientImpactLock("result");
       setBattleSceneAmbientImpactGate("fresh");
@@ -7536,6 +7570,7 @@ function runBattleSceneAmbientTick() {
     setBattleSceneAmbientImpactResultSnapshot();
     setBattleSceneAmbientImpactResultSnapshotLifecycle();
     setBattleSceneAmbientImpactResultSnapshotWindows();
+    setBattleSceneAmbientImpactResultSnapshotState();
     setBattleSceneAmbientImpactSource("idle");
     setBattleSceneAmbientImpactSignal(null, "idle");
     setBattleSceneAmbientImpactReplay(0);
@@ -7552,6 +7587,16 @@ function runBattleSceneAmbientTick() {
     resultDrivenImpactGate.cooldownMaxMs,
     resultDrivenImpactGate.priorityRemainingMs,
     resultDrivenImpactGate.priorityMaxMs,
+  );
+  setBattleSceneAmbientImpactResultSnapshotState(
+    resultDrivenImpactGateReason,
+    hasResultDrivenAmbientImpactSignal
+      ? "fresh"
+      : resultDrivenImpactGateReason == "stale_sequence" ||
+          resultDrivenImpactGateReason == "stale_window"
+        ? "stale"
+        : "none",
+    hasResultDrivenAmbientImpactSignal ? "signal" : "none",
   );
   const useResultDrivenAmbientImpact = hasResultDrivenAmbientImpactSignal;
   const resultDrivenAmbientReplayOutcomeProfile =
@@ -7800,6 +7845,11 @@ function runBattleSceneAmbientTick() {
         resultDrivenImpactGate.priorityRemainingMs,
         resultDrivenImpactGate.priorityMaxMs,
       );
+      setBattleSceneAmbientImpactResultSnapshotState(
+        resultDrivenImpactGateReason,
+        hasResultDrivenAmbientImpactSignal ? "fresh" : "none",
+        "signal",
+      );
       setBattleSceneAmbientImpactCooldown(
         resultDrivenAmbientReplayMinIntervalMs,
         resultDrivenAmbientReplayMinIntervalMs,
@@ -7949,6 +7999,7 @@ function runBattleSceneAmbientTick() {
     setBattleSceneAmbientImpactResultSnapshot();
     setBattleSceneAmbientImpactResultSnapshotLifecycle();
     setBattleSceneAmbientImpactResultSnapshotWindows();
+    setBattleSceneAmbientImpactResultSnapshotState();
     setBattleSceneAmbientImpactReplay(0);
     setBattleSceneAmbientImpactCooldown(0);
     setBattleSceneAmbientImpactPriorityWindow(0);
@@ -8181,6 +8232,7 @@ function stopBattleSceneAmbientLoop() {
   setBattleSceneAmbientImpactResultSnapshot();
   setBattleSceneAmbientImpactResultSnapshotLifecycle();
   setBattleSceneAmbientImpactResultSnapshotWindows();
+  setBattleSceneAmbientImpactResultSnapshotState();
   battleSceneDuelState.pressure = "low";
   renderBattleSceneDuelHud();
 }
