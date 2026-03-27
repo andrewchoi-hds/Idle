@@ -5281,6 +5281,12 @@ function renderBattleSceneDuelHud() {
   if (dom.battleSceneEnemyVitals) {
     dom.battleSceneEnemyVitals.textContent = `HP ${enemyHpPct}% · 기세 ${enemyCastPct}%`;
   }
+  if (dom.battleSceneArena) {
+    dom.battleSceneArena.dataset.scenePlayerHpPct = String(playerHpPct);
+    dom.battleSceneArena.dataset.scenePlayerCastPct = String(playerCastPct);
+    dom.battleSceneArena.dataset.sceneEnemyHpPct = String(enemyHpPct);
+    dom.battleSceneArena.dataset.sceneEnemyCastPct = String(enemyCastPct);
+  }
   if (dom.battleScenePlayer) {
     const playerHpTier = resolveBattleSceneHpTier(playerHpPct);
     const playerCastTier = resolveBattleSceneCastTier(playerCastPct);
