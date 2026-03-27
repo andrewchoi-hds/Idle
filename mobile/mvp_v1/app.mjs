@@ -6998,6 +6998,7 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
       randomRecoveryWindowMs,
       explicitRandomOutcomeProfile,
     );
+    setBattleSceneAmbientImpactExplicitSnapshotState("fresh", "fresh", "signal");
     if (source) {
       battleSceneLastResultDrivenImpactAtMs = battleSceneLastExplicitEventAtMs;
       battleSceneLastResultDrivenImpactSignal = {
