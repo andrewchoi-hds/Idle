@@ -2970,3 +2970,11 @@
 
 ## 705) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(explicit snapshot state telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 706) 다음 순차 작업
+1. [완료] explicit remaining telemetry(`data-scene-ambient-impact-explicit-recovery-remaining-ms`, `...-explicit-quiet-remaining-ms`)와 result replay budget telemetry(`data-scene-ambient-impact-result-replay-max`, `...-result-replay-remaining`)를 추가해 소비 레이어가 남은 시간/남은 replay 횟수를 계산 없이 바로 읽을 수 있도록 보강.
+2. [완료] explicit/result lifecycle helper를 확장해 remaining/max/remaining budget이 explicit 결과 직후/ambient tick/reset 경로에서 함께 정합화되도록 연결.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 remaining budget 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 707) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(remaining budget telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

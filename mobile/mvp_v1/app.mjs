@@ -3998,11 +3998,17 @@ function setBattleSceneAmbientImpactExplicitSnapshotLifecycle(
         BATTLE_SCENE_AMBIENT_RANDOM_QUIET_THRESHOLD_MS,
     ),
   );
+  const recoveryRemainingMs = Math.max(0, recoveryMaxMs - ageMs);
+  const quietRemainingMs = Math.max(0, quietThresholdMs - ageMs);
   dom.battleSceneArena.dataset.sceneAmbientImpactExplicitAgeMs = String(ageMs);
   dom.battleSceneArena.dataset.sceneAmbientImpactExplicitRecoveryMaxMs =
     String(recoveryMaxMs);
   dom.battleSceneArena.dataset.sceneAmbientImpactExplicitQuietThresholdMs =
     String(quietThresholdMs);
+  dom.battleSceneArena.dataset.sceneAmbientImpactExplicitRecoveryRemainingMs =
+    String(recoveryRemainingMs);
+  dom.battleSceneArena.dataset.sceneAmbientImpactExplicitQuietRemainingMs =
+    String(quietRemainingMs);
 }
 
 function setBattleSceneAmbientImpactExplicitSnapshotState(
@@ -4080,6 +4086,7 @@ function setBattleSceneAmbientImpactResultSnapshotLifecycle(
   ageMsInput = 0,
   ageMaxMsInput = BATTLE_SCENE_RESULT_DRIVEN_AMBIENT_IMPACT_PRIORITY_WINDOW_MS,
   replayCountInput = 0,
+  replayMaxInput = 0,
 ) {
   if (!dom.battleSceneArena) {
     return;
@@ -4094,6 +4101,8 @@ function setBattleSceneAmbientImpactResultSnapshotLifecycle(
     ),
   );
   const replayCount = Math.max(0, Math.round(Number(replayCountInput) || 0));
+  const replayMax = Math.max(0, Math.round(Number(replayMaxInput) || 0));
+  const replayRemaining = Math.max(0, replayMax - replayCount);
   dom.battleSceneArena.dataset.sceneAmbientImpactResultExplicitSeq =
     String(explicitSeq);
   dom.battleSceneArena.dataset.sceneAmbientImpactResultSignalAgeMs =
@@ -4102,6 +4111,10 @@ function setBattleSceneAmbientImpactResultSnapshotLifecycle(
     String(ageMaxMs);
   dom.battleSceneArena.dataset.sceneAmbientImpactResultReplayCount =
     String(replayCount);
+  dom.battleSceneArena.dataset.sceneAmbientImpactResultReplayMax =
+    String(replayMax);
+  dom.battleSceneArena.dataset.sceneAmbientImpactResultReplayRemaining =
+    String(replayRemaining);
 }
 
 function setBattleSceneAmbientImpactResultSnapshotWindows(
@@ -7024,6 +7037,9 @@ function triggerBattleSceneImpact(kind, tone = "info", options = {}) {
           battleSceneLastResultDrivenImpactSignal,
         ),
         0,
+        resolveBattleSceneResultDrivenAmbientImpactReplayMax(
+          battleSceneLastResultDrivenImpactSignal,
+        ),
       );
       setBattleSceneAmbientImpactResultSnapshotWindows(
         0,
@@ -7616,6 +7632,9 @@ function runBattleSceneAmbientTick() {
     resultDrivenImpactGate.signalAgeMs,
     resultDrivenImpactGate.signalAgeMaxMs,
     battleSceneLastResultDrivenImpactReplayCount,
+    resolveBattleSceneResultDrivenAmbientImpactReplayMax(
+      resultDrivenImpactSignal,
+    ),
   );
   setBattleSceneAmbientImpactResultSnapshotWindows(
     resultDrivenImpactGate.cooldownRemainingMs,
@@ -7883,6 +7902,7 @@ function runBattleSceneAmbientTick() {
         resultDrivenImpactGate.signalAgeMs,
         resultDrivenImpactGate.signalAgeMaxMs,
         battleSceneLastResultDrivenImpactReplayCount,
+        resultDrivenAmbientReplayMax,
       );
       setBattleSceneAmbientImpactResultSnapshotWindows(
         resultDrivenAmbientReplayMinIntervalMs,
