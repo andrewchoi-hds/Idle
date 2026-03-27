@@ -2986,3 +2986,11 @@
 
 ## 709) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(actor root telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 710) 다음 순차 작업
+1. [완료] 아레나 루트 actor percent telemetry(`data-scene-player-hp-pct`, `data-scene-player-cast-pct`, `data-scene-enemy-hp-pct`, `data-scene-enemy-cast-pct`)를 추가해 소비 레이어가 카드 내부 텍스트를 파싱하지 않아도 현재 수치 상태를 바로 읽을 수 있도록 보강.
+2. [완료] `renderBattleSceneDuelHud()` 경로에서 HP/cast 퍼센트가 카드 UI와 아레나 루트 dataset에 동시에 기록되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 actor percent telemetry 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 711) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(actor percent telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

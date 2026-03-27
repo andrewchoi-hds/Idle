@@ -329,6 +329,30 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-player-hp-pct="100"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-player-cast-pct="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-enemy-hp-pct="100"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-enemy-cast-pct="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact="idle"',
     "index.html",
     failures,
@@ -1656,6 +1680,10 @@ async function main() {
   assertIncludes(app, "dataset.scenePlayerCastTier", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneEnemyHpTier", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneEnemyCastTier", "app.mjs", failures);
+  assertIncludes(app, "dataset.scenePlayerHpPct", "app.mjs", failures);
+  assertIncludes(app, "dataset.scenePlayerCastPct", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneEnemyHpPct", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneEnemyCastPct", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomState", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomRecoverySource", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomCadenceSource", "app.mjs", failures);
@@ -1902,6 +1930,30 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneArena.dataset.sceneEnemyCastTier = enemyCastTier;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.scenePlayerHpPct = String(playerHpPct);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.scenePlayerCastPct = String(playerCastPct);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneEnemyHpPct = String(enemyHpPct);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneEnemyCastPct = String(enemyCastPct);',
     "app.mjs",
     failures,
   );
