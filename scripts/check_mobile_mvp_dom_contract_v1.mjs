@@ -293,6 +293,42 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-player-frame="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-enemy-frame="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-player-hp-tier="safe"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-player-cast-tier="low"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-enemy-hp-tier="safe"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-enemy-cast-tier="low"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact="idle"',
     "index.html",
     failures,
@@ -1614,6 +1650,12 @@ async function main() {
   assertIncludes(app, "dataset.sceneAmbientImpactGate", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactFresh", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactActive", "app.mjs", failures);
+  assertIncludes(app, "dataset.scenePlayerFrame", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneEnemyFrame", "app.mjs", failures);
+  assertIncludes(app, "dataset.scenePlayerHpTier", "app.mjs", failures);
+  assertIncludes(app, "dataset.scenePlayerCastTier", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneEnemyHpTier", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneEnemyCastTier", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomState", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomRecoverySource", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomCadenceSource", "app.mjs", failures);
@@ -1824,6 +1866,42 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneArena.dataset.sceneAmbientImpactRandomTone = tone;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.scenePlayerFrame = frame;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneEnemyFrame = frame;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.scenePlayerHpTier = playerHpTier;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.scenePlayerCastTier = playerCastTier;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneEnemyHpTier = enemyHpTier;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneEnemyCastTier = enemyCastTier;',
     "app.mjs",
     failures,
   );

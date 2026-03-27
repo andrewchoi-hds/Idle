@@ -1354,6 +1354,13 @@ function setBattleSceneActorFrame(actorInput, frameInput, options = {}) {
   }
   clearBattleSceneActorFrameTimer(actor);
   actorNode.dataset.actorFrame = frame;
+  if (dom.battleSceneArena) {
+    if (actor === "player") {
+      dom.battleSceneArena.dataset.scenePlayerFrame = frame;
+    } else {
+      dom.battleSceneArena.dataset.sceneEnemyFrame = frame;
+    }
+  }
   if (frame === "idle") {
     return;
   }
@@ -1365,6 +1372,13 @@ function setBattleSceneActorFrame(actorInput, frameInput, options = {}) {
     const node = resolveBattleSceneActorNode(actor);
     if (node) {
       node.dataset.actorFrame = "idle";
+    }
+    if (dom.battleSceneArena) {
+      if (actor === "player") {
+        dom.battleSceneArena.dataset.scenePlayerFrame = "idle";
+      } else {
+        dom.battleSceneArena.dataset.sceneEnemyFrame = "idle";
+      }
     }
     battleSceneActorFrameTimers[actor] = null;
   }, holdMs);
@@ -1380,6 +1394,10 @@ function resetBattleSceneActorFrames() {
   const enemyNode = resolveBattleSceneActorNode("enemy");
   if (enemyNode) {
     enemyNode.dataset.actorFrame = "idle";
+  }
+  if (dom.battleSceneArena) {
+    dom.battleSceneArena.dataset.scenePlayerFrame = "idle";
+    dom.battleSceneArena.dataset.sceneEnemyFrame = "idle";
   }
 }
 
@@ -5264,12 +5282,24 @@ function renderBattleSceneDuelHud() {
     dom.battleSceneEnemyVitals.textContent = `HP ${enemyHpPct}% · 기세 ${enemyCastPct}%`;
   }
   if (dom.battleScenePlayer) {
-    dom.battleScenePlayer.dataset.hpTier = resolveBattleSceneHpTier(playerHpPct);
-    dom.battleScenePlayer.dataset.castTier = resolveBattleSceneCastTier(playerCastPct);
+    const playerHpTier = resolveBattleSceneHpTier(playerHpPct);
+    const playerCastTier = resolveBattleSceneCastTier(playerCastPct);
+    dom.battleScenePlayer.dataset.hpTier = playerHpTier;
+    dom.battleScenePlayer.dataset.castTier = playerCastTier;
+    if (dom.battleSceneArena) {
+      dom.battleSceneArena.dataset.scenePlayerHpTier = playerHpTier;
+      dom.battleSceneArena.dataset.scenePlayerCastTier = playerCastTier;
+    }
   }
   if (dom.battleSceneEnemy) {
-    dom.battleSceneEnemy.dataset.hpTier = resolveBattleSceneHpTier(enemyHpPct);
-    dom.battleSceneEnemy.dataset.castTier = resolveBattleSceneCastTier(enemyCastPct);
+    const enemyHpTier = resolveBattleSceneHpTier(enemyHpPct);
+    const enemyCastTier = resolveBattleSceneCastTier(enemyCastPct);
+    dom.battleSceneEnemy.dataset.hpTier = enemyHpTier;
+    dom.battleSceneEnemy.dataset.castTier = enemyCastTier;
+    if (dom.battleSceneArena) {
+      dom.battleSceneArena.dataset.sceneEnemyHpTier = enemyHpTier;
+      dom.battleSceneArena.dataset.sceneEnemyCastTier = enemyCastTier;
+    }
   }
   if (dom.battleSceneArena) {
     const sceneLead = resolveBattleSceneLead(
