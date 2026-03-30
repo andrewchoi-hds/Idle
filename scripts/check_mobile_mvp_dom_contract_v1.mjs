@@ -371,6 +371,30 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-pressure="low"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-combo-tier="calm"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-lead="even"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-danger="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact="idle"',
     "index.html",
     failures,
@@ -1705,6 +1729,10 @@ async function main() {
   assertIncludes(app, "dataset.sceneRound", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneComboCount", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneDpsScore", "app.mjs", failures);
+  assertIncludes(app, "dataset.scenePressure", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneComboTier", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneLead", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneDanger", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomState", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomRecoverySource", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomCadenceSource", "app.mjs", failures);
@@ -1993,6 +2021,30 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneArena.dataset.sceneDpsScore = String(pressureScore);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.scenePressure = battleSceneDuelState.pressure;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneComboTier = sceneComboTier;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneLead = sceneLead;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneDanger = sceneDanger;',
     "app.mjs",
     failures,
   );
