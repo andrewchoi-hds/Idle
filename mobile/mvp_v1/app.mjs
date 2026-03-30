@@ -4494,6 +4494,68 @@ function resolveBattleSceneDuelLeadTone() {
   return hpGap > 0 ? "success" : "warn";
 }
 
+function setBattleSceneLeadEffectState(stateInput = "idle") {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  const state =
+    stateInput === "swing_player" ||
+    stateInput === "swing_enemy" ||
+    stateInput === "swing_even" ||
+    stateInput === "resonance_player" ||
+    stateInput === "resonance_enemy" ||
+    stateInput === "resonance_even"
+      ? stateInput
+      : "idle";
+  dom.battleSceneArena.dataset.sceneLeadEffect = state;
+}
+
+function setBattleScenePressureEffectState(stateInput = "idle") {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  const state =
+    stateInput === "spike_medium" ||
+    stateInput === "spike_high" ||
+    stateInput === "resonance_medium" ||
+    stateInput === "resonance_high"
+      ? stateInput
+      : "idle";
+  dom.battleSceneArena.dataset.scenePressureEffect = state;
+}
+
+function setBattleSceneDangerEffectState(stateInput = "idle") {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  const state =
+    stateInput === "pulse_player" ||
+    stateInput === "pulse_enemy" ||
+    stateInput === "pulse_both" ||
+    stateInput === "resonance_player" ||
+    stateInput === "resonance_enemy" ||
+    stateInput === "resonance_both"
+      ? stateInput
+      : "idle";
+  dom.battleSceneArena.dataset.sceneDangerEffect = state;
+}
+
+function setBattleSceneComboEffectState(stateInput = "idle") {
+  if (!dom.battleSceneArena) {
+    return;
+  }
+  const state =
+    stateInput === "surge_flow" ||
+    stateInput === "surge_frenzy" ||
+    stateInput === "cooldown_flow" ||
+    stateInput === "cooldown_calm" ||
+    stateInput === "resonance_flow" ||
+    stateInput === "resonance_frenzy"
+      ? stateInput
+      : "idle";
+  dom.battleSceneArena.dataset.sceneComboEffect = state;
+}
+
 function maybeTriggerBattleSceneLeadSwing(nextLeadInput) {
   const nextLead = nextLeadInput === "player" || nextLeadInput === "enemy" ? nextLeadInput : "even";
   if (battleSceneLastLeadState === nextLead) {
@@ -4518,8 +4580,10 @@ function maybeTriggerBattleSceneLeadSwing(nextLeadInput) {
       window.clearTimeout(battleSceneLeadSwingTimer);
     }
     const durationMs = BATTLE_SCENE_LEAD_SWING_DURATIONS_MS[nextLead] || 360;
+    setBattleSceneLeadEffectState(`swing_${nextLead}`);
     battleSceneLeadSwingTimer = window.setTimeout(() => {
       dom.battleSceneArena?.classList.remove(className);
+      setBattleSceneLeadEffectState();
       battleSceneLeadSwingTimer = null;
     }, durationMs);
   }
@@ -4595,8 +4659,10 @@ function triggerBattleSceneLeadResonance(leadInput = "even", options = {}) {
     window.clearTimeout(battleSceneLeadResonanceTimer);
   }
   const durationMs = BATTLE_SCENE_LEAD_RESONANCE_DURATIONS_MS[lead] || 380;
+  setBattleSceneLeadEffectState(`resonance_${lead}`);
   battleSceneLeadResonanceTimer = window.setTimeout(() => {
     dom.battleSceneArena?.classList.remove(className);
+    setBattleSceneLeadEffectState();
     battleSceneLeadResonanceTimer = null;
   }, durationMs);
 
@@ -4672,8 +4738,10 @@ function triggerBattleScenePressureSpike(level = "medium", options = {}) {
     window.clearTimeout(battleScenePressureSpikeTimer);
   }
   const durationMs = BATTLE_SCENE_PRESSURE_SPIKE_DURATIONS_MS[normalizedLevel] || 360;
+  setBattleScenePressureEffectState(`spike_${normalizedLevel}`);
   battleScenePressureSpikeTimer = window.setTimeout(() => {
     dom.battleSceneArena?.classList.remove(className);
+    setBattleScenePressureEffectState();
     battleScenePressureSpikeTimer = null;
   }, durationMs);
   battleSceneLastPressureSpikeAtMs = now;
@@ -4700,8 +4768,10 @@ function triggerBattleScenePressureResonance(level = "medium", options = {}) {
     window.clearTimeout(battleScenePressureResonanceTimer);
   }
   const durationMs = BATTLE_SCENE_PRESSURE_RESONANCE_DURATIONS_MS[normalizedLevel] || 420;
+  setBattleScenePressureEffectState(`resonance_${normalizedLevel}`);
   battleScenePressureResonanceTimer = window.setTimeout(() => {
     dom.battleSceneArena?.classList.remove(className);
+    setBattleScenePressureEffectState();
     battleScenePressureResonanceTimer = null;
   }, durationMs);
 
@@ -4833,8 +4903,10 @@ function triggerBattleSceneDangerPulse(side = "player", options = {}) {
     window.clearTimeout(battleSceneDangerPulseTimer);
   }
   const durationMs = BATTLE_SCENE_DANGER_PULSE_DURATIONS_MS[normalizedSide] || 420;
+  setBattleSceneDangerEffectState(`pulse_${normalizedSide}`);
   battleSceneDangerPulseTimer = window.setTimeout(() => {
     dom.battleSceneArena?.classList.remove(className);
+    setBattleSceneDangerEffectState();
     battleSceneDangerPulseTimer = null;
   }, durationMs);
 
@@ -4902,8 +4974,10 @@ function triggerBattleSceneDangerResonance(side = "player", options = {}) {
     window.clearTimeout(battleSceneDangerResonanceTimer);
   }
   const durationMs = BATTLE_SCENE_DANGER_RESONANCE_DURATIONS_MS[normalizedSide] || 460;
+  setBattleSceneDangerEffectState(`resonance_${normalizedSide}`);
   battleSceneDangerResonanceTimer = window.setTimeout(() => {
     dom.battleSceneArena?.classList.remove(className);
+    setBattleSceneDangerEffectState();
     battleSceneDangerResonanceTimer = null;
   }, durationMs);
 
@@ -5018,8 +5092,10 @@ function triggerBattleSceneComboSurge(tier = "flow", options = {}) {
     window.clearTimeout(battleSceneComboSurgeTimer);
   }
   const durationMs = BATTLE_SCENE_COMBO_SURGE_DURATIONS_MS[normalizedTier] || 460;
+  setBattleSceneComboEffectState(`surge_${normalizedTier}`);
   battleSceneComboSurgeTimer = window.setTimeout(() => {
     dom.battleSceneArena?.classList.remove(className);
+    setBattleSceneComboEffectState();
     battleSceneComboSurgeTimer = null;
   }, durationMs);
 
@@ -5100,8 +5176,10 @@ function triggerBattleSceneComboCooldown(tier = "flow", options = {}) {
     window.clearTimeout(battleSceneComboCooldownTimer);
   }
   const durationMs = BATTLE_SCENE_COMBO_COOLDOWN_DURATIONS_MS[normalizedTier] || 460;
+  setBattleSceneComboEffectState(`cooldown_${normalizedTier}`);
   battleSceneComboCooldownTimer = window.setTimeout(() => {
     dom.battleSceneArena?.classList.remove(className);
+    setBattleSceneComboEffectState();
     battleSceneComboCooldownTimer = null;
   }, durationMs);
 
@@ -5165,8 +5243,10 @@ function triggerBattleSceneComboResonance(tier = "flow", options = {}) {
     window.clearTimeout(battleSceneComboResonanceTimer);
   }
   const durationMs = BATTLE_SCENE_COMBO_RESONANCE_DURATIONS_MS[normalizedTier] || 440;
+  setBattleSceneComboEffectState(`resonance_${normalizedTier}`);
   battleSceneComboResonanceTimer = window.setTimeout(() => {
     dom.battleSceneArena?.classList.remove(className);
+    setBattleSceneComboEffectState();
     battleSceneComboResonanceTimer = null;
   }, durationMs);
 
@@ -5420,6 +5500,10 @@ function resetBattleSceneDuelState(options = {}) {
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_COMBO_COOLDOWN_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_COMBO_RESONANCE_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_LEAD_RESONANCE_CLASSES);
+  setBattleSceneLeadEffectState();
+  setBattleScenePressureEffectState();
+  setBattleSceneDangerEffectState();
+  setBattleSceneComboEffectState();
   clearBattleSceneComboBanner();
   resetBattleSceneActorFrames();
   setBattleSceneImpactCue("idle");
@@ -8278,6 +8362,10 @@ function stopBattleSceneAmbientLoop() {
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_COMBO_SURGE_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_COMBO_COOLDOWN_CLASSES);
   dom.battleSceneArena?.classList.remove(...BATTLE_SCENE_COMBO_RESONANCE_CLASSES);
+  setBattleSceneLeadEffectState();
+  setBattleScenePressureEffectState();
+  setBattleSceneDangerEffectState();
+  setBattleSceneComboEffectState();
   if (battleSceneSkillBannerTimer !== null) {
     window.clearTimeout(battleSceneSkillBannerTimer);
     battleSceneSkillBannerTimer = null;

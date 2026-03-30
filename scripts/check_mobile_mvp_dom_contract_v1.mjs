@@ -431,6 +431,30 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-lead-effect="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-pressure-effect="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-danger-effect="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-combo-effect="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact="idle"',
     "index.html",
     failures,
@@ -1774,6 +1798,10 @@ async function main() {
   assertIncludes(app, "dataset.sceneComboTier", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneLead", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneDanger", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneLeadEffect", "app.mjs", failures);
+  assertIncludes(app, "dataset.scenePressureEffect", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneDangerEffect", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneComboEffect", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomState", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomRecoverySource", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomCadenceSource", "app.mjs", failures);
@@ -2116,6 +2144,30 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneArena.dataset.sceneDanger = sceneDanger;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneLeadEffect = state;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.scenePressureEffect = state;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneDangerEffect = state;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneComboEffect = state;',
     "app.mjs",
     failures,
   );
