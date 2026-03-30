@@ -170,7 +170,7 @@ npm run mobile:mvp:serve
   - 전장 흐름 레이어(`battle-scene-flow-back/front`)를 추가해 배경 전류가 상시 흐르는 느낌을 유지
   - 타격 궤적 레이어(`battleSceneTrailLayer`, `spawnBattleSceneTrail`)를 추가해 실시간/자동 루프에서 slash/wave 궤적이 지속적으로 발생
   - 쇼크웨이브 레이어(`battleSceneShockwaveLayer`, `spawnBattleSceneShockwave`)를 추가해 strike/burst/impact 및 고압 상시 루프에 원형 파동 임팩트를 누적 반영
-  - 미니 듀얼 HUD(`battleScenePlayerHpBar/EnemyHpBar`, `battleScenePlayerCastBar/EnemyCastBar`, `battleSceneClashCore`)를 추가해 버튼 입력 없이도 HP/기세/충돌 압력이 상시 갱신
+  - 미니 듀얼 HUD(`battleScenePlayerHpBar/EnemyHpBar`, `battleScenePlayerCastBar/EnemyCastBar`, `battleSceneClashCore`)를 추가하고, clash core에도 `data-pressure=low|medium|high` contract를 부여해 버튼 입력 없이도 HP/기세/충돌 압력이 상시 갱신
   - 상시 듀얼 tick(`runBattleSceneDuelTick`, `applyBattleSceneDuelStrike`, `applyBattleSceneDuelBurst`)을 추가해 `idle/auto/realtime` 모드별 타격 빈도·피해량·비기 주기를 차등 적용
   - 전투 상단 HUD(`battleSceneRoundBadge`, `battleSceneComboBadge`, `battleSceneDpsBadge`)를 추가하고, 아레나 루트 dataset(`data-scene-round`, `data-scene-combo-count`, `data-scene-dps-score`)에도 같은 수치를 기록해 라운드/연격/압력 지표를 상시 노출
   - 스킬 배너(`battleSceneSkillBanner`)와 전투 티커(`battleSceneTicker`)를 추가해 치명타/비기/라운드 종료 이벤트를 조작 없이도 지속 피드백

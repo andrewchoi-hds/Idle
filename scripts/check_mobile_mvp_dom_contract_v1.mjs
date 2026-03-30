@@ -275,6 +275,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-pressure="low"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-state="idle"',
     "index.html",
     failures,
