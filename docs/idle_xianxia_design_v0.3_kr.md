@@ -3098,3 +3098,11 @@
 
 ## 735) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(message key contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 736) 다음 순차 작업
+1. [완료] 티커 노드(`battleSceneTicker`) contract에 `data-message-key`를 추가해 소비 레이어가 최신 ticker 문구의 의미 key(`battle_win`, `breakthrough_success`, `ambient_auto`, `ambient_idle`, `battle_ticker` 등)를 텍스트 파싱 없이 직접 읽을 수 있도록 보강.
+2. [완료] `renderBattleSceneTicker`, `pushBattleSceneTicker`, `syncBattleSceneDuelFromImpact`, ambient 순환 ticker call site를 함께 정리해 ticker key가 결과 기반/ambient 경로에서 실제 의미와 일치하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ticker key contract 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 737) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ticker key contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
