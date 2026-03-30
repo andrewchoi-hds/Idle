@@ -437,6 +437,36 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="battleSceneStatus"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="battleSceneResult"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-message-state="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="battleSceneTicker"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-queue-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-tone="info"',
     "index.html",
     failures,
@@ -2228,7 +2258,37 @@ async function main() {
   );
   assertIncludes(
     app,
-    'node.dataset.tone = normalizeBattleSceneTone(tone);',
+    "node.dataset.tone = normalizedTone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneStatus.dataset.messageState =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneResult.dataset.messageState =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneTicker.dataset.messageState = "idle";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneTicker.dataset.messageState = "active";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneTicker.dataset.queueCount = String(battleSceneTickerState.items.length);',
     "app.mjs",
     failures,
   );
