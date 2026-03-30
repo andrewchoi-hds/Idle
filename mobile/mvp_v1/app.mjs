@@ -2579,6 +2579,7 @@ function renderBattleSceneCombatMetrics() {
     applyBattleSceneChipTone(dom.battleSceneRoundBadge, "info");
     dom.battleSceneRoundBadge.dataset.round = String(battleSceneDuelState.round);
     dom.battleSceneRoundBadge.dataset.loop = loopMode;
+    dom.battleSceneRoundBadge.dataset.badgeKey = `round_${loopMode}`;
   }
   if (dom.battleSceneArena) {
     dom.battleSceneArena.dataset.sceneRound = String(battleSceneDuelState.round);
@@ -2596,6 +2597,7 @@ function renderBattleSceneCombatMetrics() {
     applyBattleSceneChipTone(dom.battleSceneComboBadge, comboTone);
     dom.battleSceneComboBadge.dataset.comboCount = String(battleSceneDuelState.combo);
     dom.battleSceneComboBadge.dataset.comboTier = comboTier;
+    dom.battleSceneComboBadge.dataset.badgeKey = `combo_${comboTier}`;
   }
   if (dom.battleSceneArena) {
     dom.battleSceneArena.dataset.sceneComboCount = String(battleSceneDuelState.combo);
@@ -2615,6 +2617,7 @@ function renderBattleSceneCombatMetrics() {
     );
     dom.battleSceneDpsBadge.dataset.dpsScore = String(pressureScore);
     dom.battleSceneDpsBadge.dataset.pressure = battleSceneDuelState.pressure;
+    dom.battleSceneDpsBadge.dataset.badgeKey = `pressure_${battleSceneDuelState.pressure}`;
     if (dom.battleSceneArena) {
       dom.battleSceneArena.dataset.sceneDpsScore = String(pressureScore);
     }
