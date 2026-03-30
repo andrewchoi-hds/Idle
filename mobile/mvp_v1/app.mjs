@@ -2397,7 +2397,7 @@ function applyBattleSceneChipTone(node, tone = "info") {
   node.dataset.tone = normalizeBattleSceneTone(tone);
 }
 
-function setBattleSceneSkillBanner(label, tone = "info") {
+function setBattleSceneSkillBanner(label, tone = "info", source = "ambient") {
   if (!dom.battleSceneSkillBanner) {
     return;
   }
@@ -2405,6 +2405,7 @@ function setBattleSceneSkillBanner(label, tone = "info") {
   dom.battleSceneSkillBanner.textContent = String(label || "기세 수렴");
   dom.battleSceneSkillBanner.dataset.tone = normalizedTone;
   dom.battleSceneSkillBanner.dataset.bannerState = "active";
+  dom.battleSceneSkillBanner.dataset.bannerSource = normalizeBattleSceneMessageSource(source);
   dom.battleSceneSkillBanner.classList.remove("is-active", ...BATTLE_SCENE_TONE_CLASSES);
   dom.battleSceneSkillBanner.classList.add(`tone-${normalizedTone}`);
   dom.battleSceneSkillBanner.setAttribute("aria-hidden", "false");
@@ -2418,6 +2419,7 @@ function setBattleSceneSkillBanner(label, tone = "info") {
       dom.battleSceneSkillBanner.classList.remove("is-active");
       dom.battleSceneSkillBanner.setAttribute("aria-hidden", "true");
       dom.battleSceneSkillBanner.dataset.bannerState = "idle";
+      dom.battleSceneSkillBanner.dataset.bannerSource = "idle";
     }
     battleSceneSkillBannerTimer = null;
   }, 860);
@@ -2454,10 +2456,11 @@ function clearBattleSceneComboBanner() {
   dom.battleSceneComboBanner.dataset.tone = "info";
   dom.battleSceneComboBanner.dataset.tier = "flow";
   dom.battleSceneComboBanner.dataset.bannerState = "idle";
+  dom.battleSceneComboBanner.dataset.bannerSource = "idle";
   dom.battleSceneComboBanner.setAttribute("aria-hidden", "true");
 }
 
-function setBattleSceneComboBanner(comboInput, tone = "info") {
+function setBattleSceneComboBanner(comboInput, tone = "info", source = "ambient") {
   if (!dom.battleSceneComboBanner) {
     return;
   }
@@ -2478,6 +2481,7 @@ function setBattleSceneComboBanner(comboInput, tone = "info") {
   dom.battleSceneComboBanner.dataset.tone = normalizedTone;
   dom.battleSceneComboBanner.dataset.tier = tier;
   dom.battleSceneComboBanner.dataset.bannerState = "active";
+  dom.battleSceneComboBanner.dataset.bannerSource = normalizeBattleSceneMessageSource(source);
   dom.battleSceneComboBanner.classList.remove(
     "is-active",
     ...BATTLE_SCENE_TONE_CLASSES,
@@ -2496,6 +2500,7 @@ function setBattleSceneComboBanner(comboInput, tone = "info") {
       dom.battleSceneComboBanner.classList.remove("is-active");
       dom.battleSceneComboBanner.setAttribute("aria-hidden", "true");
       dom.battleSceneComboBanner.dataset.bannerState = "idle";
+      dom.battleSceneComboBanner.dataset.bannerSource = "idle";
     }
     battleSceneComboBannerTimer = null;
   }, holdMs);
@@ -6263,7 +6268,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
     pushBattleSceneTicker(tickerText, tickerTone, source);
   }
   if (bannerText) {
-    setBattleSceneSkillBanner(bannerText, bannerTone);
+    setBattleSceneSkillBanner(bannerText, bannerTone, source);
   }
   renderBattleSceneDuelHud();
 }
@@ -6342,7 +6347,7 @@ function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true, opti
         battleSceneDuelState.combo % 3 === 0 &&
         Math.random() < 0.18;
   if (shouldShowComboBanner) {
-    setBattleSceneComboBanner(battleSceneDuelState.combo, tone);
+    setBattleSceneComboBanner(battleSceneDuelState.combo, tone, "ambient");
   }
   if (!suppressAmbientActorFrames) {
     setBattleSceneActorFrame(attacker, "skill");
@@ -6358,6 +6363,7 @@ function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true, opti
     setBattleSceneSkillBanner(
       `${attacker === "player" ? "수련자" : "적수"} · ${skillLabel}`,
       tone,
+      "ambient",
     );
   }
   if (!visuals || resultPrioritySuppressed) {
@@ -6457,6 +6463,7 @@ function applyBattleSceneDuelStrike(attacker, mode = "idle", visuals = true, opt
     setBattleSceneComboBanner(
       battleSceneDuelState.combo,
       isCrit ? "error" : tone,
+      "ambient",
     );
   }
   if (!suppressAmbientActorFrames) {
@@ -8440,6 +8447,7 @@ function stopBattleSceneAmbientLoop() {
     dom.battleSceneSkillBanner.classList.remove("is-active");
     dom.battleSceneSkillBanner.setAttribute("aria-hidden", "true");
     dom.battleSceneSkillBanner.dataset.bannerState = "idle";
+    dom.battleSceneSkillBanner.dataset.bannerSource = "idle";
   }
   clearBattleSceneComboBanner();
   if (dom.battleSceneSparkLayer) {
