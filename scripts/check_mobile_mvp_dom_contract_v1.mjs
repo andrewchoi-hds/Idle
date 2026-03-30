@@ -437,6 +437,24 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-banner-state="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-tier="flow"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-pressure="low"',
     "index.html",
     failures,
@@ -1828,6 +1846,9 @@ async function main() {
   assertIncludes(app, "dataset.sceneRound", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneComboCount", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneDpsScore", "app.mjs", failures);
+  assertIncludes(app, "dataset.tone", "app.mjs", failures);
+  assertIncludes(app, "dataset.bannerState", "app.mjs", failures);
+  assertIncludes(app, "dataset.tier", "app.mjs", failures);
   assertIncludes(app, "dataset.scenePressure", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneComboTier", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneLead", "app.mjs", failures);
@@ -2202,6 +2223,30 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneArena.dataset.sceneDpsScore = String(pressureScore);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'node.dataset.tone = normalizeBattleSceneTone(tone);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneSkillBanner.dataset.bannerState = "active";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneComboBanner.dataset.bannerState = "active";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneComboBanner.dataset.tier = tier;',
     "app.mjs",
     failures,
   );
