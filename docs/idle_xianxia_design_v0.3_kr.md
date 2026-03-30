@@ -3074,3 +3074,11 @@
 
 ## 729) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(banner source contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 730) 다음 순차 작업
+1. [완료] 상단 badge 노드(`battleSceneRoundBadge`, `battleSceneComboBadge`, `battleSceneDpsBadge`) 기본 contract에 `data-round`, `data-combo-count`, `data-dps-score`를 추가해 배지 노드 단독 관찰만으로도 라운드/연격/압력 수치를 바로 읽을 수 있도록 보강.
+2. [완료] `renderBattleSceneCombatMetrics()` 경로에서 badge 텍스트/톤과 badge dataset, 아레나 루트 combat metric dataset이 함께 갱신되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 badge value contract 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 731) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(badge value contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
