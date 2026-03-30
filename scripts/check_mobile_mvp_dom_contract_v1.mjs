@@ -485,6 +485,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-banner-source="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-tier="flow"',
     "index.html",
     failures,
@@ -2342,13 +2348,31 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.battleSceneSkillBanner.dataset.bannerSource = normalizeBattleSceneMessageSource(source);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneComboBanner.dataset.bannerState = "active";',
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
+    'dom.battleSceneComboBanner.dataset.bannerSource = normalizeBattleSceneMessageSource(source);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneComboBanner.dataset.tier = tier;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneComboBanner.dataset.bannerSource = "idle";',
     "app.mjs",
     failures,
   );
