@@ -353,6 +353,24 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-round="1"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-combo-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-dps-score="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-ambient-impact="idle"',
     "index.html",
     failures,
@@ -1684,6 +1702,9 @@ async function main() {
   assertIncludes(app, "dataset.scenePlayerCastPct", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneEnemyHpPct", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneEnemyCastPct", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneRound", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneComboCount", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneDpsScore", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomState", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomRecoverySource", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneAmbientImpactRandomCadenceSource", "app.mjs", failures);
@@ -1954,6 +1975,24 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneArena.dataset.sceneEnemyCastPct = String(enemyCastPct);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneRound = String(battleSceneDuelState.round);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneComboCount = String(battleSceneDuelState.combo);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneDpsScore = String(pressureScore);',
     "app.mjs",
     failures,
   );

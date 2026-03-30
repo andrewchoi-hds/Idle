@@ -172,7 +172,7 @@ npm run mobile:mvp:serve
   - 쇼크웨이브 레이어(`battleSceneShockwaveLayer`, `spawnBattleSceneShockwave`)를 추가해 strike/burst/impact 및 고압 상시 루프에 원형 파동 임팩트를 누적 반영
   - 미니 듀얼 HUD(`battleScenePlayerHpBar/EnemyHpBar`, `battleScenePlayerCastBar/EnemyCastBar`, `battleSceneClashCore`)를 추가해 버튼 입력 없이도 HP/기세/충돌 압력이 상시 갱신
   - 상시 듀얼 tick(`runBattleSceneDuelTick`, `applyBattleSceneDuelStrike`, `applyBattleSceneDuelBurst`)을 추가해 `idle/auto/realtime` 모드별 타격 빈도·피해량·비기 주기를 차등 적용
-  - 전투 상단 HUD(`battleSceneRoundBadge`, `battleSceneComboBadge`, `battleSceneDpsBadge`)를 추가해 라운드/연격/압력 지표를 상시 노출
+  - 전투 상단 HUD(`battleSceneRoundBadge`, `battleSceneComboBadge`, `battleSceneDpsBadge`)를 추가하고, 아레나 루트 dataset(`data-scene-round`, `data-scene-combo-count`, `data-scene-dps-score`)에도 같은 수치를 기록해 라운드/연격/압력 지표를 상시 노출
   - 스킬 배너(`battleSceneSkillBanner`)와 전투 티커(`battleSceneTicker`)를 추가해 치명타/비기/라운드 종료 이벤트를 조작 없이도 지속 피드백
   - 배우 프레임 상태(`data-actor-frame=idle/attack/hit/skill`)와 전환 헬퍼(`setBattleSceneActorFrame`, `resetBattleSceneActorFrames`)를 추가하고, 아레나 루트 dataset(`data-scene-player-frame`, `data-scene-enemy-frame`)에도 같은 frame을 기록해 타격/피격/비기 타이밍이 즉시 시각 반영
   - 프레임별 아바타 SVG 에셋(`battle_avatar_cultivator_{attack|hit|skill}.svg`, `battle_avatar_guardian_{attack|hit|skill}.svg`)을 연결해 동일 상태 전환에서도 실제 스프라이트 체감이 나도록 강화
@@ -304,7 +304,7 @@ npm run mobile:mvp:check
   - 결과 우선 내러티브 구간(`5.2초`)에서 ambient strike/burst ticker/banner 및 주기적 상태 문구 갱신이 억제되고(`data-scene-outcome-priority=narrative`), 윈도우 종료 후에만 순환 문구가 재개되는지 검증
   - 결과 우선 SFX 구간(`5.6초`)에서 ambient SFX가 매 틱 재생되지 않고 cadence(`1/3`)로만 제한되며 hold 구간에서는 재생이 스킵되는지 검증
   - 결과 우선 내러티브 구간에서 combo/danger 전이 트리거가 cadence(`1/4`)로 제한되고, combo 배너가 최소 연격 9 미만에서는 노출되지 않는지 검증
-  - 결과 우선 actor frame 구간(`5.4초`)에서 ambient strike/burst 경로가 `setBattleSceneActorFrame`를 호출하지 않아 결과 직후의 actor frame 표현이 불필요하게 덮어쓰기되지 않고, 아레나 루트 actor telemetry(`data-scene-player-frame`, `data-scene-enemy-frame`, `data-scene-player-hp-tier`, `data-scene-player-cast-tier`, `data-scene-enemy-hp-tier`, `data-scene-enemy-cast-tier`, `data-scene-player-hp-pct`, `data-scene-player-cast-pct`, `data-scene-enemy-hp-pct`, `data-scene-enemy-cast-pct`)가 배우 카드 상태와 같이 동기화되는지 검증
+  - 결과 우선 actor frame 구간(`5.4초`)에서 ambient strike/burst 경로가 `setBattleSceneActorFrame`를 호출하지 않아 결과 직후의 actor frame 표현이 불필요하게 덮어쓰기되지 않고, 아레나 루트 actor/combat telemetry(`data-scene-player-frame`, `data-scene-enemy-frame`, `data-scene-player-hp-tier`, `data-scene-player-cast-tier`, `data-scene-enemy-hp-tier`, `data-scene-enemy-cast-tier`, `data-scene-player-hp-pct`, `data-scene-player-cast-pct`, `data-scene-enemy-hp-pct`, `data-scene-enemy-cast-pct`, `data-scene-round`, `data-scene-combo-count`, `data-scene-dps-score`)가 배우 카드/HUD 상태와 같이 동기화되는지 검증
   - 결과 기반 impact 호출에서 arena dataset(`data-scene-impact-cue`)이 `battle_win_*`/`battle_loss_*`/`breakthrough_*` cue로 갱신되고, `breakthrough_retreat_fail`/`breakthrough_death_fail` 등 고위험 결과가 fallback이 아닌 전용 cue로 반영되는지 검증
   - 결과 기반 impact 호출에서 arena dataset(`data-scene-impact-kinetic`)이 `battle_win_dominant`/`battle_loss_crushing`/`breakthrough_*` kinetic cue로 갱신되고, 동일 kind라도 결과 메타 수치(`qiDelta`, `successPct`, `deathPct`, `policyReason`)에 따라 shake/zoom/hit-stop preset이 분기되는지 검증
   - 결과 기반 impact 호출에서 arena dataset(`data-scene-impact-vfx`)이 `battle_win_*`/`battle_loss_*`/`breakthrough_*` VFX cue로 갱신되고, `blocked_no_qi`/`blocked_tribulation_setting` 같은 차단 케이스가 과도한 파동 대신 저강도 VFX로 분기되는지 검증
