@@ -461,6 +461,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-message-key="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="battleSceneTicker"',
     "index.html",
     failures,
@@ -2342,7 +2348,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.battleSceneStatus.dataset.messageKey = normalizeBattleSceneMessageKey(',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneResult.dataset.messageState =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneResult.dataset.messageKey = normalizeBattleSceneMessageKey(',
     "app.mjs",
     failures,
   );
