@@ -3106,3 +3106,11 @@
 
 ## 737) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ticker key contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 738) 다음 순차 작업
+1. [완료] skill/combo banner 노드(`battleSceneSkillBanner`, `battleSceneComboBanner`) contract에 `data-banner-key`를 추가해 소비 레이어가 현재 배너의 의미 key(`breakthrough_success`, `breakthrough_blocked_no_qi`, `ambient_skill_player`, `combo_surge` 등)를 텍스트 파싱 없이 직접 읽을 수 있도록 보강.
+2. [완료] `setBattleSceneSkillBanner`, `setBattleSceneComboBanner`, `clearBattleSceneComboBanner`, outcome/ambient banner call site를 함께 정리해 banner key가 결과 기반/ambient 경로에서 실제 의미와 일치하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 banner key contract 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 739) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(banner key contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

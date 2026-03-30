@@ -2310,6 +2310,11 @@ function normalizeBattleSceneBannerActor(actor) {
   return "none";
 }
 
+function normalizeBattleSceneBannerKey(key) {
+  const normalized = String(key || "").trim();
+  return normalized || "idle";
+}
+
 function normalizeBattleSceneMessageKey(key) {
   const normalized = String(key || "").trim();
   return normalized || "idle";
@@ -2434,12 +2439,16 @@ function setBattleSceneSkillBanner(label, tone = "info", source = "ambient", opt
     return;
   }
   const normalizedTone = normalizeBattleSceneTone(tone);
+  const bannerKey = normalizeBattleSceneBannerKey(
+    options.key || `${normalizeBattleSceneMessageSource(source)}_banner`,
+  );
   const bannerActor = normalizeBattleSceneBannerActor(options.actor);
   const skillLabel = String(options.skillLabel || "").trim() || "none";
   dom.battleSceneSkillBanner.textContent = String(label || "기세 수렴");
   dom.battleSceneSkillBanner.dataset.tone = normalizedTone;
   dom.battleSceneSkillBanner.dataset.bannerState = "active";
   dom.battleSceneSkillBanner.dataset.bannerSource = normalizeBattleSceneMessageSource(source);
+  dom.battleSceneSkillBanner.dataset.bannerKey = bannerKey;
   dom.battleSceneSkillBanner.dataset.bannerActor = bannerActor;
   dom.battleSceneSkillBanner.dataset.skillLabel = skillLabel;
   dom.battleSceneSkillBanner.classList.remove("is-active", ...BATTLE_SCENE_TONE_CLASSES);
@@ -2456,6 +2465,7 @@ function setBattleSceneSkillBanner(label, tone = "info", source = "ambient", opt
       dom.battleSceneSkillBanner.setAttribute("aria-hidden", "true");
       dom.battleSceneSkillBanner.dataset.bannerState = "idle";
       dom.battleSceneSkillBanner.dataset.bannerSource = "idle";
+      dom.battleSceneSkillBanner.dataset.bannerKey = "idle";
       dom.battleSceneSkillBanner.dataset.bannerActor = "none";
       dom.battleSceneSkillBanner.dataset.skillLabel = "none";
     }
@@ -2496,6 +2506,7 @@ function clearBattleSceneComboBanner() {
   dom.battleSceneComboBanner.dataset.comboCount = "0";
   dom.battleSceneComboBanner.dataset.bannerState = "idle";
   dom.battleSceneComboBanner.dataset.bannerSource = "idle";
+  dom.battleSceneComboBanner.dataset.bannerKey = "idle";
   dom.battleSceneComboBanner.setAttribute("aria-hidden", "true");
 }
 
@@ -2522,6 +2533,8 @@ function setBattleSceneComboBanner(comboInput, tone = "info", source = "ambient"
   dom.battleSceneComboBanner.dataset.comboCount = String(combo);
   dom.battleSceneComboBanner.dataset.bannerState = "active";
   dom.battleSceneComboBanner.dataset.bannerSource = normalizeBattleSceneMessageSource(source);
+  dom.battleSceneComboBanner.dataset.bannerKey =
+    tier === "overdrive" ? "combo_overdrive" : tier === "surge" ? "combo_surge" : "combo_flow";
   dom.battleSceneComboBanner.classList.remove(
     "is-active",
     ...BATTLE_SCENE_TONE_CLASSES,
@@ -2541,6 +2554,7 @@ function setBattleSceneComboBanner(comboInput, tone = "info", source = "ambient"
       dom.battleSceneComboBanner.setAttribute("aria-hidden", "true");
       dom.battleSceneComboBanner.dataset.bannerState = "idle";
       dom.battleSceneComboBanner.dataset.bannerSource = "idle";
+      dom.battleSceneComboBanner.dataset.bannerKey = "idle";
       dom.battleSceneComboBanner.dataset.comboCount = "0";
     }
     battleSceneComboBannerTimer = null;
@@ -5756,6 +5770,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
   let tickerKey = `${source}_ticker`;
   let bannerText = "";
   let bannerTone = "info";
+  let bannerKey = `${source}_banner`;
   let applyOutcomeTransition = false;
 
   if (source === "battle" && outcome) {
@@ -5932,6 +5947,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
             ? `기 ${fmtNumber(blockedQiDeficit)} 부족 · 축기 후 재시도`
             : "축기 재정렬 후 재시도";
         bannerTone = "warn";
+        bannerKey = "breakthrough_blocked_no_qi";
         applyOutcomeTransition = true;
       } else if (blockedTribulationSetting) {
         battleSceneDuelState.playerCast = clampBattleSceneGauge(
@@ -5955,6 +5971,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
             ? `도겁 자동 허용 꺼짐 · 난이도 ${fmtNumber(blockedDifficultyIndex)}`
             : "도겁 자동 허용 꺼짐";
         bannerTone = "info";
+        bannerKey = "breakthrough_blocked_tribulation_setting";
         applyOutcomeTransition = true;
       } else if (blockedAutoRiskPolicy) {
         if (pausedByPolicy) {
@@ -5983,6 +6000,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
             ? `${pauseMeta} · ${autoPolicyNextActionKo}`
             : pauseMeta;
           bannerTone = "error";
+          bannerKey = "breakthrough_paused_by_policy";
           applyOutcomeTransition = true;
         } else if (autoPolicyReason === "blocked_extreme_risk") {
           battleSceneDuelState.playerCast = clampBattleSceneGauge(
@@ -6004,6 +6022,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
           tickerKey = "breakthrough_blocked_auto_risk_policy";
           bannerText = autoPolicyNextActionKo || "치명 위험 구간 · 수동 판단 필요";
           bannerTone = "error";
+          bannerKey = "breakthrough_blocked_auto_risk_policy";
           applyOutcomeTransition = true;
         } else if (autoPolicyReason === "blocked_high_risk") {
           battleSceneDuelState.playerCast = clampBattleSceneGauge(
@@ -6025,6 +6044,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
           tickerKey = "breakthrough_blocked_auto_risk_policy";
           bannerText = autoPolicyNextActionKo || "고위험 구간 · 보정 후 수동 시도";
           bannerTone = "warn";
+          bannerKey = "breakthrough_blocked_auto_risk_policy";
           applyOutcomeTransition = true;
         } else if (autoPolicyReason === "blocked_high_qi_cost") {
           battleSceneDuelState.playerCast = clampBattleSceneGauge(
@@ -6046,6 +6066,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
           tickerKey = "breakthrough_blocked_auto_risk_policy";
           bannerText = autoPolicyNextActionKo || "기(氣) 비축 후 재시도";
           bannerTone = "info";
+          bannerKey = "breakthrough_blocked_auto_risk_policy";
           applyOutcomeTransition = true;
         } else {
           battleSceneDuelState.playerCast = clampBattleSceneGauge(
@@ -6064,6 +6085,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
           if (autoPolicyNextActionKo) {
             bannerText = autoPolicyNextActionKo;
             bannerTone = "info";
+            bannerKey = "breakthrough_blocked_auto_risk_policy";
           }
           applyOutcomeTransition = true;
         }
@@ -6129,6 +6151,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
           ? `경지 돌파 ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)} · 성공률 ${successPct.toFixed(1)}%`
           : `경지 돌파 · 성공률 ${successPct.toFixed(1)}%`;
       bannerTone = "success";
+      bannerKey = "breakthrough_success";
       applyOutcomeTransition = true;
     } else if (outcomeCode === "minor_fail") {
       const minorQiLoss = Math.max(
@@ -6171,6 +6194,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
             ? `경상 실패 · 사망률 ${deathPct.toFixed(1)}% 구간`
             : "경상 실패 · 기맥 요동";
       bannerTone = "warn";
+      bannerKey = "breakthrough_minor_fail";
       applyOutcomeTransition = true;
     } else if (outcomeCode === "retreat_fail") {
       const retreatLayers = Math.max(1, Number(outcome.retreatLayers) || 1);
@@ -6214,6 +6238,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
           ? `경지 후퇴 ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)} · 기 ${fmtSignedInteger(-retreatQiLoss)}`
           : `경지 후퇴 ${retreatLayers}단계 · 기 ${fmtSignedInteger(-retreatQiLoss)}`;
       bannerTone = "error";
+      bannerKey = "breakthrough_retreat_fail";
       applyOutcomeTransition = true;
     } else if (outcomeCode === "death_fail") {
       const reward = Math.max(0, Number(outcome.rebirthReward) || 0);
@@ -6247,6 +6272,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
           ? `환생 발동 · 난이도 ${fmtNumber(toDifficultyIndex)} 재정렬`
           : "환생 발동 · 기맥 재정렬";
       bannerTone = "warn";
+      bannerKey = "breakthrough_death_fail";
       applyOutcomeTransition = true;
     } else {
       battleSceneDuelState.combo = Math.max(0, battleSceneDuelState.combo - 1);
@@ -6291,6 +6317,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
     tickerKey = "breakthrough_success";
     bannerText = "경지 돌파 · 영맥 개화";
     bannerTone = "success";
+    bannerKey = "breakthrough_success";
   } else {
     battleSceneDuelState.playerHp = clampBattleSceneGauge(
       battleSceneDuelState.playerHp - rollBattleSceneInteger(10, 22),
@@ -6333,6 +6360,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
   }
   if (bannerText) {
     setBattleSceneSkillBanner(bannerText, bannerTone, source, {
+      key: bannerKey,
       actor: "center",
     });
   }
@@ -6431,6 +6459,7 @@ function applyBattleSceneDuelBurst(attacker, mode = "idle", visuals = true, opti
       tone,
       "ambient",
       {
+        key: attacker === "player" ? "ambient_skill_player" : "ambient_skill_enemy",
         actor: attacker,
         skillLabel,
       },
@@ -8523,6 +8552,7 @@ function stopBattleSceneAmbientLoop() {
     dom.battleSceneSkillBanner.setAttribute("aria-hidden", "true");
     dom.battleSceneSkillBanner.dataset.bannerState = "idle";
     dom.battleSceneSkillBanner.dataset.bannerSource = "idle";
+    dom.battleSceneSkillBanner.dataset.bannerKey = "idle";
     dom.battleSceneSkillBanner.dataset.bannerActor = "none";
     dom.battleSceneSkillBanner.dataset.skillLabel = "none";
   }

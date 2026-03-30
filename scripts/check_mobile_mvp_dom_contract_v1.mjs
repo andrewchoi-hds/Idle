@@ -521,6 +521,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-banner-key="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-banner-actor="none"',
     "index.html",
     failures,
@@ -2450,6 +2456,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.battleSceneSkillBanner.dataset.bannerKey = bannerKey;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneSkillBanner.dataset.bannerActor = bannerActor;',
     "app.mjs",
     failures,
@@ -2474,6 +2486,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.battleSceneComboBanner.dataset.bannerKey =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneComboBanner.dataset.tier = tier;',
     "app.mjs",
     failures,
@@ -2487,6 +2505,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneComboBanner.dataset.bannerSource = "idle";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneComboBanner.dataset.bannerKey = "idle";',
     "app.mjs",
     failures,
   );
