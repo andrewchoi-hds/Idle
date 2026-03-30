@@ -189,13 +189,13 @@ npm run mobile:mvp:serve
   - 우세 전환 헬퍼(`maybeTriggerBattleSceneLeadSwing`)를 추가해 `player/enemy/even` 리드 전환 순간 전장 swing 클래스(`scene-lead-swing-*`) + 파동/궤적/티커를 자동 트리거
   - 우세 공명 헬퍼(`triggerBattleSceneLeadResonance`)를 추가해 `player/enemy/even` 리드 유지 구간에서 전장 resonance(`scene-lead-resonance-*`)를 상시 재맥동으로 자동 트리거
   - 압력 스파이크 헬퍼(`triggerBattleScenePressureSpike`, `maybeTriggerBattleScenePressureTransition`)를 추가해 압력 `low→medium/high`, `medium→high` 전환과 고압 루프에서 전장/충돌코어 spike(`scene-pressure-spike-*`)를 자동 트리거
-  - 압력 공명 헬퍼(`triggerBattleScenePressureResonance`)를 추가해 `medium/high` 압력 유지 구간에서 전장 resonance(`scene-pressure-resonance-*`)를 모드별 간격으로 재맥동 트리거
+  - 압력 공명 헬퍼(`triggerBattleScenePressureResonance`)를 추가해 `medium/high` 압력 유지 구간에서 전장 resonance(`scene-pressure-resonance-*`)를 모드별 간격으로 재맥동 트리거하고, 아레나 루트 dataset(`data-scene-pressure-effect`)에도 현재 압력 effect 상태를 기록
   - 위기 맥동 헬퍼(`triggerBattleSceneDangerPulse`, `maybeTriggerBattleSceneDangerTransition`)를 추가해 HP 위험 구간(`player/enemy/both`) 진입 및 유지 루프에서 전장 위기 pulse(`scene-danger-pulse-*`)를 자동 트리거
-  - 위기 공명 헬퍼(`triggerBattleSceneDangerResonance`)를 추가해 위험 상태(`player/enemy/both`) 유지 구간에서 전장 resonance(`scene-danger-resonance-*`)를 모드별 간격으로 재맥동 트리거
+  - 위기 공명 헬퍼(`triggerBattleSceneDangerResonance`)를 추가해 위험 상태(`player/enemy/both`) 유지 구간에서 전장 resonance(`scene-danger-resonance-*`)를 모드별 간격으로 재맥동 트리거하고, 아레나 루트 dataset(`data-scene-danger-effect`)에도 현재 위기 effect 상태를 기록
   - 콤보 서지 헬퍼(`triggerBattleSceneComboSurge`, `maybeTriggerBattleSceneComboTierTransition`)를 추가해 combo tier(`calm→flow/frenzy`, `flow→frenzy`) 전환 및 상시 루프에서 전장 surge(`scene-combo-surge-*`)를 자동 트리거
   - 콤보 쿨다운 헬퍼(`triggerBattleSceneComboCooldown`)를 추가해 combo tier 하향 전환(`frenzy→flow/calm`, `flow→calm`) 순간 전장 cooldown(`scene-combo-cooldown-*`)을 자동 트리거
   - 콤보 공명 헬퍼(`triggerBattleSceneComboResonance`)를 추가해 `flow/frenzy` 유지 구간에서 전장 resonance(`scene-combo-resonance-*`)를 상시 재맥동으로 자동 트리거
-  - 연격 배너(`battleSceneComboBanner`, `setBattleSceneComboBanner`)를 추가해 연격 임계치(3/7/11)에서 중앙 배너를 자동 노출하고, 라운드 종료/연격 종료 시 자동 정리
+  - 연격 배너(`battleSceneComboBanner`, `setBattleSceneComboBanner`)를 추가해 연격 임계치(3/7/11)에서 중앙 배너를 자동 노출하고, 라운드 종료/연격 종료 시 자동 정리하며, 아레나 루트 dataset(`data-scene-combo-effect`)에도 surge/cooldown/resonance 상태를 기록
   - 전투 집중 기본 ON(`main.app.battle-focus-mode`)으로 첫 진입부터 실제 게임 화면 비중을 높이고, 토글 해제 시 전체 운영 패널을 다시 노출
   - 상시 루프(`runBattleSceneAmbientTick`)가 `idle/auto/realtime` 모드별로 연출 강도와 임팩트 빈도를 조절해 방치형 전투 화면처럼 지속 동작
   - 결과 우선 윈도우(`BATTLE_SCENE_RESULT_PRIORITY_WINDOW_MS=2600ms`)를 추가해 명시적 전투/돌파 결과 직후에는 ambient 랜덤 pulse/장식 트리거 비중을 낮추고 실제 결과 기반 연출을 우선 반영
@@ -304,7 +304,7 @@ npm run mobile:mvp:check
   - 결과 우선 내러티브 구간(`5.2초`)에서 ambient strike/burst ticker/banner 및 주기적 상태 문구 갱신이 억제되고(`data-scene-outcome-priority=narrative`), 윈도우 종료 후에만 순환 문구가 재개되는지 검증
   - 결과 우선 SFX 구간(`5.6초`)에서 ambient SFX가 매 틱 재생되지 않고 cadence(`1/3`)로만 제한되며 hold 구간에서는 재생이 스킵되는지 검증
   - 결과 우선 내러티브 구간에서 combo/danger 전이 트리거가 cadence(`1/4`)로 제한되고, combo 배너가 최소 연격 9 미만에서는 노출되지 않는지 검증
-  - 결과 우선 actor frame 구간(`5.4초`)에서 ambient strike/burst 경로가 `setBattleSceneActorFrame`를 호출하지 않아 결과 직후의 actor frame 표현이 불필요하게 덮어쓰기되지 않고, 아레나 루트 actor/combat telemetry(`data-scene-player-frame`, `data-scene-enemy-frame`, `data-scene-player-hp-tier`, `data-scene-player-cast-tier`, `data-scene-enemy-hp-tier`, `data-scene-enemy-cast-tier`, `data-scene-player-hp-pct`, `data-scene-player-cast-pct`, `data-scene-enemy-hp-pct`, `data-scene-enemy-cast-pct`, `data-scene-round`, `data-scene-combo-count`, `data-scene-dps-score`, `data-scene-pressure`, `data-scene-combo-tier`, `data-scene-lead`, `data-scene-danger`)가 배우 카드/HUD 상태와 같이 동기화되는지 검증
+  - 결과 우선 actor frame 구간(`5.4초`)에서 ambient strike/burst 경로가 `setBattleSceneActorFrame`를 호출하지 않아 결과 직후의 actor frame 표현이 불필요하게 덮어쓰기되지 않고, 아레나 루트 actor/combat/effect telemetry(`data-scene-player-frame`, `data-scene-enemy-frame`, `data-scene-player-hp-tier`, `data-scene-player-cast-tier`, `data-scene-enemy-hp-tier`, `data-scene-enemy-cast-tier`, `data-scene-player-hp-pct`, `data-scene-player-cast-pct`, `data-scene-enemy-hp-pct`, `data-scene-enemy-cast-pct`, `data-scene-round`, `data-scene-combo-count`, `data-scene-dps-score`, `data-scene-pressure`, `data-scene-combo-tier`, `data-scene-lead`, `data-scene-danger`, `data-scene-lead-effect`, `data-scene-pressure-effect`, `data-scene-danger-effect`, `data-scene-combo-effect`)가 배우 카드/HUD 상태와 같이 동기화되는지 검증
   - 결과 기반 impact 호출에서 arena dataset(`data-scene-impact-cue`)이 `battle_win_*`/`battle_loss_*`/`breakthrough_*` cue로 갱신되고, `breakthrough_retreat_fail`/`breakthrough_death_fail` 등 고위험 결과가 fallback이 아닌 전용 cue로 반영되는지 검증
   - 결과 기반 impact 호출에서 arena dataset(`data-scene-impact-kinetic`)이 `battle_win_dominant`/`battle_loss_crushing`/`breakthrough_*` kinetic cue로 갱신되고, 동일 kind라도 결과 메타 수치(`qiDelta`, `successPct`, `deathPct`, `policyReason`)에 따라 shake/zoom/hit-stop preset이 분기되는지 검증
   - 결과 기반 impact 호출에서 arena dataset(`data-scene-impact-vfx`)이 `battle_win_*`/`battle_loss_*`/`breakthrough_*` VFX cue로 갱신되고, `blocked_no_qi`/`blocked_tribulation_setting` 같은 차단 케이스가 과도한 파동 대신 저강도 VFX로 분기되는지 검증
