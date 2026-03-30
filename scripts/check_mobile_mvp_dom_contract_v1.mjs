@@ -473,6 +473,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-message-key="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-queue-count="0"',
     "index.html",
     failures,
@@ -2384,7 +2390,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.battleSceneTicker.dataset.messageKey = "idle";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneTicker.dataset.messageState = "active";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneTicker.dataset.messageKey = normalizeBattleSceneMessageKey(latest.key);',
     "app.mjs",
     failures,
   );
@@ -2402,13 +2420,19 @@ async function main() {
   );
   assertIncludes(
     app,
-    "source: normalizeBattleSceneMessageSource(source),",
+    'key: normalizeBattleSceneMessageKey(key || `${normalizedSource}_ticker`),',
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "pushBattleSceneTicker(tickerText, tickerTone, source);",
+    "source: normalizedSource,",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "pushBattleSceneTicker(tickerText, tickerTone, source, tickerKey);",
     "app.mjs",
     failures,
   );

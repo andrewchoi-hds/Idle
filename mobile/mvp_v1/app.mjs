@@ -2388,23 +2388,27 @@ function renderBattleSceneTicker() {
     applyBattleSceneTickerTone("info");
     dom.battleSceneTicker.dataset.messageState = "idle";
     dom.battleSceneTicker.dataset.messageSource = "idle";
+    dom.battleSceneTicker.dataset.messageKey = "idle";
     return;
   }
   dom.battleSceneTicker.textContent = latest.message;
   applyBattleSceneTickerTone(latest.tone);
   dom.battleSceneTicker.dataset.messageState = "active";
   dom.battleSceneTicker.dataset.messageSource = normalizeBattleSceneMessageSource(latest.source);
+  dom.battleSceneTicker.dataset.messageKey = normalizeBattleSceneMessageKey(latest.key);
 }
 
-function pushBattleSceneTicker(message, tone = "info", source = "ambient") {
+function pushBattleSceneTicker(message, tone = "info", source = "ambient", key = "") {
   const normalizedMessage = String(message || "").trim();
   if (!normalizedMessage) {
     return;
   }
+  const normalizedSource = normalizeBattleSceneMessageSource(source);
   battleSceneTickerState.items.unshift({
     message: normalizedMessage,
     tone: normalizeBattleSceneTone(tone),
-    source: normalizeBattleSceneMessageSource(source),
+    source: normalizedSource,
+    key: normalizeBattleSceneMessageKey(key || `${normalizedSource}_ticker`),
     atMs: Date.now(),
   });
   if (battleSceneTickerState.items.length > BATTLE_SCENE_TICKER_MAX) {
@@ -5749,6 +5753,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
   let comboAction = "resonance";
   let tickerText = "";
   let tickerTone = "info";
+  let tickerKey = `${source}_ticker`;
   let bannerText = "";
   let bannerTone = "info";
   let applyOutcomeTransition = false;
@@ -5798,6 +5803,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
       comboAction = "surge";
       tickerText = "수동 전투 승리 · 전장 주도권 확보";
       tickerTone = "success";
+      tickerKey = "battle_win";
     } else {
       const qiLoss = Math.max(1, Math.abs(Math.round(Number(outcome.qiDelta) || 0)));
       const playerDamage = Math.max(16, Math.min(44, Math.round(16 + qiLoss * 0.72)));
@@ -5823,6 +5829,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
       comboAction = "cooldown";
       tickerText = "수동 전투 패배 · 진형 재정비";
       tickerTone = "warn";
+      tickerKey = "battle_loss";
     }
     applyOutcomeTransition = true;
   } else if (source === "breakthrough" && outcome) {
@@ -5919,6 +5926,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
         comboAction = "cooldown";
         tickerText = `돌파 기력 부족 · 기 ${fmtNumber(blockedCurrentQi)}/${fmtNumber(blockedRequiredQi)}`;
         tickerTone = "warn";
+        tickerKey = "breakthrough_blocked_no_qi";
         bannerText =
           blockedQiDeficit > 0
             ? `기 ${fmtNumber(blockedQiDeficit)} 부족 · 축기 후 재시도`
@@ -5941,6 +5949,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
             ? `도겁 자동 대기 · 난이도 ${fmtNumber(blockedDifficultyIndex)}`
             : "도겁 자동 대기 · 설정 확인 필요";
         tickerTone = "warn";
+        tickerKey = "breakthrough_blocked_tribulation_setting";
         bannerText =
           blockedDifficultyIndex > 0
             ? `도겁 자동 허용 꺼짐 · 난이도 ${fmtNumber(blockedDifficultyIndex)}`
@@ -5965,6 +5974,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
           comboAction = "cooldown";
           tickerText = `자동 돌파 일시정지 · ${autoPolicyReasonLabel}`;
           tickerTone = "error";
+          tickerKey = "breakthrough_paused_by_policy";
           const pauseMeta =
             policyConsecutiveBlocks > 0 || policyPauseThreshold > 0
               ? `연속 ${Math.max(policyConsecutiveBlocks, policyPauseThreshold)}회 차단`
@@ -5991,6 +6001,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
           comboAction = "cooldown";
           tickerText = `자동 돌파 차단 · ${autoPolicyReasonLabel}`;
           tickerTone = "error";
+          tickerKey = "breakthrough_blocked_auto_risk_policy";
           bannerText = autoPolicyNextActionKo || "치명 위험 구간 · 수동 판단 필요";
           bannerTone = "error";
           applyOutcomeTransition = true;
@@ -6011,6 +6022,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
           comboAction = "cooldown";
           tickerText = `자동 돌파 차단 · ${autoPolicyReasonLabel}`;
           tickerTone = "warn";
+          tickerKey = "breakthrough_blocked_auto_risk_policy";
           bannerText = autoPolicyNextActionKo || "고위험 구간 · 보정 후 수동 시도";
           bannerTone = "warn";
           applyOutcomeTransition = true;
@@ -6031,6 +6043,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
           comboAction = "resonance";
           tickerText = `자동 돌파 차단 · ${autoPolicyReasonLabel}`;
           tickerTone = "warn";
+          tickerKey = "breakthrough_blocked_auto_risk_policy";
           bannerText = autoPolicyNextActionKo || "기(氣) 비축 후 재시도";
           bannerTone = "info";
           applyOutcomeTransition = true;
@@ -6047,6 +6060,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
           comboAction = "cooldown";
           tickerText = `자동 돌파 차단 · ${autoPolicyReasonLabel}`;
           tickerTone = "warn";
+          tickerKey = "breakthrough_blocked_auto_risk_policy";
           if (autoPolicyNextActionKo) {
             bannerText = autoPolicyNextActionKo;
             bannerTone = "info";
@@ -6063,6 +6077,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
         comboAction = "cooldown";
         tickerText = "돌파 차단 · 준비 조건 미충족";
         tickerTone = "error";
+        tickerKey = "breakthrough_blocked";
         applyOutcomeTransition = true;
       }
     } else if (outcomeCode === "success") {
@@ -6108,6 +6123,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
           ? `돌파 성공 · ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)} · 기 ${fmtSignedInteger(-successQiConsume)}`
           : `돌파 성공 · 기 ${fmtSignedInteger(-successQiConsume)}`;
       tickerTone = "success";
+      tickerKey = "breakthrough_success";
       bannerText =
         fromDifficultyIndex > 0 && toDifficultyIndex > 0
           ? `경지 돌파 ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)} · 성공률 ${successPct.toFixed(1)}%`
@@ -6145,6 +6161,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
           ? `돌파 경상 실패 · ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)} · 기 ${fmtSignedInteger(-minorQiLoss)}`
           : `돌파 경상 실패 · 기 ${fmtSignedInteger(-minorQiLoss)}`;
       tickerTone = "warn";
+      tickerKey = "breakthrough_minor_fail";
       bannerText =
         fromDifficultyIndex > 0 && toDifficultyIndex > 0
           ? `경상 실패 · 난이도 ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)}${
@@ -6191,6 +6208,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
           ? `돌파 후퇴 실패 · ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)} · 기 ${fmtSignedInteger(-retreatQiLoss)}`
           : `돌파 후퇴 실패 · ${retreatLayers}단계 하락 · 기 ${fmtSignedInteger(-retreatQiLoss)}`;
       tickerTone = "error";
+      tickerKey = "breakthrough_retreat_fail";
       bannerText =
         fromDifficultyIndex > 0 && toDifficultyIndex > 0
           ? `경지 후퇴 ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)} · 기 ${fmtSignedInteger(-retreatQiLoss)}`
@@ -6223,6 +6241,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
           ? `도겁 사망 · ${fmtNumber(fromDifficultyIndex)}→${fmtNumber(toDifficultyIndex)} 환생`
           : "도겁 사망 · 환생 전환";
       tickerTone = "error";
+      tickerKey = "breakthrough_death_fail";
       bannerText =
         toDifficultyIndex > 0
           ? `환생 발동 · 난이도 ${fmtNumber(toDifficultyIndex)} 재정렬`
@@ -6235,6 +6254,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
       comboAction = "resonance";
       tickerText = "돌파 결과 갱신 · 전장 기세 재계산";
       tickerTone = "info";
+      tickerKey = "breakthrough_result";
       applyOutcomeTransition = true;
     }
   } else if (kind === "battle_win") {
@@ -6248,6 +6268,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
     );
     tickerText = "수동 전투 승리 · 전장 주도권 확보";
     tickerTone = "success";
+    tickerKey = "battle_win";
   } else if (kind === "battle_loss") {
     battleSceneDuelState.playerHp = clampBattleSceneGauge(
       battleSceneDuelState.playerHp - rollBattleSceneInteger(18, 34),
@@ -6259,6 +6280,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
     );
     tickerText = "수동 전투 패배 · 진형 재정비";
     tickerTone = "warn";
+    tickerKey = "battle_loss";
   } else if (kind === "breakthrough_success") {
     battleSceneDuelState.playerHp = BATTLE_SCENE_DUEL_MAX_HP;
     battleSceneDuelState.enemyHp = BATTLE_SCENE_DUEL_MAX_HP;
@@ -6266,6 +6288,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
     battleSceneDuelState.enemyCast = rollBattleSceneInteger(14, 48);
     tickerText = "돌파 성공 · 기세 급상승";
     tickerTone = "success";
+    tickerKey = "breakthrough_success";
     bannerText = "경지 돌파 · 영맥 개화";
     bannerTone = "success";
   } else {
@@ -6279,6 +6302,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
     );
     tickerText = "돌파 실패 · 기세 불안정";
     tickerTone = "warn";
+    tickerKey = "breakthrough_fail";
   }
 
   battleSceneDuelState.pressure = resolveBattleSceneDuelPressure(resolveBattleSceneAmbientMode());
@@ -6305,7 +6329,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
     });
   }
   if (tickerText) {
-    pushBattleSceneTicker(tickerText, tickerTone, source);
+    pushBattleSceneTicker(tickerText, tickerTone, source, tickerKey);
   }
   if (bannerText) {
     setBattleSceneSkillBanner(bannerText, bannerTone, source, {
@@ -8335,6 +8359,7 @@ function runBattleSceneAmbientTick() {
           `실시간 ${battleSceneDuelState.round}R · 수련자 ${playerHpPct}% / 적수 ${enemyHpPct}%`,
           leadTone,
           "ambient",
+          "ambient_realtime",
         );
       }
     } else if (mode === "auto") {
@@ -8350,6 +8375,7 @@ function runBattleSceneAmbientTick() {
           `자동 ${battleSceneDuelState.round}R · 압력 ${Math.round(battleSceneDuelState.dpsMomentum * 10)}`,
           leadTone,
           "ambient",
+          "ambient_auto",
         );
       }
     } else {
@@ -8361,7 +8387,7 @@ function runBattleSceneAmbientTick() {
         "ambient_idle",
       );
       if (Math.random() < (lowPerformanceMode ? 0.18 : 0.28)) {
-        pushBattleSceneTicker("전장 파동 안정화 · 조작 없이도 교전 지속", "info", "ambient");
+        pushBattleSceneTicker("전장 파동 안정화 · 조작 없이도 교전 지속", "info", "ambient", "ambient_idle");
       }
     }
   }
