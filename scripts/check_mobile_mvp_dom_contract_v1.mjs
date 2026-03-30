@@ -497,13 +497,31 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-loop="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-combo-count="0"',
     "index.html",
     failures,
   );
   assertIncludes(
     html,
+    'data-combo-tier="calm"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-dps-score="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-pressure="low"',
     "index.html",
     failures,
   );
@@ -2318,7 +2336,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.battleSceneRoundBadge.dataset.loop = loopMode;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneArena.dataset.sceneComboCount = String(battleSceneDuelState.combo);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleSceneComboBadge.dataset.comboTier = comboTier;",
     "app.mjs",
     failures,
   );
@@ -2337,6 +2367,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneDpsBadge.dataset.dpsScore = String(pressureScore);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleSceneDpsBadge.dataset.pressure = battleSceneDuelState.pressure;",
     "app.mjs",
     failures,
   );
