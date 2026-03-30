@@ -2280,18 +2280,24 @@ function applyBattleSceneTone(node, tone) {
   if (!node) {
     return;
   }
+  const normalizedTone = normalizeBattleSceneTone(tone);
+  node.dataset.tone = normalizedTone;
   node.classList.remove(...BATTLE_SCENE_TONE_CLASSES);
-  node.classList.add(`tone-${normalizeBattleSceneTone(tone)}`);
+  node.classList.add(`tone-${normalizedTone}`);
 }
 
 function applyBattleSceneUiState() {
   if (dom.battleSceneStatus) {
     dom.battleSceneStatus.textContent = battleSceneUiState.statusText;
     applyBattleSceneTone(dom.battleSceneStatus, battleSceneUiState.statusTone);
+    dom.battleSceneStatus.dataset.messageState =
+      battleSceneUiState.statusText === BATTLE_SCENE_DEFAULT_STATUS ? "idle" : "active";
   }
   if (dom.battleSceneResult) {
     dom.battleSceneResult.textContent = battleSceneUiState.resultText;
     applyBattleSceneTone(dom.battleSceneResult, battleSceneUiState.resultTone);
+    dom.battleSceneResult.dataset.messageState =
+      battleSceneUiState.resultText === BATTLE_SCENE_DEFAULT_RESULT ? "idle" : "active";
   }
 }
 
@@ -2319,13 +2325,16 @@ function renderBattleSceneTicker() {
     return;
   }
   const latest = battleSceneTickerState.items[0];
+  dom.battleSceneTicker.dataset.queueCount = String(battleSceneTickerState.items.length);
   if (!latest) {
     dom.battleSceneTicker.textContent = BATTLE_SCENE_DEFAULT_TICKER;
     applyBattleSceneTickerTone("info");
+    dom.battleSceneTicker.dataset.messageState = "idle";
     return;
   }
   dom.battleSceneTicker.textContent = latest.message;
   applyBattleSceneTickerTone(latest.tone);
+  dom.battleSceneTicker.dataset.messageState = "active";
 }
 
 function pushBattleSceneTicker(message, tone = "info") {
