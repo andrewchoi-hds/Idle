@@ -3058,3 +3058,11 @@
 
 ## 725) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(message node contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 726) 다음 순차 작업
+1. [완료] 메시지 노드(`battleSceneStatus`, `battleSceneResult`, `battleSceneTicker`) contract에 `data-message-source=idle|ambient|battle|breakthrough|auto|offline`를 추가해 소비 레이어가 현재 문구가 어떤 루프/결과 경로에서 왔는지 텍스트 문맥 없이 바로 읽을 수 있도록 보강.
+2. [완료] `setBattleSceneStatus`, `setBattleSceneResult`, `pushBattleSceneTicker`, `renderBattleSceneTicker`와 battle/breakthrough/auto/offline/ambient call site를 함께 정리해 source dataset이 실제 호출 출처와 일치하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 message source contract 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 727) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(message source contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

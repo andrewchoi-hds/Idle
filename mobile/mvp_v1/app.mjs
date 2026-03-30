@@ -639,8 +639,10 @@ const BATTLE_SCENE_ENEMY_SKILLS = ["혈영쇄", "황혼식", "혼멸파"];
 const battleSceneUiState = {
   statusText: BATTLE_SCENE_DEFAULT_STATUS,
   statusTone: "info",
+  statusSource: "idle",
   resultText: BATTLE_SCENE_DEFAULT_RESULT,
   resultTone: "info",
+  resultSource: "idle",
 };
 let battleSceneImpactTimer = null;
 let battleSceneFlashTimer = null;
@@ -2286,30 +2288,57 @@ function applyBattleSceneTone(node, tone) {
   node.classList.add(`tone-${normalizedTone}`);
 }
 
+function normalizeBattleSceneMessageSource(source) {
+  if (
+    source === "ambient" ||
+    source === "battle" ||
+    source === "breakthrough" ||
+    source === "auto" ||
+    source === "offline"
+  ) {
+    return source;
+  }
+  return "idle";
+}
+
 function applyBattleSceneUiState() {
   if (dom.battleSceneStatus) {
     dom.battleSceneStatus.textContent = battleSceneUiState.statusText;
     applyBattleSceneTone(dom.battleSceneStatus, battleSceneUiState.statusTone);
     dom.battleSceneStatus.dataset.messageState =
       battleSceneUiState.statusText === BATTLE_SCENE_DEFAULT_STATUS ? "idle" : "active";
+    dom.battleSceneStatus.dataset.messageSource = normalizeBattleSceneMessageSource(
+      battleSceneUiState.statusSource,
+    );
   }
   if (dom.battleSceneResult) {
     dom.battleSceneResult.textContent = battleSceneUiState.resultText;
     applyBattleSceneTone(dom.battleSceneResult, battleSceneUiState.resultTone);
     dom.battleSceneResult.dataset.messageState =
       battleSceneUiState.resultText === BATTLE_SCENE_DEFAULT_RESULT ? "idle" : "active";
+    dom.battleSceneResult.dataset.messageSource = normalizeBattleSceneMessageSource(
+      battleSceneUiState.resultSource,
+    );
   }
 }
 
-function setBattleSceneStatus(text, tone = "info") {
+function setBattleSceneStatus(text, tone = "info", source = "ambient") {
   battleSceneUiState.statusText = String(text || BATTLE_SCENE_DEFAULT_STATUS);
   battleSceneUiState.statusTone = normalizeBattleSceneTone(tone);
+  battleSceneUiState.statusSource =
+    battleSceneUiState.statusText === BATTLE_SCENE_DEFAULT_STATUS
+      ? "idle"
+      : normalizeBattleSceneMessageSource(source);
   applyBattleSceneUiState();
 }
 
-function setBattleSceneResult(text, tone = "info") {
+function setBattleSceneResult(text, tone = "info", source = "ambient") {
   battleSceneUiState.resultText = String(text || BATTLE_SCENE_DEFAULT_RESULT);
   battleSceneUiState.resultTone = normalizeBattleSceneTone(tone);
+  battleSceneUiState.resultSource =
+    battleSceneUiState.resultText === BATTLE_SCENE_DEFAULT_RESULT
+      ? "idle"
+      : normalizeBattleSceneMessageSource(source);
   applyBattleSceneUiState();
 }
 
@@ -2330,14 +2359,16 @@ function renderBattleSceneTicker() {
     dom.battleSceneTicker.textContent = BATTLE_SCENE_DEFAULT_TICKER;
     applyBattleSceneTickerTone("info");
     dom.battleSceneTicker.dataset.messageState = "idle";
+    dom.battleSceneTicker.dataset.messageSource = "idle";
     return;
   }
   dom.battleSceneTicker.textContent = latest.message;
   applyBattleSceneTickerTone(latest.tone);
   dom.battleSceneTicker.dataset.messageState = "active";
+  dom.battleSceneTicker.dataset.messageSource = normalizeBattleSceneMessageSource(latest.source);
 }
 
-function pushBattleSceneTicker(message, tone = "info") {
+function pushBattleSceneTicker(message, tone = "info", source = "ambient") {
   const normalizedMessage = String(message || "").trim();
   if (!normalizedMessage) {
     return;
@@ -2345,6 +2376,7 @@ function pushBattleSceneTicker(message, tone = "info") {
   battleSceneTickerState.items.unshift({
     message: normalizedMessage,
     tone: normalizeBattleSceneTone(tone),
+    source: normalizeBattleSceneMessageSource(source),
     atMs: Date.now(),
   });
   if (battleSceneTickerState.items.length > BATTLE_SCENE_TICKER_MAX) {
@@ -6228,7 +6260,7 @@ function syncBattleSceneDuelFromImpact(kind, options = {}) {
     });
   }
   if (tickerText) {
-    pushBattleSceneTicker(tickerText, tickerTone);
+    pushBattleSceneTicker(tickerText, tickerTone, source);
   }
   if (bannerText) {
     setBattleSceneSkillBanner(bannerText, bannerTone);
@@ -8238,37 +8270,42 @@ function runBattleSceneAmbientTick() {
   ) {
     const leadTone = resolveBattleSceneDuelLeadTone();
     if (mode === "realtime") {
-      setBattleSceneStatus(`실시간 교전 ${battleSceneDuelState.round}R`, leadTone);
+      setBattleSceneStatus(`실시간 교전 ${battleSceneDuelState.round}R`, leadTone, "ambient");
       setBattleSceneResult(
         `수련자 ${playerHpPct}% · 적수 ${enemyHpPct}% · 자동 전투 루프가 연출을 갱신 중입니다.`,
         "info",
+        "ambient",
       );
       if (Math.random() < (lowPerformanceMode ? 0.32 : 0.44)) {
         pushBattleSceneTicker(
           `실시간 ${battleSceneDuelState.round}R · 수련자 ${playerHpPct}% / 적수 ${enemyHpPct}%`,
           leadTone,
+          "ambient",
         );
       }
     } else if (mode === "auto") {
-      setBattleSceneStatus(`자동 교전 ${battleSceneDuelState.round}R`, leadTone);
+      setBattleSceneStatus(`자동 교전 ${battleSceneDuelState.round}R`, leadTone, "ambient");
       setBattleSceneResult(
         `수련자 ${playerHpPct}% · 적수 ${enemyHpPct}% · 자동 옵션 기반 전장 파동 순환 중`,
         "info",
+        "ambient",
       );
       if (Math.random() < (lowPerformanceMode ? 0.26 : 0.36)) {
         pushBattleSceneTicker(
           `자동 ${battleSceneDuelState.round}R · 압력 ${Math.round(battleSceneDuelState.dpsMomentum * 10)}`,
           leadTone,
+          "ambient",
         );
       }
     } else {
-      setBattleSceneStatus("전장 호흡 감지", leadTone);
+      setBattleSceneStatus("전장 호흡 감지", leadTone, "ambient");
       setBattleSceneResult(
         `환영 교전 ${battleSceneDuelState.round}R · 수련자 ${playerHpPct}% / 적수 ${enemyHpPct}%`,
         "info",
+        "ambient",
       );
       if (Math.random() < (lowPerformanceMode ? 0.18 : 0.28)) {
-        pushBattleSceneTicker("전장 파동 안정화 · 조작 없이도 교전 지속", "info");
+        pushBattleSceneTicker("전장 파동 안정화 · 조작 없이도 교전 지속", "info", "ambient");
       }
     }
   }
@@ -8487,10 +8524,11 @@ function playBattleSceneBattleOutcome(outcome) {
     return;
   }
   if (outcome.won) {
-    setBattleSceneStatus("전투 승리", "success");
+    setBattleSceneStatus("전투 승리", "success", "battle");
     setBattleSceneResult(
       `전투 승리 · 기 ${fmtSignedInteger(outcome.qiDelta)} · 영석 ${fmtSignedInteger(outcome.spiritCoinDelta)}`,
       "success",
+      "battle",
     );
     triggerBattleSceneImpact("battle_win", "success", {
       source: "battle",
@@ -8510,8 +8548,8 @@ function playBattleSceneBattleOutcome(outcome) {
     spawnBattleSceneFloat("일격 적중", { tone: "info", anchor: "enemy" });
     return;
   }
-  setBattleSceneStatus("전투 패배", "error");
-  setBattleSceneResult(`전투 패배 · 기 ${fmtSignedInteger(outcome.qiDelta)}`, "error");
+  setBattleSceneStatus("전투 패배", "error", "battle");
+  setBattleSceneResult(`전투 패배 · 기 ${fmtSignedInteger(outcome.qiDelta)}`, "error", "battle");
   triggerBattleSceneImpact("battle_loss", "error", {
     source: "battle",
     outcome,
@@ -8540,8 +8578,9 @@ function playBattleSceneBreakthroughOutcome(outcome) {
     setBattleSceneStatus(
       blockedTribulationSetting ? "자동 도겁 대기" : "돌파 조건 부족",
       tone,
+      "breakthrough",
     );
-    setBattleSceneResult(outcome.message || "돌파를 진행할 수 없습니다.", tone);
+    setBattleSceneResult(outcome.message || "돌파를 진행할 수 없습니다.", tone, "breakthrough");
     triggerBattleSceneImpact("breakthrough_fail", tone, {
       source: "breakthrough",
       outcome,
@@ -8563,7 +8602,7 @@ function playBattleSceneBreakthroughOutcome(outcome) {
         ),
       ),
     );
-    setBattleSceneStatus("돌파 성공", "success");
+    setBattleSceneStatus("돌파 성공", "success", "breakthrough");
     setBattleSceneResult(
       `${outcome.message || "돌파 성공"}${
         fromDifficultyIndex > 0 && toDifficultyIndex > 0
@@ -8571,6 +8610,7 @@ function playBattleSceneBreakthroughOutcome(outcome) {
           : ""
       } · 기 ${fmtSignedInteger(-qiConsume)}`,
       "success",
+      "breakthrough",
     );
     triggerBattleSceneImpact("breakthrough_success", "success", {
       source: "breakthrough",
@@ -8591,7 +8631,7 @@ function playBattleSceneBreakthroughOutcome(outcome) {
         ),
       ),
     );
-    setBattleSceneStatus("돌파 실패(경상)", "warn");
+    setBattleSceneStatus("돌파 실패(경상)", "warn", "breakthrough");
     setBattleSceneResult(
       `${outcome.message || "경상 실패"}${
         fromDifficultyIndex > 0 && toDifficultyIndex > 0
@@ -8599,6 +8639,7 @@ function playBattleSceneBreakthroughOutcome(outcome) {
           : ""
       } · 기 ${fmtSignedInteger(-qiLoss)}`,
       "warn",
+      "breakthrough",
     );
     triggerBattleSceneImpact("breakthrough_fail", "warn", {
       source: "breakthrough",
@@ -8620,7 +8661,7 @@ function playBattleSceneBreakthroughOutcome(outcome) {
       ),
     );
     const retreatLayers = Math.max(1, Number(outcome.retreatLayers) || 1);
-    setBattleSceneStatus("돌파 실패(후퇴)", "error");
+    setBattleSceneStatus("돌파 실패(후퇴)", "error", "breakthrough");
     setBattleSceneResult(
       `${outcome.message || "경지 후퇴 발생"}${
         fromDifficultyIndex > 0 && toDifficultyIndex > 0
@@ -8628,6 +8669,7 @@ function playBattleSceneBreakthroughOutcome(outcome) {
           : ` · ${retreatLayers}단계 하락`
       } · 기 ${fmtSignedInteger(-qiLoss)}`,
       "error",
+      "breakthrough",
     );
     triggerBattleSceneImpact("breakthrough_fail", "error", {
       source: "breakthrough",
@@ -8640,7 +8682,7 @@ function playBattleSceneBreakthroughOutcome(outcome) {
   if (outcome.outcome === "death_fail") {
     const reward = Math.max(0, Number(outcome.rebirthReward) || 0);
     const resetStageNameKo = String(outcome.resetStageNameKo || "");
-    setBattleSceneStatus("도겁 사망", "error");
+    setBattleSceneStatus("도겁 사망", "error", "breakthrough");
     setBattleSceneResult(
       `${outcome.message || "사망 후 환생 발동"}${
         fromDifficultyIndex > 0 && toDifficultyIndex > 0
@@ -8648,6 +8690,7 @@ function playBattleSceneBreakthroughOutcome(outcome) {
           : ""
       }${resetStageNameKo ? ` · ${resetStageNameKo}` : ""}`,
       "error",
+      "breakthrough",
     );
     triggerBattleSceneImpact("breakthrough_fail", "error", {
       source: "breakthrough",
@@ -8657,8 +8700,8 @@ function playBattleSceneBreakthroughOutcome(outcome) {
     spawnBattleSceneFloat(`정수 ${fmtSignedInteger(reward)}`, { tone: "success", anchor: "player" });
     return;
   }
-  setBattleSceneStatus("돌파 결과 확인", "info");
-  setBattleSceneResult(outcome.message || "돌파 처리 완료", "info");
+  setBattleSceneStatus("돌파 결과 확인", "info", "breakthrough");
+  setBattleSceneResult(outcome.message || "돌파 처리 완료", "info", "breakthrough");
   triggerBattleSceneImpact("breakthrough_fail", "info", {
     source: "breakthrough",
     outcome,
@@ -9417,10 +9460,11 @@ function playBattleSceneAutoSummary(summaryInput, sourceLabel = "자동 진행")
     eventSignal,
   );
 
-  setBattleSceneStatus(statusText, tone);
+  setBattleSceneStatus(statusText, tone, "auto");
   setBattleSceneResult(
     `${sourceLabel} · ${parts.length > 0 ? parts.join(" · ") : "변화 없음"}`,
     tone,
+    "auto",
   );
   triggerBattleSceneImpact(impactKind, tone, impactOptions);
 
@@ -9500,6 +9544,7 @@ function playBattleSceneOfflineSummary(offlineReportInput) {
   setBattleSceneStatus(
     eventSignal?.statusTextKo ? `오프라인 정산 ${eventSignal.statusTextKo}` : "오프라인 정산 완료",
     tone,
+    "offline",
   );
   setBattleSceneResult(
     `오프라인 ${fmtDurationSec(summary.appliedOfflineSec)} · 전투 ${battles}회 · 돌파 ${breakthroughs}회${
@@ -9508,6 +9553,7 @@ function playBattleSceneOfflineSummary(offlineReportInput) {
       eventSignal?.resultHintKo ? ` · 최근 이벤트 ${eventSignal.resultHintKo}` : ""
     }`,
     tone,
+    "offline",
   );
   triggerBattleSceneImpact(impactKind, tone, impactOptions);
   if ((Number(delta.qi) || 0) !== 0) {
@@ -11609,8 +11655,8 @@ function bindEvents() {
       );
       if (!confirmed) {
         setStatus("돌파 시도 취소(고위험 확인)", true);
-        setBattleSceneStatus("돌파 취소", "warn");
-        setBattleSceneResult("고위험 확인 단계에서 수동으로 취소됨", "warn");
+        setBattleSceneStatus("돌파 취소", "warn", "breakthrough");
+        setBattleSceneResult("고위험 확인 단계에서 수동으로 취소됨", "warn", "breakthrough");
         triggerBattleSceneImpact("breakthrough_fail", "warn");
         spawnBattleSceneFloat("돌파 취소", { tone: "warn", anchor: "center" });
         render();

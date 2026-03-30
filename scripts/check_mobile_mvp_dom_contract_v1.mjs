@@ -455,6 +455,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-message-source="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="battleSceneTicker"',
     "index.html",
     failures,
@@ -2270,7 +2276,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.battleSceneStatus.dataset.messageSource = normalizeBattleSceneMessageSource(',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneResult.dataset.messageState =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneResult.dataset.messageSource = normalizeBattleSceneMessageSource(',
     "app.mjs",
     failures,
   );
@@ -2282,13 +2300,37 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.battleSceneTicker.dataset.messageSource = "idle";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneTicker.dataset.messageState = "active";',
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
+    'dom.battleSceneTicker.dataset.messageSource = normalizeBattleSceneMessageSource(latest.source);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneTicker.dataset.queueCount = String(battleSceneTickerState.items.length);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "source: normalizeBattleSceneMessageSource(source),",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "pushBattleSceneTicker(tickerText, tickerTone, source);",
     "app.mjs",
     failures,
   );
