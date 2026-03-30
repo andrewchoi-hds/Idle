@@ -3010,3 +3010,11 @@
 
 ## 715) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(scene pressure/lead telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 716) 다음 순차 작업
+1. [완료] scene root state contract(`data-scene-loop`, `data-scene-world`, `data-scene-tier`, `data-scene-performance`, `data-scene-outcome-priority`)를 기본 DOM contract까지 노출해 소비 레이어가 현재 루프/세계/난도/성능/결과 우선 모드를 루트에서 바로 읽을 수 있도록 보강.
+2. [완료] `setBattleSceneLoopMode()`, `setBattleSceneAtmosphere()`, ambient tick 경로의 `scenePerformance`/`sceneOutcomePriority` 기록이 기본 contract와 같은 축으로 유지되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 scene root state 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 717) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(scene root state contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

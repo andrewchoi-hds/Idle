@@ -165,7 +165,7 @@ npm run mobile:mvp:serve
   - `runBreakthroughAttempt` 반환값 자체에도 `stageQiRequired/qiDelta`를 포함해 수동 돌파 결과 연출(`playBattleSceneBreakthroughOutcome`)과 impact 동기화가 이벤트 경로와 동일 메타를 사용하도록 정합화
   - `runBreakthroughAttempt` 반환/이벤트의 돌파 전이 메타를 `fromDifficultyIndex/toDifficultyIndex/resetStageNameKo`까지 확장해 후퇴/사망 연출이 난이도 전이(예: `198→1`)를 직접 표시하고, 환생 복귀 스테이지 문구를 상태/세부 로그에 일관되게 노출
   - `minor_fail` 경로도 `fromDifficultyIndex/toDifficultyIndex` 메타를 status/result/ticker/banner에 동일 반영해 경상 실패가 단계 유지(`N→N`)인지 포함한 전이 정보를 자동/수동/오프라인 힌트에서 일관되게 노출
-  - stage 메타(`world`, `difficulty_index`, `is_tribulation`)를 연출 패널 `data-scene-world`, `data-scene-tier`로 반영해 인간계/신선계/진선계 및 난도 구간별 색감·오라 강도를 차등 적용
+  - stage 메타(`world`, `difficulty_index`, `is_tribulation`)를 연출 패널 `data-scene-world`, `data-scene-tier`로 반영하고, 루프/성능/결과 우선 모드도 아레나 루트 dataset(`data-scene-loop`, `data-scene-performance`, `data-scene-outcome-priority`)에 기록해 인간계/신선계/진선계 및 난도 구간별 색감·오라 강도와 결과 우선 상태를 동시에 추적 가능하게 유지
   - 전투 spark 레이어(`battleSceneSparkLayer`)를 추가해 클릭 없이도 상시 파티클/충돌 파동이 순환되도록 구성
   - 전장 흐름 레이어(`battle-scene-flow-back/front`)를 추가해 배경 전류가 상시 흐르는 느낌을 유지
   - 타격 궤적 레이어(`battleSceneTrailLayer`, `spawnBattleSceneTrail`)를 추가해 실시간/자동 루프에서 slash/wave 궤적이 지속적으로 발생
@@ -300,7 +300,7 @@ npm run mobile:mvp:check
   - 결과 우선 구간(`3.8초`)에서 ambient 장식 트리거(`cast telegraph/charge mote/zoom·hitstop`)가 과도하게 재발하지 않고, `96%+ cast` 같은 긴급 텔레그래프만 제한적으로 유지되는지 검증
   - 결과 우선 구간(`2.6~6.2초`)에서 `runBattleSceneDuelTick`의 strike/burst가 `resultPrioritySuppressed`로 동작해 ambient kinetic 연출(impact/ticker/banner)이 평시 대비 낮은 빈도로만 발생하는지 검증
   - 결과 우선 구간에서 duel tick cadence(`1/2`)와 strike chance scale(`0.42`)이 동시에 적용되어 라운드 종료(ambient reset) 빈도가 감소하고, HP 0 도달 시 즉시 라운드 리셋 대신 지연 처리되는지 검증
-  - 결과 직후 hold 구간(`1.8초`)에서 duel tick이 실제로 스킵되고(`data-scene-outcome-priority=hold`), 이후 suppressed 단계로 전환되어 cadence 기반으로 재개되는지 검증
+  - 결과 직후 hold 구간(`1.8초`)에서 duel tick이 실제로 스킵되고(`data-scene-outcome-priority=hold`), 아레나 루트 scene state(`data-scene-loop`, `data-scene-world`, `data-scene-tier`, `data-scene-performance`, `data-scene-outcome-priority`)가 현재 루프/세계/난도/성능/결과 우선 모드와 맞춰 유지되는지 검증
   - 결과 우선 내러티브 구간(`5.2초`)에서 ambient strike/burst ticker/banner 및 주기적 상태 문구 갱신이 억제되고(`data-scene-outcome-priority=narrative`), 윈도우 종료 후에만 순환 문구가 재개되는지 검증
   - 결과 우선 SFX 구간(`5.6초`)에서 ambient SFX가 매 틱 재생되지 않고 cadence(`1/3`)로만 제한되며 hold 구간에서는 재생이 스킵되는지 검증
   - 결과 우선 내러티브 구간에서 combo/danger 전이 트리거가 cadence(`1/4`)로 제한되고, combo 배너가 최소 연격 9 미만에서는 노출되지 않는지 검증
