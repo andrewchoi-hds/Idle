@@ -2994,3 +2994,11 @@
 
 ## 711) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(actor percent telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 712) 다음 순차 작업
+1. [완료] 아레나 루트 combat metric telemetry(`data-scene-round`, `data-scene-combo-count`, `data-scene-dps-score`)를 추가해 소비 레이어가 배지 텍스트를 파싱하지 않아도 전투 상단 수치를 바로 읽을 수 있도록 보강.
+2. [완료] `renderBattleSceneCombatMetrics()` 경로에서 badge 텍스트와 아레나 루트 dataset이 동시에 갱신되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 combat metric telemetry 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 713) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(combat metric telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
