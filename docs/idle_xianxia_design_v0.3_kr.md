@@ -3082,3 +3082,11 @@
 
 ## 731) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(badge value contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 732) 다음 순차 작업
+1. [완료] skill/combo banner 노드(`battleSceneSkillBanner`, `battleSceneComboBanner`) contract에 `data-banner-actor`, `data-skill-label`, `data-combo-count`를 추가해 소비 레이어가 텍스트 파싱 없이 배너 actor/skill/combo payload를 직접 읽을 수 있도록 보강.
+2. [완료] `setBattleSceneSkillBanner`, `setBattleSceneComboBanner`, `clearBattleSceneComboBanner`와 timer 종료/reset 경로를 함께 정리해 배너 payload가 활성 시 실제 값으로, 종료 시 기본값(`none/0`)으로 복귀하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 banner payload contract 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 733) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(banner payload contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
