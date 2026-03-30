@@ -2362,15 +2362,22 @@ function setBattleSceneSkillBanner(label, tone = "info") {
   }
   const normalizedTone = normalizeBattleSceneTone(tone);
   dom.battleSceneSkillBanner.textContent = String(label || "기세 수렴");
+  dom.battleSceneSkillBanner.dataset.tone = normalizedTone;
+  dom.battleSceneSkillBanner.dataset.bannerState = "active";
   dom.battleSceneSkillBanner.classList.remove("is-active", ...BATTLE_SCENE_TONE_CLASSES);
   dom.battleSceneSkillBanner.classList.add(`tone-${normalizedTone}`);
+  dom.battleSceneSkillBanner.setAttribute("aria-hidden", "false");
   void dom.battleSceneSkillBanner.offsetWidth;
   dom.battleSceneSkillBanner.classList.add("is-active");
   if (battleSceneSkillBannerTimer !== null) {
     window.clearTimeout(battleSceneSkillBannerTimer);
   }
   battleSceneSkillBannerTimer = window.setTimeout(() => {
-    dom.battleSceneSkillBanner?.classList.remove("is-active");
+    if (dom.battleSceneSkillBanner) {
+      dom.battleSceneSkillBanner.classList.remove("is-active");
+      dom.battleSceneSkillBanner.setAttribute("aria-hidden", "true");
+      dom.battleSceneSkillBanner.dataset.bannerState = "idle";
+    }
     battleSceneSkillBannerTimer = null;
   }, 860);
 }
@@ -2403,6 +2410,9 @@ function clearBattleSceneComboBanner() {
     ...BATTLE_SCENE_COMBO_BANNER_TIER_CLASSES,
   );
   dom.battleSceneComboBanner.classList.add("tier-flow", "tone-info");
+  dom.battleSceneComboBanner.dataset.tone = "info";
+  dom.battleSceneComboBanner.dataset.tier = "flow";
+  dom.battleSceneComboBanner.dataset.bannerState = "idle";
   dom.battleSceneComboBanner.setAttribute("aria-hidden", "true");
 }
 
@@ -2424,6 +2434,9 @@ function setBattleSceneComboBanner(comboInput, tone = "info") {
         ? `폭주 연격 x${combo}`
         : `연격 x${combo}`;
   dom.battleSceneComboBanner.textContent = label;
+  dom.battleSceneComboBanner.dataset.tone = normalizedTone;
+  dom.battleSceneComboBanner.dataset.tier = tier;
+  dom.battleSceneComboBanner.dataset.bannerState = "active";
   dom.battleSceneComboBanner.classList.remove(
     "is-active",
     ...BATTLE_SCENE_TONE_CLASSES,
@@ -2438,8 +2451,11 @@ function setBattleSceneComboBanner(comboInput, tone = "info") {
   }
   const holdMs = tier === "overdrive" ? 1040 : tier === "surge" ? 920 : 780;
   battleSceneComboBannerTimer = window.setTimeout(() => {
-    dom.battleSceneComboBanner?.classList.remove("is-active");
-    dom.battleSceneComboBanner?.setAttribute("aria-hidden", "true");
+    if (dom.battleSceneComboBanner) {
+      dom.battleSceneComboBanner.classList.remove("is-active");
+      dom.battleSceneComboBanner.setAttribute("aria-hidden", "true");
+      dom.battleSceneComboBanner.dataset.bannerState = "idle";
+    }
     battleSceneComboBannerTimer = null;
   }, holdMs);
 }
@@ -8374,7 +8390,11 @@ function stopBattleSceneAmbientLoop() {
     window.clearTimeout(battleSceneSkillBannerTimer);
     battleSceneSkillBannerTimer = null;
   }
-  dom.battleSceneSkillBanner?.classList.remove("is-active");
+  if (dom.battleSceneSkillBanner) {
+    dom.battleSceneSkillBanner.classList.remove("is-active");
+    dom.battleSceneSkillBanner.setAttribute("aria-hidden", "true");
+    dom.battleSceneSkillBanner.dataset.bannerState = "idle";
+  }
   clearBattleSceneComboBanner();
   if (dom.battleSceneSparkLayer) {
     dom.battleSceneSparkLayer.innerHTML = "";

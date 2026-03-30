@@ -3042,3 +3042,11 @@
 
 ## 721) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(actor card telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 722) 다음 순차 작업
+1. [완료] 상단 badge 노드(`battleSceneRoundBadge`, `battleSceneComboBadge`, `battleSceneDpsBadge`)에 `data-tone` 기본 contract를 부여하고, skill/combo banner 노드에도 `data-banner-state`, `data-tone`, `data-tier` contract를 정리해 소비 UI가 텍스트/클래스를 직접 파싱하지 않아도 상태를 읽을 수 있도록 보강.
+2. [완료] `setBattleSceneSkillBanner()`, `clearBattleSceneComboBanner()`, `setBattleSceneComboBanner()` 경로에서 banner state/tone/tier와 `aria-hidden`이 함께 정리되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 badge/banner contract 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 723) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(badge/banner contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
