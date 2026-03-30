@@ -3026,3 +3026,11 @@
 
 ## 719) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(transient effect telemetry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 720) 다음 순차 작업
+1. [완료] `battleSceneClashCore` 기본 contract에 `data-pressure="low"`를 추가해 clash core 노드 단독 관찰만으로도 현재 충돌 압력 상태를 읽을 수 있도록 보강.
+2. [완료] 기존 `renderBattleSceneDuelHud()`의 `battleSceneClashCore.dataset.pressure = battleSceneDuelState.pressure` 경로와 같은 축으로 기본 DOM contract/문서를 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 clash core pressure 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 721) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(clash core pressure contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
