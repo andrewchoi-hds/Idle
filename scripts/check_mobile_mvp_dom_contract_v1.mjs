@@ -509,7 +509,25 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-banner-actor="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-skill-label="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-tier="flow"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-combo-count="0"',
     "index.html",
     failures,
   );
@@ -2390,6 +2408,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.battleSceneSkillBanner.dataset.bannerActor = bannerActor;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneSkillBanner.dataset.skillLabel = skillLabel;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneComboBanner.dataset.bannerState = "active";',
     "app.mjs",
     failures,
@@ -2408,7 +2438,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.battleSceneComboBanner.dataset.comboCount = String(combo);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneComboBanner.dataset.bannerSource = "idle";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneComboBanner.dataset.comboCount = "0";',
     "app.mjs",
     failures,
   );
