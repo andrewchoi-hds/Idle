@@ -275,6 +275,42 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-state="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-loop="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-world="true"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-tier="novice"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-performance="normal"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-outcome-priority="normal"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-impact-cue="idle"',
     "index.html",
     failures,
@@ -1708,6 +1744,11 @@ async function main() {
   assertIncludes(app, "setBattleSceneAmbientImpactCooldown(0);", "app.mjs", failures);
   assertIncludes(app, "setBattleSceneAmbientImpactPriorityWindow(0);", "app.mjs", failures);
   assertIncludes(app, "setBattleSceneAmbientImpactSignalAge(0);", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneLoop", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneWorld", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneTier", "app.mjs", failures);
+  assertIncludes(app, "dataset.scenePerformance", "app.mjs", failures);
+  assertIncludes(app, "dataset.sceneOutcomePriority", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneImpactCue", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneImpactKinetic", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneImpactVfx", "app.mjs", failures);
@@ -1979,6 +2020,36 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneArena.dataset.sceneEnemyCastTier = enemyCastTier;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneLoop = String(loopMode || "idle");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneWorld = normalizeBattleSceneWorld(stage?.world);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneTier = resolveBattleSceneTier(stage);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.scenePerformance = lowPerformanceMode ? "low" : "normal";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneArena.dataset.sceneOutcomePriority = holdDuelTickByOutcome',
     "app.mjs",
     failures,
   );
