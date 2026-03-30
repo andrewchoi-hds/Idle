@@ -5381,6 +5381,8 @@ function renderBattleSceneDuelHud() {
     const playerCastTier = resolveBattleSceneCastTier(playerCastPct);
     dom.battleScenePlayer.dataset.hpTier = playerHpTier;
     dom.battleScenePlayer.dataset.castTier = playerCastTier;
+    dom.battleScenePlayer.dataset.hpPct = String(playerHpPct);
+    dom.battleScenePlayer.dataset.castPct = String(playerCastPct);
     if (dom.battleSceneArena) {
       dom.battleSceneArena.dataset.scenePlayerHpTier = playerHpTier;
       dom.battleSceneArena.dataset.scenePlayerCastTier = playerCastTier;
@@ -5391,6 +5393,8 @@ function renderBattleSceneDuelHud() {
     const enemyCastTier = resolveBattleSceneCastTier(enemyCastPct);
     dom.battleSceneEnemy.dataset.hpTier = enemyHpTier;
     dom.battleSceneEnemy.dataset.castTier = enemyCastTier;
+    dom.battleSceneEnemy.dataset.hpPct = String(enemyHpPct);
+    dom.battleSceneEnemy.dataset.castPct = String(enemyCastPct);
     if (dom.battleSceneArena) {
       dom.battleSceneArena.dataset.sceneEnemyHpTier = enemyHpTier;
       dom.battleSceneArena.dataset.sceneEnemyCastTier = enemyCastTier;

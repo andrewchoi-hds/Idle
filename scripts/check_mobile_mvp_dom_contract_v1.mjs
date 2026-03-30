@@ -275,6 +275,30 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-hp-tier="safe"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-cast-tier="low"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-hp-pct="100"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-cast-pct="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-pressure="low"',
     "index.html",
     failures,
@@ -1797,6 +1821,10 @@ async function main() {
   assertIncludes(app, "dataset.scenePlayerCastPct", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneEnemyHpPct", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneEnemyCastPct", "app.mjs", failures);
+  assertIncludes(app, "dataset.hpTier", "app.mjs", failures);
+  assertIncludes(app, "dataset.castTier", "app.mjs", failures);
+  assertIncludes(app, "dataset.hpPct", "app.mjs", failures);
+  assertIncludes(app, "dataset.castPct", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneRound", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneComboCount", "app.mjs", failures);
   assertIncludes(app, "dataset.sceneDpsScore", "app.mjs", failures);
@@ -2108,6 +2136,54 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneArena.dataset.sceneEnemyCastPct = String(enemyCastPct);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleScenePlayer.dataset.hpTier = playerHpTier;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleScenePlayer.dataset.castTier = playerCastTier;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleScenePlayer.dataset.hpPct = String(playerHpPct);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleScenePlayer.dataset.castPct = String(playerCastPct);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneEnemy.dataset.hpTier = enemyHpTier;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneEnemy.dataset.castTier = enemyCastTier;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneEnemy.dataset.hpPct = String(enemyHpPct);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneEnemy.dataset.castPct = String(enemyCastPct);',
     "app.mjs",
     failures,
   );
