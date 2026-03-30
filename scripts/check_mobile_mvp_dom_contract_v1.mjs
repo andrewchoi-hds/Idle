@@ -503,7 +503,19 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-badge-key="round_idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-combo-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-badge-key="combo_calm"',
     "index.html",
     failures,
   );
@@ -516,6 +528,12 @@ async function main() {
   assertIncludes(
     html,
     'data-dps-score="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-badge-key="pressure_low"',
     "index.html",
     failures,
   );
@@ -2342,7 +2360,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.battleSceneRoundBadge.dataset.badgeKey = `round_${loopMode}`;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneArena.dataset.sceneComboCount = String(battleSceneDuelState.combo);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneComboBadge.dataset.badgeKey = `combo_${comboTier}`;',
     "app.mjs",
     failures,
   );
@@ -2373,6 +2403,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.battleSceneDpsBadge.dataset.pressure = battleSceneDuelState.pressure;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneDpsBadge.dataset.badgeKey = `pressure_${battleSceneDuelState.pressure}`;',
     "app.mjs",
     failures,
   );
