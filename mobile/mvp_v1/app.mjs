@@ -11251,6 +11251,7 @@ function render() {
   dom.previewDeathInFailPct.textContent = preview.deathInFailurePct.toFixed(1);
   dom.previewExpectedLabel.textContent = expectedDelta.labelKo;
   dom.previewExpectedLabel.title = "1회 돌파 시도 기준 기대값";
+  dom.previewExpectedLabel.dataset.tone = expectedDelta.tone;
   dom.previewExpectedQiDelta.textContent = fmtSignedInteger(expectedDelta.expectedQiDelta);
   dom.previewExpectedEssenceDelta.textContent = fmtSignedFixed(
     expectedDelta.expectedRebirthEssenceDelta,
@@ -11262,15 +11263,20 @@ function render() {
   applyRiskTone(dom.previewExpectedLabel, expectedDelta.tone);
   dom.previewRiskLabel.textContent = riskTier.labelKo;
   dom.previewRiskLabel.title = riskTier.descriptionKo;
+  dom.previewRiskLabel.dataset.tone = riskTier.tone;
   applyRiskTone(dom.previewRiskLabel, riskTier.tone);
   dom.previewMitigationLabel.textContent = mitigation.labelKo;
   dom.previewMitigationLabel.title = mitigation.messageKo;
+  dom.previewMitigationLabel.dataset.tone = mitigation.tone;
   dom.previewMitigationHint.textContent = mitigation.messageKo;
+  dom.previewMitigationHint.dataset.tone = mitigation.tone;
   applyRiskTone(dom.previewMitigationLabel, mitigation.tone);
   applyRiskTone(dom.previewMitigationHint, mitigation.tone);
   dom.previewRecommendationLabel.textContent = recommendation.labelKo;
   dom.previewRecommendationLabel.title = recommendation.messageKo;
+  dom.previewRecommendationLabel.dataset.tone = recommendation.tone;
   dom.previewRecommendationHint.textContent = recommendation.messageKo;
+  dom.previewRecommendationHint.dataset.tone = recommendation.tone;
   applyRiskTone(dom.previewRecommendationLabel, recommendation.tone);
   applyRiskTone(dom.previewRecommendationHint, recommendation.tone);
   dom.btnApplyRecommendation.disabled = !recommendationToggle.changed;
