@@ -11300,6 +11300,12 @@ function render() {
         : breakthroughReady
           ? "ready"
           : "charging";
+  if (dom.stagePanel) {
+    dom.stagePanel.dataset.difficultyIndex = String(stage.difficulty_index);
+    dom.stagePanel.dataset.qiRequired = fmtNumber(stage.qi_required);
+    dom.stagePanel.dataset.qiPct = String(qiRatio);
+    dom.stagePanel.dataset.progressKey = qiProgressKey;
+  }
   dom.qiProgressBar.style.width = `${qiRatio}%`;
   dom.qiProgressBar.dataset.qiPct = String(qiRatio);
   dom.qiProgressBar.dataset.qiCurrent = fmtNumber(state.currencies.qi);
