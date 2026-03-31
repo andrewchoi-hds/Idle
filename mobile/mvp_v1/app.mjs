@@ -4517,15 +4517,23 @@ function setBattleSceneAtmosphere(stageInput) {
 
 function setBattleSceneStageLabels(stage, displayName) {
   if (dom.battleScenePlayerStage) {
+    const playerName = String(state.playerName || "-");
+    const stageName = String(displayName || "-");
     const playerStageLabel = `${state.playerName} · ${displayName}`;
     dom.battleScenePlayerStage.textContent = playerStageLabel;
     dom.battleScenePlayerStage.dataset.stageLabel = playerStageLabel;
+    dom.battleScenePlayerStage.dataset.playerName = playerName;
+    dom.battleScenePlayerStage.dataset.stageName = stageName;
   }
   if (dom.battleSceneEnemyStage) {
+    const worldLabel = String(worldKo(stage.world) || "-");
+    const qiRequired = fmtNumber(stage.qi_required);
     const enemyStageLabel =
-      `${worldKo(stage.world)} 수문자 · 요구 기 ${fmtNumber(stage.qi_required)}`;
+      `${worldLabel} 수문자 · 요구 기 ${qiRequired}`;
     dom.battleSceneEnemyStage.textContent = enemyStageLabel;
     dom.battleSceneEnemyStage.dataset.stageLabel = enemyStageLabel;
+    dom.battleSceneEnemyStage.dataset.worldLabel = worldLabel;
+    dom.battleSceneEnemyStage.dataset.qiRequired = qiRequired;
   }
 }
 
