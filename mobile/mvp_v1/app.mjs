@@ -5514,6 +5514,7 @@ function renderBattleSceneDuelHud() {
     dom.battleScenePlayerVitals.dataset.castPct = String(playerCastPct);
     dom.battleScenePlayerVitals.dataset.hpTier = playerHpTier;
     dom.battleScenePlayerVitals.dataset.castTier = playerCastTier;
+    dom.battleScenePlayerVitals.dataset.vitalsKey = `${playerHpTier}_${playerCastTier}`;
   }
   if (dom.battleSceneEnemyVitals) {
     dom.battleSceneEnemyVitals.textContent = `HP ${enemyHpPct}% · 기세 ${enemyCastPct}%`;
@@ -5521,6 +5522,7 @@ function renderBattleSceneDuelHud() {
     dom.battleSceneEnemyVitals.dataset.castPct = String(enemyCastPct);
     dom.battleSceneEnemyVitals.dataset.hpTier = enemyHpTier;
     dom.battleSceneEnemyVitals.dataset.castTier = enemyCastTier;
+    dom.battleSceneEnemyVitals.dataset.vitalsKey = `${enemyHpTier}_${enemyCastTier}`;
   }
   if (dom.battleSceneArena) {
     dom.battleSceneArena.dataset.scenePlayerHpPct = String(playerHpPct);
