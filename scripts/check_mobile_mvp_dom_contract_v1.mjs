@@ -287,6 +287,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-vitals-key="safe_low"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-stage-label="-"',
     "index.html",
     failures,
@@ -2456,6 +2462,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.battleScenePlayerVitals.dataset.vitalsKey = `${playerHpTier}_${playerCastTier}`;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneEnemyVitals.dataset.hpPct = String(enemyHpPct);',
     "app.mjs",
     failures,
@@ -2475,6 +2487,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.battleSceneEnemyVitals.dataset.castTier = enemyCastTier;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneEnemyVitals.dataset.vitalsKey = `${enemyHpTier}_${enemyCastTier}`;',
     "app.mjs",
     failures,
   );
