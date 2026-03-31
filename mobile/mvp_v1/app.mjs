@@ -11245,19 +11245,32 @@ function render() {
   dom.invBreakthroughElixir.textContent = fmtNumber(state.inventory.breakthroughElixir);
   dom.invTribulationTalisman.textContent = fmtNumber(state.inventory.tribulationTalisman);
   dom.previewSuccessPct.textContent = preview.successPct.toFixed(1);
+  dom.previewSuccessPct.dataset.pct = preview.successPct.toFixed(1);
   dom.previewDeathPct.textContent = preview.deathPct.toFixed(1);
+  dom.previewDeathPct.dataset.pct = preview.deathPct.toFixed(1);
   dom.previewMinorFailPct.textContent = preview.minorFailPct.toFixed(1);
+  dom.previewMinorFailPct.dataset.pct = preview.minorFailPct.toFixed(1);
   dom.previewRetreatFailPct.textContent = preview.retreatFailPct.toFixed(1);
+  dom.previewRetreatFailPct.dataset.pct = preview.retreatFailPct.toFixed(1);
   dom.previewDeathInFailPct.textContent = preview.deathInFailurePct.toFixed(1);
+  dom.previewDeathInFailPct.dataset.pct = preview.deathInFailurePct.toFixed(1);
   dom.previewExpectedLabel.textContent = expectedDelta.labelKo;
   dom.previewExpectedLabel.title = "1회 돌파 시도 기준 기대값";
   dom.previewExpectedLabel.dataset.tone = expectedDelta.tone;
   dom.previewExpectedQiDelta.textContent = fmtSignedInteger(expectedDelta.expectedQiDelta);
+  dom.previewExpectedQiDelta.dataset.value = fmtSignedInteger(expectedDelta.expectedQiDelta);
   dom.previewExpectedEssenceDelta.textContent = fmtSignedFixed(
     expectedDelta.expectedRebirthEssenceDelta,
     1,
   );
+  dom.previewExpectedEssenceDelta.dataset.value = fmtSignedFixed(
+    expectedDelta.expectedRebirthEssenceDelta,
+    1,
+  );
   dom.previewExpectedDifficultyDelta.textContent = fmtSignedFixed(
+    expectedDelta.expectedDifficultyDelta,
+  );
+  dom.previewExpectedDifficultyDelta.dataset.value = fmtSignedFixed(
     expectedDelta.expectedDifficultyDelta,
   );
   applyRiskTone(dom.previewExpectedLabel, expectedDelta.tone);
