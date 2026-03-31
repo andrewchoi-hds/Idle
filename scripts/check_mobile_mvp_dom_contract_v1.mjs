@@ -439,6 +439,54 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="previewSuccessPct" data-pct="0.0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="previewDeathPct" data-pct="0.0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="previewMinorFailPct" data-pct="0.0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="previewRetreatFailPct" data-pct="0.0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="previewDeathInFailPct" data-pct="0.0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="previewExpectedQiDelta" data-value="+0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="previewExpectedEssenceDelta" data-value="+0.0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="previewExpectedDifficultyDelta" data-value="+0.0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-vitals-key="safe_low"',
     "index.html",
     failures,
@@ -2939,6 +2987,54 @@ async function main() {
   assertIncludes(
     app,
     "dom.previewRecommendationHint.dataset.tone = recommendation.tone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.previewSuccessPct.dataset.pct = preview.successPct.toFixed(1);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.previewDeathPct.dataset.pct = preview.deathPct.toFixed(1);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.previewMinorFailPct.dataset.pct = preview.minorFailPct.toFixed(1);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.previewRetreatFailPct.dataset.pct = preview.retreatFailPct.toFixed(1);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.previewDeathInFailPct.dataset.pct = preview.deathInFailurePct.toFixed(1);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.previewExpectedQiDelta.dataset.value = fmtSignedInteger(expectedDelta.expectedQiDelta);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.previewExpectedEssenceDelta.dataset.value = fmtSignedFixed(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.previewExpectedDifficultyDelta.dataset.value = fmtSignedFixed(",
     "app.mjs",
     failures,
   );
