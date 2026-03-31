@@ -11201,9 +11201,13 @@ function render() {
   const autoResumePolicy = resolveAutoBreakthroughResumePolicy(context, state);
 
   dom.stageDisplay.textContent = displayName;
+  dom.stageDisplay.dataset.stageName = String(displayName || "-");
   dom.worldTag.textContent = worldKo(stage.world);
+  dom.worldTag.dataset.worldLabel = String(worldKo(stage.world) || "-");
   dom.difficultyIndex.textContent = String(stage.difficulty_index);
+  dom.difficultyIndex.dataset.difficultyIndex = String(stage.difficulty_index);
   dom.qiRequired.textContent = fmtNumber(stage.qi_required);
+  dom.qiRequired.dataset.qiRequired = fmtNumber(stage.qi_required);
   dom.statQi.textContent = fmtNumber(state.currencies.qi);
   dom.statSpiritCoin.textContent = fmtNumber(state.currencies.spiritCoin);
   dom.statRebirthEssence.textContent = fmtNumber(state.currencies.rebirthEssence);
