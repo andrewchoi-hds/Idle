@@ -11219,6 +11219,8 @@ function render() {
 
   if (dom.stagePanel) {
     dom.stagePanel.dataset.stageName = String(displayName || "-");
+    dom.stagePanel.dataset.stageKey = `${stageWorldKey}_${stageTier}`;
+    dom.stagePanel.dataset.worldLabel = String(worldKo(stage.world) || "-");
     dom.stagePanel.dataset.worldKey = stageWorldKey;
     dom.stagePanel.dataset.stageTier = stageTier;
     dom.stagePanel.dataset.breakthroughReady = String(breakthroughReady);
@@ -11302,7 +11304,9 @@ function render() {
           : "charging";
   if (dom.stagePanel) {
     dom.stagePanel.dataset.difficultyIndex = String(stage.difficulty_index);
+    dom.stagePanel.dataset.qiCurrent = fmtNumber(state.currencies.qi);
     dom.stagePanel.dataset.qiRequired = fmtNumber(stage.qi_required);
+    dom.stagePanel.dataset.requiredState = breakthroughReady ? "ready" : "gated";
     dom.stagePanel.dataset.qiPct = String(qiRatio);
     dom.stagePanel.dataset.progressKey = qiProgressKey;
   }
