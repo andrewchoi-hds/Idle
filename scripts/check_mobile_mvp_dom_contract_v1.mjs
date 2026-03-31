@@ -329,6 +329,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-hp-tier="safe"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-cast-tier="low"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-hp-pct="100"',
     "index.html",
     failures,
@@ -2432,6 +2444,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.battleScenePlayerVitals.dataset.hpTier = playerHpTier;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePlayerVitals.dataset.castTier = playerCastTier;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneEnemyVitals.dataset.hpPct = String(enemyHpPct);',
     "app.mjs",
     failures,
@@ -2439,6 +2463,18 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneEnemyVitals.dataset.castPct = String(enemyCastPct);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleSceneEnemyVitals.dataset.hpTier = enemyHpTier;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleSceneEnemyVitals.dataset.castTier = enemyCastTier;",
     "app.mjs",
     failures,
   );
