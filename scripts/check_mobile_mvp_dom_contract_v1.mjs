@@ -293,6 +293,30 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-player-name="-"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-stage-name="-"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-world-label="-"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-qi-required="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-hp-pct="100"',
     "index.html",
     failures,
@@ -2366,7 +2390,31 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.battleScenePlayerStage.dataset.playerName = playerName;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePlayerStage.dataset.stageName = stageName;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.battleSceneEnemyStage.dataset.stageLabel = enemyStageLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleSceneEnemyStage.dataset.worldLabel = worldLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleSceneEnemyStage.dataset.qiRequired = qiRequired;",
     "app.mjs",
     failures,
   );

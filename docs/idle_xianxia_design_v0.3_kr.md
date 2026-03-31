@@ -3138,3 +3138,11 @@
 
 ## 745) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(actor text node contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 746) 다음 순차 작업
+1. [완료] stage text 노드(`battleScenePlayerStage`, `battleSceneEnemyStage`) contract에 `data-player-name`, `data-stage-name`, `data-world-label`, `data-qi-required`를 추가해 텍스트 파싱 없이도 플레이어/적수 stage payload를 직접 읽을 수 있도록 보강.
+2. [완료] `setBattleSceneStageLabels()` 경로에서 stage label 텍스트와 분리 payload dataset이 함께 갱신되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 stage text payload contract 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 747) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(stage text payload contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
