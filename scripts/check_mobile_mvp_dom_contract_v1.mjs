@@ -355,6 +355,30 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-difficulty-index="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-qi-required="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-qi-pct="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-progress-key="empty"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-vitals-key="safe_low"',
     "index.html",
     failures,
@@ -2693,6 +2717,30 @@ async function main() {
   assertIncludes(
     app,
     "dom.stagePanel.dataset.breakthroughReady = String(breakthroughReady);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.stagePanel.dataset.difficultyIndex = String(stage.difficulty_index);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.stagePanel.dataset.qiRequired = fmtNumber(stage.qi_required);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.stagePanel.dataset.qiPct = String(qiRatio);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.stagePanel.dataset.progressKey = qiProgressKey;",
     "app.mjs",
     failures,
   );
