@@ -403,6 +403,42 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="previewRiskLabel" class="risk-pill" data-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="previewExpectedLabel" class="risk-pill" data-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="previewMitigationLabel" class="risk-pill" data-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="previewMitigationHint" class="recommendation-text" data-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="previewRecommendationLabel" class="risk-pill" data-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="previewRecommendationHint" class="recommendation-text" data-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-vitals-key="safe_low"',
     "index.html",
     failures,
@@ -2867,6 +2903,42 @@ async function main() {
   assertIncludes(
     app,
     "dom.qiProgressBar.dataset.progressKey = qiProgressKey;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.previewExpectedLabel.dataset.tone = expectedDelta.tone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.previewRiskLabel.dataset.tone = riskTier.tone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.previewMitigationLabel.dataset.tone = mitigation.tone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.previewMitigationHint.dataset.tone = mitigation.tone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.previewRecommendationLabel.dataset.tone = recommendation.tone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.previewRecommendationHint.dataset.tone = recommendation.tone;",
     "app.mjs",
     failures,
   );
