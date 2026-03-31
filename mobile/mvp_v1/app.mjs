@@ -5492,6 +5492,10 @@ function renderBattleSceneDuelHud() {
       BATTLE_SCENE_DUEL_MAX_CAST) *
       100,
   );
+  const playerHpTier = resolveBattleSceneHpTier(playerHpPct);
+  const playerCastTier = resolveBattleSceneCastTier(playerCastPct);
+  const enemyHpTier = resolveBattleSceneHpTier(enemyHpPct);
+  const enemyCastTier = resolveBattleSceneCastTier(enemyCastPct);
   if (dom.battleScenePlayerHpBar) {
     dom.battleScenePlayerHpBar.style.width = `${playerHpPct}%`;
   }
@@ -5508,11 +5512,15 @@ function renderBattleSceneDuelHud() {
     dom.battleScenePlayerVitals.textContent = `HP ${playerHpPct}% · 기세 ${playerCastPct}%`;
     dom.battleScenePlayerVitals.dataset.hpPct = String(playerHpPct);
     dom.battleScenePlayerVitals.dataset.castPct = String(playerCastPct);
+    dom.battleScenePlayerVitals.dataset.hpTier = playerHpTier;
+    dom.battleScenePlayerVitals.dataset.castTier = playerCastTier;
   }
   if (dom.battleSceneEnemyVitals) {
     dom.battleSceneEnemyVitals.textContent = `HP ${enemyHpPct}% · 기세 ${enemyCastPct}%`;
     dom.battleSceneEnemyVitals.dataset.hpPct = String(enemyHpPct);
     dom.battleSceneEnemyVitals.dataset.castPct = String(enemyCastPct);
+    dom.battleSceneEnemyVitals.dataset.hpTier = enemyHpTier;
+    dom.battleSceneEnemyVitals.dataset.castTier = enemyCastTier;
   }
   if (dom.battleSceneArena) {
     dom.battleSceneArena.dataset.scenePlayerHpPct = String(playerHpPct);
@@ -5521,8 +5529,6 @@ function renderBattleSceneDuelHud() {
     dom.battleSceneArena.dataset.sceneEnemyCastPct = String(enemyCastPct);
   }
   if (dom.battleScenePlayer) {
-    const playerHpTier = resolveBattleSceneHpTier(playerHpPct);
-    const playerCastTier = resolveBattleSceneCastTier(playerCastPct);
     dom.battleScenePlayer.dataset.hpTier = playerHpTier;
     dom.battleScenePlayer.dataset.castTier = playerCastTier;
     dom.battleScenePlayer.dataset.hpPct = String(playerHpPct);
@@ -5533,8 +5539,6 @@ function renderBattleSceneDuelHud() {
     }
   }
   if (dom.battleSceneEnemy) {
-    const enemyHpTier = resolveBattleSceneHpTier(enemyHpPct);
-    const enemyCastTier = resolveBattleSceneCastTier(enemyCastPct);
     dom.battleSceneEnemy.dataset.hpTier = enemyHpTier;
     dom.battleSceneEnemy.dataset.castTier = enemyCastTier;
     dom.battleSceneEnemy.dataset.hpPct = String(enemyHpPct);
