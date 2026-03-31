@@ -299,6 +299,30 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-stage-name="-"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-world-label="-"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-difficulty-index="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-qi-required="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-stage-key="player_idle"',
     "index.html",
     failures,
@@ -2457,6 +2481,30 @@ async function main() {
   assertIncludes(
     app,
     "dom.battleSceneEnemyStage.dataset.qiRequired = qiRequired;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.stageDisplay.dataset.stageName = String(displayName || "-");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.worldTag.dataset.worldLabel = String(worldKo(stage.world) || "-");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.difficultyIndex.dataset.difficultyIndex = String(stage.difficulty_index);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.qiRequired.dataset.qiRequired = fmtNumber(stage.qi_required);",
     "app.mjs",
     failures,
   );
