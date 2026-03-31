@@ -13,6 +13,7 @@ const REQUIRED_HTML_IDS = [
   "battleFocusHint",
   "battleSfxHint",
   "battleHapticHint",
+  "stagePanel",
   "stageDisplay",
   "worldTag",
   "difficultyIndex",
@@ -151,6 +152,7 @@ const REQUIRED_DOM_KEYS = [
   "battleFocusHint",
   "battleSfxHint",
   "battleHapticHint",
+  "stagePanel",
   "battleSceneArena",
   "battleScenePlayer",
   "battleSceneEnemy",
@@ -318,6 +320,36 @@ async function main() {
   assertIncludes(
     html,
     'data-gauge-key="cast_low"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="stagePanel"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-stage-name="-"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-world-key="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-stage-tier="novice"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-breakthrough-ready="false"',
     "index.html",
     failures,
   );
@@ -2637,6 +2669,30 @@ async function main() {
   assertIncludes(
     app,
     "dom.battleSceneEnemyStage.dataset.qiRequired = qiRequired;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.stagePanel.dataset.stageName = String(displayName || "-");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.stagePanel.dataset.worldKey = stageWorldKey;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.stagePanel.dataset.stageTier = stageTier;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.stagePanel.dataset.breakthroughReady = String(breakthroughReady);",
     "app.mjs",
     failures,
   );
