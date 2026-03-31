@@ -4517,11 +4517,15 @@ function setBattleSceneAtmosphere(stageInput) {
 
 function setBattleSceneStageLabels(stage, displayName) {
   if (dom.battleScenePlayerStage) {
-    dom.battleScenePlayerStage.textContent = `${state.playerName} · ${displayName}`;
+    const playerStageLabel = `${state.playerName} · ${displayName}`;
+    dom.battleScenePlayerStage.textContent = playerStageLabel;
+    dom.battleScenePlayerStage.dataset.stageLabel = playerStageLabel;
   }
   if (dom.battleSceneEnemyStage) {
-    dom.battleSceneEnemyStage.textContent =
+    const enemyStageLabel =
       `${worldKo(stage.world)} 수문자 · 요구 기 ${fmtNumber(stage.qi_required)}`;
+    dom.battleSceneEnemyStage.textContent = enemyStageLabel;
+    dom.battleSceneEnemyStage.dataset.stageLabel = enemyStageLabel;
   }
 }
 
@@ -5494,9 +5498,13 @@ function renderBattleSceneDuelHud() {
   }
   if (dom.battleScenePlayerVitals) {
     dom.battleScenePlayerVitals.textContent = `HP ${playerHpPct}% · 기세 ${playerCastPct}%`;
+    dom.battleScenePlayerVitals.dataset.hpPct = String(playerHpPct);
+    dom.battleScenePlayerVitals.dataset.castPct = String(playerCastPct);
   }
   if (dom.battleSceneEnemyVitals) {
     dom.battleSceneEnemyVitals.textContent = `HP ${enemyHpPct}% · 기세 ${enemyCastPct}%`;
+    dom.battleSceneEnemyVitals.dataset.hpPct = String(enemyHpPct);
+    dom.battleSceneEnemyVitals.dataset.castPct = String(enemyCastPct);
   }
   if (dom.battleSceneArena) {
     dom.battleSceneArena.dataset.scenePlayerHpPct = String(playerHpPct);
