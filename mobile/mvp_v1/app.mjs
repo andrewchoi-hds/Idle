@@ -11269,12 +11269,23 @@ function render() {
   renderBattleSfxControl();
   renderBattleHapticControl();
 
-  const qiRatio = clampPercent((state.currencies.qi / stage.qi_required) * 100);
+  const qiCurrent = Number(state.currencies.qi) || 0;
+  const qiRequiredValue = Math.max(0, Number(stage.qi_required) || 0);
+  const qiRatio = clampPercent((qiCurrent / Math.max(1, qiRequiredValue)) * 100);
+  const qiProgressKey =
+    qiCurrent <= 0
+      ? "empty"
+      : qiCurrent > qiRequiredValue
+        ? "surplus"
+        : breakthroughReady
+          ? "ready"
+          : "charging";
   dom.qiProgressBar.style.width = `${qiRatio}%`;
   dom.qiProgressBar.dataset.qiPct = String(qiRatio);
   dom.qiProgressBar.dataset.qiCurrent = fmtNumber(state.currencies.qi);
   dom.qiProgressBar.dataset.qiRequired = fmtNumber(stage.qi_required);
   dom.qiProgressBar.dataset.breakthroughReady = String(breakthroughReady);
+  dom.qiProgressBar.dataset.progressKey = qiProgressKey;
 
   dom.optAutoBattle.checked = state.settings.autoBattle;
   dom.optAutoBreakthrough.checked = state.settings.autoBreakthrough;
