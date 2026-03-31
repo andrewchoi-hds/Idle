@@ -299,6 +299,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-stage-key="player_idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-stage-key="enemy_idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-player-name="-"',
     "index.html",
     failures,
@@ -2408,6 +2420,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.battleScenePlayerStage.dataset.stageKey = `player_${worldKey}_${stageTier}`;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.battleScenePlayerStage.dataset.playerName = playerName;",
     "app.mjs",
     failures,
@@ -2421,6 +2439,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.battleSceneEnemyStage.dataset.stageLabel = enemyStageLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneEnemyStage.dataset.stageKey = `enemy_${worldKey}_${stageTier}`;',
     "app.mjs",
     failures,
   );
