@@ -92,6 +92,7 @@ const dom = {
   battleFocusHint: document.getElementById("battleFocusHint"),
   battleSfxHint: document.getElementById("battleSfxHint"),
   battleHapticHint: document.getElementById("battleHapticHint"),
+  stagePanel: document.getElementById("stagePanel"),
   stageDisplay: document.getElementById("stageDisplay"),
   worldTag: document.getElementById("worldTag"),
   difficultyIndex: document.getElementById("difficultyIndex"),
@@ -11215,6 +11216,13 @@ function render() {
   const stageTier = resolveBattleSceneTier(stage);
   const breakthroughReady =
     (Number(state.currencies.qi) || 0) >= (Number(stage.qi_required) || 0);
+
+  if (dom.stagePanel) {
+    dom.stagePanel.dataset.stageName = String(displayName || "-");
+    dom.stagePanel.dataset.worldKey = stageWorldKey;
+    dom.stagePanel.dataset.stageTier = stageTier;
+    dom.stagePanel.dataset.breakthroughReady = String(breakthroughReady);
+  }
 
   dom.stageDisplay.textContent = displayName;
   dom.stageDisplay.dataset.stageName = String(displayName || "-");
