@@ -11296,12 +11296,18 @@ function render() {
   dom.btnApplyRecommendation.title = recommendationToggle.messageKo;
   dom.autoBreakthroughResumeLabel.textContent = autoResumePolicy.labelKo;
   dom.autoBreakthroughResumeLabel.title = autoResumePolicy.messageKo;
+  dom.autoBreakthroughResumeLabel.dataset.tone = autoResumePolicy.tone;
+  dom.autoBreakthroughResumeLabel.dataset.policyReason = autoResumePolicy.reason;
   dom.autoBreakthroughResumeHint.textContent = autoResumePolicy.messageKo;
+  dom.autoBreakthroughResumeHint.dataset.tone = autoResumePolicy.tone;
+  dom.autoBreakthroughResumeHint.dataset.policyReason = autoResumePolicy.reason;
   applyRiskTone(dom.autoBreakthroughResumeLabel, autoResumePolicy.tone);
   applyRiskTone(dom.autoBreakthroughResumeHint, autoResumePolicy.tone);
   dom.btnResumeAutoBreakthrough.disabled = !autoResumePolicy.actionable;
   dom.btnResumeAutoBreakthrough.title = autoResumePolicy.messageKo;
   dom.btnResumeAutoBreakthrough.textContent = autoResumePolicy.actionLabelKo;
+  dom.btnResumeAutoBreakthrough.dataset.policyReason = autoResumePolicy.reason;
+  dom.btnResumeAutoBreakthrough.dataset.actionable = String(autoResumePolicy.actionable);
   dom.playerNameInput.value = state.playerName;
   dom.optSaveSlot.value = String(activeSaveSlot);
   dom.lastSavedAt.textContent = fmtDateTimeFromIso(state.lastSavedAtIso);

@@ -439,6 +439,24 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="autoBreakthroughResumeLabel" class="risk-pill" data-tone="info" data-policy-reason="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="autoBreakthroughResumeHint" class="recommendation-text" data-tone="info" data-policy-reason="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="btnResumeAutoBreakthrough" type="button" class="ghost-btn recommendation-btn" data-policy-reason="none" data-actionable="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="previewSuccessPct" data-pct="0.0"',
     "index.html",
     failures,
@@ -2987,6 +3005,42 @@ async function main() {
   assertIncludes(
     app,
     "dom.previewRecommendationHint.dataset.tone = recommendation.tone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.autoBreakthroughResumeLabel.dataset.tone = autoResumePolicy.tone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.autoBreakthroughResumeLabel.dataset.policyReason = autoResumePolicy.reason;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.autoBreakthroughResumeHint.dataset.tone = autoResumePolicy.tone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.autoBreakthroughResumeHint.dataset.policyReason = autoResumePolicy.reason;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnResumeAutoBreakthrough.dataset.policyReason = autoResumePolicy.reason;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnResumeAutoBreakthrough.dataset.actionable = String(autoResumePolicy.actionable);",
     "app.mjs",
     failures,
   );
