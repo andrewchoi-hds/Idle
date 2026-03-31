@@ -305,7 +305,19 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-stage-key="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-world-label="-"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-world-key="idle"',
     "index.html",
     failures,
   );
@@ -317,7 +329,19 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-stage-tier="novice"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-qi-required="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-required-state="gated"',
     "index.html",
     failures,
   );
@@ -2510,7 +2534,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.stageDisplay.dataset.stageKey = `${stageWorldKey}_${stageTier}`;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.worldTag.dataset.worldLabel = String(worldKo(stage.world) || "-");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.worldTag.dataset.worldKey = stageWorldKey;",
     "app.mjs",
     failures,
   );
@@ -2522,7 +2558,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.difficultyIndex.dataset.stageTier = stageTier;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.qiRequired.dataset.qiRequired = fmtNumber(stage.qi_required);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.qiRequired.dataset.requiredState = breakthroughReady ? "ready" : "gated";',
     "app.mjs",
     failures,
   );
@@ -2546,7 +2594,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    'dom.qiProgressBar.dataset.breakthroughReady = String((Number(state.currencies.qi) || 0) >= (Number(stage.qi_required) || 0));',
+    "dom.qiProgressBar.dataset.breakthroughReady = String(breakthroughReady);",
     "app.mjs",
     failures,
   );

@@ -3186,3 +3186,11 @@
 
 ## 757) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(qi progress contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 758) 다음 순차 작업
+1. [완료] stage panel 텍스트 노드(`stageDisplay`, `worldTag`, `difficultyIndex`, `qiRequired`) contract에 `data-stage-key`, `data-world-key`, `data-stage-tier`, `data-required-state`를 추가해 상단 메타 영역이 world/tier/ready 의미까지 직접 노출하도록 보강.
+2. [완료] `render()` 경로에서 `normalizeBattleSceneWorld(stage.world)`, `resolveBattleSceneTier(stage)`, 돌파 가능 여부를 사용해 stage panel key/tier/required-state dataset을 함께 기록하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 stage panel key contract 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 759) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(stage panel key contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

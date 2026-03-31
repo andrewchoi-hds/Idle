@@ -11199,15 +11199,23 @@ function render() {
     currentUseTribulationTalisman: dom.useTribulationTalisman.checked,
   });
   const autoResumePolicy = resolveAutoBreakthroughResumePolicy(context, state);
+  const stageWorldKey = normalizeBattleSceneWorld(stage.world);
+  const stageTier = resolveBattleSceneTier(stage);
+  const breakthroughReady =
+    (Number(state.currencies.qi) || 0) >= (Number(stage.qi_required) || 0);
 
   dom.stageDisplay.textContent = displayName;
   dom.stageDisplay.dataset.stageName = String(displayName || "-");
+  dom.stageDisplay.dataset.stageKey = `${stageWorldKey}_${stageTier}`;
   dom.worldTag.textContent = worldKo(stage.world);
   dom.worldTag.dataset.worldLabel = String(worldKo(stage.world) || "-");
+  dom.worldTag.dataset.worldKey = stageWorldKey;
   dom.difficultyIndex.textContent = String(stage.difficulty_index);
   dom.difficultyIndex.dataset.difficultyIndex = String(stage.difficulty_index);
+  dom.difficultyIndex.dataset.stageTier = stageTier;
   dom.qiRequired.textContent = fmtNumber(stage.qi_required);
   dom.qiRequired.dataset.qiRequired = fmtNumber(stage.qi_required);
+  dom.qiRequired.dataset.requiredState = breakthroughReady ? "ready" : "gated";
   dom.statQi.textContent = fmtNumber(state.currencies.qi);
   dom.statSpiritCoin.textContent = fmtNumber(state.currencies.spiritCoin);
   dom.statRebirthEssence.textContent = fmtNumber(state.currencies.rebirthEssence);
@@ -11266,7 +11274,7 @@ function render() {
   dom.qiProgressBar.dataset.qiPct = String(qiRatio);
   dom.qiProgressBar.dataset.qiCurrent = fmtNumber(state.currencies.qi);
   dom.qiProgressBar.dataset.qiRequired = fmtNumber(stage.qi_required);
-  dom.qiProgressBar.dataset.breakthroughReady = String((Number(state.currencies.qi) || 0) >= (Number(stage.qi_required) || 0));
+  dom.qiProgressBar.dataset.breakthroughReady = String(breakthroughReady);
 
   dom.optAutoBattle.checked = state.settings.autoBattle;
   dom.optAutoBreakthrough.checked = state.settings.autoBreakthrough;
