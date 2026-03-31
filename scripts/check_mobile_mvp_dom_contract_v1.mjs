@@ -323,6 +323,24 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-qi-pct="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-qi-current="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-breakthrough-ready="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-stage-key="player_idle"',
     "index.html",
     failures,
@@ -2505,6 +2523,30 @@ async function main() {
   assertIncludes(
     app,
     "dom.qiRequired.dataset.qiRequired = fmtNumber(stage.qi_required);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.qiProgressBar.dataset.qiPct = String(qiRatio);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.qiProgressBar.dataset.qiCurrent = fmtNumber(state.currencies.qi);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.qiProgressBar.dataset.qiRequired = fmtNumber(stage.qi_required);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.qiProgressBar.dataset.breakthroughReady = String((Number(state.currencies.qi) || 0) >= (Number(stage.qi_required) || 0));',
     "app.mjs",
     failures,
   );

@@ -11263,6 +11263,10 @@ function render() {
 
   const qiRatio = clampPercent((state.currencies.qi / stage.qi_required) * 100);
   dom.qiProgressBar.style.width = `${qiRatio}%`;
+  dom.qiProgressBar.dataset.qiPct = String(qiRatio);
+  dom.qiProgressBar.dataset.qiCurrent = fmtNumber(state.currencies.qi);
+  dom.qiProgressBar.dataset.qiRequired = fmtNumber(stage.qi_required);
+  dom.qiProgressBar.dataset.breakthroughReady = String((Number(state.currencies.qi) || 0) >= (Number(stage.qi_required) || 0));
 
   dom.optAutoBattle.checked = state.settings.autoBattle;
   dom.optAutoBreakthrough.checked = state.settings.autoBreakthrough;
