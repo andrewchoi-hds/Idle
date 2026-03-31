@@ -287,6 +287,24 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-stage-label="-"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-hp-pct="100"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-cast-pct="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-hp-pct="100"',
     "index.html",
     failures,
@@ -2337,6 +2355,42 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneEnemy.dataset.castPct = String(enemyCastPct);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePlayerStage.dataset.stageLabel = playerStageLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleSceneEnemyStage.dataset.stageLabel = enemyStageLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleScenePlayerVitals.dataset.hpPct = String(playerHpPct);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleScenePlayerVitals.dataset.castPct = String(playerCastPct);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneEnemyVitals.dataset.hpPct = String(enemyHpPct);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneEnemyVitals.dataset.castPct = String(enemyCastPct);',
     "app.mjs",
     failures,
   );
