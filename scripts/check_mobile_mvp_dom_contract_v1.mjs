@@ -365,6 +365,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-progress-key="empty"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-stage-key="player_idle"',
     "index.html",
     failures,
@@ -2595,6 +2601,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.qiProgressBar.dataset.breakthroughReady = String(breakthroughReady);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.qiProgressBar.dataset.progressKey = qiProgressKey;",
     "app.mjs",
     failures,
   );
