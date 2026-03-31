@@ -5502,15 +5502,27 @@ function renderBattleSceneDuelHud() {
   const enemyCastTier = resolveBattleSceneCastTier(enemyCastPct);
   if (dom.battleScenePlayerHpBar) {
     dom.battleScenePlayerHpBar.style.width = `${playerHpPct}%`;
+    dom.battleScenePlayerHpBar.dataset.fillPct = String(playerHpPct);
+    dom.battleScenePlayerHpBar.dataset.gaugeTier = playerHpTier;
+    dom.battleScenePlayerHpBar.dataset.gaugeKey = `hp_${playerHpTier}`;
   }
   if (dom.battleSceneEnemyHpBar) {
     dom.battleSceneEnemyHpBar.style.width = `${enemyHpPct}%`;
+    dom.battleSceneEnemyHpBar.dataset.fillPct = String(enemyHpPct);
+    dom.battleSceneEnemyHpBar.dataset.gaugeTier = enemyHpTier;
+    dom.battleSceneEnemyHpBar.dataset.gaugeKey = `hp_${enemyHpTier}`;
   }
   if (dom.battleScenePlayerCastBar) {
     dom.battleScenePlayerCastBar.style.width = `${playerCastPct}%`;
+    dom.battleScenePlayerCastBar.dataset.fillPct = String(playerCastPct);
+    dom.battleScenePlayerCastBar.dataset.gaugeTier = playerCastTier;
+    dom.battleScenePlayerCastBar.dataset.gaugeKey = `cast_${playerCastTier}`;
   }
   if (dom.battleSceneEnemyCastBar) {
     dom.battleSceneEnemyCastBar.style.width = `${enemyCastPct}%`;
+    dom.battleSceneEnemyCastBar.dataset.fillPct = String(enemyCastPct);
+    dom.battleSceneEnemyCastBar.dataset.gaugeTier = enemyCastTier;
+    dom.battleSceneEnemyCastBar.dataset.gaugeKey = `cast_${enemyCastTier}`;
   }
   if (dom.battleScenePlayerVitals) {
     dom.battleScenePlayerVitals.textContent = `HP ${playerHpPct}% · 기세 ${playerCastPct}%`;

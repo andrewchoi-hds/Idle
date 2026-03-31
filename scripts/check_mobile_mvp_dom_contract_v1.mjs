@@ -287,6 +287,42 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-fill-pct="100"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-fill-pct="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-gauge-tier="safe"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-gauge-tier="low"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-gauge-key="hp_safe"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-gauge-key="cast_low"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-vitals-key="safe_low"',
     "index.html",
     failures,
@@ -2444,6 +2480,42 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.battleScenePlayerHpBar.dataset.fillPct = String(playerHpPct);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePlayerHpBar.dataset.gaugeTier = playerHpTier;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleScenePlayerHpBar.dataset.gaugeKey = `hp_${playerHpTier}`;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleScenePlayerCastBar.dataset.fillPct = String(playerCastPct);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePlayerCastBar.dataset.gaugeTier = playerCastTier;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleScenePlayerCastBar.dataset.gaugeKey = `cast_${playerCastTier}`;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleScenePlayer.dataset.castTier = playerCastTier;',
     "app.mjs",
     failures,
@@ -2463,6 +2535,42 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneEnemy.dataset.hpTier = enemyHpTier;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneEnemyHpBar.dataset.fillPct = String(enemyHpPct);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleSceneEnemyHpBar.dataset.gaugeTier = enemyHpTier;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneEnemyHpBar.dataset.gaugeKey = `hp_${enemyHpTier}`;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneEnemyCastBar.dataset.fillPct = String(enemyCastPct);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleSceneEnemyCastBar.dataset.gaugeTier = enemyCastTier;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneEnemyCastBar.dataset.gaugeKey = `cast_${enemyCastTier}`;',
     "app.mjs",
     failures,
   );
