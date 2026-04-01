@@ -10230,6 +10230,20 @@ function syncSlotActionButtons() {
     sourceSummary.state,
     sourceLocked,
   );
+  const lockHintText = sourceLocked
+    ? `활성 슬롯 ${activeSaveSlot}: 잠금됨 (삭제/덮어쓰기 보호 중)`
+    : `활성 슬롯 ${activeSaveSlot}: 잠금 해제 (삭제/덮어쓰기 가능)`;
+  const lockHintTone = sourceLocked ? "warn" : "info";
+  const targetHintText = `대상 슬롯 ${targetSlot}: ${resolveSlotSummaryStateLabelKo(targetSummary.state)}${
+    targetLocked ? " · 잠금됨" : ""
+  }`;
+  const targetHintTone = targetLocked
+    ? "warn"
+    : resolveSlotSummaryStateTone(targetSummary.state);
+  const copyHintText = `복제: ${resolveSlotCopyHint(copyPolicy)}`;
+  const copyHintTone = resolveSlotCopyHintTone(copyPolicy);
+  const deleteHintText = `삭제: ${resolveSlotDeleteHint(deletePolicy)}`;
+  const deleteHintTone = resolveSlotDeleteHintTone(deletePolicy);
   if (dom.savePanel) {
     dom.savePanel.dataset.activeSlot = String(activeSaveSlot);
     dom.savePanel.dataset.copyTargetSlot = String(targetSlot);
@@ -10242,6 +10256,16 @@ function syncSlotActionButtons() {
     dom.savePanel.dataset.deletePolicyReason = deletePolicy.reason || "unknown";
     dom.savePanel.dataset.deleteAllowed = String(deletePolicy.allowed);
   }
+  if (dom.slotActionHintBox) {
+    dom.slotActionHintBox.dataset.lockHint = lockHintText;
+    dom.slotActionHintBox.dataset.lockTone = lockHintTone;
+    dom.slotActionHintBox.dataset.targetHint = targetHintText;
+    dom.slotActionHintBox.dataset.targetTone = targetHintTone;
+    dom.slotActionHintBox.dataset.copyHint = copyHintText;
+    dom.slotActionHintBox.dataset.copyTone = copyHintTone;
+    dom.slotActionHintBox.dataset.deleteHint = deleteHintText;
+    dom.slotActionHintBox.dataset.deleteTone = deleteHintTone;
+  }
   dom.btnDeleteSlot.disabled = !deletePolicy.allowed;
   if (deletePolicy.allowed) {
     dom.btnDeleteSlot.title = "";
@@ -10252,10 +10276,8 @@ function syncSlotActionButtons() {
   }
 
   if (dom.slotLockHint) {
-    dom.slotLockHint.textContent = sourceLocked
-      ? `활성 슬롯 ${activeSaveSlot}: 잠금됨 (삭제/덮어쓰기 보호 중)`
-      : `활성 슬롯 ${activeSaveSlot}: 잠금 해제 (삭제/덮어쓰기 가능)`;
-    applySlotHintTone(dom.slotLockHint, sourceLocked ? "warn" : "info");
+    dom.slotLockHint.textContent = lockHintText;
+    applySlotHintTone(dom.slotLockHint, lockHintTone);
   }
   if (dom.btnToggleSlotLock) {
     dom.btnToggleSlotLock.textContent = sourceLocked ? "활성 슬롯 잠금 해제" : "활성 슬롯 잠금";
@@ -10264,21 +10286,16 @@ function syncSlotActionButtons() {
       : "잠그면 삭제/덮어쓰기를 차단합니다.";
   }
   if (dom.slotTargetHint) {
-    const lockSuffix = targetLocked ? " · 잠금됨" : "";
-    dom.slotTargetHint.textContent =
-      `대상 슬롯 ${targetSlot}: ${resolveSlotSummaryStateLabelKo(targetSummary.state)}${lockSuffix}`;
-    applySlotHintTone(
-      dom.slotTargetHint,
-      targetLocked ? "warn" : resolveSlotSummaryStateTone(targetSummary.state),
-    );
+    dom.slotTargetHint.textContent = targetHintText;
+    applySlotHintTone(dom.slotTargetHint, targetHintTone);
   }
   if (dom.slotCopyHint) {
-    dom.slotCopyHint.textContent = `복제: ${resolveSlotCopyHint(copyPolicy)}`;
-    applySlotHintTone(dom.slotCopyHint, resolveSlotCopyHintTone(copyPolicy));
+    dom.slotCopyHint.textContent = copyHintText;
+    applySlotHintTone(dom.slotCopyHint, copyHintTone);
   }
   if (dom.slotDeleteHint) {
-    dom.slotDeleteHint.textContent = `삭제: ${resolveSlotDeleteHint(deletePolicy)}`;
-    applySlotHintTone(dom.slotDeleteHint, resolveSlotDeleteHintTone(deletePolicy));
+    dom.slotDeleteHint.textContent = deleteHintText;
+    applySlotHintTone(dom.slotDeleteHint, deleteHintTone);
   }
 }
 

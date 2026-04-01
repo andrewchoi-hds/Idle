@@ -691,6 +691,54 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-lock-hint="잠금 상태 준비 중..."',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-lock-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-target-hint="대상 슬롯 상태 준비 중..."',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-target-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-copy-hint="복제 규칙 준비 중..."',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-copy-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-delete-hint="삭제 규칙 준비 중..."',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-delete-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="logsPanel"',
     "index.html",
     failures,
@@ -3881,6 +3929,54 @@ async function main() {
   assertIncludes(
     app,
     "dom.breakthroughPreviewPanel.dataset.autoResumeActionable = String(autoResumePolicy.actionable);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.slotActionHintBox.dataset.lockHint = lockHintText;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.slotActionHintBox.dataset.lockTone = lockHintTone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.slotActionHintBox.dataset.targetHint = targetHintText;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.slotActionHintBox.dataset.targetTone = targetHintTone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.slotActionHintBox.dataset.copyHint = copyHintText;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.slotActionHintBox.dataset.copyTone = copyHintTone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.slotActionHintBox.dataset.deleteHint = deleteHintText;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.slotActionHintBox.dataset.deleteTone = deleteHintTone;",
     "app.mjs",
     failures,
   );
