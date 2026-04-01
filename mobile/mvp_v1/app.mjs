@@ -11216,14 +11216,19 @@ function render() {
   if (dom.breakthroughPreviewPanel) {
     dom.breakthroughPreviewPanel.dataset.riskTier = riskTier.tier;
     dom.breakthroughPreviewPanel.dataset.riskTone = riskTier.tone;
+    dom.breakthroughPreviewPanel.dataset.riskLabel = riskTier.labelKo || "-";
     dom.breakthroughPreviewPanel.dataset.expectedKey = expectedDelta.burdenTier || "none";
     dom.breakthroughPreviewPanel.dataset.expectedTone = expectedDelta.tone;
+    dom.breakthroughPreviewPanel.dataset.expectedLabel = expectedDelta.labelKo || "-";
     dom.breakthroughPreviewPanel.dataset.mitigationKey = mitigation.key || "none";
     dom.breakthroughPreviewPanel.dataset.mitigationTone = mitigation.tone;
+    dom.breakthroughPreviewPanel.dataset.mitigationLabel = mitigation.labelKo || "-";
     dom.breakthroughPreviewPanel.dataset.recommendationKey = recommendation.key || "none";
     dom.breakthroughPreviewPanel.dataset.recommendationTone = recommendation.tone;
+    dom.breakthroughPreviewPanel.dataset.recommendationLabel = recommendation.labelKo || "-";
     dom.breakthroughPreviewPanel.dataset.autoResumeReason = autoResumePolicy.reason || "none";
     dom.breakthroughPreviewPanel.dataset.autoResumeTone = autoResumePolicy.tone;
+    dom.breakthroughPreviewPanel.dataset.autoResumeLabel = autoResumePolicy.labelKo || "-";
     dom.breakthroughPreviewPanel.dataset.successPct = preview.successPct.toFixed(1);
     dom.breakthroughPreviewPanel.dataset.deathPct = preview.deathPct.toFixed(1);
     dom.breakthroughPreviewPanel.dataset.minorFailPct = preview.minorFailPct.toFixed(1);

@@ -339,6 +339,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-risk-label="-"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-expected-key="none"',
     "index.html",
     failures,
@@ -346,6 +352,12 @@ async function main() {
   assertIncludes(
     html,
     'data-expected-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-expected-label="-"',
     "index.html",
     failures,
   );
@@ -363,6 +375,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-mitigation-label="-"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-recommendation-key="none"',
     "index.html",
     failures,
@@ -375,6 +393,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-recommendation-label="-"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-auto-resume-reason="none"',
     "index.html",
     failures,
@@ -382,6 +406,12 @@ async function main() {
   assertIncludes(
     html,
     'data-auto-resume-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-auto-resume-label="-"',
     "index.html",
     failures,
   );
@@ -3240,6 +3270,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.breakthroughPreviewPanel.dataset.riskLabel = riskTier.labelKo || "-";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.breakthroughPreviewPanel.dataset.expectedKey = expectedDelta.burdenTier || "none";',
     "app.mjs",
     failures,
@@ -3247,6 +3283,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.breakthroughPreviewPanel.dataset.expectedTone = expectedDelta.tone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.breakthroughPreviewPanel.dataset.expectedLabel = expectedDelta.labelKo || "-";',
     "app.mjs",
     failures,
   );
@@ -3264,6 +3306,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.breakthroughPreviewPanel.dataset.mitigationLabel = mitigation.labelKo || "-";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.breakthroughPreviewPanel.dataset.recommendationKey = recommendation.key || "none";',
     "app.mjs",
     failures,
@@ -3276,6 +3324,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.breakthroughPreviewPanel.dataset.recommendationLabel = recommendation.labelKo || "-";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.breakthroughPreviewPanel.dataset.autoResumeReason = autoResumePolicy.reason || "none";',
     "app.mjs",
     failures,
@@ -3283,6 +3337,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.breakthroughPreviewPanel.dataset.autoResumeTone = autoResumePolicy.tone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.breakthroughPreviewPanel.dataset.autoResumeLabel = autoResumePolicy.labelKo || "-";',
     "app.mjs",
     failures,
   );
