@@ -333,7 +333,19 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-risk-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-expected-key="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-expected-tone="info"',
     "index.html",
     failures,
   );
@@ -345,13 +357,31 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-mitigation-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-recommendation-key="none"',
     "index.html",
     failures,
   );
   assertIncludes(
     html,
+    'data-recommendation-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-auto-resume-reason="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-auto-resume-tone="info"',
     "index.html",
     failures,
   );
@@ -3204,7 +3234,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.breakthroughPreviewPanel.dataset.riskTone = riskTier.tone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.breakthroughPreviewPanel.dataset.expectedKey = expectedDelta.burdenTier || "none";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.expectedTone = expectedDelta.tone;",
     "app.mjs",
     failures,
   );
@@ -3216,13 +3258,31 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.breakthroughPreviewPanel.dataset.mitigationTone = mitigation.tone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.breakthroughPreviewPanel.dataset.recommendationKey = recommendation.key || "none";',
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
+    "dom.breakthroughPreviewPanel.dataset.recommendationTone = recommendation.tone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.breakthroughPreviewPanel.dataset.autoResumeReason = autoResumePolicy.reason || "none";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.autoResumeTone = autoResumePolicy.tone;",
     "app.mjs",
     failures,
   );
