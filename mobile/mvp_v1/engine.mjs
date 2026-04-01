@@ -2469,6 +2469,7 @@ export function resolveBreakthroughRecommendation(currentPreview, options = {}) 
 
   if (!tribulationStage || currentRisk.tier === "safe") {
     return {
+      key: "stockpile",
       tone: "info",
       labelKo: "자원 비축",
       messageKo: "비도겁 구간입니다. 영약/수호부를 비축하세요.",
@@ -2485,6 +2486,7 @@ export function resolveBreakthroughRecommendation(currentPreview, options = {}) 
         ? ` (예상 사망 위험 ${deathFailDropPct.toFixed(1)}%p 감소)`
         : "";
     return {
+      key: "talisman_recommended",
       tone: "warn",
       labelKo: "수호부 권장",
       messageKo: `도겁 구간 위험도가 높습니다. 수호부 사용을 권장합니다.${dropText}`,
@@ -2501,6 +2503,7 @@ export function resolveBreakthroughRecommendation(currentPreview, options = {}) 
         ? ` (예상 성공률 +${successGainPct.toFixed(1)}%p)`
         : "";
     return {
+      key: "elixir_recommended",
       tone: "warn",
       labelKo: "영약 권장",
       messageKo: `돌파 성공률이 낮습니다. 영약 사용을 권장합니다.${gainText}`,
@@ -2509,6 +2512,7 @@ export function resolveBreakthroughRecommendation(currentPreview, options = {}) 
 
   if (currentRisk.tier === "extreme" && !riskReduced) {
     return {
+      key: "regroup",
       tone: "error",
       labelKo: "재정비 권장",
       messageKo: "사망 위험이 매우 높습니다. 환생 보정과 자원 확보 후 재도전하세요.",
@@ -2517,6 +2521,7 @@ export function resolveBreakthroughRecommendation(currentPreview, options = {}) 
 
   if (usingTribulationTalisman || usingBreakthroughElixir) {
     return {
+      key: "ready",
       tone: "info",
       labelKo: "준비 완료",
       messageKo: `현재 위험도 ${currentRisk.labelKo}. 설정 유지 후 돌파를 진행하세요.`,
@@ -2524,6 +2529,7 @@ export function resolveBreakthroughRecommendation(currentPreview, options = {}) 
   }
 
   return {
+    key: "caution",
     tone: currentRisk.tone === "error" ? "warn" : currentRisk.tone,
     labelKo: "주의 진행",
     messageKo: `현재 위험도 ${currentRisk.labelKo}. 필요 시 수동으로 자원을 보강하세요.`,
@@ -2628,6 +2634,7 @@ export function resolveBreakthroughMitigationSummary(currentPreview, mitigatedPr
 
   if (!tribulationStage || currentRisk.tier === "safe") {
     return {
+      key: "non_tribulation",
       tone: "info",
       labelKo: "비도겁",
       messageKo: "현재 경지는 도겁 리스크가 없어 보정 효과가 제한적입니다.",
@@ -2641,6 +2648,7 @@ export function resolveBreakthroughMitigationSummary(currentPreview, mitigatedPr
 
   if (successDeltaPct <= 0.05 && deathFailDeltaPct <= 0.05 && !riskImproved) {
     return {
+      key: "no_change",
       tone: "warn",
       labelKo: "개선 없음",
       messageKo: "현재 조건 대비 추가 보정 효과가 거의 없습니다.",
@@ -2653,16 +2661,20 @@ export function resolveBreakthroughMitigationSummary(currentPreview, mitigatedPr
   }
 
   let labelKo = "개선 경미";
+  let key = "minor";
   if (riskImproved || successDeltaPct >= 8 || deathFailDeltaPct >= 6) {
     labelKo = "개선 큼";
+    key = "major";
   } else if (successDeltaPct >= 4 || deathFailDeltaPct >= 3) {
     labelKo = "개선 보통";
+    key = "moderate";
   }
 
   const riskText = riskImproved
     ? `위험도 ${currentRisk.labelKo}→${mitigatedRisk.labelKo}`
     : `위험도 ${currentRisk.labelKo} 유지`;
   return {
+    key,
     tone: "info",
     labelKo,
     messageKo: `보정 적용 시 성공 ${fmtSignedPct(successDeltaPct)}, 사망 ${fmtSignedPct(-deathFailDeltaPct)} (${riskText})`,
@@ -2726,15 +2738,19 @@ export function resolveBreakthroughExpectedDelta(context, state, previewInput) {
   const expectedQiLossRatio = expectedQiLoss / Math.max(1, currentQi);
   let tone = "info";
   let labelKo = "부담 낮음";
+  let burdenTier = "low";
   if (expectedQiLossRatio >= 0.6 || deathFailProb >= 0.12) {
     tone = "error";
     labelKo = "부담 큼";
+    burdenTier = "high";
   } else if (expectedQiLossRatio >= 0.35 || deathFailProb >= 0.05) {
     tone = "warn";
     labelKo = "부담 보통";
+    burdenTier = "medium";
   }
 
   return {
+    burdenTier,
     tone,
     labelKo,
     expectedQiDelta,

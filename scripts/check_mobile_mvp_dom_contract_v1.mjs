@@ -409,13 +409,31 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-risk-tier="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="previewExpectedLabel" class="risk-pill" data-tone="info"',
     "index.html",
     failures,
   );
   assertIncludes(
     html,
+    'data-expected-key="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="previewMitigationLabel" class="risk-pill" data-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-mitigation-key="none"',
     "index.html",
     failures,
   );
@@ -428,6 +446,12 @@ async function main() {
   assertIncludes(
     html,
     'id="previewRecommendationLabel" class="risk-pill" data-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-recommendation-key="none"',
     "index.html",
     failures,
   );
@@ -2980,7 +3004,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.previewExpectedLabel.dataset.expectedKey = expectedDelta.burdenTier || "none";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.previewRiskLabel.dataset.tone = riskTier.tone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.previewRiskLabel.dataset.riskTier = riskTier.tier;",
     "app.mjs",
     failures,
   );
@@ -2992,7 +3028,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.previewMitigationLabel.dataset.mitigationKey = mitigation.key || "none";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.previewMitigationHint.dataset.tone = mitigation.tone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.previewMitigationHint.dataset.mitigationKey = mitigation.key || "none";',
     "app.mjs",
     failures,
   );
@@ -3004,7 +3052,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.previewRecommendationLabel.dataset.recommendationKey = recommendation.key || "none";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.previewRecommendationHint.dataset.tone = recommendation.tone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.previewRecommendationHint.dataset.recommendationKey = recommendation.key || "none";',
     "app.mjs",
     failures,
   );
