@@ -91,6 +91,7 @@ const REQUIRED_HTML_IDS = [
   "btnAuto10s",
   "btnRealtimeAuto",
   "btnResetRun",
+  "actionsPanel",
   "realtimeAutoStatus",
   "realtimeElapsed",
   "realtimeBattles",
@@ -189,6 +190,7 @@ const REQUIRED_DOM_KEYS = [
   "autoBreakthroughResumeLabel",
   "autoBreakthroughResumeHint",
   "btnResumeAutoBreakthrough",
+  "actionsPanel",
   "optAutoResumeRealtime",
   "optLowPerformanceBattleScene",
   "optAutoBreakthroughResumeWarmupSec",
@@ -678,6 +680,54 @@ async function main() {
   assertIncludes(
     html,
     'data-progress-key="empty"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="actionsPanel"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-realtime-running="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-realtime-label="중지"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-realtime-warmup-remaining="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-realtime-elapsed="0초"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-realtime-battles="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-realtime-breakthroughs="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-realtime-rebirths="0"',
     "index.html",
     failures,
   );
@@ -3585,6 +3635,48 @@ async function main() {
   assertIncludes(
     app,
     "dom.breakthroughPreviewPanel.dataset.autoResumeActionable = String(autoResumePolicy.actionable);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.realtimeRunning = String(running);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.realtimeLabel = realtimeLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.realtimeWarmupRemaining = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.realtimeElapsed = elapsedLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.realtimeBattles = battlesLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.realtimeBreakthroughs = breakthroughsLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.realtimeRebirths = rebirthsLabel;",
     "app.mjs",
     failures,
   );

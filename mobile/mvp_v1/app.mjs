@@ -210,6 +210,7 @@ const dom = {
   btnAuto10s: document.getElementById("btnAuto10s"),
   btnRealtimeAuto: document.getElementById("btnRealtimeAuto"),
   btnResetRun: document.getElementById("btnResetRun"),
+  actionsPanel: document.getElementById("actionsPanel"),
   realtimeAutoStatus: document.getElementById("realtimeAutoStatus"),
   realtimeElapsed: document.getElementById("realtimeElapsed"),
   realtimeBattles: document.getElementById("realtimeBattles"),
@@ -10831,18 +10832,36 @@ function syncRealtimeAutoControls() {
     running && warmupRemainingSec > 0
       ? ` · 돌파 워밍업 ${warmupRemainingSec}s`
       : "";
-  dom.btnRealtimeAuto.textContent = running ? "실시간 자동 중지" : "실시간 자동 시작";
-  dom.realtimeAutoStatus.textContent = running
+  const realtimeLabel = running
     ? `진행 중 · ${fmtDurationSec(stats.elapsedSec)}${warmupText}`
     : "중지";
+  dom.btnRealtimeAuto.textContent = running ? "실시간 자동 중지" : "실시간 자동 시작";
+  dom.realtimeAutoStatus.textContent = realtimeLabel;
+  if (dom.actionsPanel) {
+    dom.actionsPanel.dataset.realtimeRunning = String(running);
+    dom.actionsPanel.dataset.realtimeLabel = realtimeLabel;
+    dom.actionsPanel.dataset.realtimeWarmupRemaining = String(
+      Math.max(0, warmupRemainingSec),
+    );
+  }
 }
 
 function renderRealtimeSummary() {
   const stats = getRealtimeStats();
-  dom.realtimeElapsed.textContent = fmtDurationSec(stats.elapsedSec);
-  dom.realtimeBattles.textContent = `${fmtNumber(stats.battles)}회`;
-  dom.realtimeBreakthroughs.textContent = `${fmtNumber(stats.breakthroughs)}회`;
-  dom.realtimeRebirths.textContent = `${fmtNumber(stats.rebirths)}회`;
+  const elapsedLabel = fmtDurationSec(stats.elapsedSec);
+  const battlesLabel = fmtNumber(stats.battles);
+  const breakthroughsLabel = fmtNumber(stats.breakthroughs);
+  const rebirthsLabel = fmtNumber(stats.rebirths);
+  dom.realtimeElapsed.textContent = elapsedLabel;
+  dom.realtimeBattles.textContent = `${battlesLabel}회`;
+  dom.realtimeBreakthroughs.textContent = `${breakthroughsLabel}회`;
+  dom.realtimeRebirths.textContent = `${rebirthsLabel}회`;
+  if (dom.actionsPanel) {
+    dom.actionsPanel.dataset.realtimeElapsed = elapsedLabel;
+    dom.actionsPanel.dataset.realtimeBattles = battlesLabel;
+    dom.actionsPanel.dataset.realtimeBreakthroughs = breakthroughsLabel;
+    dom.actionsPanel.dataset.realtimeRebirths = rebirthsLabel;
+  }
 }
 
 function stopRealtimeAuto(reason = "중지") {
