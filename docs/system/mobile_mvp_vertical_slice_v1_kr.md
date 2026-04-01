@@ -166,6 +166,7 @@ npm run mobile:mvp:serve
   - `runBreakthroughAttempt` 반환/이벤트의 돌파 전이 메타를 `fromDifficultyIndex/toDifficultyIndex/resetStageNameKo`까지 확장해 후퇴/사망 연출이 난이도 전이(예: `198→1`)를 직접 표시하고, 환생 복귀 스테이지 문구를 상태/세부 로그에 일관되게 노출
   - `minor_fail` 경로도 `fromDifficultyIndex/toDifficultyIndex` 메타를 status/result/ticker/banner에 동일 반영해 경상 실패가 단계 유지(`N→N`)인지 포함한 전이 정보를 자동/수동/오프라인 힌트에서 일관되게 노출
   - stage 메타(`world`, `difficulty_index`, `is_tribulation`)를 연출 패널 `data-scene-world`, `data-scene-tier`로 반영하고, stage 패널 루트(`stagePanel`), 텍스트 노드(`stageDisplay`, `worldTag`, `difficultyIndex`, `qiRequired`)와 진행 막대(`qiProgressBar`)에도 `data-stage-name`, `data-stage-key`, `data-world-label`, `data-world-key`, `data-stage-tier`, `data-breakthrough-ready`, `data-difficulty-index`, `data-qi-current`, `data-qi-required`, `data-required-state`, `data-qi-pct`, `data-progress-key` contract를 유지하며, 루프/성능/결과 우선 모드도 아레나 루트 dataset(`data-scene-loop`, `data-scene-performance`, `data-scene-outcome-priority`)에 기록해 인간계/신선계/진선계 및 난도 구간별 색감·오라 강도와 결과 우선 상태를 동시에 추적 가능하게 유지
+  - 자원 패널 루트(`statsPanel`)에도 `data-qi`, `data-spirit-coin`, `data-rebirth-essence`, `data-rebirth-count` contract를 유지해 부모 패널 하나만 읽어도 현재 핵심 자원 상태를 집약해서 해석할 수 있도록 구성
   - 전투 spark 레이어(`battleSceneSparkLayer`)를 추가해 클릭 없이도 상시 파티클/충돌 파동이 순환되도록 구성
   - 전장 흐름 레이어(`battle-scene-flow-back/front`)를 추가해 배경 전류가 상시 흐르는 느낌을 유지
   - 타격 궤적 레이어(`battleSceneTrailLayer`, `spawnBattleSceneTrail`)를 추가해 실시간/자동 루프에서 slash/wave 궤적이 지속적으로 발생
