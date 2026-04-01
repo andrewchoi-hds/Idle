@@ -228,6 +228,7 @@ const dom = {
   btnToggleSlotLock: document.getElementById("btnToggleSlotLock"),
   btnDeleteSlot: document.getElementById("btnDeleteSlot"),
   saveSlotSummaryList: document.getElementById("saveSlotSummaryList"),
+  logsPanel: document.getElementById("logsPanel"),
   eventLogList: document.getElementById("eventLogList"),
 };
 
@@ -11239,6 +11240,13 @@ function updateLastSavedNow() {
 
 function renderLogs() {
   const rows = state.logs.length > 0 ? state.logs : [{ at: "-", kind: "info", message: "로그 없음" }];
+  const latestRow = rows[0] || { at: "-", kind: "info", message: "로그 없음" };
+  if (dom.logsPanel) {
+    dom.logsPanel.dataset.logCount = String(state.logs.length);
+    dom.logsPanel.dataset.lastLogKind = String(latestRow.kind || "info");
+    dom.logsPanel.dataset.lastLogMessage = String(latestRow.message || "로그 없음");
+    dom.logsPanel.dataset.lastLogAt = String(latestRow.at || "-");
+  }
   dom.eventLogList.innerHTML = rows
     .map((row) => {
       const kind = String(row.kind || "info");

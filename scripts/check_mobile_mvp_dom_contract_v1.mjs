@@ -88,6 +88,7 @@ const REQUIRED_HTML_IDS = [
   "btnToggleSlotLock",
   "btnDeleteSlot",
   "saveSlotSummaryList",
+  "logsPanel",
   "btnBattle",
   "btnBreakthrough",
   "btnAuto10s",
@@ -213,6 +214,7 @@ const REQUIRED_DOM_KEYS = [
   "btnToggleSlotLock",
   "btnDeleteSlot",
   "saveSlotSummaryList",
+  "logsPanel",
   "offlineModal",
   "offlineAppliedDuration",
   "offlineRawDuration",
@@ -684,6 +686,36 @@ async function main() {
   assertIncludes(
     html,
     'data-progress-key="empty"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="logsPanel"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-log-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-last-log-kind="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-last-log-message="로그 없음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-last-log-at="-"',
     "index.html",
     failures,
   );
@@ -3849,6 +3881,30 @@ async function main() {
   assertIncludes(
     app,
     "dom.breakthroughPreviewPanel.dataset.autoResumeActionable = String(autoResumePolicy.actionable);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.logsPanel.dataset.logCount = String(state.logs.length);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.logsPanel.dataset.lastLogKind = String(latestRow.kind || "info");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.logsPanel.dataset.lastLogMessage = String(latestRow.message || "로그 없음");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.logsPanel.dataset.lastLogAt = String(latestRow.at || "-");',
     "app.mjs",
     failures,
   );
