@@ -69,6 +69,7 @@ const REQUIRED_HTML_IDS = [
   "optBattleSpeed",
   "optOfflineCapHours",
   "optOfflineEventLimit",
+  "breakthroughPreviewPanel",
   "playerNameInput",
   "optSaveSlot",
   "optCopySlotTarget",
@@ -192,6 +193,7 @@ const REQUIRED_DOM_KEYS = [
   "optBattleSpeed",
   "optOfflineCapHours",
   "optOfflineEventLimit",
+  "breakthroughPreviewPanel",
   "optSaveSlot",
   "optCopySlotTarget",
   "slotActionHintBox",
@@ -314,6 +316,66 @@ async function main() {
   assertIncludes(
     html,
     'data-gauge-key="hp_safe"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="breakthroughPreviewPanel"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-risk-tier="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-expected-key="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-mitigation-key="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-recommendation-key="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-auto-resume-reason="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-success-pct="0.0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-death-pct="0.0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-recommendation-changed="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-auto-resume-actionable="false"',
     "index.html",
     failures,
   );
@@ -3005,6 +3067,60 @@ async function main() {
   assertIncludes(
     app,
     "dom.qiProgressBar.dataset.progressKey = qiProgressKey;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.riskTier = riskTier.tier;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.breakthroughPreviewPanel.dataset.expectedKey = expectedDelta.burdenTier || "none";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.breakthroughPreviewPanel.dataset.mitigationKey = mitigation.key || "none";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.breakthroughPreviewPanel.dataset.recommendationKey = recommendation.key || "none";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.breakthroughPreviewPanel.dataset.autoResumeReason = autoResumePolicy.reason || "none";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.successPct = preview.successPct.toFixed(1);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.deathPct = preview.deathPct.toFixed(1);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.recommendationChanged = String(recommendationToggle.changed);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.autoResumeActionable = String(autoResumePolicy.actionable);",
     "app.mjs",
     failures,
   );

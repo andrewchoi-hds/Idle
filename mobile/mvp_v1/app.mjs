@@ -156,6 +156,7 @@ const dom = {
   optBattleSpeed: document.getElementById("optBattleSpeed"),
   optOfflineCapHours: document.getElementById("optOfflineCapHours"),
   optOfflineEventLimit: document.getElementById("optOfflineEventLimit"),
+  breakthroughPreviewPanel: document.getElementById("breakthroughPreviewPanel"),
   useBreakthroughElixir: document.getElementById("useBreakthroughElixir"),
   useTribulationTalisman: document.getElementById("useTribulationTalisman"),
   playerNameInput: document.getElementById("playerNameInput"),
@@ -11212,6 +11213,17 @@ function render() {
     currentUseTribulationTalisman: dom.useTribulationTalisman.checked,
   });
   const autoResumePolicy = resolveAutoBreakthroughResumePolicy(context, state);
+  if (dom.breakthroughPreviewPanel) {
+    dom.breakthroughPreviewPanel.dataset.riskTier = riskTier.tier;
+    dom.breakthroughPreviewPanel.dataset.expectedKey = expectedDelta.burdenTier || "none";
+    dom.breakthroughPreviewPanel.dataset.mitigationKey = mitigation.key || "none";
+    dom.breakthroughPreviewPanel.dataset.recommendationKey = recommendation.key || "none";
+    dom.breakthroughPreviewPanel.dataset.autoResumeReason = autoResumePolicy.reason || "none";
+    dom.breakthroughPreviewPanel.dataset.successPct = preview.successPct.toFixed(1);
+    dom.breakthroughPreviewPanel.dataset.deathPct = preview.deathPct.toFixed(1);
+    dom.breakthroughPreviewPanel.dataset.recommendationChanged = String(recommendationToggle.changed);
+    dom.breakthroughPreviewPanel.dataset.autoResumeActionable = String(autoResumePolicy.actionable);
+  }
   const stageWorldKey = normalizeBattleSceneWorld(stage.world);
   const stageTier = resolveBattleSceneTier(stage);
   const breakthroughReady =
