@@ -11232,6 +11232,24 @@ function render() {
     dom.breakthroughPreviewPanel.dataset.expectedDifficultyDelta = fmtSignedFixed(
       expectedDelta.expectedDifficultyDelta,
     );
+    dom.breakthroughPreviewPanel.dataset.breakthroughElixirCount = fmtNumber(
+      state.inventory.breakthroughElixir,
+    );
+    dom.breakthroughPreviewPanel.dataset.tribulationTalismanCount = fmtNumber(
+      state.inventory.tribulationTalisman,
+    );
+    dom.breakthroughPreviewPanel.dataset.hasBreakthroughElixir = String(
+      (Number(state.inventory.breakthroughElixir) || 0) > 0,
+    );
+    dom.breakthroughPreviewPanel.dataset.hasTribulationTalisman = String(
+      (Number(state.inventory.tribulationTalisman) || 0) > 0,
+    );
+    dom.breakthroughPreviewPanel.dataset.useBreakthroughElixir = String(
+      dom.useBreakthroughElixir.checked,
+    );
+    dom.breakthroughPreviewPanel.dataset.useTribulationTalisman = String(
+      dom.useTribulationTalisman.checked,
+    );
     dom.breakthroughPreviewPanel.dataset.recommendationReason =
       recommendationToggle.reason || "none";
     dom.breakthroughPreviewPanel.dataset.nextElixir = String(
