@@ -13,6 +13,7 @@ const REQUIRED_HTML_IDS = [
   "battleFocusHint",
   "battleSfxHint",
   "battleHapticHint",
+  "settingsPanel",
   "stagePanel",
   "savePanel",
   "stageDisplay",
@@ -156,6 +157,7 @@ const REQUIRED_DOM_KEYS = [
   "battleFocusHint",
   "battleSfxHint",
   "battleHapticHint",
+  "settingsPanel",
   "stagePanel",
   "savePanel",
   "battleSceneArena",
@@ -754,6 +756,66 @@ async function main() {
   assertIncludes(
     html,
     'data-essence-delta="+0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="settingsPanel"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-auto-battle="true"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-auto-breakthrough="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-auto-tribulation="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-auto-resume-realtime="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-low-performance-battle-scene="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-auto-breakthrough-resume-warmup-sec="6"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-battle-speed="2"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-offline-cap-hours="12"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-offline-event-limit="24"',
     "index.html",
     failures,
   );
@@ -3931,6 +3993,60 @@ async function main() {
   assertIncludes(
     app,
     "dom.offlineModal.dataset.essenceDelta = essenceDeltaLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.settingsPanel.dataset.autoBattle = String(state.settings.autoBattle);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.settingsPanel.dataset.autoBreakthrough = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.settingsPanel.dataset.autoTribulation = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.settingsPanel.dataset.autoResumeRealtime = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.settingsPanel.dataset.lowPerformanceBattleScene = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.settingsPanel.dataset.autoBreakthroughResumeWarmupSec = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.settingsPanel.dataset.battleSpeed = battleSpeedValue;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.settingsPanel.dataset.offlineCapHours = offlineCapHoursValue;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.settingsPanel.dataset.offlineEventLimit = offlineEventLimitValue;",
     "app.mjs",
     failures,
   );
