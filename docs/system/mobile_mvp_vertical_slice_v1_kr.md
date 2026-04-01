@@ -169,6 +169,7 @@ npm run mobile:mvp:serve
   - 자원 패널 루트(`statsPanel`)에도 `data-qi`, `data-spirit-coin`, `data-rebirth-essence`, `data-rebirth-count` contract를 유지해 부모 패널 하나만 읽어도 현재 핵심 자원 상태를 집약해서 해석할 수 있도록 구성
   - 액션 패널 루트(`actionsPanel`)에도 `data-realtime-running`, `data-realtime-label`, `data-realtime-warmup-remaining`, `data-realtime-elapsed`, `data-realtime-battles`, `data-realtime-breakthroughs`, `data-realtime-rebirths` contract를 유지해 부모 패널 하나만 읽어도 현재 실시간 자동 상태와 누적 진행도를 집약해서 해석할 수 있도록 구성
   - 저장 패널 루트(`savePanel`)에도 `data-active-slot`, `data-copy-target-slot`, `data-source-slot-state`, `data-source-slot-locked`, `data-target-slot-state`, `data-target-slot-locked`, `data-copy-policy-reason`, `data-copy-allowed`, `data-delete-policy-reason`, `data-delete-allowed`, `data-last-saved-at`, `data-last-active-at` contract를 유지해 부모 패널 하나만 읽어도 현재 슬롯 선택/잠금/복제·삭제 가능 여부와 최근 저장 시각을 집약해서 해석할 수 있도록 구성
+  - 오프라인 모달 루트(`offlineModal`)에도 `data-report-state`, `data-applied-duration`, `data-raw-duration`, `data-cap-state`, `data-warmup-summary`, `data-critical-summary`, `data-battle-count`, `data-breakthrough-count`, `data-rebirth-count`, `data-qi-delta`, `data-spirit-delta`, `data-essence-delta` contract를 유지해 부모 노드 하나만 읽어도 현재 정산 요약과 순변화 상태를 집약해서 해석할 수 있도록 구성
   - 전투 spark 레이어(`battleSceneSparkLayer`)를 추가해 클릭 없이도 상시 파티클/충돌 파동이 순환되도록 구성
   - 전장 흐름 레이어(`battle-scene-flow-back/front`)를 추가해 배경 전류가 상시 흐르는 느낌을 유지
   - 타격 궤적 레이어(`battleSceneTrailLayer`, `spawnBattleSceneTrail`)를 추가해 실시간/자동 루프에서 slash/wave 궤적이 지속적으로 발생

@@ -687,6 +687,78 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-report-state="empty"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-applied-duration="0초"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-raw-duration="0초"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-cap-state="미적용"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-warmup-summary="워밍업 없음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-critical-summary="핵심 이벤트 없음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-battle-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-breakthrough-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-rebirth-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-qi-delta="+0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-spirit-delta="+0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-essence-delta="+0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="savePanel"',
     "index.html",
     failures,
@@ -3715,6 +3787,150 @@ async function main() {
   assertIncludes(
     app,
     "dom.breakthroughPreviewPanel.dataset.autoResumeActionable = String(autoResumePolicy.actionable);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.reportState = "empty";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.appliedDuration = "0초";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.rawDuration = "0초";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.capState = "미적용";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.warmupSummary = "워밍업 없음";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.criticalSummary = "핵심 이벤트 없음";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.battleCount = "0";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.breakthroughCount = "0";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.rebirthCount = "0";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.qiDelta = "+0";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.spiritDelta = "+0";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.essenceDelta = "+0";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.reportState = "ready";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.appliedDuration = appliedDurationLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.rawDuration = rawDurationLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.capState = capStateLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.warmupSummary = warmupLabelKo;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.criticalSummary = criticalSummaryLabelKo;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.battleCount = battleCountLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.breakthroughCount = breakthroughCountLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.rebirthCount = rebirthCountLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.qiDelta = qiDeltaLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.spiritDelta = spiritDeltaLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.essenceDelta = essenceDeltaLabel;",
     "app.mjs",
     failures,
   );

@@ -11122,6 +11122,18 @@ function setDeltaNode(node, value) {
 function hideOfflineModal() {
   dom.offlineModal.classList.add("hidden");
   dom.offlineModal.setAttribute("aria-hidden", "true");
+  dom.offlineModal.dataset.reportState = "empty";
+  dom.offlineModal.dataset.appliedDuration = "0초";
+  dom.offlineModal.dataset.rawDuration = "0초";
+  dom.offlineModal.dataset.capState = "미적용";
+  dom.offlineModal.dataset.warmupSummary = "워밍업 없음";
+  dom.offlineModal.dataset.criticalSummary = "핵심 이벤트 없음";
+  dom.offlineModal.dataset.battleCount = "0";
+  dom.offlineModal.dataset.breakthroughCount = "0";
+  dom.offlineModal.dataset.rebirthCount = "0";
+  dom.offlineModal.dataset.qiDelta = "+0";
+  dom.offlineModal.dataset.spiritDelta = "+0";
+  dom.offlineModal.dataset.essenceDelta = "+0";
   dom.offlineDetailCompareCode.textContent = "비교 코드 없음";
   setOfflineCompareCurrentSummary("");
   dom.offlineCompareCodeInput.value = "";
@@ -11150,19 +11162,40 @@ function showOfflineModal(offline) {
   const warmupLabelKo = buildOfflineWarmupTelemetryLabelKo(summary);
   const criticalSummaryLabelKo = buildOfflineDetailCriticalSummaryLabelKo(events);
   const detailReportSnapshot = buildOfflineDetailReportSnapshot(events);
-  dom.offlineAppliedDuration.textContent = fmtDurationSec(summary.appliedOfflineSec);
-  dom.offlineRawDuration.textContent = fmtDurationSec(summary.rawOfflineSec);
-  dom.offlineWarmupSummary.textContent = warmupLabelKo;
-  dom.offlineCriticalSummary.textContent = criticalSummaryLabelKo;
-  dom.offlineCapState.textContent = summary.cappedByMaxOffline
+  const appliedDurationLabel = fmtDurationSec(summary.appliedOfflineSec);
+  const rawDurationLabel = fmtDurationSec(summary.rawOfflineSec);
+  const capStateLabel = summary.cappedByMaxOffline
     ? `${state.settings.offlineCapHours}시간 적용`
     : "미적용";
-  dom.offlineBattleCount.textContent = `${auto?.battles ?? 0}회`;
-  dom.offlineBreakthroughCount.textContent = `${auto?.breakthroughs ?? 0}회`;
-  dom.offlineRebirthCount.textContent = `${auto?.rebirths ?? 0}회`;
+  const battleCountLabel = String(auto?.battles ?? 0);
+  const breakthroughCountLabel = String(auto?.breakthroughs ?? 0);
+  const rebirthCountLabel = String(auto?.rebirths ?? 0);
+  const qiDeltaLabel = fmtSignedInteger(delta.qi);
+  const spiritDeltaLabel = fmtSignedInteger(delta.spiritCoin);
+  const essenceDeltaLabel = fmtSignedInteger(delta.rebirthEssence);
+  dom.offlineAppliedDuration.textContent = appliedDurationLabel;
+  dom.offlineRawDuration.textContent = rawDurationLabel;
+  dom.offlineWarmupSummary.textContent = warmupLabelKo;
+  dom.offlineCriticalSummary.textContent = criticalSummaryLabelKo;
+  dom.offlineCapState.textContent = capStateLabel;
+  dom.offlineBattleCount.textContent = `${battleCountLabel}회`;
+  dom.offlineBreakthroughCount.textContent = `${breakthroughCountLabel}회`;
+  dom.offlineRebirthCount.textContent = `${rebirthCountLabel}회`;
   setDeltaNode(dom.offlineQiDelta, delta.qi);
   setDeltaNode(dom.offlineSpiritDelta, delta.spiritCoin);
   setDeltaNode(dom.offlineEssenceDelta, delta.rebirthEssence);
+  dom.offlineModal.dataset.reportState = "ready";
+  dom.offlineModal.dataset.appliedDuration = appliedDurationLabel;
+  dom.offlineModal.dataset.rawDuration = rawDurationLabel;
+  dom.offlineModal.dataset.capState = capStateLabel;
+  dom.offlineModal.dataset.warmupSummary = warmupLabelKo;
+  dom.offlineModal.dataset.criticalSummary = criticalSummaryLabelKo;
+  dom.offlineModal.dataset.battleCount = battleCountLabel;
+  dom.offlineModal.dataset.breakthroughCount = breakthroughCountLabel;
+  dom.offlineModal.dataset.rebirthCount = rebirthCountLabel;
+  dom.offlineModal.dataset.qiDelta = qiDeltaLabel;
+  dom.offlineModal.dataset.spiritDelta = spiritDeltaLabel;
+  dom.offlineModal.dataset.essenceDelta = essenceDeltaLabel;
   lastOfflineReport = {
     generatedAtIso: new Date().toISOString(),
     playerName: state.playerName,
