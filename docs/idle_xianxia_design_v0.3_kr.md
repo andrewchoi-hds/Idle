@@ -3259,6 +3259,14 @@
 ## 777) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(recommendation button contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
 
+## 778) 다음 순차 작업
+1. [완료] 자동 재개 가이드(`autoBreakthroughResumeLabel`, `autoBreakthroughResumeHint`, `btnResumeAutoBreakthrough`) contract에 `data-risk-tier`, `data-next-breakthrough`, `data-next-tribulation`, `data-action-label`를 추가해 재개 시 적용될 토글 상태와 위험도를 텍스트 파싱 없이 직접 읽을 수 있도록 보강.
+2. [완료] `render()` 경로에서 `autoResumePolicy.riskTier`, `shouldEnableAutoBreakthrough`, `shouldEnableAutoTribulation`, `actionLabelKo`가 라벨/힌트/버튼 dataset에도 함께 기록되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 auto resume guidance extension 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 779) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(auto resume guidance extension 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
 ## 774) 다음 순차 작업
 1. [완료] 자동 재개 가이드(`autoBreakthroughResumeLabel`, `autoBreakthroughResumeHint`, `btnResumeAutoBreakthrough`) contract에 `data-tone`, `data-policy-reason`, `data-actionable`를 추가해 재개 가능/보류 사유와 버튼 활성 여부를 직접 읽을 수 있도록 보강.
 2. [완료] `render()` 경로에서 `autoResumePolicy`의 tone/reason/actionable이 라벨/힌트/버튼 dataset에도 함께 기록되도록 정합화.

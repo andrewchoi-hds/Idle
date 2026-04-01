@@ -475,13 +475,19 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-risk-tier="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="autoBreakthroughResumeHint" class="recommendation-text" data-tone="info" data-policy-reason="none"',
     "index.html",
     failures,
   );
   assertIncludes(
     html,
-    'id="btnResumeAutoBreakthrough" type="button" class="ghost-btn recommendation-btn" data-policy-reason="none" data-actionable="false"',
+    'id="btnResumeAutoBreakthrough" type="button" class="ghost-btn recommendation-btn" data-policy-reason="none" data-actionable="false" data-risk-tier="none" data-next-breakthrough="false" data-next-tribulation="false" data-action-label="-"',
     "index.html",
     failures,
   );
@@ -3130,6 +3136,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.autoBreakthroughResumeLabel.dataset.riskTier = autoResumePolicy.riskTier?.tier || "none";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.autoBreakthroughResumeHint.dataset.tone = autoResumePolicy.tone;",
     "app.mjs",
     failures,
@@ -3142,6 +3154,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.autoBreakthroughResumeHint.dataset.riskTier = autoResumePolicy.riskTier?.tier || "none";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.btnResumeAutoBreakthrough.dataset.policyReason = autoResumePolicy.reason;",
     "app.mjs",
     failures,
@@ -3149,6 +3167,30 @@ async function main() {
   assertIncludes(
     app,
     "dom.btnResumeAutoBreakthrough.dataset.actionable = String(autoResumePolicy.actionable);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.btnResumeAutoBreakthrough.dataset.riskTier = autoResumePolicy.riskTier?.tier || "none";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnResumeAutoBreakthrough.dataset.nextBreakthrough = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnResumeAutoBreakthrough.dataset.nextTribulation = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.btnResumeAutoBreakthrough.dataset.actionLabel = autoResumePolicy.actionLabelKo || "-";',
     "app.mjs",
     failures,
   );
