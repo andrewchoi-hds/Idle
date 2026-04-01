@@ -92,6 +92,7 @@ const dom = {
   battleFocusHint: document.getElementById("battleFocusHint"),
   battleSfxHint: document.getElementById("battleSfxHint"),
   battleHapticHint: document.getElementById("battleHapticHint"),
+  settingsPanel: document.getElementById("settingsPanel"),
   stagePanel: document.getElementById("stagePanel"),
   stageDisplay: document.getElementById("stageDisplay"),
   worldTag: document.getElementById("worldTag"),
@@ -11531,12 +11532,35 @@ function render() {
   dom.optAutoTribulation.checked = state.settings.autoTribulation;
   dom.optAutoResumeRealtime.checked = state.settings.autoResumeRealtime;
   dom.optLowPerformanceBattleScene.checked = state.settings.lowPerformanceBattleScene === true;
-  dom.optAutoBreakthroughResumeWarmupSec.value = String(
-    getConfiguredAutoBreakthroughResumeWarmupSec(),
-  );
-  dom.optBattleSpeed.value = String(state.settings.battleSpeed);
-  dom.optOfflineCapHours.value = String(state.settings.offlineCapHours);
-  dom.optOfflineEventLimit.value = String(state.settings.offlineEventLimit);
+  const configuredWarmupSec = getConfiguredAutoBreakthroughResumeWarmupSec();
+  const battleSpeedValue = String(state.settings.battleSpeed);
+  const offlineCapHoursValue = String(state.settings.offlineCapHours);
+  const offlineEventLimitValue = String(state.settings.offlineEventLimit);
+  dom.optAutoBreakthroughResumeWarmupSec.value = String(configuredWarmupSec);
+  dom.optBattleSpeed.value = battleSpeedValue;
+  dom.optOfflineCapHours.value = offlineCapHoursValue;
+  dom.optOfflineEventLimit.value = offlineEventLimitValue;
+  if (dom.settingsPanel) {
+    dom.settingsPanel.dataset.autoBattle = String(state.settings.autoBattle);
+    dom.settingsPanel.dataset.autoBreakthrough = String(
+      state.settings.autoBreakthrough,
+    );
+    dom.settingsPanel.dataset.autoTribulation = String(
+      state.settings.autoTribulation,
+    );
+    dom.settingsPanel.dataset.autoResumeRealtime = String(
+      state.settings.autoResumeRealtime,
+    );
+    dom.settingsPanel.dataset.lowPerformanceBattleScene = String(
+      state.settings.lowPerformanceBattleScene === true,
+    );
+    dom.settingsPanel.dataset.autoBreakthroughResumeWarmupSec = String(
+      configuredWarmupSec,
+    );
+    dom.settingsPanel.dataset.battleSpeed = battleSpeedValue;
+    dom.settingsPanel.dataset.offlineCapHours = offlineCapHoursValue;
+    dom.settingsPanel.dataset.offlineEventLimit = offlineEventLimitValue;
+  }
   syncCopySlotTargetSelection();
   syncSlotActionButtons();
   renderLogs();
