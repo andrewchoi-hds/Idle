@@ -3267,6 +3267,14 @@
 ## 781) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(preview root contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
 
+## 782) 다음 순차 작업
+1. [완료] 돌파 preview 부모 패널(`breakthroughPreviewPanel`) contract에 `data-minor-fail-pct`, `data-retreat-fail-pct`, `data-death-in-fail-pct`, `data-expected-qi-delta`, `data-expected-essence-delta`, `data-expected-difficulty-delta`, `data-recommendation-reason`, `data-next-elixir`, `data-next-talisman`, `data-missing-elixir`, `data-missing-talisman`, `data-auto-resume-risk-tier`, `data-auto-resume-next-breakthrough`, `data-auto-resume-next-tribulation`, `data-auto-resume-action-label`를 추가해 부모 노드 단독 관찰만으로도 실패 분기/기대값/권장 토글/자동 재개 의도를 함께 읽을 수 있도록 집약도를 높임.
+2. [완료] `render()` 경로에서 preview 실패 분기, 기대값, recommendation toggle, auto resume policy 상태가 preview 부모 패널 dataset에도 함께 기록되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 preview root aggregate extension 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 783) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(preview root aggregate extension 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
 ## 778) 다음 순차 작업
 1. [완료] 자동 재개 가이드(`autoBreakthroughResumeLabel`, `autoBreakthroughResumeHint`, `btnResumeAutoBreakthrough`) contract에 `data-risk-tier`, `data-next-breakthrough`, `data-next-tribulation`, `data-action-label`를 추가해 재개 시 적용될 토글 상태와 위험도를 텍스트 파싱 없이 직접 읽을 수 있도록 보강.
 2. [완료] `render()` 경로에서 `autoResumePolicy.riskTier`, `shouldEnableAutoBreakthrough`, `shouldEnableAutoTribulation`, `actionLabelKo`가 라벨/힌트/버튼 dataset에도 함께 기록되도록 정합화.
