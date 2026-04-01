@@ -463,6 +463,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="btnApplyRecommendation" type="button" class="ghost-btn recommendation-btn" data-tone="info" data-recommendation-reason="none" data-changed="false" data-next-elixir="false" data-next-talisman="false" data-missing-elixir="false" data-missing-talisman="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="autoBreakthroughResumeLabel" class="risk-pill" data-tone="info" data-policy-reason="none"',
     "index.html",
     failures,
@@ -3065,6 +3071,48 @@ async function main() {
   assertIncludes(
     app,
     'dom.previewRecommendationHint.dataset.recommendationKey = recommendation.key || "none";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnApplyRecommendation.dataset.tone = recommendation.tone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.btnApplyRecommendation.dataset.recommendationReason = recommendationToggle.reason || "none";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnApplyRecommendation.dataset.changed = String(recommendationToggle.changed);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnApplyRecommendation.dataset.nextElixir = String(recommendationToggle.nextUseBreakthroughElixir);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnApplyRecommendation.dataset.nextTalisman = String(recommendationToggle.nextUseTribulationTalisman);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnApplyRecommendation.dataset.missingElixir = String(recommendationToggle.missingBreakthroughElixir);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnApplyRecommendation.dataset.missingTalisman = String(recommendationToggle.missingTribulationTalisman);",
     "app.mjs",
     failures,
   );
