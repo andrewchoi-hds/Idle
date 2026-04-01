@@ -11300,6 +11300,13 @@ function render() {
   applyRiskTone(dom.previewRecommendationHint, recommendation.tone);
   dom.btnApplyRecommendation.disabled = !recommendationToggle.changed;
   dom.btnApplyRecommendation.title = recommendationToggle.messageKo;
+  dom.btnApplyRecommendation.dataset.tone = recommendation.tone;
+  dom.btnApplyRecommendation.dataset.recommendationReason = recommendationToggle.reason || "none";
+  dom.btnApplyRecommendation.dataset.changed = String(recommendationToggle.changed);
+  dom.btnApplyRecommendation.dataset.nextElixir = String(recommendationToggle.nextUseBreakthroughElixir);
+  dom.btnApplyRecommendation.dataset.nextTalisman = String(recommendationToggle.nextUseTribulationTalisman);
+  dom.btnApplyRecommendation.dataset.missingElixir = String(recommendationToggle.missingBreakthroughElixir);
+  dom.btnApplyRecommendation.dataset.missingTalisman = String(recommendationToggle.missingTribulationTalisman);
   dom.autoBreakthroughResumeLabel.textContent = autoResumePolicy.labelKo;
   dom.autoBreakthroughResumeLabel.title = autoResumePolicy.messageKo;
   dom.autoBreakthroughResumeLabel.dataset.tone = autoResumePolicy.tone;

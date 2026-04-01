@@ -3251,6 +3251,14 @@
 ## 775) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(preview semantic contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
 
+## 776) 다음 순차 작업
+1. [완료] 권장 설정 버튼(`btnApplyRecommendation`) contract에 `data-recommendation-reason`, `data-changed`, `data-next-elixir`, `data-next-talisman`, `data-missing-elixir`, `data-missing-talisman`, `data-tone`를 추가해 버튼 단독 관찰만으로도 추천 변경 상태를 직접 읽을 수 있도록 보강.
+2. [완료] `render()` 경로에서 `recommendationToggle`의 reason/changed/next/missing 상태와 `recommendation.tone`이 버튼 dataset에도 함께 기록되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 recommendation button contract 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 777) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(recommendation button contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
 ## 774) 다음 순차 작업
 1. [완료] 자동 재개 가이드(`autoBreakthroughResumeLabel`, `autoBreakthroughResumeHint`, `btnResumeAutoBreakthrough`) contract에 `data-tone`, `data-policy-reason`, `data-actionable`를 추가해 재개 가능/보류 사유와 버튼 활성 여부를 직접 읽을 수 있도록 보강.
 2. [완료] `render()` 경로에서 `autoResumePolicy`의 tone/reason/actionable이 라벨/힌트/버튼 dataset에도 함께 기록되도록 정합화.
