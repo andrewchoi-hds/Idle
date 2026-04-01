@@ -10305,6 +10305,25 @@ function renderSaveSlotSummary(force = false) {
     return;
   }
   const rows = [1, 2, 3].map((slot) => summarizeSaveSlot(slot));
+  const activeRow =
+    rows.find((row) => row.slot === activeSaveSlot) || rows[0] || { slot: activeSaveSlot, state: "empty" };
+  if (dom.saveSlotSummaryList) {
+    dom.saveSlotSummaryList.dataset.slotCount = String(rows.length);
+    dom.saveSlotSummaryList.dataset.activeSlot = String(activeSaveSlot);
+    dom.saveSlotSummaryList.dataset.activeSlotState = String(activeRow.state || "empty");
+    dom.saveSlotSummaryList.dataset.okCount = String(
+      rows.filter((row) => row.state === "ok").length,
+    );
+    dom.saveSlotSummaryList.dataset.emptyCount = String(
+      rows.filter((row) => row.state === "empty").length,
+    );
+    dom.saveSlotSummaryList.dataset.corruptCount = String(
+      rows.filter((row) => row.state === "corrupt").length,
+    );
+    dom.saveSlotSummaryList.dataset.lockedCount = String(
+      rows.filter((row) => isSlotLocked(row.slot)).length,
+    );
+  }
   dom.saveSlotSummaryList.innerHTML = rows
     .map((row) => {
       const classes = ["slot-summary-item"];

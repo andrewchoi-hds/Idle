@@ -739,6 +739,48 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-slot-count="3"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-active-slot="1"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-active-slot-state="empty"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ok-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-empty-count="3"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-corrupt-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-locked-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="logsPanel"',
     "index.html",
     failures,
@@ -3977,6 +4019,48 @@ async function main() {
   assertIncludes(
     app,
     "dom.slotActionHintBox.dataset.deleteTone = deleteHintTone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.saveSlotSummaryList.dataset.slotCount = String(rows.length);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.saveSlotSummaryList.dataset.activeSlot = String(activeSaveSlot);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.saveSlotSummaryList.dataset.activeSlotState = String(activeRow.state || "empty");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.saveSlotSummaryList.dataset.okCount = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.saveSlotSummaryList.dataset.emptyCount = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.saveSlotSummaryList.dataset.corruptCount = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.saveSlotSummaryList.dataset.lockedCount = String(",
     "app.mjs",
     failures,
   );
