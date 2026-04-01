@@ -14,6 +14,7 @@ const REQUIRED_HTML_IDS = [
   "battleSfxHint",
   "battleHapticHint",
   "stagePanel",
+  "savePanel",
   "stageDisplay",
   "worldTag",
   "difficultyIndex",
@@ -156,6 +157,7 @@ const REQUIRED_DOM_KEYS = [
   "battleSfxHint",
   "battleHapticHint",
   "stagePanel",
+  "savePanel",
   "battleSceneArena",
   "battleScenePlayer",
   "battleSceneEnemy",
@@ -680,6 +682,84 @@ async function main() {
   assertIncludes(
     html,
     'data-progress-key="empty"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="savePanel"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-active-slot="1"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-copy-target-slot="2"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-source-slot-state="empty"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-source-slot-locked="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-target-slot-state="empty"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-target-slot-locked="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-copy-policy-reason="unknown"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-copy-allowed="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-delete-policy-reason="unknown"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-delete-allowed="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-last-saved-at="없음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-last-active-at="없음"',
     "index.html",
     failures,
   );
@@ -3635,6 +3715,78 @@ async function main() {
   assertIncludes(
     app,
     "dom.breakthroughPreviewPanel.dataset.autoResumeActionable = String(autoResumePolicy.actionable);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.activeSlot = String(activeSaveSlot);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.copyTargetSlot = String(targetSlot);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.savePanel.dataset.sourceSlotState = sourceSummary.state || "empty";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.sourceSlotLocked = String(sourceLocked);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.savePanel.dataset.targetSlotState = targetSummary.state || "empty";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.targetSlotLocked = String(targetLocked);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.savePanel.dataset.copyPolicyReason = copyPolicy.reason || "unknown";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.copyAllowed = String(copyPolicy.allowed);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.savePanel.dataset.deletePolicyReason = deletePolicy.reason || "unknown";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.deleteAllowed = String(deletePolicy.allowed);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.lastSavedAt = fmtDateTimeFromIso(state.lastSavedAtIso);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.lastActiveAt = fmtDateTimeFromEpochMs(state.lastActiveEpochMs);",
     "app.mjs",
     failures,
   );

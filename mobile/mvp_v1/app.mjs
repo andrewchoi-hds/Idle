@@ -124,6 +124,7 @@ const dom = {
   battleSceneResult: document.getElementById("battleSceneResult"),
   battleSceneTicker: document.getElementById("battleSceneTicker"),
   statsPanel: document.getElementById("statsPanel"),
+  savePanel: document.getElementById("savePanel"),
   statQi: document.getElementById("statQi"),
   statSpiritCoin: document.getElementById("statSpiritCoin"),
   statRebirthEssence: document.getElementById("statRebirthEssence"),
@@ -10227,6 +10228,18 @@ function syncSlotActionButtons() {
     sourceSummary.state,
     sourceLocked,
   );
+  if (dom.savePanel) {
+    dom.savePanel.dataset.activeSlot = String(activeSaveSlot);
+    dom.savePanel.dataset.copyTargetSlot = String(targetSlot);
+    dom.savePanel.dataset.sourceSlotState = sourceSummary.state || "empty";
+    dom.savePanel.dataset.sourceSlotLocked = String(sourceLocked);
+    dom.savePanel.dataset.targetSlotState = targetSummary.state || "empty";
+    dom.savePanel.dataset.targetSlotLocked = String(targetLocked);
+    dom.savePanel.dataset.copyPolicyReason = copyPolicy.reason || "unknown";
+    dom.savePanel.dataset.copyAllowed = String(copyPolicy.allowed);
+    dom.savePanel.dataset.deletePolicyReason = deletePolicy.reason || "unknown";
+    dom.savePanel.dataset.deleteAllowed = String(deletePolicy.allowed);
+  }
   dom.btnDeleteSlot.disabled = !deletePolicy.allowed;
   if (deletePolicy.allowed) {
     dom.btnDeleteSlot.title = "";
@@ -11446,6 +11459,10 @@ function render() {
   dom.optSaveSlot.value = String(activeSaveSlot);
   dom.lastSavedAt.textContent = fmtDateTimeFromIso(state.lastSavedAtIso);
   dom.lastActiveAt.textContent = fmtDateTimeFromEpochMs(state.lastActiveEpochMs);
+  if (dom.savePanel) {
+    dom.savePanel.dataset.lastSavedAt = fmtDateTimeFromIso(state.lastSavedAtIso);
+    dom.savePanel.dataset.lastActiveAt = fmtDateTimeFromEpochMs(state.lastActiveEpochMs);
+  }
   renderBattleScene(stage, displayName);
   renderBattleSfxControl();
   renderBattleHapticControl();
