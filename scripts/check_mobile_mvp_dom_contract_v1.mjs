@@ -811,6 +811,54 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-compare-code="비교 코드 없음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-compare-result="비교 대기 중"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-compare-action-hint="가이드: 비교 코드를 입력하세요."',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-compare-source="출처: 없음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-compare-current-summary="현재 코드: 없음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-compare-target-summary="대상 코드: 없음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-compare-delta-summary="차이 요약: 대기 중"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-compare-match-summary="일치 요약: 대기 중"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-report-state="empty"',
     "index.html",
     failures,
@@ -4085,6 +4133,114 @@ async function main() {
   assertIncludes(
     app,
     'dom.logsPanel.dataset.lastLogAt = String(latestRow.at || "-");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.compareResult = label;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.compareCode = label;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.compareDeltaSummary = "차이 요약: 대기 중";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.compareDeltaSummary = label;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.compareMatchSummary = "일치 요약: 대기 중";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.compareMatchSummary = label;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.compareSource = label;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.compareCurrentSummary = label;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.compareTargetSummary = label;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.compareActionHint = label;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.compareCode = "비교 코드 없음";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.compareResult = "비교 대기 중";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.compareActionHint = "가이드: 비교 코드를 입력하세요.";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.compareSource = "출처: 없음";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.compareCurrentSummary = "현재 코드: 없음";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.compareTargetSummary = "대상 코드: 없음";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.compareDeltaSummary = "차이 요약: 대기 중";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.compareMatchSummary = "일치 요약: 대기 중";',
     "app.mjs",
     failures,
   );

@@ -10076,10 +10076,12 @@ function applyRiskTone(node, tone) {
 }
 
 function setOfflineCompareResultState(currentCodeInput, targetCodeInput) {
-  dom.offlineCompareCodeResult.textContent = buildOfflineDetailCompareResultStateLabelKo(
+  const label = buildOfflineDetailCompareResultStateLabelKo(
     currentCodeInput,
     targetCodeInput,
   );
+  dom.offlineCompareCodeResult.textContent = label;
+  dom.offlineModal.dataset.compareResult = label;
   applyRiskTone(
     dom.offlineCompareCodeResult,
     buildOfflineDetailCompareResultStateTone(currentCodeInput, targetCodeInput),
@@ -10087,14 +10089,23 @@ function setOfflineCompareResultState(currentCodeInput, targetCodeInput) {
 }
 
 function setOfflineCompareResultLabel(currentCodeInput, targetCodeInput) {
-  dom.offlineCompareCodeResult.textContent = buildOfflineDetailCompareResultLabelKo(
+  const label = buildOfflineDetailCompareResultLabelKo(
     currentCodeInput,
     targetCodeInput,
   );
+  dom.offlineCompareCodeResult.textContent = label;
+  dom.offlineModal.dataset.compareResult = label;
   applyRiskTone(
     dom.offlineCompareCodeResult,
     buildOfflineDetailCompareResultStateTone(currentCodeInput, targetCodeInput),
   );
+}
+
+function setOfflineCompareCodeLabel(codeInput) {
+  const normalizedCode = typeof codeInput === "string" ? codeInput.trim() : "";
+  const label = normalizedCode || "비교 코드 없음";
+  dom.offlineDetailCompareCode.textContent = label;
+  dom.offlineModal.dataset.compareCode = label;
 }
 
 function setOfflineCompareDeltaSummary(
@@ -10105,11 +10116,16 @@ function setOfflineCompareDeltaSummary(
   const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
   if (idleWhenEmpty && !targetText) {
     dom.offlineCompareCodeDeltaSummary.textContent = "차이 요약: 대기 중";
+    dom.offlineModal.dataset.compareDeltaSummary = "차이 요약: 대기 중";
     applyRiskTone(dom.offlineCompareCodeDeltaSummary, "info");
     return;
   }
-  dom.offlineCompareCodeDeltaSummary.textContent =
-    buildOfflineDetailCompareCodeDeltaSummaryLabelKo(currentCodeInput, targetText);
+  const label = buildOfflineDetailCompareCodeDeltaSummaryLabelKo(
+    currentCodeInput,
+    targetText,
+  );
+  dom.offlineCompareCodeDeltaSummary.textContent = label;
+  dom.offlineModal.dataset.compareDeltaSummary = label;
   applyRiskTone(
     dom.offlineCompareCodeDeltaSummary,
     buildOfflineDetailCompareCodeDeltaSummaryTone(currentCodeInput, targetText),
@@ -10124,11 +10140,16 @@ function setOfflineCompareMatchSummary(
   const targetText = typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
   if (idleWhenEmpty && !targetText) {
     dom.offlineCompareCodeMatchSummary.textContent = "일치 요약: 대기 중";
+    dom.offlineModal.dataset.compareMatchSummary = "일치 요약: 대기 중";
     applyRiskTone(dom.offlineCompareCodeMatchSummary, "info");
     return;
   }
-  dom.offlineCompareCodeMatchSummary.textContent =
-    buildOfflineDetailCompareCodeMatchSummaryLabelKo(currentCodeInput, targetText);
+  const label = buildOfflineDetailCompareCodeMatchSummaryLabelKo(
+    currentCodeInput,
+    targetText,
+  );
+  dom.offlineCompareCodeMatchSummary.textContent = label;
+  dom.offlineModal.dataset.compareMatchSummary = label;
   applyRiskTone(
     dom.offlineCompareCodeMatchSummary,
     buildOfflineDetailCompareCodeMatchSummaryTone(currentCodeInput, targetText),
@@ -10141,6 +10162,7 @@ function setOfflineCompareSource(sourceInput) {
   offlineCompareSource = normalizedSource;
   const label = buildOfflineDetailCompareCodeSourceLabelKo(normalizedSource);
   dom.offlineCompareCodeSource.textContent = label;
+  dom.offlineModal.dataset.compareSource = label;
   applyRiskTone(
     dom.offlineCompareCodeSource,
     buildOfflineDetailCompareCodeSourceTone(normalizedSource),
@@ -10151,8 +10173,9 @@ function setOfflineCompareSource(sourceInput) {
 function setOfflineCompareCurrentSummary(currentCodeInput) {
   const currentText =
     typeof currentCodeInput === "string" ? currentCodeInput.trim() : "";
-  dom.offlineCompareCodeCurrentSummary.textContent =
-    buildOfflineDetailCompareCodeCurrentSummaryLabelKo(currentText);
+  const label = buildOfflineDetailCompareCodeCurrentSummaryLabelKo(currentText);
+  dom.offlineCompareCodeCurrentSummary.textContent = label;
+  dom.offlineModal.dataset.compareCurrentSummary = label;
   applyRiskTone(
     dom.offlineCompareCodeCurrentSummary,
     buildOfflineDetailCompareCodeCurrentSummaryTone(currentText),
@@ -10162,8 +10185,9 @@ function setOfflineCompareCurrentSummary(currentCodeInput) {
 function setOfflineCompareTargetSummary(targetCodeInput) {
   const targetText =
     typeof targetCodeInput === "string" ? targetCodeInput.trim() : "";
-  dom.offlineCompareCodeTargetSummary.textContent =
-    buildOfflineDetailCompareCodeTargetSummaryLabelKo(targetText);
+  const label = buildOfflineDetailCompareCodeTargetSummaryLabelKo(targetText);
+  dom.offlineCompareCodeTargetSummary.textContent = label;
+  dom.offlineModal.dataset.compareTargetSummary = label;
   applyRiskTone(
     dom.offlineCompareCodeTargetSummary,
     buildOfflineDetailCompareCodeTargetSummaryTone(targetText),
@@ -10200,6 +10224,7 @@ function setOfflineCompareActionHint(currentCodeInput, targetCodeInput) {
     targetCodeInput,
   );
   dom.offlineCompareCodeActionHint.textContent = label;
+  dom.offlineModal.dataset.compareActionHint = label;
   applyRiskTone(dom.offlineCompareCodeActionHint, tone);
   syncOfflineCompareViewModeAction(currentCodeInput, targetCodeInput);
 }
@@ -10467,7 +10492,7 @@ function renderOfflineDetailList(events) {
   const mode = offlineDetailCriticalOnly ? "critical" : "all";
   const rows = filterOfflineDetailEventsByMode(prioritizedRows, mode);
   const currentCompareCode = buildOfflineDetailCompareCode(prioritizedRows, mode);
-  dom.offlineDetailCompareCode.textContent = currentCompareCode;
+  setOfflineCompareCodeLabel(currentCompareCode);
   setOfflineCompareCurrentSummary(currentCompareCode);
   const targetText = String(dom.offlineCompareCodeInput.value || "").trim();
   setOfflineCompareResultState(currentCompareCode, targetText);
@@ -11172,12 +11197,20 @@ function hideOfflineModal() {
   dom.offlineModal.dataset.qiDelta = "+0";
   dom.offlineModal.dataset.spiritDelta = "+0";
   dom.offlineModal.dataset.essenceDelta = "+0";
-  dom.offlineDetailCompareCode.textContent = "비교 코드 없음";
-  setOfflineCompareCurrentSummary("");
+  dom.offlineModal.dataset.compareCode = "비교 코드 없음";
+  dom.offlineModal.dataset.compareResult = "비교 대기 중";
+  dom.offlineModal.dataset.compareActionHint = "가이드: 비교 코드를 입력하세요.";
+  dom.offlineModal.dataset.compareSource = "출처: 없음";
+  dom.offlineModal.dataset.compareCurrentSummary = "현재 코드: 없음";
+  dom.offlineModal.dataset.compareTargetSummary = "대상 코드: 없음";
+  dom.offlineModal.dataset.compareDeltaSummary = "차이 요약: 대기 중";
+  dom.offlineModal.dataset.compareMatchSummary = "일치 요약: 대기 중";
+  setOfflineCompareCodeLabel("");
   dom.offlineCompareCodeInput.value = "";
   setOfflineCompareResultState("", "");
   setOfflineCompareActionHint("", "");
   setOfflineCompareSource("none");
+  setOfflineCompareCurrentSummary("");
   setOfflineCompareTargetSummary("");
   setOfflineCompareDeltaSummary("", "", true);
   setOfflineCompareMatchSummary("", "", true);
@@ -11246,6 +11279,7 @@ function showOfflineModal(offline) {
     events,
   };
   dom.offlineCompareCodeInput.value = "";
+  setOfflineCompareCodeLabel("");
   setOfflineCompareResultState("", "");
   setOfflineCompareActionHint("", "");
   setOfflineCompareSource("none");
