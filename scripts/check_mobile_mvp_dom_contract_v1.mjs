@@ -405,6 +405,42 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-breakthrough-elixir-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-tribulation-talisman-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-has-breakthrough-elixir="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-has-tribulation-talisman="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-use-breakthrough-elixir="true"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-use-tribulation-talisman="true"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-recommendation-reason="none"',
     "index.html",
     failures,
@@ -3235,6 +3271,42 @@ async function main() {
   assertIncludes(
     app,
     "dom.breakthroughPreviewPanel.dataset.expectedDifficultyDelta = fmtSignedFixed(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.breakthroughElixirCount = fmtNumber(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.tribulationTalismanCount = fmtNumber(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.hasBreakthroughElixir = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.hasTribulationTalisman = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.useBreakthroughElixir = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.useTribulationTalisman = String(",
     "app.mjs",
     failures,
   );
