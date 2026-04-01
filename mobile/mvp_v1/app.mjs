@@ -11217,18 +11217,26 @@ function render() {
     dom.breakthroughPreviewPanel.dataset.riskTier = riskTier.tier;
     dom.breakthroughPreviewPanel.dataset.riskTone = riskTier.tone;
     dom.breakthroughPreviewPanel.dataset.riskLabel = riskTier.labelKo || "-";
+    dom.breakthroughPreviewPanel.dataset.riskDescription =
+      riskTier.descriptionKo || "-";
     dom.breakthroughPreviewPanel.dataset.expectedKey = expectedDelta.burdenTier || "none";
     dom.breakthroughPreviewPanel.dataset.expectedTone = expectedDelta.tone;
     dom.breakthroughPreviewPanel.dataset.expectedLabel = expectedDelta.labelKo || "-";
     dom.breakthroughPreviewPanel.dataset.mitigationKey = mitigation.key || "none";
     dom.breakthroughPreviewPanel.dataset.mitigationTone = mitigation.tone;
     dom.breakthroughPreviewPanel.dataset.mitigationLabel = mitigation.labelKo || "-";
+    dom.breakthroughPreviewPanel.dataset.mitigationMessage =
+      mitigation.messageKo || "-";
     dom.breakthroughPreviewPanel.dataset.recommendationKey = recommendation.key || "none";
     dom.breakthroughPreviewPanel.dataset.recommendationTone = recommendation.tone;
     dom.breakthroughPreviewPanel.dataset.recommendationLabel = recommendation.labelKo || "-";
+    dom.breakthroughPreviewPanel.dataset.recommendationMessage =
+      recommendation.messageKo || "-";
     dom.breakthroughPreviewPanel.dataset.autoResumeReason = autoResumePolicy.reason || "none";
     dom.breakthroughPreviewPanel.dataset.autoResumeTone = autoResumePolicy.tone;
     dom.breakthroughPreviewPanel.dataset.autoResumeLabel = autoResumePolicy.labelKo || "-";
+    dom.breakthroughPreviewPanel.dataset.autoResumeMessage =
+      autoResumePolicy.messageKo || "-";
     dom.breakthroughPreviewPanel.dataset.successPct = preview.successPct.toFixed(1);
     dom.breakthroughPreviewPanel.dataset.deathPct = preview.deathPct.toFixed(1);
     dom.breakthroughPreviewPanel.dataset.minorFailPct = preview.minorFailPct.toFixed(1);
@@ -11262,6 +11270,8 @@ function render() {
     );
     dom.breakthroughPreviewPanel.dataset.recommendationReason =
       recommendationToggle.reason || "none";
+    dom.breakthroughPreviewPanel.dataset.recommendationToggleMessage =
+      recommendationToggle.messageKo || "-";
     dom.breakthroughPreviewPanel.dataset.nextElixir = String(
       recommendationToggle.nextUseBreakthroughElixir,
     );
