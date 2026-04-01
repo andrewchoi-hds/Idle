@@ -11311,9 +11311,11 @@ function render() {
   dom.autoBreakthroughResumeLabel.title = autoResumePolicy.messageKo;
   dom.autoBreakthroughResumeLabel.dataset.tone = autoResumePolicy.tone;
   dom.autoBreakthroughResumeLabel.dataset.policyReason = autoResumePolicy.reason;
+  dom.autoBreakthroughResumeLabel.dataset.riskTier = autoResumePolicy.riskTier?.tier || "none";
   dom.autoBreakthroughResumeHint.textContent = autoResumePolicy.messageKo;
   dom.autoBreakthroughResumeHint.dataset.tone = autoResumePolicy.tone;
   dom.autoBreakthroughResumeHint.dataset.policyReason = autoResumePolicy.reason;
+  dom.autoBreakthroughResumeHint.dataset.riskTier = autoResumePolicy.riskTier?.tier || "none";
   applyRiskTone(dom.autoBreakthroughResumeLabel, autoResumePolicy.tone);
   applyRiskTone(dom.autoBreakthroughResumeHint, autoResumePolicy.tone);
   dom.btnResumeAutoBreakthrough.disabled = !autoResumePolicy.actionable;
@@ -11321,6 +11323,14 @@ function render() {
   dom.btnResumeAutoBreakthrough.textContent = autoResumePolicy.actionLabelKo;
   dom.btnResumeAutoBreakthrough.dataset.policyReason = autoResumePolicy.reason;
   dom.btnResumeAutoBreakthrough.dataset.actionable = String(autoResumePolicy.actionable);
+  dom.btnResumeAutoBreakthrough.dataset.riskTier = autoResumePolicy.riskTier?.tier || "none";
+  dom.btnResumeAutoBreakthrough.dataset.nextBreakthrough = String(
+    autoResumePolicy.shouldEnableAutoBreakthrough,
+  );
+  dom.btnResumeAutoBreakthrough.dataset.nextTribulation = String(
+    autoResumePolicy.shouldEnableAutoTribulation,
+  );
+  dom.btnResumeAutoBreakthrough.dataset.actionLabel = autoResumePolicy.actionLabelKo || "-";
   dom.playerNameInput.value = state.playerName;
   dom.optSaveSlot.value = String(activeSaveSlot);
   dom.lastSavedAt.textContent = fmtDateTimeFromIso(state.lastSavedAtIso);
