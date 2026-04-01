@@ -11257,6 +11257,7 @@ function render() {
   dom.previewExpectedLabel.textContent = expectedDelta.labelKo;
   dom.previewExpectedLabel.title = "1회 돌파 시도 기준 기대값";
   dom.previewExpectedLabel.dataset.tone = expectedDelta.tone;
+  dom.previewExpectedLabel.dataset.expectedKey = expectedDelta.burdenTier || "none";
   dom.previewExpectedQiDelta.textContent = fmtSignedInteger(expectedDelta.expectedQiDelta);
   dom.previewExpectedQiDelta.dataset.value = fmtSignedInteger(expectedDelta.expectedQiDelta);
   dom.previewExpectedEssenceDelta.textContent = fmtSignedFixed(
@@ -11277,19 +11278,24 @@ function render() {
   dom.previewRiskLabel.textContent = riskTier.labelKo;
   dom.previewRiskLabel.title = riskTier.descriptionKo;
   dom.previewRiskLabel.dataset.tone = riskTier.tone;
+  dom.previewRiskLabel.dataset.riskTier = riskTier.tier;
   applyRiskTone(dom.previewRiskLabel, riskTier.tone);
   dom.previewMitigationLabel.textContent = mitigation.labelKo;
   dom.previewMitigationLabel.title = mitigation.messageKo;
   dom.previewMitigationLabel.dataset.tone = mitigation.tone;
+  dom.previewMitigationLabel.dataset.mitigationKey = mitigation.key || "none";
   dom.previewMitigationHint.textContent = mitigation.messageKo;
   dom.previewMitigationHint.dataset.tone = mitigation.tone;
+  dom.previewMitigationHint.dataset.mitigationKey = mitigation.key || "none";
   applyRiskTone(dom.previewMitigationLabel, mitigation.tone);
   applyRiskTone(dom.previewMitigationHint, mitigation.tone);
   dom.previewRecommendationLabel.textContent = recommendation.labelKo;
   dom.previewRecommendationLabel.title = recommendation.messageKo;
   dom.previewRecommendationLabel.dataset.tone = recommendation.tone;
+  dom.previewRecommendationLabel.dataset.recommendationKey = recommendation.key || "none";
   dom.previewRecommendationHint.textContent = recommendation.messageKo;
   dom.previewRecommendationHint.dataset.tone = recommendation.tone;
+  dom.previewRecommendationHint.dataset.recommendationKey = recommendation.key || "none";
   applyRiskTone(dom.previewRecommendationLabel, recommendation.tone);
   applyRiskTone(dom.previewRecommendationHint, recommendation.tone);
   dom.btnApplyRecommendation.disabled = !recommendationToggle.changed;
