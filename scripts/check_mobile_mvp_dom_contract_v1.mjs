@@ -369,6 +369,96 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-minor-fail-pct="0.0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-retreat-fail-pct="0.0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-death-in-fail-pct="0.0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-expected-qi-delta="+0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-expected-essence-delta="+0.0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-expected-difficulty-delta="+0.0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-recommendation-reason="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-next-elixir="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-next-talisman="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-missing-elixir="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-missing-talisman="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-auto-resume-risk-tier="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-auto-resume-next-breakthrough="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-auto-resume-next-tribulation="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-auto-resume-action-label="-"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-recommendation-changed="false"',
     "index.html",
     failures,
@@ -3109,6 +3199,96 @@ async function main() {
   assertIncludes(
     app,
     "dom.breakthroughPreviewPanel.dataset.deathPct = preview.deathPct.toFixed(1);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.minorFailPct = preview.minorFailPct.toFixed(1);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.retreatFailPct = preview.retreatFailPct.toFixed(1);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.deathInFailPct = preview.deathInFailurePct.toFixed(1);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.expectedQiDelta = fmtSignedInteger(expectedDelta.expectedQiDelta);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.expectedEssenceDelta = fmtSignedFixed(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.expectedDifficultyDelta = fmtSignedFixed(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.breakthroughPreviewPanel.dataset.recommendationReason =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.nextElixir = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.nextTalisman = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.missingElixir = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.missingTalisman = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.breakthroughPreviewPanel.dataset.autoResumeRiskTier =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.autoResumeNextBreakthrough = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.autoResumeNextTribulation = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.breakthroughPreviewPanel.dataset.autoResumeActionLabel =',
     "app.mjs",
     failures,
   );

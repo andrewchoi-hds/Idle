@@ -11221,6 +11221,41 @@ function render() {
     dom.breakthroughPreviewPanel.dataset.autoResumeReason = autoResumePolicy.reason || "none";
     dom.breakthroughPreviewPanel.dataset.successPct = preview.successPct.toFixed(1);
     dom.breakthroughPreviewPanel.dataset.deathPct = preview.deathPct.toFixed(1);
+    dom.breakthroughPreviewPanel.dataset.minorFailPct = preview.minorFailPct.toFixed(1);
+    dom.breakthroughPreviewPanel.dataset.retreatFailPct = preview.retreatFailPct.toFixed(1);
+    dom.breakthroughPreviewPanel.dataset.deathInFailPct = preview.deathInFailurePct.toFixed(1);
+    dom.breakthroughPreviewPanel.dataset.expectedQiDelta = fmtSignedInteger(expectedDelta.expectedQiDelta);
+    dom.breakthroughPreviewPanel.dataset.expectedEssenceDelta = fmtSignedFixed(
+      expectedDelta.expectedRebirthEssenceDelta,
+      1,
+    );
+    dom.breakthroughPreviewPanel.dataset.expectedDifficultyDelta = fmtSignedFixed(
+      expectedDelta.expectedDifficultyDelta,
+    );
+    dom.breakthroughPreviewPanel.dataset.recommendationReason =
+      recommendationToggle.reason || "none";
+    dom.breakthroughPreviewPanel.dataset.nextElixir = String(
+      recommendationToggle.nextUseBreakthroughElixir,
+    );
+    dom.breakthroughPreviewPanel.dataset.nextTalisman = String(
+      recommendationToggle.nextUseTribulationTalisman,
+    );
+    dom.breakthroughPreviewPanel.dataset.missingElixir = String(
+      recommendationToggle.missingBreakthroughElixir,
+    );
+    dom.breakthroughPreviewPanel.dataset.missingTalisman = String(
+      recommendationToggle.missingTribulationTalisman,
+    );
+    dom.breakthroughPreviewPanel.dataset.autoResumeRiskTier =
+      autoResumePolicy.riskTier?.tier || "none";
+    dom.breakthroughPreviewPanel.dataset.autoResumeNextBreakthrough = String(
+      autoResumePolicy.shouldEnableAutoBreakthrough,
+    );
+    dom.breakthroughPreviewPanel.dataset.autoResumeNextTribulation = String(
+      autoResumePolicy.shouldEnableAutoTribulation,
+    );
+    dom.breakthroughPreviewPanel.dataset.autoResumeActionLabel =
+      autoResumePolicy.actionLabelKo || "-";
     dom.breakthroughPreviewPanel.dataset.recommendationChanged = String(recommendationToggle.changed);
     dom.breakthroughPreviewPanel.dataset.autoResumeActionable = String(autoResumePolicy.actionable);
   }
