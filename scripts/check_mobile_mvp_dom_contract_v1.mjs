@@ -36,6 +36,7 @@ const REQUIRED_HTML_IDS = [
   "battleSceneComboBanner",
   "battleSceneShockwaveLayer",
   "battleSceneTicker",
+  "statsPanel",
   "statQi",
   "statSpiritCoin",
   "statRebirthEssence",
@@ -171,6 +172,7 @@ const REQUIRED_DOM_KEYS = [
   "battleSceneComboBanner",
   "battleSceneShockwaveLayer",
   "battleSceneTicker",
+  "statsPanel",
   "previewMinorFailPct",
   "previewRetreatFailPct",
   "previewRiskLabel",
@@ -676,6 +678,36 @@ async function main() {
   assertIncludes(
     html,
     'data-progress-key="empty"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="statsPanel"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-qi="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-spirit-coin="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-rebirth-essence="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-rebirth-count="0"',
     "index.html",
     failures,
   );
@@ -3553,6 +3585,30 @@ async function main() {
   assertIncludes(
     app,
     "dom.breakthroughPreviewPanel.dataset.autoResumeActionable = String(autoResumePolicy.actionable);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.statsPanel.dataset.qi = fmtNumber(state.currencies.qi);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.statsPanel.dataset.spiritCoin = fmtNumber(state.currencies.spiritCoin);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.statsPanel.dataset.rebirthEssence = fmtNumber(state.currencies.rebirthEssence);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.statsPanel.dataset.rebirthCount = fmtNumber(state.progression.rebirthCount);",
     "app.mjs",
     failures,
   );

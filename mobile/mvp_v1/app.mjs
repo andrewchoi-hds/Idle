@@ -123,6 +123,7 @@ const dom = {
   battleSceneTrailLayer: document.getElementById("battleSceneTrailLayer"),
   battleSceneResult: document.getElementById("battleSceneResult"),
   battleSceneTicker: document.getElementById("battleSceneTicker"),
+  statsPanel: document.getElementById("statsPanel"),
   statQi: document.getElementById("statQi"),
   statSpiritCoin: document.getElementById("statSpiritCoin"),
   statRebirthEssence: document.getElementById("statRebirthEssence"),
@@ -11327,6 +11328,12 @@ function render() {
   dom.statSpiritCoin.textContent = fmtNumber(state.currencies.spiritCoin);
   dom.statRebirthEssence.textContent = fmtNumber(state.currencies.rebirthEssence);
   dom.statRebirthCount.textContent = fmtNumber(state.progression.rebirthCount);
+  if (dom.statsPanel) {
+    dom.statsPanel.dataset.qi = fmtNumber(state.currencies.qi);
+    dom.statsPanel.dataset.spiritCoin = fmtNumber(state.currencies.spiritCoin);
+    dom.statsPanel.dataset.rebirthEssence = fmtNumber(state.currencies.rebirthEssence);
+    dom.statsPanel.dataset.rebirthCount = fmtNumber(state.progression.rebirthCount);
+  }
   dom.invBreakthroughElixir.textContent = fmtNumber(state.inventory.breakthroughElixir);
   dom.invTribulationTalisman.textContent = fmtNumber(state.inventory.tribulationTalisman);
   dom.previewSuccessPct.textContent = preview.successPct.toFixed(1);
