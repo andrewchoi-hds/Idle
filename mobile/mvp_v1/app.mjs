@@ -2394,6 +2394,46 @@ function syncBattleScenePanelContract() {
     dom.battleSceneArena?.dataset.sceneState || "idle";
   dom.battleScenePanel.dataset.sceneLoop =
     dom.battleSceneArena?.dataset.sceneLoop || "idle";
+  dom.battleScenePanel.dataset.sceneWorld =
+    dom.battleSceneArena?.dataset.sceneWorld || "true";
+  dom.battleScenePanel.dataset.sceneTier =
+    dom.battleSceneArena?.dataset.sceneTier || "novice";
+  dom.battleScenePanel.dataset.scenePerformance =
+    dom.battleSceneArena?.dataset.scenePerformance || "normal";
+  dom.battleScenePanel.dataset.sceneOutcomePriority =
+    dom.battleSceneArena?.dataset.sceneOutcomePriority || "normal";
+  dom.battleScenePanel.dataset.playerFrame =
+    dom.battleSceneArena?.dataset.scenePlayerFrame || "idle";
+  dom.battleScenePanel.dataset.enemyFrame =
+    dom.battleSceneArena?.dataset.sceneEnemyFrame || "idle";
+  dom.battleScenePanel.dataset.playerHpTier =
+    dom.battleSceneArena?.dataset.scenePlayerHpTier || "safe";
+  dom.battleScenePanel.dataset.playerCastTier =
+    dom.battleSceneArena?.dataset.scenePlayerCastTier || "low";
+  dom.battleScenePanel.dataset.enemyHpTier =
+    dom.battleSceneArena?.dataset.sceneEnemyHpTier || "safe";
+  dom.battleScenePanel.dataset.enemyCastTier =
+    dom.battleSceneArena?.dataset.sceneEnemyCastTier || "low";
+  dom.battleScenePanel.dataset.playerHpPct =
+    dom.battleSceneArena?.dataset.scenePlayerHpPct || "100";
+  dom.battleScenePanel.dataset.playerCastPct =
+    dom.battleSceneArena?.dataset.scenePlayerCastPct || "0";
+  dom.battleScenePanel.dataset.enemyHpPct =
+    dom.battleSceneArena?.dataset.sceneEnemyHpPct || "100";
+  dom.battleScenePanel.dataset.enemyCastPct =
+    dom.battleSceneArena?.dataset.sceneEnemyCastPct || "0";
+  dom.battleScenePanel.dataset.lead =
+    dom.battleSceneArena?.dataset.sceneLead || "even";
+  dom.battleScenePanel.dataset.danger =
+    dom.battleSceneArena?.dataset.sceneDanger || "none";
+  dom.battleScenePanel.dataset.leadEffect =
+    dom.battleSceneArena?.dataset.sceneLeadEffect || "idle";
+  dom.battleScenePanel.dataset.pressureEffect =
+    dom.battleSceneArena?.dataset.scenePressureEffect || "idle";
+  dom.battleScenePanel.dataset.dangerEffect =
+    dom.battleSceneArena?.dataset.sceneDangerEffect || "idle";
+  dom.battleScenePanel.dataset.comboEffect =
+    dom.battleSceneArena?.dataset.sceneComboEffect || "idle";
   dom.battleScenePanel.dataset.statusTone =
     dom.battleSceneStatus?.dataset.tone || "info";
   dom.battleScenePanel.dataset.statusState =
