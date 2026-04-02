@@ -339,6 +339,7 @@ let realtimePolicyReasonAccum = createEmptyPolicyBlockReasonSummary();
 let slotSummaryDirty = true;
 let slotSummaryLastRenderedAtMs = 0;
 let slotQuickLoadLastAcceptedAtMs = 0;
+let savePayloadSource = "empty";
 let battleFocusMode = true;
 let battleSfxEnabled = false;
 let battleSfxContext = null;
@@ -743,6 +744,39 @@ const battleSceneDuelState = {
 function setStatus(message, isError = false) {
   dom.appStatus.textContent = message;
   dom.appStatus.style.color = isError ? "#f27167" : "#f3bd4d";
+}
+
+function syncSavePayloadContract(sourceInput = savePayloadSource) {
+  if (!dom.savePayload) {
+    return;
+  }
+  const value = String(dom.savePayload.value || "");
+  const trimmed = value.trim();
+  const payloadState = trimmed ? "filled" : "empty";
+  const payloadSource = payloadState === "empty"
+    ? "empty"
+    : String(sourceInput || "manual").trim() || "manual";
+  const payloadLength = String(value.length);
+  const payloadLines = String(trimmed ? value.trimEnd().split(/\r?\n/).length : 0);
+  savePayloadSource = payloadSource;
+  dom.savePayload.dataset.payloadState = payloadState;
+  dom.savePayload.dataset.payloadSource = payloadSource;
+  dom.savePayload.dataset.payloadLength = payloadLength;
+  dom.savePayload.dataset.payloadLines = payloadLines;
+  if (dom.savePanel) {
+    dom.savePanel.dataset.payloadState = payloadState;
+    dom.savePanel.dataset.payloadSource = payloadSource;
+    dom.savePanel.dataset.payloadLength = payloadLength;
+    dom.savePanel.dataset.payloadLines = payloadLines;
+  }
+}
+
+function setSavePayloadValue(valueInput, source = "manual") {
+  if (!dom.savePayload) {
+    return;
+  }
+  dom.savePayload.value = String(valueInput ?? "");
+  syncSavePayloadContract(source);
 }
 
 function applyBattleFocusMode(enabled, options = {}) {
@@ -10744,7 +10778,7 @@ async function exportOfflineReportToPayload() {
     detailViewSnapshotAtExport,
   };
   const payload = `${JSON.stringify(payloadObj, null, 2)}\n`;
-  dom.savePayload.value = payload;
+  setSavePayloadValue(payload, "offline_report");
   let copied = false;
   if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
     try {
@@ -10773,7 +10807,7 @@ async function copyOfflineCompareCodeToClipboard() {
     }
   }
   if (!copied) {
-    dom.savePayload.value = `${code}\n`;
+    setSavePayloadValue(`${code}\n`, "offline_compare_code");
   }
   setStatus(copied ? "오프라인 비교 코드 복사 완료" : "오프라인 비교 코드 생성 완료");
 }
@@ -10948,7 +10982,7 @@ async function exportRealtimeReportToPayload() {
     rebirthCount: state.progression.rebirthCount,
   };
   const payload = `${JSON.stringify(payloadObj, null, 2)}\n`;
-  dom.savePayload.value = payload;
+  setSavePayloadValue(payload, "realtime_report");
   let copied = false;
   if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
     try {
@@ -12461,7 +12495,7 @@ function bindEvents() {
   });
 
   dom.btnExportState.addEventListener("click", () => {
-    dom.savePayload.value = serializeSliceState(state);
+    setSavePayloadValue(serializeSliceState(state), "state_export");
     setStatus("현재 상태를 JSON으로 내보냈음");
   });
 
@@ -12488,6 +12522,9 @@ function bindEvents() {
     } catch (err) {
       setStatus(err instanceof Error ? err.message : "JSON 가져오기 실패", true);
     }
+  });
+  dom.savePayload.addEventListener("input", () => {
+    syncSavePayloadContract(dom.savePayload.value.trim() ? "manual" : "empty");
   });
 }
 

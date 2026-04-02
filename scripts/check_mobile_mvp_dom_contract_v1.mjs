@@ -215,6 +215,7 @@ const REQUIRED_DOM_KEYS = [
   "slotTargetHint",
   "slotCopyHint",
   "slotDeleteHint",
+  "savePayload",
   "btnCopySlot",
   "btnToggleSlotLock",
   "btnDeleteSlot",
@@ -782,6 +783,30 @@ async function main() {
   assertIncludes(
     html,
     'data-locked-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-payload-state="empty"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-payload-source="empty"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-payload-length="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-payload-lines="0"',
     "index.html",
     failures,
   );
@@ -4355,6 +4380,84 @@ async function main() {
   assertIncludes(
     app,
     "dom.saveSlotSummaryList.dataset.lockedCount = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePayload.dataset.payloadState = payloadState;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePayload.dataset.payloadSource = payloadSource;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePayload.dataset.payloadLength = payloadLength;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePayload.dataset.payloadLines = payloadLines;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.payloadState = payloadState;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.payloadSource = payloadSource;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.payloadLength = payloadLength;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.payloadLines = payloadLines;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'setSavePayloadValue(payload, "offline_report");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'setSavePayloadValue(`${code}\\n`, "offline_compare_code");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'setSavePayloadValue(payload, "realtime_report");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'setSavePayloadValue(serializeSliceState(state), "state_export");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'syncSavePayloadContract(dom.savePayload.value.trim() ? "manual" : "empty");',
     "app.mjs",
     failures,
   );
