@@ -3459,6 +3459,14 @@
 ## 829) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(focus controls aggregate extension 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
 
+## 830) 다음 순차 작업
+1. [완료] 액션 패널 루트(`actionsPanel`) contract에 `data-battle-button-label`, `data-breakthrough-button-label`, `data-auto10s-button-label`, `data-realtime-button-label`, `data-reset-button-label`, `data-export-report-label`, `data-reset-report-label`, `data-battle-button-disabled`, `data-breakthrough-button-disabled`, `data-auto10s-button-disabled`, `data-realtime-button-disabled`, `data-reset-button-disabled`, `data-export-report-disabled`, `data-reset-report-disabled`를 추가해 부모 패널 단독 관찰만으로도 버튼 label/disabled 상태를 직접 읽을 수 있도록 보강.
+2. [완료] `syncActionsPanelButtonContract()`를 추가하고 `syncRealtimeAutoControls()` 경로에 연결해 액션 버튼 상태가 `actionsPanel` dataset에도 함께 반영되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 actions panel button-state aggregate 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 831) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(actions panel button-state aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
 ## 778) 다음 순차 작업
 1. [완료] 자동 재개 가이드(`autoBreakthroughResumeLabel`, `autoBreakthroughResumeHint`, `btnResumeAutoBreakthrough`) contract에 `data-risk-tier`, `data-next-breakthrough`, `data-next-tribulation`, `data-action-label`를 추가해 재개 시 적용될 토글 상태와 위험도를 텍스트 파싱 없이 직접 읽을 수 있도록 보강.
 2. [완료] `render()` 경로에서 `autoResumePolicy.riskTier`, `shouldEnableAutoBreakthrough`, `shouldEnableAutoTribulation`, `actionLabelKo`가 라벨/힌트/버튼 dataset에도 함께 기록되도록 정합화.
