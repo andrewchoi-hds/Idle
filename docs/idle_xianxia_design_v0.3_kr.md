@@ -3459,6 +3459,14 @@
 ## 829) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(focus controls aggregate extension 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
 
+## 834) 다음 순차 작업
+1. [완료] 오프라인 compare row 루트(`offlineCompareRow`) contract에 `data-paste-button-label`, `data-paste-button-disabled`, `data-load-payload-button-label`, `data-load-payload-button-disabled`, `data-compare-button-label`, `data-compare-button-disabled`를 추가해 부모 줄 단독 관찰만으로도 비교 조작 버튼 상태를 직접 읽을 수 있도록 보강.
+2. [완료] `syncOfflineCompareRowContract()`가 붙여넣기/`savePayload` 대조/비교 실행 버튼의 label/disabled 상태를 함께 mirror하도록 확장해 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 offline compare row button-state aggregate 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 835) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(offline compare row button-state aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
 ## 830) 다음 순차 작업
 1. [완료] 액션 패널 루트(`actionsPanel`) contract에 `data-battle-button-label`, `data-breakthrough-button-label`, `data-auto10s-button-label`, `data-realtime-button-label`, `data-reset-button-label`, `data-export-report-label`, `data-reset-report-label`, `data-battle-button-disabled`, `data-breakthrough-button-disabled`, `data-auto10s-button-disabled`, `data-realtime-button-disabled`, `data-reset-button-disabled`, `data-export-report-disabled`, `data-reset-report-disabled`를 추가해 부모 패널 단독 관찰만으로도 버튼 label/disabled 상태를 직접 읽을 수 있도록 보강.
 2. [완료] `syncActionsPanelButtonContract()`를 추가하고 `syncRealtimeAutoControls()` 경로에 연결해 액션 버튼 상태가 `actionsPanel` dataset에도 함께 반영되도록 정합화.
