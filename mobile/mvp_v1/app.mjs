@@ -797,6 +797,9 @@ function applyBattleFocusMode(enabled, options = {}) {
   if (dom.focusControlsPanel) {
     dom.focusControlsPanel.dataset.battleFocus = String(battleFocusMode);
     dom.focusControlsPanel.dataset.battleFocusHint = focusHint;
+    dom.focusControlsPanel.dataset.focusToggleLabel =
+      dom.btnToggleBattleFocus?.textContent?.trim() || "전투 집중 OFF";
+    dom.focusControlsPanel.dataset.focusTogglePressed = String(battleFocusMode);
   }
   if (options.announce === true) {
     setStatus(
@@ -854,6 +857,14 @@ function renderBattleSfxControl() {
       supported && battleSfxEnabled,
     );
     dom.focusControlsPanel.dataset.battleSfxHint = sfxHint;
+    dom.focusControlsPanel.dataset.sfxToggleLabel =
+      dom.btnToggleBattleSfx?.textContent?.trim() || "전투 효과음 OFF";
+    dom.focusControlsPanel.dataset.sfxTogglePressed = String(
+      supported && battleSfxEnabled,
+    );
+    dom.focusControlsPanel.dataset.sfxToggleDisabled = String(
+      dom.btnToggleBattleSfx?.disabled === true,
+    );
   }
 }
 
@@ -1176,6 +1187,14 @@ function renderBattleHapticControl() {
       supported && battleHapticEnabled,
     );
     dom.focusControlsPanel.dataset.battleHapticHint = hapticHint;
+    dom.focusControlsPanel.dataset.hapticToggleLabel =
+      dom.btnToggleBattleHaptic?.textContent?.trim() || "전투 진동 OFF";
+    dom.focusControlsPanel.dataset.hapticTogglePressed = String(
+      supported && battleHapticEnabled,
+    );
+    dom.focusControlsPanel.dataset.hapticToggleDisabled = String(
+      dom.btnToggleBattleHaptic?.disabled === true,
+    );
   }
 }
 
