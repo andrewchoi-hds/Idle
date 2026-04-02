@@ -1496,6 +1496,66 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-ambient-impact="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-lock="free"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-gate="no_signal"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-fresh="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-active="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-source="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-kind="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-tone="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-outcome-profile="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-state="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-status-text="대기 중"',
     "index.html",
     failures,
@@ -5868,6 +5928,66 @@ async function main() {
   assertIncludes(
     app,
     "dom.battleScenePanel.dataset.comboEffect =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpact =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactLock =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactGate =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactFresh =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactActive =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactSource =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactKind =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactTone =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactOutcomeProfile =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomState =",
     "app.mjs",
     failures,
   );
