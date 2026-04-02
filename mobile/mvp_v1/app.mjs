@@ -2436,6 +2436,9 @@ function syncBattleScenePanelContract() {
     dom.battleSceneArena?.dataset.sceneComboEffect || "idle";
   dom.battleScenePanel.dataset.statusTone =
     dom.battleSceneStatus?.dataset.tone || "info";
+  dom.battleScenePanel.dataset.statusText =
+    String(dom.battleSceneStatus?.textContent || BATTLE_SCENE_DEFAULT_STATUS).trim() ||
+    BATTLE_SCENE_DEFAULT_STATUS;
   dom.battleScenePanel.dataset.statusState =
     dom.battleSceneStatus?.dataset.messageState || "idle";
   dom.battleScenePanel.dataset.statusSource =
@@ -2444,6 +2447,9 @@ function syncBattleScenePanelContract() {
     dom.battleSceneStatus?.dataset.messageKey || "idle";
   dom.battleScenePanel.dataset.resultTone =
     dom.battleSceneResult?.dataset.tone || "info";
+  dom.battleScenePanel.dataset.resultText =
+    String(dom.battleSceneResult?.textContent || BATTLE_SCENE_DEFAULT_RESULT).trim() ||
+    BATTLE_SCENE_DEFAULT_RESULT;
   dom.battleScenePanel.dataset.resultState =
     dom.battleSceneResult?.dataset.messageState || "idle";
   dom.battleScenePanel.dataset.resultSource =
@@ -2452,6 +2458,9 @@ function syncBattleScenePanelContract() {
     dom.battleSceneResult?.dataset.messageKey || "idle";
   dom.battleScenePanel.dataset.tickerTone =
     dom.battleSceneTicker?.dataset.tone || "info";
+  dom.battleScenePanel.dataset.tickerText =
+    String(dom.battleSceneTicker?.textContent || BATTLE_SCENE_DEFAULT_TICKER).trim() ||
+    BATTLE_SCENE_DEFAULT_TICKER;
   dom.battleScenePanel.dataset.tickerState =
     dom.battleSceneTicker?.dataset.messageState || "idle";
   dom.battleScenePanel.dataset.tickerSource =
@@ -2472,6 +2481,9 @@ function syncBattleScenePanelContract() {
     dom.battleSceneDpsBadge?.dataset.pressure || "low";
   dom.battleScenePanel.dataset.skillBannerState =
     dom.battleSceneSkillBanner?.dataset.bannerState || "idle";
+  dom.battleScenePanel.dataset.skillBannerText =
+    String(dom.battleSceneSkillBanner?.textContent || "기세 수렴").trim() ||
+    "기세 수렴";
   dom.battleScenePanel.dataset.skillBannerSource =
     dom.battleSceneSkillBanner?.dataset.bannerSource || "idle";
   dom.battleScenePanel.dataset.skillBannerKey =
@@ -2484,6 +2496,9 @@ function syncBattleScenePanelContract() {
     dom.battleSceneSkillBanner?.dataset.skillLabel || "none";
   dom.battleScenePanel.dataset.comboBannerState =
     dom.battleSceneComboBanner?.dataset.bannerState || "idle";
+  dom.battleScenePanel.dataset.comboBannerText =
+    String(dom.battleSceneComboBanner?.textContent || "연격 x3").trim() ||
+    "연격 x3";
   dom.battleScenePanel.dataset.comboBannerSource =
     dom.battleSceneComboBanner?.dataset.bannerSource || "idle";
   dom.battleScenePanel.dataset.comboBannerKey =
