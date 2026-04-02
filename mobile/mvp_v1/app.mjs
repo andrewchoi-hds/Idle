@@ -89,6 +89,7 @@ const dom = {
   btnToggleBattleFocus: document.getElementById("btnToggleBattleFocus"),
   btnToggleBattleSfx: document.getElementById("btnToggleBattleSfx"),
   btnToggleBattleHaptic: document.getElementById("btnToggleBattleHaptic"),
+  focusControlsPanel: document.getElementById("focusControlsPanel"),
   battleFocusHint: document.getElementById("battleFocusHint"),
   battleSfxHint: document.getElementById("battleSfxHint"),
   battleHapticHint: document.getElementById("battleHapticHint"),
@@ -744,6 +745,9 @@ function setStatus(message, isError = false) {
 
 function applyBattleFocusMode(enabled, options = {}) {
   battleFocusMode = enabled !== false;
+  const focusHint = battleFocusMode
+    ? "전투/액션 중심 화면입니다. 운영 패널은 접혀 있습니다."
+    : "전체 패널 화면입니다. 운영/저장/로그 패널이 표시됩니다.";
   dom.appRoot?.classList.toggle("battle-focus-mode", battleFocusMode);
   if (dom.btnToggleBattleFocus) {
     dom.btnToggleBattleFocus.setAttribute("aria-pressed", String(battleFocusMode));
@@ -752,9 +756,11 @@ function applyBattleFocusMode(enabled, options = {}) {
       : "전투 집중 OFF";
   }
   if (dom.battleFocusHint) {
-    dom.battleFocusHint.textContent = battleFocusMode
-      ? "전투/액션 중심 화면입니다. 운영 패널은 접혀 있습니다."
-      : "전체 패널 화면입니다. 운영/저장/로그 패널이 표시됩니다.";
+    dom.battleFocusHint.textContent = focusHint;
+  }
+  if (dom.focusControlsPanel) {
+    dom.focusControlsPanel.dataset.battleFocus = String(battleFocusMode);
+    dom.focusControlsPanel.dataset.battleFocusHint = focusHint;
   }
   if (options.announce === true) {
     setStatus(
@@ -786,6 +792,11 @@ function persistBattleSfxPreference() {
 
 function renderBattleSfxControl() {
   const supported = isBattleSfxSupported();
+  const sfxHint = !supported
+    ? "전투 효과음: 브라우저 미지원"
+    : battleSfxEnabled
+      ? "전투 효과음: 켜짐 (타격/비기/임팩트)"
+      : "전투 효과음: 꺼짐";
   if (dom.btnToggleBattleSfx) {
     dom.btnToggleBattleSfx.disabled = !supported;
     dom.btnToggleBattleSfx.setAttribute(
@@ -799,11 +810,14 @@ function renderBattleSfxControl() {
         : "전투 효과음 OFF";
   }
   if (dom.battleSfxHint) {
-    dom.battleSfxHint.textContent = !supported
-      ? "전투 효과음: 브라우저 미지원"
-      : battleSfxEnabled
-        ? "전투 효과음: 켜짐 (타격/비기/임팩트)"
-        : "전투 효과음: 꺼짐";
+    dom.battleSfxHint.textContent = sfxHint;
+  }
+  if (dom.focusControlsPanel) {
+    dom.focusControlsPanel.dataset.battleSfxSupported = String(supported);
+    dom.focusControlsPanel.dataset.battleSfxEnabled = String(
+      supported && battleSfxEnabled,
+    );
+    dom.focusControlsPanel.dataset.battleSfxHint = sfxHint;
   }
 }
 
@@ -1100,6 +1114,11 @@ function persistBattleHapticPreference() {
 
 function renderBattleHapticControl() {
   const supported = isBattleHapticSupported();
+  const hapticHint = !supported
+    ? "전투 진동: 브라우저 미지원"
+    : battleHapticEnabled
+      ? "전투 진동: 켜짐 (타격/비기/임팩트)"
+      : "전투 진동: 꺼짐";
   if (dom.btnToggleBattleHaptic) {
     dom.btnToggleBattleHaptic.disabled = !supported;
     dom.btnToggleBattleHaptic.setAttribute(
@@ -1113,11 +1132,14 @@ function renderBattleHapticControl() {
         : "전투 진동 OFF";
   }
   if (dom.battleHapticHint) {
-    dom.battleHapticHint.textContent = !supported
-      ? "전투 진동: 브라우저 미지원"
-      : battleHapticEnabled
-        ? "전투 진동: 켜짐 (타격/비기/임팩트)"
-        : "전투 진동: 꺼짐";
+    dom.battleHapticHint.textContent = hapticHint;
+  }
+  if (dom.focusControlsPanel) {
+    dom.focusControlsPanel.dataset.battleHapticSupported = String(supported);
+    dom.focusControlsPanel.dataset.battleHapticEnabled = String(
+      supported && battleHapticEnabled,
+    );
+    dom.focusControlsPanel.dataset.battleHapticHint = hapticHint;
   }
 }
 

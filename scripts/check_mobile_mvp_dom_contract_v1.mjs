@@ -7,6 +7,7 @@ const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
 
 const REQUIRED_HTML_IDS = [
   "appStatus",
+  "focusControlsPanel",
   "btnToggleBattleFocus",
   "btnToggleBattleSfx",
   "btnToggleBattleHaptic",
@@ -155,6 +156,7 @@ const REQUIRED_DOM_KEYS = [
   "btnToggleBattleFocus",
   "btnToggleBattleSfx",
   "btnToggleBattleHaptic",
+  "focusControlsPanel",
   "battleFocusHint",
   "battleSfxHint",
   "battleHapticHint",
@@ -926,6 +928,60 @@ async function main() {
   assertIncludes(
     html,
     'data-essence-delta="+0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="focusControlsPanel"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-battle-focus="true"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-battle-focus-hint="전투/액션 중심 화면입니다. 운영 패널은 접혀 있습니다."',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-battle-sfx-supported="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-battle-sfx-enabled="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-battle-sfx-hint="전투 효과음: 꺼짐"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-battle-haptic-supported="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-battle-haptic-enabled="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-battle-haptic-hint="전투 진동: 꺼짐"',
     "index.html",
     failures,
   );
@@ -4385,6 +4441,54 @@ async function main() {
   assertIncludes(
     app,
     "dom.offlineModal.dataset.essenceDelta = essenceDeltaLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.focusControlsPanel.dataset.battleFocus = String(battleFocusMode);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.focusControlsPanel.dataset.battleFocusHint = focusHint;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.focusControlsPanel.dataset.battleSfxSupported = String(supported);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.focusControlsPanel.dataset.battleSfxEnabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.focusControlsPanel.dataset.battleSfxHint = sfxHint;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.focusControlsPanel.dataset.battleHapticSupported = String(supported);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.focusControlsPanel.dataset.battleHapticEnabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.focusControlsPanel.dataset.battleHapticHint = hapticHint;",
     "app.mjs",
     failures,
   );
