@@ -10651,6 +10651,15 @@ function renderSaveSlotSummary(force = false) {
     dom.saveSlotSummaryList.dataset.slotCount = String(rows.length);
     dom.saveSlotSummaryList.dataset.activeSlot = String(activeSaveSlot);
     dom.saveSlotSummaryList.dataset.activeSlotState = String(activeRow.state || "empty");
+    dom.saveSlotSummaryList.dataset.activeSlotSummary = String(
+      activeRow.summary || `슬롯 ${activeSaveSlot}: 비어 있음`,
+    );
+    dom.saveSlotSummaryList.dataset.activeSlotSource = String(
+      activeRow.source || "none",
+    );
+    dom.saveSlotSummaryList.dataset.activeSlotLocked = String(
+      isSlotLocked(activeSaveSlot),
+    );
     dom.saveSlotSummaryList.dataset.okCount = String(
       rows.filter((row) => row.state === "ok").length,
     );

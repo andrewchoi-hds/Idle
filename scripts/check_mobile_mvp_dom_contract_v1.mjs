@@ -764,6 +764,24 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-active-slot-summary="슬롯 1: 비어 있음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-active-slot-source="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-active-slot-locked="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-ok-count="0"',
     "index.html",
     failures,
@@ -4986,6 +5004,24 @@ async function main() {
   assertIncludes(
     app,
     'dom.saveSlotSummaryList.dataset.activeSlotState = String(activeRow.state || "empty");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.saveSlotSummaryList.dataset.activeSlotSummary = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.saveSlotSummaryList.dataset.activeSlotSource = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.saveSlotSummaryList.dataset.activeSlotLocked = String(",
     "app.mjs",
     failures,
   );
