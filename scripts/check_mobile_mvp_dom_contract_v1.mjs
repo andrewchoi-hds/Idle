@@ -1070,6 +1070,132 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-world="true"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-tier="novice"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-performance="normal"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-outcome-priority="normal"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-player-frame="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-enemy-frame="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-player-hp-tier="safe"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-player-cast-tier="low"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-enemy-hp-tier="safe"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-enemy-cast-tier="low"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-player-hp-pct="100"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-player-cast-pct="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-enemy-hp-pct="100"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-enemy-cast-pct="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-lead="even"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-danger="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-lead-effect="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-pressure-effect="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-danger-effect="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-combo-effect="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-status-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-status-tone="info"',
     "index.html",
     failures,
@@ -4992,6 +5118,132 @@ async function main() {
   assertIncludes(
     app,
     "dom.battleScenePanel.dataset.sceneLoop =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.sceneWorld =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.sceneTier =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.scenePerformance =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.sceneOutcomePriority =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.playerFrame =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.enemyFrame =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.playerHpTier =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.playerCastTier =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.enemyHpTier =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.enemyCastTier =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.playerHpPct =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.playerCastPct =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.enemyHpPct =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.enemyCastPct =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.lead =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.danger =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.leadEffect =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.pressureEffect =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.dangerEffect =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.comboEffect =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'syncBattleScenePanelContract();',
     "app.mjs",
     failures,
   );
