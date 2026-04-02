@@ -10513,6 +10513,21 @@ function renderOfflineDetailList(events) {
   const prioritizedRows = prioritizeOfflineDetailEvents(events);
   const mode = offlineDetailCriticalOnly ? "critical" : "all";
   const rows = filterOfflineDetailEventsByMode(prioritizedRows, mode);
+  const filterSummaryLabel = buildOfflineDetailFilterSummaryLabelKo(
+    prioritizedRows,
+    mode,
+  );
+  const hiddenSummaryLabel = buildOfflineDetailHiddenSummaryLabelKo(
+    prioritizedRows,
+    mode,
+  );
+  const hiddenKindsSummaryLabel = buildOfflineDetailHiddenKindsSummaryLabelKo(
+    prioritizedRows,
+    mode,
+  );
+  const emptyLabel = offlineDetailCriticalOnly
+    ? "핵심 이벤트 없음"
+    : "세부 로그 없음";
   const currentCompareCode = buildOfflineDetailCompareCode(prioritizedRows, mode);
   setOfflineCompareCodeLabel(currentCompareCode);
   setOfflineCompareCurrentSummary(currentCompareCode);
@@ -10521,22 +10536,24 @@ function renderOfflineDetailList(events) {
   setOfflineCompareActionHint(currentCompareCode, targetText);
   setOfflineCompareDeltaSummary(currentCompareCode, targetText, true);
   setOfflineCompareMatchSummary(currentCompareCode, targetText, true);
-  dom.offlineDetailFilterSummary.textContent = buildOfflineDetailFilterSummaryLabelKo(
-    prioritizedRows,
-    mode,
-  );
-  dom.offlineDetailHiddenSummary.textContent = buildOfflineDetailHiddenSummaryLabelKo(
-    prioritizedRows,
-    mode,
-  );
-  dom.offlineDetailHiddenKindsSummary.textContent = buildOfflineDetailHiddenKindsSummaryLabelKo(
-    prioritizedRows,
-    mode,
-  );
+  dom.offlineDetailFilterSummary.textContent = filterSummaryLabel;
+  dom.offlineDetailHiddenSummary.textContent = hiddenSummaryLabel;
+  dom.offlineDetailHiddenKindsSummary.textContent = hiddenKindsSummaryLabel;
+  if (dom.offlineDetailList) {
+    dom.offlineDetailList.dataset.detailMode = mode;
+    dom.offlineDetailList.dataset.detailExpanded = String(offlineDetailExpanded);
+    dom.offlineDetailList.dataset.visibleCount = String(rows.length);
+    dom.offlineDetailList.dataset.prioritizedCount = String(prioritizedRows.length);
+    dom.offlineDetailList.dataset.hiddenCount = String(
+      Math.max(0, prioritizedRows.length - rows.length),
+    );
+    dom.offlineDetailList.dataset.filterSummary = filterSummaryLabel;
+    dom.offlineDetailList.dataset.hiddenSummary = hiddenSummaryLabel;
+    dom.offlineDetailList.dataset.hiddenKindsSummary = hiddenKindsSummaryLabel;
+    dom.offlineDetailList.dataset.emptyLabel = emptyLabel;
+  }
   if (rows.length === 0) {
-    dom.offlineDetailList.innerHTML = offlineDetailCriticalOnly
-      ? '<li class="delta-neutral">핵심 이벤트 없음</li>'
-      : '<li class="delta-neutral">세부 로그 없음</li>';
+    dom.offlineDetailList.innerHTML = `<li class="delta-neutral">${emptyLabel}</li>`;
     return;
   }
   dom.offlineDetailList.innerHTML = rows
@@ -10546,6 +10563,9 @@ function renderOfflineDetailList(events) {
 
 function setOfflineDetailCriticalOnly(enabled) {
   offlineDetailCriticalOnly = Boolean(enabled);
+  dom.offlineDetailList.dataset.detailMode = offlineDetailCriticalOnly
+    ? "critical"
+    : "all";
   dom.btnToggleOfflineCriticalOnly.textContent = offlineDetailCriticalOnly
     ? "전체 로그 보기"
     : "핵심 로그만 보기";
@@ -10553,6 +10573,7 @@ function setOfflineDetailCriticalOnly(enabled) {
 
 function setOfflineDetailExpanded(expanded) {
   offlineDetailExpanded = expanded;
+  dom.offlineDetailList.dataset.detailExpanded = String(expanded);
   dom.offlineDetailList.classList.toggle("hidden", !expanded);
   dom.btnToggleOfflineDetail.textContent = expanded ? "세부 로그 숨기기" : "세부 로그 보기";
 }
@@ -11239,6 +11260,15 @@ function hideOfflineModal() {
   dom.offlineDetailFilterSummary.textContent = "세부 로그 0건 (전체)";
   dom.offlineDetailHiddenSummary.textContent = "숨김 이벤트 없음";
   dom.offlineDetailHiddenKindsSummary.textContent = "숨김 상세 없음";
+  dom.offlineDetailList.dataset.detailMode = "all";
+  dom.offlineDetailList.dataset.detailExpanded = "false";
+  dom.offlineDetailList.dataset.visibleCount = "0";
+  dom.offlineDetailList.dataset.prioritizedCount = "0";
+  dom.offlineDetailList.dataset.hiddenCount = "0";
+  dom.offlineDetailList.dataset.filterSummary = "세부 로그 0건 (전체)";
+  dom.offlineDetailList.dataset.hiddenSummary = "숨김 이벤트 없음";
+  dom.offlineDetailList.dataset.hiddenKindsSummary = "숨김 상세 없음";
+  dom.offlineDetailList.dataset.emptyLabel = "세부 로그 없음";
   setOfflineDetailCriticalOnly(false);
   setOfflineDetailExpanded(false);
 }

@@ -861,6 +861,60 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-detail-mode="all"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-detail-expanded="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-visible-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-prioritized-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-hidden-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-filter-summary="세부 로그 0건 (전체)"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-hidden-summary="숨김 이벤트 없음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-hidden-kinds-summary="숨김 상세 없음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-empty-label="세부 로그 없음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-report-state="empty"',
     "index.html",
     failures,
@@ -4189,6 +4243,114 @@ async function main() {
   assertIncludes(
     app,
     'dom.logsPanel.dataset.lastLogAt = String(latestRow.at || "-");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineDetailList.dataset.detailMode = mode;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineDetailList.dataset.detailExpanded = String(offlineDetailExpanded);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineDetailList.dataset.visibleCount = String(rows.length);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineDetailList.dataset.prioritizedCount = String(prioritizedRows.length);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineDetailList.dataset.hiddenCount = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineDetailList.dataset.filterSummary = filterSummaryLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineDetailList.dataset.hiddenSummary = hiddenSummaryLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineDetailList.dataset.hiddenKindsSummary = hiddenKindsSummaryLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineDetailList.dataset.emptyLabel = emptyLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineDetailList.dataset.detailMode = "all";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineDetailList.dataset.detailExpanded = "false";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineDetailList.dataset.visibleCount = "0";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineDetailList.dataset.prioritizedCount = "0";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineDetailList.dataset.hiddenCount = "0";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineDetailList.dataset.filterSummary = "세부 로그 0건 (전체)";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineDetailList.dataset.hiddenSummary = "숨김 이벤트 없음";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineDetailList.dataset.hiddenKindsSummary = "숨김 상세 없음";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineDetailList.dataset.emptyLabel = "세부 로그 없음";',
     "app.mjs",
     failures,
   );
