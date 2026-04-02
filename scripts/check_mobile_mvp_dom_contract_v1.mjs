@@ -1190,6 +1190,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-status-text="대기 중"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-status-tone="info"',
     "index.html",
     failures,
@@ -1220,6 +1226,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-result-text="전장 파동 감지 중 · 자동/실시간 루프에서 연출이 계속 갱신됩니다."',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-result-tone="info"',
     "index.html",
     failures,
@@ -1239,6 +1251,12 @@ async function main() {
   assertIncludes(
     html,
     'data-result-key="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ticker-text="전투 신호 대기 · 상시 교전 로그를 수집 중입니다."',
     "index.html",
     failures,
   );
@@ -1304,6 +1322,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-skill-banner-text="기세 수렴"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-skill-banner-state="idle"',
     "index.html",
     failures,
@@ -1335,6 +1359,12 @@ async function main() {
   assertIncludes(
     html,
     'data-skill-label="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-combo-banner-text="연격 x3"',
     "index.html",
     failures,
   );
@@ -5255,6 +5285,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.battleScenePanel.dataset.statusText =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.battleScenePanel.dataset.statusState =",
     "app.mjs",
     failures,
@@ -5279,6 +5315,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.battleScenePanel.dataset.resultText =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.battleScenePanel.dataset.resultState =",
     "app.mjs",
     failures,
@@ -5298,6 +5340,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.battleScenePanel.dataset.tickerTone =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.tickerText =",
     "app.mjs",
     failures,
   );
@@ -5369,6 +5417,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.battleScenePanel.dataset.skillBannerText =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.battleScenePanel.dataset.skillBannerSource =",
     "app.mjs",
     failures,
@@ -5400,6 +5454,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.battleScenePanel.dataset.comboBannerState =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.comboBannerText =",
     "app.mjs",
     failures,
   );
