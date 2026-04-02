@@ -2420,6 +2420,40 @@ function syncBattleScenePanelContract() {
     dom.battleSceneTicker?.dataset.messageKey || "idle";
   dom.battleScenePanel.dataset.tickerQueueCount =
     dom.battleSceneTicker?.dataset.queueCount || "0";
+  dom.battleScenePanel.dataset.round =
+    dom.battleSceneRoundBadge?.dataset.round || "1";
+  dom.battleScenePanel.dataset.comboCount =
+    dom.battleSceneComboBadge?.dataset.comboCount || "0";
+  dom.battleScenePanel.dataset.comboTier =
+    dom.battleSceneComboBadge?.dataset.comboTier || "calm";
+  dom.battleScenePanel.dataset.dpsScore =
+    dom.battleSceneDpsBadge?.dataset.dpsScore || "0";
+  dom.battleScenePanel.dataset.pressure =
+    dom.battleSceneDpsBadge?.dataset.pressure || "low";
+  dom.battleScenePanel.dataset.skillBannerState =
+    dom.battleSceneSkillBanner?.dataset.bannerState || "idle";
+  dom.battleScenePanel.dataset.skillBannerSource =
+    dom.battleSceneSkillBanner?.dataset.bannerSource || "idle";
+  dom.battleScenePanel.dataset.skillBannerKey =
+    dom.battleSceneSkillBanner?.dataset.bannerKey || "idle";
+  dom.battleScenePanel.dataset.skillBannerTone =
+    dom.battleSceneSkillBanner?.dataset.tone || "info";
+  dom.battleScenePanel.dataset.skillBannerActor =
+    dom.battleSceneSkillBanner?.dataset.bannerActor || "none";
+  dom.battleScenePanel.dataset.skillLabel =
+    dom.battleSceneSkillBanner?.dataset.skillLabel || "none";
+  dom.battleScenePanel.dataset.comboBannerState =
+    dom.battleSceneComboBanner?.dataset.bannerState || "idle";
+  dom.battleScenePanel.dataset.comboBannerSource =
+    dom.battleSceneComboBanner?.dataset.bannerSource || "idle";
+  dom.battleScenePanel.dataset.comboBannerKey =
+    dom.battleSceneComboBanner?.dataset.bannerKey || "idle";
+  dom.battleScenePanel.dataset.comboBannerTone =
+    dom.battleSceneComboBanner?.dataset.tone || "info";
+  dom.battleScenePanel.dataset.comboBannerTier =
+    dom.battleSceneComboBanner?.dataset.tier || "flow";
+  dom.battleScenePanel.dataset.comboBannerCount =
+    dom.battleSceneComboBanner?.dataset.comboCount || "0";
 }
 
 function applyBattleSceneUiState() {
@@ -2561,6 +2595,7 @@ function setBattleSceneSkillBanner(label, tone = "info", source = "ambient", opt
   dom.battleSceneSkillBanner.setAttribute("aria-hidden", "false");
   void dom.battleSceneSkillBanner.offsetWidth;
   dom.battleSceneSkillBanner.classList.add("is-active");
+  syncBattleScenePanelContract();
   if (battleSceneSkillBannerTimer !== null) {
     window.clearTimeout(battleSceneSkillBannerTimer);
   }
@@ -2573,6 +2608,7 @@ function setBattleSceneSkillBanner(label, tone = "info", source = "ambient", opt
       dom.battleSceneSkillBanner.dataset.bannerKey = "idle";
       dom.battleSceneSkillBanner.dataset.bannerActor = "none";
       dom.battleSceneSkillBanner.dataset.skillLabel = "none";
+      syncBattleScenePanelContract();
     }
     battleSceneSkillBannerTimer = null;
   }, 860);
@@ -2613,6 +2649,7 @@ function clearBattleSceneComboBanner() {
   dom.battleSceneComboBanner.dataset.bannerSource = "idle";
   dom.battleSceneComboBanner.dataset.bannerKey = "idle";
   dom.battleSceneComboBanner.setAttribute("aria-hidden", "true");
+  syncBattleScenePanelContract();
 }
 
 function setBattleSceneComboBanner(comboInput, tone = "info", source = "ambient") {
@@ -2649,6 +2686,7 @@ function setBattleSceneComboBanner(comboInput, tone = "info", source = "ambient"
   dom.battleSceneComboBanner.setAttribute("aria-hidden", "false");
   void dom.battleSceneComboBanner.offsetWidth;
   dom.battleSceneComboBanner.classList.add("is-active");
+  syncBattleScenePanelContract();
   if (battleSceneComboBannerTimer !== null) {
     window.clearTimeout(battleSceneComboBannerTimer);
   }
@@ -2661,6 +2699,7 @@ function setBattleSceneComboBanner(comboInput, tone = "info", source = "ambient"
       dom.battleSceneComboBanner.dataset.bannerSource = "idle";
       dom.battleSceneComboBanner.dataset.bannerKey = "idle";
       dom.battleSceneComboBanner.dataset.comboCount = "0";
+      syncBattleScenePanelContract();
     }
     battleSceneComboBannerTimer = null;
   }, holdMs);
@@ -2727,6 +2766,7 @@ function renderBattleSceneCombatMetrics() {
       dom.battleSceneArena.dataset.sceneDpsScore = String(pressureScore);
     }
   }
+  syncBattleScenePanelContract();
 }
 
 function setBattleSceneState(sceneState = "idle") {

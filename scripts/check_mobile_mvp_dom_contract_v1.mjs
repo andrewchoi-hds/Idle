@@ -1148,6 +1148,108 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-round="1"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-combo-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-combo-tier="calm"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-dps-score="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-pressure="low"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-skill-banner-state="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-skill-banner-source="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-skill-banner-key="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-skill-banner-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-skill-banner-actor="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-skill-label="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-combo-banner-state="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-combo-banner-source="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-combo-banner-key="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-combo-banner-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-combo-banner-tier="flow"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-combo-banner-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="focusControlsPanel"',
     "index.html",
     failures,
@@ -4974,6 +5076,114 @@ async function main() {
   assertIncludes(
     app,
     "syncBattleScenePanelContract();",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.round =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.comboCount =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.comboTier =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.dpsScore =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.pressure =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.skillBannerState =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.skillBannerSource =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.skillBannerKey =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.skillBannerTone =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.skillBannerActor =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.skillLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.comboBannerState =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.comboBannerSource =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.comboBannerKey =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.comboBannerTone =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.comboBannerTier =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.comboBannerCount =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'syncBattleScenePanelContract();',
     "app.mjs",
     failures,
   );
