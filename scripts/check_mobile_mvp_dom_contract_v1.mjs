@@ -124,6 +124,7 @@ const REQUIRED_HTML_IDS = [
   "btnToggleOfflineDetail",
   "btnToggleOfflineCriticalOnly",
   "btnCopyOfflineCompareCode",
+  "offlineCompareRow",
   "offlineCompareCodeInput",
   "btnPasteOfflineCompareCode",
   "btnLoadOfflineCompareCodeFromPayload",
@@ -234,6 +235,7 @@ const REQUIRED_DOM_KEYS = [
   "btnToggleOfflineDetail",
   "btnToggleOfflineCriticalOnly",
   "btnCopyOfflineCompareCode",
+  "offlineCompareRow",
   "offlineCompareCodeInput",
   "btnPasteOfflineCompareCode",
   "btnLoadOfflineCompareCodeFromPayload",
@@ -810,6 +812,42 @@ async function main() {
   assertIncludes(
     html,
     'data-last-log-at="-"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="offlineCompareRow"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-input-state="empty"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-input-length="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-target-mode="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-apply-view-enabled="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-apply-view-label="보기 모드 맞추기"',
     "index.html",
     failures,
   );
@@ -4449,6 +4487,42 @@ async function main() {
   assertIncludes(
     app,
     'dom.offlineDetailList.dataset.emptyLabel = "세부 로그 없음";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineCompareRow.dataset.inputState = inputText ? "present" : "empty";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineCompareRow.dataset.inputLength = String(inputText.length);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineCompareRow.dataset.targetMode = targetMode || "none";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineCompareRow.dataset.applyViewEnabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineCompareRow.dataset.applyViewLabel =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncOfflineCompareRowContract();",
     "app.mjs",
     failures,
   );

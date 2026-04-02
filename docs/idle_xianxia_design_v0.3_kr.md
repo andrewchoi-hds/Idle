@@ -3403,6 +3403,14 @@
 ## 815) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(battle scene panel root contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
 
+## 816) 다음 순차 작업
+1. [완료] 오프라인 compare row 루트(`offlineCompareRow`) contract에 `data-input-state`, `data-input-length`, `data-target-mode`, `data-apply-view-enabled`, `data-apply-view-label`를 추가해 부모 줄 단독 관찰만으로도 비교 입력 상태와 보기 모드 정렬 가능 여부를 직접 읽을 수 있도록 보강.
+2. [완료] `syncOfflineCompareViewModeAction()` 경로에 `syncOfflineCompareRowContract()`를 연결해 버튼 상태와 입력 상태가 `offlineCompareRow` dataset에도 함께 반영되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 offline compare row root contract 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 817) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(offline compare row root contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
 ## 778) 다음 순차 작업
 1. [완료] 자동 재개 가이드(`autoBreakthroughResumeLabel`, `autoBreakthroughResumeHint`, `btnResumeAutoBreakthrough`) contract에 `data-risk-tier`, `data-next-breakthrough`, `data-next-tribulation`, `data-action-label`를 추가해 재개 시 적용될 토글 상태와 위험도를 텍스트 파싱 없이 직접 읽을 수 있도록 보강.
 2. [완료] `render()` 경로에서 `autoResumePolicy.riskTier`, `shouldEnableAutoBreakthrough`, `shouldEnableAutoTribulation`, `actionLabelKo`가 라벨/힌트/버튼 dataset에도 함께 기록되도록 정합화.
