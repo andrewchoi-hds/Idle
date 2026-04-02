@@ -1688,6 +1688,90 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-battle-button-label="전투 1회"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-breakthrough-button-label="돌파 시도"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-auto10s-button-label="자동 10초 진행"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-realtime-button-label="실시간 자동 시작"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-reset-button-label="런 초기화"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-export-report-label="실시간 리포트 JSON"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-reset-report-label="실시간 통계 초기화"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-battle-button-disabled="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-breakthrough-button-disabled="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-auto10s-button-disabled="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-realtime-button-disabled="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-reset-button-disabled="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-export-report-disabled="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-reset-report-disabled="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="savePanel"',
     "index.html",
     failures,
@@ -5886,6 +5970,96 @@ async function main() {
   assertIncludes(
     app,
     "dom.settingsPanel.dataset.offlineEventLimit = offlineEventLimitValue;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.battleButtonLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.breakthroughButtonLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.auto10sButtonLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.realtimeButtonLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.resetButtonLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.exportReportLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.resetReportLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.battleButtonDisabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.breakthroughButtonDisabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.auto10sButtonDisabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.realtimeButtonDisabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.resetButtonDisabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.exportReportDisabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.resetReportDisabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncActionsPanelButtonContract();",
     "app.mjs",
     failures,
   );

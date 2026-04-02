@@ -10830,6 +10830,47 @@ function getRealtimeStats() {
   return state.realtimeStats;
 }
 
+function syncActionsPanelButtonContract() {
+  if (!dom.actionsPanel) {
+    return;
+  }
+  dom.actionsPanel.dataset.battleButtonLabel =
+    dom.btnBattle?.textContent?.trim() || "전투 1회";
+  dom.actionsPanel.dataset.breakthroughButtonLabel =
+    dom.btnBreakthrough?.textContent?.trim() || "돌파 시도";
+  dom.actionsPanel.dataset.auto10sButtonLabel =
+    dom.btnAuto10s?.textContent?.trim() || "자동 10초 진행";
+  dom.actionsPanel.dataset.realtimeButtonLabel =
+    dom.btnRealtimeAuto?.textContent?.trim() || "실시간 자동 시작";
+  dom.actionsPanel.dataset.resetButtonLabel =
+    dom.btnResetRun?.textContent?.trim() || "런 초기화";
+  dom.actionsPanel.dataset.exportReportLabel =
+    dom.btnExportRealtimeReport?.textContent?.trim() || "실시간 리포트 JSON";
+  dom.actionsPanel.dataset.resetReportLabel =
+    dom.btnResetRealtimeStats?.textContent?.trim() || "실시간 통계 초기화";
+  dom.actionsPanel.dataset.battleButtonDisabled = String(
+    dom.btnBattle?.disabled === true,
+  );
+  dom.actionsPanel.dataset.breakthroughButtonDisabled = String(
+    dom.btnBreakthrough?.disabled === true,
+  );
+  dom.actionsPanel.dataset.auto10sButtonDisabled = String(
+    dom.btnAuto10s?.disabled === true,
+  );
+  dom.actionsPanel.dataset.realtimeButtonDisabled = String(
+    dom.btnRealtimeAuto?.disabled === true,
+  );
+  dom.actionsPanel.dataset.resetButtonDisabled = String(
+    dom.btnResetRun?.disabled === true,
+  );
+  dom.actionsPanel.dataset.exportReportDisabled = String(
+    dom.btnExportRealtimeReport?.disabled === true,
+  );
+  dom.actionsPanel.dataset.resetReportDisabled = String(
+    dom.btnResetRealtimeStats?.disabled === true,
+  );
+}
+
 function getConfiguredAutoBreakthroughResumeWarmupSec() {
   return normalizeAutoBreakthroughResumeWarmupSec(
     state?.settings?.autoBreakthroughResumeWarmupSec,
@@ -11203,6 +11244,7 @@ function syncRealtimeAutoControls() {
       Math.max(0, warmupRemainingSec),
     );
   }
+  syncActionsPanelButtonContract();
 }
 
 function renderRealtimeSummary() {
