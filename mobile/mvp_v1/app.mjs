@@ -2406,6 +2406,22 @@ function syncBattleScenePanelContract() {
     dom.battleSceneArena?.dataset.scenePlayerFrame || "idle";
   dom.battleScenePanel.dataset.enemyFrame =
     dom.battleSceneArena?.dataset.sceneEnemyFrame || "idle";
+  dom.battleScenePanel.dataset.playerStageLabel =
+    dom.battleScenePlayerStage?.dataset.stageLabel || "-";
+  dom.battleScenePanel.dataset.playerStageKey =
+    dom.battleScenePlayerStage?.dataset.stageKey || "player_idle";
+  dom.battleScenePanel.dataset.playerName =
+    dom.battleScenePlayerStage?.dataset.playerName || "-";
+  dom.battleScenePanel.dataset.playerStageName =
+    dom.battleScenePlayerStage?.dataset.stageName || "-";
+  dom.battleScenePanel.dataset.enemyStageLabel =
+    dom.battleSceneEnemyStage?.dataset.stageLabel || "-";
+  dom.battleScenePanel.dataset.enemyStageKey =
+    dom.battleSceneEnemyStage?.dataset.stageKey || "enemy_idle";
+  dom.battleScenePanel.dataset.enemyWorldLabel =
+    dom.battleSceneEnemyStage?.dataset.worldLabel || "-";
+  dom.battleScenePanel.dataset.enemyQiRequired =
+    dom.battleSceneEnemyStage?.dataset.qiRequired || "0";
   dom.battleScenePanel.dataset.playerHpTier =
     dom.battleSceneArena?.dataset.scenePlayerHpTier || "safe";
   dom.battleScenePanel.dataset.playerCastTier =
@@ -2422,6 +2438,16 @@ function syncBattleScenePanelContract() {
     dom.battleSceneArena?.dataset.sceneEnemyHpPct || "100";
   dom.battleScenePanel.dataset.enemyCastPct =
     dom.battleSceneArena?.dataset.sceneEnemyCastPct || "0";
+  dom.battleScenePanel.dataset.playerVitalsText =
+    String(dom.battleScenePlayerVitals?.textContent || "HP 100% · 기세 0%").trim() ||
+    "HP 100% · 기세 0%";
+  dom.battleScenePanel.dataset.playerVitalsKey =
+    dom.battleScenePlayerVitals?.dataset.vitalsKey || "safe_low";
+  dom.battleScenePanel.dataset.enemyVitalsText =
+    String(dom.battleSceneEnemyVitals?.textContent || "HP 100% · 기세 0%").trim() ||
+    "HP 100% · 기세 0%";
+  dom.battleScenePanel.dataset.enemyVitalsKey =
+    dom.battleSceneEnemyVitals?.dataset.vitalsKey || "safe_low";
   dom.battleScenePanel.dataset.lead =
     dom.battleSceneArena?.dataset.sceneLead || "even";
   dom.battleScenePanel.dataset.danger =

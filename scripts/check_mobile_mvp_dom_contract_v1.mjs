@@ -1100,7 +1100,55 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-player-stage-label="-"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-player-stage-key="player_idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-player-name="-"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-player-stage-name="-"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-enemy-frame="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-enemy-stage-label="-"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-enemy-stage-key="enemy_idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-enemy-world-label="-"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-enemy-qi-required="0"',
     "index.html",
     failures,
   );
@@ -1149,6 +1197,30 @@ async function main() {
   assertIncludes(
     html,
     'data-enemy-cast-pct="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-player-vitals-text="HP 100% · 기세 0%"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-player-vitals-key="safe_low"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-enemy-vitals-text="HP 100% · 기세 0%"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-enemy-vitals-key="safe_low"',
     "index.html",
     failures,
   );
@@ -5183,7 +5255,55 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.battleScenePanel.dataset.playerStageLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.playerStageKey =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.playerName =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.playerStageName =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.battleScenePanel.dataset.enemyFrame =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.enemyStageLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.enemyStageKey =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.enemyWorldLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.enemyQiRequired =",
     "app.mjs",
     failures,
   );
@@ -5232,6 +5352,30 @@ async function main() {
   assertIncludes(
     app,
     "dom.battleScenePanel.dataset.enemyCastPct =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.playerVitalsText =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.playerVitalsKey =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.enemyVitalsText =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.enemyVitalsKey =",
     "app.mjs",
     failures,
   );
