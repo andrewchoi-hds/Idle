@@ -10452,6 +10452,22 @@ function syncOfflineCompareRowContract() {
   );
   dom.offlineCompareRow.dataset.applyViewLabel =
     applyViewLabel || "보기 모드 맞추기";
+  dom.offlineCompareRow.dataset.pasteButtonLabel =
+    dom.btnPasteOfflineCompareCode?.textContent?.trim() || "비교 코드 붙여넣기";
+  dom.offlineCompareRow.dataset.pasteButtonDisabled = String(
+    dom.btnPasteOfflineCompareCode?.disabled === true,
+  );
+  dom.offlineCompareRow.dataset.loadPayloadButtonLabel =
+    dom.btnLoadOfflineCompareCodeFromPayload?.textContent?.trim() ||
+    "savePayload에서 대조";
+  dom.offlineCompareRow.dataset.loadPayloadButtonDisabled = String(
+    dom.btnLoadOfflineCompareCodeFromPayload?.disabled === true,
+  );
+  dom.offlineCompareRow.dataset.compareButtonLabel =
+    dom.btnCompareOfflineCode?.textContent?.trim() || "비교 코드 대조";
+  dom.offlineCompareRow.dataset.compareButtonDisabled = String(
+    dom.btnCompareOfflineCode?.disabled === true,
+  );
 }
 
 function syncOfflineCompareViewModeAction(currentCodeInput, targetCodeInput) {

@@ -962,6 +962,42 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-paste-button-label="비교 코드 붙여넣기"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-paste-button-disabled="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-load-payload-button-label="savePayload에서 대조"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-load-payload-button-disabled="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-compare-button-label="비교 코드 대조"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-compare-button-disabled="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-compare-code="비교 코드 없음"',
     "index.html",
     failures,
@@ -5298,6 +5334,42 @@ async function main() {
   assertIncludes(
     app,
     'dom.offlineCompareRow.dataset.applyViewLabel =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineCompareRow.dataset.pasteButtonLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineCompareRow.dataset.pasteButtonDisabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineCompareRow.dataset.loadPayloadButtonLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineCompareRow.dataset.loadPayloadButtonDisabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineCompareRow.dataset.compareButtonLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineCompareRow.dataset.compareButtonDisabled = String(",
     "app.mjs",
     failures,
   );
