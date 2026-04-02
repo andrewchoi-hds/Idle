@@ -295,7 +295,7 @@
         </div>
       </section>
 
-      <section id="savePanel" class="panel save" data-panel-role="secondary" data-active-slot="1" data-copy-target-slot="2" data-source-slot-state="empty" data-source-slot-locked="false" data-target-slot-state="empty" data-target-slot-locked="false" data-copy-policy-reason="unknown" data-copy-allowed="false" data-delete-policy-reason="unknown" data-delete-allowed="false" data-last-saved-at="없음" data-last-active-at="없음">
+      <section id="savePanel" class="panel save" data-panel-role="secondary" data-active-slot="1" data-copy-target-slot="2" data-source-slot-state="empty" data-source-slot-locked="false" data-target-slot-state="empty" data-target-slot-locked="false" data-copy-policy-reason="unknown" data-copy-allowed="false" data-delete-policy-reason="unknown" data-delete-allowed="false" data-last-saved-at="없음" data-last-active-at="없음" data-payload-state="empty" data-payload-source="empty" data-payload-length="0" data-payload-lines="0">
         <h2>저장 / 복구</h2>
         <p class="sub">플레이어명</p>
         <input id="playerNameInput" type="text" maxlength="20" />
@@ -340,6 +340,10 @@
         <ul id="saveSlotSummaryList" class="slot-summary-list" data-slot-count="3" data-active-slot="1" data-active-slot-state="empty" data-ok-count="0" data-empty-count="3" data-corrupt-count="0" data-locked-count="0"></ul>
         <textarea
           id="savePayload"
+          data-payload-state="empty"
+          data-payload-source="empty"
+          data-payload-length="0"
+          data-payload-lines="0"
           rows="8"
           placeholder="내보내기/가져오기 JSON"
         ></textarea>
