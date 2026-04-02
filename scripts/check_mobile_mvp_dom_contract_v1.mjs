@@ -22,6 +22,7 @@ const REQUIRED_HTML_IDS = [
   "difficultyIndex",
   "qiRequired",
   "qiProgressBar",
+  "battleScenePanel",
   "battleSceneArena",
   "battleScenePlayer",
   "battleSceneEnemy",
@@ -163,6 +164,7 @@ const REQUIRED_DOM_KEYS = [
   "settingsPanel",
   "stagePanel",
   "savePanel",
+  "battleScenePanel",
   "battleSceneArena",
   "battleScenePlayer",
   "battleSceneEnemy",
@@ -982,6 +984,102 @@ async function main() {
   assertIncludes(
     html,
     'data-essence-delta="+0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="battleScenePanel"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-state="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-scene-loop="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-status-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-status-state="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-status-source="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-status-key="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-result-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-result-state="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-result-source="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-result-key="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ticker-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ticker-state="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ticker-source="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ticker-key="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ticker-queue-count="0"',
     "index.html",
     failures,
   );
@@ -4603,6 +4701,102 @@ async function main() {
   assertIncludes(
     app,
     "dom.offlineModal.dataset.essenceDelta = essenceDeltaLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.sceneState =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.sceneLoop =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.statusTone =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.statusState =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.statusSource =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.statusKey =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.resultTone =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.resultState =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.resultSource =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.resultKey =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.tickerTone =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.tickerState =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.tickerSource =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.tickerKey =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.tickerQueueCount =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncBattleScenePanelContract();",
     "app.mjs",
     failures,
   );

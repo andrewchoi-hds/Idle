@@ -100,6 +100,7 @@ const dom = {
   difficultyIndex: document.getElementById("difficultyIndex"),
   qiRequired: document.getElementById("qiRequired"),
   qiProgressBar: document.getElementById("qiProgressBar"),
+  battleScenePanel: document.getElementById("battleScenePanel"),
   battleSceneStatus: document.getElementById("battleSceneStatus"),
   battleSceneArena: document.getElementById("battleSceneArena"),
   battleScenePlayer: document.getElementById("battleScenePlayer"),
@@ -2307,6 +2308,7 @@ function setBattleSceneLoopMode(loopMode = "idle") {
     return;
   }
   dom.battleSceneArena.dataset.sceneLoop = String(loopMode || "idle");
+  syncBattleScenePanelContract();
 }
 
 function applyBattleSceneTone(node, tone) {
@@ -2349,6 +2351,42 @@ function normalizeBattleSceneMessageKey(key) {
   return normalized || "idle";
 }
 
+function syncBattleScenePanelContract() {
+  if (!dom.battleScenePanel) {
+    return;
+  }
+  dom.battleScenePanel.dataset.sceneState =
+    dom.battleSceneArena?.dataset.sceneState || "idle";
+  dom.battleScenePanel.dataset.sceneLoop =
+    dom.battleSceneArena?.dataset.sceneLoop || "idle";
+  dom.battleScenePanel.dataset.statusTone =
+    dom.battleSceneStatus?.dataset.tone || "info";
+  dom.battleScenePanel.dataset.statusState =
+    dom.battleSceneStatus?.dataset.messageState || "idle";
+  dom.battleScenePanel.dataset.statusSource =
+    dom.battleSceneStatus?.dataset.messageSource || "idle";
+  dom.battleScenePanel.dataset.statusKey =
+    dom.battleSceneStatus?.dataset.messageKey || "idle";
+  dom.battleScenePanel.dataset.resultTone =
+    dom.battleSceneResult?.dataset.tone || "info";
+  dom.battleScenePanel.dataset.resultState =
+    dom.battleSceneResult?.dataset.messageState || "idle";
+  dom.battleScenePanel.dataset.resultSource =
+    dom.battleSceneResult?.dataset.messageSource || "idle";
+  dom.battleScenePanel.dataset.resultKey =
+    dom.battleSceneResult?.dataset.messageKey || "idle";
+  dom.battleScenePanel.dataset.tickerTone =
+    dom.battleSceneTicker?.dataset.tone || "info";
+  dom.battleScenePanel.dataset.tickerState =
+    dom.battleSceneTicker?.dataset.messageState || "idle";
+  dom.battleScenePanel.dataset.tickerSource =
+    dom.battleSceneTicker?.dataset.messageSource || "idle";
+  dom.battleScenePanel.dataset.tickerKey =
+    dom.battleSceneTicker?.dataset.messageKey || "idle";
+  dom.battleScenePanel.dataset.tickerQueueCount =
+    dom.battleSceneTicker?.dataset.queueCount || "0";
+}
+
 function applyBattleSceneUiState() {
   if (dom.battleSceneStatus) {
     dom.battleSceneStatus.textContent = battleSceneUiState.statusText;
@@ -2374,6 +2412,7 @@ function applyBattleSceneUiState() {
       battleSceneUiState.resultKey,
     );
   }
+  syncBattleScenePanelContract();
 }
 
 function setBattleSceneStatus(text, tone = "info", source = "ambient", key = "idle") {
@@ -2423,6 +2462,7 @@ function renderBattleSceneTicker() {
     dom.battleSceneTicker.dataset.messageState = "idle";
     dom.battleSceneTicker.dataset.messageSource = "idle";
     dom.battleSceneTicker.dataset.messageKey = "idle";
+    syncBattleScenePanelContract();
     return;
   }
   dom.battleSceneTicker.textContent = latest.message;
@@ -2430,6 +2470,7 @@ function renderBattleSceneTicker() {
   dom.battleSceneTicker.dataset.messageState = "active";
   dom.battleSceneTicker.dataset.messageSource = normalizeBattleSceneMessageSource(latest.source);
   dom.battleSceneTicker.dataset.messageKey = normalizeBattleSceneMessageKey(latest.key);
+  syncBattleScenePanelContract();
 }
 
 function pushBattleSceneTicker(message, tone = "info", source = "ambient", key = "") {
@@ -2658,6 +2699,7 @@ function setBattleSceneState(sceneState = "idle") {
     return;
   }
   dom.battleSceneArena.dataset.sceneState = String(sceneState || "idle");
+  syncBattleScenePanelContract();
 }
 
 function setBattleSceneImpactCue(cue = "idle") {
