@@ -193,6 +193,7 @@ const dom = {
   offlineDetailHiddenSummary: document.getElementById("offlineDetailHiddenSummary"),
   offlineDetailHiddenKindsSummary: document.getElementById("offlineDetailHiddenKindsSummary"),
   offlineCapState: document.getElementById("offlineCapState"),
+  offlineCompareRow: document.getElementById("offlineCompareRow"),
   offlineBattleCount: document.getElementById("offlineBattleCount"),
   offlineBreakthroughCount: document.getElementById("offlineBreakthroughCount"),
   offlineRebirthCount: document.getElementById("offlineRebirthCount"),
@@ -10258,6 +10259,27 @@ function setOfflineCompareTargetSummary(targetCodeInput) {
   );
 }
 
+function syncOfflineCompareRowContract() {
+  if (!dom.offlineCompareRow) {
+    return;
+  }
+  const inputText = String(dom.offlineCompareCodeInput?.value || "").trim();
+  const targetMode = String(
+    dom.btnApplyOfflineCompareViewMode?.dataset.targetMode || "",
+  ).trim();
+  const applyViewLabel = String(
+    dom.btnApplyOfflineCompareViewMode?.textContent || "보기 모드 맞추기",
+  ).trim();
+  dom.offlineCompareRow.dataset.inputState = inputText ? "present" : "empty";
+  dom.offlineCompareRow.dataset.inputLength = String(inputText.length);
+  dom.offlineCompareRow.dataset.targetMode = targetMode || "none";
+  dom.offlineCompareRow.dataset.applyViewEnabled = String(
+    !dom.btnApplyOfflineCompareViewMode?.disabled,
+  );
+  dom.offlineCompareRow.dataset.applyViewLabel =
+    applyViewLabel || "보기 모드 맞추기";
+}
+
 function syncOfflineCompareViewModeAction(currentCodeInput, targetCodeInput) {
   if (!dom.btnApplyOfflineCompareViewMode) {
     return;
@@ -10270,12 +10292,14 @@ function syncOfflineCompareViewModeAction(currentCodeInput, targetCodeInput) {
     dom.btnApplyOfflineCompareViewMode.disabled = true;
     dom.btnApplyOfflineCompareViewMode.dataset.targetMode = "";
     dom.btnApplyOfflineCompareViewMode.textContent = "보기 모드 맞추기";
+    syncOfflineCompareRowContract();
     return;
   }
   const modeLabelKo = targetMode === "critical" ? "핵심" : "전체";
   dom.btnApplyOfflineCompareViewMode.disabled = false;
   dom.btnApplyOfflineCompareViewMode.dataset.targetMode = targetMode;
   dom.btnApplyOfflineCompareViewMode.textContent = `보기 모드 맞추기(${modeLabelKo})`;
+  syncOfflineCompareRowContract();
 }
 
 function setOfflineCompareActionHint(currentCodeInput, targetCodeInput) {
