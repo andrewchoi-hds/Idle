@@ -3387,6 +3387,14 @@
 ## 811) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(focus controls panel root contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
 
+## 812) 다음 순차 작업
+1. [완료] 오프라인 세부 로그 리스트 루트(`offlineDetailList`) contract에 `data-detail-mode`, `data-detail-expanded`, `data-visible-count`, `data-prioritized-count`, `data-hidden-count`, `data-filter-summary`, `data-hidden-summary`, `data-hidden-kinds-summary`, `data-empty-label`를 추가해 부모 리스트 단독 관찰만으로도 현재 세부 로그 모드와 표시/숨김 집계를 직접 읽을 수 있도록 보강.
+2. [완료] `renderOfflineDetailList()`, `setOfflineDetailCriticalOnly()`, `setOfflineDetailExpanded()`, `hideOfflineModal()` 경로에서 세부 로그 상태와 기본값 리셋이 `offlineDetailList` dataset에도 함께 기록되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 offline detail list root contract 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 813) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(offline detail list root contract 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
 ## 778) 다음 순차 작업
 1. [완료] 자동 재개 가이드(`autoBreakthroughResumeLabel`, `autoBreakthroughResumeHint`, `btnResumeAutoBreakthrough`) contract에 `data-risk-tier`, `data-next-breakthrough`, `data-next-tribulation`, `data-action-label`를 추가해 재개 시 적용될 토글 상태와 위험도를 텍스트 파싱 없이 직접 읽을 수 있도록 보강.
 2. [완료] `render()` 경로에서 `autoResumePolicy.riskTier`, `shouldEnableAutoBreakthrough`, `shouldEnableAutoTribulation`, `actionLabelKo`가 라벨/힌트/버튼 dataset에도 함께 기록되도록 정합화.
