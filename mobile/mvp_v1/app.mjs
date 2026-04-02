@@ -10584,6 +10584,43 @@ function syncSlotActionButtons() {
     dom.slotDeleteHint.textContent = deleteHintText;
     applySlotHintTone(dom.slotDeleteHint, deleteHintTone);
   }
+  if (dom.savePanel) {
+    dom.savePanel.dataset.copyButtonLabel =
+      dom.btnCopySlot?.textContent?.trim() || "활성 슬롯 복제";
+    dom.savePanel.dataset.copyButtonDisabled = String(
+      dom.btnCopySlot?.disabled === true,
+    );
+    dom.savePanel.dataset.toggleLockButtonLabel =
+      dom.btnToggleSlotLock?.textContent?.trim() || "활성 슬롯 잠금";
+    dom.savePanel.dataset.toggleLockButtonDisabled = String(
+      dom.btnToggleSlotLock?.disabled === true,
+    );
+    dom.savePanel.dataset.deleteButtonLabel =
+      dom.btnDeleteSlot?.textContent?.trim() || "활성 슬롯 삭제";
+    dom.savePanel.dataset.deleteButtonDisabled = String(
+      dom.btnDeleteSlot?.disabled === true,
+    );
+    dom.savePanel.dataset.saveButtonLabel =
+      dom.btnSaveLocal?.textContent?.trim() || "로컬 저장";
+    dom.savePanel.dataset.saveButtonDisabled = String(
+      dom.btnSaveLocal?.disabled === true,
+    );
+    dom.savePanel.dataset.loadButtonLabel =
+      dom.btnLoadLocal?.textContent?.trim() || "로컬 불러오기";
+    dom.savePanel.dataset.loadButtonDisabled = String(
+      dom.btnLoadLocal?.disabled === true,
+    );
+    dom.savePanel.dataset.exportButtonLabel =
+      dom.btnExportState?.textContent?.trim() || "JSON 내보내기";
+    dom.savePanel.dataset.exportButtonDisabled = String(
+      dom.btnExportState?.disabled === true,
+    );
+    dom.savePanel.dataset.importButtonLabel =
+      dom.btnImportState?.textContent?.trim() || "JSON 가져오기";
+    dom.savePanel.dataset.importButtonDisabled = String(
+      dom.btnImportState?.disabled === true,
+    );
+  }
 }
 
 function renderSaveSlotSummary(force = false) {

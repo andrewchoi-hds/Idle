@@ -812,6 +812,90 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-copy-button-label="활성 슬롯 복제"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-copy-button-disabled="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-toggle-lock-button-label="활성 슬롯 잠금"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-toggle-lock-button-disabled="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-delete-button-label="활성 슬롯 삭제"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-delete-button-disabled="true"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-save-button-label="로컬 저장"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-save-button-disabled="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-load-button-label="로컬 불러오기"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-load-button-disabled="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-export-button-label="JSON 내보내기"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-export-button-disabled="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-import-button-label="JSON 가져오기"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-import-button-disabled="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="logsPanel"',
     "index.html",
     failures,
@@ -4968,6 +5052,90 @@ async function main() {
   assertIncludes(
     app,
     'syncSavePayloadContract(dom.savePayload.value.trim() ? "manual" : "empty");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.copyButtonLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.copyButtonDisabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.toggleLockButtonLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.toggleLockButtonDisabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.deleteButtonLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.deleteButtonDisabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.saveButtonLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.saveButtonDisabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.loadButtonLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.loadButtonDisabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.exportButtonLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.exportButtonDisabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.importButtonLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.importButtonDisabled = String(",
     "app.mjs",
     failures,
   );
