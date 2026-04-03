@@ -2555,6 +2555,74 @@ function syncBattleScenePanelContract() {
     dom.battleSceneArena?.dataset.sceneAmbientImpactSignalAgeMs || "0";
   dom.battleScenePanel.dataset.ambientImpactSignalAgeMaxMs =
     dom.battleSceneArena?.dataset.sceneAmbientImpactSignalAgeMaxMs || "6800";
+  dom.battleScenePanel.dataset.ambientImpactExplicitSeq =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactExplicitSeq || "0";
+  dom.battleScenePanel.dataset.ambientImpactExplicitSource =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactExplicitSource || "none";
+  dom.battleScenePanel.dataset.ambientImpactExplicitKind =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactExplicitKind || "none";
+  dom.battleScenePanel.dataset.ambientImpactExplicitTone =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactExplicitTone || "none";
+  dom.battleScenePanel.dataset.ambientImpactExplicitOutcomeCode =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactExplicitOutcomeCode || "none";
+  dom.battleScenePanel.dataset.ambientImpactExplicitOutcomeProfile =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactExplicitOutcomeProfile || "neutral";
+  dom.battleScenePanel.dataset.ambientImpactExplicitSyncDuel =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactExplicitSyncDuel || "off";
+  dom.battleScenePanel.dataset.ambientImpactExplicitAgeMs =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactExplicitAgeMs || "0";
+  dom.battleScenePanel.dataset.ambientImpactExplicitRecoveryMaxMs =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactExplicitRecoveryMaxMs || "1400";
+  dom.battleScenePanel.dataset.ambientImpactExplicitQuietThresholdMs =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactExplicitQuietThresholdMs || "2200";
+  dom.battleScenePanel.dataset.ambientImpactExplicitRecoveryRemainingMs =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactExplicitRecoveryRemainingMs || "0";
+  dom.battleScenePanel.dataset.ambientImpactExplicitQuietRemainingMs =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactExplicitQuietRemainingMs || "0";
+  dom.battleScenePanel.dataset.ambientImpactExplicitGate =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactExplicitGate || "no_signal";
+  dom.battleScenePanel.dataset.ambientImpactExplicitFresh =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactExplicitFresh || "none";
+  dom.battleScenePanel.dataset.ambientImpactExplicitActive =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactExplicitActive || "none";
+  dom.battleScenePanel.dataset.ambientImpactResultSource =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactResultSource || "none";
+  dom.battleScenePanel.dataset.ambientImpactResultKind =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactResultKind || "none";
+  dom.battleScenePanel.dataset.ambientImpactResultTone =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactResultTone || "none";
+  dom.battleScenePanel.dataset.ambientImpactResultOutcomeCode =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactResultOutcomeCode || "none";
+  dom.battleScenePanel.dataset.ambientImpactResultOutcomeProfile =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactResultOutcomeProfile || "neutral";
+  dom.battleScenePanel.dataset.ambientImpactResultSyncDuel =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactResultSyncDuel || "off";
+  dom.battleScenePanel.dataset.ambientImpactResultExplicitSeq =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactResultExplicitSeq || "0";
+  dom.battleScenePanel.dataset.ambientImpactResultSignalAgeMs =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactResultSignalAgeMs || "0";
+  dom.battleScenePanel.dataset.ambientImpactResultSignalAgeMaxMs =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactResultSignalAgeMaxMs || "6800";
+  dom.battleScenePanel.dataset.ambientImpactResultReplayCount =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactResultReplayCount || "0";
+  dom.battleScenePanel.dataset.ambientImpactResultReplayMax =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactResultReplayMax || "0";
+  dom.battleScenePanel.dataset.ambientImpactResultReplayRemaining =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactResultReplayRemaining || "0";
+  dom.battleScenePanel.dataset.ambientImpactResultCooldownMs =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactResultCooldownMs || "0";
+  dom.battleScenePanel.dataset.ambientImpactResultCooldownMaxMs =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactResultCooldownMaxMs || "960";
+  dom.battleScenePanel.dataset.ambientImpactResultPriorityRemainingMs =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactResultPriorityRemainingMs || "0";
+  dom.battleScenePanel.dataset.ambientImpactResultPriorityMaxMs =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactResultPriorityMaxMs || "6800";
+  dom.battleScenePanel.dataset.ambientImpactResultGate =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactResultGate || "no_signal";
+  dom.battleScenePanel.dataset.ambientImpactResultFresh =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactResultFresh || "none";
+  dom.battleScenePanel.dataset.ambientImpactResultActive =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactResultActive || "none";
   dom.battleScenePanel.dataset.statusTone =
     dom.battleSceneStatus?.dataset.tone || "info";
   dom.battleScenePanel.dataset.statusText =
