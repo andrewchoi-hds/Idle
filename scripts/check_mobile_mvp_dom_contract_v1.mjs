@@ -1622,6 +1622,144 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-ambient-impact-random-recovery-source="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-recovery-outcome-profile="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-recovery-ms="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-recovery-max-ms="1400"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-cadence-source="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-cadence-outcome-profile="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-cadence-divisor="2"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-probability-source="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-probability-outcome-profile="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-probability-scale-pct="100"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-kind-source="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-kind-profile="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-kind="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-tone="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-outcome-source="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-outcome-profile="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-outcome-code="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-sync-source="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-sync-outcome-profile="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-sync-duel="on"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-quiet-source="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-quiet-outcome-profile="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-random-quiet-threshold-ms="2200"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-ambient-impact-replay="0"',
     "index.html",
     failures,
@@ -6426,6 +6564,144 @@ async function main() {
   assertIncludes(
     app,
     "dom.battleScenePanel.dataset.ambientImpactRandomState =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomRecoverySource =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomRecoveryOutcomeProfile =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomRecoveryMs =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomRecoveryMaxMs =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomCadenceSource =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomCadenceOutcomeProfile =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomCadenceDivisor =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomProbabilitySource =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomProbabilityOutcomeProfile =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomProbabilityScalePct =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomKindSource =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomKindProfile =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomKind =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomTone =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomOutcomeSource =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomOutcomeProfile =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomOutcomeCode =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomSyncSource =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomSyncOutcomeProfile =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomSyncDuel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomQuietSource =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomQuietOutcomeProfile =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactRandomQuietThresholdMs =",
     "app.mjs",
     failures,
   );
