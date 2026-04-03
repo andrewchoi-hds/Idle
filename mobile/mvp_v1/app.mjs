@@ -2567,6 +2567,18 @@ function syncBattleScenePanelContract() {
     dom.battleSceneArena?.dataset.sceneAmbientImpactRandomQuietOutcomeProfile || "neutral";
   dom.battleScenePanel.dataset.ambientImpactRandomQuietThresholdMs =
     dom.battleSceneArena?.dataset.sceneAmbientImpactRandomQuietThresholdMs || "2200";
+  dom.battleScenePanel.dataset.ambientImpactRandomResidueSource =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomResidueSource || "none";
+  dom.battleScenePanel.dataset.ambientImpactRandomResidueKind =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomResidueKind || "none";
+  dom.battleScenePanel.dataset.ambientImpactRandomResidueTone =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomResidueTone || "none";
+  dom.battleScenePanel.dataset.ambientImpactRandomResidueOutcomeCode =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomResidueOutcomeCode || "none";
+  dom.battleScenePanel.dataset.ambientImpactRandomResidueSyncDuel =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomResidueSyncDuel || "on";
+  dom.battleScenePanel.dataset.ambientImpactRandomResidueOutcomeProfile =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomResidueOutcomeProfile || "neutral";
   dom.battleScenePanel.dataset.ambientImpactReplay =
     dom.battleSceneArena?.dataset.sceneAmbientImpactReplay || "0";
   dom.battleScenePanel.dataset.ambientImpactReplaySource =
