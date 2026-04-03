@@ -806,6 +806,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-state-breakdown-label="정상 0 · 빈 슬롯 3 · 손상 0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-locked-count-label="잠금 슬롯 0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-payload-state="empty"',
     "index.html",
     failures,
@@ -5874,6 +5886,18 @@ async function main() {
   assertIncludes(
     app,
     "dom.saveSlotSummaryList.dataset.lockedCount = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.saveSlotSummaryList.dataset.stateBreakdownLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.saveSlotSummaryList.dataset.lockedCountLabel = `잠금 슬롯 ${lockedCount}`;',
     "app.mjs",
     failures,
   );
