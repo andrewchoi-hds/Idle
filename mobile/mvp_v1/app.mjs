@@ -11886,6 +11886,9 @@ function hideOfflineModal() {
   dom.offlineModal.dataset.battleCount = "0";
   dom.offlineModal.dataset.breakthroughCount = "0";
   dom.offlineModal.dataset.rebirthCount = "0";
+  dom.offlineModal.dataset.battleCountLabel = "0회";
+  dom.offlineModal.dataset.breakthroughCountLabel = "0회";
+  dom.offlineModal.dataset.rebirthCountLabel = "0회";
   dom.offlineModal.dataset.qiDelta = "+0";
   dom.offlineModal.dataset.spiritDelta = "+0";
   dom.offlineModal.dataset.essenceDelta = "+0";
@@ -11942,6 +11945,9 @@ function showOfflineModal(offline) {
   const battleCountLabel = String(auto?.battles ?? 0);
   const breakthroughCountLabel = String(auto?.breakthroughs ?? 0);
   const rebirthCountLabel = String(auto?.rebirths ?? 0);
+  const battleCountDisplayLabel = `${battleCountLabel}회`;
+  const breakthroughCountDisplayLabel = `${breakthroughCountLabel}회`;
+  const rebirthCountDisplayLabel = `${rebirthCountLabel}회`;
   const qiDeltaLabel = fmtSignedInteger(delta.qi);
   const spiritDeltaLabel = fmtSignedInteger(delta.spiritCoin);
   const essenceDeltaLabel = fmtSignedInteger(delta.rebirthEssence);
@@ -11950,9 +11956,9 @@ function showOfflineModal(offline) {
   dom.offlineWarmupSummary.textContent = warmupLabelKo;
   dom.offlineCriticalSummary.textContent = criticalSummaryLabelKo;
   dom.offlineCapState.textContent = capStateLabel;
-  dom.offlineBattleCount.textContent = `${battleCountLabel}회`;
-  dom.offlineBreakthroughCount.textContent = `${breakthroughCountLabel}회`;
-  dom.offlineRebirthCount.textContent = `${rebirthCountLabel}회`;
+  dom.offlineBattleCount.textContent = battleCountDisplayLabel;
+  dom.offlineBreakthroughCount.textContent = breakthroughCountDisplayLabel;
+  dom.offlineRebirthCount.textContent = rebirthCountDisplayLabel;
   setDeltaNode(dom.offlineQiDelta, delta.qi);
   setDeltaNode(dom.offlineSpiritDelta, delta.spiritCoin);
   setDeltaNode(dom.offlineEssenceDelta, delta.rebirthEssence);
@@ -11965,6 +11971,9 @@ function showOfflineModal(offline) {
   dom.offlineModal.dataset.battleCount = battleCountLabel;
   dom.offlineModal.dataset.breakthroughCount = breakthroughCountLabel;
   dom.offlineModal.dataset.rebirthCount = rebirthCountLabel;
+  dom.offlineModal.dataset.battleCountLabel = battleCountDisplayLabel;
+  dom.offlineModal.dataset.breakthroughCountLabel = breakthroughCountDisplayLabel;
+  dom.offlineModal.dataset.rebirthCountLabel = rebirthCountDisplayLabel;
   dom.offlineModal.dataset.qiDelta = qiDeltaLabel;
   dom.offlineModal.dataset.spiritDelta = spiritDeltaLabel;
   dom.offlineModal.dataset.essenceDelta = essenceDeltaLabel;

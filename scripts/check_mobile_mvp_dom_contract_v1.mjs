@@ -1196,6 +1196,24 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-battle-count-label="0회"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-breakthrough-count-label="0회"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-rebirth-count-label="0회"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-source-slot-summary="슬롯 1: 비어 있음"',
     "index.html",
     failures,
@@ -6443,13 +6461,31 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.offlineModal.dataset.battleCountLabel = "0회";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.offlineModal.dataset.breakthroughCount = "0";',
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
+    'dom.offlineModal.dataset.breakthroughCountLabel = "0회";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.offlineModal.dataset.rebirthCount = "0";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.rebirthCountLabel = "0회";',
     "app.mjs",
     failures,
   );
@@ -6515,13 +6551,31 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.offlineModal.dataset.battleCountLabel = battleCountDisplayLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.offlineModal.dataset.breakthroughCount = breakthroughCountLabel;",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
+    "dom.offlineModal.dataset.breakthroughCountLabel = breakthroughCountDisplayLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.offlineModal.dataset.rebirthCount = rebirthCountLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.rebirthCountLabel = rebirthCountDisplayLabel;",
     "app.mjs",
     failures,
   );
