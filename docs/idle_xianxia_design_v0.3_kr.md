@@ -3539,3 +3539,11 @@
 
 ## 841) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(battle scene panel ambient origin aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 842) 다음 순차 작업
+1. [완료] 전투 패널 루트(`battleScenePanel`) contract에 `data-ambient-impact-replay`, `data-ambient-impact-replay-source`, `data-ambient-impact-replay-outcome-profile`, `data-ambient-impact-replay-max`, `data-ambient-impact-replay-remaining`, `data-ambient-impact-cooldown-ms`, `data-ambient-impact-cooldown-source`, `data-ambient-impact-cooldown-outcome-profile`, `data-ambient-impact-cooldown-max-ms`, `data-ambient-impact-priority-remaining-ms`, `data-ambient-impact-priority-source`, `data-ambient-impact-priority-outcome-profile`, `data-ambient-impact-priority-max-ms`, `data-ambient-impact-signal-age-source`, `data-ambient-impact-signal-age-outcome-profile`, `data-ambient-impact-signal-age-ms`, `data-ambient-impact-signal-age-max-ms`를 추가해 부모 패널 단독 관찰만으로도 현재 임팩트 lifecycle budget/window 상태를 직접 읽을 수 있도록 보강.
+2. [완료] `syncBattleScenePanelContract()`가 `battleSceneArena`의 ambient replay/cooldown/priority/signal-age dataset을 `battleScenePanel` root에도 함께 mirror하도록 확장해 panel-root 소비 정합을 강화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 battle scene panel ambient lifecycle aggregate 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 843) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(battle scene panel ambient lifecycle aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
