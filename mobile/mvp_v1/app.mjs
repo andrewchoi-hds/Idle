@@ -128,6 +128,7 @@ const dom = {
   battleSceneTicker: document.getElementById("battleSceneTicker"),
   statsPanel: document.getElementById("statsPanel"),
   savePanel: document.getElementById("savePanel"),
+  assetsPanel: document.getElementById("assetsPanel"),
   statQi: document.getElementById("statQi"),
   statSpiritCoin: document.getElementById("statSpiritCoin"),
   statRebirthEssence: document.getElementById("statRebirthEssence"),
@@ -12045,6 +12046,38 @@ function renderLogs() {
     .join("");
 }
 
+function syncAssetsPanelContract() {
+  if (!dom.assetsPanel) {
+    return;
+  }
+  const links = Array.from(dom.assetsPanel.querySelectorAll("a[href]"));
+  const normalizedLinks = links.map((link) => {
+    const href = String(link.getAttribute("href") || "");
+    const label = String(link.textContent || "").trim() || "미지정";
+    const source = href.includes("kenney.nl")
+      ? "kenney"
+      : href.includes("opengameart.org")
+        ? "opengameart"
+        : "external";
+    return { href, label, source };
+  });
+  const primary = normalizedLinks[0] || {
+    href: "",
+    label: "미지정",
+    source: "none",
+  };
+  const cc0Count = normalizedLinks.filter((link) =>
+    link.label.toUpperCase().includes("CC0"),
+  ).length;
+  dom.assetsPanel.dataset.linkCount = String(normalizedLinks.length);
+  dom.assetsPanel.dataset.primarySource = primary.source;
+  dom.assetsPanel.dataset.primaryLabel = primary.label;
+  dom.assetsPanel.dataset.sourceSummary =
+    normalizedLinks.map((link) => link.label).join(" · ") || "추천 링크 없음";
+  dom.assetsPanel.dataset.licenseSummary =
+    normalizedLinks.length > 0 ? `CC0 ${cc0Count}건` : "라이선스 정보 없음";
+}
+
 function render() {
   ensureRealtimeStatsShape();
   const stage = getStage(context, state.progression.difficultyIndex);
@@ -12391,6 +12424,7 @@ function render() {
     dom.settingsPanel.dataset.offlineCapLabel = offlineCapLabel;
     dom.settingsPanel.dataset.offlineEventLimitLabel = offlineEventLimitLabel;
   }
+  syncAssetsPanelContract();
   syncCopySlotTargetSelection();
   syncSlotActionButtons();
   renderLogs();
