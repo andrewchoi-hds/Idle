@@ -1622,6 +1622,108 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-ambient-impact-replay="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-replay-source="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-replay-outcome-profile="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-replay-max="3"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-replay-remaining="3"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-cooldown-ms="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-cooldown-source="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-cooldown-outcome-profile="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-cooldown-max-ms="960"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-priority-remaining-ms="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-priority-source="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-priority-outcome-profile="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-priority-max-ms="6800"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-signal-age-source="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-signal-age-outcome-profile="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-signal-age-ms="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-signal-age-max-ms="6800"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-status-text="대기 중"',
     "index.html",
     failures,
@@ -6120,6 +6222,108 @@ async function main() {
   assertIncludes(
     app,
     "dom.battleScenePanel.dataset.ambientImpactRandomState =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactReplay =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactReplaySource =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactReplayOutcomeProfile =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactReplayMax =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactReplayRemaining =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactCooldownMs =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactCooldownSource =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactCooldownOutcomeProfile =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactCooldownMaxMs =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactPriorityRemainingMs =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactPrioritySource =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactPriorityOutcomeProfile =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactPriorityMaxMs =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactSignalAgeSource =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactSignalAgeOutcomeProfile =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactSignalAgeMs =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactSignalAgeMaxMs =",
     "app.mjs",
     failures,
   );
