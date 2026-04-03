@@ -2534,7 +2534,19 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-auto-battle-label="자동 전투 ON"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-auto-breakthrough="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-auto-breakthrough-label="자동 돌파 OFF"',
     "index.html",
     failures,
   );
@@ -2546,13 +2558,31 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-auto-tribulation-label="자동 도겁 허용 OFF"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-auto-resume-realtime="false"',
     "index.html",
     failures,
   );
   assertIncludes(
     html,
+    'data-auto-resume-realtime-label="앱 복귀 시 실시간 자동 재개 OFF"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-low-performance-battle-scene="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-low-performance-battle-scene-label="전투 연출 저사양 모드 OFF"',
     "index.html",
     failures,
   );
@@ -7715,7 +7745,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.settingsPanel.dataset.autoBattleLabel = autoBattleLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.settingsPanel.dataset.autoBreakthrough = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.settingsPanel.dataset.autoBreakthroughLabel = autoBreakthroughLabel;",
     "app.mjs",
     failures,
   );
@@ -7727,13 +7769,31 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.settingsPanel.dataset.autoTribulationLabel = autoTribulationLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.settingsPanel.dataset.autoResumeRealtime = String(",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
+    "dom.settingsPanel.dataset.autoResumeRealtimeLabel = autoResumeRealtimeLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.settingsPanel.dataset.lowPerformanceBattleScene = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.settingsPanel.dataset.lowPerformanceBattleSceneLabel =",
     "app.mjs",
     failures,
   );
