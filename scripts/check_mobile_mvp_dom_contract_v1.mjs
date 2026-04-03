@@ -1233,6 +1233,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-count-summary="전투 0회 · 돌파 0회 · 환생 0회"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-qi-delta-tone="neutral"',
     "index.html",
     failures,
@@ -1246,6 +1252,12 @@ async function main() {
   assertIncludes(
     html,
     'data-essence-delta-tone="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-resource-delta-summary="기 +0 · 영석 +0 · 환생정수 +0"',
     "index.html",
     failures,
   );
@@ -6588,6 +6600,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.offlineModal.dataset.countSummary = "전투 0회 · 돌파 0회 · 환생 0회";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.offlineModal.dataset.qiDeltaTone = "neutral";',
     "app.mjs",
     failures,
@@ -6601,6 +6619,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.offlineModal.dataset.essenceDeltaTone = "neutral";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.resourceDeltaSummary = "기 +0 · 영석 +0 · 환생정수 +0";',
     "app.mjs",
     failures,
   );
@@ -6696,6 +6720,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.offlineModal.dataset.countSummary = countSummaryLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.offlineModal.dataset.qiDeltaTone =",
     "app.mjs",
     failures,
@@ -6709,6 +6739,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.offlineModal.dataset.essenceDeltaTone =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.resourceDeltaSummary = resourceDeltaSummaryLabel;",
     "app.mjs",
     failures,
   );
