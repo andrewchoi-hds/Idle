@@ -12240,6 +12240,12 @@ function render() {
   const stageTier = resolveBattleSceneTier(stage);
   const breakthroughReady =
     (Number(state.currencies.qi) || 0) >= (Number(stage.qi_required) || 0);
+  const stageSummaryLabel =
+    `${worldKo(stage.world)} · ${displayName} · 난이도 ${fmtNumber(stage.difficulty_index)}`;
+  const qiSummaryLabel =
+    `기 ${fmtNumber(state.currencies.qi)} / ${fmtNumber(stage.qi_required)} · ${
+      breakthroughReady ? "돌파 가능" : "돌파 대기"
+    }`;
 
   if (dom.stagePanel) {
     dom.stagePanel.dataset.stageName = String(displayName || "-");
@@ -12248,6 +12254,8 @@ function render() {
     dom.stagePanel.dataset.worldKey = stageWorldKey;
     dom.stagePanel.dataset.stageTier = stageTier;
     dom.stagePanel.dataset.breakthroughReady = String(breakthroughReady);
+    dom.stagePanel.dataset.stageSummary = stageSummaryLabel;
+    dom.stagePanel.dataset.qiSummary = qiSummaryLabel;
   }
 
   dom.stageDisplay.textContent = displayName;
