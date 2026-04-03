@@ -2300,6 +2300,42 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-flash-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-flash-active="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-float-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-spark-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-trail-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-shockwave-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-skill-banner-text="기세 수렴"',
     "index.html",
     failures,
@@ -7350,6 +7386,48 @@ async function main() {
   assertIncludes(
     app,
     "dom.battleScenePanel.dataset.dpsBadgeTone =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.flashTone =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.flashActive =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.floatCount =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.sparkCount =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.trailCount =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.shockwaveCount =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function syncBattleSceneMotionLayerContracts() {",
     "app.mjs",
     failures,
   );
