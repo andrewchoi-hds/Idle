@@ -1328,6 +1328,24 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-impact-cue="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-impact-kinetic="normal"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-impact-vfx="normal"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-player-frame="idle"',
     "index.html",
     failures,
@@ -5760,6 +5778,24 @@ async function main() {
   assertIncludes(
     app,
     "dom.battleScenePanel.dataset.sceneOutcomePriority =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.impactCue =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.impactKinetic =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.impactVfx =",
     "app.mjs",
     failures,
   );
