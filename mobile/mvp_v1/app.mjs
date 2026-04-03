@@ -10929,6 +10929,10 @@ function syncSlotActionButtons() {
     applySlotHintTone(dom.slotDeleteHint, deleteHintTone);
   }
   if (dom.savePanel) {
+    const selectionSummaryLabel =
+      `활성 ${activeSaveSlot}번 · ${
+        dom.savePanel.dataset.sourceSlotSummary || `슬롯 ${activeSaveSlot}: 비어 있음`
+      } → ${targetHintText}`;
     dom.savePanel.dataset.copyButtonLabel =
       dom.btnCopySlot?.textContent?.trim() || "활성 슬롯 복제";
     dom.savePanel.dataset.copyButtonDisabled = String(
@@ -10964,6 +10968,12 @@ function syncSlotActionButtons() {
     dom.savePanel.dataset.importButtonDisabled = String(
       dom.btnImportState?.disabled === true,
     );
+    dom.savePanel.dataset.selectionSummary = selectionSummaryLabel;
+    dom.savePanel.dataset.buttonSummary = [
+      dom.btnSaveLocal?.textContent?.trim() || "로컬 저장",
+      dom.btnLoadLocal?.textContent?.trim() || "로컬 불러오기",
+      dom.btnExportState?.textContent?.trim() || "JSON 내보내기",
+    ].join(" · ");
   }
 }
 
