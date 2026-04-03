@@ -2421,6 +2421,12 @@ function syncBattleScenePanelContract() {
     dom.battleSceneArena?.dataset.scenePerformance || "normal";
   dom.battleScenePanel.dataset.sceneOutcomePriority =
     dom.battleSceneArena?.dataset.sceneOutcomePriority || "normal";
+  dom.battleScenePanel.dataset.impactCue =
+    dom.battleSceneArena?.dataset.sceneImpactCue || "idle";
+  dom.battleScenePanel.dataset.impactKinetic =
+    dom.battleSceneArena?.dataset.sceneImpactKinetic || "normal";
+  dom.battleScenePanel.dataset.impactVfx =
+    dom.battleSceneArena?.dataset.sceneImpactVfx || "normal";
   dom.battleScenePanel.dataset.playerFrame =
     dom.battleSceneArena?.dataset.scenePlayerFrame || "idle";
   dom.battleScenePanel.dataset.enemyFrame =
