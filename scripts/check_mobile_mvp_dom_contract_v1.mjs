@@ -681,6 +681,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-stage-summary="- · - · 난이도 0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-difficulty-index="0"',
     "index.html",
     failures,
@@ -712,6 +718,12 @@ async function main() {
   assertIncludes(
     html,
     'data-progress-key="empty"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-qi-summary="기 0 / 0 · 돌파 대기"',
     "index.html",
     failures,
   );
@@ -5545,6 +5557,18 @@ async function main() {
   assertIncludes(
     app,
     "dom.stagePanel.dataset.breakthroughReady = String(breakthroughReady);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.stagePanel.dataset.stageSummary = stageSummaryLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.stagePanel.dataset.qiSummary = qiSummaryLabel;",
     "app.mjs",
     failures,
   );
