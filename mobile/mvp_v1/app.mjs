@@ -10789,6 +10789,16 @@ function syncOfflineCompareRowContract() {
   dom.offlineCompareRow.dataset.compareButtonDisabled = String(
     dom.btnCompareOfflineCode?.disabled === true,
   );
+  dom.offlineCompareRow.dataset.inputSummary = inputText
+    ? `입력 ${inputText.length}자 · 보기 모드 ${targetMode || "미정"}`
+    : `입력 없음 · 보기 모드 ${targetMode || "미정"}`;
+  dom.offlineCompareRow.dataset.actionSummary = [
+    dom.btnPasteOfflineCompareCode?.textContent?.trim() || "비교 코드 붙여넣기",
+    dom.btnLoadOfflineCompareCodeFromPayload?.textContent?.trim() ||
+      "savePayload에서 대조",
+    dom.btnCompareOfflineCode?.textContent?.trim() || "비교 코드 대조",
+    applyViewLabel || "보기 모드 맞추기",
+  ].join(" · ");
 }
 
 function syncOfflineCompareViewModeAction(currentCodeInput, targetCodeInput) {

@@ -3741,6 +3741,14 @@
 - 모바일 MVP 수직슬라이스 가이드(focus controls summary aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
 
 ## 888) 다음 순차 작업
+1. [완료] 오프라인 compare row 루트(`offlineCompareRow`) contract에 `data-input-summary`, `data-action-summary`를 추가해 부모 줄 단독 관찰만으로도 비교 준비 상태를 사람이 읽는 summary로 직접 읽을 수 있도록 보강.
+2. [완료] `syncOfflineCompareRowContract()`가 입력 상태와 주요 버튼 흐름을 한 줄 summary로 함께 기록하도록 확장해 panel-root 소비 정합을 강화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 offline compare row summary aggregate 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 889) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(offline compare row summary aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 888) 다음 순차 작업
 1. [완료] 저장 패널 루트(`savePanel`) contract에 `data-selection-summary`, `data-button-summary`를 추가해 부모 패널 단독 관찰만으로도 현재 슬롯 흐름과 주요 저장 액션을 한 줄 summary로 직접 읽을 수 있도록 보강.
 2. [완료] `syncSlotActionButtons()`가 저장 패널 root에 selection/button summary를 함께 기록하도록 확장해 panel-root 소비 정합을 강화.
 3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 save panel summary aggregate 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.

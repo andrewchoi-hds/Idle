@@ -1083,6 +1083,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-input-summary="입력 없음 · 보기 모드 미정"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-action-summary="비교 코드 붙여넣기 · savePayload에서 대조 · 비교 코드 대조 · 보기 모드 맞추기"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-compare-code="비교 코드 없음"',
     "index.html",
     failures,
@@ -6499,6 +6511,18 @@ async function main() {
   assertIncludes(
     app,
     "dom.offlineCompareRow.dataset.compareButtonDisabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineCompareRow.dataset.inputSummary = inputText",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineCompareRow.dataset.actionSummary = [",
     "app.mjs",
     failures,
   );
