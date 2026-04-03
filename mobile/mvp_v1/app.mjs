@@ -12302,6 +12302,11 @@ function render() {
   const battleSpeedValue = String(state.settings.battleSpeed);
   const offlineCapHoursValue = String(state.settings.offlineCapHours);
   const offlineEventLimitValue = String(state.settings.offlineEventLimit);
+  const battleSpeedLabel =
+    dom.optBattleSpeed?.selectedOptions?.[0]?.textContent?.trim() || "표준";
+  const warmupLabel = `${configuredWarmupSec}초`;
+  const offlineCapLabel = `${offlineCapHoursValue}시간`;
+  const offlineEventLimitLabel = `${offlineEventLimitValue}건`;
   dom.optAutoBreakthroughResumeWarmupSec.value = String(configuredWarmupSec);
   dom.optBattleSpeed.value = battleSpeedValue;
   dom.optOfflineCapHours.value = offlineCapHoursValue;
@@ -12326,6 +12331,10 @@ function render() {
     dom.settingsPanel.dataset.battleSpeed = battleSpeedValue;
     dom.settingsPanel.dataset.offlineCapHours = offlineCapHoursValue;
     dom.settingsPanel.dataset.offlineEventLimit = offlineEventLimitValue;
+    dom.settingsPanel.dataset.autoBreakthroughResumeWarmupLabel = warmupLabel;
+    dom.settingsPanel.dataset.battleSpeedLabel = battleSpeedLabel;
+    dom.settingsPanel.dataset.offlineCapLabel = offlineCapLabel;
+    dom.settingsPanel.dataset.offlineEventLimitLabel = offlineEventLimitLabel;
   }
   syncCopySlotTargetSelection();
   syncSlotActionButtons();

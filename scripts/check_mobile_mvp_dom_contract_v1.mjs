@@ -2516,7 +2516,19 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-auto-breakthrough-resume-warmup-label="6초"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-battle-speed="2"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-battle-speed-label="표준"',
     "index.html",
     failures,
   );
@@ -2528,7 +2540,19 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-offline-cap-label="12시간"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-offline-event-limit="24"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-offline-event-limit-label="24건"',
     "index.html",
     failures,
   );
@@ -7655,7 +7679,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.settingsPanel.dataset.autoBreakthroughResumeWarmupLabel = warmupLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.settingsPanel.dataset.battleSpeed = battleSpeedValue;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.settingsPanel.dataset.battleSpeedLabel = battleSpeedLabel;",
     "app.mjs",
     failures,
   );
@@ -7667,7 +7703,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.settingsPanel.dataset.offlineCapLabel = offlineCapLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.settingsPanel.dataset.offlineEventLimit = offlineEventLimitValue;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.settingsPanel.dataset.offlineEventLimitLabel = offlineEventLimitLabel;",
     "app.mjs",
     failures,
   );
