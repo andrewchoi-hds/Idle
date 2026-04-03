@@ -10947,6 +10947,10 @@ function renderSaveSlotSummary(force = false) {
   const activeRow =
     rows.find((row) => row.slot === activeSaveSlot) || rows[0] || { slot: activeSaveSlot, state: "empty" };
   if (dom.saveSlotSummaryList) {
+    const okCount = rows.filter((row) => row.state === "ok").length;
+    const emptyCount = rows.filter((row) => row.state === "empty").length;
+    const corruptCount = rows.filter((row) => row.state === "corrupt").length;
+    const lockedCount = rows.filter((row) => isSlotLocked(row.slot)).length;
     dom.saveSlotSummaryList.dataset.slotCount = String(rows.length);
     dom.saveSlotSummaryList.dataset.activeSlot = String(activeSaveSlot);
     dom.saveSlotSummaryList.dataset.activeSlotState = String(activeRow.state || "empty");
@@ -10959,18 +10963,13 @@ function renderSaveSlotSummary(force = false) {
     dom.saveSlotSummaryList.dataset.activeSlotLocked = String(
       isSlotLocked(activeSaveSlot),
     );
-    dom.saveSlotSummaryList.dataset.okCount = String(
-      rows.filter((row) => row.state === "ok").length,
-    );
-    dom.saveSlotSummaryList.dataset.emptyCount = String(
-      rows.filter((row) => row.state === "empty").length,
-    );
-    dom.saveSlotSummaryList.dataset.corruptCount = String(
-      rows.filter((row) => row.state === "corrupt").length,
-    );
-    dom.saveSlotSummaryList.dataset.lockedCount = String(
-      rows.filter((row) => isSlotLocked(row.slot)).length,
-    );
+    dom.saveSlotSummaryList.dataset.okCount = String(okCount);
+    dom.saveSlotSummaryList.dataset.emptyCount = String(emptyCount);
+    dom.saveSlotSummaryList.dataset.corruptCount = String(corruptCount);
+    dom.saveSlotSummaryList.dataset.lockedCount = String(lockedCount);
+    dom.saveSlotSummaryList.dataset.stateBreakdownLabel =
+      `정상 ${okCount} · 빈 슬롯 ${emptyCount} · 손상 ${corruptCount}`;
+    dom.saveSlotSummaryList.dataset.lockedCountLabel = `잠금 슬롯 ${lockedCount}`;
   }
   dom.saveSlotSummaryList.innerHTML = rows
     .map((row) => {
