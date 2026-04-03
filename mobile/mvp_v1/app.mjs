@@ -12013,10 +12013,16 @@ function renderLogs() {
   const rows = state.logs.length > 0 ? state.logs : [{ at: "-", kind: "info", message: "로그 없음" }];
   const latestRow = rows[0] || { at: "-", kind: "info", message: "로그 없음" };
   if (dom.logsPanel) {
+    const logCountLabel = `로그 ${state.logs.length}건`;
+    const lastLogSummary = `[${latestRow.at || "-"}] ${latestRow.kind || "info"} · ${
+      latestRow.message || "로그 없음"
+    }`;
     dom.logsPanel.dataset.logCount = String(state.logs.length);
     dom.logsPanel.dataset.lastLogKind = String(latestRow.kind || "info");
     dom.logsPanel.dataset.lastLogMessage = String(latestRow.message || "로그 없음");
     dom.logsPanel.dataset.lastLogAt = String(latestRow.at || "-");
+    dom.logsPanel.dataset.logCountLabel = logCountLabel;
+    dom.logsPanel.dataset.lastLogSummary = lastLogSummary;
   }
   dom.eventLogList.innerHTML = rows
     .map((row) => {

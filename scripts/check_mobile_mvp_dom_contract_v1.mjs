@@ -956,6 +956,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-log-count-label="로그 0건"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-last-log-summary="[-] info · 로그 없음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="offlineCompareRow"',
     "index.html",
     failures,
@@ -6084,6 +6096,18 @@ async function main() {
   assertIncludes(
     app,
     'dom.logsPanel.dataset.lastLogAt = String(latestRow.at || "-");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.logsPanel.dataset.logCountLabel = logCountLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.logsPanel.dataset.lastLogSummary = lastLogSummary;",
     "app.mjs",
     failures,
   );
