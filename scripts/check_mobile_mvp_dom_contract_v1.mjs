@@ -1562,7 +1562,55 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-ambient-impact-outcome-code="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-ambient-impact-outcome-profile="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-sync-duel="off"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-origin-source="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-origin-kind="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-origin-tone="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-origin-outcome-code="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-origin-outcome-profile="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-ambient-impact-origin-sync-duel="off"',
     "index.html",
     failures,
   );
@@ -6017,7 +6065,55 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.battleScenePanel.dataset.ambientImpactOutcomeCode =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.battleScenePanel.dataset.ambientImpactOutcomeProfile =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactSyncDuel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactOriginSource =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactOriginKind =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactOriginTone =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactOriginOutcomeCode =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactOriginOutcomeProfile =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactOriginSyncDuel =",
     "app.mjs",
     failures,
   );
