@@ -2748,6 +2748,18 @@ function syncBattleScenePanelContract() {
     dom.battleSceneDpsBadge?.dataset.badgeKey || "pressure_low";
   dom.battleScenePanel.dataset.dpsBadgeTone =
     dom.battleSceneDpsBadge?.dataset.tone || "info";
+  dom.battleScenePanel.dataset.flashTone =
+    dom.battleSceneFlash?.dataset.tone || "info";
+  dom.battleScenePanel.dataset.flashActive =
+    dom.battleSceneFlash?.dataset.flashActive || "false";
+  dom.battleScenePanel.dataset.floatCount =
+    dom.battleSceneFloatLayer?.dataset.floatCount || "0";
+  dom.battleScenePanel.dataset.sparkCount =
+    dom.battleSceneSparkLayer?.dataset.sparkCount || "0";
+  dom.battleScenePanel.dataset.trailCount =
+    dom.battleSceneTrailLayer?.dataset.trailCount || "0";
+  dom.battleScenePanel.dataset.shockwaveCount =
+    dom.battleSceneShockwaveLayer?.dataset.shockwaveCount || "0";
   dom.battleScenePanel.dataset.skillBannerState =
     dom.battleSceneSkillBanner?.dataset.bannerState || "idle";
   dom.battleScenePanel.dataset.skillBannerText =
@@ -2778,6 +2790,38 @@ function syncBattleScenePanelContract() {
     dom.battleSceneComboBanner?.dataset.tier || "flow";
   dom.battleScenePanel.dataset.comboBannerCount =
     dom.battleSceneComboBanner?.dataset.comboCount || "0";
+}
+
+function syncBattleSceneMotionLayerContracts() {
+  if (dom.battleSceneFlash) {
+    dom.battleSceneFlash.dataset.tone = normalizeBattleSceneTone(
+      dom.battleSceneFlash.dataset.tone || "info",
+    );
+    dom.battleSceneFlash.dataset.flashActive = String(
+      dom.battleSceneFlash.classList.contains("is-active"),
+    );
+  }
+  if (dom.battleSceneFloatLayer) {
+    dom.battleSceneFloatLayer.dataset.floatCount = String(
+      dom.battleSceneFloatLayer.childElementCount,
+    );
+  }
+  if (dom.battleSceneSparkLayer) {
+    dom.battleSceneSparkLayer.dataset.sparkCount = String(
+      dom.battleSceneSparkLayer.childElementCount,
+    );
+  }
+  if (dom.battleSceneTrailLayer) {
+    dom.battleSceneTrailLayer.dataset.trailCount = String(
+      dom.battleSceneTrailLayer.childElementCount,
+    );
+  }
+  if (dom.battleSceneShockwaveLayer) {
+    dom.battleSceneShockwaveLayer.dataset.shockwaveCount = String(
+      dom.battleSceneShockwaveLayer.childElementCount,
+    );
+  }
+  syncBattleScenePanelContract();
 }
 
 function applyBattleSceneUiState() {
@@ -7244,6 +7288,7 @@ function spawnBattleSceneFloat(text, options = {}) {
     "animationend",
     () => {
       floatNode.remove();
+      syncBattleSceneMotionLayerContracts();
     },
     { once: true },
   );
@@ -7251,6 +7296,7 @@ function spawnBattleSceneFloat(text, options = {}) {
   while (dom.battleSceneFloatLayer.childElementCount > 18) {
     dom.battleSceneFloatLayer.firstElementChild?.remove();
   }
+  syncBattleSceneMotionLayerContracts();
 }
 
 function spawnBattleSceneSpark(options = {}) {
@@ -7281,6 +7327,7 @@ function spawnBattleSceneSpark(options = {}) {
     "animationend",
     () => {
       node.remove();
+      syncBattleSceneMotionLayerContracts();
     },
     { once: true },
   );
@@ -7291,6 +7338,7 @@ function spawnBattleSceneSpark(options = {}) {
   ) {
     dom.battleSceneSparkLayer.firstElementChild?.remove();
   }
+  syncBattleSceneMotionLayerContracts();
 }
 
 function spawnBattleSceneChargeMote(options = {}) {
@@ -7325,6 +7373,7 @@ function spawnBattleSceneChargeMote(options = {}) {
     "animationend",
     () => {
       node.remove();
+      syncBattleSceneMotionLayerContracts();
     },
     { once: true },
   );
@@ -7335,6 +7384,7 @@ function spawnBattleSceneChargeMote(options = {}) {
   ) {
     dom.battleSceneSparkLayer.firstElementChild?.remove();
   }
+  syncBattleSceneMotionLayerContracts();
 }
 
 function spawnBattleSceneTrail(options = {}) {
@@ -7365,6 +7415,7 @@ function spawnBattleSceneTrail(options = {}) {
     "animationend",
     () => {
       node.remove();
+      syncBattleSceneMotionLayerContracts();
     },
     { once: true },
   );
@@ -7375,6 +7426,7 @@ function spawnBattleSceneTrail(options = {}) {
   ) {
     dom.battleSceneTrailLayer.firstElementChild?.remove();
   }
+  syncBattleSceneMotionLayerContracts();
 }
 
 function spawnBattleSceneShockwave(options = {}) {
@@ -7409,6 +7461,7 @@ function spawnBattleSceneShockwave(options = {}) {
     "animationend",
     () => {
       node.remove();
+      syncBattleSceneMotionLayerContracts();
     },
     { once: true },
   );
@@ -7419,6 +7472,7 @@ function spawnBattleSceneShockwave(options = {}) {
   ) {
     dom.battleSceneShockwaveLayer.firstElementChild?.remove();
   }
+  syncBattleSceneMotionLayerContracts();
 }
 
 function maybeSpawnBattleSceneCastTelegraph(actor, options = {}) {
@@ -7599,15 +7653,23 @@ function triggerBattleSceneFlash(tone = "info") {
   if (!dom.battleSceneFlash) {
     return;
   }
+  const normalizedTone = normalizeBattleSceneTone(tone);
   dom.battleSceneFlash.classList.remove("is-active", ...BATTLE_SCENE_TONE_CLASSES);
-  dom.battleSceneFlash.classList.add(`tone-${normalizeBattleSceneTone(tone)}`);
+  dom.battleSceneFlash.classList.add(`tone-${normalizedTone}`);
+  dom.battleSceneFlash.dataset.tone = normalizedTone;
   void dom.battleSceneFlash.offsetWidth;
   dom.battleSceneFlash.classList.add("is-active");
+  dom.battleSceneFlash.dataset.flashActive = "true";
+  syncBattleSceneMotionLayerContracts();
   if (battleSceneFlashTimer !== null) {
     window.clearTimeout(battleSceneFlashTimer);
   }
   battleSceneFlashTimer = window.setTimeout(() => {
     dom.battleSceneFlash?.classList.remove("is-active");
+    if (dom.battleSceneFlash) {
+      dom.battleSceneFlash.dataset.flashActive = "false";
+    }
+    syncBattleSceneMotionLayerContracts();
     battleSceneFlashTimer = null;
   }, 520);
 }
@@ -9082,6 +9144,12 @@ function stopBattleSceneAmbientLoop() {
   if (dom.battleSceneShockwaveLayer) {
     dom.battleSceneShockwaveLayer.innerHTML = "";
   }
+  if (dom.battleSceneFlash) {
+    dom.battleSceneFlash.classList.remove("is-active", ...BATTLE_SCENE_TONE_CLASSES);
+    dom.battleSceneFlash.dataset.tone = "info";
+    dom.battleSceneFlash.dataset.flashActive = "false";
+  }
+  syncBattleSceneMotionLayerContracts();
   resetBattleSceneActorFrames();
   setBattleSceneImpactCue("idle");
   setBattleSceneImpactKinetic("normal");
