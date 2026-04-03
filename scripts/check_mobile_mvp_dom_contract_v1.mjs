@@ -1172,6 +1172,30 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-qi-label="0 기"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-spirit-coin-label="0 영석"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-rebirth-essence-label="0 환생정수"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-rebirth-count-label="0회"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-qi-delta="+0"',
     "index.html",
     failures,
@@ -7944,6 +7968,30 @@ async function main() {
   assertIncludes(
     app,
     "dom.statsPanel.dataset.rebirthCount = fmtNumber(state.progression.rebirthCount);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.statsPanel.dataset.qiLabel = qiLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.statsPanel.dataset.spiritCoinLabel = spiritCoinLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.statsPanel.dataset.rebirthEssenceLabel = rebirthEssenceLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.statsPanel.dataset.rebirthCountLabel = rebirthCountLabel;",
     "app.mjs",
     failures,
   );
