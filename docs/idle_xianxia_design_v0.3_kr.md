@@ -3651,3 +3651,11 @@
 
 ## 867) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(settings panel boolean-label aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 868) 다음 순차 작업
+1. [완료] 로그 패널 루트(`logsPanel`) contract에 `data-log-count-label`, `data-last-log-summary`를 추가해 부모 패널 단독 관찰만으로도 로그 개수와 최신 로그의 사람이 읽는 요약 label을 직접 읽을 수 있도록 보강.
+2. [완료] `renderLogs()`가 로그 패널 root에 수치/원문뿐 아니라 요약 label도 함께 기록하도록 확장해 panel-root 소비 정합을 강화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 logs panel label aggregate 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 869) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(logs panel label aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
