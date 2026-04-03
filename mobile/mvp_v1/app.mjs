@@ -12320,6 +12320,19 @@ function render() {
   dom.optAutoTribulation.checked = state.settings.autoTribulation;
   dom.optAutoResumeRealtime.checked = state.settings.autoResumeRealtime;
   dom.optLowPerformanceBattleScene.checked = state.settings.lowPerformanceBattleScene === true;
+  const autoBattleLabel = `자동 전투 ${state.settings.autoBattle ? "ON" : "OFF"}`;
+  const autoBreakthroughLabel =
+    `자동 돌파 ${state.settings.autoBreakthrough ? "ON" : "OFF"}`;
+  const autoTribulationLabel =
+    `자동 도겁 허용 ${state.settings.autoTribulation ? "ON" : "OFF"}`;
+  const autoResumeRealtimeLabel =
+    `앱 복귀 시 실시간 자동 재개 ${
+      state.settings.autoResumeRealtime ? "ON" : "OFF"
+    }`;
+  const lowPerformanceBattleSceneLabel =
+    `전투 연출 저사양 모드 ${
+      state.settings.lowPerformanceBattleScene === true ? "ON" : "OFF"
+    }`;
   const configuredWarmupSec = getConfiguredAutoBreakthroughResumeWarmupSec();
   const battleSpeedValue = String(state.settings.battleSpeed);
   const offlineCapHoursValue = String(state.settings.offlineCapHours);
@@ -12335,18 +12348,24 @@ function render() {
   dom.optOfflineEventLimit.value = offlineEventLimitValue;
   if (dom.settingsPanel) {
     dom.settingsPanel.dataset.autoBattle = String(state.settings.autoBattle);
+    dom.settingsPanel.dataset.autoBattleLabel = autoBattleLabel;
     dom.settingsPanel.dataset.autoBreakthrough = String(
       state.settings.autoBreakthrough,
     );
+    dom.settingsPanel.dataset.autoBreakthroughLabel = autoBreakthroughLabel;
     dom.settingsPanel.dataset.autoTribulation = String(
       state.settings.autoTribulation,
     );
+    dom.settingsPanel.dataset.autoTribulationLabel = autoTribulationLabel;
     dom.settingsPanel.dataset.autoResumeRealtime = String(
       state.settings.autoResumeRealtime,
     );
+    dom.settingsPanel.dataset.autoResumeRealtimeLabel = autoResumeRealtimeLabel;
     dom.settingsPanel.dataset.lowPerformanceBattleScene = String(
       state.settings.lowPerformanceBattleScene === true,
     );
+    dom.settingsPanel.dataset.lowPerformanceBattleSceneLabel =
+      lowPerformanceBattleSceneLabel;
     dom.settingsPanel.dataset.autoBreakthroughResumeWarmupSec = String(
       configuredWarmupSec,
     );
