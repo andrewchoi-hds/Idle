@@ -90,6 +90,7 @@ const REQUIRED_HTML_IDS = [
   "btnToggleSlotLock",
   "btnDeleteSlot",
   "saveSlotSummaryList",
+  "assetsPanel",
   "logsPanel",
   "btnBattle",
   "btnBreakthrough",
@@ -1209,6 +1210,42 @@ async function main() {
   assertIncludes(
     html,
     'data-rebirth-count-label="0회"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="assetsPanel"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-link-count="3"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-primary-source="kenney"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-primary-label="Kenney Asset Library (CC0)"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-source-summary="Kenney Asset Library (CC0) · Oriental Roof Tiles (CC0) · Pixel FX Pack (CC0)"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-license-summary="CC0 3건"',
     "index.html",
     failures,
   );
@@ -8238,6 +8275,54 @@ async function main() {
   assertIncludes(
     app,
     "dom.statsPanel.dataset.rebirthCountLabel = rebirthCountLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'assetsPanel: document.getElementById("assetsPanel"),',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function syncAssetsPanelContract() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.assetsPanel.dataset.linkCount = String(normalizedLinks.length);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.assetsPanel.dataset.primarySource = primary.source;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.assetsPanel.dataset.primaryLabel = primary.label;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.assetsPanel.dataset.sourceSummary =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.assetsPanel.dataset.licenseSummary =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncAssetsPanelContract();",
     "app.mjs",
     failures,
   );
