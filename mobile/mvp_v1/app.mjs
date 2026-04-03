@@ -2681,6 +2681,8 @@ function syncBattleScenePanelContract() {
     dom.battleSceneArena?.dataset.sceneAmbientImpactResultFresh || "none";
   dom.battleScenePanel.dataset.ambientImpactResultActive =
     dom.battleSceneArena?.dataset.sceneAmbientImpactResultActive || "none";
+  dom.battleScenePanel.dataset.ambientImpactSignalSeq =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactSignalSeq || "0";
   dom.battleScenePanel.dataset.statusTone =
     dom.battleSceneStatus?.dataset.tone || "info";
   dom.battleScenePanel.dataset.statusText =
