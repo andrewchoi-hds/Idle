@@ -2769,6 +2769,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-toggle-summary="전투 ON · 돌파 OFF · 도겁 OFF"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-limit-summary="워밍업 6초 · 속도 표준 · 오프라인 12시간/24건"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-battle-button-label="전투 1회"',
     "index.html",
     failures,
@@ -8119,6 +8131,18 @@ async function main() {
   assertIncludes(
     app,
     "dom.settingsPanel.dataset.offlineEventLimitLabel = offlineEventLimitLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.settingsPanel.dataset.toggleSummary = settingsToggleSummaryLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.settingsPanel.dataset.limitSummary = settingsLimitSummaryLabel;",
     "app.mjs",
     failures,
   );
