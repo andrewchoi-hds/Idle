@@ -12433,6 +12433,12 @@ function render() {
   const warmupLabel = `${configuredWarmupSec}초`;
   const offlineCapLabel = `${offlineCapHoursValue}시간`;
   const offlineEventLimitLabel = `${offlineEventLimitValue}건`;
+  const settingsToggleSummaryLabel =
+    `전투 ${state.settings.autoBattle ? "ON" : "OFF"} · 돌파 ${
+      state.settings.autoBreakthrough ? "ON" : "OFF"
+    } · 도겁 ${state.settings.autoTribulation ? "ON" : "OFF"}`;
+  const settingsLimitSummaryLabel =
+    `워밍업 ${warmupLabel} · 속도 ${battleSpeedLabel} · 오프라인 ${offlineCapLabel}/${offlineEventLimitLabel}`;
   dom.optAutoBreakthroughResumeWarmupSec.value = String(configuredWarmupSec);
   dom.optBattleSpeed.value = battleSpeedValue;
   dom.optOfflineCapHours.value = offlineCapHoursValue;
@@ -12467,6 +12473,8 @@ function render() {
     dom.settingsPanel.dataset.battleSpeedLabel = battleSpeedLabel;
     dom.settingsPanel.dataset.offlineCapLabel = offlineCapLabel;
     dom.settingsPanel.dataset.offlineEventLimitLabel = offlineEventLimitLabel;
+    dom.settingsPanel.dataset.toggleSummary = settingsToggleSummaryLabel;
+    dom.settingsPanel.dataset.limitSummary = settingsLimitSummaryLabel;
   }
   syncAssetsPanelContract();
   syncCopySlotTargetSelection();
