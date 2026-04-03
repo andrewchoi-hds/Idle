@@ -12259,6 +12259,12 @@ function render() {
   dom.statRebirthEssence.textContent = fmtNumber(state.currencies.rebirthEssence);
   dom.statRebirthCount.textContent = fmtNumber(state.progression.rebirthCount);
   if (dom.statsPanel) {
+    const resourceSummaryLabel =
+      `기 ${fmtNumber(state.currencies.qi)} · 영석 ${fmtNumber(
+        state.currencies.spiritCoin,
+      )} · 환생정수 ${fmtNumber(state.currencies.rebirthEssence)} · 환생 ${fmtNumber(
+        state.progression.rebirthCount,
+      )}회`;
     const qiLabel = `${fmtNumber(state.currencies.qi)} 기`;
     const spiritCoinLabel = `${fmtNumber(state.currencies.spiritCoin)} 영석`;
     const rebirthEssenceLabel = `${fmtNumber(state.currencies.rebirthEssence)} 환생정수`;
@@ -12271,6 +12277,7 @@ function render() {
     dom.statsPanel.dataset.spiritCoinLabel = spiritCoinLabel;
     dom.statsPanel.dataset.rebirthEssenceLabel = rebirthEssenceLabel;
     dom.statsPanel.dataset.rebirthCountLabel = rebirthCountLabel;
+    dom.statsPanel.dataset.resourceSummary = resourceSummaryLabel;
   }
   dom.invBreakthroughElixir.textContent = fmtNumber(state.inventory.breakthroughElixir);
   dom.invTribulationTalisman.textContent = fmtNumber(state.inventory.tribulationTalisman);

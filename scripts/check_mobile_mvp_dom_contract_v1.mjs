@@ -1233,6 +1233,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-resource-summary="기 0 · 영석 0 · 환생정수 0 · 환생 0회"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-count-summary="전투 0회 · 돌파 0회 · 환생 0회"',
     "index.html",
     failures,
@@ -8413,6 +8419,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.statsPanel.dataset.rebirthCountLabel = rebirthCountLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.statsPanel.dataset.resourceSummary = resourceSummaryLabel;",
     "app.mjs",
     failures,
   );
