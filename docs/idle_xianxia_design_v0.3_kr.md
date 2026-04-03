@@ -3717,6 +3717,14 @@
 - 모바일 MVP 수직슬라이스 가이드(stats panel resource-summary aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
 
 ## 882) 다음 순차 작업
+1. [완료] 액션 패널 루트(`actionsPanel`) contract에 `data-realtime-summary`, `data-button-summary`를 추가해 부모 패널 단독 관찰만으로도 현재 실시간 진행과 주요 액션 흐름을 한 줄 summary로 직접 읽을 수 있도록 보강.
+2. [완료] `renderRealtimeSummary()`와 `syncActionsPanelButtonContract()`가 액션 패널 root에 누적/버튼 요약 summary를 함께 기록하도록 확장해 panel-root 소비 정합을 강화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 actions panel summary aggregate 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 883) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(actions panel summary aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 882) 다음 순차 작업
 1. [완료] 설정 패널 루트(`settingsPanel`) contract에 `data-toggle-summary`, `data-limit-summary`를 추가해 부모 패널 단독 관찰만으로도 자동 옵션 조합과 한도/속도 설정을 한 줄 summary로 직접 읽을 수 있도록 보강.
 2. [완료] `render()`가 설정 패널 root에 개별 값/label뿐 아니라 toggle/limit summary도 함께 기록하도록 확장해 panel-root 소비 정합을 강화.
 3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 settings panel summary aggregate 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
