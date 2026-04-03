@@ -525,6 +525,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-inventory-summary="영약 0 · 수호부 0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-has-breakthrough-elixir="false"',
     "index.html",
     failures,
@@ -544,6 +550,18 @@ async function main() {
   assertIncludes(
     html,
     'data-use-tribulation-talisman="true"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-toggle-summary="영약 ON · 수호부 ON"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-odds-summary="성공 0.0% · 사망 0.0%"',
     "index.html",
     failures,
   );
@@ -5778,6 +5796,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.breakthroughPreviewPanel.dataset.inventorySummary = inventorySummaryLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.breakthroughPreviewPanel.dataset.hasBreakthroughElixir = String(",
     "app.mjs",
     failures,
@@ -5797,6 +5821,18 @@ async function main() {
   assertIncludes(
     app,
     "dom.breakthroughPreviewPanel.dataset.useTribulationTalisman = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.toggleSummary = toggleSummaryLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.oddsSummary = oddsSummaryLabel;",
     "app.mjs",
     failures,
   );

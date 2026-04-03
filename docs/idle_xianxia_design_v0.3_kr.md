@@ -3691,3 +3691,11 @@
 
 ## 877) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(actions panel warmup-label aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 878) 다음 순차 작업
+1. [완료] 돌파 preview 부모 패널(`breakthroughPreviewPanel`) contract에 `data-inventory-summary`, `data-toggle-summary`, `data-odds-summary`를 추가해 부모 패널 단독 관찰만으로도 재고/토글/확률 요약을 직접 읽을 수 있도록 보강.
+2. [완료] `render()`가 돌파 preview root에 개별 수치뿐 아니라 사람이 바로 읽는 summary label을 함께 기록하도록 확장해 panel-root 소비 정합을 강화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 breakthrough preview summary aggregate 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 879) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(breakthrough preview summary aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
