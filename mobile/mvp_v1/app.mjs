@@ -12161,10 +12161,18 @@ function render() {
   dom.statRebirthEssence.textContent = fmtNumber(state.currencies.rebirthEssence);
   dom.statRebirthCount.textContent = fmtNumber(state.progression.rebirthCount);
   if (dom.statsPanel) {
+    const qiLabel = `${fmtNumber(state.currencies.qi)} 기`;
+    const spiritCoinLabel = `${fmtNumber(state.currencies.spiritCoin)} 영석`;
+    const rebirthEssenceLabel = `${fmtNumber(state.currencies.rebirthEssence)} 환생정수`;
+    const rebirthCountLabel = `${fmtNumber(state.progression.rebirthCount)}회`;
     dom.statsPanel.dataset.qi = fmtNumber(state.currencies.qi);
     dom.statsPanel.dataset.spiritCoin = fmtNumber(state.currencies.spiritCoin);
     dom.statsPanel.dataset.rebirthEssence = fmtNumber(state.currencies.rebirthEssence);
     dom.statsPanel.dataset.rebirthCount = fmtNumber(state.progression.rebirthCount);
+    dom.statsPanel.dataset.qiLabel = qiLabel;
+    dom.statsPanel.dataset.spiritCoinLabel = spiritCoinLabel;
+    dom.statsPanel.dataset.rebirthEssenceLabel = rebirthEssenceLabel;
+    dom.statsPanel.dataset.rebirthCountLabel = rebirthCountLabel;
   }
   dom.invBreakthroughElixir.textContent = fmtNumber(state.inventory.breakthroughElixir);
   dom.invTribulationTalisman.textContent = fmtNumber(state.inventory.tribulationTalisman);

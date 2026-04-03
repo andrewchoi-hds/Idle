@@ -3611,3 +3611,11 @@
 
 ## 859) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(settings panel label aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 860) 다음 순차 작업
+1. [완료] 자원 패널 루트(`statsPanel`) contract에 `data-qi-label`, `data-spirit-coin-label`, `data-rebirth-essence-label`, `data-rebirth-count-label`를 추가해 부모 패널 단독 관찰만으로도 현재 자원의 사람이 읽는 표시 label을 직접 읽을 수 있도록 보강.
+2. [완료] `render()`가 자원 패널 root에 수치뿐 아니라 표시 label도 함께 기록하도록 확장해 panel-root 소비 정합을 강화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 stats panel label aggregate 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 861) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(stats panel label aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
