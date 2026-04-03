@@ -2468,11 +2468,19 @@ function syncBattleScenePanelContract() {
     "HP 100% · 기세 0%";
   dom.battleScenePanel.dataset.playerVitalsKey =
     dom.battleScenePlayerVitals?.dataset.vitalsKey || "safe_low";
+  dom.battleScenePanel.dataset.playerHpGaugeKey =
+    dom.battleScenePlayerHpBar?.dataset.gaugeKey || "hp_safe";
+  dom.battleScenePanel.dataset.playerCastGaugeKey =
+    dom.battleScenePlayerCastBar?.dataset.gaugeKey || "cast_low";
   dom.battleScenePanel.dataset.enemyVitalsText =
     String(dom.battleSceneEnemyVitals?.textContent || "HP 100% · 기세 0%").trim() ||
     "HP 100% · 기세 0%";
   dom.battleScenePanel.dataset.enemyVitalsKey =
     dom.battleSceneEnemyVitals?.dataset.vitalsKey || "safe_low";
+  dom.battleScenePanel.dataset.enemyHpGaugeKey =
+    dom.battleSceneEnemyHpBar?.dataset.gaugeKey || "hp_safe";
+  dom.battleScenePanel.dataset.enemyCastGaugeKey =
+    dom.battleSceneEnemyCastBar?.dataset.gaugeKey || "cast_low";
   dom.battleScenePanel.dataset.lead =
     dom.battleSceneArena?.dataset.sceneLead || "even";
   dom.battleScenePanel.dataset.danger =
