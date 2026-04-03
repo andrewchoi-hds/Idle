@@ -3659,3 +3659,11 @@
 
 ## 869) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(logs panel label aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 870) 다음 순차 작업
+1. [완료] offline 정산 모달 루트(`offlineModal`) contract에 `data-battle-count-label`, `data-breakthrough-count-label`, `data-rebirth-count-label`를 추가해 부모 모달 단독 관찰만으로도 정산 count의 사람이 읽는 표시 label을 직접 읽을 수 있도록 보강.
+2. [완료] `showOfflineModal()`/`hideOfflineModal()`가 offline modal root에 count 값뿐 아니라 `0회`/`N회` 형태의 표시 label도 함께 기록하도록 확장해 panel-root 소비 정합을 강화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 offline modal count-label aggregate 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 871) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(offline modal count-label aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
