@@ -3685,6 +3685,14 @@
 - 모바일 MVP 수직슬라이스 가이드(offline modal delta-tone aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
 
 ## 876) 다음 순차 작업
+1. [완료] offline 정산 모달 루트(`offlineModal`) contract에 `data-count-summary`, `data-resource-delta-summary`를 추가해 부모 모달 단독 관찰만으로도 정산 핵심을 사람이 읽는 summary 형태로 직접 읽을 수 있도록 보강.
+2. [완료] `showOfflineModal()`/`hideOfflineModal()`가 offline modal root에 count/delta 값뿐 아니라 summary label도 함께 기록하도록 확장해 panel-root 소비 정합을 강화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 offline modal summary aggregate 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 877) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(offline modal summary aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 876) 다음 순차 작업
 1. [완료] 액션 패널 루트(`actionsPanel`) contract에 `data-realtime-warmup-label`를 추가해 부모 패널 단독 관찰만으로도 실시간 자동 돌파 워밍업 상태의 사람이 읽는 요약 label을 직접 읽을 수 있도록 보강.
 2. [완료] `syncRealtimeAutoControls()`가 액션 패널 root에 워밍업 잔여 초뿐 아니라 `워밍업 없음`/`N초` 형태의 label도 함께 기록하도록 확장해 panel-root 소비 정합을 강화.
 3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 actions panel warmup-label aggregate 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.

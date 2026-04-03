@@ -11899,12 +11899,14 @@ function hideOfflineModal() {
   dom.offlineModal.dataset.battleCountLabel = "0회";
   dom.offlineModal.dataset.breakthroughCountLabel = "0회";
   dom.offlineModal.dataset.rebirthCountLabel = "0회";
+  dom.offlineModal.dataset.countSummary = "전투 0회 · 돌파 0회 · 환생 0회";
   dom.offlineModal.dataset.qiDelta = "+0";
   dom.offlineModal.dataset.spiritDelta = "+0";
   dom.offlineModal.dataset.essenceDelta = "+0";
   dom.offlineModal.dataset.qiDeltaTone = "neutral";
   dom.offlineModal.dataset.spiritDeltaTone = "neutral";
   dom.offlineModal.dataset.essenceDeltaTone = "neutral";
+  dom.offlineModal.dataset.resourceDeltaSummary = "기 +0 · 영석 +0 · 환생정수 +0";
   dom.offlineModal.dataset.compareCode = "비교 코드 없음";
   dom.offlineModal.dataset.compareResult = "비교 대기 중";
   dom.offlineModal.dataset.compareActionHint = "가이드: 비교 코드를 입력하세요.";
@@ -11964,6 +11966,8 @@ function showOfflineModal(offline) {
   const qiDeltaLabel = fmtSignedInteger(delta.qi);
   const spiritDeltaLabel = fmtSignedInteger(delta.spiritCoin);
   const essenceDeltaLabel = fmtSignedInteger(delta.rebirthEssence);
+  const countSummaryLabel = `전투 ${battleCountDisplayLabel} · 돌파 ${breakthroughCountDisplayLabel} · 환생 ${rebirthCountDisplayLabel}`;
+  const resourceDeltaSummaryLabel = `기 ${qiDeltaLabel} · 영석 ${spiritDeltaLabel} · 환생정수 ${essenceDeltaLabel}`;
   dom.offlineAppliedDuration.textContent = appliedDurationLabel;
   dom.offlineRawDuration.textContent = rawDurationLabel;
   dom.offlineWarmupSummary.textContent = warmupLabelKo;
@@ -11987,6 +11991,7 @@ function showOfflineModal(offline) {
   dom.offlineModal.dataset.battleCountLabel = battleCountDisplayLabel;
   dom.offlineModal.dataset.breakthroughCountLabel = breakthroughCountDisplayLabel;
   dom.offlineModal.dataset.rebirthCountLabel = rebirthCountDisplayLabel;
+  dom.offlineModal.dataset.countSummary = countSummaryLabel;
   dom.offlineModal.dataset.qiDelta = qiDeltaLabel;
   dom.offlineModal.dataset.spiritDelta = spiritDeltaLabel;
   dom.offlineModal.dataset.essenceDelta = essenceDeltaLabel;
@@ -11996,6 +12001,7 @@ function showOfflineModal(offline) {
     dom.offlineSpiritDelta?.dataset.deltaTone || "neutral";
   dom.offlineModal.dataset.essenceDeltaTone =
     dom.offlineEssenceDelta?.dataset.deltaTone || "neutral";
+  dom.offlineModal.dataset.resourceDeltaSummary = resourceDeltaSummaryLabel;
   lastOfflineReport = {
     generatedAtIso: new Date().toISOString(),
     playerName: state.playerName,
