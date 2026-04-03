@@ -12125,6 +12125,16 @@ function render() {
     currentUseTribulationTalisman: dom.useTribulationTalisman.checked,
   });
   const autoResumePolicy = resolveAutoBreakthroughResumePolicy(context, state);
+  const inventorySummaryLabel =
+    `영약 ${fmtNumber(state.inventory.breakthroughElixir)} · 수호부 ${fmtNumber(
+      state.inventory.tribulationTalisman,
+    )}`;
+  const toggleSummaryLabel =
+    `영약 ${dom.useBreakthroughElixir.checked ? "ON" : "OFF"} · 수호부 ${
+      dom.useTribulationTalisman.checked ? "ON" : "OFF"
+    }`;
+  const oddsSummaryLabel =
+    `성공 ${preview.successPct.toFixed(1)}% · 사망 ${preview.deathPct.toFixed(1)}%`;
   if (dom.breakthroughPreviewPanel) {
     dom.breakthroughPreviewPanel.dataset.riskTier = riskTier.tier;
     dom.breakthroughPreviewPanel.dataset.riskTone = riskTier.tone;
@@ -12168,6 +12178,7 @@ function render() {
     dom.breakthroughPreviewPanel.dataset.tribulationTalismanCount = fmtNumber(
       state.inventory.tribulationTalisman,
     );
+    dom.breakthroughPreviewPanel.dataset.inventorySummary = inventorySummaryLabel;
     dom.breakthroughPreviewPanel.dataset.hasBreakthroughElixir = String(
       (Number(state.inventory.breakthroughElixir) || 0) > 0,
     );
@@ -12180,6 +12191,8 @@ function render() {
     dom.breakthroughPreviewPanel.dataset.useTribulationTalisman = String(
       dom.useTribulationTalisman.checked,
     );
+    dom.breakthroughPreviewPanel.dataset.toggleSummary = toggleSummaryLabel;
+    dom.breakthroughPreviewPanel.dataset.oddsSummary = oddsSummaryLabel;
     dom.breakthroughPreviewPanel.dataset.recommendationReason =
       recommendationToggle.reason || "none";
     dom.breakthroughPreviewPanel.dataset.recommendationToggleMessage =
