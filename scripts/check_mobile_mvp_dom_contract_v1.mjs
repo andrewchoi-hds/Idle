@@ -2102,6 +2102,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-ambient-impact-signal-seq="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-status-text="대기 중"',
     "index.html",
     failures,
@@ -7080,6 +7086,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.battleScenePanel.dataset.ambientImpactResultActive =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.ambientImpactSignalSeq =",
     "app.mjs",
     failures,
   );
