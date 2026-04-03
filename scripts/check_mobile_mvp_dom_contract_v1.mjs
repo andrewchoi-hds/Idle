@@ -2919,6 +2919,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-realtime-warmup-label="워밍업 없음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-realtime-elapsed="0초"',
     "index.html",
     failures,
@@ -8239,6 +8245,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.actionsPanel.dataset.realtimeWarmupRemaining = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.realtimeWarmupLabel = warmupLabel;",
     "app.mjs",
     failures,
   );

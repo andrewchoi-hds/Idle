@@ -11589,6 +11589,10 @@ function syncRealtimeAutoControls() {
   const stats = getRealtimeStats();
   const running = isRealtimeAutoRunning();
   const warmupRemainingSec = getAutoBreakthroughWarmupRemainingSec(stats);
+  const warmupLabel =
+    running && warmupRemainingSec > 0
+      ? `${Math.max(0, warmupRemainingSec)}초`
+      : "워밍업 없음";
   const warmupText =
     running && warmupRemainingSec > 0
       ? ` · 돌파 워밍업 ${warmupRemainingSec}s`
@@ -11604,6 +11608,7 @@ function syncRealtimeAutoControls() {
     dom.actionsPanel.dataset.realtimeWarmupRemaining = String(
       Math.max(0, warmupRemainingSec),
     );
+    dom.actionsPanel.dataset.realtimeWarmupLabel = warmupLabel;
   }
   syncActionsPanelButtonContract();
 }
