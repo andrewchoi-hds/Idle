@@ -957,6 +957,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-selection-summary="활성 1번 · 슬롯 1: 비어 있음 → 대상 슬롯 2: 비어 있음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-button-summary="로컬 저장 · 로컬 불러오기 · JSON 내보내기"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="logsPanel"',
     "index.html",
     failures,
@@ -6265,6 +6277,18 @@ async function main() {
   assertIncludes(
     app,
     "dom.savePanel.dataset.importButtonDisabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.selectionSummary = selectionSummaryLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.savePanel.dataset.buttonSummary = [',
     "app.mjs",
     failures,
   );
