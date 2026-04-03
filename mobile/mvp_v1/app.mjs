@@ -11230,6 +11230,12 @@ function syncActionsPanelButtonContract() {
   dom.actionsPanel.dataset.resetReportDisabled = String(
     dom.btnResetRealtimeStats?.disabled === true,
   );
+  const buttonSummaryLabel = [
+    dom.btnBattle?.textContent?.trim() || "전투 1회",
+    dom.btnBreakthrough?.textContent?.trim() || "돌파 시도",
+    dom.btnRealtimeAuto?.textContent?.trim() || "실시간 자동 시작",
+  ].join(" · ");
+  dom.actionsPanel.dataset.buttonSummary = buttonSummaryLabel;
 }
 
 function getConfiguredAutoBreakthroughResumeWarmupSec() {
@@ -11635,6 +11641,8 @@ function renderRealtimeSummary() {
     dom.actionsPanel.dataset.realtimeBreakthroughsLabel =
       breakthroughsDisplayLabel;
     dom.actionsPanel.dataset.realtimeRebirthsLabel = rebirthsDisplayLabel;
+    dom.actionsPanel.dataset.realtimeSummary =
+      `${dom.actionsPanel.dataset.realtimeLabel || "중지"} · 전투 ${battlesDisplayLabel} · 돌파 ${breakthroughsDisplayLabel} · 환생 ${rebirthsDisplayLabel}`;
   }
 }
 
