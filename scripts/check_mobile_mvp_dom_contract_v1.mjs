@@ -1215,6 +1215,24 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-qi-delta-tone="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-spirit-delta-tone="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-essence-delta-tone="neutral"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="assetsPanel"',
     "index.html",
     failures,
@@ -6528,6 +6546,24 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.offlineModal.dataset.qiDeltaTone = "neutral";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.spiritDeltaTone = "neutral";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.essenceDeltaTone = "neutral";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.offlineModal.dataset.qiDelta = "+0";',
     "app.mjs",
     failures,
@@ -6613,6 +6649,24 @@ async function main() {
   assertIncludes(
     app,
     "dom.offlineModal.dataset.rebirthCountLabel = rebirthCountDisplayLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.qiDeltaTone =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.spiritDeltaTone =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.offlineModal.dataset.essenceDeltaTone =",
     "app.mjs",
     failures,
   );

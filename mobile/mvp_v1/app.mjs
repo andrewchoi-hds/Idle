@@ -11866,13 +11866,17 @@ function setDeltaNode(node, value) {
   const amount = Number.isFinite(value) ? Math.floor(value) : 0;
   node.textContent = fmtSignedInteger(amount);
   node.classList.remove("delta-gain", "delta-loss", "delta-neutral");
+  let deltaTone = "neutral";
   if (amount > 0) {
     node.classList.add("delta-gain");
+    deltaTone = "gain";
   } else if (amount < 0) {
     node.classList.add("delta-loss");
+    deltaTone = "loss";
   } else {
     node.classList.add("delta-neutral");
   }
+  node.dataset.deltaTone = deltaTone;
 }
 
 function hideOfflineModal() {
@@ -11893,6 +11897,9 @@ function hideOfflineModal() {
   dom.offlineModal.dataset.qiDelta = "+0";
   dom.offlineModal.dataset.spiritDelta = "+0";
   dom.offlineModal.dataset.essenceDelta = "+0";
+  dom.offlineModal.dataset.qiDeltaTone = "neutral";
+  dom.offlineModal.dataset.spiritDeltaTone = "neutral";
+  dom.offlineModal.dataset.essenceDeltaTone = "neutral";
   dom.offlineModal.dataset.compareCode = "비교 코드 없음";
   dom.offlineModal.dataset.compareResult = "비교 대기 중";
   dom.offlineModal.dataset.compareActionHint = "가이드: 비교 코드를 입력하세요.";
@@ -11978,6 +11985,12 @@ function showOfflineModal(offline) {
   dom.offlineModal.dataset.qiDelta = qiDeltaLabel;
   dom.offlineModal.dataset.spiritDelta = spiritDeltaLabel;
   dom.offlineModal.dataset.essenceDelta = essenceDeltaLabel;
+  dom.offlineModal.dataset.qiDeltaTone =
+    dom.offlineQiDelta?.dataset.deltaTone || "neutral";
+  dom.offlineModal.dataset.spiritDeltaTone =
+    dom.offlineSpiritDelta?.dataset.deltaTone || "neutral";
+  dom.offlineModal.dataset.essenceDeltaTone =
+    dom.offlineEssenceDelta?.dataset.deltaTone || "neutral";
   lastOfflineReport = {
     generatedAtIso: new Date().toISOString(),
     playerName: state.playerName,
