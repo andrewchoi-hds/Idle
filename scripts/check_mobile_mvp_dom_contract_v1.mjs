@@ -1172,6 +1172,30 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-source-slot-summary="슬롯 1: 비어 있음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-target-slot-summary="대상 슬롯 2: 비어 있음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-copy-policy-label="복제: 복제 규칙 준비 중..."',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-delete-policy-label="삭제: 삭제 규칙 준비 중..."',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-qi-label="0 기"',
     "index.html",
     failures,
@@ -7889,6 +7913,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.savePanel.dataset.sourceSlotSummary =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.targetSlotSummary = targetHintText;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.savePanel.dataset.copyPolicyReason = copyPolicy.reason || "unknown";',
     "app.mjs",
     failures,
@@ -7901,6 +7937,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.savePanel.dataset.copyPolicyLabel = copyHintText;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.savePanel.dataset.deletePolicyReason = deletePolicy.reason || "unknown";',
     "app.mjs",
     failures,
@@ -7908,6 +7950,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.savePanel.dataset.deleteAllowed = String(deletePolicy.allowed);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.deletePolicyLabel = deleteHintText;",
     "app.mjs",
     failures,
   );

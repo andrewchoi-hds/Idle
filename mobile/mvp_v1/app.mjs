@@ -10844,12 +10844,19 @@ function syncSlotActionButtons() {
     dom.savePanel.dataset.copyTargetSlot = String(targetSlot);
     dom.savePanel.dataset.sourceSlotState = sourceSummary.state || "empty";
     dom.savePanel.dataset.sourceSlotLocked = String(sourceLocked);
+    dom.savePanel.dataset.sourceSlotSummary =
+      `슬롯 ${activeSaveSlot}: ${resolveSlotSummaryStateLabelKo(sourceSummary.state)}${
+        sourceLocked ? " · 잠금됨" : ""
+      }`;
     dom.savePanel.dataset.targetSlotState = targetSummary.state || "empty";
     dom.savePanel.dataset.targetSlotLocked = String(targetLocked);
+    dom.savePanel.dataset.targetSlotSummary = targetHintText;
     dom.savePanel.dataset.copyPolicyReason = copyPolicy.reason || "unknown";
     dom.savePanel.dataset.copyAllowed = String(copyPolicy.allowed);
+    dom.savePanel.dataset.copyPolicyLabel = copyHintText;
     dom.savePanel.dataset.deletePolicyReason = deletePolicy.reason || "unknown";
     dom.savePanel.dataset.deleteAllowed = String(deletePolicy.allowed);
+    dom.savePanel.dataset.deletePolicyLabel = deleteHintText;
   }
   if (dom.slotActionHintBox) {
     dom.slotActionHintBox.dataset.lockHint = lockHintText;
