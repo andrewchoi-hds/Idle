@@ -2521,6 +2521,52 @@ function syncBattleScenePanelContract() {
     dom.battleSceneArena?.dataset.sceneAmbientImpactOriginSyncDuel || "off";
   dom.battleScenePanel.dataset.ambientImpactRandomState =
     dom.battleSceneArena?.dataset.sceneAmbientImpactRandomState || "idle";
+  dom.battleScenePanel.dataset.ambientImpactRandomRecoverySource =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomRecoverySource || "none";
+  dom.battleScenePanel.dataset.ambientImpactRandomRecoveryOutcomeProfile =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomRecoveryOutcomeProfile || "neutral";
+  dom.battleScenePanel.dataset.ambientImpactRandomRecoveryMs =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomRecoveryMs || "0";
+  dom.battleScenePanel.dataset.ambientImpactRandomRecoveryMaxMs =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomRecoveryMaxMs || "1400";
+  dom.battleScenePanel.dataset.ambientImpactRandomCadenceSource =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomCadenceSource || "none";
+  dom.battleScenePanel.dataset.ambientImpactRandomCadenceOutcomeProfile =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomCadenceOutcomeProfile || "neutral";
+  dom.battleScenePanel.dataset.ambientImpactRandomCadenceDivisor =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomCadenceDivisor || "2";
+  dom.battleScenePanel.dataset.ambientImpactRandomProbabilitySource =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomProbabilitySource || "none";
+  dom.battleScenePanel.dataset.ambientImpactRandomProbabilityOutcomeProfile =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomProbabilityOutcomeProfile || "neutral";
+  dom.battleScenePanel.dataset.ambientImpactRandomProbabilityScalePct =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomProbabilityScalePct || "100";
+  dom.battleScenePanel.dataset.ambientImpactRandomKindSource =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomKindSource || "none";
+  dom.battleScenePanel.dataset.ambientImpactRandomKindProfile =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomKindProfile || "neutral";
+  dom.battleScenePanel.dataset.ambientImpactRandomKind =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomKind || "none";
+  dom.battleScenePanel.dataset.ambientImpactRandomTone =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomTone || "none";
+  dom.battleScenePanel.dataset.ambientImpactRandomOutcomeSource =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomOutcomeSource || "none";
+  dom.battleScenePanel.dataset.ambientImpactRandomOutcomeProfile =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomOutcomeProfile || "neutral";
+  dom.battleScenePanel.dataset.ambientImpactRandomOutcomeCode =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomOutcomeCode || "none";
+  dom.battleScenePanel.dataset.ambientImpactRandomSyncSource =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomSyncSource || "none";
+  dom.battleScenePanel.dataset.ambientImpactRandomSyncOutcomeProfile =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomSyncOutcomeProfile || "neutral";
+  dom.battleScenePanel.dataset.ambientImpactRandomSyncDuel =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomSyncDuel || "on";
+  dom.battleScenePanel.dataset.ambientImpactRandomQuietSource =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomQuietSource || "none";
+  dom.battleScenePanel.dataset.ambientImpactRandomQuietOutcomeProfile =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomQuietOutcomeProfile || "neutral";
+  dom.battleScenePanel.dataset.ambientImpactRandomQuietThresholdMs =
+    dom.battleSceneArena?.dataset.sceneAmbientImpactRandomQuietThresholdMs || "2200";
   dom.battleScenePanel.dataset.ambientImpactReplay =
     dom.battleSceneArena?.dataset.sceneAmbientImpactReplay || "0";
   dom.battleScenePanel.dataset.ambientImpactReplaySource =
