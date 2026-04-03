@@ -1479,6 +1479,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-control-summary="전투 집중 ON · 전투 효과음 OFF · 전투 진동 OFF"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-support-summary="효과음 미지원 · 진동 미지원"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="battleScenePanel"',
     "index.html",
     failures,
@@ -8059,6 +8071,24 @@ async function main() {
   assertIncludes(
     app,
     "dom.focusControlsPanel.dataset.hapticToggleDisabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function syncFocusControlsPanelSummaries() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.focusControlsPanel.dataset.controlSummary = controlSummaryLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.focusControlsPanel.dataset.supportSummary = supportSummaryLabel;",
     "app.mjs",
     failures,
   );

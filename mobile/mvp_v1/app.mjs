@@ -802,6 +802,7 @@ function applyBattleFocusMode(enabled, options = {}) {
       dom.btnToggleBattleFocus?.textContent?.trim() || "전투 집중 OFF";
     dom.focusControlsPanel.dataset.focusTogglePressed = String(battleFocusMode);
   }
+  syncFocusControlsPanelSummaries();
   if (options.announce === true) {
     setStatus(
       battleFocusMode
@@ -867,6 +868,7 @@ function renderBattleSfxControl() {
       dom.btnToggleBattleSfx?.disabled === true,
     );
   }
+  syncFocusControlsPanelSummaries();
 }
 
 function ensureBattleSfxContext() {
@@ -1197,6 +1199,32 @@ function renderBattleHapticControl() {
       dom.btnToggleBattleHaptic?.disabled === true,
     );
   }
+  syncFocusControlsPanelSummaries();
+}
+
+function syncFocusControlsPanelSummaries() {
+  if (!dom.focusControlsPanel) {
+    return;
+  }
+  const controlSummaryLabel = [
+    dom.focusControlsPanel.dataset.focusToggleLabel || "전투 집중 OFF",
+    dom.focusControlsPanel.dataset.sfxToggleLabel || "전투 효과음 OFF",
+    dom.focusControlsPanel.dataset.hapticToggleLabel || "전투 진동 OFF",
+  ].join(" · ");
+  const supportSummaryLabel = [
+    `효과음 ${
+      dom.focusControlsPanel.dataset.battleSfxSupported === "true"
+        ? "지원"
+        : "미지원"
+    }`,
+    `진동 ${
+      dom.focusControlsPanel.dataset.battleHapticSupported === "true"
+        ? "지원"
+        : "미지원"
+    }`,
+  ].join(" · ");
+  dom.focusControlsPanel.dataset.controlSummary = controlSummaryLabel;
+  dom.focusControlsPanel.dataset.supportSummary = supportSummaryLabel;
 }
 
 function emitBattleHaptic(pattern) {
