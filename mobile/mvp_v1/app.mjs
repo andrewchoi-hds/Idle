@@ -2728,14 +2728,26 @@ function syncBattleScenePanelContract() {
     dom.battleSceneTicker?.dataset.queueCount || "0";
   dom.battleScenePanel.dataset.round =
     dom.battleSceneRoundBadge?.dataset.round || "1";
+  dom.battleScenePanel.dataset.roundBadgeKey =
+    dom.battleSceneRoundBadge?.dataset.badgeKey || "round_idle";
+  dom.battleScenePanel.dataset.roundBadgeTone =
+    dom.battleSceneRoundBadge?.dataset.tone || "info";
   dom.battleScenePanel.dataset.comboCount =
     dom.battleSceneComboBadge?.dataset.comboCount || "0";
   dom.battleScenePanel.dataset.comboTier =
     dom.battleSceneComboBadge?.dataset.comboTier || "calm";
+  dom.battleScenePanel.dataset.comboBadgeKey =
+    dom.battleSceneComboBadge?.dataset.badgeKey || "combo_calm";
+  dom.battleScenePanel.dataset.comboBadgeTone =
+    dom.battleSceneComboBadge?.dataset.tone || "info";
   dom.battleScenePanel.dataset.dpsScore =
     dom.battleSceneDpsBadge?.dataset.dpsScore || "0";
   dom.battleScenePanel.dataset.pressure =
     dom.battleSceneDpsBadge?.dataset.pressure || "low";
+  dom.battleScenePanel.dataset.dpsBadgeKey =
+    dom.battleSceneDpsBadge?.dataset.badgeKey || "pressure_low";
+  dom.battleScenePanel.dataset.dpsBadgeTone =
+    dom.battleSceneDpsBadge?.dataset.tone || "info";
   dom.battleScenePanel.dataset.skillBannerState =
     dom.battleSceneSkillBanner?.dataset.bannerState || "idle";
   dom.battleScenePanel.dataset.skillBannerText =

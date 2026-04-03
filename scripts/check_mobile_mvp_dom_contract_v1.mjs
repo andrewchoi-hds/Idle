@@ -2240,6 +2240,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-round-badge-key="round_idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-round-badge-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-combo-count="0"',
     "index.html",
     failures,
@@ -2252,6 +2264,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-combo-badge-key="combo_calm"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-combo-badge-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-dps-score="0"',
     "index.html",
     failures,
@@ -2259,6 +2283,18 @@ async function main() {
   assertIncludes(
     html,
     'data-pressure="low"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-dps-badge-key="pressure_low"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-dps-badge-tone="info"',
     "index.html",
     failures,
   );
@@ -7259,6 +7295,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.battleScenePanel.dataset.roundBadgeKey =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.roundBadgeTone =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.battleScenePanel.dataset.comboCount =",
     "app.mjs",
     failures,
@@ -7271,6 +7319,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.battleScenePanel.dataset.comboBadgeKey =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.comboBadgeTone =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.battleScenePanel.dataset.dpsScore =",
     "app.mjs",
     failures,
@@ -7278,6 +7338,18 @@ async function main() {
   assertIncludes(
     app,
     "dom.battleScenePanel.dataset.pressure =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.dpsBadgeKey =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.dpsBadgeTone =",
     "app.mjs",
     failures,
   );
