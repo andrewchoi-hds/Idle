@@ -2792,6 +2792,24 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-realtime-battles-label="0회"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-realtime-breakthroughs-label="0회"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-realtime-rebirths-label="0회"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="statsPanel"',
     "index.html",
     failures,
@@ -7944,6 +7962,24 @@ async function main() {
   assertIncludes(
     app,
     "dom.actionsPanel.dataset.realtimeRebirths = rebirthsLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.realtimeBattlesLabel = battlesDisplayLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.realtimeBreakthroughsLabel =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.realtimeRebirthsLabel = rebirthsDisplayLabel;",
     "app.mjs",
     failures,
   );

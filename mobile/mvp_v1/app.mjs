@@ -11607,15 +11607,22 @@ function renderRealtimeSummary() {
   const battlesLabel = fmtNumber(stats.battles);
   const breakthroughsLabel = fmtNumber(stats.breakthroughs);
   const rebirthsLabel = fmtNumber(stats.rebirths);
+  const battlesDisplayLabel = `${battlesLabel}회`;
+  const breakthroughsDisplayLabel = `${breakthroughsLabel}회`;
+  const rebirthsDisplayLabel = `${rebirthsLabel}회`;
   dom.realtimeElapsed.textContent = elapsedLabel;
-  dom.realtimeBattles.textContent = `${battlesLabel}회`;
-  dom.realtimeBreakthroughs.textContent = `${breakthroughsLabel}회`;
-  dom.realtimeRebirths.textContent = `${rebirthsLabel}회`;
+  dom.realtimeBattles.textContent = battlesDisplayLabel;
+  dom.realtimeBreakthroughs.textContent = breakthroughsDisplayLabel;
+  dom.realtimeRebirths.textContent = rebirthsDisplayLabel;
   if (dom.actionsPanel) {
     dom.actionsPanel.dataset.realtimeElapsed = elapsedLabel;
     dom.actionsPanel.dataset.realtimeBattles = battlesLabel;
     dom.actionsPanel.dataset.realtimeBreakthroughs = breakthroughsLabel;
     dom.actionsPanel.dataset.realtimeRebirths = rebirthsLabel;
+    dom.actionsPanel.dataset.realtimeBattlesLabel = battlesDisplayLabel;
+    dom.actionsPanel.dataset.realtimeBreakthroughsLabel =
+      breakthroughsDisplayLabel;
+    dom.actionsPanel.dataset.realtimeRebirthsLabel = rebirthsDisplayLabel;
   }
 }
 
