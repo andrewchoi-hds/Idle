@@ -1466,6 +1466,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-player-hp-gauge-key="hp_safe"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-player-cast-gauge-key="cast_low"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-enemy-vitals-text="HP 100% · 기세 0%"',
     "index.html",
     failures,
@@ -1473,6 +1485,18 @@ async function main() {
   assertIncludes(
     html,
     'data-enemy-vitals-key="safe_low"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-enemy-hp-gauge-key="hp_safe"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-enemy-cast-gauge-key="cast_low"',
     "index.html",
     failures,
   );
@@ -6455,6 +6479,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.battleScenePanel.dataset.playerHpGaugeKey =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.playerCastGaugeKey =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.battleScenePanel.dataset.enemyVitalsText =",
     "app.mjs",
     failures,
@@ -6462,6 +6498,18 @@ async function main() {
   assertIncludes(
     app,
     "dom.battleScenePanel.dataset.enemyVitalsKey =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.enemyHpGaugeKey =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.enemyCastGaugeKey =",
     "app.mjs",
     failures,
   );
