@@ -12321,6 +12321,8 @@ function render() {
     `${recommendation.labelKo || "-"} · ${recommendation.messageKo || "-"}`;
   const autoResumeSummaryLabel =
     `${autoResumePolicy.labelKo || "-"} · ${autoResumePolicy.messageKo || "-"}`;
+  const previewOverviewSummaryLabel =
+    `재고 ${inventorySummaryLabel} · 설정 ${toggleSummaryLabel} · 확률 ${oddsSummaryLabel} · 권장 ${recommendationSummaryLabel} · 재개 ${autoResumeSummaryLabel}`;
   if (dom.breakthroughPreviewPanel) {
     dom.breakthroughPreviewPanel.dataset.riskTier = riskTier.tier;
     dom.breakthroughPreviewPanel.dataset.riskTone = riskTier.tone;
@@ -12383,6 +12385,8 @@ function render() {
       recommendationSummaryLabel;
     dom.breakthroughPreviewPanel.dataset.autoResumeSummary =
       autoResumeSummaryLabel;
+    dom.breakthroughPreviewPanel.dataset.overviewSummary =
+      previewOverviewSummaryLabel;
     dom.breakthroughPreviewPanel.dataset.recommendationReason =
       recommendationToggle.reason || "none";
     dom.breakthroughPreviewPanel.dataset.recommendationToggleMessage =
