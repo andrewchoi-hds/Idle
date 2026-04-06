@@ -765,10 +765,15 @@ function syncSavePayloadContract(sourceInput = savePayloadSource) {
   dom.savePayload.dataset.payloadLength = payloadLength;
   dom.savePayload.dataset.payloadLines = payloadLines;
   if (dom.savePanel) {
+    const payloadSummary =
+      payloadState === "empty"
+        ? "payload 비어 있음"
+        : `payload ${payloadSource} · ${payloadLines}줄 · ${payloadLength}자`;
     dom.savePanel.dataset.payloadState = payloadState;
     dom.savePanel.dataset.payloadSource = payloadSource;
     dom.savePanel.dataset.payloadLength = payloadLength;
     dom.savePanel.dataset.payloadLines = payloadLines;
+    dom.savePanel.dataset.payloadSummary = payloadSummary;
   }
 }
 

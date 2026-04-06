@@ -873,6 +873,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-payload-summary="payload 비어 있음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-copy-button-label="활성 슬롯 복제"',
     "index.html",
     failures,
@@ -6181,6 +6187,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.savePanel.dataset.payloadLines = payloadLines;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.payloadSummary = payloadSummary;",
     "app.mjs",
     failures,
   );
