@@ -10868,6 +10868,8 @@ function syncOfflineCompareRowContract() {
     dom.btnCompareOfflineCode?.textContent?.trim() || "비교 코드 대조",
     applyViewLabel || "보기 모드 맞추기",
   ].join(" · ");
+  dom.offlineCompareRow.dataset.overviewSummary =
+    `${dom.offlineCompareRow.dataset.inputSummary} · ${dom.offlineCompareRow.dataset.actionSummary}`;
 }
 
 function syncOfflineCompareViewModeAction(currentCodeInput, targetCodeInput) {
