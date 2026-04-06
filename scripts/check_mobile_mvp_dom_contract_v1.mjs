@@ -1383,6 +1383,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="Kenney Asset Library (CC0) · 3개 링크 · CC0 3건"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-source-slot-summary="슬롯 1: 비어 있음"',
     "index.html",
     failures,
@@ -8743,6 +8749,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.assetsPanel.dataset.licenseSummary =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.assetsPanel.dataset.overviewSummary = overviewSummaryLabel;",
     "app.mjs",
     failures,
   );
