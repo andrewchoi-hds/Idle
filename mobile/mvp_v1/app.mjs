@@ -2888,6 +2888,8 @@ function syncBattleScenePanelContract() {
     `수련자 ${dom.battleScenePanel.dataset.playerVitalsText || "HP 100% · 기세 0%"} · 적수 ${
       dom.battleScenePanel.dataset.enemyVitalsText || "HP 100% · 기세 0%"
     }`;
+  dom.battleScenePanel.dataset.overviewSummary =
+    `${dom.battleScenePanel.dataset.sceneSummary} · ${dom.battleScenePanel.dataset.actorSummary}`;
 }
 
 function syncBattleSceneMotionLayerContracts() {
