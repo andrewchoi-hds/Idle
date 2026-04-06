@@ -12636,6 +12636,8 @@ function render() {
     dom.settingsPanel.dataset.offlineEventLimitLabel = offlineEventLimitLabel;
     dom.settingsPanel.dataset.toggleSummary = settingsToggleSummaryLabel;
     dom.settingsPanel.dataset.limitSummary = settingsLimitSummaryLabel;
+    dom.settingsPanel.dataset.overviewSummary =
+      `${settingsToggleSummaryLabel} · ${settingsLimitSummaryLabel}`;
   }
   syncAssetsPanelContract();
   syncCopySlotTargetSelection();
