@@ -12405,6 +12405,7 @@ function render() {
     `기 ${fmtNumber(state.currencies.qi)} / ${fmtNumber(stage.qi_required)} · ${
       breakthroughReady ? "돌파 가능" : "돌파 대기"
     }`;
+  const overviewSummaryLabel = `${stageSummaryLabel} · ${qiSummaryLabel}`;
 
   if (dom.stagePanel) {
     dom.stagePanel.dataset.stageName = String(displayName || "-");
@@ -12415,6 +12416,7 @@ function render() {
     dom.stagePanel.dataset.breakthroughReady = String(breakthroughReady);
     dom.stagePanel.dataset.stageSummary = stageSummaryLabel;
     dom.stagePanel.dataset.qiSummary = qiSummaryLabel;
+    dom.stagePanel.dataset.overviewSummary = overviewSummaryLabel;
   }
 
   dom.stageDisplay.textContent = displayName;
