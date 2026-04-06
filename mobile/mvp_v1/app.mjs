@@ -11361,6 +11361,19 @@ function syncActionsPanelButtonContract() {
     dom.btnRealtimeAuto?.textContent?.trim() || "실시간 자동 시작",
   ].join(" · ");
   dom.actionsPanel.dataset.buttonSummary = buttonSummaryLabel;
+  syncActionsPanelOverviewSummary();
+}
+
+function syncActionsPanelOverviewSummary() {
+  if (!dom.actionsPanel) {
+    return;
+  }
+  const realtimeSummaryLabel =
+    dom.actionsPanel.dataset.realtimeSummary || "중지 · 전투 0회 · 돌파 0회 · 환생 0회";
+  const buttonSummaryLabel =
+    dom.actionsPanel.dataset.buttonSummary || "전투 1회 · 돌파 시도 · 실시간 자동 시작";
+  dom.actionsPanel.dataset.overviewSummary =
+    `${realtimeSummaryLabel} · ${buttonSummaryLabel}`;
 }
 
 function getConfiguredAutoBreakthroughResumeWarmupSec() {
@@ -11768,6 +11781,7 @@ function renderRealtimeSummary() {
     dom.actionsPanel.dataset.realtimeRebirthsLabel = rebirthsDisplayLabel;
     dom.actionsPanel.dataset.realtimeSummary =
       `${dom.actionsPanel.dataset.realtimeLabel || "중지"} · 전투 ${battlesDisplayLabel} · 돌파 ${breakthroughsDisplayLabel} · 환생 ${rebirthsDisplayLabel}`;
+    syncActionsPanelOverviewSummary();
   }
 }
 

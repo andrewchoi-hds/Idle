@@ -3851,3 +3851,11 @@
 
 ## 903) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(settings panel overview summary aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 904) 다음 순차 작업
+1. [완료] 액션 패널 루트(`actionsPanel`) contract에 `data-overview-summary`를 추가해 부모 패널 단독 관찰만으로도 현재 실시간 자동 흐름과 주요 액션 버튼 흐름을 한 줄 overview summary로 직접 읽을 수 있도록 보강.
+2. [완료] `syncActionsPanelOverviewSummary()`를 추가하고 `syncActionsPanelButtonContract()`, `renderRealtimeSummary()` 경로에 연결해 기존 `realtimeSummary/buttonSummary`를 결합한 overview summary가 항상 함께 갱신되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 actions panel overview summary aggregate 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 905) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(actions panel overview summary aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

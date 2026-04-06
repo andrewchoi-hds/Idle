@@ -3003,6 +3003,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="중지 · 전투 0회 · 돌파 0회 · 환생 0회 · 전투 1회 · 돌파 시도 · 실시간 자동 시작"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="savePanel"',
     "index.html",
     failures,
@@ -8515,6 +8521,24 @@ async function main() {
   assertIncludes(
     app,
     "dom.actionsPanel.dataset.buttonSummary = buttonSummaryLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function syncActionsPanelOverviewSummary() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.actionsPanel.dataset.overviewSummary =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncActionsPanelOverviewSummary();",
     "app.mjs",
     failures,
   );
