@@ -12178,12 +12178,14 @@ function renderLogs() {
     const lastLogSummary = `[${latestRow.at || "-"}] ${latestRow.kind || "info"} · ${
       latestRow.message || "로그 없음"
     }`;
+    const logSummary = `${logCountLabel} · ${lastLogSummary}`;
     dom.logsPanel.dataset.logCount = String(state.logs.length);
     dom.logsPanel.dataset.lastLogKind = String(latestRow.kind || "info");
     dom.logsPanel.dataset.lastLogMessage = String(latestRow.message || "로그 없음");
     dom.logsPanel.dataset.lastLogAt = String(latestRow.at || "-");
     dom.logsPanel.dataset.logCountLabel = logCountLabel;
     dom.logsPanel.dataset.lastLogSummary = lastLogSummary;
+    dom.logsPanel.dataset.logSummary = logSummary;
   }
   dom.eventLogList.innerHTML = rows
     .map((row) => {
