@@ -1563,6 +1563,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="전투 집중 ON · 전투 효과음 OFF · 전투 진동 OFF · 효과음 미지원 · 진동 미지원"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="battleScenePanel"',
     "index.html",
     failures,
@@ -8269,6 +8275,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.focusControlsPanel.dataset.supportSummary = supportSummaryLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.focusControlsPanel.dataset.overviewSummary =',
     "app.mjs",
     failures,
   );

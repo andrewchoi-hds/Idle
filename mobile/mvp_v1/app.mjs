@@ -1230,6 +1230,8 @@ function syncFocusControlsPanelSummaries() {
   ].join(" · ");
   dom.focusControlsPanel.dataset.controlSummary = controlSummaryLabel;
   dom.focusControlsPanel.dataset.supportSummary = supportSummaryLabel;
+  dom.focusControlsPanel.dataset.overviewSummary =
+    `${controlSummaryLabel} · ${supportSummaryLabel}`;
 }
 
 function emitBattleHaptic(pattern) {
