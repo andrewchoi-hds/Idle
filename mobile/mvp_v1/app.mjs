@@ -11248,6 +11248,7 @@ function renderOfflineDetailList(events) {
   const emptyLabel = offlineDetailCriticalOnly
     ? "핵심 이벤트 없음"
     : "세부 로그 없음";
+  const overviewSummaryLabel = `${filterSummaryLabel} · ${hiddenSummaryLabel}`;
   const currentCompareCode = buildOfflineDetailCompareCode(prioritizedRows, mode);
   setOfflineCompareCodeLabel(currentCompareCode);
   setOfflineCompareCurrentSummary(currentCompareCode);
@@ -11271,6 +11272,7 @@ function renderOfflineDetailList(events) {
     dom.offlineDetailList.dataset.hiddenSummary = hiddenSummaryLabel;
     dom.offlineDetailList.dataset.hiddenKindsSummary = hiddenKindsSummaryLabel;
     dom.offlineDetailList.dataset.emptyLabel = emptyLabel;
+    dom.offlineDetailList.dataset.overviewSummary = overviewSummaryLabel;
   }
   if (rows.length === 0) {
     dom.offlineDetailList.innerHTML = `<li class="delta-neutral">${emptyLabel}</li>`;
@@ -12065,6 +12067,7 @@ function hideOfflineModal() {
   dom.offlineDetailList.dataset.hiddenSummary = "숨김 이벤트 없음";
   dom.offlineDetailList.dataset.hiddenKindsSummary = "숨김 상세 없음";
   dom.offlineDetailList.dataset.emptyLabel = "세부 로그 없음";
+  dom.offlineDetailList.dataset.overviewSummary = "세부 로그 0건 (전체) · 숨김 이벤트 없음";
   setOfflineDetailCriticalOnly(false);
   setOfflineDetailExpanded(false);
 }
