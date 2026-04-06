@@ -2439,6 +2439,42 @@ function normalizeBattleSceneMessageKey(key) {
   return normalized || "idle";
 }
 
+function summarizeBattleSceneLoopModeKo(loopMode) {
+  return loopMode === "realtime"
+    ? "실시간"
+    : loopMode === "auto"
+      ? "자동"
+      : "대기";
+}
+
+function summarizeBattleSceneStateKo(sceneState) {
+  return sceneState === "battle_win"
+    ? "전투 승리"
+    : sceneState === "battle_loss"
+      ? "전투 패배"
+      : sceneState === "breakthrough_success"
+        ? "돌파 성공"
+        : sceneState === "breakthrough_fail"
+          ? "돌파 실패"
+          : "대기";
+}
+
+function summarizeBattleScenePressureKo(pressure) {
+  return pressure === "high"
+    ? "압력 높음"
+    : pressure === "medium"
+      ? "압력 중간"
+      : "압력 낮음";
+}
+
+function summarizeBattleSceneLeadKo(lead) {
+  return lead === "player"
+    ? "수련자 우세"
+    : lead === "enemy"
+      ? "적수 우세"
+      : "균형";
+}
+
 function syncBattleScenePanelContract() {
   if (!dom.battleScenePanel) {
     return;
@@ -2824,6 +2860,16 @@ function syncBattleScenePanelContract() {
     dom.battleSceneComboBanner?.dataset.tier || "flow";
   dom.battleScenePanel.dataset.comboBannerCount =
     dom.battleSceneComboBanner?.dataset.comboCount || "0";
+  dom.battleScenePanel.dataset.sceneSummary = [
+    summarizeBattleSceneLoopModeKo(dom.battleScenePanel.dataset.sceneLoop),
+    summarizeBattleSceneStateKo(dom.battleScenePanel.dataset.sceneState),
+    summarizeBattleScenePressureKo(dom.battleScenePanel.dataset.pressure),
+    summarizeBattleSceneLeadKo(dom.battleScenePanel.dataset.lead),
+  ].join(" · ");
+  dom.battleScenePanel.dataset.actorSummary =
+    `수련자 ${dom.battleScenePanel.dataset.playerVitalsText || "HP 100% · 기세 0%"} · 적수 ${
+      dom.battleScenePanel.dataset.enemyVitalsText || "HP 100% · 기세 0%"
+    }`;
 }
 
 function syncBattleSceneMotionLayerContracts() {
