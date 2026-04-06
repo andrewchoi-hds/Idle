@@ -1143,6 +1143,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-compare-summary="비교 대기 중 · 출처: 없음 · 가이드: 비교 코드를 입력하세요."',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-detail-mode="all"',
     "index.html",
     failures,
@@ -6594,6 +6600,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function syncOfflineCompareSummary() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.offlineModal.dataset.compareCode = "비교 코드 없음";',
     "app.mjs",
     failures,
@@ -6637,6 +6649,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.offlineModal.dataset.compareMatchSummary = "일치 요약: 대기 중";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.compareSummary =',
     "app.mjs",
     failures,
   );

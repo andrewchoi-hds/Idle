@@ -10642,6 +10642,7 @@ function setOfflineCompareResultState(currentCodeInput, targetCodeInput) {
   );
   dom.offlineCompareCodeResult.textContent = label;
   dom.offlineModal.dataset.compareResult = label;
+  syncOfflineCompareSummary();
   applyRiskTone(
     dom.offlineCompareCodeResult,
     buildOfflineDetailCompareResultStateTone(currentCodeInput, targetCodeInput),
@@ -10655,6 +10656,7 @@ function setOfflineCompareResultLabel(currentCodeInput, targetCodeInput) {
   );
   dom.offlineCompareCodeResult.textContent = label;
   dom.offlineModal.dataset.compareResult = label;
+  syncOfflineCompareSummary();
   applyRiskTone(
     dom.offlineCompareCodeResult,
     buildOfflineDetailCompareResultStateTone(currentCodeInput, targetCodeInput),
@@ -10723,11 +10725,25 @@ function setOfflineCompareSource(sourceInput) {
   const label = buildOfflineDetailCompareCodeSourceLabelKo(normalizedSource);
   dom.offlineCompareCodeSource.textContent = label;
   dom.offlineModal.dataset.compareSource = label;
+  syncOfflineCompareSummary();
   applyRiskTone(
     dom.offlineCompareCodeSource,
     buildOfflineDetailCompareCodeSourceTone(normalizedSource),
   );
   return label;
+}
+
+function syncOfflineCompareSummary() {
+  if (!dom.offlineModal) {
+    return;
+  }
+  const resultLabel = dom.offlineModal.dataset.compareResult || "비교 대기 중";
+  const sourceLabel = dom.offlineModal.dataset.compareSource || "출처: 없음";
+  const actionHintLabel =
+    dom.offlineModal.dataset.compareActionHint ||
+    "가이드: 비교 코드를 입력하세요.";
+  dom.offlineModal.dataset.compareSummary =
+    `${resultLabel} · ${sourceLabel} · ${actionHintLabel}`;
 }
 
 function setOfflineCompareCurrentSummary(currentCodeInput) {
@@ -10834,6 +10850,7 @@ function setOfflineCompareActionHint(currentCodeInput, targetCodeInput) {
   );
   dom.offlineCompareCodeActionHint.textContent = label;
   dom.offlineModal.dataset.compareActionHint = label;
+  syncOfflineCompareSummary();
   applyRiskTone(dom.offlineCompareCodeActionHint, tone);
   syncOfflineCompareViewModeAction(currentCodeInput, targetCodeInput);
 }
@@ -11971,6 +11988,8 @@ function hideOfflineModal() {
   dom.offlineModal.dataset.compareTargetSummary = "대상 코드: 없음";
   dom.offlineModal.dataset.compareDeltaSummary = "차이 요약: 대기 중";
   dom.offlineModal.dataset.compareMatchSummary = "일치 요약: 대기 중";
+  dom.offlineModal.dataset.compareSummary =
+    "비교 대기 중 · 출처: 없음 · 가이드: 비교 코드를 입력하세요.";
   setOfflineCompareCodeLabel("");
   dom.offlineCompareCodeInput.value = "";
   setOfflineCompareResultState("", "");
@@ -12058,6 +12077,7 @@ function showOfflineModal(offline) {
   dom.offlineModal.dataset.essenceDeltaTone =
     dom.offlineEssenceDelta?.dataset.deltaTone || "neutral";
   dom.offlineModal.dataset.resourceDeltaSummary = resourceDeltaSummaryLabel;
+  syncOfflineCompareSummary();
   lastOfflineReport = {
     generatedAtIso: new Date().toISOString(),
     playerName: state.playerName,
