@@ -861,6 +861,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="활성 1번 · 정상 0 · 빈 슬롯 3 · 손상 0 · 잠금 0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-payload-state="empty"',
     "index.html",
     failures,
@@ -6181,6 +6187,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.saveSlotSummaryList.dataset.lockedCountLabel = `잠금 슬롯 ${lockedCount}`;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.saveSlotSummaryList.dataset.overviewSummary = overviewSummaryLabel;",
     "app.mjs",
     failures,
   );
