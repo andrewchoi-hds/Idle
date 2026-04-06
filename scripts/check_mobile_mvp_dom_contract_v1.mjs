@@ -741,6 +741,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="- · - · 난이도 0 · 기 0 / 0 · 돌파 대기"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-lock-hint="잠금 상태 준비 중..."',
     "index.html",
     failures,
@@ -5689,6 +5695,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.stagePanel.dataset.qiSummary = qiSummaryLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.stagePanel.dataset.overviewSummary = overviewSummaryLabel;",
     "app.mjs",
     failures,
   );
