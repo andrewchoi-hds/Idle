@@ -1743,6 +1743,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-scene-summary="대기 · 대기 · 압력 낮음 · 균형"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-actor-summary="수련자 HP 100% · 기세 0% · 적수 HP 100% · 기세 0%"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-lead="even"',
     "index.html",
     failures,
@@ -7117,6 +7129,24 @@ async function main() {
   assertIncludes(
     app,
     "dom.battleScenePanel.dataset.enemyCastGaugeKey =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function summarizeBattleSceneLoopModeKo(loopMode) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.sceneSummary = [",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.actorSummary =",
     "app.mjs",
     failures,
   );
