@@ -1233,6 +1233,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="세부 로그 0건 (전체) · 숨김 이벤트 없음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-report-state="empty"',
     "index.html",
     failures,
@@ -6468,6 +6474,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.offlineDetailList.dataset.overviewSummary = overviewSummaryLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.offlineDetailList.dataset.emptyLabel = emptyLabel;",
     "app.mjs",
     failures,
@@ -6517,6 +6529,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.offlineDetailList.dataset.hiddenKindsSummary = "숨김 상세 없음";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineDetailList.dataset.overviewSummary = "세부 로그 0건 (전체) · 숨김 이벤트 없음";',
     "app.mjs",
     failures,
   );
