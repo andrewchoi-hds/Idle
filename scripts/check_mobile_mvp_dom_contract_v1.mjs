@@ -579,6 +579,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="재고 영약 0 · 수호부 0 · 설정 영약 ON · 수호부 ON · 확률 성공 0.0% · 사망 0.0% · 권장 - · - · 재개 - · -"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-recommendation-reason="none"',
     "index.html",
     failures,
@@ -6049,6 +6055,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.breakthroughPreviewPanel.dataset.oddsSummary = oddsSummaryLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.overviewSummary =",
     "app.mjs",
     failures,
   );
