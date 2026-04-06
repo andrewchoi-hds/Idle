@@ -11068,6 +11068,8 @@ function renderSaveSlotSummary(force = false) {
     const emptyCount = rows.filter((row) => row.state === "empty").length;
     const corruptCount = rows.filter((row) => row.state === "corrupt").length;
     const lockedCount = rows.filter((row) => isSlotLocked(row.slot)).length;
+    const overviewSummaryLabel =
+      `활성 ${activeSaveSlot}번 · 정상 ${okCount} · 빈 슬롯 ${emptyCount} · 손상 ${corruptCount} · 잠금 ${lockedCount}`;
     dom.saveSlotSummaryList.dataset.slotCount = String(rows.length);
     dom.saveSlotSummaryList.dataset.activeSlot = String(activeSaveSlot);
     dom.saveSlotSummaryList.dataset.activeSlotState = String(activeRow.state || "empty");
@@ -11087,6 +11089,7 @@ function renderSaveSlotSummary(force = false) {
     dom.saveSlotSummaryList.dataset.stateBreakdownLabel =
       `정상 ${okCount} · 빈 슬롯 ${emptyCount} · 손상 ${corruptCount}`;
     dom.saveSlotSummaryList.dataset.lockedCountLabel = `잠금 슬롯 ${lockedCount}`;
+    dom.saveSlotSummaryList.dataset.overviewSummary = overviewSummaryLabel;
   }
   dom.saveSlotSummaryList.innerHTML = rows
     .map((row) => {
