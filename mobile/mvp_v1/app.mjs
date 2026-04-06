@@ -12228,13 +12228,19 @@ function syncAssetsPanelContract() {
   const cc0Count = normalizedLinks.filter((link) =>
     link.label.toUpperCase().includes("CC0"),
   ).length;
+  const licenseSummaryLabel =
+    normalizedLinks.length > 0 ? `CC0 ${cc0Count}건` : "라이선스 정보 없음";
+  const overviewSummaryLabel =
+    normalizedLinks.length > 0
+      ? `${primary.label} · ${normalizedLinks.length}개 링크 · ${licenseSummaryLabel}`
+      : "추천 링크 없음 · 라이선스 정보 없음";
   dom.assetsPanel.dataset.linkCount = String(normalizedLinks.length);
   dom.assetsPanel.dataset.primarySource = primary.source;
   dom.assetsPanel.dataset.primaryLabel = primary.label;
   dom.assetsPanel.dataset.sourceSummary =
     normalizedLinks.map((link) => link.label).join(" · ") || "추천 링크 없음";
-  dom.assetsPanel.dataset.licenseSummary =
-    normalizedLinks.length > 0 ? `CC0 ${cc0Count}건` : "라이선스 정보 없음";
+  dom.assetsPanel.dataset.licenseSummary = licenseSummaryLabel;
+  dom.assetsPanel.dataset.overviewSummary = overviewSummaryLabel;
 }
 
 function render() {

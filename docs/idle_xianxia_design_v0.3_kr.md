@@ -3819,3 +3819,11 @@
 
 ## 895) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(offline detail overview summary aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 896) 다음 순차 작업
+1. [완료] 에셋 패널 루트(`assetsPanel`) contract에 `data-overview-summary`를 추가해 부모 패널 단독 관찰만으로도 대표 에셋 출처와 링크/라이선스 구성을 한 줄 overview summary로 직접 읽을 수 있도록 보강.
+2. [완료] `syncAssetsPanelContract()`가 기존 `primary/source/license` 집계를 바탕으로 overview summary도 함께 기록하도록 확장해 panel-root 소비 정합을 강화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 assets panel overview summary aggregate 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 897) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(assets panel overview summary aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
