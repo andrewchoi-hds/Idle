@@ -774,7 +774,23 @@ function syncSavePayloadContract(sourceInput = savePayloadSource) {
     dom.savePanel.dataset.payloadLength = payloadLength;
     dom.savePanel.dataset.payloadLines = payloadLines;
     dom.savePanel.dataset.payloadSummary = payloadSummary;
+    syncSavePanelOverviewSummary();
   }
+}
+
+function syncSavePanelOverviewSummary() {
+  if (!dom.savePanel) {
+    return;
+  }
+  const selectionSummaryLabel =
+    dom.savePanel.dataset.selectionSummary ||
+    "활성 1번 · 슬롯 1: 비어 있음 → 대상 슬롯 2: 비어 있음";
+  const buttonSummaryLabel =
+    dom.savePanel.dataset.buttonSummary || "로컬 저장 · 로컬 불러오기 · JSON 내보내기";
+  const payloadSummaryLabel =
+    dom.savePanel.dataset.payloadSummary || "payload 비어 있음";
+  dom.savePanel.dataset.overviewSummary =
+    `${selectionSummaryLabel} · ${buttonSummaryLabel} · ${payloadSummaryLabel}`;
 }
 
 function setSavePayloadValue(valueInput, source = "manual") {
@@ -11056,6 +11072,7 @@ function syncSlotActionButtons() {
       dom.btnLoadLocal?.textContent?.trim() || "로컬 불러오기",
       dom.btnExportState?.textContent?.trim() || "JSON 내보내기",
     ].join(" · ");
+    syncSavePanelOverviewSummary();
   }
 }
 
