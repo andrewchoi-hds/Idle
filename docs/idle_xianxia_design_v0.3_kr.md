@@ -3867,3 +3867,11 @@
 
 ## 907) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(stage panel overview summary aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 908) 다음 순차 작업
+1. [완료] 저장 패널 루트(`savePanel`) contract에 `data-overview-summary`를 추가해 부모 패널 단독 관찰만으로도 현재 슬롯 흐름, 주요 저장 액션, payload 상태를 한 줄 overview summary로 직접 읽을 수 있도록 보강.
+2. [완료] `syncSavePanelOverviewSummary()`를 추가하고 `syncSavePayloadContract()`, `syncSlotActionButtons()` 경로에 연결해 기존 `selectionSummary/buttonSummary/payloadSummary`를 결합한 overview summary가 항상 함께 갱신되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 save panel overview summary aggregate 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 909) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(save panel overview summary aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

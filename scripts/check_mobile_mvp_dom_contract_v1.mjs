@@ -999,6 +999,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="활성 1번 · 슬롯 1: 비어 있음 → 대상 슬롯 2: 비어 있음 · 로컬 저장 · 로컬 불러오기 · JSON 내보내기 · payload 비어 있음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="logsPanel"',
     "index.html",
     failures,
@@ -6300,6 +6306,24 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function syncSavePanelOverviewSummary() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePanel.dataset.overviewSummary =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncSavePanelOverviewSummary();",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'setSavePayloadValue(payload, "offline_report");',
     "app.mjs",
     failures,
@@ -6421,6 +6445,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.savePanel.dataset.buttonSummary = [',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncSavePanelOverviewSummary();",
     "app.mjs",
     failures,
   );
