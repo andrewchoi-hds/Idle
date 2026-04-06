@@ -1611,6 +1611,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="대기 · 대기 · 압력 낮음 · 균형 · 수련자 HP 100% · 기세 0% · 적수 HP 100% · 기세 0%"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-scene-world="true"',
     "index.html",
     failures,
@@ -7303,6 +7309,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.battleScenePanel.dataset.actorSummary =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleScenePanel.dataset.overviewSummary =",
     "app.mjs",
     failures,
   );
