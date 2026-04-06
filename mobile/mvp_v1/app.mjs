@@ -12270,6 +12270,10 @@ function render() {
     }`;
   const oddsSummaryLabel =
     `성공 ${preview.successPct.toFixed(1)}% · 사망 ${preview.deathPct.toFixed(1)}%`;
+  const recommendationSummaryLabel =
+    `${recommendation.labelKo || "-"} · ${recommendation.messageKo || "-"}`;
+  const autoResumeSummaryLabel =
+    `${autoResumePolicy.labelKo || "-"} · ${autoResumePolicy.messageKo || "-"}`;
   if (dom.breakthroughPreviewPanel) {
     dom.breakthroughPreviewPanel.dataset.riskTier = riskTier.tier;
     dom.breakthroughPreviewPanel.dataset.riskTone = riskTier.tone;
@@ -12328,6 +12332,10 @@ function render() {
     );
     dom.breakthroughPreviewPanel.dataset.toggleSummary = toggleSummaryLabel;
     dom.breakthroughPreviewPanel.dataset.oddsSummary = oddsSummaryLabel;
+    dom.breakthroughPreviewPanel.dataset.recommendationSummary =
+      recommendationSummaryLabel;
+    dom.breakthroughPreviewPanel.dataset.autoResumeSummary =
+      autoResumeSummaryLabel;
     dom.breakthroughPreviewPanel.dataset.recommendationReason =
       recommendationToggle.reason || "none";
     dom.breakthroughPreviewPanel.dataset.recommendationToggleMessage =

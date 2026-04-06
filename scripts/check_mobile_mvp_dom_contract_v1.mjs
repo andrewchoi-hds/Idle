@@ -435,6 +435,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-recommendation-summary="- · -"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-recommendation-toggle-message="-"',
     "index.html",
     failures,
@@ -460,6 +466,12 @@ async function main() {
   assertIncludes(
     html,
     'data-auto-resume-message="-"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-auto-resume-summary="- · -"',
     "index.html",
     failures,
   );
@@ -5844,6 +5856,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.breakthroughPreviewPanel.dataset.recommendationSummary =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.breakthroughPreviewPanel.dataset.autoResumeReason = autoResumePolicy.reason || "none";',
     "app.mjs",
     failures,
@@ -5863,6 +5881,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.breakthroughPreviewPanel.dataset.autoResumeMessage =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.breakthroughPreviewPanel.dataset.autoResumeSummary =",
     "app.mjs",
     failures,
   );
