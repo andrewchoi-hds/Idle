@@ -3705,6 +3705,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="info · idle · idle · 대기 중"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="battleSceneTicker"',
     "index.html",
     failures,
@@ -3712,6 +3718,18 @@ async function main() {
   assertIncludes(
     html,
     'data-message-key="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-overview-summary="info · idle · idle · 전장 파동 감지 중 · 자동/실시간 루프에서 연출이 계속 갱신됩니다."',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-overview-summary="info · idle · idle · 전투 신호 대기 · 상시 교전 로그를 수집 중입니다. · 큐 0건"',
     "index.html",
     failures,
   );
@@ -9366,6 +9384,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'syncBattleSceneMessageOverview(dom.battleSceneStatus, BATTLE_SCENE_DEFAULT_STATUS);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneResult.dataset.messageState =',
     "app.mjs",
     failures,
@@ -9379,6 +9403,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneResult.dataset.messageSource = normalizeBattleSceneMessageSource(',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'syncBattleSceneMessageOverview(dom.battleSceneResult, BATTLE_SCENE_DEFAULT_RESULT);',
     "app.mjs",
     failures,
   );
@@ -9415,6 +9445,24 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneTicker.dataset.messageSource = normalizeBattleSceneMessageSource(latest.source);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function syncBattleSceneMessageOverview(node, defaultText, options = {}) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'node.dataset.overviewSummary = parts.join(" · ");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "includeQueueCount: true,",
     "app.mjs",
     failures,
   );
