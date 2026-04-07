@@ -12502,6 +12502,7 @@ function render() {
     dom.statsPanel.dataset.rebirthEssenceLabel = rebirthEssenceLabel;
     dom.statsPanel.dataset.rebirthCountLabel = rebirthCountLabel;
     dom.statsPanel.dataset.resourceSummary = resourceSummaryLabel;
+    dom.statsPanel.dataset.overviewSummary = resourceSummaryLabel;
   }
   dom.invBreakthroughElixir.textContent = fmtNumber(state.inventory.breakthroughElixir);
   dom.invTribulationTalisman.textContent = fmtNumber(state.inventory.tribulationTalisman);
