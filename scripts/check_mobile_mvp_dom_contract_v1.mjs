@@ -915,6 +915,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="payload 비어 있음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-payload-summary="payload 비어 있음"',
     "index.html",
     failures,
@@ -6325,6 +6331,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.savePayload.dataset.payloadLines = payloadLines;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.savePayload.dataset.overviewSummary = payloadSummary;",
     "app.mjs",
     failures,
   );
