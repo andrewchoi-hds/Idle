@@ -2990,6 +2990,30 @@ function applyBattleSceneTickerTone(tone = "info") {
   applyBattleSceneTone(dom.battleSceneTicker, tone);
 }
 
+function syncBattleSceneBannerOverview(node, options = {}) {
+  if (!node) {
+    return;
+  }
+  const bannerState = node.dataset.bannerState || "idle";
+  const tone = node.dataset.tone || "info";
+  const source = node.dataset.bannerSource || "idle";
+  const key = node.dataset.bannerKey || "idle";
+  const text = bannerState === "idle"
+    ? options.defaultText || String(node.textContent || "").trim() || "-"
+    : String(node.textContent || options.defaultText || "").trim() || "-";
+  const parts = [bannerState, tone, source, key];
+  if (options.includeActor) {
+    parts.push(node.dataset.bannerActor || "none");
+    parts.push(node.dataset.skillLabel || "none");
+  }
+  if (options.includeCombo) {
+    parts.push(node.dataset.tier || "flow");
+    parts.push(node.dataset.comboCount || "0");
+  }
+  parts.push(text);
+  node.dataset.overviewSummary = parts.join(" · ");
+}
+
 function syncBattleSceneMessageOverview(node, defaultText, options = {}) {
   if (!node) {
     return;
@@ -3087,6 +3111,10 @@ function setBattleSceneSkillBanner(label, tone = "info", source = "ambient", opt
   dom.battleSceneSkillBanner.setAttribute("aria-hidden", "false");
   void dom.battleSceneSkillBanner.offsetWidth;
   dom.battleSceneSkillBanner.classList.add("is-active");
+  syncBattleSceneBannerOverview(dom.battleSceneSkillBanner, {
+    includeActor: true,
+    defaultText: "기세 수렴",
+  });
   syncBattleScenePanelContract();
   if (battleSceneSkillBannerTimer !== null) {
     window.clearTimeout(battleSceneSkillBannerTimer);
@@ -3100,6 +3128,10 @@ function setBattleSceneSkillBanner(label, tone = "info", source = "ambient", opt
       dom.battleSceneSkillBanner.dataset.bannerKey = "idle";
       dom.battleSceneSkillBanner.dataset.bannerActor = "none";
       dom.battleSceneSkillBanner.dataset.skillLabel = "none";
+      syncBattleSceneBannerOverview(dom.battleSceneSkillBanner, {
+        includeActor: true,
+        defaultText: "기세 수렴",
+      });
       syncBattleScenePanelContract();
     }
     battleSceneSkillBannerTimer = null;
@@ -3141,6 +3173,10 @@ function clearBattleSceneComboBanner() {
   dom.battleSceneComboBanner.dataset.bannerSource = "idle";
   dom.battleSceneComboBanner.dataset.bannerKey = "idle";
   dom.battleSceneComboBanner.setAttribute("aria-hidden", "true");
+  syncBattleSceneBannerOverview(dom.battleSceneComboBanner, {
+    includeCombo: true,
+    defaultText: "연격 x3",
+  });
   syncBattleScenePanelContract();
 }
 
@@ -3178,6 +3214,10 @@ function setBattleSceneComboBanner(comboInput, tone = "info", source = "ambient"
   dom.battleSceneComboBanner.setAttribute("aria-hidden", "false");
   void dom.battleSceneComboBanner.offsetWidth;
   dom.battleSceneComboBanner.classList.add("is-active");
+  syncBattleSceneBannerOverview(dom.battleSceneComboBanner, {
+    includeCombo: true,
+    defaultText: "연격 x3",
+  });
   syncBattleScenePanelContract();
   if (battleSceneComboBannerTimer !== null) {
     window.clearTimeout(battleSceneComboBannerTimer);
@@ -3191,6 +3231,10 @@ function setBattleSceneComboBanner(comboInput, tone = "info", source = "ambient"
       dom.battleSceneComboBanner.dataset.bannerSource = "idle";
       dom.battleSceneComboBanner.dataset.bannerKey = "idle";
       dom.battleSceneComboBanner.dataset.comboCount = "0";
+      syncBattleSceneBannerOverview(dom.battleSceneComboBanner, {
+        includeCombo: true,
+        defaultText: "연격 x3",
+      });
       syncBattleScenePanelContract();
     }
     battleSceneComboBannerTimer = null;

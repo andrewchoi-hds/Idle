@@ -3705,6 +3705,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="idle · info · idle · idle · none · none · 기세 수렴"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-overview-summary="info · idle · idle · 대기 중"',
     "index.html",
     failures,
@@ -3718,6 +3724,12 @@ async function main() {
   assertIncludes(
     html,
     'data-message-key="idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-overview-summary="idle · info · idle · idle · flow · 0 · 연격 x3"',
     "index.html",
     failures,
   );
@@ -9522,6 +9534,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'syncBattleSceneBannerOverview(dom.battleSceneSkillBanner, {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneComboBanner.dataset.bannerState = "active";',
     "app.mjs",
     failures,
@@ -9565,6 +9583,24 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneComboBanner.dataset.comboCount = "0";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'syncBattleSceneBannerOverview(dom.battleSceneComboBanner, {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function syncBattleSceneBannerOverview(node, options = {}) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'node.dataset.overviewSummary = parts.join(" · ");',
     "app.mjs",
     failures,
   );
