@@ -10815,6 +10815,22 @@ function syncOfflineCompareSummary() {
     "가이드: 비교 코드를 입력하세요.";
   dom.offlineModal.dataset.compareSummary =
     `${resultLabel} · ${sourceLabel} · ${actionHintLabel}`;
+  syncOfflineModalOverviewSummary();
+}
+
+function syncOfflineModalOverviewSummary() {
+  if (!dom.offlineModal) {
+    return;
+  }
+  const countSummaryLabel =
+    dom.offlineModal.dataset.countSummary || "전투 0회 · 돌파 0회 · 환생 0회";
+  const resourceDeltaSummaryLabel =
+    dom.offlineModal.dataset.resourceDeltaSummary || "기 +0 · 영석 +0 · 환생정수 +0";
+  const compareSummaryLabel =
+    dom.offlineModal.dataset.compareSummary ||
+    "비교 대기 중 · 출처: 없음 · 가이드: 비교 코드를 입력하세요.";
+  dom.offlineModal.dataset.overviewSummary =
+    `${countSummaryLabel} · ${resourceDeltaSummaryLabel} · ${compareSummaryLabel}`;
 }
 
 function setOfflineCompareCurrentSummary(currentCodeInput) {
@@ -12083,6 +12099,7 @@ function hideOfflineModal() {
   dom.offlineModal.dataset.compareMatchSummary = "일치 요약: 대기 중";
   dom.offlineModal.dataset.compareSummary =
     "비교 대기 중 · 출처: 없음 · 가이드: 비교 코드를 입력하세요.";
+  syncOfflineModalOverviewSummary();
   setOfflineCompareCodeLabel("");
   dom.offlineCompareCodeInput.value = "";
   setOfflineCompareResultState("", "");
@@ -12172,6 +12189,7 @@ function showOfflineModal(offline) {
     dom.offlineEssenceDelta?.dataset.deltaTone || "neutral";
   dom.offlineModal.dataset.resourceDeltaSummary = resourceDeltaSummaryLabel;
   syncOfflineCompareSummary();
+  syncOfflineModalOverviewSummary();
   lastOfflineReport = {
     generatedAtIso: new Date().toISOString(),
     playerName: state.playerName,

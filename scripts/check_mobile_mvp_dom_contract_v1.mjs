@@ -6846,6 +6846,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function syncOfflineModalOverviewSummary() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.offlineModal.dataset.overviewSummary =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.offlineModal.dataset.reportState = "empty";',
     "app.mjs",
     failures,
@@ -7064,6 +7076,18 @@ async function main() {
     app,
     "dom.offlineModal.dataset.resourceDeltaSummary = resourceDeltaSummaryLabel;",
     "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncOfflineModalOverviewSummary();",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-overview-summary="전투 0회 · 돌파 0회 · 환생 0회 · 기 +0 · 영석 +0 · 환생정수 +0 · 비교 대기 중 · 출처: 없음 · 가이드: 비교 코드를 입력하세요."',
+    "index.html",
     failures,
   );
   assertIncludes(
