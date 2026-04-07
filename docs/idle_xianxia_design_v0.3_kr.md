@@ -3924,6 +3924,14 @@
 ## 921) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(qi progress overview summary aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
 
+## 922) 다음 순차 작업
+1. [완료] 저장 payload textarea(`savePayload`) contract에 `data-overview-summary`를 추가해 child node 단독 관찰만으로도 payload 상태를 한 줄 overview summary로 직접 읽을 수 있도록 보강.
+2. [완료] `syncSavePayloadContract()`가 기존 payload state/source/length/lines와 함께 overview summary도 textarea dataset에 함께 기록하도록 확장해 child-node 소비 정합을 강화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 save payload overview summary aggregate 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 923) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(save payload overview summary aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
 ## 920) 다음 순차 작업
 1. [완료] 로그 패널 루트(`logsPanel`) contract에 `data-overview-summary`를 추가해 부모 패널 단독 관찰만으로도 현재 로그 개수와 최신 로그 문맥을 overview summary로 직접 읽을 수 있도록 보강.
 2. [완료] `renderLogs()`가 기존 `logSummary`를 overview summary로도 함께 기록하도록 확장해 panel-root 소비 정합을 강화.

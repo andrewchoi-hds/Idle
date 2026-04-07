@@ -759,16 +759,17 @@ function syncSavePayloadContract(sourceInput = savePayloadSource) {
     : String(sourceInput || "manual").trim() || "manual";
   const payloadLength = String(value.length);
   const payloadLines = String(trimmed ? value.trimEnd().split(/\r?\n/).length : 0);
+  const payloadSummary =
+    payloadState === "empty"
+      ? "payload 비어 있음"
+      : `payload ${payloadSource} · ${payloadLines}줄 · ${payloadLength}자`;
   savePayloadSource = payloadSource;
   dom.savePayload.dataset.payloadState = payloadState;
   dom.savePayload.dataset.payloadSource = payloadSource;
   dom.savePayload.dataset.payloadLength = payloadLength;
   dom.savePayload.dataset.payloadLines = payloadLines;
+  dom.savePayload.dataset.overviewSummary = payloadSummary;
   if (dom.savePanel) {
-    const payloadSummary =
-      payloadState === "empty"
-        ? "payload 비어 있음"
-        : `payload ${payloadSource} · ${payloadLines}줄 · ${payloadLength}자`;
     dom.savePanel.dataset.payloadState = payloadState;
     dom.savePanel.dataset.payloadSource = payloadSource;
     dom.savePanel.dataset.payloadLength = payloadLength;
