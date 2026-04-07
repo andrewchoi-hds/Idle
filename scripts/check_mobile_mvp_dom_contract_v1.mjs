@@ -1065,6 +1065,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="로그 0건 · [-] info · 로그 없음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="offlineCompareRow"',
     "index.html",
     failures,
@@ -6529,6 +6535,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.logsPanel.dataset.logSummary = logSummary;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.logsPanel.dataset.overviewSummary = logSummary;",
     "app.mjs",
     failures,
   );
