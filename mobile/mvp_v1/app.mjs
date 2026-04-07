@@ -2937,6 +2937,7 @@ function applyBattleSceneUiState() {
     dom.battleSceneStatus.dataset.messageKey = normalizeBattleSceneMessageKey(
       battleSceneUiState.statusKey,
     );
+    syncBattleSceneMessageOverview(dom.battleSceneStatus, BATTLE_SCENE_DEFAULT_STATUS);
   }
   if (dom.battleSceneResult) {
     dom.battleSceneResult.textContent = battleSceneUiState.resultText;
@@ -2949,6 +2950,7 @@ function applyBattleSceneUiState() {
     dom.battleSceneResult.dataset.messageKey = normalizeBattleSceneMessageKey(
       battleSceneUiState.resultKey,
     );
+    syncBattleSceneMessageOverview(dom.battleSceneResult, BATTLE_SCENE_DEFAULT_RESULT);
   }
   syncBattleScenePanelContract();
 }
@@ -2988,6 +2990,21 @@ function applyBattleSceneTickerTone(tone = "info") {
   applyBattleSceneTone(dom.battleSceneTicker, tone);
 }
 
+function syncBattleSceneMessageOverview(node, defaultText, options = {}) {
+  if (!node) {
+    return;
+  }
+  const tone = node.dataset.tone || "info";
+  const source = node.dataset.messageSource || "idle";
+  const key = node.dataset.messageKey || "idle";
+  const text = String(node.textContent || defaultText).trim() || defaultText;
+  const parts = [tone, source, key, text];
+  if (options.includeQueueCount) {
+    parts.push(`큐 ${node.dataset.queueCount || "0"}건`);
+  }
+  node.dataset.overviewSummary = parts.join(" · ");
+}
+
 function renderBattleSceneTicker() {
   if (!dom.battleSceneTicker) {
     return;
@@ -3000,6 +3017,9 @@ function renderBattleSceneTicker() {
     dom.battleSceneTicker.dataset.messageState = "idle";
     dom.battleSceneTicker.dataset.messageSource = "idle";
     dom.battleSceneTicker.dataset.messageKey = "idle";
+    syncBattleSceneMessageOverview(dom.battleSceneTicker, BATTLE_SCENE_DEFAULT_TICKER, {
+      includeQueueCount: true,
+    });
     syncBattleScenePanelContract();
     return;
   }
@@ -3008,6 +3028,9 @@ function renderBattleSceneTicker() {
   dom.battleSceneTicker.dataset.messageState = "active";
   dom.battleSceneTicker.dataset.messageSource = normalizeBattleSceneMessageSource(latest.source);
   dom.battleSceneTicker.dataset.messageKey = normalizeBattleSceneMessageKey(latest.key);
+  syncBattleSceneMessageOverview(dom.battleSceneTicker, BATTLE_SCENE_DEFAULT_TICKER, {
+    includeQueueCount: true,
+  });
   syncBattleScenePanelContract();
 }
 
