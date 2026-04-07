@@ -12253,6 +12253,7 @@ function renderLogs() {
     dom.logsPanel.dataset.logCountLabel = logCountLabel;
     dom.logsPanel.dataset.lastLogSummary = lastLogSummary;
     dom.logsPanel.dataset.logSummary = logSummary;
+    dom.logsPanel.dataset.overviewSummary = logSummary;
   }
   dom.eventLogList.innerHTML = rows
     .map((row) => {
