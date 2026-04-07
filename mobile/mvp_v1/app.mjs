@@ -11012,6 +11012,12 @@ function syncSlotActionButtons() {
     dom.slotActionHintBox.dataset.copyTone = copyHintTone;
     dom.slotActionHintBox.dataset.deleteHint = deleteHintText;
     dom.slotActionHintBox.dataset.deleteTone = deleteHintTone;
+    dom.slotActionHintBox.dataset.overviewSummary = [
+      lockHintText,
+      targetHintText,
+      copyHintText,
+      deleteHintText,
+    ].join(" · ");
   }
   dom.btnDeleteSlot.disabled = !deletePolicy.allowed;
   if (deletePolicy.allowed) {
