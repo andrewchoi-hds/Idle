@@ -801,6 +801,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="잠금 상태 준비 중... · 대상 슬롯 상태 준비 중... · 복제 규칙 준비 중... · 삭제 규칙 준비 중..."',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-slot-count="3"',
     "index.html",
     failures,
@@ -6187,6 +6193,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.slotActionHintBox.dataset.deleteTone = deleteHintTone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.slotActionHintBox.dataset.overviewSummary = [",
     "app.mjs",
     failures,
   );
