@@ -12631,6 +12631,7 @@ function render() {
   dom.qiProgressBar.dataset.qiRequired = fmtNumber(stage.qi_required);
   dom.qiProgressBar.dataset.breakthroughReady = String(breakthroughReady);
   dom.qiProgressBar.dataset.progressKey = qiProgressKey;
+  dom.qiProgressBar.dataset.overviewSummary = qiSummaryLabel;
 
   dom.optAutoBattle.checked = state.settings.autoBattle;
   dom.optAutoBreakthrough.checked = state.settings.autoBreakthrough;

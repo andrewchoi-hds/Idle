@@ -741,6 +741,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="기 0 / 0 · 돌파 대기"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-qi-summary="기 0 / 0 · 돌파 대기"',
     "index.html",
     failures,
@@ -5851,6 +5857,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.qiProgressBar.dataset.progressKey = qiProgressKey;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.qiProgressBar.dataset.overviewSummary = qiSummaryLabel;",
     "app.mjs",
     failures,
   );
