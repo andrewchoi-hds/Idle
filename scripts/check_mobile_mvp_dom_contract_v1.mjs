@@ -657,6 +657,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="HP 100% · safe · hp_safe"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-overview-summary="기세 0% · low · cast_low"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="stagePanel"',
     "index.html",
     failures,
@@ -5622,6 +5634,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.battleScenePlayerHpBar.dataset.overviewSummary =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleScenePlayerCastBar.dataset.fillPct = String(playerCastPct);',
     "app.mjs",
     failures,
@@ -5635,6 +5653,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleScenePlayerCastBar.dataset.gaugeKey = `cast_${playerCastTier}`;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleScenePlayerCastBar.dataset.overviewSummary =',
     "app.mjs",
     failures,
   );
@@ -5682,6 +5706,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.battleSceneEnemyHpBar.dataset.overviewSummary =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneEnemyCastBar.dataset.fillPct = String(enemyCastPct);',
     "app.mjs",
     failures,
@@ -5695,6 +5725,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneEnemyCastBar.dataset.gaugeKey = `cast_${enemyCastTier}`;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneEnemyCastBar.dataset.overviewSummary =',
     "app.mjs",
     failures,
   );
