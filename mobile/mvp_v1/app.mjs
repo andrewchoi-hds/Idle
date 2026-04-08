@@ -12695,6 +12695,12 @@ function render() {
   dom.btnApplyRecommendation.dataset.nextTalisman = String(recommendationToggle.nextUseTribulationTalisman);
   dom.btnApplyRecommendation.dataset.missingElixir = String(recommendationToggle.missingBreakthroughElixir);
   dom.btnApplyRecommendation.dataset.missingTalisman = String(recommendationToggle.missingTribulationTalisman);
+  dom.btnApplyRecommendation.dataset.overviewSummary =
+    `${dom.btnApplyRecommendation.textContent?.trim() || "권장 설정 적용"} · ${
+      recommendationToggle.reason || "none"
+    } · ${recommendationToggle.changed ? "변경 가능" : "변경 없음"} · 영약 ${
+      recommendationToggle.nextUseBreakthroughElixir ? "ON" : "OFF"
+    } · 수호부 ${recommendationToggle.nextUseTribulationTalisman ? "ON" : "OFF"}`;
   dom.autoBreakthroughResumeLabel.textContent = autoResumePolicy.labelKo;
   dom.autoBreakthroughResumeLabel.title = autoResumePolicy.messageKo;
   dom.autoBreakthroughResumeLabel.dataset.tone = autoResumePolicy.tone;
@@ -12719,6 +12725,12 @@ function render() {
     autoResumePolicy.shouldEnableAutoTribulation,
   );
   dom.btnResumeAutoBreakthrough.dataset.actionLabel = autoResumePolicy.actionLabelKo || "-";
+  dom.btnResumeAutoBreakthrough.dataset.overviewSummary =
+    `${dom.btnResumeAutoBreakthrough.textContent?.trim() || "자동 돌파 재개"} · ${
+      autoResumePolicy.reason || "none"
+    } · ${autoResumePolicy.actionable ? "재개 가능" : "재개 대기"} · 위험 ${
+      autoResumePolicy.riskTier?.tier || "none"
+    }`;
   dom.playerNameInput.value = state.playerName;
   dom.optSaveSlot.value = String(activeSaveSlot);
   dom.lastSavedAt.textContent = fmtDateTimeFromIso(state.lastSavedAtIso);
