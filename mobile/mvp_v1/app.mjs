@@ -2911,26 +2911,36 @@ function syncBattleSceneMotionLayerContracts() {
     dom.battleSceneFlash.dataset.flashActive = String(
       dom.battleSceneFlash.classList.contains("is-active"),
     );
+    dom.battleSceneFlash.dataset.overviewSummary =
+      `${dom.battleSceneFlash.dataset.tone} · ${dom.battleSceneFlash.dataset.flashActive}`;
   }
   if (dom.battleSceneFloatLayer) {
     dom.battleSceneFloatLayer.dataset.floatCount = String(
       dom.battleSceneFloatLayer.childElementCount,
     );
+    dom.battleSceneFloatLayer.dataset.overviewSummary =
+      `float ${dom.battleSceneFloatLayer.dataset.floatCount}`;
   }
   if (dom.battleSceneSparkLayer) {
     dom.battleSceneSparkLayer.dataset.sparkCount = String(
       dom.battleSceneSparkLayer.childElementCount,
     );
+    dom.battleSceneSparkLayer.dataset.overviewSummary =
+      `spark ${dom.battleSceneSparkLayer.dataset.sparkCount}`;
   }
   if (dom.battleSceneTrailLayer) {
     dom.battleSceneTrailLayer.dataset.trailCount = String(
       dom.battleSceneTrailLayer.childElementCount,
     );
+    dom.battleSceneTrailLayer.dataset.overviewSummary =
+      `trail ${dom.battleSceneTrailLayer.dataset.trailCount}`;
   }
   if (dom.battleSceneShockwaveLayer) {
     dom.battleSceneShockwaveLayer.dataset.shockwaveCount = String(
       dom.battleSceneShockwaveLayer.childElementCount,
     );
+    dom.battleSceneShockwaveLayer.dataset.overviewSummary =
+      `shockwave ${dom.battleSceneShockwaveLayer.dataset.shockwaveCount}`;
   }
   syncBattleScenePanelContract();
 }

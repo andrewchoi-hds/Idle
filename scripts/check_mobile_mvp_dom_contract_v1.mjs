@@ -2721,6 +2721,36 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="info · false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-overview-summary="float 0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-overview-summary="spark 0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-overview-summary="trail 0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-overview-summary="shockwave 0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-skill-banner-text="기세 수렴"',
     "index.html",
     failures,
@@ -8389,6 +8419,36 @@ async function main() {
   assertIncludes(
     app,
     "function syncBattleSceneMotionLayerContracts() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneFlash.dataset.overviewSummary =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneFloatLayer.dataset.overviewSummary =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneSparkLayer.dataset.overviewSummary =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneTrailLayer.dataset.overviewSummary =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneShockwaveLayer.dataset.overviewSummary =',
     "app.mjs",
     failures,
   );
