@@ -2673,6 +2673,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="압력 낮음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-dps-badge-key="pressure_low"',
     "index.html",
     failures,
@@ -5761,6 +5767,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneEnemyCastBar.dataset.gaugeKey = `cast_${enemyCastTier}`;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneClashCore.dataset.overviewSummary =',
     "app.mjs",
     failures,
   );

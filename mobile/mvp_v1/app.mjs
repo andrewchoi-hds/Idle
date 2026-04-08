@@ -6316,6 +6316,8 @@ function renderBattleSceneDuelHud() {
   }
   if (dom.battleSceneClashCore) {
     dom.battleSceneClashCore.dataset.pressure = battleSceneDuelState.pressure;
+    dom.battleSceneClashCore.dataset.overviewSummary =
+      summarizeBattleScenePressureKo(battleSceneDuelState.pressure);
   }
   renderBattleSceneCombatMetrics();
 }
