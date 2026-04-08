@@ -12681,9 +12681,13 @@ function render() {
   dom.previewRecommendationLabel.title = recommendation.messageKo;
   dom.previewRecommendationLabel.dataset.tone = recommendation.tone;
   dom.previewRecommendationLabel.dataset.recommendationKey = recommendation.key || "none";
+  dom.previewRecommendationLabel.dataset.overviewSummary =
+    `${recommendation.labelKo || "-"} · ${recommendation.key || "none"} · ${recommendation.tone}`;
   dom.previewRecommendationHint.textContent = recommendation.messageKo;
   dom.previewRecommendationHint.dataset.tone = recommendation.tone;
   dom.previewRecommendationHint.dataset.recommendationKey = recommendation.key || "none";
+  dom.previewRecommendationHint.dataset.overviewSummary =
+    `${recommendation.messageKo || "-"} · ${recommendation.key || "none"} · ${recommendation.tone}`;
   applyRiskTone(dom.previewRecommendationLabel, recommendation.tone);
   applyRiskTone(dom.previewRecommendationHint, recommendation.tone);
   dom.btnApplyRecommendation.disabled = !recommendationToggle.changed;
@@ -12706,10 +12710,18 @@ function render() {
   dom.autoBreakthroughResumeLabel.dataset.tone = autoResumePolicy.tone;
   dom.autoBreakthroughResumeLabel.dataset.policyReason = autoResumePolicy.reason;
   dom.autoBreakthroughResumeLabel.dataset.riskTier = autoResumePolicy.riskTier?.tier || "none";
+  dom.autoBreakthroughResumeLabel.dataset.overviewSummary =
+    `${autoResumePolicy.labelKo || "-"} · ${autoResumePolicy.reason || "none"} · ${
+      autoResumePolicy.riskTier?.tier || "none"
+    }`;
   dom.autoBreakthroughResumeHint.textContent = autoResumePolicy.messageKo;
   dom.autoBreakthroughResumeHint.dataset.tone = autoResumePolicy.tone;
   dom.autoBreakthroughResumeHint.dataset.policyReason = autoResumePolicy.reason;
   dom.autoBreakthroughResumeHint.dataset.riskTier = autoResumePolicy.riskTier?.tier || "none";
+  dom.autoBreakthroughResumeHint.dataset.overviewSummary =
+    `${autoResumePolicy.messageKo || "-"} · ${autoResumePolicy.reason || "none"} · ${
+      autoResumePolicy.riskTier?.tier || "none"
+    }`;
   applyRiskTone(dom.autoBreakthroughResumeLabel, autoResumePolicy.tone);
   applyRiskTone(dom.autoBreakthroughResumeHint, autoResumePolicy.tone);
   dom.btnResumeAutoBreakthrough.disabled = !autoResumePolicy.actionable;
