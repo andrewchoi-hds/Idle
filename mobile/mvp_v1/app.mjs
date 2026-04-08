@@ -12555,15 +12555,23 @@ function render() {
   dom.stageDisplay.textContent = displayName;
   dom.stageDisplay.dataset.stageName = String(displayName || "-");
   dom.stageDisplay.dataset.stageKey = `${stageWorldKey}_${stageTier}`;
+  dom.stageDisplay.dataset.overviewSummary =
+    `${displayName || "-"} · ${stageWorldKey}_${stageTier}`;
   dom.worldTag.textContent = worldKo(stage.world);
   dom.worldTag.dataset.worldLabel = String(worldKo(stage.world) || "-");
   dom.worldTag.dataset.worldKey = stageWorldKey;
+  dom.worldTag.dataset.overviewSummary =
+    `${worldKo(stage.world) || "-"} · ${stageWorldKey}`;
   dom.difficultyIndex.textContent = String(stage.difficulty_index);
   dom.difficultyIndex.dataset.difficultyIndex = String(stage.difficulty_index);
   dom.difficultyIndex.dataset.stageTier = stageTier;
+  dom.difficultyIndex.dataset.overviewSummary =
+    `난이도 ${fmtNumber(stage.difficulty_index)} · ${stageTier}`;
   dom.qiRequired.textContent = fmtNumber(stage.qi_required);
   dom.qiRequired.dataset.qiRequired = fmtNumber(stage.qi_required);
   dom.qiRequired.dataset.requiredState = breakthroughReady ? "ready" : "gated";
+  dom.qiRequired.dataset.overviewSummary =
+    `요구 기 ${fmtNumber(stage.qi_required)} · ${breakthroughReady ? "돌파 가능" : "돌파 대기"}`;
   dom.statQi.textContent = fmtNumber(state.currencies.qi);
   dom.statSpiritCoin.textContent = fmtNumber(state.currencies.spiritCoin);
   dom.statRebirthEssence.textContent = fmtNumber(state.currencies.rebirthEssence);

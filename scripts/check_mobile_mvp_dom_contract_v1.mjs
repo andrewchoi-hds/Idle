@@ -759,6 +759,24 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="- · idle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-overview-summary="난이도 0 · novice"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-overview-summary="요구 기 0 · 돌파 대기"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-lock-hint="잠금 상태 준비 중..."',
     "index.html",
     failures,
@@ -5850,6 +5868,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.stageDisplay.dataset.overviewSummary =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.worldTag.dataset.worldLabel = String(worldKo(stage.world) || "-");',
     "app.mjs",
     failures,
@@ -5857,6 +5881,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.worldTag.dataset.worldKey = stageWorldKey;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.worldTag.dataset.overviewSummary =',
     "app.mjs",
     failures,
   );
@@ -5874,6 +5904,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.difficultyIndex.dataset.overviewSummary =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.qiRequired.dataset.qiRequired = fmtNumber(stage.qi_required);",
     "app.mjs",
     failures,
@@ -5881,6 +5917,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.qiRequired.dataset.requiredState = breakthroughReady ? "ready" : "gated";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.qiRequired.dataset.overviewSummary =',
     "app.mjs",
     failures,
   );
