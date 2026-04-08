@@ -3375,6 +3375,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="권장 설정 적용 · none · 변경 없음 · 영약 OFF · 수호부 OFF"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="autoBreakthroughResumeLabel" class="risk-pill" data-tone="info" data-policy-reason="none"',
     "index.html",
     failures,
@@ -3394,6 +3400,12 @@ async function main() {
   assertIncludes(
     html,
     'id="btnResumeAutoBreakthrough" type="button" class="ghost-btn recommendation-btn" data-policy-reason="none" data-actionable="false" data-risk-tier="none" data-next-breakthrough="false" data-next-tribulation="false" data-action-label="-"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-overview-summary="자동 돌파 재개 · none · 재개 대기 · 위험 none"',
     "index.html",
     failures,
   );
@@ -9312,6 +9324,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.btnApplyRecommendation.dataset.overviewSummary =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.autoBreakthroughResumeLabel.dataset.tone = autoResumePolicy.tone;",
     "app.mjs",
     failures,
@@ -9379,6 +9397,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.btnResumeAutoBreakthrough.dataset.actionLabel = autoResumePolicy.actionLabelKo || "-";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnResumeAutoBreakthrough.dataset.overviewSummary =",
     "app.mjs",
     failures,
   );

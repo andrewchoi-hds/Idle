@@ -3996,6 +3996,14 @@
 ## 929) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(battle scene gauge overview summary aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
 
+## 934) 다음 순차 작업
+1. [완료] 추천/재개 버튼(`btnApplyRecommendation`, `btnResumeAutoBreakthrough`) contract에 `data-overview-summary`를 추가해 child button 단독 관찰만으로도 현재 권장 적용/자동 재개 상태를 한 줄 overview summary로 직접 읽을 수 있도록 보강.
+2. [완료] `render()`가 기존 recommendation/auto-resume button dataset 갱신과 함께 overview summary도 함께 기록하도록 확장해 child-button 소비 정합을 강화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 recommendation button overview summary aggregate 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 935) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(recommendation button overview summary aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
 ## 930) 다음 순차 작업
 1. [완료] actor 카드 루트(`battleScenePlayer`, `battleSceneEnemy`) contract에 `data-overview-summary`를 추가해 카드 루트 단독 관찰만으로도 actor frame과 HP/기세 상태를 한 줄 overview summary로 직접 읽을 수 있도록 보강.
 2. [완료] `renderBattleSceneDuelHud()`가 기존 `actorFrame/hpTier/castTier/hpPct/castPct` 갱신과 함께 카드 루트 overview summary도 함께 기록하도록 확장해 actor-root 소비 정합을 강화.
