@@ -6230,6 +6230,8 @@ function renderBattleSceneDuelHud() {
     dom.battleScenePlayerVitals.dataset.hpTier = playerHpTier;
     dom.battleScenePlayerVitals.dataset.castTier = playerCastTier;
     dom.battleScenePlayerVitals.dataset.vitalsKey = `${playerHpTier}_${playerCastTier}`;
+    dom.battleScenePlayerVitals.dataset.overviewSummary =
+      `HP ${playerHpPct}% · 기세 ${playerCastPct}% · ${playerHpTier}_${playerCastTier}`;
   }
   if (dom.battleSceneEnemyVitals) {
     dom.battleSceneEnemyVitals.textContent = `HP ${enemyHpPct}% · 기세 ${enemyCastPct}%`;
@@ -6238,6 +6240,8 @@ function renderBattleSceneDuelHud() {
     dom.battleSceneEnemyVitals.dataset.hpTier = enemyHpTier;
     dom.battleSceneEnemyVitals.dataset.castTier = enemyCastTier;
     dom.battleSceneEnemyVitals.dataset.vitalsKey = `${enemyHpTier}_${enemyCastTier}`;
+    dom.battleSceneEnemyVitals.dataset.overviewSummary =
+      `HP ${enemyHpPct}% · 기세 ${enemyCastPct}% · ${enemyHpTier}_${enemyCastTier}`;
   }
   if (dom.battleSceneArena) {
     dom.battleSceneArena.dataset.scenePlayerHpPct = String(playerHpPct);
