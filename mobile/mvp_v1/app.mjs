@@ -2494,6 +2494,16 @@ function summarizeBattleSceneLeadKo(lead) {
       : "균형";
 }
 
+function summarizeBattleSceneComboTierKo(comboTier) {
+  return comboTier === "overdrive"
+    ? "연격 폭주"
+    : comboTier === "surge"
+      ? "연격 상승"
+      : comboTier === "flow"
+        ? "연격 흐름"
+        : "연격 대기";
+}
+
 function syncBattleScenePanelContract() {
   if (!dom.battleScenePanel) {
     return;
@@ -3254,12 +3264,16 @@ function resolveBattleSceneDpsTone(momentum) {
 function renderBattleSceneCombatMetrics() {
   const loopMode = resolveBattleSceneAmbientMode();
   const comboTier = resolveBattleSceneComboTier(battleSceneDuelState.combo);
+  const roundOverviewSummary = `${summarizeBattleSceneLoopModeKo(loopMode)} · ${battleSceneDuelState.round}R`;
+  const comboOverviewSummary =
+    `${summarizeBattleSceneComboTierKo(comboTier)} · 연격 x${battleSceneDuelState.combo}`;
   if (dom.battleSceneRoundBadge) {
     dom.battleSceneRoundBadge.textContent = `${battleSceneDuelState.round}R`;
     applyBattleSceneChipTone(dom.battleSceneRoundBadge, "info");
     dom.battleSceneRoundBadge.dataset.round = String(battleSceneDuelState.round);
     dom.battleSceneRoundBadge.dataset.loop = loopMode;
     dom.battleSceneRoundBadge.dataset.badgeKey = `round_${loopMode}`;
+    dom.battleSceneRoundBadge.dataset.overviewSummary = roundOverviewSummary;
   }
   if (dom.battleSceneArena) {
     dom.battleSceneArena.dataset.sceneRound = String(battleSceneDuelState.round);
@@ -3278,6 +3292,7 @@ function renderBattleSceneCombatMetrics() {
     dom.battleSceneComboBadge.dataset.comboCount = String(battleSceneDuelState.combo);
     dom.battleSceneComboBadge.dataset.comboTier = comboTier;
     dom.battleSceneComboBadge.dataset.badgeKey = `combo_${comboTier}`;
+    dom.battleSceneComboBadge.dataset.overviewSummary = comboOverviewSummary;
   }
   if (dom.battleSceneArena) {
     dom.battleSceneArena.dataset.sceneComboCount = String(battleSceneDuelState.combo);
@@ -3298,6 +3313,8 @@ function renderBattleSceneCombatMetrics() {
     dom.battleSceneDpsBadge.dataset.dpsScore = String(pressureScore);
     dom.battleSceneDpsBadge.dataset.pressure = battleSceneDuelState.pressure;
     dom.battleSceneDpsBadge.dataset.badgeKey = `pressure_${battleSceneDuelState.pressure}`;
+    dom.battleSceneDpsBadge.dataset.overviewSummary =
+      `${summarizeBattleScenePressureKo(battleSceneDuelState.pressure)} · 압력 ${pressureScore}`;
     if (dom.battleSceneArena) {
       dom.battleSceneArena.dataset.sceneDpsScore = String(pressureScore);
     }
