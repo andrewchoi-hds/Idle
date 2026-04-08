@@ -12646,6 +12646,8 @@ function render() {
   dom.previewExpectedLabel.title = "1회 돌파 시도 기준 기대값";
   dom.previewExpectedLabel.dataset.tone = expectedDelta.tone;
   dom.previewExpectedLabel.dataset.expectedKey = expectedDelta.burdenTier || "none";
+  dom.previewExpectedLabel.dataset.overviewSummary =
+    `${expectedDelta.labelKo || "-"} · ${expectedDelta.burdenTier || "none"} · ${expectedDelta.tone}`;
   dom.previewExpectedQiDelta.textContent = fmtSignedInteger(expectedDelta.expectedQiDelta);
   dom.previewExpectedQiDelta.dataset.value = fmtSignedInteger(expectedDelta.expectedQiDelta);
   dom.previewExpectedEssenceDelta.textContent = fmtSignedFixed(
@@ -12667,14 +12669,20 @@ function render() {
   dom.previewRiskLabel.title = riskTier.descriptionKo;
   dom.previewRiskLabel.dataset.tone = riskTier.tone;
   dom.previewRiskLabel.dataset.riskTier = riskTier.tier;
+  dom.previewRiskLabel.dataset.overviewSummary =
+    `${riskTier.labelKo || "-"} · ${riskTier.tier || "none"} · ${riskTier.tone}`;
   applyRiskTone(dom.previewRiskLabel, riskTier.tone);
   dom.previewMitigationLabel.textContent = mitigation.labelKo;
   dom.previewMitigationLabel.title = mitigation.messageKo;
   dom.previewMitigationLabel.dataset.tone = mitigation.tone;
   dom.previewMitigationLabel.dataset.mitigationKey = mitigation.key || "none";
+  dom.previewMitigationLabel.dataset.overviewSummary =
+    `${mitigation.labelKo || "-"} · ${mitigation.key || "none"} · ${mitigation.tone}`;
   dom.previewMitigationHint.textContent = mitigation.messageKo;
   dom.previewMitigationHint.dataset.tone = mitigation.tone;
   dom.previewMitigationHint.dataset.mitigationKey = mitigation.key || "none";
+  dom.previewMitigationHint.dataset.overviewSummary =
+    `${mitigation.messageKo || "-"} · ${mitigation.key || "none"} · ${mitigation.tone}`;
   applyRiskTone(dom.previewMitigationLabel, mitigation.tone);
   applyRiskTone(dom.previewMitigationHint, mitigation.tone);
   dom.previewRecommendationLabel.textContent = recommendation.labelKo;
