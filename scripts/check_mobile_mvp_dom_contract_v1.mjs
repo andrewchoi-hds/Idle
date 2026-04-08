@@ -3357,6 +3357,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="- · none · info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-recommendation-key="none"',
     "index.html",
     failures,
@@ -3382,6 +3388,12 @@ async function main() {
   assertIncludes(
     html,
     'id="autoBreakthroughResumeLabel" class="risk-pill" data-tone="info" data-policy-reason="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-overview-summary="- · none · none"',
     "index.html",
     failures,
   );
@@ -9270,6 +9282,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.previewRecommendationLabel.dataset.overviewSummary =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.previewRecommendationHint.dataset.tone = recommendation.tone;",
     "app.mjs",
     failures,
@@ -9277,6 +9295,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.previewRecommendationHint.dataset.recommendationKey = recommendation.key || "none";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.previewRecommendationHint.dataset.overviewSummary =',
     "app.mjs",
     failures,
   );
@@ -9348,6 +9372,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.autoBreakthroughResumeLabel.dataset.overviewSummary =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.autoBreakthroughResumeHint.dataset.tone = autoResumePolicy.tone;",
     "app.mjs",
     failures,
@@ -9361,6 +9391,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.autoBreakthroughResumeHint.dataset.riskTier = autoResumePolicy.riskTier?.tier || "none";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.autoBreakthroughResumeHint.dataset.overviewSummary =',
     "app.mjs",
     failures,
   );
