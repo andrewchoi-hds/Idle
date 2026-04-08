@@ -9330,6 +9330,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.battleScenePlayerVitals.dataset.overviewSummary =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneEnemyVitals.dataset.hpPct = String(enemyHpPct);',
     "app.mjs",
     failures,
@@ -9355,6 +9361,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneEnemyVitals.dataset.vitalsKey = `${enemyHpTier}_${enemyCastTier}`;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneEnemyVitals.dataset.overviewSummary =',
     "app.mjs",
     failures,
   );
