@@ -3933,6 +3933,14 @@
 - 모바일 MVP 수직슬라이스 가이드(save payload overview summary aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
 
 ## 924) 다음 순차 작업
+1. [완료] stage child text 노드(`stageDisplay`, `worldTag`, `difficultyIndex`, `qiRequired`) contract에 `data-overview-summary`를 추가해 child node 단독 관찰만으로도 스테이지/세계/난이도/요구 기 문맥을 한 줄 overview summary로 직접 읽을 수 있도록 보강.
+2. [완료] `render()`가 각 child text node의 기존 dataset/text를 바탕으로 overview summary도 함께 기록하도록 확장해 child-node 소비 정합을 강화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 stage child overview summary aggregate 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 925) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(stage child overview summary aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 924) 다음 순차 작업
 1. [완료] 배너 노드(`battleSceneSkillBanner`, `battleSceneComboBanner`) contract에 `data-overview-summary`를 추가해 child node 단독 관찰만으로도 배너 상태/tone/source/key/payload를 한 줄 overview summary로 직접 읽을 수 있도록 보강.
 2. [완료] `syncBattleSceneBannerOverview()`를 추가하고 skill/combo 배너의 활성/타이머 종료/reset 경로에 연결해 overview summary가 상태 변화와 함께 항상 같이 갱신되도록 정합화.
 3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 battle scene banner overview summary aggregate 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
