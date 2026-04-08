@@ -375,6 +375,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="- · none · info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-expected-tone="info"',
     "index.html",
     failures,
@@ -3346,6 +3352,12 @@ async function main() {
   assertIncludes(
     html,
     'id="previewMitigationHint" class="recommendation-text" data-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-overview-summary="- · none · info"',
     "index.html",
     failures,
   );
@@ -9234,6 +9246,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.previewExpectedLabel.dataset.overviewSummary =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.previewRiskLabel.dataset.tone = riskTier.tone;",
     "app.mjs",
     failures,
@@ -9241,6 +9259,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.previewRiskLabel.dataset.riskTier = riskTier.tier;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.previewRiskLabel.dataset.overviewSummary =',
     "app.mjs",
     failures,
   );
@@ -9258,6 +9282,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.previewMitigationLabel.dataset.overviewSummary =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.previewMitigationHint.dataset.tone = mitigation.tone;",
     "app.mjs",
     failures,
@@ -9265,6 +9295,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.previewMitigationHint.dataset.mitigationKey = mitigation.key || "none";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.previewMitigationHint.dataset.overviewSummary =',
     "app.mjs",
     failures,
   );
