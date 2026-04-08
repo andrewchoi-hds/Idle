@@ -5682,6 +5682,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.battleScenePlayer.dataset.overviewSummary =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneEnemy.dataset.hpTier = enemyHpTier;',
     "app.mjs",
     failures,
@@ -5749,6 +5755,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneEnemy.dataset.castPct = String(enemyCastPct);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneEnemy.dataset.overviewSummary =',
     "app.mjs",
     failures,
   );

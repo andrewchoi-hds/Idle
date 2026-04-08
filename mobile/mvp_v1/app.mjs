@@ -6266,6 +6266,8 @@ function renderBattleSceneDuelHud() {
     dom.battleScenePlayer.dataset.castTier = playerCastTier;
     dom.battleScenePlayer.dataset.hpPct = String(playerHpPct);
     dom.battleScenePlayer.dataset.castPct = String(playerCastPct);
+    dom.battleScenePlayer.dataset.overviewSummary =
+      `${dom.battleScenePlayer.dataset.actorFrame || "idle"} · HP ${playerHpPct}% · 기세 ${playerCastPct}% · ${playerHpTier}_${playerCastTier}`;
     if (dom.battleSceneArena) {
       dom.battleSceneArena.dataset.scenePlayerHpTier = playerHpTier;
       dom.battleSceneArena.dataset.scenePlayerCastTier = playerCastTier;
@@ -6276,6 +6278,8 @@ function renderBattleSceneDuelHud() {
     dom.battleSceneEnemy.dataset.castTier = enemyCastTier;
     dom.battleSceneEnemy.dataset.hpPct = String(enemyHpPct);
     dom.battleSceneEnemy.dataset.castPct = String(enemyCastPct);
+    dom.battleSceneEnemy.dataset.overviewSummary =
+      `${dom.battleSceneEnemy.dataset.actorFrame || "idle"} · HP ${enemyHpPct}% · 기세 ${enemyCastPct}% · ${enemyHpTier}_${enemyCastTier}`;
     if (dom.battleSceneArena) {
       dom.battleSceneArena.dataset.sceneEnemyHpTier = enemyHpTier;
       dom.battleSceneArena.dataset.sceneEnemyCastTier = enemyCastTier;
