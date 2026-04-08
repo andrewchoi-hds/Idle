@@ -3753,6 +3753,24 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-overview-summary="대기 · 1R"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-overview-summary="연격 대기 · 연격 x0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-overview-summary="압력 낮음 · 압력 0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-tone="info"',
     "index.html",
     failures,
@@ -9324,6 +9342,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.battleSceneRoundBadge.dataset.overviewSummary = roundOverviewSummary;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneArena.dataset.sceneComboCount = String(battleSceneDuelState.combo);',
     "app.mjs",
     failures,
@@ -9331,6 +9355,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneComboBadge.dataset.badgeKey = `combo_${comboTier}`;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.battleSceneComboBadge.dataset.overviewSummary = comboOverviewSummary;",
     "app.mjs",
     failures,
   );
@@ -9367,6 +9397,18 @@ async function main() {
   assertIncludes(
     app,
     'dom.battleSceneDpsBadge.dataset.badgeKey = `pressure_${battleSceneDuelState.pressure}`;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "summarizeBattleSceneComboTierKo(comboTier)",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    '`${summarizeBattleScenePressureKo(battleSceneDuelState.pressure)} · 압력 ${pressureScore}`',
     "app.mjs",
     failures,
   );
