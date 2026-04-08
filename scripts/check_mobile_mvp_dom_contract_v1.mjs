@@ -5778,6 +5778,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.battleScenePlayerStage.dataset.overviewSummary =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.battleSceneEnemyStage.dataset.stageLabel = enemyStageLabel;",
     "app.mjs",
     failures,
@@ -5797,6 +5803,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.battleSceneEnemyStage.dataset.qiRequired = qiRequired;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.battleSceneEnemyStage.dataset.overviewSummary =',
     "app.mjs",
     failures,
   );

@@ -5226,6 +5226,8 @@ function setBattleSceneStageLabels(stage, displayName) {
     dom.battleScenePlayerStage.dataset.stageKey = `player_${worldKey}_${stageTier}`;
     dom.battleScenePlayerStage.dataset.playerName = playerName;
     dom.battleScenePlayerStage.dataset.stageName = stageName;
+    dom.battleScenePlayerStage.dataset.overviewSummary =
+      `${playerStageLabel} · player_${worldKey}_${stageTier}`;
   }
   if (dom.battleSceneEnemyStage) {
     const worldLabel = String(worldKo(stage.world) || "-");
@@ -5237,6 +5239,8 @@ function setBattleSceneStageLabels(stage, displayName) {
     dom.battleSceneEnemyStage.dataset.stageKey = `enemy_${worldKey}_${stageTier}`;
     dom.battleSceneEnemyStage.dataset.worldLabel = worldLabel;
     dom.battleSceneEnemyStage.dataset.qiRequired = qiRequired;
+    dom.battleSceneEnemyStage.dataset.overviewSummary =
+      `${enemyStageLabel} · enemy_${worldKey}_${stageTier}`;
   }
 }
 
