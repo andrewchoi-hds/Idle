@@ -4059,3 +4059,11 @@
 
 ## 943) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ops digest quick action consumer 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 944) 다음 순차 작업
+1. [완료] 운용 다이제스트 패널(`opsDigestPanel`)에 보조 액션 row를 추가해 `btnLoadLocal`, `btnResetRun`, 최근 오프라인 정산 재열기 액션을 전투 집중 화면에서도 바로 실행할 수 있도록 보강.
+2. [완료] `syncOpsDigestQuickActions()`를 확장하고 `syncOpsDigestOfflineButton()`, `openOpsDigestOfflineModal()`를 추가해 저장 복구/런 초기화/오프라인 정산 보기 상태를 실제 소스 버튼 및 `lastOfflineReport`와 함께 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ops digest secondary action consumer 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 945) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ops digest secondary action consumer 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

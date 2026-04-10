@@ -100,10 +100,14 @@ const dom = {
   opsDigestBreakthrough: document.getElementById("opsDigestBreakthrough"),
   opsDigestSave: document.getElementById("opsDigestSave"),
   opsDigestQuickSummary: document.getElementById("opsDigestQuickSummary"),
+  opsDigestSecondarySummary: document.getElementById("opsDigestSecondarySummary"),
   btnOpsDigestFocus: document.getElementById("btnOpsDigestFocus"),
   btnOpsDigestRealtime: document.getElementById("btnOpsDigestRealtime"),
   btnOpsDigestRecommendation: document.getElementById("btnOpsDigestRecommendation"),
   btnOpsDigestSave: document.getElementById("btnOpsDigestSave"),
+  btnOpsDigestLoad: document.getElementById("btnOpsDigestLoad"),
+  btnOpsDigestReset: document.getElementById("btnOpsDigestReset"),
+  btnOpsDigestOffline: document.getElementById("btnOpsDigestOffline"),
   battleFocusHint: document.getElementById("battleFocusHint"),
   battleSfxHint: document.getElementById("battleSfxHint"),
   battleHapticHint: document.getElementById("battleHapticHint"),
@@ -894,6 +898,34 @@ function syncOpsDigestActionButton(targetButton, sourceButton, sourceId, fallbac
   };
 }
 
+function syncOpsDigestOfflineButton() {
+  const hasOfflineReport = Boolean(lastOfflineReport?.summary);
+  const appliedSec = Math.max(
+    0,
+    Math.floor(Number(lastOfflineReport?.summary?.appliedOfflineSec) || 0),
+  );
+  const eventCount = Array.isArray(lastOfflineReport?.events)
+    ? lastOfflineReport.events.length
+    : 0;
+  const label = hasOfflineReport ? "오프라인 정산 보기" : "오프라인 정산 대기";
+  const disabled = !hasOfflineReport;
+  const overviewSummary = hasOfflineReport
+    ? `${label} · 적용 ${fmtDurationSec(appliedSec)} · 이벤트 ${eventCount}건 · offlineModal`
+    : `${label} · 실행 대기 · offlineModal`;
+  if (dom.btnOpsDigestOffline) {
+    dom.btnOpsDigestOffline.textContent = label;
+    dom.btnOpsDigestOffline.disabled = disabled;
+    dom.btnOpsDigestOffline.dataset.actionSource = "offlineModal";
+    dom.btnOpsDigestOffline.dataset.actionDisabled = String(disabled);
+    dom.btnOpsDigestOffline.dataset.overviewSummary = overviewSummary;
+  }
+  return {
+    label,
+    disabled,
+    overviewSummary,
+  };
+}
+
 function syncOpsDigestQuickActions() {
   if (!dom.opsDigestPanel) {
     return;
@@ -922,6 +954,19 @@ function syncOpsDigestQuickActions() {
     "btnSaveLocal",
     "로컬 저장",
   );
+  const loadAction = syncOpsDigestActionButton(
+    dom.btnOpsDigestLoad,
+    dom.btnLoadLocal,
+    "btnLoadLocal",
+    "로컬 불러오기",
+  );
+  const resetAction = syncOpsDigestActionButton(
+    dom.btnOpsDigestReset,
+    dom.btnResetRun,
+    "btnResetRun",
+    "런 초기화",
+  );
+  const offlineAction = syncOpsDigestOfflineButton();
   const quickActionSummary = [
     summarizeOpsDigestActionLabel(focusAction.label, focusAction.disabled),
     summarizeOpsDigestActionLabel(realtimeAction.label, realtimeAction.disabled),
@@ -930,6 +975,11 @@ function syncOpsDigestQuickActions() {
       recommendationAction.disabled,
     ),
     summarizeOpsDigestActionLabel(saveAction.label, saveAction.disabled),
+  ].join(" · ");
+  const secondaryActionSummary = [
+    summarizeOpsDigestActionLabel(loadAction.label, loadAction.disabled),
+    summarizeOpsDigestActionLabel(resetAction.label, resetAction.disabled),
+    summarizeOpsDigestActionLabel(offlineAction.label, offlineAction.disabled),
   ].join(" · ");
   dom.opsDigestPanel.dataset.focusActionLabel = focusAction.label;
   dom.opsDigestPanel.dataset.focusActionDisabled = String(focusAction.disabled);
@@ -942,8 +992,18 @@ function syncOpsDigestQuickActions() {
   dom.opsDigestPanel.dataset.saveActionLabel = saveAction.label;
   dom.opsDigestPanel.dataset.saveActionDisabled = String(saveAction.disabled);
   dom.opsDigestPanel.dataset.quickActionSummary = quickActionSummary;
+  dom.opsDigestPanel.dataset.loadActionLabel = loadAction.label;
+  dom.opsDigestPanel.dataset.loadActionDisabled = String(loadAction.disabled);
+  dom.opsDigestPanel.dataset.resetActionLabel = resetAction.label;
+  dom.opsDigestPanel.dataset.resetActionDisabled = String(resetAction.disabled);
+  dom.opsDigestPanel.dataset.offlineActionLabel = offlineAction.label;
+  dom.opsDigestPanel.dataset.offlineActionDisabled = String(offlineAction.disabled);
+  dom.opsDigestPanel.dataset.secondaryActionSummary = secondaryActionSummary;
   if (dom.opsDigestQuickSummary) {
     dom.opsDigestQuickSummary.textContent = quickActionSummary;
+  }
+  if (dom.opsDigestSecondarySummary) {
+    dom.opsDigestSecondarySummary.textContent = secondaryActionSummary;
   }
 }
 
@@ -952,6 +1012,14 @@ function forwardOpsDigestActionClick(sourceButton) {
     return;
   }
   sourceButton.click();
+}
+
+function openOpsDigestOfflineModal() {
+  if (!lastOfflineReport?.summary) {
+    return;
+  }
+  showOfflineModal(lastOfflineReport);
+  setStatus("최근 오프라인 정산을 다시 열었습니다.");
 }
 
 function setSavePayloadValue(valueInput, source = "manual") {
@@ -12410,6 +12478,7 @@ function hideOfflineModal() {
   dom.offlineDetailList.dataset.overviewSummary = "세부 로그 0건 (전체) · 숨김 이벤트 없음";
   setOfflineDetailCriticalOnly(false);
   setOfflineDetailExpanded(false);
+  syncOpsDigestPanel();
 }
 
 function showOfflineModal(offline) {
@@ -12501,6 +12570,7 @@ function showOfflineModal(offline) {
   setOfflineDetailExpanded(false);
   dom.offlineModal.classList.remove("hidden");
   dom.offlineModal.setAttribute("aria-hidden", "false");
+  syncOpsDigestPanel();
 }
 
 function persistLocal() {
@@ -13152,6 +13222,15 @@ function bindEvents() {
   });
   dom.btnOpsDigestSave?.addEventListener("click", () => {
     forwardOpsDigestActionClick(dom.btnSaveLocal);
+  });
+  dom.btnOpsDigestLoad?.addEventListener("click", () => {
+    forwardOpsDigestActionClick(dom.btnLoadLocal);
+  });
+  dom.btnOpsDigestReset?.addEventListener("click", () => {
+    forwardOpsDigestActionClick(dom.btnResetRun);
+  });
+  dom.btnOpsDigestOffline?.addEventListener("click", () => {
+    openOpsDigestOfflineModal();
   });
   dom.btnToggleBattleSfx?.addEventListener("click", () => {
     setBattleSfxEnabled(!battleSfxEnabled, { announce: true });
