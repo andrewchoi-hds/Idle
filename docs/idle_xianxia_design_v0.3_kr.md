@@ -4043,3 +4043,11 @@
 
 ## 939) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(preview text overview summary aggregate 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 940) 다음 순차 작업
+1. [완료] `overview summary`를 실제로 소비하는 운용 요약 패널(`opsDigestPanel`)을 추가해 `진행/전장/자원/자동화/돌파/저장` 6개 핵심 상태를 한 곳에서 바로 읽을 수 있도록 보강.
+2. [완료] `syncOpsDigestPanel()`를 추가하고 `render()`, `syncBattleScenePanelContract()`, `syncActionsPanelOverviewSummary()`, `syncSavePanelOverviewSummary()` 경로에 연결해 주요 root summary가 바뀔 때 다이제스트 패널도 함께 갱신되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ops digest consumer panel 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 941) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ops digest consumer panel 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

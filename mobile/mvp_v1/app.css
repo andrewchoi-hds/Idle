@@ -112,6 +112,45 @@ h2 {
   min-height: 40px;
 }
 
+.ops-digest {
+  display: grid;
+  gap: 10px;
+}
+
+.ops-digest-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 10px;
+}
+
+.ops-digest-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ops-digest-item {
+  background: #0d1917;
+  border: 1px solid #1e3933;
+  border-radius: 10px;
+  padding: 10px;
+  display: grid;
+  gap: 6px;
+}
+
+.ops-digest-label {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+}
+
+.ops-digest-value {
+  font-size: 12px;
+  line-height: 1.45;
+}
+
 .app.battle-focus-mode .panel[data-panel-role="secondary"] {
   display: none;
 }
