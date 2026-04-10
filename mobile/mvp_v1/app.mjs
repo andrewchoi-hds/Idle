@@ -90,6 +90,13 @@ const dom = {
   btnToggleBattleSfx: document.getElementById("btnToggleBattleSfx"),
   btnToggleBattleHaptic: document.getElementById("btnToggleBattleHaptic"),
   focusControlsPanel: document.getElementById("focusControlsPanel"),
+  opsDigestPanel: document.getElementById("opsDigestPanel"),
+  opsDigestStage: document.getElementById("opsDigestStage"),
+  opsDigestBattle: document.getElementById("opsDigestBattle"),
+  opsDigestResources: document.getElementById("opsDigestResources"),
+  opsDigestActions: document.getElementById("opsDigestActions"),
+  opsDigestBreakthrough: document.getElementById("opsDigestBreakthrough"),
+  opsDigestSave: document.getElementById("opsDigestSave"),
   battleFocusHint: document.getElementById("battleFocusHint"),
   battleSfxHint: document.getElementById("battleSfxHint"),
   battleHapticHint: document.getElementById("battleHapticHint"),
@@ -792,6 +799,53 @@ function syncSavePanelOverviewSummary() {
     dom.savePanel.dataset.payloadSummary || "payload 비어 있음";
   dom.savePanel.dataset.overviewSummary =
     `${selectionSummaryLabel} · ${buttonSummaryLabel} · ${payloadSummaryLabel}`;
+  syncOpsDigestPanel();
+}
+
+function syncOpsDigestPanel() {
+  if (!dom.opsDigestPanel) {
+    return;
+  }
+  const stageOverview =
+    dom.stagePanel?.dataset.overviewSummary || "- · - · 난이도 0 · 기 0 / 0 · 돌파 대기";
+  const battleOverview =
+    dom.battleScenePanel?.dataset.overviewSummary ||
+    "대기 · 대기 · 압력 낮음 · 균형 · 수련자 HP 100% · 기세 0% · 적수 HP 100% · 기세 0%";
+  const resourceOverview =
+    dom.statsPanel?.dataset.overviewSummary || "기 0 · 영석 0 · 환생정수 0 · 환생 0회";
+  const actionOverview =
+    dom.actionsPanel?.dataset.overviewSummary ||
+    "중지 · 전투 0회 · 돌파 0회 · 환생 0회 · 전투 1회 · 돌파 시도 · 실시간 자동 시작";
+  const breakthroughOverview =
+    dom.breakthroughPreviewPanel?.dataset.overviewSummary ||
+    "재고 영약 0 · 수호부 0 · 설정 영약 ON · 수호부 ON · 확률 성공 0.0% · 사망 0.0% · 권장 - · - · 재개 - · -";
+  const saveOverview =
+    dom.savePanel?.dataset.overviewSummary ||
+    "활성 1번 · 슬롯 1: 비어 있음 → 대상 슬롯 2: 비어 있음 · 로컬 저장 · 로컬 불러오기 · JSON 내보내기 · payload 비어 있음";
+  dom.opsDigestPanel.dataset.stageOverview = stageOverview;
+  dom.opsDigestPanel.dataset.battleOverview = battleOverview;
+  dom.opsDigestPanel.dataset.resourceOverview = resourceOverview;
+  dom.opsDigestPanel.dataset.actionOverview = actionOverview;
+  dom.opsDigestPanel.dataset.breakthroughOverview = breakthroughOverview;
+  dom.opsDigestPanel.dataset.saveOverview = saveOverview;
+  if (dom.opsDigestStage) {
+    dom.opsDigestStage.textContent = stageOverview;
+  }
+  if (dom.opsDigestBattle) {
+    dom.opsDigestBattle.textContent = battleOverview;
+  }
+  if (dom.opsDigestResources) {
+    dom.opsDigestResources.textContent = resourceOverview;
+  }
+  if (dom.opsDigestActions) {
+    dom.opsDigestActions.textContent = actionOverview;
+  }
+  if (dom.opsDigestBreakthrough) {
+    dom.opsDigestBreakthrough.textContent = breakthroughOverview;
+  }
+  if (dom.opsDigestSave) {
+    dom.opsDigestSave.textContent = saveOverview;
+  }
 }
 
 function setSavePayloadValue(valueInput, source = "manual") {
@@ -2901,6 +2955,7 @@ function syncBattleScenePanelContract() {
     }`;
   dom.battleScenePanel.dataset.overviewSummary =
     `${dom.battleScenePanel.dataset.sceneSummary} · ${dom.battleScenePanel.dataset.actorSummary}`;
+  syncOpsDigestPanel();
 }
 
 function syncBattleSceneMotionLayerContracts() {
@@ -11532,6 +11587,7 @@ function syncActionsPanelOverviewSummary() {
     dom.actionsPanel.dataset.buttonSummary || "전투 1회 · 돌파 시도 · 실시간 자동 시작";
   dom.actionsPanel.dataset.overviewSummary =
     `${realtimeSummaryLabel} · ${buttonSummaryLabel}`;
+  syncOpsDigestPanel();
 }
 
 function getConfiguredAutoBreakthroughResumeWarmupSec() {
@@ -12868,6 +12924,7 @@ function render() {
   renderLogs();
   renderSaveSlotSummary();
   renderRealtimeSummary();
+  syncOpsDigestPanel();
   syncRealtimeAutoControls();
   startBattleSceneAmbientLoop();
 }

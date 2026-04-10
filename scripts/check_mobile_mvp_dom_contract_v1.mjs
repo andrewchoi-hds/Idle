@@ -14,6 +14,13 @@ const REQUIRED_HTML_IDS = [
   "battleFocusHint",
   "battleSfxHint",
   "battleHapticHint",
+  "opsDigestPanel",
+  "opsDigestStage",
+  "opsDigestBattle",
+  "opsDigestResources",
+  "opsDigestActions",
+  "opsDigestBreakthrough",
+  "opsDigestSave",
   "settingsPanel",
   "stagePanel",
   "savePanel",
@@ -160,6 +167,13 @@ const REQUIRED_DOM_KEYS = [
   "btnToggleBattleSfx",
   "btnToggleBattleHaptic",
   "focusControlsPanel",
+  "opsDigestPanel",
+  "opsDigestStage",
+  "opsDigestBattle",
+  "opsDigestResources",
+  "opsDigestActions",
+  "opsDigestBreakthrough",
+  "opsDigestSave",
   "battleFocusHint",
   "battleSfxHint",
   "battleHapticHint",
@@ -1576,6 +1590,30 @@ async function main() {
   assertIncludes(
     html,
     'data-battle-sfx-enabled="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="opsDigestPanel"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-stage-overview="- · - · 난이도 0 · 기 0 / 0 · 돌파 대기"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="opsDigestStage"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="opsDigestBattle"',
     "index.html",
     failures,
   );
@@ -8707,6 +8745,30 @@ async function main() {
   assertIncludes(
     app,
     'dom.focusControlsPanel.dataset.overviewSummary =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function syncOpsDigestPanel() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.stageOverview = stageOverview;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestStage.textContent = stageOverview;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncOpsDigestPanel();",
     "app.mjs",
     failures,
   );
