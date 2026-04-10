@@ -149,6 +149,14 @@ h2 {
   margin: 0;
 }
 
+.ops-digest-status {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #294941;
+  background: rgba(11, 22, 20, 0.88);
+}
+
 @media (max-width: 640px) {
   .ops-digest-actions-secondary {
     grid-template-columns: repeat(2, minmax(0, 1fr));

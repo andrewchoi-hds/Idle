@@ -99,6 +99,7 @@ const dom = {
   opsDigestActions: document.getElementById("opsDigestActions"),
   opsDigestBreakthrough: document.getElementById("opsDigestBreakthrough"),
   opsDigestSave: document.getElementById("opsDigestSave"),
+  opsDigestRecentAction: document.getElementById("opsDigestRecentAction"),
   opsDigestQuickSummary: document.getElementById("opsDigestQuickSummary"),
   opsDigestSecondarySummary: document.getElementById("opsDigestSecondarySummary"),
   btnOpsDigestFocus: document.getElementById("btnOpsDigestFocus"),
@@ -760,9 +761,25 @@ const battleSceneDuelState = {
   dpsMomentum: 0,
 };
 
-function setStatus(message, isError = false) {
+function syncOpsDigestRecentAction(message, isError = false, source = "system") {
+  if (!dom.opsDigestPanel) {
+    return;
+  }
+  const normalizedMessage = String(message || "최근 조작 대기 중").trim() || "최근 조작 대기 중";
+  const tone = isError ? "warn" : "info";
+  const normalizedSource = String(source || "system").trim() || "system";
+  dom.opsDigestPanel.dataset.recentAction = normalizedMessage;
+  dom.opsDigestPanel.dataset.recentActionTone = tone;
+  dom.opsDigestPanel.dataset.recentActionSource = normalizedSource;
+  if (dom.opsDigestRecentAction) {
+    dom.opsDigestRecentAction.textContent = normalizedMessage;
+  }
+}
+
+function setStatus(message, isError = false, source = "system") {
   dom.appStatus.textContent = message;
   dom.appStatus.style.color = isError ? "#f27167" : "#f3bd4d";
+  syncOpsDigestRecentAction(message, isError, source);
 }
 
 function syncSavePayloadContract(sourceInput = savePayloadSource) {
