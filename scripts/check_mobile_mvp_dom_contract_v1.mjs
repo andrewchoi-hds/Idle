@@ -15,6 +15,8 @@ const REQUIRED_HTML_IDS = [
   "battleSfxHint",
   "battleHapticHint",
   "opsDigestPanel",
+  "opsDigestFocus",
+  "opsDigestSettings",
   "opsDigestStage",
   "opsDigestBattle",
   "opsDigestResources",
@@ -168,6 +170,8 @@ const REQUIRED_DOM_KEYS = [
   "btnToggleBattleHaptic",
   "focusControlsPanel",
   "opsDigestPanel",
+  "opsDigestFocus",
+  "opsDigestSettings",
   "opsDigestStage",
   "opsDigestBattle",
   "opsDigestResources",
@@ -1602,6 +1606,30 @@ async function main() {
   assertIncludes(
     html,
     'data-stage-overview="- · - · 난이도 0 · 기 0 / 0 · 돌파 대기"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-focus-overview="전투 집중 ON · 전투 효과음 OFF · 전투 진동 OFF · 효과음 미지원 · 진동 미지원"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-settings-overview="전투 ON · 돌파 OFF · 도겁 OFF · 워밍업 6초 · 속도 표준 · 오프라인 12시간/24건"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="opsDigestFocus"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="opsDigestSettings"',
     "index.html",
     failures,
   );
@@ -8751,6 +8779,30 @@ async function main() {
   assertIncludes(
     app,
     "function syncOpsDigestPanel() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.focusOverview = focusOverview;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.settingsOverview = settingsOverview;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestFocus.textContent = focusOverview;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestSettings.textContent = settingsOverview;",
     "app.mjs",
     failures,
   );

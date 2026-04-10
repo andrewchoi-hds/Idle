@@ -91,6 +91,8 @@ const dom = {
   btnToggleBattleHaptic: document.getElementById("btnToggleBattleHaptic"),
   focusControlsPanel: document.getElementById("focusControlsPanel"),
   opsDigestPanel: document.getElementById("opsDigestPanel"),
+  opsDigestFocus: document.getElementById("opsDigestFocus"),
+  opsDigestSettings: document.getElementById("opsDigestSettings"),
   opsDigestStage: document.getElementById("opsDigestStage"),
   opsDigestBattle: document.getElementById("opsDigestBattle"),
   opsDigestResources: document.getElementById("opsDigestResources"),
@@ -806,6 +808,12 @@ function syncOpsDigestPanel() {
   if (!dom.opsDigestPanel) {
     return;
   }
+  const focusOverview =
+    dom.focusControlsPanel?.dataset.overviewSummary ||
+    "전투 집중 ON · 전투 효과음 OFF · 전투 진동 OFF · 효과음 미지원 · 진동 미지원";
+  const settingsOverview =
+    dom.settingsPanel?.dataset.overviewSummary ||
+    "전투 ON · 돌파 OFF · 도겁 OFF · 워밍업 6초 · 속도 표준 · 오프라인 12시간/24건";
   const stageOverview =
     dom.stagePanel?.dataset.overviewSummary || "- · - · 난이도 0 · 기 0 / 0 · 돌파 대기";
   const battleOverview =
@@ -822,12 +830,20 @@ function syncOpsDigestPanel() {
   const saveOverview =
     dom.savePanel?.dataset.overviewSummary ||
     "활성 1번 · 슬롯 1: 비어 있음 → 대상 슬롯 2: 비어 있음 · 로컬 저장 · 로컬 불러오기 · JSON 내보내기 · payload 비어 있음";
+  dom.opsDigestPanel.dataset.focusOverview = focusOverview;
+  dom.opsDigestPanel.dataset.settingsOverview = settingsOverview;
   dom.opsDigestPanel.dataset.stageOverview = stageOverview;
   dom.opsDigestPanel.dataset.battleOverview = battleOverview;
   dom.opsDigestPanel.dataset.resourceOverview = resourceOverview;
   dom.opsDigestPanel.dataset.actionOverview = actionOverview;
   dom.opsDigestPanel.dataset.breakthroughOverview = breakthroughOverview;
   dom.opsDigestPanel.dataset.saveOverview = saveOverview;
+  if (dom.opsDigestFocus) {
+    dom.opsDigestFocus.textContent = focusOverview;
+  }
+  if (dom.opsDigestSettings) {
+    dom.opsDigestSettings.textContent = settingsOverview;
+  }
   if (dom.opsDigestStage) {
     dom.opsDigestStage.textContent = stageOverview;
   }
