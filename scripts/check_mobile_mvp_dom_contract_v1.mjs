@@ -23,6 +23,11 @@ const REQUIRED_HTML_IDS = [
   "opsDigestActions",
   "opsDigestBreakthrough",
   "opsDigestSave",
+  "opsDigestQuickSummary",
+  "btnOpsDigestFocus",
+  "btnOpsDigestRealtime",
+  "btnOpsDigestRecommendation",
+  "btnOpsDigestSave",
   "settingsPanel",
   "stagePanel",
   "savePanel",
@@ -178,6 +183,11 @@ const REQUIRED_DOM_KEYS = [
   "opsDigestActions",
   "opsDigestBreakthrough",
   "opsDigestSave",
+  "opsDigestQuickSummary",
+  "btnOpsDigestFocus",
+  "btnOpsDigestRealtime",
+  "btnOpsDigestRecommendation",
+  "btnOpsDigestSave",
   "battleFocusHint",
   "battleSfxHint",
   "battleHapticHint",
@@ -1642,6 +1652,54 @@ async function main() {
   assertIncludes(
     html,
     'id="opsDigestBattle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="opsDigestQuickActions"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="btnOpsDigestFocus"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="btnOpsDigestRealtime"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="btnOpsDigestRecommendation"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="btnOpsDigestSave"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="opsDigestQuickSummary"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-quick-action-summary="전투 집중 ON · 실시간 자동 시작 · 권장 설정 적용(대기) · 로컬 저장"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-action-source="btnToggleBattleFocus"',
     "index.html",
     failures,
   );
@@ -8784,6 +8842,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function syncOpsDigestQuickActions() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.focusOverview = focusOverview;",
     "app.mjs",
     failures,
@@ -8815,6 +8879,30 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestStage.textContent = stageOverview;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.quickActionSummary = quickActionSummary;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnOpsDigestFocus?.addEventListener(\"click\", () => {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "targetButton.textContent = label;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnOpsDigestFocus,",
     "app.mjs",
     failures,
   );

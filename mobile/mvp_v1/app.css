@@ -124,6 +124,27 @@ h2 {
   gap: 10px;
 }
 
+.ops-digest-actions {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ops-digest-btn {
+  min-height: 42px;
+  text-align: left;
+  font-size: 12px;
+}
+
+.ops-digest-btn:disabled {
+  opacity: 0.62;
+  cursor: not-allowed;
+}
+
+.ops-digest-summary {
+  margin: 0;
+}
+
 .ops-digest-grid {
   display: grid;
   gap: 8px;
