@@ -24,10 +24,14 @@ const REQUIRED_HTML_IDS = [
   "opsDigestBreakthrough",
   "opsDigestSave",
   "opsDigestQuickSummary",
+  "opsDigestSecondarySummary",
   "btnOpsDigestFocus",
   "btnOpsDigestRealtime",
   "btnOpsDigestRecommendation",
   "btnOpsDigestSave",
+  "btnOpsDigestLoad",
+  "btnOpsDigestReset",
+  "btnOpsDigestOffline",
   "settingsPanel",
   "stagePanel",
   "savePanel",
@@ -184,10 +188,14 @@ const REQUIRED_DOM_KEYS = [
   "opsDigestBreakthrough",
   "opsDigestSave",
   "opsDigestQuickSummary",
+  "opsDigestSecondarySummary",
   "btnOpsDigestFocus",
   "btnOpsDigestRealtime",
   "btnOpsDigestRecommendation",
   "btnOpsDigestSave",
+  "btnOpsDigestLoad",
+  "btnOpsDigestReset",
+  "btnOpsDigestOffline",
   "battleFocusHint",
   "battleSfxHint",
   "battleHapticHint",
@@ -1693,7 +1701,43 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestSecondaryActions"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="btnOpsDigestLoad"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="btnOpsDigestReset"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="btnOpsDigestOffline"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="opsDigestSecondarySummary"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-quick-action-summary="전투 집중 ON · 실시간 자동 시작 · 권장 설정 적용(대기) · 로컬 저장"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-secondary-action-summary="로컬 불러오기 · 런 초기화 · 오프라인 정산 대기(대기)"',
     "index.html",
     failures,
   );
@@ -8848,6 +8892,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function syncOpsDigestOfflineButton() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.focusOverview = focusOverview;",
     "app.mjs",
     failures,
@@ -8890,6 +8940,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.opsDigestPanel.dataset.secondaryActionSummary = secondaryActionSummary;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.btnOpsDigestFocus?.addEventListener(\"click\", () => {",
     "app.mjs",
     failures,
@@ -8903,6 +8959,18 @@ async function main() {
   assertIncludes(
     app,
     "dom.btnOpsDigestFocus,",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnOpsDigestLoad?.addEventListener(\"click\", () => {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "openOpsDigestOfflineModal();",
     "app.mjs",
     failures,
   );

@@ -130,6 +130,10 @@ h2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.ops-digest-actions-secondary {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .ops-digest-btn {
   min-height: 42px;
   text-align: left;
@@ -143,6 +147,12 @@ h2 {
 
 .ops-digest-summary {
   margin: 0;
+}
+
+@media (max-width: 640px) {
+  .ops-digest-actions-secondary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .ops-digest-grid {
