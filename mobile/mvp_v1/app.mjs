@@ -99,6 +99,11 @@ const dom = {
   opsDigestActions: document.getElementById("opsDigestActions"),
   opsDigestBreakthrough: document.getElementById("opsDigestBreakthrough"),
   opsDigestSave: document.getElementById("opsDigestSave"),
+  opsDigestQuickSummary: document.getElementById("opsDigestQuickSummary"),
+  btnOpsDigestFocus: document.getElementById("btnOpsDigestFocus"),
+  btnOpsDigestRealtime: document.getElementById("btnOpsDigestRealtime"),
+  btnOpsDigestRecommendation: document.getElementById("btnOpsDigestRecommendation"),
+  btnOpsDigestSave: document.getElementById("btnOpsDigestSave"),
   battleFocusHint: document.getElementById("battleFocusHint"),
   battleSfxHint: document.getElementById("battleSfxHint"),
   battleHapticHint: document.getElementById("battleHapticHint"),
@@ -862,6 +867,91 @@ function syncOpsDigestPanel() {
   if (dom.opsDigestSave) {
     dom.opsDigestSave.textContent = saveOverview;
   }
+  syncOpsDigestQuickActions();
+}
+
+function summarizeOpsDigestActionLabel(label, disabled) {
+  return disabled ? `${label}(대기)` : label;
+}
+
+function syncOpsDigestActionButton(targetButton, sourceButton, sourceId, fallbackLabel) {
+  const label = sourceButton?.textContent?.trim() || fallbackLabel;
+  const disabled = sourceButton?.disabled === true;
+  const sourceOverview = sourceButton?.dataset?.overviewSummary?.trim() || label;
+  const availabilityLabel = disabled ? "실행 대기" : "실행 가능";
+  const overviewSummary = `${sourceOverview} · ${availabilityLabel} · ${sourceId}`;
+  if (targetButton) {
+    targetButton.textContent = label;
+    targetButton.disabled = disabled;
+    targetButton.dataset.actionSource = sourceId;
+    targetButton.dataset.actionDisabled = String(disabled);
+    targetButton.dataset.overviewSummary = overviewSummary;
+  }
+  return {
+    label,
+    disabled,
+    overviewSummary,
+  };
+}
+
+function syncOpsDigestQuickActions() {
+  if (!dom.opsDigestPanel) {
+    return;
+  }
+  const focusAction = syncOpsDigestActionButton(
+    dom.btnOpsDigestFocus,
+    dom.btnToggleBattleFocus,
+    "btnToggleBattleFocus",
+    "전투 집중 ON",
+  );
+  const realtimeAction = syncOpsDigestActionButton(
+    dom.btnOpsDigestRealtime,
+    dom.btnRealtimeAuto,
+    "btnRealtimeAuto",
+    "실시간 자동 시작",
+  );
+  const recommendationAction = syncOpsDigestActionButton(
+    dom.btnOpsDigestRecommendation,
+    dom.btnApplyRecommendation,
+    "btnApplyRecommendation",
+    "권장 설정 적용",
+  );
+  const saveAction = syncOpsDigestActionButton(
+    dom.btnOpsDigestSave,
+    dom.btnSaveLocal,
+    "btnSaveLocal",
+    "로컬 저장",
+  );
+  const quickActionSummary = [
+    summarizeOpsDigestActionLabel(focusAction.label, focusAction.disabled),
+    summarizeOpsDigestActionLabel(realtimeAction.label, realtimeAction.disabled),
+    summarizeOpsDigestActionLabel(
+      recommendationAction.label,
+      recommendationAction.disabled,
+    ),
+    summarizeOpsDigestActionLabel(saveAction.label, saveAction.disabled),
+  ].join(" · ");
+  dom.opsDigestPanel.dataset.focusActionLabel = focusAction.label;
+  dom.opsDigestPanel.dataset.focusActionDisabled = String(focusAction.disabled);
+  dom.opsDigestPanel.dataset.realtimeActionLabel = realtimeAction.label;
+  dom.opsDigestPanel.dataset.realtimeActionDisabled = String(realtimeAction.disabled);
+  dom.opsDigestPanel.dataset.recommendActionLabel = recommendationAction.label;
+  dom.opsDigestPanel.dataset.recommendActionDisabled = String(
+    recommendationAction.disabled,
+  );
+  dom.opsDigestPanel.dataset.saveActionLabel = saveAction.label;
+  dom.opsDigestPanel.dataset.saveActionDisabled = String(saveAction.disabled);
+  dom.opsDigestPanel.dataset.quickActionSummary = quickActionSummary;
+  if (dom.opsDigestQuickSummary) {
+    dom.opsDigestQuickSummary.textContent = quickActionSummary;
+  }
+}
+
+function forwardOpsDigestActionClick(sourceButton) {
+  if (!sourceButton || sourceButton.disabled) {
+    return;
+  }
+  sourceButton.click();
 }
 
 function setSavePayloadValue(valueInput, source = "manual") {
@@ -1319,6 +1409,7 @@ function syncFocusControlsPanelSummaries() {
   dom.focusControlsPanel.dataset.supportSummary = supportSummaryLabel;
   dom.focusControlsPanel.dataset.overviewSummary =
     `${controlSummaryLabel} · ${supportSummaryLabel}`;
+  syncOpsDigestPanel();
 }
 
 function emitBattleHaptic(pattern) {
@@ -13049,6 +13140,18 @@ function clampPercent(value) {
 function bindEvents() {
   dom.btnToggleBattleFocus.addEventListener("click", () => {
     applyBattleFocusMode(!battleFocusMode, { announce: true });
+  });
+  dom.btnOpsDigestFocus?.addEventListener("click", () => {
+    forwardOpsDigestActionClick(dom.btnToggleBattleFocus);
+  });
+  dom.btnOpsDigestRealtime?.addEventListener("click", () => {
+    forwardOpsDigestActionClick(dom.btnRealtimeAuto);
+  });
+  dom.btnOpsDigestRecommendation?.addEventListener("click", () => {
+    forwardOpsDigestActionClick(dom.btnApplyRecommendation);
+  });
+  dom.btnOpsDigestSave?.addEventListener("click", () => {
+    forwardOpsDigestActionClick(dom.btnSaveLocal);
   });
   dom.btnToggleBattleSfx?.addEventListener("click", () => {
     setBattleSfxEnabled(!battleSfxEnabled, { announce: true });
