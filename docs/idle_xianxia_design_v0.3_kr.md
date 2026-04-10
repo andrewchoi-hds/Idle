@@ -4067,3 +4067,11 @@
 
 ## 945) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ops digest secondary action consumer 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 946) 다음 순차 작업
+1. [완료] 운용 다이제스트 패널(`opsDigestPanel`)에 최근 조작 상태줄(`opsDigestRecentAction`)을 추가해, 전투 집중 화면에서도 방금 실행한 조작 결과를 패널 내부에서 바로 읽을 수 있도록 보강.
+2. [완료] 공용 상태 라인 helper `setStatus()`가 `syncOpsDigestRecentAction()`를 함께 호출하도록 확장해, 기존 앱 상태 메시지가 다이제스트 최근 조작 라인과도 자동 동기화되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ops digest recent action consumer 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 947) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ops digest recent action consumer 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

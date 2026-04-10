@@ -23,6 +23,7 @@ const REQUIRED_HTML_IDS = [
   "opsDigestActions",
   "opsDigestBreakthrough",
   "opsDigestSave",
+  "opsDigestRecentAction",
   "opsDigestQuickSummary",
   "opsDigestSecondarySummary",
   "btnOpsDigestFocus",
@@ -187,6 +188,7 @@ const REQUIRED_DOM_KEYS = [
   "opsDigestActions",
   "opsDigestBreakthrough",
   "opsDigestSave",
+  "opsDigestRecentAction",
   "opsDigestQuickSummary",
   "opsDigestSecondarySummary",
   "btnOpsDigestFocus",
@@ -1665,6 +1667,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestRecentAction"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="opsDigestQuickActions"',
     "index.html",
     failures,
@@ -1738,6 +1746,12 @@ async function main() {
   assertIncludes(
     html,
     'data-secondary-action-summary="로컬 불러오기 · 런 초기화 · 오프라인 정산 대기(대기)"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-recent-action="최근 조작 대기 중"',
     "index.html",
     failures,
   );
@@ -8875,6 +8889,24 @@ async function main() {
   assertIncludes(
     app,
     'dom.focusControlsPanel.dataset.overviewSummary =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function syncOpsDigestRecentAction(message, isError = false, source = \"system\") {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.recentAction = normalizedMessage;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncOpsDigestRecentAction(message, isError, source);",
     "app.mjs",
     failures,
   );
