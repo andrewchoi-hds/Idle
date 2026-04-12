@@ -1703,6 +1703,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestNextReason"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="opsDigestWarnings"',
     "index.html",
     failures,
@@ -1818,6 +1824,12 @@ async function main() {
   assertIncludes(
     html,
     'data-next-action-label="실시간 자동 시작"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-next-action-reason="자동 진행이 멈춰 있어 누적 진행이 쌓이지 않습니다."',
     "index.html",
     failures,
   );
@@ -8991,6 +9003,12 @@ async function main() {
   assertIncludes(
     app,
     "function executeOpsDigestNextAction() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.nextActionReason = action.reason;",
     "app.mjs",
     failures,
   );
