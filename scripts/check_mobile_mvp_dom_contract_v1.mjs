@@ -1691,6 +1691,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="btnOpsDigestNextAction"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="opsDigestNextAction"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="opsDigestWarnings"',
     "index.html",
     failures,
@@ -1800,6 +1812,12 @@ async function main() {
   assertIncludes(
     html,
     'data-warning-target="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-next-action-label="실시간 자동 시작"',
     "index.html",
     failures,
   );
@@ -8966,7 +8984,25 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function syncOpsDigestNextAction() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function executeOpsDigestNextAction() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.warningSummary = warningSummary;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.nextActionSummary = action.summary;",
     "app.mjs",
     failures,
   );
@@ -8985,6 +9021,12 @@ async function main() {
   assertIncludes(
     app,
     "const opsDigestPanelButtons = [",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.btnOpsDigestNextAction?.addEventListener("click", () => {',
     "app.mjs",
     failures,
   );

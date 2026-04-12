@@ -124,6 +124,18 @@ h2 {
   gap: 10px;
 }
 
+.ops-digest-next {
+  display: grid;
+  gap: 6px;
+}
+
+.ops-digest-next-row {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: minmax(132px, 180px) minmax(0, 1fr);
+  align-items: start;
+}
+
 .ops-digest-actions {
   display: grid;
   gap: 8px;
@@ -178,6 +190,9 @@ h2 {
 }
 
 @media (max-width: 640px) {
+  .ops-digest-next-row {
+    grid-template-columns: 1fr;
+  }
   .ops-digest-actions-secondary {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
