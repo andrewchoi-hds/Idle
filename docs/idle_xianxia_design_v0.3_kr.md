@@ -4075,3 +4075,11 @@
 
 ## 947) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ops digest recent action consumer 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 948) 다음 순차 작업
+1. [완료] 운용 다이제스트 패널(`opsDigestPanel`)에 주의 상태 strip(`opsDigestWarnings`)을 추가해, 전투 집중 화면에서도 현재 즉시 대응이 필요한 경고를 한 줄로 확인할 수 있도록 보강.
+2. [완료] `syncOpsDigestWarnings()`를 추가하고 전장 상태 tone, 돌파 위험/자동 재개 tone, 저장 슬롯 손상 여부를 실제 root contract에서 소비해 `data-warning-count`, `data-warning-tone`, `data-warning-summary`로 집약되게 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ops digest warning strip consumer 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 949) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ops digest warning strip consumer 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
