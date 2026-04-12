@@ -110,6 +110,7 @@ const dom = {
   opsDigestRecentAction: document.getElementById("opsDigestRecentAction"),
   btnOpsDigestNextAction: document.getElementById("btnOpsDigestNextAction"),
   opsDigestNextAction: document.getElementById("opsDigestNextAction"),
+  opsDigestNextReason: document.getElementById("opsDigestNextReason"),
   opsDigestWarnings: document.getElementById("opsDigestWarnings"),
   opsDigestQuickSummary: document.getElementById("opsDigestQuickSummary"),
   opsDigestSecondarySummary: document.getElementById("opsDigestSecondarySummary"),
@@ -1006,6 +1007,7 @@ function syncOpsDigestNextAction() {
     target: "btnRealtimeAuto",
     source: "btnRealtimeAuto",
     summary: "자동 진행 정지 · 실시간 자동 시작",
+    reason: "자동 진행이 멈춰 있어 누적 진행이 쌓이지 않습니다.",
   };
   const warningTarget = String(dom.opsDigestPanel.dataset.warningTarget || "none").trim();
   const warningSummary = String(dom.opsDigestPanel.dataset.warningSummary || "").trim();
@@ -1025,6 +1027,7 @@ function syncOpsDigestNextAction() {
       target: warningTarget,
       source: warningSource || "ops_warning",
       summary: `${warningSummary || "주의 상태 확인"} · ${warningActionLabel || "관련 패널 확인"}`,
+      reason: "먼저 경고 원인을 확인하는 편이 이후 조작보다 우선입니다.",
     };
   } else if (dom.btnApplyRecommendation && dom.btnApplyRecommendation.disabled !== true) {
     action = {
@@ -1036,6 +1039,7 @@ function syncOpsDigestNextAction() {
       summary:
         dom.btnApplyRecommendation.dataset.overviewSummary ||
         "권장 설정 적용 · 변경 가능",
+      reason: "현재 확률/재고 조합보다 더 안전하거나 효율적인 설정을 바로 반영할 수 있습니다.",
     };
   } else if (
     dom.stagePanel?.dataset.breakthroughReady === "true" &&
@@ -1048,6 +1052,7 @@ function syncOpsDigestNextAction() {
       target: "btnBreakthrough",
       source: "btnBreakthrough",
       summary: "돌파 준비 완료 · 돌파 시도",
+      reason: "필요 기가 이미 충족되어 바로 돌파 판정을 시도할 수 있습니다.",
     };
   } else if (
     dom.actionsPanel?.dataset.realtimeRunning !== "true" &&
@@ -1060,6 +1065,7 @@ function syncOpsDigestNextAction() {
       target: "btnRealtimeAuto",
       source: "btnRealtimeAuto",
       summary: "자동 진행 정지 · 실시간 자동 시작",
+      reason: "자동 진행이 멈춰 있어 누적 진행이 쌓이지 않습니다.",
     };
   } else if (dom.btnOpsDigestOffline?.disabled !== true) {
     action = {
@@ -1071,6 +1077,7 @@ function syncOpsDigestNextAction() {
       summary:
         dom.btnOpsDigestOffline.dataset.overviewSummary ||
         "최근 오프라인 정산 확인 · 오프라인 정산 보기",
+      reason: "최근 복귀 정산 결과를 확인하면 자원 변화와 비교 상태를 바로 점검할 수 있습니다.",
     };
   } else if (dom.btnBattle?.disabled !== true) {
     action = {
@@ -1080,6 +1087,7 @@ function syncOpsDigestNextAction() {
       target: "btnBattle",
       source: "btnBattle",
       summary: "즉시 진행 가능 · 전투 1회",
+      reason: "현재 바로 실행 가능한 핵심 진행 액션이 전투 1회입니다.",
     };
   }
   dom.opsDigestPanel.dataset.nextActionLabel = action.label;
@@ -1088,12 +1096,16 @@ function syncOpsDigestNextAction() {
   dom.opsDigestPanel.dataset.nextActionTarget = action.target;
   dom.opsDigestPanel.dataset.nextActionSource = action.source;
   dom.opsDigestPanel.dataset.nextActionSummary = action.summary;
+  dom.opsDigestPanel.dataset.nextActionReason = action.reason;
   if (dom.btnOpsDigestNextAction) {
     dom.btnOpsDigestNextAction.textContent = action.label;
     dom.btnOpsDigestNextAction.disabled = action.disabled;
   }
   if (dom.opsDigestNextAction) {
     dom.opsDigestNextAction.textContent = action.summary;
+  }
+  if (dom.opsDigestNextReason) {
+    dom.opsDigestNextReason.textContent = action.reason;
   }
 }
 

@@ -136,6 +136,10 @@ h2 {
   align-items: start;
 }
 
+.ops-digest-next-reason {
+  margin: 0;
+}
+
 .ops-digest-actions {
   display: grid;
   gap: 8px;
