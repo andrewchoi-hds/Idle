@@ -1771,6 +1771,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-warning-target="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-action-source="btnToggleBattleFocus"',
     "index.html",
     failures,
@@ -8920,7 +8926,25 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function openOpsDigestWarningTarget() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.warningSummary = warningSummary;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestPanel.dataset.warningTarget = primaryWarning?.targetId || "none";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestWarnings?.addEventListener("click", () => {',
     "app.mjs",
     failures,
   );

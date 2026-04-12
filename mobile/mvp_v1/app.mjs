@@ -369,6 +369,7 @@ let battleSfxLastPlayAtMs = 0;
 let battleSfxAmbientLastPlayAtMs = 0;
 let battleHapticEnabled = false;
 let battleHapticLastPlayAtMs = 0;
+let opsDigestJumpTargetTimer = null;
 const MOBILE_MVP_BATTLE_SFX_PREF_KEY = "idle_xianxia_mobile_mvp_v1_battle_sfx";
 const MOBILE_MVP_BATTLE_HAPTIC_PREF_KEY = "idle_xianxia_mobile_mvp_v1_battle_haptic";
 const BATTLE_SFX_MIN_INTERVAL_MS = 90;
@@ -797,6 +798,30 @@ function pushOpsDigestWarning(target, message, tone = "warn") {
   });
 }
 
+function pushOpsDigestWarningEntry(
+  target,
+  message,
+  tone = "warn",
+  targetId = "none",
+  source = "none",
+  actionLabel = "관련 패널 확인",
+) {
+  if (!Array.isArray(target)) {
+    return;
+  }
+  const normalizedMessage = String(message || "").trim();
+  if (!normalizedMessage) {
+    return;
+  }
+  target.push({
+    message: normalizedMessage,
+    tone: tone === "error" ? "error" : tone === "warn" ? "warn" : "info",
+    targetId: String(targetId || "none").trim() || "none",
+    source: String(source || "none").trim() || "none",
+    actionLabel: String(actionLabel || "관련 패널 확인").trim() || "관련 패널 확인",
+  });
+}
+
 function syncOpsDigestWarnings() {
   if (!dom.opsDigestPanel) {
     return;
@@ -809,7 +834,14 @@ function syncOpsDigestWarnings() {
     battleStatusText &&
     battleStatusText !== "대기 중"
   ) {
-    pushOpsDigestWarning(warnings, `전장 ${battleStatusText}`, battleStatusTone);
+    pushOpsDigestWarningEntry(
+      warnings,
+      `전장 ${battleStatusText}`,
+      battleStatusTone,
+      "battleScenePanel",
+      "battle_status",
+      "전장 패널 확인",
+    );
   }
   const previewRiskTone = String(dom.breakthroughPreviewPanel?.dataset.riskTone || "info");
   const previewRiskLabel = String(dom.breakthroughPreviewPanel?.dataset.riskLabel || "-").trim();
@@ -818,7 +850,14 @@ function syncOpsDigestWarnings() {
     previewRiskLabel &&
     previewRiskLabel !== "-"
   ) {
-    pushOpsDigestWarning(warnings, `돌파 위험 ${previewRiskLabel}`, previewRiskTone);
+    pushOpsDigestWarningEntry(
+      warnings,
+      `돌파 위험 ${previewRiskLabel}`,
+      previewRiskTone,
+      "breakthroughPreviewPanel",
+      "preview_risk",
+      "돌파 패널 확인",
+    );
   }
   const autoResumeTone = String(
     dom.breakthroughPreviewPanel?.dataset.autoResumeTone || "info",
@@ -831,17 +870,36 @@ function syncOpsDigestWarnings() {
     autoResumeLabel &&
     autoResumeLabel !== "-"
   ) {
-    pushOpsDigestWarning(warnings, `자동 재개 ${autoResumeLabel}`, autoResumeTone);
+    pushOpsDigestWarningEntry(
+      warnings,
+      `자동 재개 ${autoResumeLabel}`,
+      autoResumeTone,
+      "breakthroughPreviewPanel",
+      "auto_resume",
+      "자동 재개 정책 확인",
+    );
   }
   const activeSaveSlot = String(dom.savePanel?.dataset.activeSlot || "").trim();
   const sourceSlotState = String(dom.savePanel?.dataset.sourceSlotState || "empty").trim();
   if (sourceSlotState === "corrupt") {
-    pushOpsDigestWarning(
+    pushOpsDigestWarningEntry(
       warnings,
       `저장 슬롯 ${activeSaveSlot || "?"} 손상`,
       "error",
+      "savePanel",
+      "save_corrupt",
+      "저장 패널 확인",
     );
   }
+  const primaryWarning = warnings.reduce((best, entry) => {
+    if (!entry) {
+      return best;
+    }
+    const entryPriority = entry.tone === "error" ? 2 : entry.tone === "warn" ? 1 : 0;
+    const bestPriority =
+      !best ? -1 : best.tone === "error" ? 2 : best.tone === "warn" ? 1 : 0;
+    return entryPriority > bestPriority ? entry : best;
+  }, null);
   const warningSummary = warnings.length
     ? warnings.map((entry) => entry.message).join(" · ")
     : "주의 상태 없음";
@@ -853,10 +911,66 @@ function syncOpsDigestWarnings() {
   dom.opsDigestPanel.dataset.warningCount = String(warnings.length);
   dom.opsDigestPanel.dataset.warningTone = warningTone;
   dom.opsDigestPanel.dataset.warningSummary = warningSummary;
+  dom.opsDigestPanel.dataset.warningTarget = primaryWarning?.targetId || "none";
+  dom.opsDigestPanel.dataset.warningSource = primaryWarning?.source || "none";
+  dom.opsDigestPanel.dataset.warningActionLabel =
+    primaryWarning?.actionLabel || "이동 대기";
   if (dom.opsDigestWarnings) {
     dom.opsDigestWarnings.textContent = warningSummary;
+    dom.opsDigestWarnings.disabled = warnings.length === 0;
+    dom.opsDigestWarnings.dataset.warningTarget = primaryWarning?.targetId || "none";
+    dom.opsDigestWarnings.dataset.warningSource = primaryWarning?.source || "none";
+    dom.opsDigestWarnings.dataset.warningActionLabel =
+      primaryWarning?.actionLabel || "이동 대기";
+    dom.opsDigestWarnings.title =
+      warnings.length > 0
+        ? primaryWarning?.actionLabel || "관련 패널 확인"
+        : "주의 상태 없음";
     applyRiskTone(dom.opsDigestWarnings, warningTone);
   }
+}
+
+function flashOpsDigestJumpTarget(targetNode) {
+  if (!targetNode) {
+    return;
+  }
+  document.querySelectorAll(".ops-jump-target").forEach((node) => {
+    node.classList.remove("ops-jump-target");
+  });
+  targetNode.classList.add("ops-jump-target");
+  if (opsDigestJumpTargetTimer) {
+    window.clearTimeout(opsDigestJumpTargetTimer);
+  }
+  opsDigestJumpTargetTimer = window.setTimeout(() => {
+    targetNode.classList.remove("ops-jump-target");
+    opsDigestJumpTargetTimer = null;
+  }, 1600);
+}
+
+function openOpsDigestWarningTarget() {
+  if (!dom.opsDigestPanel) {
+    return;
+  }
+  const targetId = String(dom.opsDigestPanel.dataset.warningTarget || "none").trim();
+  if (!targetId || targetId === "none") {
+    return;
+  }
+  const targetNode = document.getElementById(targetId);
+  if (!targetNode) {
+    return;
+  }
+  if (battleFocusMode && targetNode.dataset?.panelRole === "secondary") {
+    applyBattleFocusMode(false);
+  }
+  targetNode.scrollIntoView({ behavior: "smooth", block: "start" });
+  flashOpsDigestJumpTarget(targetNode);
+  const actionLabel =
+    String(dom.opsDigestPanel.dataset.warningActionLabel || "관련 패널 확인").trim() ||
+    "관련 패널 확인";
+  const source =
+    String(dom.opsDigestPanel.dataset.warningSource || "ops_warning").trim() ||
+    "ops_warning";
+  setStatus(`주의 상태 이동: ${actionLabel}`, false, source);
 }
 
 function syncSavePayloadContract(sourceInput = savePayloadSource) {
@@ -13326,6 +13440,9 @@ function bindEvents() {
   });
   dom.btnOpsDigestOffline?.addEventListener("click", () => {
     openOpsDigestOfflineModal();
+  });
+  dom.opsDigestWarnings?.addEventListener("click", () => {
+    openOpsDigestWarningTarget();
   });
   dom.btnToggleBattleSfx?.addEventListener("click", () => {
     setBattleSfxEnabled(!battleSfxEnabled, { announce: true });
