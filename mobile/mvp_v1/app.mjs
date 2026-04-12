@@ -99,6 +99,14 @@ const dom = {
   opsDigestActions: document.getElementById("opsDigestActions"),
   opsDigestBreakthrough: document.getElementById("opsDigestBreakthrough"),
   opsDigestSave: document.getElementById("opsDigestSave"),
+  btnOpsDigestOpenFocus: document.getElementById("btnOpsDigestOpenFocus"),
+  btnOpsDigestOpenSettings: document.getElementById("btnOpsDigestOpenSettings"),
+  btnOpsDigestOpenStage: document.getElementById("btnOpsDigestOpenStage"),
+  btnOpsDigestOpenBattle: document.getElementById("btnOpsDigestOpenBattle"),
+  btnOpsDigestOpenResources: document.getElementById("btnOpsDigestOpenResources"),
+  btnOpsDigestOpenActions: document.getElementById("btnOpsDigestOpenActions"),
+  btnOpsDigestOpenBreakthrough: document.getElementById("btnOpsDigestOpenBreakthrough"),
+  btnOpsDigestOpenSave: document.getElementById("btnOpsDigestOpenSave"),
   opsDigestRecentAction: document.getElementById("opsDigestRecentAction"),
   opsDigestWarnings: document.getElementById("opsDigestWarnings"),
   opsDigestQuickSummary: document.getElementById("opsDigestQuickSummary"),
@@ -947,6 +955,23 @@ function flashOpsDigestJumpTarget(targetNode) {
   }, 1600);
 }
 
+function openOpsDigestPanelTarget(targetId, actionLabel = "패널 확인", source = "ops_digest") {
+  const normalizedTargetId = String(targetId || "").trim();
+  if (!normalizedTargetId) {
+    return;
+  }
+  const targetNode = document.getElementById(normalizedTargetId);
+  if (!targetNode) {
+    return;
+  }
+  if (battleFocusMode && targetNode.dataset?.panelRole === "secondary") {
+    applyBattleFocusMode(false);
+  }
+  targetNode.scrollIntoView({ behavior: "smooth", block: "start" });
+  flashOpsDigestJumpTarget(targetNode);
+  setStatus(`패널 이동: ${actionLabel}`, false, source);
+}
+
 function openOpsDigestWarningTarget() {
   if (!dom.opsDigestPanel) {
     return;
@@ -959,18 +984,13 @@ function openOpsDigestWarningTarget() {
   if (!targetNode) {
     return;
   }
-  if (battleFocusMode && targetNode.dataset?.panelRole === "secondary") {
-    applyBattleFocusMode(false);
-  }
-  targetNode.scrollIntoView({ behavior: "smooth", block: "start" });
-  flashOpsDigestJumpTarget(targetNode);
   const actionLabel =
     String(dom.opsDigestPanel.dataset.warningActionLabel || "관련 패널 확인").trim() ||
     "관련 패널 확인";
   const source =
     String(dom.opsDigestPanel.dataset.warningSource || "ops_warning").trim() ||
     "ops_warning";
-  setStatus(`주의 상태 이동: ${actionLabel}`, false, source);
+  openOpsDigestPanelTarget(targetId, actionLabel, source);
 }
 
 function syncSavePayloadContract(sourceInput = savePayloadSource) {
@@ -13420,6 +13440,26 @@ function bindEvents() {
   dom.btnToggleBattleFocus.addEventListener("click", () => {
     applyBattleFocusMode(!battleFocusMode, { announce: true });
   });
+  const opsDigestPanelButtons = [
+    [dom.btnOpsDigestOpenFocus, "focusControlsPanel", "집중 패널 열기", "ops_focus"],
+    [dom.btnOpsDigestOpenSettings, "settingsPanel", "설정 패널 열기", "ops_settings"],
+    [dom.btnOpsDigestOpenStage, "stagePanel", "진행 패널 열기", "ops_stage"],
+    [dom.btnOpsDigestOpenBattle, "battleScenePanel", "전장 패널 열기", "ops_battle"],
+    [dom.btnOpsDigestOpenResources, "statsPanel", "자원 패널 열기", "ops_resources"],
+    [dom.btnOpsDigestOpenActions, "actionsPanel", "자동화 패널 열기", "ops_actions"],
+    [
+      dom.btnOpsDigestOpenBreakthrough,
+      "breakthroughPreviewPanel",
+      "돌파 패널 열기",
+      "ops_breakthrough",
+    ],
+    [dom.btnOpsDigestOpenSave, "savePanel", "저장 패널 열기", "ops_save"],
+  ];
+  for (const [button, targetId, label, source] of opsDigestPanelButtons) {
+    button?.addEventListener("click", () => {
+      openOpsDigestPanelTarget(targetId, label, source);
+    });
+  }
   dom.btnOpsDigestFocus?.addEventListener("click", () => {
     forwardOpsDigestActionClick(dom.btnToggleBattleFocus);
   });
