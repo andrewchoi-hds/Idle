@@ -198,6 +198,13 @@ h2 {
   gap: 6px;
 }
 
+.ops-digest-link {
+  justify-self: start;
+  min-height: 30px;
+  padding: 6px 10px;
+  font-size: 11px;
+}
+
 .ops-digest-label {
   color: var(--muted);
   font-size: 11px;

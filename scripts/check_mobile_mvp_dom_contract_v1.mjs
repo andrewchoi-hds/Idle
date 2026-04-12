@@ -23,6 +23,14 @@ const REQUIRED_HTML_IDS = [
   "opsDigestActions",
   "opsDigestBreakthrough",
   "opsDigestSave",
+  "btnOpsDigestOpenFocus",
+  "btnOpsDigestOpenSettings",
+  "btnOpsDigestOpenStage",
+  "btnOpsDigestOpenBattle",
+  "btnOpsDigestOpenResources",
+  "btnOpsDigestOpenActions",
+  "btnOpsDigestOpenBreakthrough",
+  "btnOpsDigestOpenSave",
   "opsDigestRecentAction",
   "opsDigestWarnings",
   "opsDigestQuickSummary",
@@ -189,6 +197,14 @@ const REQUIRED_DOM_KEYS = [
   "opsDigestActions",
   "opsDigestBreakthrough",
   "opsDigestSave",
+  "btnOpsDigestOpenFocus",
+  "btnOpsDigestOpenSettings",
+  "btnOpsDigestOpenStage",
+  "btnOpsDigestOpenBattle",
+  "btnOpsDigestOpenResources",
+  "btnOpsDigestOpenActions",
+  "btnOpsDigestOpenBreakthrough",
+  "btnOpsDigestOpenSave",
   "opsDigestRecentAction",
   "opsDigestWarnings",
   "opsDigestQuickSummary",
@@ -1712,6 +1728,18 @@ async function main() {
   assertIncludes(
     html,
     'id="opsDigestQuickSummary"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="btnOpsDigestOpenFocus"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="btnOpsDigestOpenSave"',
     "index.html",
     failures,
   );
@@ -8932,6 +8960,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function openOpsDigestPanelTarget(targetId, actionLabel = \"패널 확인\", source = \"ops_digest\") {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.warningSummary = warningSummary;",
     "app.mjs",
     failures,
@@ -8945,6 +8979,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.opsDigestWarnings?.addEventListener("click", () => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const opsDigestPanelButtons = [",
     "app.mjs",
     failures,
   );

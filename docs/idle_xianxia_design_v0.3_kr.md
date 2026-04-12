@@ -4091,3 +4091,11 @@
 
 ## 951) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ops digest warning navigation consumer 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 952) 다음 순차 작업
+1. [완료] 운용 다이제스트 각 요약 카드에 직접 탐색 버튼을 추가해 `집중/설정/진행/전장/자원/자동화/돌파/저장` 상세 패널로 바로 이동할 수 있도록 보강.
+2. [완료] `openOpsDigestPanelTarget()` 공용 helper를 추가하고 warning navigation도 같은 helper를 재사용하도록 정리해, 전투 집중 모드 해제·스크롤·강조 동작을 한 경로로 통합.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ops digest direct panel navigation 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 953) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ops digest direct panel navigation 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
