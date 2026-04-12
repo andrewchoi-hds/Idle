@@ -108,6 +108,8 @@ const dom = {
   btnOpsDigestOpenBreakthrough: document.getElementById("btnOpsDigestOpenBreakthrough"),
   btnOpsDigestOpenSave: document.getElementById("btnOpsDigestOpenSave"),
   opsDigestRecentAction: document.getElementById("opsDigestRecentAction"),
+  btnOpsDigestNextAction: document.getElementById("btnOpsDigestNextAction"),
+  opsDigestNextAction: document.getElementById("opsDigestNextAction"),
   opsDigestWarnings: document.getElementById("opsDigestWarnings"),
   opsDigestQuickSummary: document.getElementById("opsDigestQuickSummary"),
   opsDigestSecondarySummary: document.getElementById("opsDigestSecondarySummary"),
@@ -993,6 +995,136 @@ function openOpsDigestWarningTarget() {
   openOpsDigestPanelTarget(targetId, actionLabel, source);
 }
 
+function syncOpsDigestNextAction() {
+  if (!dom.opsDigestPanel) {
+    return;
+  }
+  let action = {
+    label: "실시간 자동 시작",
+    disabled: dom.btnRealtimeAuto?.disabled === true,
+    kind: "button",
+    target: "btnRealtimeAuto",
+    source: "btnRealtimeAuto",
+    summary: "자동 진행 정지 · 실시간 자동 시작",
+  };
+  const warningTarget = String(dom.opsDigestPanel.dataset.warningTarget || "none").trim();
+  const warningSummary = String(dom.opsDigestPanel.dataset.warningSummary || "").trim();
+  const warningActionLabel = String(
+    dom.opsDigestPanel.dataset.warningActionLabel || "관련 패널 확인",
+  ).trim();
+  const warningSource = String(dom.opsDigestPanel.dataset.warningSource || "ops_warning").trim();
+  if (
+    (Number(dom.opsDigestPanel.dataset.warningCount) || 0) > 0 &&
+    warningTarget &&
+    warningTarget !== "none"
+  ) {
+    action = {
+      label: warningActionLabel || "관련 패널 확인",
+      disabled: false,
+      kind: "panel",
+      target: warningTarget,
+      source: warningSource || "ops_warning",
+      summary: `${warningSummary || "주의 상태 확인"} · ${warningActionLabel || "관련 패널 확인"}`,
+    };
+  } else if (dom.btnApplyRecommendation && dom.btnApplyRecommendation.disabled !== true) {
+    action = {
+      label: dom.btnApplyRecommendation.textContent?.trim() || "권장 설정 적용",
+      disabled: false,
+      kind: "button",
+      target: "btnApplyRecommendation",
+      source: "btnApplyRecommendation",
+      summary:
+        dom.btnApplyRecommendation.dataset.overviewSummary ||
+        "권장 설정 적용 · 변경 가능",
+    };
+  } else if (
+    dom.stagePanel?.dataset.breakthroughReady === "true" &&
+    dom.btnBreakthrough?.disabled !== true
+  ) {
+    action = {
+      label: dom.btnBreakthrough.textContent?.trim() || "돌파 시도",
+      disabled: false,
+      kind: "button",
+      target: "btnBreakthrough",
+      source: "btnBreakthrough",
+      summary: "돌파 준비 완료 · 돌파 시도",
+    };
+  } else if (
+    dom.actionsPanel?.dataset.realtimeRunning !== "true" &&
+    dom.btnRealtimeAuto?.disabled !== true
+  ) {
+    action = {
+      label: dom.btnRealtimeAuto.textContent?.trim() || "실시간 자동 시작",
+      disabled: false,
+      kind: "button",
+      target: "btnRealtimeAuto",
+      source: "btnRealtimeAuto",
+      summary: "자동 진행 정지 · 실시간 자동 시작",
+    };
+  } else if (dom.btnOpsDigestOffline?.disabled !== true) {
+    action = {
+      label: dom.btnOpsDigestOffline.textContent?.trim() || "오프라인 정산 보기",
+      disabled: false,
+      kind: "helper",
+      target: "offlineModal",
+      source: "offlineModal",
+      summary:
+        dom.btnOpsDigestOffline.dataset.overviewSummary ||
+        "최근 오프라인 정산 확인 · 오프라인 정산 보기",
+    };
+  } else if (dom.btnBattle?.disabled !== true) {
+    action = {
+      label: dom.btnBattle.textContent?.trim() || "전투 1회",
+      disabled: false,
+      kind: "button",
+      target: "btnBattle",
+      source: "btnBattle",
+      summary: "즉시 진행 가능 · 전투 1회",
+    };
+  }
+  dom.opsDigestPanel.dataset.nextActionLabel = action.label;
+  dom.opsDigestPanel.dataset.nextActionDisabled = String(action.disabled);
+  dom.opsDigestPanel.dataset.nextActionKind = action.kind;
+  dom.opsDigestPanel.dataset.nextActionTarget = action.target;
+  dom.opsDigestPanel.dataset.nextActionSource = action.source;
+  dom.opsDigestPanel.dataset.nextActionSummary = action.summary;
+  if (dom.btnOpsDigestNextAction) {
+    dom.btnOpsDigestNextAction.textContent = action.label;
+    dom.btnOpsDigestNextAction.disabled = action.disabled;
+  }
+  if (dom.opsDigestNextAction) {
+    dom.opsDigestNextAction.textContent = action.summary;
+  }
+}
+
+function executeOpsDigestNextAction() {
+  if (!dom.opsDigestPanel) {
+    return;
+  }
+  const disabled = dom.opsDigestPanel.dataset.nextActionDisabled === "true";
+  if (disabled) {
+    return;
+  }
+  const kind = String(dom.opsDigestPanel.dataset.nextActionKind || "button").trim();
+  const target = String(dom.opsDigestPanel.dataset.nextActionTarget || "").trim();
+  const source = String(dom.opsDigestPanel.dataset.nextActionSource || "ops_next").trim();
+  const label =
+    String(dom.opsDigestPanel.dataset.nextActionLabel || "추천 다음 행동").trim() ||
+    "추천 다음 행동";
+  if (kind === "panel") {
+    openOpsDigestPanelTarget(target, label, source);
+    return;
+  }
+  if (kind === "helper" && target === "offlineModal") {
+    openOpsDigestOfflineModal();
+    return;
+  }
+  const sourceButton = target ? document.getElementById(target) : null;
+  if (sourceButton instanceof HTMLButtonElement) {
+    forwardOpsDigestActionClick(sourceButton);
+  }
+}
+
 function syncSavePayloadContract(sourceInput = savePayloadSource) {
   if (!dom.savePayload) {
     return;
@@ -1101,6 +1233,7 @@ function syncOpsDigestPanel() {
   }
   syncOpsDigestWarnings();
   syncOpsDigestQuickActions();
+  syncOpsDigestNextAction();
 }
 
 function summarizeOpsDigestActionLabel(label, disabled) {
@@ -13439,6 +13572,9 @@ function clampPercent(value) {
 function bindEvents() {
   dom.btnToggleBattleFocus.addEventListener("click", () => {
     applyBattleFocusMode(!battleFocusMode, { announce: true });
+  });
+  dom.btnOpsDigestNextAction?.addEventListener("click", () => {
+    executeOpsDigestNextAction();
   });
   const opsDigestPanelButtons = [
     [dom.btnOpsDigestOpenFocus, "focusControlsPanel", "집중 패널 열기", "ops_focus"],
