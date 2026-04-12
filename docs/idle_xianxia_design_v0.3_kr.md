@@ -4083,3 +4083,11 @@
 
 ## 949) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ops digest warning strip consumer 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 950) 다음 순차 작업
+1. [완료] 운용 다이제스트 주의 상태 strip(`opsDigestWarnings`)을 버튼형 consumer로 승격하고, 가장 우선순위 높은 관련 패널로 바로 이동할 수 있도록 보강.
+2. [완료] `syncOpsDigestWarnings()`가 `target/source/actionLabel`까지 함께 집약하고, `openOpsDigestWarningTarget()`가 전투 집중 모드 해제·스크롤·강조를 처리하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ops digest warning navigation consumer 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 951) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ops digest warning navigation consumer 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

@@ -163,6 +163,18 @@ h2 {
   border-radius: 10px;
   border: 1px solid #36514a;
   background: rgba(16, 30, 27, 0.92);
+  width: 100%;
+  text-align: left;
+}
+
+.ops-digest-warning:disabled {
+  cursor: default;
+  opacity: 0.82;
+}
+
+.ops-jump-target {
+  box-shadow: 0 0 0 2px rgba(243, 189, 77, 0.58);
+  transition: box-shadow 160ms ease;
 }
 
 @media (max-width: 640px) {
