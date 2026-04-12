@@ -24,6 +24,7 @@ const REQUIRED_HTML_IDS = [
   "opsDigestBreakthrough",
   "opsDigestSave",
   "opsDigestRecentAction",
+  "opsDigestWarnings",
   "opsDigestQuickSummary",
   "opsDigestSecondarySummary",
   "btnOpsDigestFocus",
@@ -189,6 +190,7 @@ const REQUIRED_DOM_KEYS = [
   "opsDigestBreakthrough",
   "opsDigestSave",
   "opsDigestRecentAction",
+  "opsDigestWarnings",
   "opsDigestQuickSummary",
   "opsDigestSecondarySummary",
   "btnOpsDigestFocus",
@@ -1673,6 +1675,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestWarnings"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="opsDigestQuickActions"',
     "index.html",
     failures,
@@ -1752,6 +1760,12 @@ async function main() {
   assertIncludes(
     html,
     'data-recent-action="최근 조작 대기 중"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-warning-summary="주의 상태 없음"',
     "index.html",
     failures,
   );
@@ -8895,6 +8909,18 @@ async function main() {
   assertIncludes(
     app,
     "function syncOpsDigestRecentAction(message, isError = false, source = \"system\") {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function syncOpsDigestWarnings() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.warningSummary = warningSummary;",
     "app.mjs",
     failures,
   );

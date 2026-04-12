@@ -100,6 +100,7 @@ const dom = {
   opsDigestBreakthrough: document.getElementById("opsDigestBreakthrough"),
   opsDigestSave: document.getElementById("opsDigestSave"),
   opsDigestRecentAction: document.getElementById("opsDigestRecentAction"),
+  opsDigestWarnings: document.getElementById("opsDigestWarnings"),
   opsDigestQuickSummary: document.getElementById("opsDigestQuickSummary"),
   opsDigestSecondarySummary: document.getElementById("opsDigestSecondarySummary"),
   btnOpsDigestFocus: document.getElementById("btnOpsDigestFocus"),
@@ -782,6 +783,82 @@ function setStatus(message, isError = false, source = "system") {
   syncOpsDigestRecentAction(message, isError, source);
 }
 
+function pushOpsDigestWarning(target, message, tone = "warn") {
+  if (!Array.isArray(target)) {
+    return;
+  }
+  const normalizedMessage = String(message || "").trim();
+  if (!normalizedMessage) {
+    return;
+  }
+  target.push({
+    message: normalizedMessage,
+    tone: tone === "error" ? "error" : tone === "warn" ? "warn" : "info",
+  });
+}
+
+function syncOpsDigestWarnings() {
+  if (!dom.opsDigestPanel) {
+    return;
+  }
+  const warnings = [];
+  const battleStatusTone = String(dom.battleScenePanel?.dataset.statusTone || "info");
+  const battleStatusText = String(dom.battleScenePanel?.dataset.statusText || "").trim();
+  if (
+    (battleStatusTone === "warn" || battleStatusTone === "error") &&
+    battleStatusText &&
+    battleStatusText !== "대기 중"
+  ) {
+    pushOpsDigestWarning(warnings, `전장 ${battleStatusText}`, battleStatusTone);
+  }
+  const previewRiskTone = String(dom.breakthroughPreviewPanel?.dataset.riskTone || "info");
+  const previewRiskLabel = String(dom.breakthroughPreviewPanel?.dataset.riskLabel || "-").trim();
+  if (
+    (previewRiskTone === "warn" || previewRiskTone === "error") &&
+    previewRiskLabel &&
+    previewRiskLabel !== "-"
+  ) {
+    pushOpsDigestWarning(warnings, `돌파 위험 ${previewRiskLabel}`, previewRiskTone);
+  }
+  const autoResumeTone = String(
+    dom.breakthroughPreviewPanel?.dataset.autoResumeTone || "info",
+  );
+  const autoResumeLabel = String(
+    dom.breakthroughPreviewPanel?.dataset.autoResumeLabel || "-",
+  ).trim();
+  if (
+    (autoResumeTone === "warn" || autoResumeTone === "error") &&
+    autoResumeLabel &&
+    autoResumeLabel !== "-"
+  ) {
+    pushOpsDigestWarning(warnings, `자동 재개 ${autoResumeLabel}`, autoResumeTone);
+  }
+  const activeSaveSlot = String(dom.savePanel?.dataset.activeSlot || "").trim();
+  const sourceSlotState = String(dom.savePanel?.dataset.sourceSlotState || "empty").trim();
+  if (sourceSlotState === "corrupt") {
+    pushOpsDigestWarning(
+      warnings,
+      `저장 슬롯 ${activeSaveSlot || "?"} 손상`,
+      "error",
+    );
+  }
+  const warningSummary = warnings.length
+    ? warnings.map((entry) => entry.message).join(" · ")
+    : "주의 상태 없음";
+  const warningTone = warnings.some((entry) => entry.tone === "error")
+    ? "error"
+    : warnings.some((entry) => entry.tone === "warn")
+      ? "warn"
+      : "info";
+  dom.opsDigestPanel.dataset.warningCount = String(warnings.length);
+  dom.opsDigestPanel.dataset.warningTone = warningTone;
+  dom.opsDigestPanel.dataset.warningSummary = warningSummary;
+  if (dom.opsDigestWarnings) {
+    dom.opsDigestWarnings.textContent = warningSummary;
+    applyRiskTone(dom.opsDigestWarnings, warningTone);
+  }
+}
+
 function syncSavePayloadContract(sourceInput = savePayloadSource) {
   if (!dom.savePayload) {
     return;
@@ -888,6 +965,7 @@ function syncOpsDigestPanel() {
   if (dom.opsDigestSave) {
     dom.opsDigestSave.textContent = saveOverview;
   }
+  syncOpsDigestWarnings();
   syncOpsDigestQuickActions();
 }
 
