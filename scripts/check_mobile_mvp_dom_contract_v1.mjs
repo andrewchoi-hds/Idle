@@ -1709,6 +1709,24 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="btnOpsDigestAltAction"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="opsDigestAltAction"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="opsDigestAltReason"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="opsDigestWarnings"',
     "index.html",
     failures,
@@ -1830,6 +1848,12 @@ async function main() {
   assertIncludes(
     html,
     'data-next-action-reason="자동 진행이 멈춰 있어 누적 진행이 쌓이지 않습니다."',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-alt-action-label="전투 1회"',
     "index.html",
     failures,
   );
@@ -9008,7 +9032,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function executeOpsDigestAltAction() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.nextActionReason = action.reason;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.altActionReason = altAction.reason;",
     "app.mjs",
     failures,
   );
