@@ -177,6 +177,15 @@ h2 {
   gap: 4px;
 }
 
+.ops-digest-inbox-item {
+  cursor: pointer;
+}
+
+.ops-digest-inbox-item[data-inbox-disabled="true"] {
+  cursor: default;
+  opacity: 0.7;
+}
+
 .ops-digest-status {
   margin: 0;
   padding: 8px 10px;
