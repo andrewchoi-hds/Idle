@@ -4131,3 +4131,11 @@
 
 ## 961) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ops digest inbox consumer 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 962) 다음 순차 작업
+1. [완료] 운용 인박스 헤더에 `opsDigestInboxMeta`를 추가해, 현재 최고 우선순위와 실행 가능 항목 수를 목록 위에서 먼저 읽을 수 있도록 보강.
+2. [완료] `syncOpsDigestInbox()`가 `data-inbox-top-priority`, `data-inbox-top-tone`, `data-inbox-actionable-count`, `data-inbox-meta-summary`를 함께 계산하고 meta 라인에 반영하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ops digest inbox triage meta 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 963) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ops digest inbox triage meta 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
