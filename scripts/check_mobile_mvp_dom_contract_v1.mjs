@@ -37,6 +37,8 @@ const REQUIRED_HTML_IDS = [
   "opsDigestSecondarySummary",
   "opsDigestInboxList",
   "opsDigestInboxMeta",
+  "opsDigestInboxPriorityBadge",
+  "opsDigestInboxActionableBadge",
   "opsDigestInboxRecent",
   "opsDigestInboxWarning",
   "opsDigestInboxPrimary",
@@ -217,6 +219,8 @@ const REQUIRED_DOM_KEYS = [
   "opsDigestSecondarySummary",
   "opsDigestInboxList",
   "opsDigestInboxMeta",
+  "opsDigestInboxPriorityBadge",
+  "opsDigestInboxActionableBadge",
   "opsDigestInboxRecent",
   "opsDigestInboxWarning",
   "opsDigestInboxPrimary",
@@ -1835,6 +1839,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestInboxPriorityBadge"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="opsDigestInboxActionableBadge"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-quick-action-summary="전투 집중 ON · 실시간 자동 시작 · 권장 설정 적용(대기) · 로컬 저장"',
     "index.html",
     failures,
@@ -1878,6 +1894,12 @@ async function main() {
   assertIncludes(
     html,
     'data-inbox-meta-summary="우선순위 medium · 실행 가능 2건"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-inbox-priority-badge="medium"',
     "index.html",
     failures,
   );

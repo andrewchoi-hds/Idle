@@ -119,6 +119,8 @@ const dom = {
   opsDigestSecondarySummary: document.getElementById("opsDigestSecondarySummary"),
   opsDigestInboxList: document.getElementById("opsDigestInboxList"),
   opsDigestInboxMeta: document.getElementById("opsDigestInboxMeta"),
+  opsDigestInboxPriorityBadge: document.getElementById("opsDigestInboxPriorityBadge"),
+  opsDigestInboxActionableBadge: document.getElementById("opsDigestInboxActionableBadge"),
   opsDigestInboxRecent: document.getElementById("opsDigestInboxRecent"),
   opsDigestInboxWarning: document.getElementById("opsDigestInboxWarning"),
   opsDigestInboxPrimary: document.getElementById("opsDigestInboxPrimary"),
@@ -1396,6 +1398,9 @@ function syncOpsDigestInbox() {
   dom.opsDigestPanel.dataset.inboxActionableCount = String(actionableEntries.length);
   dom.opsDigestPanel.dataset.inboxMetaSummary =
     `우선순위 ${topPriority} · 실행 가능 ${actionableEntries.length}건`;
+  dom.opsDigestPanel.dataset.inboxPriorityBadge = topPriority;
+  dom.opsDigestPanel.dataset.inboxActionableBadge =
+    `실행 ${actionableEntries.length}건`;
   dom.opsDigestPanel.dataset.inboxMetaKind = String(
     topActionableEntry?.dataset.inboxKind || "none",
   );
@@ -1473,9 +1478,6 @@ function syncOpsDigestInbox() {
     );
   }
   if (dom.opsDigestInboxMeta) {
-    dom.opsDigestInboxMeta.textContent =
-      dom.opsDigestPanel.dataset.inboxMetaSummary ||
-      `우선순위 ${topPriority} · 실행 가능 ${actionableEntries.length}건`;
     dom.opsDigestInboxMeta.dataset.inboxKind = String(
       dom.opsDigestPanel.dataset.inboxMetaKind || "none",
     );
@@ -1487,7 +1489,16 @@ function syncOpsDigestInbox() {
     );
     dom.opsDigestInboxMeta.dataset.inboxDisabled = String(!topActionableEntry);
     dom.opsDigestInboxMeta.setAttribute("aria-disabled", String(!topActionableEntry));
-    applyRiskTone(dom.opsDigestInboxMeta, String(topTone || "info"));
+  }
+  if (dom.opsDigestInboxPriorityBadge) {
+    dom.opsDigestInboxPriorityBadge.textContent =
+      dom.opsDigestPanel.dataset.inboxPriorityBadge || topPriority;
+    applyRiskTone(dom.opsDigestInboxPriorityBadge, String(topTone || "info"));
+  }
+  if (dom.opsDigestInboxActionableBadge) {
+    dom.opsDigestInboxActionableBadge.textContent =
+      dom.opsDigestPanel.dataset.inboxActionableBadge ||
+      `실행 ${actionableEntries.length}건`;
   }
 }
 
