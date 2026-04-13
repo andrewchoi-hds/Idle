@@ -1869,6 +1869,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-inbox-kind="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-next-action-score="650"',
     "index.html",
     failures,
@@ -9090,6 +9096,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function syncOpsDigestInboxEntry(node, descriptor, label) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function executeOpsDigestAction(kind, target, source, label) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.nextActionReason = action.reason;",
     "app.mjs",
     failures,
@@ -9115,6 +9133,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestPanel.dataset.inboxSummary =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const opsDigestInboxNodes = [",
     "app.mjs",
     failures,
   );

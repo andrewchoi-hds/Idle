@@ -1010,6 +1010,114 @@ function openOpsDigestWarningTarget() {
   openOpsDigestPanelTarget(targetId, actionLabel, source);
 }
 
+function executeOpsDigestAction(kind, target, source, label) {
+  const normalizedKind = String(kind || "none").trim();
+  const normalizedTarget = String(target || "").trim();
+  const normalizedSource = String(source || "ops_digest").trim() || "ops_digest";
+  const normalizedLabel = String(label || "관련 항목 열기").trim() || "관련 항목 열기";
+  if (normalizedKind === "panel") {
+    openOpsDigestPanelTarget(normalizedTarget, normalizedLabel, normalizedSource);
+    return;
+  }
+  if (normalizedKind === "warning") {
+    openOpsDigestWarningTarget();
+    return;
+  }
+  if (normalizedKind === "helper" && normalizedTarget === "offlineModal") {
+    openOpsDigestOfflineModal();
+    return;
+  }
+  const sourceButton = normalizedTarget ? document.getElementById(normalizedTarget) : null;
+  if (sourceButton instanceof HTMLButtonElement) {
+    forwardOpsDigestActionClick(sourceButton);
+  }
+}
+
+function resolveOpsDigestRecentActionDescriptor() {
+  if (!dom.opsDigestPanel) {
+    return {
+      kind: "none",
+      target: "",
+      source: "system",
+      disabled: true,
+    };
+  }
+  const source = String(dom.opsDigestPanel.dataset.recentActionSource || "system").trim();
+  const panelMap = {
+    ops_focus: "focusControlsPanel",
+    ops_settings: "settingsPanel",
+    ops_stage: "stagePanel",
+    ops_battle: "battleScenePanel",
+    ops_resources: "statsPanel",
+    ops_actions: "actionsPanel",
+    ops_breakthrough: "breakthroughPreviewPanel",
+    ops_save: "savePanel",
+  };
+  if (source in panelMap) {
+    return {
+      kind: "panel",
+      target: panelMap[source],
+      source,
+      disabled: false,
+    };
+  }
+  if (source === "ops_warning") {
+    return {
+      kind: "warning",
+      target: "warning",
+      source,
+      disabled: false,
+    };
+  }
+  const buttonTargets = new Set([
+    "btnRealtimeAuto",
+    "btnApplyRecommendation",
+    "btnBreakthrough",
+    "btnBattle",
+    "btnSaveLocal",
+    "btnLoadLocal",
+    "btnResetRun",
+  ]);
+  if (buttonTargets.has(source)) {
+    const sourceButton = document.getElementById(source);
+    return {
+      kind: "button",
+      target: source,
+      source,
+      disabled: !(sourceButton instanceof HTMLButtonElement) || sourceButton.disabled,
+    };
+  }
+  if (source === "offlineModal") {
+    return {
+      kind: "helper",
+      target: "offlineModal",
+      source,
+      disabled: dom.btnOpsDigestOffline?.disabled === true,
+    };
+  }
+  return {
+    kind: "none",
+    target: "",
+    source,
+    disabled: true,
+  };
+}
+
+function syncOpsDigestInboxEntry(node, descriptor, label) {
+  if (!node) {
+    return;
+  }
+  const normalizedLabel = String(label || "").trim();
+  const disabled = descriptor?.disabled === true;
+  node.textContent = normalizedLabel;
+  node.dataset.inboxKind = String(descriptor?.kind || "none");
+  node.dataset.inboxTarget = String(descriptor?.target || "");
+  node.dataset.inboxSource = String(descriptor?.source || "none");
+  node.dataset.inboxDisabled = String(disabled);
+  node.setAttribute("aria-disabled", String(disabled));
+  node.title = disabled ? normalizedLabel : `${normalizedLabel} · 열기`;
+}
+
 function syncOpsDigestNextAction() {
   if (!dom.opsDigestPanel) {
     return;
@@ -1217,16 +1325,50 @@ function syncOpsDigestInbox() {
   dom.opsDigestPanel.dataset.inboxSummary =
     `${recentLabel} · ${warningLabel} · ${primaryLabel} · ${secondaryLabel}`;
   if (dom.opsDigestInboxRecent) {
-    dom.opsDigestInboxRecent.textContent = recentLabel;
+    syncOpsDigestInboxEntry(
+      dom.opsDigestInboxRecent,
+      resolveOpsDigestRecentActionDescriptor(),
+      recentLabel,
+    );
   }
   if (dom.opsDigestInboxWarning) {
-    dom.opsDigestInboxWarning.textContent = warningLabel;
+    syncOpsDigestInboxEntry(
+      dom.opsDigestInboxWarning,
+      {
+        kind:
+          (Number(dom.opsDigestPanel.dataset.warningCount) || 0) > 0
+            ? "warning"
+            : "none",
+        target: String(dom.opsDigestPanel.dataset.warningTarget || ""),
+        source: String(dom.opsDigestPanel.dataset.warningSource || "none"),
+        disabled: (Number(dom.opsDigestPanel.dataset.warningCount) || 0) === 0,
+      },
+      warningLabel,
+    );
   }
   if (dom.opsDigestInboxPrimary) {
-    dom.opsDigestInboxPrimary.textContent = primaryLabel;
+    syncOpsDigestInboxEntry(
+      dom.opsDigestInboxPrimary,
+      {
+        kind: String(dom.opsDigestPanel.dataset.nextActionKind || "none"),
+        target: String(dom.opsDigestPanel.dataset.nextActionTarget || ""),
+        source: String(dom.opsDigestPanel.dataset.nextActionSource || "none"),
+        disabled: dom.opsDigestPanel.dataset.nextActionDisabled === "true",
+      },
+      primaryLabel,
+    );
   }
   if (dom.opsDigestInboxSecondary) {
-    dom.opsDigestInboxSecondary.textContent = secondaryLabel;
+    syncOpsDigestInboxEntry(
+      dom.opsDigestInboxSecondary,
+      {
+        kind: String(dom.opsDigestPanel.dataset.altActionKind || "none"),
+        target: String(dom.opsDigestPanel.dataset.altActionTarget || ""),
+        source: String(dom.opsDigestPanel.dataset.altActionSource || "none"),
+        disabled: dom.opsDigestPanel.dataset.altActionDisabled === "true",
+      },
+      secondaryLabel,
+    );
   }
 }
 
@@ -1244,18 +1386,7 @@ function executeOpsDigestNextAction() {
   const label =
     String(dom.opsDigestPanel.dataset.nextActionLabel || "추천 다음 행동").trim() ||
     "추천 다음 행동";
-  if (kind === "panel") {
-    openOpsDigestPanelTarget(target, label, source);
-    return;
-  }
-  if (kind === "helper" && target === "offlineModal") {
-    openOpsDigestOfflineModal();
-    return;
-  }
-  const sourceButton = target ? document.getElementById(target) : null;
-  if (sourceButton instanceof HTMLButtonElement) {
-    forwardOpsDigestActionClick(sourceButton);
-  }
+  executeOpsDigestAction(kind, target, source, label);
 }
 
 function executeOpsDigestAltAction() {
@@ -1272,18 +1403,7 @@ function executeOpsDigestAltAction() {
   const label =
     String(dom.opsDigestPanel.dataset.altActionLabel || "차선 행동").trim() ||
     "차선 행동";
-  if (kind === "panel") {
-    openOpsDigestPanelTarget(target, label, source);
-    return;
-  }
-  if (kind === "helper" && target === "offlineModal") {
-    openOpsDigestOfflineModal();
-    return;
-  }
-  const sourceButton = target ? document.getElementById(target) : null;
-  if (sourceButton instanceof HTMLButtonElement) {
-    forwardOpsDigestActionClick(sourceButton);
-  }
+  executeOpsDigestAction(kind, target, source, label);
 }
 
 function syncSavePayloadContract(sourceInput = savePayloadSource) {
@@ -13735,6 +13855,40 @@ function bindEvents() {
   dom.btnToggleBattleFocus.addEventListener("click", () => {
     applyBattleFocusMode(!battleFocusMode, { announce: true });
   });
+  const opsDigestInboxNodes = [
+    dom.opsDigestInboxRecent,
+    dom.opsDigestInboxWarning,
+    dom.opsDigestInboxPrimary,
+    dom.opsDigestInboxSecondary,
+  ];
+  for (const node of opsDigestInboxNodes) {
+    node?.addEventListener("click", () => {
+      if (node.dataset.inboxDisabled === "true") {
+        return;
+      }
+      executeOpsDigestAction(
+        node.dataset.inboxKind,
+        node.dataset.inboxTarget,
+        node.dataset.inboxSource,
+        node.textContent || "운용 인박스 항목",
+      );
+    });
+    node?.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") {
+        return;
+      }
+      event.preventDefault();
+      if (node.dataset.inboxDisabled === "true") {
+        return;
+      }
+      executeOpsDigestAction(
+        node.dataset.inboxKind,
+        node.dataset.inboxTarget,
+        node.dataset.inboxSource,
+        node.textContent || "운용 인박스 항목",
+      );
+    });
+  }
   dom.btnOpsDigestNextAction?.addEventListener("click", () => {
     executeOpsDigestNextAction();
   });
