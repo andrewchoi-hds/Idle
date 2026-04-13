@@ -1875,6 +1875,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-inbox-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-next-action-score="650"',
     "index.html",
     failures,
@@ -9096,7 +9102,19 @@ async function main() {
   );
   assertIncludes(
     app,
-    "function syncOpsDigestInboxEntry(node, descriptor, label) {",
+    "function syncOpsDigestInboxEntry(node, descriptor, label, tone = \"info\", score = 0) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function resolveOpsDigestInboxPriority(score, tone = \"info\") {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function resolveOpsDigestActionTone(kind, target, source) {",
     "app.mjs",
     failures,
   );
@@ -9139,6 +9157,12 @@ async function main() {
   assertIncludes(
     app,
     "const opsDigestInboxNodes = [",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "node.dataset.inboxPriority = priority;",
     "app.mjs",
     failures,
   );
