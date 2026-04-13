@@ -36,6 +36,7 @@ const REQUIRED_HTML_IDS = [
   "opsDigestQuickSummary",
   "opsDigestSecondarySummary",
   "opsDigestInboxList",
+  "opsDigestInboxMeta",
   "opsDigestInboxRecent",
   "opsDigestInboxWarning",
   "opsDigestInboxPrimary",
@@ -215,6 +216,7 @@ const REQUIRED_DOM_KEYS = [
   "opsDigestQuickSummary",
   "opsDigestSecondarySummary",
   "opsDigestInboxList",
+  "opsDigestInboxMeta",
   "opsDigestInboxRecent",
   "opsDigestInboxWarning",
   "opsDigestInboxPrimary",
@@ -1827,6 +1829,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestInboxMeta"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-quick-action-summary="전투 집중 ON · 실시간 자동 시작 · 권장 설정 적용(대기) · 로컬 저장"',
     "index.html",
     failures,
@@ -1864,6 +1872,12 @@ async function main() {
   assertIncludes(
     html,
     'data-inbox-summary="최근 조작 대기 중 · 주의 상태 없음 · 자동 진행 정지 · 실시간 자동 시작 · 즉시 진행 가능 · 전투 1회"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-inbox-meta-summary="우선순위 medium · 실행 가능 2건"',
     "index.html",
     failures,
   );
@@ -9097,6 +9111,12 @@ async function main() {
   assertIncludes(
     app,
     "function syncOpsDigestInbox() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestPanel.dataset.inboxMetaSummary =',
     "app.mjs",
     failures,
   );

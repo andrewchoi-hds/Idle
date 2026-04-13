@@ -170,6 +170,18 @@ h2 {
   gap: 6px;
 }
 
+.ops-digest-inbox-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.ops-digest-inbox-meta {
+  margin: 0;
+  white-space: nowrap;
+}
+
 .ops-digest-inbox-list {
   margin: 0;
   padding-left: 18px;

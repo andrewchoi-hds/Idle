@@ -118,6 +118,7 @@ const dom = {
   opsDigestQuickSummary: document.getElementById("opsDigestQuickSummary"),
   opsDigestSecondarySummary: document.getElementById("opsDigestSecondarySummary"),
   opsDigestInboxList: document.getElementById("opsDigestInboxList"),
+  opsDigestInboxMeta: document.getElementById("opsDigestInboxMeta"),
   opsDigestInboxRecent: document.getElementById("opsDigestInboxRecent"),
   opsDigestInboxWarning: document.getElementById("opsDigestInboxWarning"),
   opsDigestInboxPrimary: document.getElementById("opsDigestInboxPrimary"),
@@ -1359,8 +1360,36 @@ function syncOpsDigestInbox() {
     dom.opsDigestPanel.dataset.nextActionSummary || "즉시 추천할 행동이 없습니다.";
   const secondaryLabel =
     dom.opsDigestPanel.dataset.altActionSummary || "차선 행동 후보가 없습니다.";
+  const inboxEntries = [
+    dom.opsDigestInboxRecent,
+    dom.opsDigestInboxWarning,
+    dom.opsDigestInboxPrimary,
+    dom.opsDigestInboxSecondary,
+  ];
+  const actionableEntries = inboxEntries.filter(
+    (node) => node && node.dataset.inboxDisabled !== "true",
+  );
+  const priorityRank = {
+    critical: 3,
+    high: 2,
+    medium: 1,
+    low: 0,
+  };
+  const topPriority =
+    inboxEntries.reduce((best, node) => {
+      const candidate = String(node?.dataset.inboxPriority || "low");
+      return priorityRank[candidate] > priorityRank[best] ? candidate : best;
+    }, "low") || "low";
+  const topTone =
+    inboxEntries.find((node) => String(node?.dataset.inboxPriority || "") === topPriority)
+      ?.dataset.inboxTone || "info";
   dom.opsDigestPanel.dataset.inboxSummary =
     `${recentLabel} · ${warningLabel} · ${primaryLabel} · ${secondaryLabel}`;
+  dom.opsDigestPanel.dataset.inboxTopPriority = topPriority;
+  dom.opsDigestPanel.dataset.inboxTopTone = String(topTone);
+  dom.opsDigestPanel.dataset.inboxActionableCount = String(actionableEntries.length);
+  dom.opsDigestPanel.dataset.inboxMetaSummary =
+    `우선순위 ${topPriority} · 실행 가능 ${actionableEntries.length}건`;
   if (dom.opsDigestInboxRecent) {
     syncOpsDigestInboxEntry(
       dom.opsDigestInboxRecent,
@@ -1426,6 +1455,12 @@ function syncOpsDigestInbox() {
       ),
       Number(dom.opsDigestPanel.dataset.altActionScore || 0),
     );
+  }
+  if (dom.opsDigestInboxMeta) {
+    dom.opsDigestInboxMeta.textContent =
+      dom.opsDigestPanel.dataset.inboxMetaSummary ||
+      `우선순위 ${topPriority} · 실행 가능 ${actionableEntries.length}건`;
+    applyRiskTone(dom.opsDigestInboxMeta, String(topTone || "info"));
   }
 }
 
