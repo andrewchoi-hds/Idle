@@ -4163,3 +4163,11 @@
 
 ## 969) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(filter-aware action queue 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 970) 다음 순차 작업
+1. [완료] 운용 인박스 source filter가 켜져 있을 때 추천 행동 queue가 단순히 matching 후보를 앞에 두는 수준을 넘어서, filter 일치 여부를 score에 직접 가중치로 반영하도록 보강.
+2. [완료] `syncOpsDigestNextAction()`가 `data-next-action-base-score`, `data-next-action-filter-score-delta`, `data-next-action-score`, `data-alt-action-base-score`, `data-alt-action-filter-score-delta`, `data-alt-action-score` contract를 함께 유지하고, 최종 정렬이 `base score + filter delta` 기준으로 계산되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 filter-weighted action queue 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 971) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(filter-weighted action queue 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

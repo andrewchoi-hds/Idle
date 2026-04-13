@@ -1911,6 +1911,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-next-action-base-score="650"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-next-action-filter-score-delta="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-inbox-summary="최근 조작 대기 중 · 주의 상태 없음 · 자동 진행 정지 · 실시간 자동 시작 · 즉시 진행 가능 · 전투 1회"',
     "index.html",
     failures,
@@ -1984,6 +1996,18 @@ async function main() {
   assertIncludes(
     html,
     'data-alt-action-filter-match="true"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-alt-action-base-score="320"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-alt-action-filter-score-delta="0"',
     "index.html",
     failures,
   );
@@ -9276,6 +9300,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function resolveOpsDigestActionFilterScoreDelta(action, sourceFilter) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function formatOpsDigestActionQueueReason(reason, sourceFilter, action) {",
     "app.mjs",
     failures,
@@ -9306,6 +9336,24 @@ async function main() {
   );
   assertIncludes(
     app,
+    "const filterScoreDelta = resolveOpsDigestActionFilterScoreDelta(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.nextActionBaseScore = String(action.baseScore || 0);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.nextActionFilterScoreDelta = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.nextActionScore = String(action.score || 0);",
     "app.mjs",
     failures,
@@ -9319,6 +9367,18 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestPanel.dataset.altActionReason = altActionReason;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.altActionBaseScore = String(altAction.baseScore || 0);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.altActionFilterScoreDelta = String(",
     "app.mjs",
     failures,
   );
