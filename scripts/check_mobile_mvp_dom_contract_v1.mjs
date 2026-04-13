@@ -1905,6 +1905,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-inbox-last-updated-label="갱신 대기"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-inbox-meta-kind="button"',
     "index.html",
     failures,
@@ -9168,13 +9174,19 @@ async function main() {
   );
   assertIncludes(
     app,
-    "function syncOpsDigestInboxEntry(node, descriptor, label, tone = \"info\", score = 0) {",
+    "function syncOpsDigestInboxEntry(node, descriptor, label, tone = \"info\", score = 0, stateKey = \"recent\") {",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
     "function resolveOpsDigestInboxPriority(score, tone = \"info\") {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function formatOpsDigestInboxUpdatedLabel(updatedAtMs) {",
     "app.mjs",
     failures,
   );
@@ -9229,6 +9241,12 @@ async function main() {
   assertIncludes(
     app,
     "node.dataset.inboxPriority = priority;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'node.dataset.inboxUpdatedLabel = formatOpsDigestInboxUpdatedLabel(',
     "app.mjs",
     failures,
   );
