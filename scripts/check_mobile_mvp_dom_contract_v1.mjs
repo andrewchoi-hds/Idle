@@ -9150,6 +9150,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.opsDigestInboxActionableBadge.textContent =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.opsDigestPanel.dataset.inboxMetaKind = String(',
     "app.mjs",
     failures,

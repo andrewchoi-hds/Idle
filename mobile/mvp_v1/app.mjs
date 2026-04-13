@@ -1499,6 +1499,10 @@ function syncOpsDigestInbox() {
     dom.opsDigestInboxActionableBadge.textContent =
       dom.opsDigestPanel.dataset.inboxActionableBadge ||
       `실행 ${actionableEntries.length}건`;
+    applyRiskTone(
+      dom.opsDigestInboxActionableBadge,
+      actionableEntries.length > 0 ? "success" : "warn",
+    );
   }
 }
 
