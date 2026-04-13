@@ -9180,6 +9180,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.opsDigestInboxFilterBadge?.addEventListener("click", (event) => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestInboxActionableBadge.textContent =",
     "app.mjs",
     failures,

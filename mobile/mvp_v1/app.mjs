@@ -1659,6 +1659,10 @@ function syncOpsDigestInbox() {
   if (dom.opsDigestInboxFilterBadge) {
     dom.opsDigestInboxFilterBadge.textContent =
       dom.opsDigestPanel.dataset.inboxSourceFilterLabel || "전체";
+    dom.opsDigestInboxFilterBadge.classList.toggle(
+      "filter-active",
+      sourceFilter !== "all",
+    );
     applyRiskTone(
       dom.opsDigestInboxFilterBadge,
       sourceFilter === "all" ? "info" : "success",
@@ -14219,6 +14223,18 @@ function bindEvents() {
       dom.opsDigestInboxMeta.dataset.inboxSource,
       dom.opsDigestInboxMeta.textContent || "운용 인박스 메타",
     );
+  });
+  dom.opsDigestInboxFilterBadge?.addEventListener("click", (event) => {
+    event.stopPropagation();
+    setOpsDigestInboxSourceFilter("all");
+  });
+  dom.opsDigestInboxFilterBadge?.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    setOpsDigestInboxSourceFilter("all");
   });
   dom.opsDigestInboxMeta?.addEventListener("keydown", (event) => {
     if (event.key !== "Enter" && event.key !== " ") {

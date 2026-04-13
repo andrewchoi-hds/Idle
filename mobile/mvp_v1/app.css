@@ -201,6 +201,10 @@ h2 {
   white-space: nowrap;
 }
 
+.ops-digest-badge.filter-active {
+  box-shadow: 0 0 0 1px rgba(243, 189, 77, 0.65);
+}
+
 .ops-digest-badge.tone-info {
   border-color: #4d6f67;
   background: rgba(20, 44, 39, 0.92);
