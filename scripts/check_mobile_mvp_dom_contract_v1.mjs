@@ -1923,6 +1923,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-inbox-source-label="시스템"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-inbox-tone="info"',
     "index.html",
     failures,
@@ -9198,6 +9204,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function formatOpsDigestInboxSourceLabel(source) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function executeOpsDigestAction(kind, target, source, label) {",
     "app.mjs",
     failures,
@@ -9241,6 +9253,12 @@ async function main() {
   assertIncludes(
     app,
     "node.dataset.inboxPriority = priority;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "node.dataset.inboxSourceLabel = formatOpsDigestInboxSourceLabel(",
     "app.mjs",
     failures,
   );
