@@ -179,11 +179,31 @@ h2 {
 
 .ops-digest-inbox-item {
   cursor: pointer;
+  border-left: 2px solid transparent;
+  padding-left: 6px;
 }
 
 .ops-digest-inbox-item[data-inbox-disabled="true"] {
   cursor: default;
   opacity: 0.7;
+}
+
+.ops-digest-inbox-item.priority-critical {
+  border-left-color: #f27167;
+  font-weight: 700;
+}
+
+.ops-digest-inbox-item.priority-high {
+  border-left-color: #f3bd4d;
+  font-weight: 600;
+}
+
+.ops-digest-inbox-item.priority-medium {
+  border-left-color: #8fdcc0;
+}
+
+.ops-digest-inbox-item.priority-low {
+  border-left-color: #49665e;
 }
 
 .ops-digest-status {

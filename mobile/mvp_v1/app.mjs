@@ -1103,19 +1103,56 @@ function resolveOpsDigestRecentActionDescriptor() {
   };
 }
 
-function syncOpsDigestInboxEntry(node, descriptor, label) {
+function resolveOpsDigestInboxPriority(score, tone = "info") {
+  if (tone === "error" || (Number(score) || 0) >= 1000) {
+    return "critical";
+  }
+  if (tone === "warn" || (Number(score) || 0) >= 700) {
+    return "high";
+  }
+  if ((Number(score) || 0) >= 400) {
+    return "medium";
+  }
+  return "low";
+}
+
+function resolveOpsDigestActionTone(kind, target, source) {
+  const normalizedKind = String(kind || "none").trim();
+  const normalizedTarget = String(target || "").trim();
+  const normalizedSource = String(source || "none").trim();
+  if (normalizedKind === "warning" || normalizedSource === "ops_warning") {
+    return String(dom.opsDigestPanel?.dataset.warningTone || "warn");
+  }
+  if (normalizedTarget === "btnApplyRecommendation") {
+    return "success";
+  }
+  if (normalizedTarget === "btnBreakthrough") {
+    return "success";
+  }
+  return "info";
+}
+
+function syncOpsDigestInboxEntry(node, descriptor, label, tone = "info", score = 0) {
   if (!node) {
     return;
   }
   const normalizedLabel = String(label || "").trim();
   const disabled = descriptor?.disabled === true;
+  const normalizedTone =
+    tone === "error" ? "error" : tone === "warn" ? "warn" : "info";
+  const priority = resolveOpsDigestInboxPriority(score, normalizedTone);
   node.textContent = normalizedLabel;
   node.dataset.inboxKind = String(descriptor?.kind || "none");
   node.dataset.inboxTarget = String(descriptor?.target || "");
   node.dataset.inboxSource = String(descriptor?.source || "none");
   node.dataset.inboxDisabled = String(disabled);
+  node.dataset.inboxTone = normalizedTone;
+  node.dataset.inboxPriority = priority;
   node.setAttribute("aria-disabled", String(disabled));
   node.title = disabled ? normalizedLabel : `${normalizedLabel} · 열기`;
+  node.classList.remove("priority-critical", "priority-high", "priority-medium", "priority-low");
+  node.classList.add(`priority-${priority}`);
+  applyRiskTone(node, normalizedTone);
 }
 
 function syncOpsDigestNextAction() {
@@ -1329,6 +1366,8 @@ function syncOpsDigestInbox() {
       dom.opsDigestInboxRecent,
       resolveOpsDigestRecentActionDescriptor(),
       recentLabel,
+      String(dom.opsDigestPanel.dataset.recentActionTone || "info"),
+      String(dom.opsDigestPanel.dataset.recentActionTone || "info") === "warn" ? 700 : 200,
     );
   }
   if (dom.opsDigestInboxWarning) {
@@ -1344,6 +1383,12 @@ function syncOpsDigestInbox() {
         disabled: (Number(dom.opsDigestPanel.dataset.warningCount) || 0) === 0,
       },
       warningLabel,
+      String(dom.opsDigestPanel.dataset.warningTone || "info"),
+      Number(dom.opsDigestPanel.dataset.warningCount || 0) > 0
+        ? String(dom.opsDigestPanel.dataset.warningTone || "info") === "error"
+          ? 1200
+          : 1000
+        : 0,
     );
   }
   if (dom.opsDigestInboxPrimary) {
@@ -1356,6 +1401,12 @@ function syncOpsDigestInbox() {
         disabled: dom.opsDigestPanel.dataset.nextActionDisabled === "true",
       },
       primaryLabel,
+      resolveOpsDigestActionTone(
+        String(dom.opsDigestPanel.dataset.nextActionKind || "none"),
+        String(dom.opsDigestPanel.dataset.nextActionTarget || ""),
+        String(dom.opsDigestPanel.dataset.nextActionSource || "none"),
+      ),
+      Number(dom.opsDigestPanel.dataset.nextActionScore || 0),
     );
   }
   if (dom.opsDigestInboxSecondary) {
@@ -1368,6 +1419,12 @@ function syncOpsDigestInbox() {
         disabled: dom.opsDigestPanel.dataset.altActionDisabled === "true",
       },
       secondaryLabel,
+      resolveOpsDigestActionTone(
+        String(dom.opsDigestPanel.dataset.altActionKind || "none"),
+        String(dom.opsDigestPanel.dataset.altActionTarget || ""),
+        String(dom.opsDigestPanel.dataset.altActionSource || "none"),
+      ),
+      Number(dom.opsDigestPanel.dataset.altActionScore || 0),
     );
   }
 }
