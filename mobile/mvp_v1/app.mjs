@@ -119,6 +119,7 @@ const dom = {
   opsDigestSecondarySummary: document.getElementById("opsDigestSecondarySummary"),
   opsDigestInboxList: document.getElementById("opsDigestInboxList"),
   opsDigestInboxMeta: document.getElementById("opsDigestInboxMeta"),
+  opsDigestInboxFilterBadge: document.getElementById("opsDigestInboxFilterBadge"),
   opsDigestInboxPriorityBadge: document.getElementById("opsDigestInboxPriorityBadge"),
   opsDigestInboxActionableBadge: document.getElementById("opsDigestInboxActionableBadge"),
   opsDigestInboxRecent: document.getElementById("opsDigestInboxRecent"),
@@ -1654,6 +1655,14 @@ function syncOpsDigestInbox() {
     dom.opsDigestInboxPriorityBadge.textContent =
       dom.opsDigestPanel.dataset.inboxPriorityBadge || topPriority;
     applyRiskTone(dom.opsDigestInboxPriorityBadge, String(topTone || "info"));
+  }
+  if (dom.opsDigestInboxFilterBadge) {
+    dom.opsDigestInboxFilterBadge.textContent =
+      dom.opsDigestPanel.dataset.inboxSourceFilterLabel || "전체";
+    applyRiskTone(
+      dom.opsDigestInboxFilterBadge,
+      sourceFilter === "all" ? "info" : "success",
+    );
   }
   if (dom.opsDigestInboxActionableBadge) {
     dom.opsDigestInboxActionableBadge.textContent =
