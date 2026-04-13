@@ -784,6 +784,32 @@ const battleSceneDuelState = {
   maxCombo: 0,
   dpsMomentum: 0,
 };
+const opsDigestInboxStampState = {
+  recent: { signature: "", updatedAt: 0 },
+  warning: { signature: "", updatedAt: 0 },
+  primary: { signature: "", updatedAt: 0 },
+  secondary: { signature: "", updatedAt: 0 },
+};
+
+function formatOpsDigestInboxUpdatedLabel(updatedAtMs) {
+  const normalized = Math.max(0, Math.floor(Number(updatedAtMs) || 0));
+  if (normalized <= 0) {
+    return "대기";
+  }
+  const elapsedSec = Math.max(0, Math.floor((Date.now() - normalized) / 1000));
+  if (elapsedSec <= 3) {
+    return "방금";
+  }
+  if (elapsedSec < 60) {
+    return `${elapsedSec}초 전`;
+  }
+  const elapsedMin = Math.floor(elapsedSec / 60);
+  if (elapsedMin < 60) {
+    return `${elapsedMin}분 전`;
+  }
+  const elapsedHour = Math.floor(elapsedMin / 60);
+  return `${elapsedHour}시간 전`;
+}
 
 function syncOpsDigestRecentAction(message, isError = false, source = "system") {
   if (!dom.opsDigestPanel) {
@@ -1135,7 +1161,7 @@ function resolveOpsDigestActionTone(kind, target, source) {
   return "info";
 }
 
-function syncOpsDigestInboxEntry(node, descriptor, label, tone = "info", score = 0) {
+function syncOpsDigestInboxEntry(node, descriptor, label, tone = "info", score = 0, stateKey = "recent") {
   if (!node) {
     return;
   }
@@ -1144,6 +1170,24 @@ function syncOpsDigestInboxEntry(node, descriptor, label, tone = "info", score =
   const normalizedTone =
     tone === "error" ? "error" : tone === "warn" ? "warn" : "info";
   const priority = resolveOpsDigestInboxPriority(score, normalizedTone);
+  const signature = [
+    normalizedLabel,
+    String(descriptor?.kind || "none"),
+    String(descriptor?.target || ""),
+    String(descriptor?.source || "none"),
+    String(disabled),
+    normalizedTone,
+    priority,
+  ].join("|");
+  const stampState = opsDigestInboxStampState[stateKey] || {
+    signature: "",
+    updatedAt: 0,
+  };
+  if (stampState.signature !== signature) {
+    stampState.signature = signature;
+    stampState.updatedAt = Date.now();
+  }
+  opsDigestInboxStampState[stateKey] = stampState;
   node.textContent = normalizedLabel;
   node.dataset.inboxKind = String(descriptor?.kind || "none");
   node.dataset.inboxTarget = String(descriptor?.target || "");
@@ -1151,6 +1195,10 @@ function syncOpsDigestInboxEntry(node, descriptor, label, tone = "info", score =
   node.dataset.inboxDisabled = String(disabled);
   node.dataset.inboxTone = normalizedTone;
   node.dataset.inboxPriority = priority;
+  node.dataset.inboxUpdatedAt = String(stampState.updatedAt || 0);
+  node.dataset.inboxUpdatedLabel = formatOpsDigestInboxUpdatedLabel(
+    stampState.updatedAt,
+  );
   node.setAttribute("aria-disabled", String(disabled));
   node.title = disabled ? normalizedLabel : `${normalizedLabel} · 열기`;
   node.classList.remove("priority-critical", "priority-high", "priority-medium", "priority-low");
@@ -1418,6 +1466,7 @@ function syncOpsDigestInbox() {
       recentLabel,
       String(dom.opsDigestPanel.dataset.recentActionTone || "info"),
       String(dom.opsDigestPanel.dataset.recentActionTone || "info") === "warn" ? 700 : 200,
+      "recent",
     );
   }
   if (dom.opsDigestInboxWarning) {
@@ -1439,6 +1488,7 @@ function syncOpsDigestInbox() {
           ? 1200
           : 1000
         : 0,
+      "warning",
     );
   }
   if (dom.opsDigestInboxPrimary) {
@@ -1457,6 +1507,7 @@ function syncOpsDigestInbox() {
         String(dom.opsDigestPanel.dataset.nextActionSource || "none"),
       ),
       Number(dom.opsDigestPanel.dataset.nextActionScore || 0),
+      "primary",
     );
   }
   if (dom.opsDigestInboxSecondary) {
@@ -1475,8 +1526,17 @@ function syncOpsDigestInbox() {
         String(dom.opsDigestPanel.dataset.altActionSource || "none"),
       ),
       Number(dom.opsDigestPanel.dataset.altActionScore || 0),
+      "secondary",
     );
   }
+  const latestInboxUpdatedAt = Math.max(
+    Number(dom.opsDigestInboxRecent?.dataset.inboxUpdatedAt || 0),
+    Number(dom.opsDigestInboxWarning?.dataset.inboxUpdatedAt || 0),
+    Number(dom.opsDigestInboxPrimary?.dataset.inboxUpdatedAt || 0),
+    Number(dom.opsDigestInboxSecondary?.dataset.inboxUpdatedAt || 0),
+  );
+  dom.opsDigestPanel.dataset.inboxLastUpdatedLabel =
+    formatOpsDigestInboxUpdatedLabel(latestInboxUpdatedAt);
   if (dom.opsDigestInboxMeta) {
     dom.opsDigestInboxMeta.dataset.inboxKind = String(
       dom.opsDigestPanel.dataset.inboxMetaKind || "none",
