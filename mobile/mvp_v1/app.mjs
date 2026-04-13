@@ -1062,6 +1062,21 @@ function executeOpsDigestAction(kind, target, source, label) {
   }
 }
 
+function setOpsDigestInboxSourceFilter(source) {
+  if (!dom.opsDigestPanel) {
+    return;
+  }
+  const normalized = String(source || "all").trim() || "all";
+  const nextFilter =
+    normalized === "all" || dom.opsDigestPanel.dataset.inboxSourceFilter === normalized
+      ? "all"
+      : normalized;
+  dom.opsDigestPanel.dataset.inboxSourceFilter = nextFilter;
+  dom.opsDigestPanel.dataset.inboxSourceFilterLabel =
+    nextFilter === "all" ? "전체" : formatOpsDigestInboxSourceLabel(nextFilter);
+  syncOpsDigestInbox();
+}
+
 function resolveOpsDigestRecentActionDescriptor() {
   if (!dom.opsDigestPanel) {
     return {
@@ -1504,6 +1519,7 @@ function syncOpsDigestInbox() {
   dom.opsDigestPanel.dataset.inboxActionableCount = String(actionableEntries.length);
   dom.opsDigestPanel.dataset.inboxMetaSummary =
     `우선순위 ${topPriority} · 실행 가능 ${actionableEntries.length}건`;
+  dom.opsDigestPanel.dataset.inboxVisibleCount = String(inboxEntries.length);
   dom.opsDigestPanel.dataset.inboxPriorityBadge = topPriority;
   dom.opsDigestPanel.dataset.inboxActionableBadge =
     `실행 ${actionableEntries.length}건`;
@@ -1608,6 +1624,28 @@ function syncOpsDigestInbox() {
     dom.opsDigestInboxMeta.dataset.inboxDisabled = String(!topActionableEntry);
     dom.opsDigestInboxMeta.setAttribute("aria-disabled", String(!topActionableEntry));
   }
+  const sourceFilter = String(dom.opsDigestPanel.dataset.inboxSourceFilter || "all").trim() || "all";
+  let visibleCount = 0;
+  for (const node of inboxEntries) {
+    if (!node) {
+      continue;
+    }
+    const matches = sourceFilter === "all" || node.dataset.inboxSource === sourceFilter;
+    node.classList.toggle("filtered-out", !matches);
+    if (matches) {
+      visibleCount += 1;
+    }
+    const sourceBadge = node.querySelector(".ops-digest-inbox-source");
+    if (sourceBadge) {
+      sourceBadge.classList.toggle(
+        "filter-active",
+        sourceFilter !== "all" && node.dataset.inboxSource === sourceFilter,
+      );
+      sourceBadge.setAttribute("role", "button");
+      sourceBadge.setAttribute("tabindex", "0");
+    }
+  }
+  dom.opsDigestPanel.dataset.inboxVisibleCount = String(visibleCount);
   if (dom.opsDigestInboxPriorityBadge) {
     dom.opsDigestInboxPriorityBadge.textContent =
       dom.opsDigestPanel.dataset.inboxPriorityBadge || topPriority;
@@ -14139,6 +14177,23 @@ function bindEvents() {
         node.dataset.inboxSource,
         node.textContent || "운용 인박스 항목",
       );
+    });
+  }
+  const inboxSourceBadges = document.querySelectorAll(".ops-digest-inbox-source");
+  for (const badge of inboxSourceBadges) {
+    badge.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const item = badge.closest(".ops-digest-inbox-item");
+      setOpsDigestInboxSourceFilter(item?.dataset.inboxSource || "all");
+    });
+    badge.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") {
+        return;
+      }
+      event.preventDefault();
+      event.stopPropagation();
+      const item = badge.closest(".ops-digest-inbox-item");
+      setOpsDigestInboxSourceFilter(item?.dataset.inboxSource || "all");
     });
   }
   dom.opsDigestInboxMeta?.addEventListener("click", () => {

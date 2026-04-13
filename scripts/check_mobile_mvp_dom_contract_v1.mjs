@@ -1911,6 +1911,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-inbox-source-filter="all"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-inbox-meta-kind="button"',
     "index.html",
     failures,
@@ -9198,6 +9204,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function setOpsDigestInboxSourceFilter(source) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function resolveOpsDigestActionTone(kind, target, source) {",
     "app.mjs",
     failures,
@@ -9265,6 +9277,12 @@ async function main() {
   assertIncludes(
     app,
     'node.dataset.inboxUpdatedLabel = formatOpsDigestInboxUpdatedLabel(',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'const inboxSourceBadges = document.querySelectorAll(".ops-digest-inbox-source");',
     "app.mjs",
     failures,
   );

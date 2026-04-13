@@ -265,6 +265,10 @@ h2 {
   border-left-color: #49665e;
 }
 
+.ops-digest-inbox-item.filtered-out {
+  opacity: 0.35;
+}
+
 .ops-digest-inbox-source {
   display: inline-flex;
   align-items: center;
@@ -309,6 +313,14 @@ h2 {
   border-color: #b14b45;
   background: rgba(61, 22, 22, 0.94);
   color: #ffd0cc;
+}
+
+.ops-digest-inbox-source {
+  cursor: pointer;
+}
+
+.ops-digest-inbox-source.filter-active {
+  box-shadow: 0 0 0 1px rgba(243, 189, 77, 0.65);
 }
 
 .ops-digest-status {
