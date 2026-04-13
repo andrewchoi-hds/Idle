@@ -201,6 +201,30 @@ h2 {
   white-space: nowrap;
 }
 
+.ops-digest-badge.tone-info {
+  border-color: #4d6f67;
+  background: rgba(20, 44, 39, 0.92);
+  color: #d6efe8;
+}
+
+.ops-digest-badge.tone-success {
+  border-color: #2e8f68;
+  background: rgba(18, 61, 46, 0.92);
+  color: #b7f5d8;
+}
+
+.ops-digest-badge.tone-warn {
+  border-color: #c08d34;
+  background: rgba(59, 42, 12, 0.94);
+  color: #ffe0a1;
+}
+
+.ops-digest-badge.tone-error {
+  border-color: #b14b45;
+  background: rgba(61, 22, 22, 0.94);
+  color: #ffd0cc;
+}
+
 .ops-digest-inbox-list {
   margin: 0;
   padding-left: 18px;
