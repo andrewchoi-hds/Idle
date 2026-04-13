@@ -1839,6 +1839,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestInboxFilterBadge"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="opsDigestInboxPriorityBadge"',
     "index.html",
     failures,
@@ -9163,6 +9169,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.opsDigestPanel.dataset.inboxMetaSummary =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestInboxFilterBadge.textContent =",
     "app.mjs",
     failures,
   );
