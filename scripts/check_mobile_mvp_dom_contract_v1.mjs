@@ -1847,6 +1847,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-next-action-score="650"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-next-action-reason="자동 진행이 멈춰 있어 누적 진행이 쌓이지 않습니다."',
     "index.html",
     failures,
@@ -1854,6 +1860,12 @@ async function main() {
   assertIncludes(
     html,
     'data-alt-action-label="전투 1회"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-alt-action-score="320"',
     "index.html",
     failures,
   );
@@ -9026,6 +9038,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "const pushActionCandidate = (candidate) => {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    ".sort((left, right) => {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function executeOpsDigestNextAction() {",
     "app.mjs",
     failures,
@@ -9044,7 +9068,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.opsDigestPanel.dataset.nextActionScore = String(action.score || 0);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.altActionReason = altAction.reason;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.altActionScore = String(altAction.score || 0);",
     "app.mjs",
     failures,
   );
