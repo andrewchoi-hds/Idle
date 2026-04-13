@@ -76,10 +76,26 @@
             </div>
           </div>
           <ul id="opsDigestInboxList" class="ops-digest-inbox-list">
-            <li id="opsDigestInboxRecent" class="ops-digest-inbox-item tone-info priority-low" tabindex="0" role="button" data-inbox-kind="none" data-inbox-target="" data-inbox-source="system" data-inbox-disabled="true" data-inbox-tone="info" data-inbox-priority="low">최근 조작 대기 중</li>
-            <li id="opsDigestInboxWarning" class="ops-digest-inbox-item tone-info priority-low" tabindex="0" role="button" data-inbox-kind="none" data-inbox-target="" data-inbox-source="none" data-inbox-disabled="true" data-inbox-tone="info" data-inbox-priority="low">주의 상태 없음</li>
-            <li id="opsDigestInboxPrimary" class="ops-digest-inbox-item tone-info priority-medium" tabindex="0" role="button" data-inbox-kind="button" data-inbox-target="btnRealtimeAuto" data-inbox-source="btnRealtimeAuto" data-inbox-disabled="false" data-inbox-tone="info" data-inbox-priority="medium">자동 진행 정지 · 실시간 자동 시작</li>
-            <li id="opsDigestInboxSecondary" class="ops-digest-inbox-item tone-info priority-low" tabindex="0" role="button" data-inbox-kind="button" data-inbox-target="btnBattle" data-inbox-source="btnBattle" data-inbox-disabled="false" data-inbox-tone="info" data-inbox-priority="low">즉시 진행 가능 · 전투 1회</li>
+            <li id="opsDigestInboxRecent" class="ops-digest-inbox-item tone-info priority-low" tabindex="0" role="button" data-inbox-kind="none" data-inbox-target="" data-inbox-source="system" data-inbox-source-label="시스템" data-inbox-disabled="true" data-inbox-tone="info" data-inbox-priority="low">
+              <span class="ops-digest-inbox-source">시스템</span>
+              <span class="ops-digest-inbox-text">최근 조작 대기 중</span>
+              <span class="ops-digest-inbox-time">대기</span>
+            </li>
+            <li id="opsDigestInboxWarning" class="ops-digest-inbox-item tone-info priority-low" tabindex="0" role="button" data-inbox-kind="none" data-inbox-target="" data-inbox-source="none" data-inbox-source-label="없음" data-inbox-disabled="true" data-inbox-tone="info" data-inbox-priority="low">
+              <span class="ops-digest-inbox-source">없음</span>
+              <span class="ops-digest-inbox-text">주의 상태 없음</span>
+              <span class="ops-digest-inbox-time">대기</span>
+            </li>
+            <li id="opsDigestInboxPrimary" class="ops-digest-inbox-item tone-info priority-medium" tabindex="0" role="button" data-inbox-kind="button" data-inbox-target="btnRealtimeAuto" data-inbox-source="btnRealtimeAuto" data-inbox-source-label="자동" data-inbox-disabled="false" data-inbox-tone="info" data-inbox-priority="medium">
+              <span class="ops-digest-inbox-source">자동</span>
+              <span class="ops-digest-inbox-text">자동 진행 정지 · 실시간 자동 시작</span>
+              <span class="ops-digest-inbox-time">대기</span>
+            </li>
+            <li id="opsDigestInboxSecondary" class="ops-digest-inbox-item tone-info priority-low" tabindex="0" role="button" data-inbox-kind="button" data-inbox-target="btnBattle" data-inbox-source="btnBattle" data-inbox-source-label="전투" data-inbox-disabled="false" data-inbox-tone="info" data-inbox-priority="low">
+              <span class="ops-digest-inbox-source">전투</span>
+              <span class="ops-digest-inbox-text">즉시 진행 가능 · 전투 1회</span>
+              <span class="ops-digest-inbox-time">대기</span>
+            </li>
           </ul>
         </div>
         <div class="ops-digest-grid">

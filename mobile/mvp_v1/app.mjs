@@ -1161,6 +1161,50 @@ function resolveOpsDigestActionTone(kind, target, source) {
   return "info";
 }
 
+function formatOpsDigestInboxSourceLabel(source) {
+  const normalizedSource = String(source || "none").trim();
+  switch (normalizedSource) {
+    case "system":
+      return "시스템";
+    case "ops_warning":
+      return "경고";
+    case "btnRealtimeAuto":
+      return "자동";
+    case "btnApplyRecommendation":
+      return "권장";
+    case "btnBreakthrough":
+      return "돌파";
+    case "btnBattle":
+      return "전투";
+    case "btnSaveLocal":
+      return "저장";
+    case "btnLoadLocal":
+      return "불러오기";
+    case "btnResetRun":
+      return "초기화";
+    case "offlineModal":
+      return "오프라인";
+    case "ops_focus":
+      return "집중";
+    case "ops_settings":
+      return "설정";
+    case "ops_stage":
+      return "진행";
+    case "ops_battle":
+      return "전장";
+    case "ops_resources":
+      return "자원";
+    case "ops_actions":
+      return "자동";
+    case "ops_breakthrough":
+      return "돌파";
+    case "ops_save":
+      return "저장";
+    default:
+      return "없음";
+  }
+}
+
 function syncOpsDigestInboxEntry(node, descriptor, label, tone = "info", score = 0, stateKey = "recent") {
   if (!node) {
     return;
@@ -1188,10 +1232,12 @@ function syncOpsDigestInboxEntry(node, descriptor, label, tone = "info", score =
     stampState.updatedAt = Date.now();
   }
   opsDigestInboxStampState[stateKey] = stampState;
-  node.textContent = normalizedLabel;
   node.dataset.inboxKind = String(descriptor?.kind || "none");
   node.dataset.inboxTarget = String(descriptor?.target || "");
   node.dataset.inboxSource = String(descriptor?.source || "none");
+  node.dataset.inboxSourceLabel = formatOpsDigestInboxSourceLabel(
+    descriptor?.source || "none",
+  );
   node.dataset.inboxDisabled = String(disabled);
   node.dataset.inboxTone = normalizedTone;
   node.dataset.inboxPriority = priority;
@@ -1204,6 +1250,18 @@ function syncOpsDigestInboxEntry(node, descriptor, label, tone = "info", score =
   node.classList.remove("priority-critical", "priority-high", "priority-medium", "priority-low");
   node.classList.add(`priority-${priority}`);
   applyRiskTone(node, normalizedTone);
+  const sourceBadge = node.querySelector(".ops-digest-inbox-source");
+  if (sourceBadge) {
+    sourceBadge.textContent = node.dataset.inboxSourceLabel;
+  }
+  const textNode = node.querySelector(".ops-digest-inbox-text");
+  if (textNode) {
+    textNode.textContent = normalizedLabel;
+  }
+  const timeNode = node.querySelector(".ops-digest-inbox-time");
+  if (timeNode) {
+    timeNode.textContent = node.dataset.inboxUpdatedLabel;
+  }
 }
 
 function syncOpsDigestNextAction() {
