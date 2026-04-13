@@ -1247,6 +1247,22 @@ function prioritizeOpsDigestActionQueue(candidates, sourceFilter) {
   return [...matchingCandidates, ...fallbackCandidates];
 }
 
+function resolveOpsDigestActionFilterScoreDelta(action, sourceFilter) {
+  const normalizedFilter = String(sourceFilter || "all").trim() || "all";
+  if (
+    normalizedFilter === "all" ||
+    !action ||
+    action.disabled === true ||
+    String(action.kind || "none") === "none"
+  ) {
+    return 0;
+  }
+  if (matchesOpsDigestActionSourceFilter(action, normalizedFilter)) {
+    return String(action.source || "none") === "ops_warning" ? 260 : 180;
+  }
+  return String(action.source || "none") === "ops_warning" ? -90 : -45;
+}
+
 function formatOpsDigestActionQueueReason(reason, sourceFilter, action) {
   const normalizedReason =
     String(reason || "").trim() || "후속 행동 후보를 기다립니다.";
@@ -1459,7 +1475,27 @@ function syncOpsDigestNextAction() {
   const queueCandidates = prioritizeOpsDigestActionQueue(
     orderedCandidates,
     sourceFilter,
-  );
+  )
+    .map((candidate, filterOrder) => {
+      const baseScore = Number(candidate.score || 0);
+      const filterScoreDelta = resolveOpsDigestActionFilterScoreDelta(
+        candidate,
+        sourceFilter,
+      );
+      return {
+        ...candidate,
+        baseScore,
+        filterScoreDelta,
+        score: baseScore + filterScoreDelta,
+        filterOrder,
+      };
+    })
+    .sort((left, right) => {
+      if ((right.score || 0) !== (left.score || 0)) {
+        return (right.score || 0) - (left.score || 0);
+      }
+      return (left.filterOrder || 0) - (right.filterOrder || 0);
+    });
   const action = queueCandidates[0] || {
     label: "후속 행동 대기",
     disabled: true,
@@ -1468,6 +1504,8 @@ function syncOpsDigestNextAction() {
     source: "none",
     summary: "즉시 추천할 행동이 없습니다.",
     reason: "현재 우선 행동 후보가 정리되면 여기에 표시됩니다.",
+    baseScore: 0,
+    filterScoreDelta: 0,
     score: 0,
   };
   const altAction = queueCandidates[1] || {
@@ -1478,6 +1516,8 @@ function syncOpsDigestNextAction() {
     source: "none",
     summary: "차선 행동 후보가 없습니다.",
     reason: "현재는 첫 번째 추천 행동 처리 후 다음 후보가 정리됩니다.",
+    baseScore: 0,
+    filterScoreDelta: 0,
     score: 0,
   };
   const nextActionFilterMatch = matchesOpsDigestActionSourceFilter(action, sourceFilter);
@@ -1504,6 +1544,10 @@ function syncOpsDigestNextAction() {
   dom.opsDigestPanel.dataset.nextActionSource = action.source;
   dom.opsDigestPanel.dataset.nextActionSummary = action.summary;
   dom.opsDigestPanel.dataset.nextActionReason = nextActionReason;
+  dom.opsDigestPanel.dataset.nextActionBaseScore = String(action.baseScore || 0);
+  dom.opsDigestPanel.dataset.nextActionFilterScoreDelta = String(
+    action.filterScoreDelta || 0,
+  );
   dom.opsDigestPanel.dataset.nextActionScore = String(action.score || 0);
   dom.opsDigestPanel.dataset.nextActionFilterMatch = String(nextActionFilterMatch);
   dom.opsDigestPanel.dataset.altActionLabel = altAction.label;
@@ -1513,6 +1557,10 @@ function syncOpsDigestNextAction() {
   dom.opsDigestPanel.dataset.altActionSource = altAction.source;
   dom.opsDigestPanel.dataset.altActionSummary = altAction.summary;
   dom.opsDigestPanel.dataset.altActionReason = altActionReason;
+  dom.opsDigestPanel.dataset.altActionBaseScore = String(altAction.baseScore || 0);
+  dom.opsDigestPanel.dataset.altActionFilterScoreDelta = String(
+    altAction.filterScoreDelta || 0,
+  );
   dom.opsDigestPanel.dataset.altActionScore = String(altAction.score || 0);
   dom.opsDigestPanel.dataset.altActionFilterMatch = String(altActionFilterMatch);
   if (dom.btnOpsDigestNextAction) {
