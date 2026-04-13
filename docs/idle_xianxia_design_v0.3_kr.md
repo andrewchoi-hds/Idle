@@ -4139,3 +4139,11 @@
 
 ## 963) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ops digest inbox triage meta 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 964) 다음 순차 작업
+1. [완료] 운용 인박스 source badge를 필터처럼 쓸 수 있게 만들어 같은 출처(`자동/전투/저장/경고` 등) 항목만 빠르게 강조할 수 있도록 보강.
+2. [완료] `setOpsDigestInboxSourceFilter()`와 source badge 이벤트를 추가하고, `syncOpsDigestInbox()`가 현재 필터 기준으로 visible count와 active badge 강조를 같이 반영하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ops digest source filter consumer 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 965) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ops digest source filter consumer 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
