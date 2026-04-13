@@ -35,6 +35,11 @@ const REQUIRED_HTML_IDS = [
   "opsDigestWarnings",
   "opsDigestQuickSummary",
   "opsDigestSecondarySummary",
+  "opsDigestInboxList",
+  "opsDigestInboxRecent",
+  "opsDigestInboxWarning",
+  "opsDigestInboxPrimary",
+  "opsDigestInboxSecondary",
   "btnOpsDigestFocus",
   "btnOpsDigestRealtime",
   "btnOpsDigestRecommendation",
@@ -209,6 +214,11 @@ const REQUIRED_DOM_KEYS = [
   "opsDigestWarnings",
   "opsDigestQuickSummary",
   "opsDigestSecondarySummary",
+  "opsDigestInboxList",
+  "opsDigestInboxRecent",
+  "opsDigestInboxWarning",
+  "opsDigestInboxPrimary",
+  "opsDigestInboxSecondary",
   "btnOpsDigestFocus",
   "btnOpsDigestRealtime",
   "btnOpsDigestRecommendation",
@@ -1811,6 +1821,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestInboxList"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-quick-action-summary="전투 집중 ON · 실시간 자동 시작 · 권장 설정 적용(대기) · 로컬 저장"',
     "index.html",
     failures,
@@ -1842,6 +1858,12 @@ async function main() {
   assertIncludes(
     html,
     'data-next-action-label="실시간 자동 시작"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-inbox-summary="최근 조작 대기 중 · 주의 상태 없음 · 자동 진행 정지 · 실시간 자동 시작 · 즉시 진행 가능 · 전투 1회"',
     "index.html",
     failures,
   );
@@ -9062,6 +9084,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function syncOpsDigestInbox() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.nextActionReason = action.reason;",
     "app.mjs",
     failures,
@@ -9081,6 +9109,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestPanel.dataset.altActionScore = String(altAction.score || 0);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.inboxSummary =",
     "app.mjs",
     failures,
   );

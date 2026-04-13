@@ -4123,3 +4123,11 @@
 
 ## 959) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ops digest action queue consumer 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 960) 다음 순차 작업
+1. [완료] 운용 다이제스트에 작은 운영 인박스(`opsDigestInboxList`)를 추가해, 최근 조작/경고/1순위 행동/2순위 행동을 한 곳에서 연속으로 읽을 수 있도록 보강.
+2. [완료] `syncOpsDigestInbox()`를 추가하고 `syncOpsDigestPanel()` 마지막에 연결해, 최근 조작/주의 상태/행동 queue가 바뀔 때 인박스도 함께 갱신되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ops digest inbox consumer 규칙 기준으로 동기화하고, `npm run typecheck`, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 961) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ops digest inbox consumer 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
