@@ -1887,7 +1887,25 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-action-queue-scope="all"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-action-queue-scope-label="전체 기준"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-next-action-label="실시간 자동 시작"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-next-action-filter-match="true"',
     "index.html",
     failures,
   );
@@ -1960,6 +1978,12 @@ async function main() {
   assertIncludes(
     html,
     'data-alt-action-label="전투 1회"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-alt-action-filter-match="true"',
     "index.html",
     failures,
   );
@@ -9240,13 +9264,43 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function matchesOpsDigestActionSourceFilter(action, sourceFilter) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function prioritizeOpsDigestActionQueue(candidates, sourceFilter) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function formatOpsDigestActionQueueReason(reason, sourceFilter, action) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncOpsDigestNextAction();",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function executeOpsDigestAction(kind, target, source, label) {",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.nextActionReason = action.reason;",
+    "dom.opsDigestPanel.dataset.actionQueueScope = sourceFilter;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.nextActionReason = nextActionReason;",
     "app.mjs",
     failures,
   );
@@ -9258,13 +9312,25 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.altActionReason = altAction.reason;",
+    "dom.opsDigestPanel.dataset.nextActionFilterMatch = String(nextActionFilterMatch);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.altActionReason = altActionReason;",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
     "dom.opsDigestPanel.dataset.altActionScore = String(altAction.score || 0);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.altActionFilterMatch = String(altActionFilterMatch);",
     "app.mjs",
     failures,
   );

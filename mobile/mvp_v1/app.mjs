@@ -1075,6 +1075,7 @@ function setOpsDigestInboxSourceFilter(source) {
   dom.opsDigestPanel.dataset.inboxSourceFilter = nextFilter;
   dom.opsDigestPanel.dataset.inboxSourceFilterLabel =
     nextFilter === "all" ? "전체" : formatOpsDigestInboxSourceLabel(nextFilter);
+  syncOpsDigestNextAction();
   syncOpsDigestInbox();
 }
 
@@ -1221,6 +1222,49 @@ function formatOpsDigestInboxSourceLabel(source) {
   }
 }
 
+function matchesOpsDigestActionSourceFilter(action, sourceFilter) {
+  const normalizedFilter = String(sourceFilter || "all").trim() || "all";
+  if (normalizedFilter === "all") {
+    return true;
+  }
+  return String(action?.source || "none").trim() === normalizedFilter;
+}
+
+function prioritizeOpsDigestActionQueue(candidates, sourceFilter) {
+  const normalizedFilter = String(sourceFilter || "all").trim() || "all";
+  if (normalizedFilter === "all") {
+    return candidates;
+  }
+  const matchingCandidates = [];
+  const fallbackCandidates = [];
+  for (const candidate of candidates) {
+    if (matchesOpsDigestActionSourceFilter(candidate, normalizedFilter)) {
+      matchingCandidates.push(candidate);
+      continue;
+    }
+    fallbackCandidates.push(candidate);
+  }
+  return [...matchingCandidates, ...fallbackCandidates];
+}
+
+function formatOpsDigestActionQueueReason(reason, sourceFilter, action) {
+  const normalizedReason =
+    String(reason || "").trim() || "후속 행동 후보를 기다립니다.";
+  const normalizedFilter = String(sourceFilter || "all").trim() || "all";
+  if (
+    normalizedFilter === "all" ||
+    !action ||
+    action.disabled === true ||
+    String(action.kind || "none") === "none"
+  ) {
+    return normalizedReason;
+  }
+  const sourceLabel = formatOpsDigestInboxSourceLabel(normalizedFilter);
+  return matchesOpsDigestActionSourceFilter(action, normalizedFilter)
+    ? `${sourceLabel} 출처 우선 · ${normalizedReason}`
+    : `${sourceLabel} 후보 부족 · ${normalizedReason}`;
+}
+
 function syncOpsDigestInboxEntry(node, descriptor, label, tone = "info", score = 0, stateKey = "recent") {
   if (!node) {
     return;
@@ -1284,6 +1328,8 @@ function syncOpsDigestNextAction() {
   if (!dom.opsDigestPanel) {
     return;
   }
+  const sourceFilter =
+    String(dom.opsDigestPanel.dataset.inboxSourceFilter || "all").trim() || "all";
   const candidates = [];
   let candidateOrder = 0;
   const pushActionCandidate = (candidate) => {
@@ -1410,7 +1456,11 @@ function syncOpsDigestNextAction() {
     seen.add(key);
     return true;
     });
-  const action = orderedCandidates[0] || {
+  const queueCandidates = prioritizeOpsDigestActionQueue(
+    orderedCandidates,
+    sourceFilter,
+  );
+  const action = queueCandidates[0] || {
     label: "후속 행동 대기",
     disabled: true,
     kind: "none",
@@ -1420,7 +1470,7 @@ function syncOpsDigestNextAction() {
     reason: "현재 우선 행동 후보가 정리되면 여기에 표시됩니다.",
     score: 0,
   };
-  const altAction = orderedCandidates[1] || {
+  const altAction = queueCandidates[1] || {
     label: "후속 행동 대기",
     disabled: true,
     kind: "none",
@@ -1430,22 +1480,41 @@ function syncOpsDigestNextAction() {
     reason: "현재는 첫 번째 추천 행동 처리 후 다음 후보가 정리됩니다.",
     score: 0,
   };
+  const nextActionFilterMatch = matchesOpsDigestActionSourceFilter(action, sourceFilter);
+  const altActionFilterMatch = matchesOpsDigestActionSourceFilter(altAction, sourceFilter);
+  const nextActionReason = formatOpsDigestActionQueueReason(
+    action.reason,
+    sourceFilter,
+    action,
+  );
+  const altActionReason = formatOpsDigestActionQueueReason(
+    altAction.reason,
+    sourceFilter,
+    altAction,
+  );
+  dom.opsDigestPanel.dataset.actionQueueScope = sourceFilter;
+  dom.opsDigestPanel.dataset.actionQueueScopeLabel =
+    sourceFilter === "all"
+      ? "전체 기준"
+      : `${formatOpsDigestInboxSourceLabel(sourceFilter)} 우선`;
   dom.opsDigestPanel.dataset.nextActionLabel = action.label;
   dom.opsDigestPanel.dataset.nextActionDisabled = String(action.disabled);
   dom.opsDigestPanel.dataset.nextActionKind = action.kind;
   dom.opsDigestPanel.dataset.nextActionTarget = action.target;
   dom.opsDigestPanel.dataset.nextActionSource = action.source;
   dom.opsDigestPanel.dataset.nextActionSummary = action.summary;
-  dom.opsDigestPanel.dataset.nextActionReason = action.reason;
+  dom.opsDigestPanel.dataset.nextActionReason = nextActionReason;
   dom.opsDigestPanel.dataset.nextActionScore = String(action.score || 0);
+  dom.opsDigestPanel.dataset.nextActionFilterMatch = String(nextActionFilterMatch);
   dom.opsDigestPanel.dataset.altActionLabel = altAction.label;
   dom.opsDigestPanel.dataset.altActionDisabled = String(altAction.disabled);
   dom.opsDigestPanel.dataset.altActionKind = altAction.kind;
   dom.opsDigestPanel.dataset.altActionTarget = altAction.target;
   dom.opsDigestPanel.dataset.altActionSource = altAction.source;
   dom.opsDigestPanel.dataset.altActionSummary = altAction.summary;
-  dom.opsDigestPanel.dataset.altActionReason = altAction.reason;
+  dom.opsDigestPanel.dataset.altActionReason = altActionReason;
   dom.opsDigestPanel.dataset.altActionScore = String(altAction.score || 0);
+  dom.opsDigestPanel.dataset.altActionFilterMatch = String(altActionFilterMatch);
   if (dom.btnOpsDigestNextAction) {
     dom.btnOpsDigestNextAction.textContent = action.label;
     dom.btnOpsDigestNextAction.disabled = action.disabled;
@@ -1454,7 +1523,7 @@ function syncOpsDigestNextAction() {
     dom.opsDigestNextAction.textContent = action.summary;
   }
   if (dom.opsDigestNextReason) {
-    dom.opsDigestNextReason.textContent = action.reason;
+    dom.opsDigestNextReason.textContent = nextActionReason;
   }
   if (dom.opsDigestInboxPrimary) {
     dom.opsDigestInboxPrimary.textContent = action.summary;
@@ -1467,7 +1536,7 @@ function syncOpsDigestNextAction() {
     dom.opsDigestAltAction.textContent = altAction.summary;
   }
   if (dom.opsDigestAltReason) {
-    dom.opsDigestAltReason.textContent = altAction.reason;
+    dom.opsDigestAltReason.textContent = altActionReason;
   }
   if (dom.opsDigestInboxSecondary) {
     dom.opsDigestInboxSecondary.textContent = altAction.summary;
