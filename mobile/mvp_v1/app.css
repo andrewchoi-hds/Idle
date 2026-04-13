@@ -180,6 +180,12 @@ h2 {
 .ops-digest-inbox-meta {
   margin: 0;
   white-space: nowrap;
+  cursor: pointer;
+}
+
+.ops-digest-inbox-meta[data-inbox-disabled="true"] {
+  cursor: default;
+  opacity: 0.7;
 }
 
 .ops-digest-inbox-list {

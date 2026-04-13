@@ -1883,6 +1883,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-inbox-meta-kind="button"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-inbox-kind="none"',
     "index.html",
     failures,
@@ -9117,6 +9123,18 @@ async function main() {
   assertIncludes(
     app,
     'dom.opsDigestPanel.dataset.inboxMetaSummary =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestPanel.dataset.inboxMetaKind = String(',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestInboxMeta?.addEventListener("click", () => {',
     "app.mjs",
     failures,
   );

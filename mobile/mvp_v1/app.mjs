@@ -1383,6 +1383,12 @@ function syncOpsDigestInbox() {
   const topTone =
     inboxEntries.find((node) => String(node?.dataset.inboxPriority || "") === topPriority)
       ?.dataset.inboxTone || "info";
+  const topActionableEntry = inboxEntries.find(
+    (node) =>
+      node &&
+      node.dataset.inboxDisabled !== "true" &&
+      String(node.dataset.inboxPriority || "low") === topPriority,
+  );
   dom.opsDigestPanel.dataset.inboxSummary =
     `${recentLabel} · ${warningLabel} · ${primaryLabel} · ${secondaryLabel}`;
   dom.opsDigestPanel.dataset.inboxTopPriority = topPriority;
@@ -1390,6 +1396,16 @@ function syncOpsDigestInbox() {
   dom.opsDigestPanel.dataset.inboxActionableCount = String(actionableEntries.length);
   dom.opsDigestPanel.dataset.inboxMetaSummary =
     `우선순위 ${topPriority} · 실행 가능 ${actionableEntries.length}건`;
+  dom.opsDigestPanel.dataset.inboxMetaKind = String(
+    topActionableEntry?.dataset.inboxKind || "none",
+  );
+  dom.opsDigestPanel.dataset.inboxMetaTarget = String(
+    topActionableEntry?.dataset.inboxTarget || "",
+  );
+  dom.opsDigestPanel.dataset.inboxMetaSource = String(
+    topActionableEntry?.dataset.inboxSource || "none",
+  );
+  dom.opsDigestPanel.dataset.inboxMetaDisabled = String(!topActionableEntry);
   if (dom.opsDigestInboxRecent) {
     syncOpsDigestInboxEntry(
       dom.opsDigestInboxRecent,
@@ -1460,6 +1476,17 @@ function syncOpsDigestInbox() {
     dom.opsDigestInboxMeta.textContent =
       dom.opsDigestPanel.dataset.inboxMetaSummary ||
       `우선순위 ${topPriority} · 실행 가능 ${actionableEntries.length}건`;
+    dom.opsDigestInboxMeta.dataset.inboxKind = String(
+      dom.opsDigestPanel.dataset.inboxMetaKind || "none",
+    );
+    dom.opsDigestInboxMeta.dataset.inboxTarget = String(
+      dom.opsDigestPanel.dataset.inboxMetaTarget || "",
+    );
+    dom.opsDigestInboxMeta.dataset.inboxSource = String(
+      dom.opsDigestPanel.dataset.inboxMetaSource || "none",
+    );
+    dom.opsDigestInboxMeta.dataset.inboxDisabled = String(!topActionableEntry);
+    dom.opsDigestInboxMeta.setAttribute("aria-disabled", String(!topActionableEntry));
     applyRiskTone(dom.opsDigestInboxMeta, String(topTone || "info"));
   }
 }
@@ -13981,6 +14008,32 @@ function bindEvents() {
       );
     });
   }
+  dom.opsDigestInboxMeta?.addEventListener("click", () => {
+    if (dom.opsDigestInboxMeta.dataset.inboxDisabled === "true") {
+      return;
+    }
+    executeOpsDigestAction(
+      dom.opsDigestInboxMeta.dataset.inboxKind,
+      dom.opsDigestInboxMeta.dataset.inboxTarget,
+      dom.opsDigestInboxMeta.dataset.inboxSource,
+      dom.opsDigestInboxMeta.textContent || "운용 인박스 메타",
+    );
+  });
+  dom.opsDigestInboxMeta?.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+    event.preventDefault();
+    if (dom.opsDigestInboxMeta.dataset.inboxDisabled === "true") {
+      return;
+    }
+    executeOpsDigestAction(
+      dom.opsDigestInboxMeta.dataset.inboxKind,
+      dom.opsDigestInboxMeta.dataset.inboxTarget,
+      dom.opsDigestInboxMeta.dataset.inboxSource,
+      dom.opsDigestInboxMeta.textContent || "운용 인박스 메타",
+    );
+  });
   dom.btnOpsDigestNextAction?.addEventListener("click", () => {
     executeOpsDigestNextAction();
   });
