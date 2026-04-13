@@ -111,6 +111,9 @@ const dom = {
   btnOpsDigestNextAction: document.getElementById("btnOpsDigestNextAction"),
   opsDigestNextAction: document.getElementById("opsDigestNextAction"),
   opsDigestNextReason: document.getElementById("opsDigestNextReason"),
+  btnOpsDigestAltAction: document.getElementById("btnOpsDigestAltAction"),
+  opsDigestAltAction: document.getElementById("opsDigestAltAction"),
+  opsDigestAltReason: document.getElementById("opsDigestAltReason"),
   opsDigestWarnings: document.getElementById("opsDigestWarnings"),
   opsDigestQuickSummary: document.getElementById("opsDigestQuickSummary"),
   opsDigestSecondarySummary: document.getElementById("opsDigestSecondarySummary"),
@@ -1000,7 +1003,8 @@ function syncOpsDigestNextAction() {
   if (!dom.opsDigestPanel) {
     return;
   }
-  let action = {
+  const candidates = [];
+  candidates.push({
     label: "실시간 자동 시작",
     disabled: dom.btnRealtimeAuto?.disabled === true,
     kind: "button",
@@ -1008,7 +1012,7 @@ function syncOpsDigestNextAction() {
     source: "btnRealtimeAuto",
     summary: "자동 진행 정지 · 실시간 자동 시작",
     reason: "자동 진행이 멈춰 있어 누적 진행이 쌓이지 않습니다.",
-  };
+  });
   const warningTarget = String(dom.opsDigestPanel.dataset.warningTarget || "none").trim();
   const warningSummary = String(dom.opsDigestPanel.dataset.warningSummary || "").trim();
   const warningActionLabel = String(
@@ -1020,7 +1024,7 @@ function syncOpsDigestNextAction() {
     warningTarget &&
     warningTarget !== "none"
   ) {
-    action = {
+    candidates.unshift({
       label: warningActionLabel || "관련 패널 확인",
       disabled: false,
       kind: "panel",
@@ -1028,9 +1032,10 @@ function syncOpsDigestNextAction() {
       source: warningSource || "ops_warning",
       summary: `${warningSummary || "주의 상태 확인"} · ${warningActionLabel || "관련 패널 확인"}`,
       reason: "먼저 경고 원인을 확인하는 편이 이후 조작보다 우선입니다.",
-    };
-  } else if (dom.btnApplyRecommendation && dom.btnApplyRecommendation.disabled !== true) {
-    action = {
+    });
+  }
+  if (dom.btnApplyRecommendation && dom.btnApplyRecommendation.disabled !== true) {
+    candidates.unshift({
       label: dom.btnApplyRecommendation.textContent?.trim() || "권장 설정 적용",
       disabled: false,
       kind: "button",
@@ -1040,12 +1045,13 @@ function syncOpsDigestNextAction() {
         dom.btnApplyRecommendation.dataset.overviewSummary ||
         "권장 설정 적용 · 변경 가능",
       reason: "현재 확률/재고 조합보다 더 안전하거나 효율적인 설정을 바로 반영할 수 있습니다.",
-    };
-  } else if (
+    });
+  }
+  if (
     dom.stagePanel?.dataset.breakthroughReady === "true" &&
     dom.btnBreakthrough?.disabled !== true
   ) {
-    action = {
+    candidates.push({
       label: dom.btnBreakthrough.textContent?.trim() || "돌파 시도",
       disabled: false,
       kind: "button",
@@ -1053,12 +1059,13 @@ function syncOpsDigestNextAction() {
       source: "btnBreakthrough",
       summary: "돌파 준비 완료 · 돌파 시도",
       reason: "필요 기가 이미 충족되어 바로 돌파 판정을 시도할 수 있습니다.",
-    };
-  } else if (
+    });
+  }
+  if (
     dom.actionsPanel?.dataset.realtimeRunning !== "true" &&
     dom.btnRealtimeAuto?.disabled !== true
   ) {
-    action = {
+    candidates.push({
       label: dom.btnRealtimeAuto.textContent?.trim() || "실시간 자동 시작",
       disabled: false,
       kind: "button",
@@ -1066,9 +1073,10 @@ function syncOpsDigestNextAction() {
       source: "btnRealtimeAuto",
       summary: "자동 진행 정지 · 실시간 자동 시작",
       reason: "자동 진행이 멈춰 있어 누적 진행이 쌓이지 않습니다.",
-    };
-  } else if (dom.btnOpsDigestOffline?.disabled !== true) {
-    action = {
+    });
+  }
+  if (dom.btnOpsDigestOffline?.disabled !== true) {
+    candidates.push({
       label: dom.btnOpsDigestOffline.textContent?.trim() || "오프라인 정산 보기",
       disabled: false,
       kind: "helper",
@@ -1078,9 +1086,10 @@ function syncOpsDigestNextAction() {
         dom.btnOpsDigestOffline.dataset.overviewSummary ||
         "최근 오프라인 정산 확인 · 오프라인 정산 보기",
       reason: "최근 복귀 정산 결과를 확인하면 자원 변화와 비교 상태를 바로 점검할 수 있습니다.",
-    };
-  } else if (dom.btnBattle?.disabled !== true) {
-    action = {
+    });
+  }
+  if (dom.btnBattle?.disabled !== true) {
+    candidates.push({
       label: dom.btnBattle.textContent?.trim() || "전투 1회",
       disabled: false,
       kind: "button",
@@ -1088,8 +1097,35 @@ function syncOpsDigestNextAction() {
       source: "btnBattle",
       summary: "즉시 진행 가능 · 전투 1회",
       reason: "현재 바로 실행 가능한 핵심 진행 액션이 전투 1회입니다.",
-    };
+    });
   }
+  const seen = new Set();
+  const orderedCandidates = candidates.filter((action) => {
+    const key = `${action.kind}:${action.target}:${action.source}`;
+    if (seen.has(key)) {
+      return false;
+    }
+    seen.add(key);
+    return true;
+  });
+  const action = orderedCandidates[0] || {
+    label: "후속 행동 대기",
+    disabled: true,
+    kind: "none",
+    target: "",
+    source: "none",
+    summary: "즉시 추천할 행동이 없습니다.",
+    reason: "현재 우선 행동 후보가 정리되면 여기에 표시됩니다.",
+  };
+  const altAction = orderedCandidates[1] || {
+    label: "후속 행동 대기",
+    disabled: true,
+    kind: "none",
+    target: "",
+    source: "none",
+    summary: "차선 행동 후보가 없습니다.",
+    reason: "현재는 첫 번째 추천 행동 처리 후 다음 후보가 정리됩니다.",
+  };
   dom.opsDigestPanel.dataset.nextActionLabel = action.label;
   dom.opsDigestPanel.dataset.nextActionDisabled = String(action.disabled);
   dom.opsDigestPanel.dataset.nextActionKind = action.kind;
@@ -1097,6 +1133,13 @@ function syncOpsDigestNextAction() {
   dom.opsDigestPanel.dataset.nextActionSource = action.source;
   dom.opsDigestPanel.dataset.nextActionSummary = action.summary;
   dom.opsDigestPanel.dataset.nextActionReason = action.reason;
+  dom.opsDigestPanel.dataset.altActionLabel = altAction.label;
+  dom.opsDigestPanel.dataset.altActionDisabled = String(altAction.disabled);
+  dom.opsDigestPanel.dataset.altActionKind = altAction.kind;
+  dom.opsDigestPanel.dataset.altActionTarget = altAction.target;
+  dom.opsDigestPanel.dataset.altActionSource = altAction.source;
+  dom.opsDigestPanel.dataset.altActionSummary = altAction.summary;
+  dom.opsDigestPanel.dataset.altActionReason = altAction.reason;
   if (dom.btnOpsDigestNextAction) {
     dom.btnOpsDigestNextAction.textContent = action.label;
     dom.btnOpsDigestNextAction.disabled = action.disabled;
@@ -1106,6 +1149,16 @@ function syncOpsDigestNextAction() {
   }
   if (dom.opsDigestNextReason) {
     dom.opsDigestNextReason.textContent = action.reason;
+  }
+  if (dom.btnOpsDigestAltAction) {
+    dom.btnOpsDigestAltAction.textContent = altAction.label;
+    dom.btnOpsDigestAltAction.disabled = altAction.disabled;
+  }
+  if (dom.opsDigestAltAction) {
+    dom.opsDigestAltAction.textContent = altAction.summary;
+  }
+  if (dom.opsDigestAltReason) {
+    dom.opsDigestAltReason.textContent = altAction.reason;
   }
 }
 
@@ -1123,6 +1176,34 @@ function executeOpsDigestNextAction() {
   const label =
     String(dom.opsDigestPanel.dataset.nextActionLabel || "추천 다음 행동").trim() ||
     "추천 다음 행동";
+  if (kind === "panel") {
+    openOpsDigestPanelTarget(target, label, source);
+    return;
+  }
+  if (kind === "helper" && target === "offlineModal") {
+    openOpsDigestOfflineModal();
+    return;
+  }
+  const sourceButton = target ? document.getElementById(target) : null;
+  if (sourceButton instanceof HTMLButtonElement) {
+    forwardOpsDigestActionClick(sourceButton);
+  }
+}
+
+function executeOpsDigestAltAction() {
+  if (!dom.opsDigestPanel) {
+    return;
+  }
+  const disabled = dom.opsDigestPanel.dataset.altActionDisabled === "true";
+  if (disabled) {
+    return;
+  }
+  const kind = String(dom.opsDigestPanel.dataset.altActionKind || "button").trim();
+  const target = String(dom.opsDigestPanel.dataset.altActionTarget || "").trim();
+  const source = String(dom.opsDigestPanel.dataset.altActionSource || "ops_alt").trim();
+  const label =
+    String(dom.opsDigestPanel.dataset.altActionLabel || "차선 행동").trim() ||
+    "차선 행동";
   if (kind === "panel") {
     openOpsDigestPanelTarget(target, label, source);
     return;
@@ -13587,6 +13668,9 @@ function bindEvents() {
   });
   dom.btnOpsDigestNextAction?.addEventListener("click", () => {
     executeOpsDigestNextAction();
+  });
+  dom.btnOpsDigestAltAction?.addEventListener("click", () => {
+    executeOpsDigestAltAction();
   });
   const opsDigestPanelButtons = [
     [dom.btnOpsDigestOpenFocus, "focusControlsPanel", "집중 패널 열기", "ops_focus"],
