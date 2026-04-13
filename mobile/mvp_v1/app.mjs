@@ -117,6 +117,11 @@ const dom = {
   opsDigestWarnings: document.getElementById("opsDigestWarnings"),
   opsDigestQuickSummary: document.getElementById("opsDigestQuickSummary"),
   opsDigestSecondarySummary: document.getElementById("opsDigestSecondarySummary"),
+  opsDigestInboxList: document.getElementById("opsDigestInboxList"),
+  opsDigestInboxRecent: document.getElementById("opsDigestInboxRecent"),
+  opsDigestInboxWarning: document.getElementById("opsDigestInboxWarning"),
+  opsDigestInboxPrimary: document.getElementById("opsDigestInboxPrimary"),
+  opsDigestInboxSecondary: document.getElementById("opsDigestInboxSecondary"),
   btnOpsDigestFocus: document.getElementById("btnOpsDigestFocus"),
   btnOpsDigestRealtime: document.getElementById("btnOpsDigestRealtime"),
   btnOpsDigestRecommendation: document.getElementById("btnOpsDigestRecommendation"),
@@ -790,6 +795,9 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
   if (dom.opsDigestRecentAction) {
     dom.opsDigestRecentAction.textContent = normalizedMessage;
   }
+  if (dom.opsDigestInboxRecent) {
+    dom.opsDigestInboxRecent.textContent = normalizedMessage;
+  }
 }
 
 function setStatus(message, isError = false, source = "system") {
@@ -941,6 +949,9 @@ function syncOpsDigestWarnings() {
         ? primaryWarning?.actionLabel || "관련 패널 확인"
         : "주의 상태 없음";
     applyRiskTone(dom.opsDigestWarnings, warningTone);
+  }
+  if (dom.opsDigestInboxWarning) {
+    dom.opsDigestInboxWarning.textContent = warningSummary;
   }
 }
 
@@ -1175,6 +1186,9 @@ function syncOpsDigestNextAction() {
   if (dom.opsDigestNextReason) {
     dom.opsDigestNextReason.textContent = action.reason;
   }
+  if (dom.opsDigestInboxPrimary) {
+    dom.opsDigestInboxPrimary.textContent = action.summary;
+  }
   if (dom.btnOpsDigestAltAction) {
     dom.btnOpsDigestAltAction.textContent = altAction.label;
     dom.btnOpsDigestAltAction.disabled = altAction.disabled;
@@ -1184,6 +1198,35 @@ function syncOpsDigestNextAction() {
   }
   if (dom.opsDigestAltReason) {
     dom.opsDigestAltReason.textContent = altAction.reason;
+  }
+  if (dom.opsDigestInboxSecondary) {
+    dom.opsDigestInboxSecondary.textContent = altAction.summary;
+  }
+}
+
+function syncOpsDigestInbox() {
+  if (!dom.opsDigestPanel) {
+    return;
+  }
+  const recentLabel = dom.opsDigestPanel.dataset.recentAction || "최근 조작 대기 중";
+  const warningLabel = dom.opsDigestPanel.dataset.warningSummary || "주의 상태 없음";
+  const primaryLabel =
+    dom.opsDigestPanel.dataset.nextActionSummary || "즉시 추천할 행동이 없습니다.";
+  const secondaryLabel =
+    dom.opsDigestPanel.dataset.altActionSummary || "차선 행동 후보가 없습니다.";
+  dom.opsDigestPanel.dataset.inboxSummary =
+    `${recentLabel} · ${warningLabel} · ${primaryLabel} · ${secondaryLabel}`;
+  if (dom.opsDigestInboxRecent) {
+    dom.opsDigestInboxRecent.textContent = recentLabel;
+  }
+  if (dom.opsDigestInboxWarning) {
+    dom.opsDigestInboxWarning.textContent = warningLabel;
+  }
+  if (dom.opsDigestInboxPrimary) {
+    dom.opsDigestInboxPrimary.textContent = primaryLabel;
+  }
+  if (dom.opsDigestInboxSecondary) {
+    dom.opsDigestInboxSecondary.textContent = secondaryLabel;
   }
 }
 
@@ -1352,6 +1395,7 @@ function syncOpsDigestPanel() {
   syncOpsDigestWarnings();
   syncOpsDigestQuickActions();
   syncOpsDigestNextAction();
+  syncOpsDigestInbox();
 }
 
 function summarizeOpsDigestActionLabel(label, disabled) {

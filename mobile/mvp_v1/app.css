@@ -165,6 +165,18 @@ h2 {
   margin: 0;
 }
 
+.ops-digest-inbox {
+  display: grid;
+  gap: 6px;
+}
+
+.ops-digest-inbox-list {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+}
+
 .ops-digest-status {
   margin: 0;
   padding: 8px 10px;
