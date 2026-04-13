@@ -1893,7 +1893,7 @@ async function main() {
   );
   assertIncludes(
     html,
-    'data-inbox-meta-summary="우선순위 medium · 실행 가능 2건"',
+    'data-inbox-meta-summary="전체 · 우선순위 medium · 실행 가능 2건"',
     "index.html",
     failures,
   );

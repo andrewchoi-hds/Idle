@@ -1483,13 +1483,18 @@ function syncOpsDigestInbox() {
     dom.opsDigestPanel.dataset.nextActionSummary || "즉시 추천할 행동이 없습니다.";
   const secondaryLabel =
     dom.opsDigestPanel.dataset.altActionSummary || "차선 행동 후보가 없습니다.";
+  const sourceFilter =
+    String(dom.opsDigestPanel.dataset.inboxSourceFilter || "all").trim() || "all";
   const inboxEntries = [
     dom.opsDigestInboxRecent,
     dom.opsDigestInboxWarning,
     dom.opsDigestInboxPrimary,
     dom.opsDigestInboxSecondary,
   ];
-  const actionableEntries = inboxEntries.filter(
+  const scopedEntries = inboxEntries.filter(
+    (node) => node && (sourceFilter === "all" || node.dataset.inboxSource === sourceFilter),
+  );
+  const actionableEntries = scopedEntries.filter(
     (node) => node && node.dataset.inboxDisabled !== "true",
   );
   const priorityRank = {
@@ -1499,14 +1504,14 @@ function syncOpsDigestInbox() {
     low: 0,
   };
   const topPriority =
-    inboxEntries.reduce((best, node) => {
+    scopedEntries.reduce((best, node) => {
       const candidate = String(node?.dataset.inboxPriority || "low");
       return priorityRank[candidate] > priorityRank[best] ? candidate : best;
     }, "low") || "low";
   const topTone =
-    inboxEntries.find((node) => String(node?.dataset.inboxPriority || "") === topPriority)
+    scopedEntries.find((node) => String(node?.dataset.inboxPriority || "") === topPriority)
       ?.dataset.inboxTone || "info";
-  const topActionableEntry = inboxEntries.find(
+  const topActionableEntry = scopedEntries.find(
     (node) =>
       node &&
       node.dataset.inboxDisabled !== "true" &&
@@ -1518,7 +1523,7 @@ function syncOpsDigestInbox() {
   dom.opsDigestPanel.dataset.inboxTopTone = String(topTone);
   dom.opsDigestPanel.dataset.inboxActionableCount = String(actionableEntries.length);
   dom.opsDigestPanel.dataset.inboxMetaSummary =
-    `우선순위 ${topPriority} · 실행 가능 ${actionableEntries.length}건`;
+    `${dom.opsDigestPanel.dataset.inboxSourceFilterLabel || "전체"} · 우선순위 ${topPriority} · 실행 가능 ${actionableEntries.length}건`;
   dom.opsDigestPanel.dataset.inboxVisibleCount = String(inboxEntries.length);
   dom.opsDigestPanel.dataset.inboxPriorityBadge = topPriority;
   dom.opsDigestPanel.dataset.inboxActionableBadge =
@@ -1624,7 +1629,6 @@ function syncOpsDigestInbox() {
     dom.opsDigestInboxMeta.dataset.inboxDisabled = String(!topActionableEntry);
     dom.opsDigestInboxMeta.setAttribute("aria-disabled", String(!topActionableEntry));
   }
-  const sourceFilter = String(dom.opsDigestPanel.dataset.inboxSourceFilter || "all").trim() || "all";
   let visibleCount = 0;
   for (const node of inboxEntries) {
     if (!node) {
