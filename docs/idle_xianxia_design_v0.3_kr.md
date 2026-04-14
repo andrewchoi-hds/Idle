@@ -4251,3 +4251,11 @@
 
 ## 991) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(timeline group collapse 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 992) 다음 순차 작업
+1. [완료] 접힌 timeline 그룹에서도 가장 최근 1건 미리보기가 보이도록 group toggle 라벨을 확장해, 그룹을 다 펼치지 않아도 최근 이벤트 문맥을 바로 파악할 수 있도록 보강.
+2. [완료] `syncOpsDigestTimeline()`가 `data-timeline-collapsed-preview-count`와 `data-timeline-group-visibility-summary`에 접힌 그룹 미리보기 수를 함께 반영하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 collapsed preview 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 993) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(collapsed group preview 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
