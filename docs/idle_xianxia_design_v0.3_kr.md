@@ -4291,3 +4291,11 @@
 
 ## 1001) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(tone-priority collapsed preview 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1002) 다음 순차 작업
+1. [완료] 접힌 timeline 그룹 미리보기를 단순 텍스트가 아니라 tone chip + 요약 형태로 바꿔, 위험/주의 항목이 접힌 상태에서도 더 빠르게 훑히도록 보강.
+2. [완료] `collectOpsDigestTimelineCollapsedPreviewEntries()`와 `formatOpsDigestTimelineCollapsedPreview()`를 조합해 `data-timeline-collapsed-preview-strategy="tone_chip"` contract를 유지하고, collapse header에 preview chip 렌더를 같이 반영하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 tone-chip collapsed preview 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1003) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(tone-chip collapsed preview 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

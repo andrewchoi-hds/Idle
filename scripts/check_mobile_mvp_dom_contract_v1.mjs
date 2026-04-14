@@ -2233,7 +2233,7 @@ async function main() {
   );
   assertIncludes(
     html,
-    'data-timeline-collapsed-preview-strategy="tone_priority"',
+    'data-timeline-collapsed-preview-strategy="tone_chip"',
     "index.html",
     failures,
   );
@@ -9952,7 +9952,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    'dom.opsDigestPanel.dataset.timelineCollapsedPreviewStrategy = "tone_priority";',
+    'dom.opsDigestPanel.dataset.timelineCollapsedPreviewStrategy = "tone_chip";',
     "app.mjs",
     failures,
   );
@@ -10216,7 +10216,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    '`${groupLabel} · ${entries.length}건 · ${collapsedPreviewLabel}`',
+    '`${groupLabel} · ${entries.length}건`',
     "app.mjs",
     failures,
   );
