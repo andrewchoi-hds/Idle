@@ -4275,3 +4275,11 @@
 
 ## 997) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(group filter button label 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 998) 다음 순차 작업
+1. [완료] 접힌 timeline 그룹 라벨의 compact preview를 최근 1건에서 최근 2건으로 확장해, 그룹을 펼치지 않아도 최신 문맥을 더 넓게 읽을 수 있도록 보강.
+2. [완료] `formatOpsDigestTimelineCollapsedPreview()`를 추가하고, `syncOpsDigestTimeline()`가 `data-timeline-collapsed-preview-depth` contract와 함께 최근 2건 미리보기 문구를 유지하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 two-item collapsed preview 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 999) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(two-item collapsed preview 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
