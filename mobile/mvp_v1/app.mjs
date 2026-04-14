@@ -875,6 +875,30 @@ function summarizeOpsDigestTimelineTones(entries) {
     .join(" · ");
 }
 
+function matchesOpsDigestTimelineToneFilter(entry, toneFilter) {
+  const normalizedFilter = String(toneFilter || "all").trim() || "all";
+  if (normalizedFilter === "all") {
+    return true;
+  }
+  const normalizedTone = String(entry?.tone || "info").trim();
+  return normalizedTone === "warn" || normalizedTone === "error";
+}
+
+function setOpsDigestTimelineToneFilter(filter) {
+  if (!dom.opsDigestPanel) {
+    return;
+  }
+  const normalized = String(filter || "all").trim() || "all";
+  const nextFilter =
+    normalized === "all" || dom.opsDigestPanel.dataset.timelineToneFilter === normalized
+      ? "all"
+      : normalized;
+  dom.opsDigestPanel.dataset.timelineToneFilter = nextFilter;
+  dom.opsDigestPanel.dataset.timelineToneFilterLabel =
+    nextFilter === "all" ? "전체 흐름" : "주의/위험";
+  syncOpsDigestTimeline();
+}
+
 function recordOpsDigestTimelineEntry(entry) {
   const normalizedLabel = String(entry?.label || "").trim();
   const normalizedKind = String(entry?.kind || "none").trim();
@@ -931,8 +955,15 @@ function syncOpsDigestTimeline() {
     String(dom.opsDigestPanel.dataset.inboxSourceFilter || "all").trim() || "all";
   const sourceFilterLabel =
     String(dom.opsDigestPanel.dataset.inboxSourceFilterLabel || "전체").trim() || "전체";
+  const toneFilter =
+    String(dom.opsDigestPanel.dataset.timelineToneFilter || "all").trim() || "all";
+  const toneFilterLabel =
+    String(dom.opsDigestPanel.dataset.timelineToneFilterLabel || "전체 흐름").trim() ||
+    "전체 흐름";
   const visibleTimelineEntries = opsDigestTimelineState.filter(
-    (entry) => sourceFilter === "all" || entry.source === sourceFilter,
+    (entry) =>
+      (sourceFilter === "all" || entry.source === sourceFilter) &&
+      matchesOpsDigestTimelineToneFilter(entry, toneFilter),
   );
   const latestTimelineEntry = visibleTimelineEntries[0] || null;
   const sourceSummary = summarizeOpsDigestTimelineSources(visibleTimelineEntries);
@@ -943,8 +974,8 @@ function syncOpsDigestTimeline() {
   dom.opsDigestPanel.dataset.timelineLatestSource = latestTimelineEntry?.source || "none";
   dom.opsDigestPanel.dataset.timelineLatestTone = latestTimelineEntry?.tone || "info";
   dom.opsDigestPanel.dataset.timelineSummary = latestTimelineEntry
-    ? `${sourceFilterLabel} 최근 ${visibleTimelineEntries.length}건 · 최신 ${latestTimelineEntry.sourceLabel} · ${latestTimelineEntry.label}`
-    : `${sourceFilterLabel} 최근 흐름 대기 중`;
+    ? `${sourceFilterLabel} · ${toneFilterLabel} · 최근 ${visibleTimelineEntries.length}건 · 최신 ${latestTimelineEntry.sourceLabel} · ${latestTimelineEntry.label}`
+    : `${sourceFilterLabel} · ${toneFilterLabel} · 최근 흐름 대기 중`;
   if (dom.opsDigestTimelineSourceBadge) {
     dom.opsDigestTimelineSourceBadge.textContent = sourceSummary;
     applyRiskTone(
@@ -953,10 +984,19 @@ function syncOpsDigestTimeline() {
     );
   }
   if (dom.opsDigestTimelineToneBadge) {
-    dom.opsDigestTimelineToneBadge.textContent = toneSummary;
+    dom.opsDigestTimelineToneBadge.textContent =
+      toneFilter === "all" ? toneSummary : `${toneFilterLabel} · ${visibleTimelineEntries.length}건`;
+    dom.opsDigestTimelineToneBadge.classList.toggle(
+      "filter-active",
+      toneFilter !== "all",
+    );
+    dom.opsDigestTimelineToneBadge.setAttribute(
+      "aria-pressed",
+      String(toneFilter !== "all"),
+    );
     applyRiskTone(
       dom.opsDigestTimelineToneBadge,
-      latestTimelineEntry?.tone || "info",
+      toneFilter === "all" ? latestTimelineEntry?.tone || "info" : "warn",
     );
   }
   if (dom.opsDigestTimelineSummary) {
@@ -970,7 +1010,8 @@ function syncOpsDigestTimeline() {
   if (visibleTimelineEntries.length === 0) {
     const emptyItem = document.createElement("li");
     emptyItem.className = "ops-digest-timeline-empty";
-    emptyItem.textContent = "최근 흐름 대기 중";
+    emptyItem.textContent =
+      toneFilter === "all" ? "최근 흐름 대기 중" : "주의/위험 흐름 없음";
     dom.opsDigestTimelineList.append(emptyItem);
     return;
   }
@@ -14554,6 +14595,18 @@ function bindEvents() {
       timelineButton.dataset.timelineSource,
       timelineButton.dataset.timelineLabel || timelineButton.textContent || "최근 흐름 항목",
     );
+  });
+  dom.opsDigestTimelineToneBadge?.addEventListener("click", (event) => {
+    event.stopPropagation();
+    setOpsDigestTimelineToneFilter("alert");
+  });
+  dom.opsDigestTimelineToneBadge?.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    setOpsDigestTimelineToneFilter("alert");
   });
   const inboxSourceBadges = document.querySelectorAll(".ops-digest-inbox-source");
   for (const badge of inboxSourceBadges) {
