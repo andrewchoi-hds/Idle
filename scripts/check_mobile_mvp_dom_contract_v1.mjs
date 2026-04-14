@@ -9496,6 +9496,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function flashOpsDigestJumpTarget(targetNode, label = \"바로 확인\") {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function openOpsDigestPanelTarget(",
     "app.mjs",
     failures,
@@ -10264,7 +10270,31 @@ async function main() {
   );
   assertIncludes(
     app,
+    'delete node.dataset.jumpLabel;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'targetNode.dataset.jumpLabel = String(label || "바로 확인").trim() || "바로 확인";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'delete targetNode.dataset.jumpLabel;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "openOpsDigestPanelTarget(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    '`${actionLabel} · 바로 확인`',
     "app.mjs",
     failures,
   );
