@@ -4171,3 +4171,11 @@
 
 ## 971) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(filter-weighted action queue 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 972) 다음 순차 작업
+1. [완료] 운용 인박스 메타가 이전 렌더의 dataset을 읽지 않고, 이번 사이클에서 갱신된 최신 인박스 항목을 기준으로 최고 우선 항목을 계산하도록 보강.
+2. [완료] `syncOpsDigestInboxEntry()`가 `data-inbox-score`를 유지하고, `syncOpsDigestInbox()`가 최신 score/priority/updatedAt 기준으로 `topScopedEntry`, `topActionableEntry`를 산출해 `data-inbox-top-score`, `data-inbox-top-source-label`, `data-inbox-meta-summary`까지 함께 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 fresh inbox meta ranking 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 973) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(fresh inbox meta ranking 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

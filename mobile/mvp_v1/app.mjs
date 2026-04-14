@@ -1317,6 +1317,7 @@ function syncOpsDigestInboxEntry(node, descriptor, label, tone = "info", score =
   node.dataset.inboxDisabled = String(disabled);
   node.dataset.inboxTone = normalizedTone;
   node.dataset.inboxPriority = priority;
+  node.dataset.inboxScore = String(Number(score) || 0);
   node.dataset.inboxUpdatedAt = String(stampState.updatedAt || 0);
   node.dataset.inboxUpdatedLabel = formatOpsDigestInboxUpdatedLabel(
     stampState.updatedAt,
@@ -1603,46 +1604,136 @@ function syncOpsDigestInbox() {
     dom.opsDigestPanel.dataset.altActionSummary || "차선 행동 후보가 없습니다.";
   const sourceFilter =
     String(dom.opsDigestPanel.dataset.inboxSourceFilter || "all").trim() || "all";
-  const inboxEntries = [
-    dom.opsDigestInboxRecent,
-    dom.opsDigestInboxWarning,
-    dom.opsDigestInboxPrimary,
-    dom.opsDigestInboxSecondary,
-  ];
-  const scopedEntries = inboxEntries.filter(
-    (node) => node && (sourceFilter === "all" || node.dataset.inboxSource === sourceFilter),
-  );
-  const actionableEntries = scopedEntries.filter(
-    (node) => node && node.dataset.inboxDisabled !== "true",
-  );
   const priorityRank = {
     critical: 3,
     high: 2,
     medium: 1,
     low: 0,
   };
-  const topPriority =
-    scopedEntries.reduce((best, node) => {
-      const candidate = String(node?.dataset.inboxPriority || "low");
-      return priorityRank[candidate] > priorityRank[best] ? candidate : best;
-    }, "low") || "low";
-  const topTone =
-    scopedEntries.find((node) => String(node?.dataset.inboxPriority || "") === topPriority)
-      ?.dataset.inboxTone || "info";
-  const topActionableEntry = scopedEntries.find(
-    (node) =>
-      node &&
-      node.dataset.inboxDisabled !== "true" &&
-      String(node.dataset.inboxPriority || "low") === topPriority,
+  const inboxEntries = [
+    {
+      node: dom.opsDigestInboxRecent,
+      descriptor: resolveOpsDigestRecentActionDescriptor(),
+      label: recentLabel,
+      tone: String(dom.opsDigestPanel.dataset.recentActionTone || "info"),
+      score:
+        String(dom.opsDigestPanel.dataset.recentActionTone || "info") === "warn"
+          ? 700
+          : 200,
+      stateKey: "recent",
+    },
+    {
+      node: dom.opsDigestInboxWarning,
+      descriptor: {
+        kind:
+          (Number(dom.opsDigestPanel.dataset.warningCount) || 0) > 0
+            ? "warning"
+            : "none",
+        target: String(dom.opsDigestPanel.dataset.warningTarget || ""),
+        source: String(dom.opsDigestPanel.dataset.warningSource || "none"),
+        disabled: (Number(dom.opsDigestPanel.dataset.warningCount) || 0) === 0,
+      },
+      label: warningLabel,
+      tone: String(dom.opsDigestPanel.dataset.warningTone || "info"),
+      score:
+        Number(dom.opsDigestPanel.dataset.warningCount || 0) > 0
+          ? String(dom.opsDigestPanel.dataset.warningTone || "info") === "error"
+            ? 1200
+            : 1000
+          : 0,
+      stateKey: "warning",
+    },
+    {
+      node: dom.opsDigestInboxPrimary,
+      descriptor: {
+        kind: String(dom.opsDigestPanel.dataset.nextActionKind || "none"),
+        target: String(dom.opsDigestPanel.dataset.nextActionTarget || ""),
+        source: String(dom.opsDigestPanel.dataset.nextActionSource || "none"),
+        disabled: dom.opsDigestPanel.dataset.nextActionDisabled === "true",
+      },
+      label: primaryLabel,
+      tone: resolveOpsDigestActionTone(
+        String(dom.opsDigestPanel.dataset.nextActionKind || "none"),
+        String(dom.opsDigestPanel.dataset.nextActionTarget || ""),
+        String(dom.opsDigestPanel.dataset.nextActionSource || "none"),
+      ),
+      score: Number(dom.opsDigestPanel.dataset.nextActionScore || 0),
+      stateKey: "primary",
+    },
+    {
+      node: dom.opsDigestInboxSecondary,
+      descriptor: {
+        kind: String(dom.opsDigestPanel.dataset.altActionKind || "none"),
+        target: String(dom.opsDigestPanel.dataset.altActionTarget || ""),
+        source: String(dom.opsDigestPanel.dataset.altActionSource || "none"),
+        disabled: dom.opsDigestPanel.dataset.altActionDisabled === "true",
+      },
+      label: secondaryLabel,
+      tone: resolveOpsDigestActionTone(
+        String(dom.opsDigestPanel.dataset.altActionKind || "none"),
+        String(dom.opsDigestPanel.dataset.altActionTarget || ""),
+        String(dom.opsDigestPanel.dataset.altActionSource || "none"),
+      ),
+      score: Number(dom.opsDigestPanel.dataset.altActionScore || 0),
+      stateKey: "secondary",
+    },
+  ];
+  for (const entry of inboxEntries) {
+    if (!entry.node) {
+      continue;
+    }
+    syncOpsDigestInboxEntry(
+      entry.node,
+      entry.descriptor,
+      entry.label,
+      entry.tone,
+      entry.score,
+      entry.stateKey,
+    );
+  }
+  const visibleEntries = inboxEntries
+    .map((entry) => entry.node)
+    .filter(Boolean);
+  const scopedEntries = visibleEntries.filter(
+    (node) => sourceFilter === "all" || node.dataset.inboxSource === sourceFilter,
   );
+  const actionableEntries = scopedEntries.filter(
+    (node) => node.dataset.inboxDisabled !== "true",
+  );
+  const compareInboxEntries = (left, right) => {
+    const leftScore = Number(left?.dataset.inboxScore || 0);
+    const rightScore = Number(right?.dataset.inboxScore || 0);
+    if (rightScore !== leftScore) {
+      return rightScore - leftScore;
+    }
+    const leftPriority = priorityRank[String(left?.dataset.inboxPriority || "low")] || 0;
+    const rightPriority = priorityRank[String(right?.dataset.inboxPriority || "low")] || 0;
+    if (rightPriority !== leftPriority) {
+      return rightPriority - leftPriority;
+    }
+    const leftUpdatedAt = Number(left?.dataset.inboxUpdatedAt || 0);
+    const rightUpdatedAt = Number(right?.dataset.inboxUpdatedAt || 0);
+    return rightUpdatedAt - leftUpdatedAt;
+  };
+  const topScopedEntry =
+    scopedEntries.slice().sort(compareInboxEntries)[0] || null;
+  const topActionableEntry =
+    actionableEntries.slice().sort(compareInboxEntries)[0] || null;
+  const topPriority = String(topScopedEntry?.dataset.inboxPriority || "low");
+  const topTone = String(topScopedEntry?.dataset.inboxTone || "info");
+  const topScore = String(topScopedEntry?.dataset.inboxScore || "0");
+  const topSourceLabel =
+    String(topScopedEntry?.dataset.inboxSourceLabel || "").trim() || "없음";
   dom.opsDigestPanel.dataset.inboxSummary =
     `${recentLabel} · ${warningLabel} · ${primaryLabel} · ${secondaryLabel}`;
   dom.opsDigestPanel.dataset.inboxTopPriority = topPriority;
-  dom.opsDigestPanel.dataset.inboxTopTone = String(topTone);
+  dom.opsDigestPanel.dataset.inboxTopTone = topTone;
+  dom.opsDigestPanel.dataset.inboxTopScore = topScore;
+  dom.opsDigestPanel.dataset.inboxTopSourceLabel = topSourceLabel;
   dom.opsDigestPanel.dataset.inboxActionableCount = String(actionableEntries.length);
   dom.opsDigestPanel.dataset.inboxMetaSummary =
-    `${dom.opsDigestPanel.dataset.inboxSourceFilterLabel || "전체"} · 우선순위 ${topPriority} · 실행 가능 ${actionableEntries.length}건`;
-  dom.opsDigestPanel.dataset.inboxVisibleCount = String(inboxEntries.length);
+    `${dom.opsDigestPanel.dataset.inboxSourceFilterLabel || "전체"} · ${topSourceLabel} · 우선순위 ${topPriority} · 실행 가능 ${actionableEntries.length}건`;
+  dom.opsDigestPanel.dataset.inboxVisibleCount = String(visibleEntries.length);
   dom.opsDigestPanel.dataset.inboxPriorityBadge = topPriority;
   dom.opsDigestPanel.dataset.inboxActionableBadge =
     `실행 ${actionableEntries.length}건`;
@@ -1656,76 +1747,6 @@ function syncOpsDigestInbox() {
     topActionableEntry?.dataset.inboxSource || "none",
   );
   dom.opsDigestPanel.dataset.inboxMetaDisabled = String(!topActionableEntry);
-  if (dom.opsDigestInboxRecent) {
-    syncOpsDigestInboxEntry(
-      dom.opsDigestInboxRecent,
-      resolveOpsDigestRecentActionDescriptor(),
-      recentLabel,
-      String(dom.opsDigestPanel.dataset.recentActionTone || "info"),
-      String(dom.opsDigestPanel.dataset.recentActionTone || "info") === "warn" ? 700 : 200,
-      "recent",
-    );
-  }
-  if (dom.opsDigestInboxWarning) {
-    syncOpsDigestInboxEntry(
-      dom.opsDigestInboxWarning,
-      {
-        kind:
-          (Number(dom.opsDigestPanel.dataset.warningCount) || 0) > 0
-            ? "warning"
-            : "none",
-        target: String(dom.opsDigestPanel.dataset.warningTarget || ""),
-        source: String(dom.opsDigestPanel.dataset.warningSource || "none"),
-        disabled: (Number(dom.opsDigestPanel.dataset.warningCount) || 0) === 0,
-      },
-      warningLabel,
-      String(dom.opsDigestPanel.dataset.warningTone || "info"),
-      Number(dom.opsDigestPanel.dataset.warningCount || 0) > 0
-        ? String(dom.opsDigestPanel.dataset.warningTone || "info") === "error"
-          ? 1200
-          : 1000
-        : 0,
-      "warning",
-    );
-  }
-  if (dom.opsDigestInboxPrimary) {
-    syncOpsDigestInboxEntry(
-      dom.opsDigestInboxPrimary,
-      {
-        kind: String(dom.opsDigestPanel.dataset.nextActionKind || "none"),
-        target: String(dom.opsDigestPanel.dataset.nextActionTarget || ""),
-        source: String(dom.opsDigestPanel.dataset.nextActionSource || "none"),
-        disabled: dom.opsDigestPanel.dataset.nextActionDisabled === "true",
-      },
-      primaryLabel,
-      resolveOpsDigestActionTone(
-        String(dom.opsDigestPanel.dataset.nextActionKind || "none"),
-        String(dom.opsDigestPanel.dataset.nextActionTarget || ""),
-        String(dom.opsDigestPanel.dataset.nextActionSource || "none"),
-      ),
-      Number(dom.opsDigestPanel.dataset.nextActionScore || 0),
-      "primary",
-    );
-  }
-  if (dom.opsDigestInboxSecondary) {
-    syncOpsDigestInboxEntry(
-      dom.opsDigestInboxSecondary,
-      {
-        kind: String(dom.opsDigestPanel.dataset.altActionKind || "none"),
-        target: String(dom.opsDigestPanel.dataset.altActionTarget || ""),
-        source: String(dom.opsDigestPanel.dataset.altActionSource || "none"),
-        disabled: dom.opsDigestPanel.dataset.altActionDisabled === "true",
-      },
-      secondaryLabel,
-      resolveOpsDigestActionTone(
-        String(dom.opsDigestPanel.dataset.altActionKind || "none"),
-        String(dom.opsDigestPanel.dataset.altActionTarget || ""),
-        String(dom.opsDigestPanel.dataset.altActionSource || "none"),
-      ),
-      Number(dom.opsDigestPanel.dataset.altActionScore || 0),
-      "secondary",
-    );
-  }
   const latestInboxUpdatedAt = Math.max(
     Number(dom.opsDigestInboxRecent?.dataset.inboxUpdatedAt || 0),
     Number(dom.opsDigestInboxWarning?.dataset.inboxUpdatedAt || 0),
@@ -1748,7 +1769,7 @@ function syncOpsDigestInbox() {
     dom.opsDigestInboxMeta.setAttribute("aria-disabled", String(!topActionableEntry));
   }
   let visibleCount = 0;
-  for (const node of inboxEntries) {
+  for (const node of visibleEntries) {
     if (!node) {
       continue;
     }
