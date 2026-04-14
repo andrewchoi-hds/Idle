@@ -1719,19 +1719,22 @@ function syncOpsDigestWarnings() {
   }
 }
 
-function flashOpsDigestJumpTarget(targetNode) {
+function flashOpsDigestJumpTarget(targetNode, label = "바로 확인") {
   if (!targetNode) {
     return;
   }
   document.querySelectorAll(".ops-jump-target").forEach((node) => {
     node.classList.remove("ops-jump-target");
+    delete node.dataset.jumpLabel;
   });
+  targetNode.dataset.jumpLabel = String(label || "바로 확인").trim() || "바로 확인";
   targetNode.classList.add("ops-jump-target");
   if (opsDigestJumpTargetTimer) {
     window.clearTimeout(opsDigestJumpTargetTimer);
   }
   opsDigestJumpTargetTimer = window.setTimeout(() => {
     targetNode.classList.remove("ops-jump-target");
+    delete targetNode.dataset.jumpLabel;
     opsDigestJumpTargetTimer = null;
   }, 1600);
 }
@@ -1759,7 +1762,10 @@ function openOpsDigestPanelTarget(
   }
   const scrollTargetNode = focusTargetNode || targetNode;
   scrollTargetNode.scrollIntoView({ behavior: "smooth", block: "start" });
-  flashOpsDigestJumpTarget(focusTargetNode || targetNode);
+  flashOpsDigestJumpTarget(
+    focusTargetNode || targetNode,
+    `${actionLabel} · 바로 확인`,
+  );
   setStatus(`패널 이동: ${actionLabel}`, false, source);
 }
 
