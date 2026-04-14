@@ -1280,10 +1280,15 @@ function syncOpsDigestTimeline() {
   }
   let expandedGroupCount = 0;
   let collapsedGroupCount = 0;
+  let collapsedPreviewCount = 0;
   for (const [groupLabel, entries] of groupedTimelineEntries.entries()) {
     const collapsed = opsDigestTimelineGroupCollapseState[groupLabel] === true;
+    const previewEntry = entries[0] || null;
     if (collapsed) {
       collapsedGroupCount += 1;
+      if (previewEntry) {
+        collapsedPreviewCount += 1;
+      }
     } else {
       expandedGroupCount += 1;
     }
@@ -1297,8 +1302,11 @@ function syncOpsDigestTimeline() {
     groupTitle.dataset.groupLabel = groupLabel;
     groupTitle.setAttribute("aria-expanded", String(!collapsed));
     groupTitle.textContent = collapsed
-      ? `${groupLabel} · ${entries.length}건 · 펼치기`
+      ? `${groupLabel} · ${entries.length}건 · ${previewEntry?.label || "미리보기 없음"}`
       : `${groupLabel} · ${entries.length}건 · 접기`;
+    groupTitle.title = collapsed
+      ? `${groupLabel} 최근 1건 · ${previewEntry?.sourceLabel || "없음"} · ${previewEntry?.label || "미리보기 없음"}`
+      : `${groupLabel} 그룹 접기`;
     groupItem.append(groupTitle);
 
     const groupList = document.createElement("ul");
@@ -1341,9 +1349,12 @@ function syncOpsDigestTimeline() {
   const visibilitySummary =
     groupedTimelineEntries.size === 0
       ? "접힘 대기"
-      : `${expandedGroupCount}개 펼침 · ${collapsedGroupCount}개 접힘`;
+      : `${expandedGroupCount}개 펼침 · ${collapsedGroupCount}개 접힘 · 미리보기 ${collapsedPreviewCount}건`;
   dom.opsDigestPanel.dataset.timelineExpandedGroupCount = String(expandedGroupCount);
   dom.opsDigestPanel.dataset.timelineCollapsedGroupCount = String(collapsedGroupCount);
+  dom.opsDigestPanel.dataset.timelineCollapsedPreviewCount = String(
+    collapsedPreviewCount,
+  );
   dom.opsDigestPanel.dataset.timelineGroupVisibilitySummary = visibilitySummary;
   if (dom.opsDigestTimelineGroupSummary) {
     dom.opsDigestTimelineGroupSummary.textContent =

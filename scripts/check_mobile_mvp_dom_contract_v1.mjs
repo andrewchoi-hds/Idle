@@ -2221,6 +2221,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-timeline-collapsed-preview-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-timeline-group-visibility-summary="접힘 대기"',
     "index.html",
     failures,
@@ -9910,6 +9916,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.opsDigestPanel.dataset.timelineCollapsedPreviewCount = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.timelineGroupVisibilitySummary = visibilitySummary;",
     "app.mjs",
     failures,
@@ -10133,6 +10145,12 @@ async function main() {
   assertIncludes(
     app,
     'groupTitle.className = "ghost-btn ops-digest-timeline-group-toggle";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    '`${groupLabel} · ${entries.length}건 · ${previewEntry?.label || "미리보기 없음"}`',
     "app.mjs",
     failures,
   );
