@@ -129,6 +129,8 @@ const dom = {
   opsDigestActiveSourceFilter: document.getElementById("opsDigestActiveSourceFilter"),
   opsDigestActiveToneFilter: document.getElementById("opsDigestActiveToneFilter"),
   opsDigestFilterSummary: document.getElementById("opsDigestFilterSummary"),
+  btnOpsDigestPresetAuto: document.getElementById("btnOpsDigestPresetAuto"),
+  btnOpsDigestPresetBreakthrough: document.getElementById("btnOpsDigestPresetBreakthrough"),
   btnOpsDigestPresetBattle: document.getElementById("btnOpsDigestPresetBattle"),
   btnOpsDigestPresetSave: document.getElementById("btnOpsDigestPresetSave"),
   btnOpsDigestPresetWarning: document.getElementById("btnOpsDigestPresetWarning"),
@@ -983,6 +985,10 @@ function syncOpsDigestFilterBar() {
     (sourceFilter === "all" ? 0 : 1) + (toneFilter === "all" ? 0 : 1);
   const warningPresetActive =
     sourceFilter === "all" && toneFilter === "alert";
+  const autoPresetActive =
+    sourceFilter === "group:auto" && toneFilter === "all";
+  const breakthroughPresetActive =
+    sourceFilter === "group:breakthrough" && toneFilter === "all";
   const battlePresetActive =
     sourceFilter === "group:battle" && toneFilter === "all";
   const savePresetActive =
@@ -996,6 +1002,12 @@ function syncOpsDigestFilterBar() {
     activeCount === 0
       ? `필터 없음 · 인박스 ${inboxVisibleCount}건 · 흐름 ${timelineCount}건`
       : `${sourceLabel} · ${toneLabel} · 인박스 ${inboxVisibleCount}건 · 흐름 ${timelineCount}건`;
+  dom.opsDigestPanel.dataset.filterAutoLabel = "자동 흐름";
+  dom.opsDigestPanel.dataset.filterAutoActive = String(autoPresetActive);
+  dom.opsDigestPanel.dataset.filterBreakthroughLabel = "돌파 흐름";
+  dom.opsDigestPanel.dataset.filterBreakthroughActive = String(
+    breakthroughPresetActive,
+  );
   dom.opsDigestPanel.dataset.filterBattleLabel = "전투 흐름";
   dom.opsDigestPanel.dataset.filterBattleActive = String(battlePresetActive);
   dom.opsDigestPanel.dataset.filterSaveLabel = "저장 흐름";
@@ -1049,6 +1061,30 @@ function syncOpsDigestFilterBar() {
     dom.btnOpsDigestPresetBattle.setAttribute(
       "aria-pressed",
       String(battlePresetActive),
+    );
+  }
+  if (dom.btnOpsDigestPresetAuto) {
+    dom.btnOpsDigestPresetAuto.textContent =
+      dom.opsDigestPanel.dataset.filterAutoLabel;
+    dom.btnOpsDigestPresetAuto.classList.toggle(
+      "filter-active",
+      autoPresetActive,
+    );
+    dom.btnOpsDigestPresetAuto.setAttribute(
+      "aria-pressed",
+      String(autoPresetActive),
+    );
+  }
+  if (dom.btnOpsDigestPresetBreakthrough) {
+    dom.btnOpsDigestPresetBreakthrough.textContent =
+      dom.opsDigestPanel.dataset.filterBreakthroughLabel;
+    dom.btnOpsDigestPresetBreakthrough.classList.toggle(
+      "filter-active",
+      breakthroughPresetActive,
+    );
+    dom.btnOpsDigestPresetBreakthrough.setAttribute(
+      "aria-pressed",
+      String(breakthroughPresetActive),
     );
   }
   if (dom.btnOpsDigestPresetSave) {
@@ -1583,6 +1619,10 @@ function resolveOpsDigestActionTone(kind, target, source) {
 function formatOpsDigestInboxSourceLabel(source) {
   const normalizedSource = String(source || "none").trim();
   switch (normalizedSource) {
+    case "group:auto":
+      return "자동 흐름";
+    case "group:breakthrough":
+      return "돌파 흐름";
     case "group:battle":
       return "전투 흐름";
     case "group:save":
@@ -1635,6 +1675,17 @@ function matchesOpsDigestSourceFilter(source, filter) {
   }
   const normalizedSource = String(source || "none").trim();
   switch (normalizedFilter) {
+    case "group:auto":
+      return new Set([
+        "btnRealtimeAuto",
+        "ops_actions",
+      ]).has(normalizedSource);
+    case "group:breakthrough":
+      return new Set([
+        "btnBreakthrough",
+        "btnApplyRecommendation",
+        "ops_breakthrough",
+      ]).has(normalizedSource);
     case "group:battle":
       return new Set([
         "btnBattle",
@@ -14809,6 +14860,12 @@ function bindEvents() {
   });
   dom.btnOpsDigestPresetWarning?.addEventListener("click", () => {
     applyOpsDigestWarningOnlyPreset();
+  });
+  dom.btnOpsDigestPresetAuto?.addEventListener("click", () => {
+    applyOpsDigestSourceGroupPreset("group:auto");
+  });
+  dom.btnOpsDigestPresetBreakthrough?.addEventListener("click", () => {
+    applyOpsDigestSourceGroupPreset("group:breakthrough");
   });
   dom.btnOpsDigestPresetBattle?.addEventListener("click", () => {
     applyOpsDigestSourceGroupPreset("group:battle");

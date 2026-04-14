@@ -4227,3 +4227,11 @@
 
 ## 985) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(source group preset 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 986) 다음 순차 작업
+1. [완료] compact filter bar에 `자동 흐름`, `돌파 흐름` preset 버튼(`btnOpsDigestPresetAuto`, `btnOpsDigestPresetBreakthrough`)을 추가해, 자주 보는 운영 묶음을 source group 기준으로 더 빠르게 좁혀 볼 수 있도록 보강.
+2. [완료] `matchesOpsDigestSourceFilter()`를 `group:auto`, `group:breakthrough`까지 확장하고, `syncOpsDigestFilterBar()`가 `data-filter-auto-*`, `data-filter-breakthrough-*` contract와 active 상태를 함께 유지하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 auto/breakthrough source group preset 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 987) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(auto/breakthrough source group preset 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
