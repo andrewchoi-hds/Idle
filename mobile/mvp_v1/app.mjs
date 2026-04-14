@@ -1461,19 +1461,22 @@ function syncOpsDigestTimeline() {
       groupHead.append(groupPreview);
     }
 
+    const groupActions = document.createElement("div");
+    groupActions.className = "ops-digest-timeline-group-actions";
+
     const groupFilterButton = document.createElement("button");
     groupFilterButton.type = "button";
     groupFilterButton.className = "ghost-btn ops-digest-timeline-group-filter";
     groupFilterButton.dataset.groupFilter = groupFilter;
     const groupFilterActive = groupFilter !== "none" && groupFilter === sourceFilter;
-    groupFilterButton.textContent = groupFilterActive ? "전체 복귀" : "이 흐름만";
+    groupFilterButton.textContent = groupFilterActive ? "복귀" : "보기";
     groupFilterButton.classList.toggle("filter-active", groupFilterActive);
     groupFilterButton.setAttribute("aria-pressed", String(groupFilterActive));
     groupFilterButton.title = groupFilterActive
       ? `${groupLabel} 필터 해제`
       : `${groupLabel}만 보기`;
     groupFilterButton.disabled = groupFilter === "none";
-    groupHead.append(groupFilterButton);
+    groupActions.append(groupFilterButton);
 
     const groupPanelButton = document.createElement("button");
     groupPanelButton.type = "button";
@@ -1485,9 +1488,11 @@ function syncOpsDigestTimeline() {
       groupPanelTarget?.source || "ops_digest";
     groupPanelButton.dataset.groupPanelFocusTarget =
       groupPanelTarget?.focusId || "";
-    groupPanelButton.textContent = groupPanelTarget ? "패널 열기" : "패널 없음";
+    groupPanelButton.textContent = groupPanelTarget ? "열기" : "없음";
+    groupPanelButton.title = groupPanelTarget?.label || "패널 없음";
     groupPanelButton.disabled = !groupPanelTarget;
-    groupHead.append(groupPanelButton);
+    groupActions.append(groupPanelButton);
+    groupHead.append(groupActions);
     groupItem.append(groupHead);
 
     const groupList = document.createElement("ul");

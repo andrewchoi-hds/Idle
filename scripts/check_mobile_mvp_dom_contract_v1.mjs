@@ -10216,6 +10216,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'groupActions.className = "ops-digest-timeline-group-actions";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'groupFilterButton.className = "ghost-btn ops-digest-timeline-group-filter";',
     "app.mjs",
     failures,
@@ -10234,13 +10240,13 @@ async function main() {
   );
   assertIncludes(
     app,
-    'groupPanelButton.textContent = groupPanelTarget ? "패널 열기" : "패널 없음";',
+    'groupPanelButton.textContent = groupPanelTarget ? "열기" : "없음";',
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    'groupFilterButton.textContent = groupFilterActive ? "전체 복귀" : "이 흐름만";',
+    'groupFilterButton.textContent = groupFilterActive ? "복귀" : "보기";',
     "app.mjs",
     failures,
   );

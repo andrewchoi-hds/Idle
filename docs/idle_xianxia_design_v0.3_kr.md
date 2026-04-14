@@ -4331,3 +4331,11 @@
 
 ## 1011) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(jump label context 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1012) 다음 순차 작업
+1. [완료] grouped timeline group header의 액션 영역을 compact header(`보기/복귀`, `열기`) 형태로 정리해 모바일에서 시선 이동과 버튼 폭을 줄이도록 보강.
+2. [완료] 그룹 렌더 경로가 `groupActions` wrapper를 만들고, filter/panel 버튼 라벨을 짧게 축약하되 title로 전체 의미를 유지하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 compact group header action 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1013) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(compact group header actions 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
