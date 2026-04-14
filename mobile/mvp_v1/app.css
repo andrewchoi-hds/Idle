@@ -272,6 +272,25 @@ h2 {
   gap: 6px;
 }
 
+.ops-digest-timeline-group {
+  display: grid;
+  gap: 4px;
+}
+
+.ops-digest-timeline-group-title {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.ops-digest-timeline-sublist {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+
 .ops-digest-timeline-row {
   margin: 0;
 }

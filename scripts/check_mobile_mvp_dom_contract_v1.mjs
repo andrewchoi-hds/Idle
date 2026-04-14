@@ -55,6 +55,7 @@ const REQUIRED_HTML_IDS = [
   "opsDigestTimelineSourceBadge",
   "opsDigestTimelineToneBadge",
   "opsDigestTimelineSummary",
+  "opsDigestTimelineGroupSummary",
   "opsDigestTimelineList",
   "btnOpsDigestFocus",
   "btnOpsDigestRealtime",
@@ -250,6 +251,7 @@ const REQUIRED_DOM_KEYS = [
   "opsDigestTimelineSourceBadge",
   "opsDigestTimelineToneBadge",
   "opsDigestTimelineSummary",
+  "opsDigestTimelineGroupSummary",
   "opsDigestTimelineList",
   "btnOpsDigestFocus",
   "btnOpsDigestRealtime",
@@ -1889,6 +1891,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestTimelineGroupSummary"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="opsDigestTimelineList"',
     "index.html",
     failures,
@@ -2184,6 +2192,18 @@ async function main() {
   assertIncludes(
     html,
     'data-timeline-tone-summary="tone 대기"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-timeline-group-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-timeline-group-summary="그룹 대기"',
     "index.html",
     failures,
   );
@@ -9584,6 +9604,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function resolveOpsDigestTimelineGroupKey(source) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function summarizeOpsDigestTimelineGroups(entries) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function recordOpsDigestTimelineEntry(entry) {",
     "app.mjs",
     failures,
@@ -9830,6 +9862,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.opsDigestPanel.dataset.timelineGroupCount = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.timelineGroupSummary = groupSummary;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.filterSummary =",
     "app.mjs",
     failures,
@@ -9932,6 +9976,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.opsDigestTimelineGroupSummary.textContent = groupSummary;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'toneFilter === "all" ? toneSummary : `${toneFilterLabel} · ${visibleTimelineEntries.length}건`;',
     "app.mjs",
     failures,
@@ -10029,6 +10079,18 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestTimelineList.replaceChildren();",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const groupedTimelineEntries = new Map();",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'groupList.className = "ops-digest-timeline-sublist";',
     "app.mjs",
     failures,
   );
