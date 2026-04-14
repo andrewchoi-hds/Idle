@@ -126,6 +126,8 @@ const dom = {
   opsDigestInboxWarning: document.getElementById("opsDigestInboxWarning"),
   opsDigestInboxPrimary: document.getElementById("opsDigestInboxPrimary"),
   opsDigestInboxSecondary: document.getElementById("opsDigestInboxSecondary"),
+  opsDigestTimelineSourceBadge: document.getElementById("opsDigestTimelineSourceBadge"),
+  opsDigestTimelineToneBadge: document.getElementById("opsDigestTimelineToneBadge"),
   opsDigestTimelineSummary: document.getElementById("opsDigestTimelineSummary"),
   opsDigestTimelineList: document.getElementById("opsDigestTimelineList"),
   btnOpsDigestFocus: document.getElementById("btnOpsDigestFocus"),
@@ -816,6 +818,63 @@ function formatOpsDigestInboxUpdatedLabel(updatedAtMs) {
   return `${elapsedHour}시간 전`;
 }
 
+function formatOpsDigestTimelineToneLabel(tone) {
+  const normalizedTone = String(tone || "info").trim();
+  switch (normalizedTone) {
+    case "success":
+      return "완료";
+    case "warn":
+      return "주의";
+    case "error":
+      return "위험";
+    default:
+      return "안내";
+  }
+}
+
+function summarizeOpsDigestTimelineSources(entries) {
+  if (!entries.length) {
+    return "출처 대기";
+  }
+  const counts = new Map();
+  for (const entry of entries) {
+    const sourceLabel = String(entry?.sourceLabel || "없음").trim() || "없음";
+    counts.set(sourceLabel, (counts.get(sourceLabel) || 0) + 1);
+  }
+  return [...counts.entries()]
+    .sort((left, right) => right[1] - left[1])
+    .slice(0, 2)
+    .map(([label, count]) => `${label} ${count}건`)
+    .join(" · ");
+}
+
+function summarizeOpsDigestTimelineTones(entries) {
+  if (!entries.length) {
+    return "tone 대기";
+  }
+  const counts = new Map();
+  for (const entry of entries) {
+    const toneLabel = formatOpsDigestTimelineToneLabel(entry?.tone || "info");
+    counts.set(toneLabel, (counts.get(toneLabel) || 0) + 1);
+  }
+  const toneOrder = {
+    위험: 3,
+    주의: 2,
+    완료: 1,
+    안내: 0,
+  };
+  return [...counts.entries()]
+    .sort((left, right) => {
+      if (right[1] !== left[1]) {
+        return right[1] - left[1];
+      }
+      return (toneOrder[right[0]] || 0) - (toneOrder[left[0]] || 0);
+    })
+    .slice(0, 2)
+    .map(([label, count]) => `${label} ${count}건`)
+    .join(" · ");
+}
+
 function recordOpsDigestTimelineEntry(entry) {
   const normalizedLabel = String(entry?.label || "").trim();
   const normalizedKind = String(entry?.kind || "none").trim();
@@ -876,12 +935,30 @@ function syncOpsDigestTimeline() {
     (entry) => sourceFilter === "all" || entry.source === sourceFilter,
   );
   const latestTimelineEntry = visibleTimelineEntries[0] || null;
+  const sourceSummary = summarizeOpsDigestTimelineSources(visibleTimelineEntries);
+  const toneSummary = summarizeOpsDigestTimelineTones(visibleTimelineEntries);
   dom.opsDigestPanel.dataset.timelineCount = String(visibleTimelineEntries.length);
+  dom.opsDigestPanel.dataset.timelineSourceSummary = sourceSummary;
+  dom.opsDigestPanel.dataset.timelineToneSummary = toneSummary;
   dom.opsDigestPanel.dataset.timelineLatestSource = latestTimelineEntry?.source || "none";
   dom.opsDigestPanel.dataset.timelineLatestTone = latestTimelineEntry?.tone || "info";
   dom.opsDigestPanel.dataset.timelineSummary = latestTimelineEntry
     ? `${sourceFilterLabel} 최근 ${visibleTimelineEntries.length}건 · 최신 ${latestTimelineEntry.sourceLabel} · ${latestTimelineEntry.label}`
     : `${sourceFilterLabel} 최근 흐름 대기 중`;
+  if (dom.opsDigestTimelineSourceBadge) {
+    dom.opsDigestTimelineSourceBadge.textContent = sourceSummary;
+    applyRiskTone(
+      dom.opsDigestTimelineSourceBadge,
+      sourceFilter === "all" ? "info" : "success",
+    );
+  }
+  if (dom.opsDigestTimelineToneBadge) {
+    dom.opsDigestTimelineToneBadge.textContent = toneSummary;
+    applyRiskTone(
+      dom.opsDigestTimelineToneBadge,
+      latestTimelineEntry?.tone || "info",
+    );
+  }
   if (dom.opsDigestTimelineSummary) {
     dom.opsDigestTimelineSummary.textContent =
       dom.opsDigestPanel.dataset.timelineSummary;
