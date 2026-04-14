@@ -4299,3 +4299,11 @@
 
 ## 1003) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(tone-chip collapsed preview 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1004) 다음 순차 작업
+1. [완료] grouped timeline 각 그룹 헤더에 `패널 열기` 버튼을 추가해, 필터링과 별개로 해당 흐름의 상세 패널로 즉시 점프할 수 있도록 보강.
+2. [완료] `resolveOpsDigestTimelineGroupPanelTarget()`를 추가하고, timeline list click delegation이 group panel button도 처리하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 timeline group panel jump 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1005) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(timeline group panel jump 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
