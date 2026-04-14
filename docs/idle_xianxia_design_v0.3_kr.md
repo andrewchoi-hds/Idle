@@ -4347,3 +4347,11 @@
 
 ## 1015) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(group action tone emphasis 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1016) 다음 순차 작업
+1. [완료] deep-link highlight가 focus target 하나만 보이는 대신, 패널 루트에는 softer context highlight를 같이 남겨 “패널 안의 어디인지”가 한 번에 보이도록 보강.
+2. [완료] `flashOpsDigestJumpTarget(targetNode, label, contextNode)`로 확장하고 `openOpsDigestPanelTarget(...)`가 focus target이 있을 때 panel root를 context highlight로 같이 넘기도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 jump context highlight 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1017) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(jump context highlight 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

@@ -476,6 +476,12 @@ h2 {
   transition: box-shadow 160ms ease;
 }
 
+.ops-jump-context {
+  box-shadow: 0 0 0 2px rgba(125, 231, 192, 0.28);
+  background:
+    linear-gradient(180deg, rgba(125, 231, 192, 0.1), rgba(125, 231, 192, 0.02));
+}
+
 .ops-jump-target::after {
   content: attr(data-jump-label);
   position: absolute;

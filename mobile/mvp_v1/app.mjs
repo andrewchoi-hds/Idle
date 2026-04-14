@@ -1727,7 +1727,7 @@ function syncOpsDigestWarnings() {
   }
 }
 
-function flashOpsDigestJumpTarget(targetNode, label = "바로 확인") {
+function flashOpsDigestJumpTarget(targetNode, label = "바로 확인", contextNode = null) {
   if (!targetNode) {
     return;
   }
@@ -1735,6 +1735,12 @@ function flashOpsDigestJumpTarget(targetNode, label = "바로 확인") {
     node.classList.remove("ops-jump-target");
     delete node.dataset.jumpLabel;
   });
+  document.querySelectorAll(".ops-jump-context").forEach((node) => {
+    node.classList.remove("ops-jump-context");
+  });
+  if (contextNode && contextNode !== targetNode) {
+    contextNode.classList.add("ops-jump-context");
+  }
   targetNode.dataset.jumpLabel = String(label || "바로 확인").trim() || "바로 확인";
   targetNode.classList.add("ops-jump-target");
   if (opsDigestJumpTargetTimer) {
@@ -1743,6 +1749,9 @@ function flashOpsDigestJumpTarget(targetNode, label = "바로 확인") {
   opsDigestJumpTargetTimer = window.setTimeout(() => {
     targetNode.classList.remove("ops-jump-target");
     delete targetNode.dataset.jumpLabel;
+    if (contextNode && contextNode !== targetNode) {
+      contextNode.classList.remove("ops-jump-context");
+    }
     opsDigestJumpTargetTimer = null;
   }, 1600);
 }
@@ -1798,6 +1807,7 @@ function openOpsDigestPanelTarget(
       source,
       focusTargetNode || targetNode,
     ),
+    focusTargetNode ? targetNode : null,
   );
   setStatus(`패널 이동: ${actionLabel}`, false, source);
 }
