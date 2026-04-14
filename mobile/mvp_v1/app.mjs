@@ -933,23 +933,10 @@ function summarizeOpsDigestTimelineGroups(entries) {
 
 function formatOpsDigestTimelineCollapsedPreview(entries, maxItems = 2) {
   const normalizedMaxItems = Math.max(1, Math.floor(Number(maxItems) || 1));
-  const previewEntries = Array.isArray(entries)
-    ? entries
-        .slice()
-        .sort((left, right) => {
-          const toneRankDelta =
-            resolveOpsDigestTimelineToneRank(right?.tone) -
-            resolveOpsDigestTimelineToneRank(left?.tone);
-          if (toneRankDelta !== 0) {
-            return toneRankDelta;
-          }
-          return (
-            Math.floor(Number(right?.updatedAt) || 0) -
-            Math.floor(Number(left?.updatedAt) || 0)
-          );
-        })
-        .slice(0, normalizedMaxItems)
-    : [];
+  const previewEntries = collectOpsDigestTimelineCollapsedPreviewEntries(
+    entries,
+    normalizedMaxItems,
+  );
   if (previewEntries.length === 0) {
     return "미리보기 없음";
   }
@@ -957,6 +944,28 @@ function formatOpsDigestTimelineCollapsedPreview(entries, maxItems = 2) {
     .map((entry) => String(entry?.label || "").trim())
     .filter(Boolean)
     .join(" / ");
+}
+
+function collectOpsDigestTimelineCollapsedPreviewEntries(entries, maxItems = 2) {
+  const normalizedMaxItems = Math.max(1, Math.floor(Number(maxItems) || 1));
+  if (!Array.isArray(entries)) {
+    return [];
+  }
+  return entries
+    .slice()
+    .sort((left, right) => {
+      const toneRankDelta =
+        resolveOpsDigestTimelineToneRank(right?.tone) -
+        resolveOpsDigestTimelineToneRank(left?.tone);
+      if (toneRankDelta !== 0) {
+        return toneRankDelta;
+      }
+      return (
+        Math.floor(Number(right?.updatedAt) || 0) -
+        Math.floor(Number(left?.updatedAt) || 0)
+      );
+    })
+    .slice(0, normalizedMaxItems);
 }
 
 function toggleOpsDigestTimelineGroup(groupLabel) {
@@ -1301,7 +1310,8 @@ function syncOpsDigestTimeline() {
   dom.opsDigestPanel.dataset.timelineCollapsedPreviewDepth = String(
     collapsedPreviewDepth,
   );
-  dom.opsDigestPanel.dataset.timelineCollapsedPreviewStrategy = "tone_priority";
+  dom.opsDigestPanel.dataset.timelineCollapsedPreviewStrategy = "tone_chip";
+  dom.opsDigestPanel.dataset.timelineCollapsedPreviewStyle = "tone_chip";
   dom.opsDigestPanel.dataset.timelineLatestSource = latestTimelineEntry?.source || "none";
   dom.opsDigestPanel.dataset.timelineLatestTone = latestTimelineEntry?.tone || "info";
   dom.opsDigestPanel.dataset.timelineSummary = latestTimelineEntry
@@ -1363,7 +1373,11 @@ function syncOpsDigestTimeline() {
   let collapsedPreviewCount = 0;
   for (const [groupLabel, entries] of groupedTimelineEntries.entries()) {
     const collapsed = opsDigestTimelineGroupCollapseState[groupLabel] === true;
-    const previewEntry = entries[0] || null;
+    const previewEntries = collectOpsDigestTimelineCollapsedPreviewEntries(
+      entries,
+      collapsedPreviewDepth,
+    );
+    const previewEntry = previewEntries[0] || null;
     const collapsedPreviewLabel = formatOpsDigestTimelineCollapsedPreview(
       entries,
       collapsedPreviewDepth,
@@ -1389,12 +1403,26 @@ function syncOpsDigestTimeline() {
     groupTitle.dataset.groupLabel = groupLabel;
     groupTitle.setAttribute("aria-expanded", String(!collapsed));
     groupTitle.textContent = collapsed
-      ? `${groupLabel} · ${entries.length}건 · ${collapsedPreviewLabel}`
+      ? `${groupLabel} · ${entries.length}건`
       : `${groupLabel} · ${entries.length}건 · 접기`;
     groupTitle.title = collapsed
       ? `${groupLabel} 우선 ${collapsedPreviewDepth}건 · ${previewEntry?.sourceLabel || "없음"} · ${collapsedPreviewLabel}`
       : `${groupLabel} 그룹 접기`;
     groupHead.append(groupTitle);
+
+    if (collapsed && previewEntries.length > 0) {
+      const groupPreview = document.createElement("div");
+      groupPreview.className = "ops-digest-timeline-group-preview";
+      for (const previewItem of previewEntries) {
+        const previewChip = document.createElement("span");
+        previewChip.className = `ops-digest-badge tone-${previewItem.tone || "info"}`;
+        previewChip.textContent = String(previewItem.label || "").trim() || "미리보기";
+        previewChip.title =
+          `${previewItem.sourceLabel || "없음"} · ${previewItem.label || "미리보기 없음"}`;
+        groupPreview.append(previewChip);
+      }
+      groupHead.append(groupPreview);
+    }
 
     const groupFilterButton = document.createElement("button");
     groupFilterButton.type = "button";
