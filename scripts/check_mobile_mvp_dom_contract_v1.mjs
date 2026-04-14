@@ -9652,6 +9652,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function resolveOpsDigestTimelineGroupFilter(groupLabel, entries = []) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function focusOpsDigestTimelineGroup(groupFilter) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function recordOpsDigestTimelineEntry(entry) {",
     "app.mjs",
     failures,
@@ -10150,6 +10162,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    'groupFilterButton.className = "ghost-btn ops-digest-timeline-group-filter";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'groupFilterButton.textContent = "이 흐름만";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     '`${groupLabel} · ${entries.length}건 · ${previewEntry?.label || "미리보기 없음"}`',
     "app.mjs",
     failures,
@@ -10163,6 +10187,18 @@ async function main() {
   assertIncludes(
     app,
     'groupList.className = "ops-digest-timeline-sublist";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'const groupFilterButton = event.target?.closest(".ops-digest-timeline-group-filter");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "focusOpsDigestTimelineGroup(groupFilterButton.dataset.groupFilter || \"all\");",
     "app.mjs",
     failures,
   );
