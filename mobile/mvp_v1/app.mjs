@@ -129,6 +129,7 @@ const dom = {
   opsDigestActiveSourceFilter: document.getElementById("opsDigestActiveSourceFilter"),
   opsDigestActiveToneFilter: document.getElementById("opsDigestActiveToneFilter"),
   opsDigestFilterSummary: document.getElementById("opsDigestFilterSummary"),
+  btnOpsDigestPresetWarning: document.getElementById("btnOpsDigestPresetWarning"),
   btnOpsDigestClearFilters: document.getElementById("btnOpsDigestClearFilters"),
   opsDigestTimelineSourceBadge: document.getElementById("opsDigestTimelineSourceBadge"),
   opsDigestTimelineToneBadge: document.getElementById("opsDigestTimelineToneBadge"),
@@ -915,6 +916,25 @@ function clearOpsDigestFilters() {
   syncOpsDigestInbox();
 }
 
+function applyOpsDigestWarningOnlyPreset() {
+  if (!dom.opsDigestPanel) {
+    return;
+  }
+  const warningPresetActive =
+    dom.opsDigestPanel.dataset.timelineToneFilter === "alert" &&
+    dom.opsDigestPanel.dataset.inboxSourceFilter === "all";
+  if (warningPresetActive) {
+    clearOpsDigestFilters();
+    return;
+  }
+  dom.opsDigestPanel.dataset.inboxSourceFilter = "all";
+  dom.opsDigestPanel.dataset.inboxSourceFilterLabel = "전체";
+  dom.opsDigestPanel.dataset.timelineToneFilter = "alert";
+  dom.opsDigestPanel.dataset.timelineToneFilterLabel = "주의/위험";
+  syncOpsDigestNextAction();
+  syncOpsDigestInbox();
+}
+
 function syncOpsDigestFilterBar() {
   if (!dom.opsDigestPanel) {
     return;
@@ -938,6 +958,8 @@ function syncOpsDigestFilterBar() {
   );
   const activeCount =
     (sourceFilter === "all" ? 0 : 1) + (toneFilter === "all" ? 0 : 1);
+  const warningPresetActive =
+    sourceFilter === "all" && toneFilter === "alert";
   const sourceLabel = sourceFilter === "all" ? "출처 전체" : `출처 ${sourceFilterLabel}`;
   const toneLabel = toneFilterLabel;
   dom.opsDigestPanel.dataset.filterSourceLabel = sourceLabel;
@@ -947,6 +969,8 @@ function syncOpsDigestFilterBar() {
     activeCount === 0
       ? `필터 없음 · 인박스 ${inboxVisibleCount}건 · 흐름 ${timelineCount}건`
       : `${sourceLabel} · ${toneLabel} · 인박스 ${inboxVisibleCount}건 · 흐름 ${timelineCount}건`;
+  dom.opsDigestPanel.dataset.filterPresetLabel = "경고 흐름";
+  dom.opsDigestPanel.dataset.filterPresetActive = String(warningPresetActive);
   dom.opsDigestPanel.dataset.filterResetLabel = "필터 해제";
   dom.opsDigestPanel.dataset.filterResetDisabled = String(activeCount === 0);
   if (dom.opsDigestActiveSourceFilter) {
@@ -971,6 +995,18 @@ function syncOpsDigestFilterBar() {
     dom.btnOpsDigestClearFilters.textContent =
       dom.opsDigestPanel.dataset.filterResetLabel;
     dom.btnOpsDigestClearFilters.disabled = activeCount === 0;
+  }
+  if (dom.btnOpsDigestPresetWarning) {
+    dom.btnOpsDigestPresetWarning.textContent =
+      dom.opsDigestPanel.dataset.filterPresetLabel;
+    dom.btnOpsDigestPresetWarning.classList.toggle(
+      "filter-active",
+      warningPresetActive,
+    );
+    dom.btnOpsDigestPresetWarning.setAttribute(
+      "aria-pressed",
+      String(warningPresetActive),
+    );
   }
 }
 
@@ -14684,6 +14720,9 @@ function bindEvents() {
     event.preventDefault();
     event.stopPropagation();
     setOpsDigestTimelineToneFilter("alert");
+  });
+  dom.btnOpsDigestPresetWarning?.addEventListener("click", () => {
+    applyOpsDigestWarningOnlyPreset();
   });
   dom.btnOpsDigestClearFilters?.addEventListener("click", () => {
     clearOpsDigestFilters();

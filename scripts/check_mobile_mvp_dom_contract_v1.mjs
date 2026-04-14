@@ -46,6 +46,7 @@ const REQUIRED_HTML_IDS = [
   "opsDigestActiveSourceFilter",
   "opsDigestActiveToneFilter",
   "opsDigestFilterSummary",
+  "btnOpsDigestPresetWarning",
   "btnOpsDigestClearFilters",
   "opsDigestTimelineSourceBadge",
   "opsDigestTimelineToneBadge",
@@ -236,6 +237,7 @@ const REQUIRED_DOM_KEYS = [
   "opsDigestActiveSourceFilter",
   "opsDigestActiveToneFilter",
   "opsDigestFilterSummary",
+  "btnOpsDigestPresetWarning",
   "btnOpsDigestClearFilters",
   "opsDigestTimelineSourceBadge",
   "opsDigestTimelineToneBadge",
@@ -1921,6 +1923,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="btnOpsDigestPresetWarning"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-quick-action-summary="전투 집중 ON · 실시간 자동 시작 · 권장 설정 적용(대기) · 로컬 저장"',
     "index.html",
     failures,
@@ -2048,6 +2056,18 @@ async function main() {
   assertIncludes(
     html,
     'data-filter-summary="필터 없음 · 인박스 4건 · 흐름 0건"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-filter-preset-label="경고 흐름"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-filter-preset-active="false"',
     "index.html",
     failures,
   );
@@ -9448,6 +9468,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function applyOpsDigestWarningOnlyPreset() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function syncOpsDigestFilterBar() {",
     "app.mjs",
     failures,
@@ -9718,6 +9744,30 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.opsDigestPanel.dataset.filterPresetLabel = \"경고 흐름\";",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.filterPresetActive = String(warningPresetActive);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnOpsDigestPresetWarning.textContent =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnOpsDigestPresetWarning.classList.toggle(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestActiveSourceFilter.textContent = sourceLabel;",
     "app.mjs",
     failures,
@@ -9761,6 +9811,18 @@ async function main() {
   assertIncludes(
     app,
     'setOpsDigestTimelineToneFilter("alert");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.btnOpsDigestPresetWarning?.addEventListener("click", () => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "applyOpsDigestWarningOnlyPreset();",
     "app.mjs",
     failures,
   );
