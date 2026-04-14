@@ -3057,6 +3057,24 @@ textarea:focus-visible,
   font-size: 12px;
 }
 
+.ghost-btn.tone-info {
+  border-color: #4d6f67;
+  background: rgba(20, 44, 39, 0.92);
+  color: #d6efe8;
+}
+
+.ghost-btn.tone-warn {
+  border-color: #c08d34;
+  background: rgba(59, 42, 12, 0.94);
+  color: #ffe0a1;
+}
+
+.ghost-btn.tone-error {
+  border-color: #b14b45;
+  background: rgba(61, 22, 22, 0.94);
+  color: #ffd0cc;
+}
+
 #btnToggleBattleFocus[aria-pressed="true"] {
   border-color: #2e8f68;
   color: #9af5ce;

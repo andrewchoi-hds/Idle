@@ -10228,7 +10228,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    "applyRiskTone(groupFilterButton, groupActionTone);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'groupPanelButton.className = "ghost-btn ops-digest-timeline-group-panel";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "applyRiskTone(groupPanelButton, groupActionTone);",
     "app.mjs",
     failures,
   );
