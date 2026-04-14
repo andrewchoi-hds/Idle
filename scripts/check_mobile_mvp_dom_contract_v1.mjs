@@ -2021,6 +2021,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-timeline-tone-filter="all"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-timeline-tone-filter-label="전체 흐름"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-timeline-latest-source="none"',
     "index.html",
     failures,
@@ -9350,6 +9362,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function matchesOpsDigestTimelineToneFilter(entry, toneFilter) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function setOpsDigestTimelineToneFilter(filter) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function formatOpsDigestTimelineToneLabel(tone) {",
     "app.mjs",
     failures,
@@ -9572,6 +9596,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    'String(dom.opsDigestPanel.dataset.timelineToneFilter || "all").trim() || "all";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestPanel.dataset.timelineToneFilter = nextFilter;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.timelineCount = String(visibleTimelineEntries.length);",
     "app.mjs",
     failures,
@@ -9602,7 +9638,25 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.opsDigestTimelineToneBadge.textContent = toneSummary;",
+    'toneFilter === "all" ? toneSummary : `${toneFilterLabel} · ${visibleTimelineEntries.length}건`;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestTimelineToneBadge.classList.toggle(',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestTimelineToneBadge?.addEventListener("click", (event) => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'setOpsDigestTimelineToneFilter("alert");',
     "app.mjs",
     failures,
   );

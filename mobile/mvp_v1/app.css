@@ -182,6 +182,10 @@ h2 {
   flex-wrap: wrap;
 }
 
+.ops-digest-timeline-meta .ops-digest-badge[role="button"] {
+  cursor: pointer;
+}
+
 .ops-digest-inbox-head {
   display: flex;
   justify-content: space-between;
