@@ -279,7 +279,7 @@ h2 {
 
 .ops-digest-timeline-group-head {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto auto;
   gap: 8px;
   align-items: center;
 }
@@ -298,6 +298,10 @@ h2 {
 }
 
 .ops-digest-timeline-group-filter {
+  white-space: nowrap;
+}
+
+.ops-digest-timeline-group-panel {
   white-space: nowrap;
 }
 

@@ -994,6 +994,38 @@ function resolveOpsDigestTimelineGroupFilter(groupLabel, entries = []) {
   }
 }
 
+function resolveOpsDigestTimelineGroupPanelTarget(groupLabel) {
+  const normalizedGroupLabel = String(groupLabel || "").trim();
+  switch (normalizedGroupLabel) {
+    case "자동 흐름":
+      return {
+        targetId: "actionsPanel",
+        label: "자동화 패널 열기",
+        source: "ops_actions",
+      };
+    case "돌파 흐름":
+      return {
+        targetId: "breakthroughPreviewPanel",
+        label: "돌파 패널 열기",
+        source: "ops_breakthrough",
+      };
+    case "전투 흐름":
+      return {
+        targetId: "battleScenePanel",
+        label: "전장 패널 열기",
+        source: "ops_battle",
+      };
+    case "저장 흐름":
+      return {
+        targetId: "savePanel",
+        label: "저장 패널 열기",
+        source: "ops_save",
+      };
+    default:
+      return null;
+  }
+}
+
 function focusOpsDigestTimelineGroup(groupFilter) {
   if (!dom.opsDigestPanel) {
     return;
@@ -1383,6 +1415,7 @@ function syncOpsDigestTimeline() {
       collapsedPreviewDepth,
     );
     const groupFilter = resolveOpsDigestTimelineGroupFilter(groupLabel, entries);
+    const groupPanelTarget = resolveOpsDigestTimelineGroupPanelTarget(groupLabel);
     if (collapsed) {
       collapsedGroupCount += 1;
       if (previewEntry) {
@@ -1437,6 +1470,18 @@ function syncOpsDigestTimeline() {
       : `${groupLabel}만 보기`;
     groupFilterButton.disabled = groupFilter === "none";
     groupHead.append(groupFilterButton);
+
+    const groupPanelButton = document.createElement("button");
+    groupPanelButton.type = "button";
+    groupPanelButton.className = "ghost-btn ops-digest-timeline-group-panel";
+    groupPanelButton.dataset.groupPanelTarget = groupPanelTarget?.targetId || "";
+    groupPanelButton.dataset.groupPanelLabel =
+      groupPanelTarget?.label || "패널 없음";
+    groupPanelButton.dataset.groupPanelSource =
+      groupPanelTarget?.source || "ops_digest";
+    groupPanelButton.textContent = groupPanelTarget ? "패널 열기" : "패널 없음";
+    groupPanelButton.disabled = !groupPanelTarget;
+    groupHead.append(groupPanelButton);
     groupItem.append(groupHead);
 
     const groupList = document.createElement("ul");
@@ -15080,6 +15125,18 @@ function bindEvents() {
     });
   }
   dom.opsDigestTimelineList?.addEventListener("click", (event) => {
+    const groupPanelButton = event.target?.closest(".ops-digest-timeline-group-panel");
+    if (groupPanelButton instanceof HTMLButtonElement) {
+      const targetId = String(groupPanelButton.dataset.groupPanelTarget || "").trim();
+      if (targetId) {
+        openOpsDigestPanelTarget(
+          targetId,
+          groupPanelButton.dataset.groupPanelLabel || "관련 패널 열기",
+          groupPanelButton.dataset.groupPanelSource || "ops_digest",
+        );
+      }
+      return;
+    }
     const groupFilterButton = event.target?.closest(".ops-digest-timeline-group-filter");
     if (groupFilterButton instanceof HTMLButtonElement) {
       focusOpsDigestTimelineGroup(groupFilterButton.dataset.groupFilter || "all");

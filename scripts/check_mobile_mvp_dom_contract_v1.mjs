@@ -9676,6 +9676,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function resolveOpsDigestTimelineGroupPanelTarget(groupLabel) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function focusOpsDigestTimelineGroup(groupFilter) {",
     "app.mjs",
     failures,
@@ -10198,6 +10204,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    'groupPanelButton.className = "ghost-btn ops-digest-timeline-group-panel";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'groupPanelButton.textContent = groupPanelTarget ? "패널 열기" : "패널 없음";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'groupFilterButton.textContent = groupFilterActive ? "전체 복귀" : "이 흐름만";',
     "app.mjs",
     failures,
@@ -10229,6 +10247,18 @@ async function main() {
   assertIncludes(
     app,
     'groupList.className = "ops-digest-timeline-sublist";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'const groupPanelButton = event.target?.closest(".ops-digest-timeline-group-panel");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "openOpsDigestPanelTarget(",
     "app.mjs",
     failures,
   );
