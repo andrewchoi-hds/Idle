@@ -807,6 +807,7 @@ const opsDigestInboxStampState = {
 };
 const OPS_DIGEST_TIMELINE_LIMIT = 6;
 const opsDigestTimelineState = [];
+const opsDigestTimelineGroupCollapseState = {};
 
 function formatOpsDigestInboxUpdatedLabel(updatedAtMs) {
   const normalized = Math.max(0, Math.floor(Number(updatedAtMs) || 0));
@@ -915,6 +916,16 @@ function summarizeOpsDigestTimelineGroups(entries) {
     .slice(0, 3)
     .map(([label, count]) => `${label} ${count}건`)
     .join(" · ");
+}
+
+function toggleOpsDigestTimelineGroup(groupLabel) {
+  const normalizedGroupLabel = String(groupLabel || "").trim();
+  if (!normalizedGroupLabel) {
+    return;
+  }
+  opsDigestTimelineGroupCollapseState[normalizedGroupLabel] =
+    opsDigestTimelineGroupCollapseState[normalizedGroupLabel] !== true;
+  syncOpsDigestTimeline();
 }
 
 function matchesOpsDigestTimelineToneFilter(entry, toneFilter) {
@@ -1267,17 +1278,32 @@ function syncOpsDigestTimeline() {
     }
     groupedTimelineEntries.get(groupLabel).push(entry);
   }
+  let expandedGroupCount = 0;
+  let collapsedGroupCount = 0;
   for (const [groupLabel, entries] of groupedTimelineEntries.entries()) {
+    const collapsed = opsDigestTimelineGroupCollapseState[groupLabel] === true;
+    if (collapsed) {
+      collapsedGroupCount += 1;
+    } else {
+      expandedGroupCount += 1;
+    }
     const groupItem = document.createElement("li");
     groupItem.className = "ops-digest-timeline-group";
+    groupItem.dataset.groupCollapsed = String(collapsed);
 
-    const groupTitle = document.createElement("p");
-    groupTitle.className = "ops-digest-timeline-group-title";
-    groupTitle.textContent = `${groupLabel} · ${entries.length}건`;
+    const groupTitle = document.createElement("button");
+    groupTitle.type = "button";
+    groupTitle.className = "ghost-btn ops-digest-timeline-group-toggle";
+    groupTitle.dataset.groupLabel = groupLabel;
+    groupTitle.setAttribute("aria-expanded", String(!collapsed));
+    groupTitle.textContent = collapsed
+      ? `${groupLabel} · ${entries.length}건 · 펼치기`
+      : `${groupLabel} · ${entries.length}건 · 접기`;
     groupItem.append(groupTitle);
 
     const groupList = document.createElement("ul");
     groupList.className = "ops-digest-timeline-sublist";
+    groupList.hidden = collapsed;
 
     for (const entry of entries) {
       const item = document.createElement("li");
@@ -1311,6 +1337,19 @@ function syncOpsDigestTimeline() {
 
     groupItem.append(groupList);
     dom.opsDigestTimelineList.append(groupItem);
+  }
+  const visibilitySummary =
+    groupedTimelineEntries.size === 0
+      ? "접힘 대기"
+      : `${expandedGroupCount}개 펼침 · ${collapsedGroupCount}개 접힘`;
+  dom.opsDigestPanel.dataset.timelineExpandedGroupCount = String(expandedGroupCount);
+  dom.opsDigestPanel.dataset.timelineCollapsedGroupCount = String(collapsedGroupCount);
+  dom.opsDigestPanel.dataset.timelineGroupVisibilitySummary = visibilitySummary;
+  if (dom.opsDigestTimelineGroupSummary) {
+    dom.opsDigestTimelineGroupSummary.textContent =
+      groupSummary === "그룹 대기"
+        ? groupSummary
+        : `${groupSummary} · ${visibilitySummary}`;
   }
   syncOpsDigestFilterBar();
 }
@@ -14900,6 +14939,11 @@ function bindEvents() {
     });
   }
   dom.opsDigestTimelineList?.addEventListener("click", (event) => {
+    const groupToggle = event.target?.closest(".ops-digest-timeline-group-toggle");
+    if (groupToggle instanceof HTMLButtonElement) {
+      toggleOpsDigestTimelineGroup(groupToggle.dataset.groupLabel || "");
+      return;
+    }
     const timelineButton = event.target?.closest(".ops-digest-timeline-item");
     if (!(timelineButton instanceof HTMLButtonElement) || timelineButton.disabled) {
       return;
