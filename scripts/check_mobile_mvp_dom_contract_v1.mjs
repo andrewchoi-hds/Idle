@@ -9496,7 +9496,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    "function openOpsDigestPanelTarget(targetId, actionLabel = \"패널 확인\", source = \"ops_digest\") {",
+    "function openOpsDigestPanelTarget(",
     "app.mjs",
     failures,
   );
@@ -10210,6 +10210,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'groupPanelButton.dataset.groupPanelFocusTarget =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'groupPanelButton.textContent = groupPanelTarget ? "패널 열기" : "패널 없음";',
     "app.mjs",
     failures,
@@ -10259,6 +10265,12 @@ async function main() {
   assertIncludes(
     app,
     "openOpsDigestPanelTarget(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'groupPanelButton.dataset.groupPanelFocusTarget || "",',
     "app.mjs",
     failures,
   );
