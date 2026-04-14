@@ -126,6 +126,8 @@ const dom = {
   opsDigestInboxWarning: document.getElementById("opsDigestInboxWarning"),
   opsDigestInboxPrimary: document.getElementById("opsDigestInboxPrimary"),
   opsDigestInboxSecondary: document.getElementById("opsDigestInboxSecondary"),
+  opsDigestTimelineSummary: document.getElementById("opsDigestTimelineSummary"),
+  opsDigestTimelineList: document.getElementById("opsDigestTimelineList"),
   btnOpsDigestFocus: document.getElementById("btnOpsDigestFocus"),
   btnOpsDigestRealtime: document.getElementById("btnOpsDigestRealtime"),
   btnOpsDigestRecommendation: document.getElementById("btnOpsDigestRecommendation"),
@@ -791,6 +793,8 @@ const opsDigestInboxStampState = {
   primary: { signature: "", updatedAt: 0 },
   secondary: { signature: "", updatedAt: 0 },
 };
+const OPS_DIGEST_TIMELINE_LIMIT = 6;
+const opsDigestTimelineState = [];
 
 function formatOpsDigestInboxUpdatedLabel(updatedAtMs) {
   const normalized = Math.max(0, Math.floor(Number(updatedAtMs) || 0));
@@ -810,6 +814,118 @@ function formatOpsDigestInboxUpdatedLabel(updatedAtMs) {
   }
   const elapsedHour = Math.floor(elapsedMin / 60);
   return `${elapsedHour}시간 전`;
+}
+
+function recordOpsDigestTimelineEntry(entry) {
+  const normalizedLabel = String(entry?.label || "").trim();
+  const normalizedKind = String(entry?.kind || "none").trim();
+  const normalizedTarget = String(entry?.target || "").trim();
+  const normalizedSource = String(entry?.source || "none").trim();
+  const normalizedTone =
+    entry?.tone === "error" ? "error" : entry?.tone === "warn" ? "warn" : "info";
+  const normalizedPriority = String(entry?.priority || "low").trim() || "low";
+  const disabled = entry?.disabled === true;
+  if (!normalizedLabel || (disabled && normalizedKind === "none")) {
+    return;
+  }
+  const signature = [
+    String(entry?.stateKey || "timeline"),
+    normalizedLabel,
+    normalizedKind,
+    normalizedTarget,
+    normalizedSource,
+    String(disabled),
+    normalizedTone,
+    normalizedPriority,
+    String(Number(entry?.score || 0)),
+  ].join("|");
+  const updatedAt = Math.max(0, Math.floor(Number(entry?.updatedAt) || Date.now()));
+  const latestEntry = opsDigestTimelineState[0];
+  if (latestEntry && latestEntry.signature === signature) {
+    latestEntry.updatedAt = updatedAt;
+    return;
+  }
+  opsDigestTimelineState.unshift({
+    signature,
+    stateKey: String(entry?.stateKey || "timeline"),
+    label: normalizedLabel,
+    kind: normalizedKind,
+    target: normalizedTarget,
+    source: normalizedSource,
+    sourceLabel: formatOpsDigestInboxSourceLabel(normalizedSource),
+    tone: normalizedTone,
+    priority: normalizedPriority,
+    score: Number(entry?.score || 0),
+    disabled,
+    updatedAt,
+  });
+  if (opsDigestTimelineState.length > OPS_DIGEST_TIMELINE_LIMIT) {
+    opsDigestTimelineState.length = OPS_DIGEST_TIMELINE_LIMIT;
+  }
+}
+
+function syncOpsDigestTimeline() {
+  if (!dom.opsDigestPanel) {
+    return;
+  }
+  const sourceFilter =
+    String(dom.opsDigestPanel.dataset.inboxSourceFilter || "all").trim() || "all";
+  const sourceFilterLabel =
+    String(dom.opsDigestPanel.dataset.inboxSourceFilterLabel || "전체").trim() || "전체";
+  const visibleTimelineEntries = opsDigestTimelineState.filter(
+    (entry) => sourceFilter === "all" || entry.source === sourceFilter,
+  );
+  const latestTimelineEntry = visibleTimelineEntries[0] || null;
+  dom.opsDigestPanel.dataset.timelineCount = String(visibleTimelineEntries.length);
+  dom.opsDigestPanel.dataset.timelineLatestSource = latestTimelineEntry?.source || "none";
+  dom.opsDigestPanel.dataset.timelineLatestTone = latestTimelineEntry?.tone || "info";
+  dom.opsDigestPanel.dataset.timelineSummary = latestTimelineEntry
+    ? `${sourceFilterLabel} 최근 ${visibleTimelineEntries.length}건 · 최신 ${latestTimelineEntry.sourceLabel} · ${latestTimelineEntry.label}`
+    : `${sourceFilterLabel} 최근 흐름 대기 중`;
+  if (dom.opsDigestTimelineSummary) {
+    dom.opsDigestTimelineSummary.textContent =
+      dom.opsDigestPanel.dataset.timelineSummary;
+  }
+  if (!dom.opsDigestTimelineList) {
+    return;
+  }
+  dom.opsDigestTimelineList.replaceChildren();
+  if (visibleTimelineEntries.length === 0) {
+    const emptyItem = document.createElement("li");
+    emptyItem.className = "ops-digest-timeline-empty";
+    emptyItem.textContent = "최근 흐름 대기 중";
+    dom.opsDigestTimelineList.append(emptyItem);
+    return;
+  }
+  for (const entry of visibleTimelineEntries.slice(0, OPS_DIGEST_TIMELINE_LIMIT)) {
+    const item = document.createElement("li");
+    item.className = "ops-digest-timeline-row";
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `ghost-btn ops-digest-timeline-item tone-${entry.tone} priority-${entry.priority}`;
+    button.disabled = entry.disabled;
+    button.dataset.timelineKind = entry.kind;
+    button.dataset.timelineTarget = entry.target;
+    button.dataset.timelineSource = entry.source;
+    button.dataset.timelineLabel = entry.label;
+
+    const sourceBadge = document.createElement("span");
+    sourceBadge.className = "ops-digest-inbox-source";
+    sourceBadge.textContent = entry.sourceLabel;
+
+    const textNode = document.createElement("span");
+    textNode.className = "ops-digest-inbox-text";
+    textNode.textContent = entry.label;
+
+    const timeNode = document.createElement("span");
+    timeNode.className = "ops-digest-inbox-time";
+    timeNode.textContent = formatOpsDigestInboxUpdatedLabel(entry.updatedAt);
+
+    button.append(sourceBadge, textNode, timeNode);
+    item.append(button);
+    dom.opsDigestTimelineList.append(item);
+  }
 }
 
 function syncOpsDigestRecentAction(message, isError = false, source = "system") {
@@ -1303,7 +1419,8 @@ function syncOpsDigestInboxEntry(node, descriptor, label, tone = "info", score =
     signature: "",
     updatedAt: 0,
   };
-  if (stampState.signature !== signature) {
+  const didChange = stampState.signature !== signature;
+  if (didChange) {
     stampState.signature = signature;
     stampState.updatedAt = Date.now();
   }
@@ -1338,6 +1455,20 @@ function syncOpsDigestInboxEntry(node, descriptor, label, tone = "info", score =
   const timeNode = node.querySelector(".ops-digest-inbox-time");
   if (timeNode) {
     timeNode.textContent = node.dataset.inboxUpdatedLabel;
+  }
+  if (didChange) {
+    recordOpsDigestTimelineEntry({
+      stateKey,
+      label: normalizedLabel,
+      kind: descriptor?.kind,
+      target: descriptor?.target,
+      source: descriptor?.source,
+      tone: normalizedTone,
+      priority,
+      score: Number(score) || 0,
+      disabled,
+      updatedAt: stampState.updatedAt,
+    });
   }
 }
 
@@ -1815,6 +1946,7 @@ function syncOpsDigestInbox() {
       actionableEntries.length > 0 ? "success" : "warn",
     );
   }
+  syncOpsDigestTimeline();
 }
 
 function executeOpsDigestNextAction() {
@@ -14334,6 +14466,18 @@ function bindEvents() {
       );
     });
   }
+  dom.opsDigestTimelineList?.addEventListener("click", (event) => {
+    const timelineButton = event.target?.closest(".ops-digest-timeline-item");
+    if (!(timelineButton instanceof HTMLButtonElement) || timelineButton.disabled) {
+      return;
+    }
+    executeOpsDigestAction(
+      timelineButton.dataset.timelineKind,
+      timelineButton.dataset.timelineTarget,
+      timelineButton.dataset.timelineSource,
+      timelineButton.dataset.timelineLabel || timelineButton.textContent || "최근 흐름 항목",
+    );
+  });
   const inboxSourceBadges = document.querySelectorAll(".ops-digest-inbox-source");
   for (const badge of inboxSourceBadges) {
     badge.addEventListener("click", (event) => {

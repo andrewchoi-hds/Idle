@@ -4179,3 +4179,11 @@
 
 ## 973) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(fresh inbox meta ranking 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 974) 다음 순차 작업
+1. [완료] 운용 다이제스트의 인박스 아래에 `최근 흐름` timeline 블록(`opsDigestTimelineSummary`, `opsDigestTimelineList`)을 추가해, 최근에 실제로 바뀐 meaningful inbox entry를 최대 6건까지 누적해서 읽을 수 있도록 보강.
+2. [완료] `syncOpsDigestInboxEntry()`가 signature 변경 시 timeline event를 기록하고, `syncOpsDigestTimeline()`이 현재 source filter를 반영한 timeline summary/list를 렌더하도록 정합화해 timeline 항목에서도 관련 패널/액션으로 다시 진입할 수 있게 구성.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ops digest timeline consumer 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 975) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ops digest timeline consumer 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
