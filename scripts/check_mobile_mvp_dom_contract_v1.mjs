@@ -43,6 +43,8 @@ const REQUIRED_HTML_IDS = [
   "opsDigestInboxWarning",
   "opsDigestInboxPrimary",
   "opsDigestInboxSecondary",
+  "opsDigestTimelineSourceBadge",
+  "opsDigestTimelineToneBadge",
   "opsDigestTimelineSummary",
   "opsDigestTimelineList",
   "btnOpsDigestFocus",
@@ -227,6 +229,8 @@ const REQUIRED_DOM_KEYS = [
   "opsDigestInboxWarning",
   "opsDigestInboxPrimary",
   "opsDigestInboxSecondary",
+  "opsDigestTimelineSourceBadge",
+  "opsDigestTimelineToneBadge",
   "opsDigestTimelineSummary",
   "opsDigestTimelineList",
   "btnOpsDigestFocus",
@@ -1873,6 +1877,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestTimelineSourceBadge"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="opsDigestTimelineToneBadge"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-quick-action-summary="전투 집중 ON · 실시간 자동 시작 · 권장 설정 적용(대기) · 로컬 저장"',
     "index.html",
     failures,
@@ -1988,6 +2004,18 @@ async function main() {
   assertIncludes(
     html,
     'data-timeline-summary="최근 흐름 대기 중"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-timeline-source-summary="출처 대기"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-timeline-tone-summary="tone 대기"',
     "index.html",
     failures,
   );
@@ -9322,6 +9350,24 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function formatOpsDigestTimelineToneLabel(tone) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function summarizeOpsDigestTimelineSources(entries) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function summarizeOpsDigestTimelineTones(entries) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function recordOpsDigestTimelineEntry(entry) {",
     "app.mjs",
     failures,
@@ -9533,6 +9579,30 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestPanel.dataset.timelineSummary = latestTimelineEntry",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.timelineSourceSummary = sourceSummary;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.timelineToneSummary = toneSummary;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestTimelineSourceBadge.textContent = sourceSummary;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestTimelineToneBadge.textContent = toneSummary;",
     "app.mjs",
     failures,
   );

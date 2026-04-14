@@ -4187,3 +4187,11 @@
 
 ## 975) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ops digest timeline consumer 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 976) 다음 순차 작업
+1. [완료] `최근 흐름` timeline 헤더에 `출처 요약`과 `tone 요약` badge를 추가해, 리스트를 다 읽지 않아도 현재 누적 흐름의 대략적인 분포를 먼저 파악할 수 있도록 보강.
+2. [완료] `syncOpsDigestTimeline()`가 visible timeline entry를 바탕으로 `data-timeline-source-summary`, `data-timeline-tone-summary` contract를 함께 계산하고, 최신 tone과 source filter 상태에 맞춰 header badge를 갱신하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 timeline summary badge 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 977) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(timeline summary badge 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
