@@ -4219,3 +4219,11 @@
 
 ## 983) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(warning preset filter bar 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 984) 다음 순차 작업
+1. [완료] compact filter bar에 `전투 흐름`, `저장 흐름` preset 버튼(`btnOpsDigestPresetBattle`, `btnOpsDigestPresetSave`)을 추가해, 개별 source badge를 찍지 않아도 주요 운영 흐름을 의미 단위로 빠르게 좁혀 볼 수 있도록 보강.
+2. [완료] `matchesOpsDigestSourceFilter()`와 `applyOpsDigestSourceGroupPreset()`를 추가하고, 인박스/timeline/source-highlight/action queue가 exact source뿐 아니라 `group:battle`, `group:save` 필터도 공통으로 해석하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 source group preset 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 985) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(source group preset 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

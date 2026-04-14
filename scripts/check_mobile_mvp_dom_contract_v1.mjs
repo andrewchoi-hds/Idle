@@ -46,6 +46,8 @@ const REQUIRED_HTML_IDS = [
   "opsDigestActiveSourceFilter",
   "opsDigestActiveToneFilter",
   "opsDigestFilterSummary",
+  "btnOpsDigestPresetBattle",
+  "btnOpsDigestPresetSave",
   "btnOpsDigestPresetWarning",
   "btnOpsDigestClearFilters",
   "opsDigestTimelineSourceBadge",
@@ -237,6 +239,8 @@ const REQUIRED_DOM_KEYS = [
   "opsDigestActiveSourceFilter",
   "opsDigestActiveToneFilter",
   "opsDigestFilterSummary",
+  "btnOpsDigestPresetBattle",
+  "btnOpsDigestPresetSave",
   "btnOpsDigestPresetWarning",
   "btnOpsDigestClearFilters",
   "opsDigestTimelineSourceBadge",
@@ -1929,6 +1933,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="btnOpsDigestPresetBattle"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="btnOpsDigestPresetSave"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-quick-action-summary="전투 집중 ON · 실시간 자동 시작 · 권장 설정 적용(대기) · 로컬 저장"',
     "index.html",
     failures,
@@ -2062,6 +2078,30 @@ async function main() {
   assertIncludes(
     html,
     'data-filter-preset-label="경고 흐름"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-filter-battle-label="전투 흐름"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-filter-battle-active="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-filter-save-label="저장 흐름"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-filter-save-active="false"',
     "index.html",
     failures,
   );
@@ -9462,6 +9502,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function applyOpsDigestSourceGroupPreset(filter) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function clearOpsDigestFilters() {",
     "app.mjs",
     failures,
@@ -9553,6 +9599,12 @@ async function main() {
   assertIncludes(
     app,
     "function formatOpsDigestInboxSourceLabel(source) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function matchesOpsDigestSourceFilter(source, filter) {",
     "app.mjs",
     failures,
   );
@@ -9744,6 +9796,30 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.opsDigestPanel.dataset.filterBattleLabel = \"전투 흐름\";",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.filterSaveLabel = \"저장 흐름\";",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnOpsDigestPresetBattle.textContent =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnOpsDigestPresetSave.textContent =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.filterPresetLabel = \"경고 흐름\";",
     "app.mjs",
     failures,
@@ -9811,6 +9887,30 @@ async function main() {
   assertIncludes(
     app,
     'setOpsDigestTimelineToneFilter("alert");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.btnOpsDigestPresetBattle?.addEventListener("click", () => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'applyOpsDigestSourceGroupPreset("group:battle");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.btnOpsDigestPresetSave?.addEventListener("click", () => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'applyOpsDigestSourceGroupPreset("group:save");',
     "app.mjs",
     failures,
   );

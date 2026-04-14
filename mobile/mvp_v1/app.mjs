@@ -129,6 +129,8 @@ const dom = {
   opsDigestActiveSourceFilter: document.getElementById("opsDigestActiveSourceFilter"),
   opsDigestActiveToneFilter: document.getElementById("opsDigestActiveToneFilter"),
   opsDigestFilterSummary: document.getElementById("opsDigestFilterSummary"),
+  btnOpsDigestPresetBattle: document.getElementById("btnOpsDigestPresetBattle"),
+  btnOpsDigestPresetSave: document.getElementById("btnOpsDigestPresetSave"),
   btnOpsDigestPresetWarning: document.getElementById("btnOpsDigestPresetWarning"),
   btnOpsDigestClearFilters: document.getElementById("btnOpsDigestClearFilters"),
   opsDigestTimelineSourceBadge: document.getElementById("opsDigestTimelineSourceBadge"),
@@ -935,6 +937,27 @@ function applyOpsDigestWarningOnlyPreset() {
   syncOpsDigestInbox();
 }
 
+function applyOpsDigestSourceGroupPreset(filter) {
+  if (!dom.opsDigestPanel) {
+    return;
+  }
+  const normalizedFilter = String(filter || "all").trim() || "all";
+  const presetActive =
+    dom.opsDigestPanel.dataset.inboxSourceFilter === normalizedFilter &&
+    dom.opsDigestPanel.dataset.timelineToneFilter === "all";
+  if (presetActive) {
+    clearOpsDigestFilters();
+    return;
+  }
+  dom.opsDigestPanel.dataset.inboxSourceFilter = normalizedFilter;
+  dom.opsDigestPanel.dataset.inboxSourceFilterLabel =
+    formatOpsDigestInboxSourceLabel(normalizedFilter);
+  dom.opsDigestPanel.dataset.timelineToneFilter = "all";
+  dom.opsDigestPanel.dataset.timelineToneFilterLabel = "전체 흐름";
+  syncOpsDigestNextAction();
+  syncOpsDigestInbox();
+}
+
 function syncOpsDigestFilterBar() {
   if (!dom.opsDigestPanel) {
     return;
@@ -960,6 +983,10 @@ function syncOpsDigestFilterBar() {
     (sourceFilter === "all" ? 0 : 1) + (toneFilter === "all" ? 0 : 1);
   const warningPresetActive =
     sourceFilter === "all" && toneFilter === "alert";
+  const battlePresetActive =
+    sourceFilter === "group:battle" && toneFilter === "all";
+  const savePresetActive =
+    sourceFilter === "group:save" && toneFilter === "all";
   const sourceLabel = sourceFilter === "all" ? "출처 전체" : `출처 ${sourceFilterLabel}`;
   const toneLabel = toneFilterLabel;
   dom.opsDigestPanel.dataset.filterSourceLabel = sourceLabel;
@@ -969,6 +996,10 @@ function syncOpsDigestFilterBar() {
     activeCount === 0
       ? `필터 없음 · 인박스 ${inboxVisibleCount}건 · 흐름 ${timelineCount}건`
       : `${sourceLabel} · ${toneLabel} · 인박스 ${inboxVisibleCount}건 · 흐름 ${timelineCount}건`;
+  dom.opsDigestPanel.dataset.filterBattleLabel = "전투 흐름";
+  dom.opsDigestPanel.dataset.filterBattleActive = String(battlePresetActive);
+  dom.opsDigestPanel.dataset.filterSaveLabel = "저장 흐름";
+  dom.opsDigestPanel.dataset.filterSaveActive = String(savePresetActive);
   dom.opsDigestPanel.dataset.filterPresetLabel = "경고 흐름";
   dom.opsDigestPanel.dataset.filterPresetActive = String(warningPresetActive);
   dom.opsDigestPanel.dataset.filterResetLabel = "필터 해제";
@@ -1006,6 +1037,30 @@ function syncOpsDigestFilterBar() {
     dom.btnOpsDigestPresetWarning.setAttribute(
       "aria-pressed",
       String(warningPresetActive),
+    );
+  }
+  if (dom.btnOpsDigestPresetBattle) {
+    dom.btnOpsDigestPresetBattle.textContent =
+      dom.opsDigestPanel.dataset.filterBattleLabel;
+    dom.btnOpsDigestPresetBattle.classList.toggle(
+      "filter-active",
+      battlePresetActive,
+    );
+    dom.btnOpsDigestPresetBattle.setAttribute(
+      "aria-pressed",
+      String(battlePresetActive),
+    );
+  }
+  if (dom.btnOpsDigestPresetSave) {
+    dom.btnOpsDigestPresetSave.textContent =
+      dom.opsDigestPanel.dataset.filterSaveLabel;
+    dom.btnOpsDigestPresetSave.classList.toggle(
+      "filter-active",
+      savePresetActive,
+    );
+    dom.btnOpsDigestPresetSave.setAttribute(
+      "aria-pressed",
+      String(savePresetActive),
     );
   }
 }
@@ -1073,7 +1128,7 @@ function syncOpsDigestTimeline() {
     "전체 흐름";
   const visibleTimelineEntries = opsDigestTimelineState.filter(
     (entry) =>
-      (sourceFilter === "all" || entry.source === sourceFilter) &&
+      matchesOpsDigestSourceFilter(entry.source, sourceFilter) &&
       matchesOpsDigestTimelineToneFilter(entry, toneFilter),
   );
   const latestTimelineEntry = visibleTimelineEntries[0] || null;
@@ -1528,6 +1583,10 @@ function resolveOpsDigestActionTone(kind, target, source) {
 function formatOpsDigestInboxSourceLabel(source) {
   const normalizedSource = String(source || "none").trim();
   switch (normalizedSource) {
+    case "group:battle":
+      return "전투 흐름";
+    case "group:save":
+      return "저장 흐름";
     case "system":
       return "시스템";
     case "ops_warning":
@@ -1569,12 +1628,35 @@ function formatOpsDigestInboxSourceLabel(source) {
   }
 }
 
-function matchesOpsDigestActionSourceFilter(action, sourceFilter) {
-  const normalizedFilter = String(sourceFilter || "all").trim() || "all";
+function matchesOpsDigestSourceFilter(source, filter) {
+  const normalizedFilter = String(filter || "all").trim() || "all";
   if (normalizedFilter === "all") {
     return true;
   }
-  return String(action?.source || "none").trim() === normalizedFilter;
+  const normalizedSource = String(source || "none").trim();
+  switch (normalizedFilter) {
+    case "group:battle":
+      return new Set([
+        "btnBattle",
+        "btnRealtimeAuto",
+        "ops_battle",
+        "ops_focus",
+      ]).has(normalizedSource);
+    case "group:save":
+      return new Set([
+        "btnSaveLocal",
+        "btnLoadLocal",
+        "btnResetRun",
+        "offlineModal",
+        "ops_save",
+      ]).has(normalizedSource);
+    default:
+      return normalizedSource === normalizedFilter;
+  }
+}
+
+function matchesOpsDigestActionSourceFilter(action, sourceFilter) {
+  return matchesOpsDigestSourceFilter(action?.source || "none", sourceFilter);
 }
 
 function prioritizeOpsDigestActionQueue(candidates, sourceFilter) {
@@ -2056,8 +2138,8 @@ function syncOpsDigestInbox() {
   const visibleEntries = inboxEntries
     .map((entry) => entry.node)
     .filter(Boolean);
-  const scopedEntries = visibleEntries.filter(
-    (node) => sourceFilter === "all" || node.dataset.inboxSource === sourceFilter,
+  const scopedEntries = visibleEntries.filter((node) =>
+    matchesOpsDigestSourceFilter(node.dataset.inboxSource, sourceFilter),
   );
   const actionableEntries = scopedEntries.filter(
     (node) => node.dataset.inboxDisabled !== "true",
@@ -2135,7 +2217,10 @@ function syncOpsDigestInbox() {
     if (!node) {
       continue;
     }
-    const matches = sourceFilter === "all" || node.dataset.inboxSource === sourceFilter;
+    const matches = matchesOpsDigestSourceFilter(
+      node.dataset.inboxSource,
+      sourceFilter,
+    );
     node.classList.toggle("filtered-out", !matches);
     if (matches) {
       visibleCount += 1;
@@ -2144,7 +2229,8 @@ function syncOpsDigestInbox() {
     if (sourceBadge) {
       sourceBadge.classList.toggle(
         "filter-active",
-        sourceFilter !== "all" && node.dataset.inboxSource === sourceFilter,
+        sourceFilter !== "all" &&
+          matchesOpsDigestSourceFilter(node.dataset.inboxSource, sourceFilter),
       );
       sourceBadge.setAttribute("role", "button");
       sourceBadge.setAttribute("tabindex", "0");
@@ -14723,6 +14809,12 @@ function bindEvents() {
   });
   dom.btnOpsDigestPresetWarning?.addEventListener("click", () => {
     applyOpsDigestWarningOnlyPreset();
+  });
+  dom.btnOpsDigestPresetBattle?.addEventListener("click", () => {
+    applyOpsDigestSourceGroupPreset("group:battle");
+  });
+  dom.btnOpsDigestPresetSave?.addEventListener("click", () => {
+    applyOpsDigestSourceGroupPreset("group:save");
   });
   dom.btnOpsDigestClearFilters?.addEventListener("click", () => {
     clearOpsDigestFilters();
