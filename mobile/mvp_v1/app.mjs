@@ -918,6 +918,18 @@ function summarizeOpsDigestTimelineGroups(entries) {
     .join(" · ");
 }
 
+function formatOpsDigestTimelineCollapsedPreview(entries, maxItems = 2) {
+  const normalizedMaxItems = Math.max(1, Math.floor(Number(maxItems) || 1));
+  const previewEntries = Array.isArray(entries) ? entries.slice(0, normalizedMaxItems) : [];
+  if (previewEntries.length === 0) {
+    return "미리보기 없음";
+  }
+  return previewEntries
+    .map((entry) => String(entry?.label || "").trim())
+    .filter(Boolean)
+    .join(" / ");
+}
+
 function toggleOpsDigestTimelineGroup(groupLabel) {
   const normalizedGroupLabel = String(groupLabel || "").trim();
   if (!normalizedGroupLabel) {
@@ -1249,6 +1261,7 @@ function syncOpsDigestTimeline() {
   const sourceSummary = summarizeOpsDigestTimelineSources(visibleTimelineEntries);
   const toneSummary = summarizeOpsDigestTimelineTones(visibleTimelineEntries);
   const groupSummary = summarizeOpsDigestTimelineGroups(visibleTimelineEntries);
+  const collapsedPreviewDepth = 2;
   dom.opsDigestPanel.dataset.timelineCount = String(visibleTimelineEntries.length);
   dom.opsDigestPanel.dataset.timelineSourceSummary = sourceSummary;
   dom.opsDigestPanel.dataset.timelineToneSummary = toneSummary;
@@ -1256,6 +1269,9 @@ function syncOpsDigestTimeline() {
     groupSummary === "그룹 대기" ? 0 : groupSummary.split(" · ").length,
   );
   dom.opsDigestPanel.dataset.timelineGroupSummary = groupSummary;
+  dom.opsDigestPanel.dataset.timelineCollapsedPreviewDepth = String(
+    collapsedPreviewDepth,
+  );
   dom.opsDigestPanel.dataset.timelineLatestSource = latestTimelineEntry?.source || "none";
   dom.opsDigestPanel.dataset.timelineLatestTone = latestTimelineEntry?.tone || "info";
   dom.opsDigestPanel.dataset.timelineSummary = latestTimelineEntry
@@ -1318,6 +1334,10 @@ function syncOpsDigestTimeline() {
   for (const [groupLabel, entries] of groupedTimelineEntries.entries()) {
     const collapsed = opsDigestTimelineGroupCollapseState[groupLabel] === true;
     const previewEntry = entries[0] || null;
+    const collapsedPreviewLabel = formatOpsDigestTimelineCollapsedPreview(
+      entries,
+      collapsedPreviewDepth,
+    );
     const groupFilter = resolveOpsDigestTimelineGroupFilter(groupLabel, entries);
     if (collapsed) {
       collapsedGroupCount += 1;
@@ -1339,10 +1359,10 @@ function syncOpsDigestTimeline() {
     groupTitle.dataset.groupLabel = groupLabel;
     groupTitle.setAttribute("aria-expanded", String(!collapsed));
     groupTitle.textContent = collapsed
-      ? `${groupLabel} · ${entries.length}건 · ${previewEntry?.label || "미리보기 없음"}`
+      ? `${groupLabel} · ${entries.length}건 · ${collapsedPreviewLabel}`
       : `${groupLabel} · ${entries.length}건 · 접기`;
     groupTitle.title = collapsed
-      ? `${groupLabel} 최근 1건 · ${previewEntry?.sourceLabel || "없음"} · ${previewEntry?.label || "미리보기 없음"}`
+      ? `${groupLabel} 최근 ${collapsedPreviewDepth}건 · ${previewEntry?.sourceLabel || "없음"} · ${collapsedPreviewLabel}`
       : `${groupLabel} 그룹 접기`;
     groupHead.append(groupTitle);
 
