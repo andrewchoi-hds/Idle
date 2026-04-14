@@ -1923,13 +1923,25 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-inbox-top-score="650"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-inbox-top-source-label="자동"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-inbox-summary="최근 조작 대기 중 · 주의 상태 없음 · 자동 진행 정지 · 실시간 자동 시작 · 즉시 진행 가능 · 전투 1회"',
     "index.html",
     failures,
   );
   assertIncludes(
     html,
-    'data-inbox-meta-summary="전체 · 우선순위 medium · 실행 가능 2건"',
+    'data-inbox-meta-summary="전체 · 자동 · 우선순위 medium · 실행 가능 2건"',
     "index.html",
     failures,
   );
@@ -1966,6 +1978,12 @@ async function main() {
   assertIncludes(
     html,
     'data-inbox-source-label="시스템"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-inbox-score="650"',
     "index.html",
     failures,
   );
@@ -9258,6 +9276,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "node.dataset.inboxScore = String(Number(score) || 0);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function resolveOpsDigestInboxPriority(score, tone = \"info\") {",
     "app.mjs",
     failures,
@@ -9397,6 +9421,36 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestPanel.dataset.inboxSummary =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const compareInboxEntries = (left, right) => {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const topScopedEntry =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const topActionableEntry =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.inboxTopScore = topScore;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.inboxTopSourceLabel = topSourceLabel;",
     "app.mjs",
     failures,
   );
