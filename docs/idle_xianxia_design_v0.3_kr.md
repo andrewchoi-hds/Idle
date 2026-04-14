@@ -4243,3 +4243,11 @@
 
 ## 989) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(grouped timeline history 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 990) 다음 순차 작업
+1. [완료] grouped timeline history의 각 그룹 헤더를 클릭 가능한 collapse/expand 토글로 바꿔, 흐름이 길어져도 필요한 그룹만 펼쳐서 읽을 수 있도록 보강.
+2. [완료] `opsDigestTimelineGroupCollapseState`와 `toggleOpsDigestTimelineGroup()`를 추가하고, `syncOpsDigestTimeline()`가 `data-timeline-expanded-group-count`, `data-timeline-collapsed-group-count`, `data-timeline-group-visibility-summary` contract를 함께 유지하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 timeline group collapse 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 991) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(timeline group collapse 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

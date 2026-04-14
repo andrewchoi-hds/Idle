@@ -2209,6 +2209,24 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-timeline-expanded-group-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-timeline-collapsed-group-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-timeline-group-visibility-summary="접힘 대기"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-timeline-tone-filter="all"',
     "index.html",
     failures,
@@ -9550,6 +9568,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "const opsDigestTimelineGroupCollapseState = {};",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function matchesOpsDigestTimelineToneFilter(entry, toneFilter) {",
     "app.mjs",
     failures,
@@ -9611,6 +9635,12 @@ async function main() {
   assertIncludes(
     app,
     "function summarizeOpsDigestTimelineGroups(entries) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function toggleOpsDigestTimelineGroup(groupLabel) {",
     "app.mjs",
     failures,
   );
@@ -9874,6 +9904,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.opsDigestPanel.dataset.timelineExpandedGroupCount = String(expandedGroupCount);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.timelineGroupVisibilitySummary = visibilitySummary;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.filterSummary =",
     "app.mjs",
     failures,
@@ -10090,7 +10132,25 @@ async function main() {
   );
   assertIncludes(
     app,
+    'groupTitle.className = "ghost-btn ops-digest-timeline-group-toggle";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "groupList.hidden = collapsed;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'groupList.className = "ops-digest-timeline-sublist";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'const groupToggle = event.target?.closest(".ops-digest-timeline-group-toggle");',
     "app.mjs",
     failures,
   );
