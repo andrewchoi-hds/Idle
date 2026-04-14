@@ -9496,7 +9496,25 @@ async function main() {
   );
   assertIncludes(
     app,
-    "function flashOpsDigestJumpTarget(targetNode, label = \"바로 확인\") {",
+    "function flashOpsDigestJumpTarget(targetNode, label = \"바로 확인\", contextNode = null) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'document.querySelectorAll(".ops-jump-context").forEach((node) => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'contextNode.classList.add("ops-jump-context");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'contextNode.classList.remove("ops-jump-context");',
     "app.mjs",
     failures,
   );
@@ -10325,6 +10343,12 @@ async function main() {
   assertIncludes(
     app,
     "buildOpsDigestJumpLabel(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "focusTargetNode ? targetNode : null,",
     "app.mjs",
     failures,
   );
