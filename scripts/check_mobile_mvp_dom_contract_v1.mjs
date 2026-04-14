@@ -43,6 +43,8 @@ const REQUIRED_HTML_IDS = [
   "opsDigestInboxWarning",
   "opsDigestInboxPrimary",
   "opsDigestInboxSecondary",
+  "opsDigestTimelineSummary",
+  "opsDigestTimelineList",
   "btnOpsDigestFocus",
   "btnOpsDigestRealtime",
   "btnOpsDigestRecommendation",
@@ -225,6 +227,8 @@ const REQUIRED_DOM_KEYS = [
   "opsDigestInboxWarning",
   "opsDigestInboxPrimary",
   "opsDigestInboxSecondary",
+  "opsDigestTimelineSummary",
+  "opsDigestTimelineList",
   "btnOpsDigestFocus",
   "btnOpsDigestRealtime",
   "btnOpsDigestRecommendation",
@@ -1857,6 +1861,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestTimelineSummary"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="opsDigestTimelineList"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-quick-action-summary="전투 집중 ON · 실시간 자동 시작 · 권장 설정 적용(대기) · 로컬 저장"',
     "index.html",
     failures,
@@ -1960,6 +1976,30 @@ async function main() {
   assertIncludes(
     html,
     'data-inbox-source-filter="all"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-timeline-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-timeline-summary="최근 흐름 대기 중"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-timeline-latest-source="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-timeline-latest-tone="info"',
     "index.html",
     failures,
   );
@@ -9270,6 +9310,30 @@ async function main() {
   );
   assertIncludes(
     app,
+    "const OPS_DIGEST_TIMELINE_LIMIT = 6;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const opsDigestTimelineState = [];",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function recordOpsDigestTimelineEntry(entry) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function syncOpsDigestTimeline() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function syncOpsDigestInboxEntry(node, descriptor, label, tone = \"info\", score = 0, stateKey = \"recent\") {",
     "app.mjs",
     failures,
@@ -9277,6 +9341,12 @@ async function main() {
   assertIncludes(
     app,
     "node.dataset.inboxScore = String(Number(score) || 0);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "recordOpsDigestTimelineEntry({",
     "app.mjs",
     failures,
   );
@@ -9456,6 +9526,30 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.opsDigestPanel.dataset.timelineCount = String(visibleTimelineEntries.length);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.timelineSummary = latestTimelineEntry",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestTimelineList.replaceChildren();",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncOpsDigestTimeline();",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "const opsDigestInboxNodes = [",
     "app.mjs",
     failures,
@@ -9481,6 +9575,12 @@ async function main() {
   assertIncludes(
     app,
     'const inboxSourceBadges = document.querySelectorAll(".ops-digest-inbox-source");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestTimelineList?.addEventListener("click", (event) => {',
     "app.mjs",
     failures,
   );

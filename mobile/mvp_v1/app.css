@@ -170,6 +170,11 @@ h2 {
   gap: 6px;
 }
 
+.ops-digest-timeline {
+  display: grid;
+  gap: 6px;
+}
+
 .ops-digest-inbox-head {
   display: flex;
   justify-content: space-between;
@@ -234,6 +239,49 @@ h2 {
   padding-left: 18px;
   display: grid;
   gap: 4px;
+}
+
+.ops-digest-timeline-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+
+.ops-digest-timeline-row {
+  margin: 0;
+}
+
+.ops-digest-timeline-item {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  text-align: left;
+  border-left: 2px solid transparent;
+}
+
+.ops-digest-timeline-item.priority-critical {
+  border-left-color: #f27167;
+}
+
+.ops-digest-timeline-item.priority-high {
+  border-left-color: #f3bd4d;
+}
+
+.ops-digest-timeline-item.priority-medium {
+  border-left-color: #8fdcc0;
+}
+
+.ops-digest-timeline-item.priority-low {
+  border-left-color: #49665e;
+}
+
+.ops-digest-timeline-empty {
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .ops-digest-inbox-item {
