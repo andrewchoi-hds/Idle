@@ -10168,7 +10168,19 @@ async function main() {
   );
   assertIncludes(
     app,
-    'groupFilterButton.textContent = "이 흐름만";',
+    'groupFilterButton.textContent = groupFilterActive ? "전체 복귀" : "이 흐름만";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'groupFilterButton.classList.toggle("filter-active", groupFilterActive);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'groupFilterButton.setAttribute("aria-pressed", String(groupFilterActive));',
     "app.mjs",
     failures,
   );

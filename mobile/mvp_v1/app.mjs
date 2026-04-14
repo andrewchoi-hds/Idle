@@ -1350,7 +1350,13 @@ function syncOpsDigestTimeline() {
     groupFilterButton.type = "button";
     groupFilterButton.className = "ghost-btn ops-digest-timeline-group-filter";
     groupFilterButton.dataset.groupFilter = groupFilter;
-    groupFilterButton.textContent = "이 흐름만";
+    const groupFilterActive = groupFilter !== "none" && groupFilter === sourceFilter;
+    groupFilterButton.textContent = groupFilterActive ? "전체 복귀" : "이 흐름만";
+    groupFilterButton.classList.toggle("filter-active", groupFilterActive);
+    groupFilterButton.setAttribute("aria-pressed", String(groupFilterActive));
+    groupFilterButton.title = groupFilterActive
+      ? `${groupLabel} 필터 해제`
+      : `${groupLabel}만 보기`;
     groupFilterButton.disabled = groupFilter === "none";
     groupHead.append(groupFilterButton);
     groupItem.append(groupHead);
