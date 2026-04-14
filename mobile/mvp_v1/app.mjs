@@ -1002,24 +1002,28 @@ function resolveOpsDigestTimelineGroupPanelTarget(groupLabel) {
         targetId: "actionsPanel",
         label: "자동화 패널 열기",
         source: "ops_actions",
+        focusId: "realtimeAutoStatus",
       };
     case "돌파 흐름":
       return {
         targetId: "breakthroughPreviewPanel",
         label: "돌파 패널 열기",
         source: "ops_breakthrough",
+        focusId: "previewRecommendationLabel",
       };
     case "전투 흐름":
       return {
         targetId: "battleScenePanel",
         label: "전장 패널 열기",
         source: "ops_battle",
+        focusId: "battleSceneStatus",
       };
     case "저장 흐름":
       return {
         targetId: "savePanel",
         label: "저장 패널 열기",
         source: "ops_save",
+        focusId: "saveSlotSummaryList",
       };
     default:
       return null;
@@ -1479,6 +1483,8 @@ function syncOpsDigestTimeline() {
       groupPanelTarget?.label || "패널 없음";
     groupPanelButton.dataset.groupPanelSource =
       groupPanelTarget?.source || "ops_digest";
+    groupPanelButton.dataset.groupPanelFocusTarget =
+      groupPanelTarget?.focusId || "";
     groupPanelButton.textContent = groupPanelTarget ? "패널 열기" : "패널 없음";
     groupPanelButton.disabled = !groupPanelTarget;
     groupHead.append(groupPanelButton);
@@ -1730,7 +1736,12 @@ function flashOpsDigestJumpTarget(targetNode) {
   }, 1600);
 }
 
-function openOpsDigestPanelTarget(targetId, actionLabel = "패널 확인", source = "ops_digest") {
+function openOpsDigestPanelTarget(
+  targetId,
+  actionLabel = "패널 확인",
+  source = "ops_digest",
+  focusTargetId = "",
+) {
   const normalizedTargetId = String(targetId || "").trim();
   if (!normalizedTargetId) {
     return;
@@ -1739,11 +1750,16 @@ function openOpsDigestPanelTarget(targetId, actionLabel = "패널 확인", sourc
   if (!targetNode) {
     return;
   }
+  const normalizedFocusTargetId = String(focusTargetId || "").trim();
+  const focusTargetNode = normalizedFocusTargetId
+    ? document.getElementById(normalizedFocusTargetId)
+    : null;
   if (battleFocusMode && targetNode.dataset?.panelRole === "secondary") {
     applyBattleFocusMode(false);
   }
-  targetNode.scrollIntoView({ behavior: "smooth", block: "start" });
-  flashOpsDigestJumpTarget(targetNode);
+  const scrollTargetNode = focusTargetNode || targetNode;
+  scrollTargetNode.scrollIntoView({ behavior: "smooth", block: "start" });
+  flashOpsDigestJumpTarget(focusTargetNode || targetNode);
   setStatus(`패널 이동: ${actionLabel}`, false, source);
 }
 
@@ -15133,6 +15149,7 @@ function bindEvents() {
           targetId,
           groupPanelButton.dataset.groupPanelLabel || "관련 패널 열기",
           groupPanelButton.dataset.groupPanelSource || "ops_digest",
+          groupPanelButton.dataset.groupPanelFocusTarget || "",
         );
       }
       return;

@@ -4307,3 +4307,11 @@
 
 ## 1005) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(timeline group panel jump 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1006) 다음 순차 작업
+1. [완료] grouped timeline 각 그룹 헤더의 `패널 열기` 버튼이 패널 루트만이 아니라 관련 하위 포인트까지 함께 강조하는 deep-link로 동작하도록 보강.
+2. [완료] `resolveOpsDigestTimelineGroupPanelTarget()`가 `focusId`를 함께 반환하고, `openOpsDigestPanelTarget(...)`가 optional `focusTargetId`를 받아 해당 노드로 스크롤/강조하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 timeline group deep-link 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1007) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(timeline group deep-link 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
