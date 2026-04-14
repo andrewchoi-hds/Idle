@@ -2233,6 +2233,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-timeline-collapsed-preview-strategy="tone_priority"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-timeline-group-visibility-summary="접힘 대기"',
     "index.html",
     failures,
@@ -9941,6 +9947,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestPanel.dataset.timelineCollapsedPreviewDepth = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestPanel.dataset.timelineCollapsedPreviewStrategy = "tone_priority";',
     "app.mjs",
     failures,
   );
