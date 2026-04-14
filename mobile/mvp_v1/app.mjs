@@ -886,6 +886,19 @@ function summarizeOpsDigestTimelineTones(entries) {
     .join(" · ");
 }
 
+function resolveOpsDigestTimelineToneRank(tone) {
+  switch (String(tone || "info").trim()) {
+    case "error":
+      return 3;
+    case "warn":
+      return 2;
+    case "success":
+      return 1;
+    default:
+      return 0;
+  }
+}
+
 function resolveOpsDigestTimelineGroupKey(source) {
   if (matchesOpsDigestSourceFilter(source, "group:auto")) {
     return "자동 흐름";
@@ -920,7 +933,23 @@ function summarizeOpsDigestTimelineGroups(entries) {
 
 function formatOpsDigestTimelineCollapsedPreview(entries, maxItems = 2) {
   const normalizedMaxItems = Math.max(1, Math.floor(Number(maxItems) || 1));
-  const previewEntries = Array.isArray(entries) ? entries.slice(0, normalizedMaxItems) : [];
+  const previewEntries = Array.isArray(entries)
+    ? entries
+        .slice()
+        .sort((left, right) => {
+          const toneRankDelta =
+            resolveOpsDigestTimelineToneRank(right?.tone) -
+            resolveOpsDigestTimelineToneRank(left?.tone);
+          if (toneRankDelta !== 0) {
+            return toneRankDelta;
+          }
+          return (
+            Math.floor(Number(right?.updatedAt) || 0) -
+            Math.floor(Number(left?.updatedAt) || 0)
+          );
+        })
+        .slice(0, normalizedMaxItems)
+    : [];
   if (previewEntries.length === 0) {
     return "미리보기 없음";
   }
@@ -1272,6 +1301,7 @@ function syncOpsDigestTimeline() {
   dom.opsDigestPanel.dataset.timelineCollapsedPreviewDepth = String(
     collapsedPreviewDepth,
   );
+  dom.opsDigestPanel.dataset.timelineCollapsedPreviewStrategy = "tone_priority";
   dom.opsDigestPanel.dataset.timelineLatestSource = latestTimelineEntry?.source || "none";
   dom.opsDigestPanel.dataset.timelineLatestTone = latestTimelineEntry?.tone || "info";
   dom.opsDigestPanel.dataset.timelineSummary = latestTimelineEntry
@@ -1362,7 +1392,7 @@ function syncOpsDigestTimeline() {
       ? `${groupLabel} · ${entries.length}건 · ${collapsedPreviewLabel}`
       : `${groupLabel} · ${entries.length}건 · 접기`;
     groupTitle.title = collapsed
-      ? `${groupLabel} 최근 ${collapsedPreviewDepth}건 · ${previewEntry?.sourceLabel || "없음"} · ${collapsedPreviewLabel}`
+      ? `${groupLabel} 우선 ${collapsedPreviewDepth}건 · ${previewEntry?.sourceLabel || "없음"} · ${collapsedPreviewLabel}`
       : `${groupLabel} 그룹 접기`;
     groupHead.append(groupTitle);
 
