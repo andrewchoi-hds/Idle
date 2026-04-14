@@ -4259,3 +4259,11 @@
 
 ## 993) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(collapsed group preview 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 994) 다음 순차 작업
+1. [완료] grouped timeline history의 각 그룹 헤더 옆에 `이 흐름만` 진입 버튼을 추가해, collapse/expand와 별개로 현재 tone filter를 유지한 채 해당 source group만 바로 좁혀 볼 수 있도록 보강.
+2. [완료] `resolveOpsDigestTimelineGroupFilter()`와 `focusOpsDigestTimelineGroup()`를 추가하고, timeline list click delegation이 group filter button도 함께 처리하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 timeline group filter jump 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 995) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(timeline group filter jump 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

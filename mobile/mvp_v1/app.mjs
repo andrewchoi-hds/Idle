@@ -928,6 +928,40 @@ function toggleOpsDigestTimelineGroup(groupLabel) {
   syncOpsDigestTimeline();
 }
 
+function resolveOpsDigestTimelineGroupFilter(groupLabel, entries = []) {
+  const normalizedGroupLabel = String(groupLabel || "").trim();
+  switch (normalizedGroupLabel) {
+    case "자동 흐름":
+      return "group:auto";
+    case "돌파 흐름":
+      return "group:breakthrough";
+    case "전투 흐름":
+      return "group:battle";
+    case "저장 흐름":
+      return "group:save";
+    default:
+      return String(entries[0]?.source || "none").trim() || "none";
+  }
+}
+
+function focusOpsDigestTimelineGroup(groupFilter) {
+  if (!dom.opsDigestPanel) {
+    return;
+  }
+  const normalizedGroupFilter = String(groupFilter || "all").trim() || "all";
+  const nextSourceFilter =
+    dom.opsDigestPanel.dataset.inboxSourceFilter === normalizedGroupFilter
+      ? "all"
+      : normalizedGroupFilter;
+  dom.opsDigestPanel.dataset.inboxSourceFilter = nextSourceFilter;
+  dom.opsDigestPanel.dataset.inboxSourceFilterLabel =
+    nextSourceFilter === "all"
+      ? "전체"
+      : formatOpsDigestInboxSourceLabel(nextSourceFilter);
+  syncOpsDigestNextAction();
+  syncOpsDigestInbox();
+}
+
 function matchesOpsDigestTimelineToneFilter(entry, toneFilter) {
   const normalizedFilter = String(toneFilter || "all").trim() || "all";
   if (normalizedFilter === "all") {
@@ -1284,6 +1318,7 @@ function syncOpsDigestTimeline() {
   for (const [groupLabel, entries] of groupedTimelineEntries.entries()) {
     const collapsed = opsDigestTimelineGroupCollapseState[groupLabel] === true;
     const previewEntry = entries[0] || null;
+    const groupFilter = resolveOpsDigestTimelineGroupFilter(groupLabel, entries);
     if (collapsed) {
       collapsedGroupCount += 1;
       if (previewEntry) {
@@ -1295,6 +1330,8 @@ function syncOpsDigestTimeline() {
     const groupItem = document.createElement("li");
     groupItem.className = "ops-digest-timeline-group";
     groupItem.dataset.groupCollapsed = String(collapsed);
+    const groupHead = document.createElement("div");
+    groupHead.className = "ops-digest-timeline-group-head";
 
     const groupTitle = document.createElement("button");
     groupTitle.type = "button";
@@ -1307,7 +1344,16 @@ function syncOpsDigestTimeline() {
     groupTitle.title = collapsed
       ? `${groupLabel} 최근 1건 · ${previewEntry?.sourceLabel || "없음"} · ${previewEntry?.label || "미리보기 없음"}`
       : `${groupLabel} 그룹 접기`;
-    groupItem.append(groupTitle);
+    groupHead.append(groupTitle);
+
+    const groupFilterButton = document.createElement("button");
+    groupFilterButton.type = "button";
+    groupFilterButton.className = "ghost-btn ops-digest-timeline-group-filter";
+    groupFilterButton.dataset.groupFilter = groupFilter;
+    groupFilterButton.textContent = "이 흐름만";
+    groupFilterButton.disabled = groupFilter === "none";
+    groupHead.append(groupFilterButton);
+    groupItem.append(groupHead);
 
     const groupList = document.createElement("ul");
     groupList.className = "ops-digest-timeline-sublist";
@@ -14950,6 +14996,11 @@ function bindEvents() {
     });
   }
   dom.opsDigestTimelineList?.addEventListener("click", (event) => {
+    const groupFilterButton = event.target?.closest(".ops-digest-timeline-group-filter");
+    if (groupFilterButton instanceof HTMLButtonElement) {
+      focusOpsDigestTimelineGroup(groupFilterButton.dataset.groupFilter || "all");
+      return;
+    }
     const groupToggle = event.target?.closest(".ops-digest-timeline-group-toggle");
     if (groupToggle instanceof HTMLButtonElement) {
       toggleOpsDigestTimelineGroup(groupToggle.dataset.groupLabel || "");
