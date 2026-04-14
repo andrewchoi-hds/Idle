@@ -138,6 +138,7 @@ const dom = {
   opsDigestTimelineSourceBadge: document.getElementById("opsDigestTimelineSourceBadge"),
   opsDigestTimelineToneBadge: document.getElementById("opsDigestTimelineToneBadge"),
   opsDigestTimelineSummary: document.getElementById("opsDigestTimelineSummary"),
+  opsDigestTimelineGroupSummary: document.getElementById("opsDigestTimelineGroupSummary"),
   opsDigestTimelineList: document.getElementById("opsDigestTimelineList"),
   btnOpsDigestFocus: document.getElementById("btnOpsDigestFocus"),
   btnOpsDigestRealtime: document.getElementById("btnOpsDigestRealtime"),
@@ -884,6 +885,38 @@ function summarizeOpsDigestTimelineTones(entries) {
     .join(" · ");
 }
 
+function resolveOpsDigestTimelineGroupKey(source) {
+  if (matchesOpsDigestSourceFilter(source, "group:auto")) {
+    return "자동 흐름";
+  }
+  if (matchesOpsDigestSourceFilter(source, "group:breakthrough")) {
+    return "돌파 흐름";
+  }
+  if (matchesOpsDigestSourceFilter(source, "group:battle")) {
+    return "전투 흐름";
+  }
+  if (matchesOpsDigestSourceFilter(source, "group:save")) {
+    return "저장 흐름";
+  }
+  return formatOpsDigestInboxSourceLabel(source);
+}
+
+function summarizeOpsDigestTimelineGroups(entries) {
+  if (!entries.length) {
+    return "그룹 대기";
+  }
+  const counts = new Map();
+  for (const entry of entries) {
+    const groupLabel = resolveOpsDigestTimelineGroupKey(entry?.source || "none");
+    counts.set(groupLabel, (counts.get(groupLabel) || 0) + 1);
+  }
+  return [...counts.entries()]
+    .sort((left, right) => right[1] - left[1])
+    .slice(0, 3)
+    .map(([label, count]) => `${label} ${count}건`)
+    .join(" · ");
+}
+
 function matchesOpsDigestTimelineToneFilter(entry, toneFilter) {
   const normalizedFilter = String(toneFilter || "all").trim() || "all";
   if (normalizedFilter === "all") {
@@ -1170,9 +1203,14 @@ function syncOpsDigestTimeline() {
   const latestTimelineEntry = visibleTimelineEntries[0] || null;
   const sourceSummary = summarizeOpsDigestTimelineSources(visibleTimelineEntries);
   const toneSummary = summarizeOpsDigestTimelineTones(visibleTimelineEntries);
+  const groupSummary = summarizeOpsDigestTimelineGroups(visibleTimelineEntries);
   dom.opsDigestPanel.dataset.timelineCount = String(visibleTimelineEntries.length);
   dom.opsDigestPanel.dataset.timelineSourceSummary = sourceSummary;
   dom.opsDigestPanel.dataset.timelineToneSummary = toneSummary;
+  dom.opsDigestPanel.dataset.timelineGroupCount = String(
+    groupSummary === "그룹 대기" ? 0 : groupSummary.split(" · ").length,
+  );
+  dom.opsDigestPanel.dataset.timelineGroupSummary = groupSummary;
   dom.opsDigestPanel.dataset.timelineLatestSource = latestTimelineEntry?.source || "none";
   dom.opsDigestPanel.dataset.timelineLatestTone = latestTimelineEntry?.tone || "info";
   dom.opsDigestPanel.dataset.timelineSummary = latestTimelineEntry
@@ -1205,6 +1243,9 @@ function syncOpsDigestTimeline() {
     dom.opsDigestTimelineSummary.textContent =
       dom.opsDigestPanel.dataset.timelineSummary;
   }
+  if (dom.opsDigestTimelineGroupSummary) {
+    dom.opsDigestTimelineGroupSummary.textContent = groupSummary;
+  }
   if (!dom.opsDigestTimelineList) {
     return;
   }
@@ -1218,34 +1259,58 @@ function syncOpsDigestTimeline() {
     syncOpsDigestFilterBar();
     return;
   }
+  const groupedTimelineEntries = new Map();
   for (const entry of visibleTimelineEntries.slice(0, OPS_DIGEST_TIMELINE_LIMIT)) {
-    const item = document.createElement("li");
-    item.className = "ops-digest-timeline-row";
+    const groupLabel = resolveOpsDigestTimelineGroupKey(entry.source);
+    if (!groupedTimelineEntries.has(groupLabel)) {
+      groupedTimelineEntries.set(groupLabel, []);
+    }
+    groupedTimelineEntries.get(groupLabel).push(entry);
+  }
+  for (const [groupLabel, entries] of groupedTimelineEntries.entries()) {
+    const groupItem = document.createElement("li");
+    groupItem.className = "ops-digest-timeline-group";
 
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = `ghost-btn ops-digest-timeline-item tone-${entry.tone} priority-${entry.priority}`;
-    button.disabled = entry.disabled;
-    button.dataset.timelineKind = entry.kind;
-    button.dataset.timelineTarget = entry.target;
-    button.dataset.timelineSource = entry.source;
-    button.dataset.timelineLabel = entry.label;
+    const groupTitle = document.createElement("p");
+    groupTitle.className = "ops-digest-timeline-group-title";
+    groupTitle.textContent = `${groupLabel} · ${entries.length}건`;
+    groupItem.append(groupTitle);
 
-    const sourceBadge = document.createElement("span");
-    sourceBadge.className = "ops-digest-inbox-source";
-    sourceBadge.textContent = entry.sourceLabel;
+    const groupList = document.createElement("ul");
+    groupList.className = "ops-digest-timeline-sublist";
 
-    const textNode = document.createElement("span");
-    textNode.className = "ops-digest-inbox-text";
-    textNode.textContent = entry.label;
+    for (const entry of entries) {
+      const item = document.createElement("li");
+      item.className = "ops-digest-timeline-row";
 
-    const timeNode = document.createElement("span");
-    timeNode.className = "ops-digest-inbox-time";
-    timeNode.textContent = formatOpsDigestInboxUpdatedLabel(entry.updatedAt);
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = `ghost-btn ops-digest-timeline-item tone-${entry.tone} priority-${entry.priority}`;
+      button.disabled = entry.disabled;
+      button.dataset.timelineKind = entry.kind;
+      button.dataset.timelineTarget = entry.target;
+      button.dataset.timelineSource = entry.source;
+      button.dataset.timelineLabel = entry.label;
 
-    button.append(sourceBadge, textNode, timeNode);
-    item.append(button);
-    dom.opsDigestTimelineList.append(item);
+      const sourceBadge = document.createElement("span");
+      sourceBadge.className = "ops-digest-inbox-source";
+      sourceBadge.textContent = entry.sourceLabel;
+
+      const textNode = document.createElement("span");
+      textNode.className = "ops-digest-inbox-text";
+      textNode.textContent = entry.label;
+
+      const timeNode = document.createElement("span");
+      timeNode.className = "ops-digest-inbox-time";
+      timeNode.textContent = formatOpsDigestInboxUpdatedLabel(entry.updatedAt);
+
+      button.append(sourceBadge, textNode, timeNode);
+      item.append(button);
+      groupList.append(item);
+    }
+
+    groupItem.append(groupList);
+    dom.opsDigestTimelineList.append(groupItem);
   }
   syncOpsDigestFilterBar();
 }
