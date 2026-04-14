@@ -4203,3 +4203,11 @@
 
 ## 979) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(timeline tone filter 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 980) 다음 순차 작업
+1. [완료] 운용 다이제스트에 compact filter bar(`opsDigestActiveSourceFilter`, `opsDigestActiveToneFilter`, `opsDigestFilterSummary`, `btnOpsDigestClearFilters`)를 추가해, source/tone 필터 상태와 남은 건수를 한 줄에서 바로 읽을 수 있도록 보강.
+2. [완료] `syncOpsDigestFilterBar()`와 `clearOpsDigestFilters()`를 추가하고, source filter와 tone filter가 바뀔 때 `data-filter-*` contract와 해제 버튼 상태가 함께 갱신되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ops digest filter bar 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 981) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ops digest filter bar 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

@@ -175,6 +175,11 @@ h2 {
   gap: 6px;
 }
 
+.ops-digest-filter-bar {
+  display: grid;
+  gap: 6px;
+}
+
 .ops-digest-timeline-meta {
   display: inline-flex;
   gap: 6px;

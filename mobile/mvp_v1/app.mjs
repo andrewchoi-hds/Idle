@@ -126,6 +126,10 @@ const dom = {
   opsDigestInboxWarning: document.getElementById("opsDigestInboxWarning"),
   opsDigestInboxPrimary: document.getElementById("opsDigestInboxPrimary"),
   opsDigestInboxSecondary: document.getElementById("opsDigestInboxSecondary"),
+  opsDigestActiveSourceFilter: document.getElementById("opsDigestActiveSourceFilter"),
+  opsDigestActiveToneFilter: document.getElementById("opsDigestActiveToneFilter"),
+  opsDigestFilterSummary: document.getElementById("opsDigestFilterSummary"),
+  btnOpsDigestClearFilters: document.getElementById("btnOpsDigestClearFilters"),
   opsDigestTimelineSourceBadge: document.getElementById("opsDigestTimelineSourceBadge"),
   opsDigestTimelineToneBadge: document.getElementById("opsDigestTimelineToneBadge"),
   opsDigestTimelineSummary: document.getElementById("opsDigestTimelineSummary"),
@@ -899,6 +903,77 @@ function setOpsDigestTimelineToneFilter(filter) {
   syncOpsDigestTimeline();
 }
 
+function clearOpsDigestFilters() {
+  if (!dom.opsDigestPanel) {
+    return;
+  }
+  dom.opsDigestPanel.dataset.inboxSourceFilter = "all";
+  dom.opsDigestPanel.dataset.inboxSourceFilterLabel = "전체";
+  dom.opsDigestPanel.dataset.timelineToneFilter = "all";
+  dom.opsDigestPanel.dataset.timelineToneFilterLabel = "전체 흐름";
+  syncOpsDigestNextAction();
+  syncOpsDigestInbox();
+}
+
+function syncOpsDigestFilterBar() {
+  if (!dom.opsDigestPanel) {
+    return;
+  }
+  const sourceFilter =
+    String(dom.opsDigestPanel.dataset.inboxSourceFilter || "all").trim() || "all";
+  const sourceFilterLabel =
+    String(dom.opsDigestPanel.dataset.inboxSourceFilterLabel || "전체").trim() || "전체";
+  const toneFilter =
+    String(dom.opsDigestPanel.dataset.timelineToneFilter || "all").trim() || "all";
+  const toneFilterLabel =
+    String(dom.opsDigestPanel.dataset.timelineToneFilterLabel || "전체 흐름").trim() ||
+    "전체 흐름";
+  const inboxVisibleCount = Math.max(
+    0,
+    Math.floor(Number(dom.opsDigestPanel.dataset.inboxVisibleCount || 0)),
+  );
+  const timelineCount = Math.max(
+    0,
+    Math.floor(Number(dom.opsDigestPanel.dataset.timelineCount || 0)),
+  );
+  const activeCount =
+    (sourceFilter === "all" ? 0 : 1) + (toneFilter === "all" ? 0 : 1);
+  const sourceLabel = sourceFilter === "all" ? "출처 전체" : `출처 ${sourceFilterLabel}`;
+  const toneLabel = toneFilterLabel;
+  dom.opsDigestPanel.dataset.filterSourceLabel = sourceLabel;
+  dom.opsDigestPanel.dataset.filterToneLabel = toneLabel;
+  dom.opsDigestPanel.dataset.filterActiveCount = String(activeCount);
+  dom.opsDigestPanel.dataset.filterSummary =
+    activeCount === 0
+      ? `필터 없음 · 인박스 ${inboxVisibleCount}건 · 흐름 ${timelineCount}건`
+      : `${sourceLabel} · ${toneLabel} · 인박스 ${inboxVisibleCount}건 · 흐름 ${timelineCount}건`;
+  dom.opsDigestPanel.dataset.filterResetLabel = "필터 해제";
+  dom.opsDigestPanel.dataset.filterResetDisabled = String(activeCount === 0);
+  if (dom.opsDigestActiveSourceFilter) {
+    dom.opsDigestActiveSourceFilter.textContent = sourceLabel;
+    applyRiskTone(
+      dom.opsDigestActiveSourceFilter,
+      sourceFilter === "all" ? "info" : "success",
+    );
+  }
+  if (dom.opsDigestActiveToneFilter) {
+    dom.opsDigestActiveToneFilter.textContent = toneLabel;
+    applyRiskTone(
+      dom.opsDigestActiveToneFilter,
+      toneFilter === "all" ? "info" : "warn",
+    );
+  }
+  if (dom.opsDigestFilterSummary) {
+    dom.opsDigestFilterSummary.textContent =
+      dom.opsDigestPanel.dataset.filterSummary;
+  }
+  if (dom.btnOpsDigestClearFilters) {
+    dom.btnOpsDigestClearFilters.textContent =
+      dom.opsDigestPanel.dataset.filterResetLabel;
+    dom.btnOpsDigestClearFilters.disabled = activeCount === 0;
+  }
+}
+
 function recordOpsDigestTimelineEntry(entry) {
   const normalizedLabel = String(entry?.label || "").trim();
   const normalizedKind = String(entry?.kind || "none").trim();
@@ -1013,6 +1088,7 @@ function syncOpsDigestTimeline() {
     emptyItem.textContent =
       toneFilter === "all" ? "최근 흐름 대기 중" : "주의/위험 흐름 없음";
     dom.opsDigestTimelineList.append(emptyItem);
+    syncOpsDigestFilterBar();
     return;
   }
   for (const entry of visibleTimelineEntries.slice(0, OPS_DIGEST_TIMELINE_LIMIT)) {
@@ -1044,6 +1120,7 @@ function syncOpsDigestTimeline() {
     item.append(button);
     dom.opsDigestTimelineList.append(item);
   }
+  syncOpsDigestFilterBar();
 }
 
 function syncOpsDigestRecentAction(message, isError = false, source = "system") {
@@ -14607,6 +14684,9 @@ function bindEvents() {
     event.preventDefault();
     event.stopPropagation();
     setOpsDigestTimelineToneFilter("alert");
+  });
+  dom.btnOpsDigestClearFilters?.addEventListener("click", () => {
+    clearOpsDigestFilters();
   });
   const inboxSourceBadges = document.querySelectorAll(".ops-digest-inbox-source");
   for (const badge of inboxSourceBadges) {

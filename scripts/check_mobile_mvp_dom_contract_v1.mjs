@@ -43,6 +43,10 @@ const REQUIRED_HTML_IDS = [
   "opsDigestInboxWarning",
   "opsDigestInboxPrimary",
   "opsDigestInboxSecondary",
+  "opsDigestActiveSourceFilter",
+  "opsDigestActiveToneFilter",
+  "opsDigestFilterSummary",
+  "btnOpsDigestClearFilters",
   "opsDigestTimelineSourceBadge",
   "opsDigestTimelineToneBadge",
   "opsDigestTimelineSummary",
@@ -229,6 +233,10 @@ const REQUIRED_DOM_KEYS = [
   "opsDigestInboxWarning",
   "opsDigestInboxPrimary",
   "opsDigestInboxSecondary",
+  "opsDigestActiveSourceFilter",
+  "opsDigestActiveToneFilter",
+  "opsDigestFilterSummary",
+  "btnOpsDigestClearFilters",
   "opsDigestTimelineSourceBadge",
   "opsDigestTimelineToneBadge",
   "opsDigestTimelineSummary",
@@ -1889,6 +1897,30 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestActiveSourceFilter"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="opsDigestActiveToneFilter"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="opsDigestFilterSummary"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="btnOpsDigestClearFilters"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-quick-action-summary="전투 집중 ON · 실시간 자동 시작 · 권장 설정 적용(대기) · 로컬 저장"',
     "index.html",
     failures,
@@ -1992,6 +2024,42 @@ async function main() {
   assertIncludes(
     html,
     'data-inbox-source-filter="all"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-filter-source-label="출처 전체"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-filter-tone-label="전체 흐름"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-filter-active-count="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-filter-summary="필터 없음 · 인박스 4건 · 흐름 0건"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-filter-reset-label="필터 해제"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-filter-reset-disabled="true"',
     "index.html",
     failures,
   );
@@ -9374,6 +9442,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function clearOpsDigestFilters() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function syncOpsDigestFilterBar() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function formatOpsDigestTimelineToneLabel(tone) {",
     "app.mjs",
     failures,
@@ -9632,6 +9712,30 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.opsDigestPanel.dataset.filterSummary =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestActiveSourceFilter.textContent = sourceLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestActiveToneFilter.textContent = toneLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnOpsDigestClearFilters.disabled = activeCount === 0;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestTimelineSourceBadge.textContent = sourceSummary;",
     "app.mjs",
     failures,
@@ -9657,6 +9761,18 @@ async function main() {
   assertIncludes(
     app,
     'setOpsDigestTimelineToneFilter("alert");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.btnOpsDigestClearFilters?.addEventListener("click", () => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "clearOpsDigestFilters();",
     "app.mjs",
     failures,
   );
