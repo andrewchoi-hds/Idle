@@ -1414,6 +1414,7 @@ function syncOpsDigestTimeline() {
       collapsedPreviewDepth,
     );
     const previewEntry = previewEntries[0] || null;
+    const groupActionTone = previewEntry?.tone || "info";
     const collapsedPreviewLabel = formatOpsDigestTimelineCollapsedPreview(
       entries,
       collapsedPreviewDepth,
@@ -1476,6 +1477,7 @@ function syncOpsDigestTimeline() {
       ? `${groupLabel} 필터 해제`
       : `${groupLabel}만 보기`;
     groupFilterButton.disabled = groupFilter === "none";
+    applyRiskTone(groupFilterButton, groupActionTone);
     groupActions.append(groupFilterButton);
 
     const groupPanelButton = document.createElement("button");
@@ -1491,6 +1493,7 @@ function syncOpsDigestTimeline() {
     groupPanelButton.textContent = groupPanelTarget ? "열기" : "없음";
     groupPanelButton.title = groupPanelTarget?.label || "패널 없음";
     groupPanelButton.disabled = !groupPanelTarget;
+    applyRiskTone(groupPanelButton, groupActionTone);
     groupActions.append(groupPanelButton);
     groupHead.append(groupActions);
     groupItem.append(groupHead);
