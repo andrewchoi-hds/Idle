@@ -9502,6 +9502,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function formatOpsDigestJumpToneLabel(tone) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function buildOpsDigestJumpLabel(actionLabel, source, targetNode) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function openOpsDigestPanelTarget(",
     "app.mjs",
     failures,
@@ -10294,7 +10306,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    '`${actionLabel} · 바로 확인`',
+    "buildOpsDigestJumpLabel(",
     "app.mjs",
     failures,
   );

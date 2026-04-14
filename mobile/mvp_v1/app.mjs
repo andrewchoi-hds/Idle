@@ -1739,6 +1739,27 @@ function flashOpsDigestJumpTarget(targetNode, label = "바로 확인") {
   }, 1600);
 }
 
+function formatOpsDigestJumpToneLabel(tone) {
+  switch (String(tone || "info").trim()) {
+    case "success":
+      return "완료";
+    case "warn":
+      return "주의";
+    case "error":
+      return "위험";
+    default:
+      return "안내";
+  }
+}
+
+function buildOpsDigestJumpLabel(actionLabel, source, targetNode) {
+  const normalizedActionLabel =
+    String(actionLabel || "패널 확인").trim() || "패널 확인";
+  const sourceLabel = formatOpsDigestInboxSourceLabel(source || "ops_digest");
+  const toneLabel = formatOpsDigestJumpToneLabel(targetNode?.dataset?.tone || "info");
+  return `${normalizedActionLabel} · ${sourceLabel} · ${toneLabel}`;
+}
+
 function openOpsDigestPanelTarget(
   targetId,
   actionLabel = "패널 확인",
@@ -1764,7 +1785,11 @@ function openOpsDigestPanelTarget(
   scrollTargetNode.scrollIntoView({ behavior: "smooth", block: "start" });
   flashOpsDigestJumpTarget(
     focusTargetNode || targetNode,
-    `${actionLabel} · 바로 확인`,
+    buildOpsDigestJumpLabel(
+      actionLabel,
+      source,
+      focusTargetNode || targetNode,
+    ),
   );
   setStatus(`패널 이동: ${actionLabel}`, false, source);
 }
