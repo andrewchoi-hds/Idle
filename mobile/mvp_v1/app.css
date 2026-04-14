@@ -226,6 +226,13 @@ h2 {
   box-shadow: 0 0 0 1px rgba(243, 189, 77, 0.65);
 }
 
+.ghost-btn.filter-active {
+  box-shadow: 0 0 0 1px rgba(243, 189, 77, 0.65);
+  border-color: #c08d34;
+  background: rgba(59, 42, 12, 0.94);
+  color: #ffe0a1;
+}
+
 .ops-digest-badge.tone-info {
   border-color: #4d6f67;
   background: rgba(20, 44, 39, 0.92);

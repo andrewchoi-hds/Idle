@@ -4211,3 +4211,11 @@
 
 ## 981) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ops digest filter bar 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 982) 다음 순차 작업
+1. [완료] compact filter bar에 `경고 흐름` preset 버튼(`btnOpsDigestPresetWarning`)을 추가해, source는 전체로 유지한 채 tone filter를 한 번에 `주의/위험`으로 맞출 수 있도록 보강.
+2. [완료] `applyOpsDigestWarningOnlyPreset()`를 추가하고 `syncOpsDigestFilterBar()`가 `data-filter-preset-label`, `data-filter-preset-active` contract와 버튼 active 상태를 함께 갱신하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 warning preset filter bar 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 983) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(warning preset filter bar 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
