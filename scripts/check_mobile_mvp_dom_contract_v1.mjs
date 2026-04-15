@@ -9502,7 +9502,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    "let opsDigestJumpTargetTimers = {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'document.querySelectorAll(".ops-jump-context").forEach((node) => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'node.classList.remove("ops-jump-target-soft");',
     "app.mjs",
     failures,
   );
@@ -10343,6 +10355,18 @@ async function main() {
   assertIncludes(
     app,
     'targetNode.dataset.jumpLabel = String(label || "바로 확인").trim() || "바로 확인";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'targetNode.classList.add("ops-jump-target-soft");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'targetNode.classList.remove("ops-jump-target-soft");',
     "app.mjs",
     failures,
   );

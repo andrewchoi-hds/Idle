@@ -4371,3 +4371,11 @@
 
 ## 1021) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(compact preview chip label 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1022) 다음 순차 작업
+1. [완료] deep-link target highlight를 strong 1단계에서 soft 2단계로 한 번 더 완화되도록 바꿔, 도착 지점은 분명히 보이되 시각 잔상은 덜 남도록 보강.
+2. [완료] `opsDigestJumpTargetTimers`를 `soften/clear` 2단계로 분리하고 `.ops-jump-target-soft` 클래스를 추가해 callout 제거 후 softer highlight가 잠깐 더 남도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 staged jump highlight 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1023) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(staged jump highlight 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

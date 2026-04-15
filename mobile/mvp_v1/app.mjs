@@ -406,7 +406,10 @@ let battleSfxLastPlayAtMs = 0;
 let battleSfxAmbientLastPlayAtMs = 0;
 let battleHapticEnabled = false;
 let battleHapticLastPlayAtMs = 0;
-let opsDigestJumpTargetTimer = null;
+let opsDigestJumpTargetTimers = {
+  soften: null,
+  clear: null,
+};
 const MOBILE_MVP_BATTLE_SFX_PREF_KEY = "idle_xianxia_mobile_mvp_v1_battle_sfx";
 const MOBILE_MVP_BATTLE_HAPTIC_PREF_KEY = "idle_xianxia_mobile_mvp_v1_battle_haptic";
 const BATTLE_SFX_MIN_INTERVAL_MS = 90;
@@ -1764,6 +1767,7 @@ function flashOpsDigestJumpTarget(targetNode, label = "바로 확인", contextNo
   }
   document.querySelectorAll(".ops-jump-target").forEach((node) => {
     node.classList.remove("ops-jump-target");
+    node.classList.remove("ops-jump-target-soft");
     delete node.dataset.jumpLabel;
   });
   document.querySelectorAll(".ops-jump-context").forEach((node) => {
@@ -1774,17 +1778,29 @@ function flashOpsDigestJumpTarget(targetNode, label = "바로 확인", contextNo
   }
   targetNode.dataset.jumpLabel = String(label || "바로 확인").trim() || "바로 확인";
   targetNode.classList.add("ops-jump-target");
-  if (opsDigestJumpTargetTimer) {
-    window.clearTimeout(opsDigestJumpTargetTimer);
+  if (opsDigestJumpTargetTimers.soften) {
+    window.clearTimeout(opsDigestJumpTargetTimers.soften);
+    opsDigestJumpTargetTimers.soften = null;
   }
-  opsDigestJumpTargetTimer = window.setTimeout(() => {
+  if (opsDigestJumpTargetTimers.clear) {
+    window.clearTimeout(opsDigestJumpTargetTimers.clear);
+    opsDigestJumpTargetTimers.clear = null;
+  }
+  opsDigestJumpTargetTimers.soften = window.setTimeout(() => {
     targetNode.classList.remove("ops-jump-target");
+    targetNode.classList.add("ops-jump-target-soft");
+    delete targetNode.dataset.jumpLabel;
+    opsDigestJumpTargetTimers.soften = null;
+  }, 900);
+  opsDigestJumpTargetTimers.clear = window.setTimeout(() => {
+    targetNode.classList.remove("ops-jump-target");
+    targetNode.classList.remove("ops-jump-target-soft");
     delete targetNode.dataset.jumpLabel;
     if (contextNode && contextNode !== targetNode) {
       contextNode.classList.remove("ops-jump-context");
     }
-    opsDigestJumpTargetTimer = null;
-  }, 1600);
+    opsDigestJumpTargetTimers.clear = null;
+  }, 1700);
 }
 
 function formatOpsDigestJumpToneLabel(tone) {
