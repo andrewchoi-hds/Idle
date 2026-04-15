@@ -140,6 +140,31 @@ h2 {
   flex: 0 0 auto;
 }
 
+.ops-digest-topline-meta {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding: 4px 6px;
+  border-radius: 999px;
+  border: 1px solid #294941;
+  background: rgba(11, 22, 20, 0.72);
+}
+
+.ops-digest-topline-meta.tone-info {
+  border-color: #35514a;
+  background: rgba(11, 22, 20, 0.72);
+}
+
+.ops-digest-topline-meta.tone-warn {
+  border-color: #c08d34;
+  background: rgba(59, 42, 12, 0.52);
+}
+
+.ops-digest-topline-meta.tone-error {
+  border-color: #b14b45;
+  background: rgba(61, 22, 22, 0.54);
+}
+
 .ops-digest-topline .ops-digest-triage-chip {
   flex: 0 0 auto;
 }

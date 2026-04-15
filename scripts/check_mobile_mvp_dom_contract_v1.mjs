@@ -40,6 +40,7 @@ const REQUIRED_HTML_IDS = [
   "btnOpsDigestOpenBreakthrough",
   "btnOpsDigestOpenSave",
   "opsDigestRecentAction",
+  "opsDigestToplineMeta",
   "btnOpsDigestToplinePriority",
   "opsDigestToplineFreshness",
   "opsDigestTriageStrip",
@@ -242,6 +243,7 @@ const REQUIRED_DOM_KEYS = [
   "btnOpsDigestOpenBreakthrough",
   "btnOpsDigestOpenSave",
   "opsDigestRecentAction",
+  "opsDigestToplineMeta",
   "btnOpsDigestToplinePriority",
   "opsDigestToplineFreshness",
   "opsDigestTriageStrip",
@@ -1815,6 +1817,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestToplineMeta"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="opsDigestToplineFreshness"',
     "index.html",
     failures,
@@ -2152,6 +2160,18 @@ async function main() {
   assertIncludes(
     html,
     'data-topline-freshness-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-meta-summary="우선 대기 · 갱신 대기"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-meta-tone="info"',
     "index.html",
     failures,
   );
@@ -11238,6 +11258,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.opsDigestPanel.dataset.toplineMetaSummary =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplineMetaTone =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.toplinePriorityKind = toplinePriorityKind;",
     "app.mjs",
     failures,
@@ -11275,6 +11307,18 @@ async function main() {
   assertIncludes(
     app,
     "dom.btnOpsDigestToplinePriority.disabled = toplinePriorityDisabled;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestToplineMeta.title =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "applyRiskTone(",
     "app.mjs",
     failures,
   );
@@ -13220,6 +13264,7 @@ async function main() {
   assertIncludes(css, ".offline-compare-current-summary.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-target-summary.tone-error", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline", "app.css", failures);
+  assertIncludes(css, ".ops-digest-topline-meta", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline .ops-digest-badge", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage-chip", "app.css", failures);
