@@ -1031,6 +1031,20 @@ function formatOpsDigestFilterChipLabel(kind, label) {
   }
 }
 
+function setOpsDigestFilterChipContent(node, icon, label) {
+  if (!node) {
+    return;
+  }
+  const iconNode = document.createElement("span");
+  iconNode.className = "ops-digest-filter-chip-icon";
+  iconNode.textContent = String(icon || "").trim() || "·";
+  iconNode.setAttribute("aria-hidden", "true");
+  const labelNode = document.createElement("span");
+  labelNode.className = "ops-digest-filter-chip-label";
+  labelNode.textContent = String(label || "").trim() || "대기";
+  node.replaceChildren(iconNode, labelNode);
+}
+
 function toggleOpsDigestTimelineGroup(groupLabel) {
   const normalizedGroupLabel = String(groupLabel || "").trim();
   if (!normalizedGroupLabel) {
@@ -1271,9 +1285,10 @@ function syncOpsDigestFilterBar() {
   dom.opsDigestPanel.dataset.filterResetLabel = "필터 해제";
   dom.opsDigestPanel.dataset.filterResetDisabled = String(activeCount === 0);
   if (dom.opsDigestActiveSourceFilter) {
-    dom.opsDigestActiveSourceFilter.textContent = formatOpsDigestFilterChipLabel(
-      "source",
-      sourceLabel,
+    setOpsDigestFilterChipContent(
+      dom.opsDigestActiveSourceFilter,
+      "⌁",
+      formatOpsDigestFilterChipLabel("source", sourceLabel),
     );
     dom.opsDigestActiveSourceFilter.title = sourceLabel;
     applyRiskTone(
@@ -1282,9 +1297,10 @@ function syncOpsDigestFilterBar() {
     );
   }
   if (dom.opsDigestActiveToneFilter) {
-    dom.opsDigestActiveToneFilter.textContent = formatOpsDigestFilterChipLabel(
-      "tone",
-      toneLabel,
+    setOpsDigestFilterChipContent(
+      dom.opsDigestActiveToneFilter,
+      "!",
+      formatOpsDigestFilterChipLabel("tone", toneLabel),
     );
     dom.opsDigestActiveToneFilter.title = toneLabel;
     applyRiskTone(
@@ -1297,17 +1313,25 @@ function syncOpsDigestFilterBar() {
       dom.opsDigestPanel.dataset.filterSummary;
   }
   if (dom.btnOpsDigestClearFilters) {
-    dom.btnOpsDigestClearFilters.textContent = formatOpsDigestFilterChipLabel(
-      "reset",
-      dom.opsDigestPanel.dataset.filterResetLabel,
+    setOpsDigestFilterChipContent(
+      dom.btnOpsDigestClearFilters,
+      "×",
+      formatOpsDigestFilterChipLabel(
+        "reset",
+        dom.opsDigestPanel.dataset.filterResetLabel,
+      ),
     );
     dom.btnOpsDigestClearFilters.title = dom.opsDigestPanel.dataset.filterResetLabel;
     dom.btnOpsDigestClearFilters.disabled = activeCount === 0;
   }
   if (dom.btnOpsDigestPresetWarning) {
-    dom.btnOpsDigestPresetWarning.textContent = formatOpsDigestFilterChipLabel(
-      "preset",
-      dom.opsDigestPanel.dataset.filterPresetLabel,
+    setOpsDigestFilterChipContent(
+      dom.btnOpsDigestPresetWarning,
+      "!",
+      formatOpsDigestFilterChipLabel(
+        "preset",
+        dom.opsDigestPanel.dataset.filterPresetLabel,
+      ),
     );
     dom.btnOpsDigestPresetWarning.title =
       dom.opsDigestPanel.dataset.filterPresetLabel;
@@ -1321,9 +1345,13 @@ function syncOpsDigestFilterBar() {
     );
   }
   if (dom.btnOpsDigestPresetBattle) {
-    dom.btnOpsDigestPresetBattle.textContent = formatOpsDigestFilterChipLabel(
-      "preset",
-      dom.opsDigestPanel.dataset.filterBattleLabel,
+    setOpsDigestFilterChipContent(
+      dom.btnOpsDigestPresetBattle,
+      "✦",
+      formatOpsDigestFilterChipLabel(
+        "preset",
+        dom.opsDigestPanel.dataset.filterBattleLabel,
+      ),
     );
     dom.btnOpsDigestPresetBattle.title =
       dom.opsDigestPanel.dataset.filterBattleLabel;
@@ -1337,9 +1365,13 @@ function syncOpsDigestFilterBar() {
     );
   }
   if (dom.btnOpsDigestPresetAuto) {
-    dom.btnOpsDigestPresetAuto.textContent = formatOpsDigestFilterChipLabel(
-      "preset",
-      dom.opsDigestPanel.dataset.filterAutoLabel,
+    setOpsDigestFilterChipContent(
+      dom.btnOpsDigestPresetAuto,
+      "↺",
+      formatOpsDigestFilterChipLabel(
+        "preset",
+        dom.opsDigestPanel.dataset.filterAutoLabel,
+      ),
     );
     dom.btnOpsDigestPresetAuto.title = dom.opsDigestPanel.dataset.filterAutoLabel;
     dom.btnOpsDigestPresetAuto.classList.toggle(
@@ -1352,11 +1384,14 @@ function syncOpsDigestFilterBar() {
     );
   }
   if (dom.btnOpsDigestPresetBreakthrough) {
-    dom.btnOpsDigestPresetBreakthrough.textContent =
+    setOpsDigestFilterChipContent(
+      dom.btnOpsDigestPresetBreakthrough,
+      "▲",
       formatOpsDigestFilterChipLabel(
         "preset",
         dom.opsDigestPanel.dataset.filterBreakthroughLabel,
-      );
+      ),
+    );
     dom.btnOpsDigestPresetBreakthrough.title =
       dom.opsDigestPanel.dataset.filterBreakthroughLabel;
     dom.btnOpsDigestPresetBreakthrough.classList.toggle(
@@ -1369,9 +1404,13 @@ function syncOpsDigestFilterBar() {
     );
   }
   if (dom.btnOpsDigestPresetSave) {
-    dom.btnOpsDigestPresetSave.textContent = formatOpsDigestFilterChipLabel(
-      "preset",
-      dom.opsDigestPanel.dataset.filterSaveLabel,
+    setOpsDigestFilterChipContent(
+      dom.btnOpsDigestPresetSave,
+      "▣",
+      formatOpsDigestFilterChipLabel(
+        "preset",
+        dom.opsDigestPanel.dataset.filterSaveLabel,
+      ),
     );
     dom.btnOpsDigestPresetSave.title = dom.opsDigestPanel.dataset.filterSaveLabel;
     dom.btnOpsDigestPresetSave.classList.toggle(

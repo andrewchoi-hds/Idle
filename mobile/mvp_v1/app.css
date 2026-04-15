@@ -191,6 +191,9 @@ h2 {
   padding: 6px 10px;
   font-size: 11px;
   flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .ops-digest-timeline-meta {
@@ -202,6 +205,20 @@ h2 {
 
 .ops-digest-timeline-meta .ops-digest-badge[role="button"] {
   cursor: pointer;
+}
+
+.ops-digest-filter-bar .ops-digest-badge {
+  gap: 4px;
+}
+
+.ops-digest-filter-chip-icon {
+  font-size: 11px;
+  line-height: 1;
+  opacity: 0.84;
+}
+
+.ops-digest-filter-chip-label {
+  white-space: nowrap;
 }
 
 .ops-digest-inbox-head {
