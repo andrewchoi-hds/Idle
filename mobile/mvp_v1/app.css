@@ -136,6 +136,10 @@ h2 {
   align-items: center;
 }
 
+.ops-digest-topline .ops-digest-badge {
+  flex: 0 0 auto;
+}
+
 .ops-digest-triage {
   display: flex;
   gap: 6px;

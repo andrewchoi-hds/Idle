@@ -40,6 +40,7 @@ const REQUIRED_HTML_IDS = [
   "btnOpsDigestOpenBreakthrough",
   "btnOpsDigestOpenSave",
   "opsDigestRecentAction",
+  "opsDigestToplineFreshness",
   "opsDigestTriageStrip",
   "btnOpsDigestTriageWarning",
   "btnOpsDigestTriageAction",
@@ -240,6 +241,7 @@ const REQUIRED_DOM_KEYS = [
   "btnOpsDigestOpenBreakthrough",
   "btnOpsDigestOpenSave",
   "opsDigestRecentAction",
+  "opsDigestToplineFreshness",
   "opsDigestTriageStrip",
   "btnOpsDigestTriageWarning",
   "btnOpsDigestTriageAction",
@@ -1811,6 +1813,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestToplineFreshness"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="opsDigestTriageStrip"',
     "index.html",
     failures,
@@ -2111,13 +2119,31 @@ async function main() {
   );
   assertIncludes(
     html,
-    'data-topline-summary="최근 조작 대기 중 · 주의 없음 · 다음 자동 시작 · 필터 없음"',
+    'data-topline-summary="최근 조작 대기 중 · 주의 없음 · 다음 자동 시작 · 필터 없음 · 갱신 대기"',
     "index.html",
     failures,
   );
   assertIncludes(
     html,
     'data-topline-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-updated-at="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-updated-label="갱신 대기"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-freshness-tone="info"',
     "index.html",
     failures,
   );
@@ -10934,6 +10960,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.opsDigestPanel.dataset.recentActionUpdatedAt = String(updatedAt);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "syncOpsDigestRecentAction(message, isError, source);",
     "app.mjs",
     failures,
@@ -11091,6 +11123,36 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestPanel.dataset.toplineTone =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplineUpdatedAt = String(latestToplineUpdatedAt);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplineUpdatedLabel = toplineUpdatedLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplineFreshnessTone = toplineFreshnessTone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestToplineFreshness.textContent = toplineUpdatedLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.inboxLastUpdatedAt = String(latestInboxUpdatedAt);",
     "app.mjs",
     failures,
   );
@@ -13030,6 +13092,7 @@ async function main() {
   assertIncludes(css, ".offline-compare-current-summary.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-target-summary.tone-error", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline", "app.css", failures);
+  assertIncludes(css, ".ops-digest-topline .ops-digest-badge", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage-chip", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-head", "app.css", failures);
