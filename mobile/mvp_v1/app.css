@@ -180,6 +180,19 @@ h2 {
   gap: 6px;
 }
 
+.ops-digest-filter-strip {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.ops-digest-filter-strip .ops-digest-btn {
+  min-height: 34px;
+  padding: 6px 10px;
+  font-size: 11px;
+  flex: 0 0 auto;
+}
+
 .ops-digest-timeline-meta {
   display: inline-flex;
   gap: 6px;

@@ -4427,3 +4427,11 @@
 
 ## 1035) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(compact group action icon+label 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1036) 다음 순차 작업
+1. [완료] ops digest compact filter bar를 badge + chip strip 구조로 더 조밀하게 다듬고, visible label은 더 짧게 축약.
+2. [완료] `formatOpsDigestFilterChipLabel()`를 추가하고, active source/tone badge와 preset/reset button이 각각 `전체`, `자동`, `돌파`, `전투`, `저장`, `경고`, `해제`처럼 짧게 보이되 full 문맥은 summary/title에 유지되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 compact filter chip strip 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1037) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(compact filter chip strip 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
