@@ -483,6 +483,12 @@ h2 {
     linear-gradient(180deg, rgba(125, 231, 192, 0.1), rgba(125, 231, 192, 0.02));
 }
 
+.ops-jump-target-soft {
+  box-shadow: 0 0 0 2px rgba(243, 189, 77, 0.32);
+  background:
+    linear-gradient(180deg, rgba(243, 189, 77, 0.08), rgba(243, 189, 77, 0.01));
+}
+
 .ops-jump-target::after {
   content: attr(data-jump-label);
   position: absolute;
