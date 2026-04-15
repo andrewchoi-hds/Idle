@@ -10282,6 +10282,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    'groupFreshnessBadge.className = `ops-digest-badge tone-${groupActionTone}`;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "groupFreshnessBadge.textContent = formatOpsDigestInboxUpdatedLabel(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'groupFilterButton.className = "ghost-btn ops-digest-timeline-group-filter";',
     "app.mjs",
     failures,
