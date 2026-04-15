@@ -4411,3 +4411,11 @@
 
 ## 1031) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(tone/state action ordering 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1032) 다음 순차 작업
+1. [완료] ops digest 상대 시간 라벨을 새로고침 없이도 살아 움직이게 만들기 위해 lightweight relative-time ticker를 추가.
+2. [완료] `startOpsDigestRelativeTimeTicker()`, `stopOpsDigestRelativeTimeTicker()`, `refreshOpsDigestRelativeTimeUi()`를 추가하고 visibility/pagehide 흐름에 연결해 hidden 상태에서는 멈추고 visible 복귀 시 즉시 갱신되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ops digest relative-time ticker 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1033) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ops digest relative-time ticker 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
