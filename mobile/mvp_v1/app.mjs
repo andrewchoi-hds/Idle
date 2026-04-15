@@ -1465,6 +1465,12 @@ function syncOpsDigestTimeline() {
     const groupActions = document.createElement("div");
     groupActions.className = "ops-digest-timeline-group-actions";
 
+    const groupCountBadge = document.createElement("span");
+    groupCountBadge.className = `ops-digest-badge tone-${groupActionTone}`;
+    groupCountBadge.textContent = `${entries.length}건`;
+    groupCountBadge.title = `${groupLabel} 최근 흐름 ${entries.length}건`;
+    groupActions.append(groupCountBadge);
+
     const groupFilterButton = document.createElement("button");
     groupFilterButton.type = "button";
     groupFilterButton.className = "ghost-btn ops-digest-timeline-group-filter";
