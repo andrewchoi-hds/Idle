@@ -2021,19 +2021,19 @@ function syncOpsDigestTriageStrip() {
     `${warningLabel} · ${triageActionLabel} · ${filterLabel}`;
 
   if (dom.btnOpsDigestTriageWarning) {
-    dom.btnOpsDigestTriageWarning.textContent = warningLabel;
+    setOpsDigestFilterChipContent(dom.btnOpsDigestTriageWarning, "!", warningLabel);
     dom.btnOpsDigestTriageWarning.disabled = warningDisabled;
     dom.btnOpsDigestTriageWarning.title = warningSummary;
     applyRiskTone(dom.btnOpsDigestTriageWarning, warningTone);
   }
   if (dom.btnOpsDigestTriageAction) {
-    dom.btnOpsDigestTriageAction.textContent = triageActionLabel;
+    setOpsDigestFilterChipContent(dom.btnOpsDigestTriageAction, "↗", triageActionLabel);
     dom.btnOpsDigestTriageAction.disabled = nextActionDisabled;
     dom.btnOpsDigestTriageAction.title = nextActionSummary;
     applyRiskTone(dom.btnOpsDigestTriageAction, nextActionTone);
   }
   if (dom.btnOpsDigestTriageFilter) {
-    dom.btnOpsDigestTriageFilter.textContent = filterLabel;
+    setOpsDigestFilterChipContent(dom.btnOpsDigestTriageFilter, "⌁", filterLabel);
     dom.btnOpsDigestTriageFilter.disabled = filterDisabled;
     dom.btnOpsDigestTriageFilter.title = filterSummary;
     applyRiskTone(dom.btnOpsDigestTriageFilter, filterTone);
