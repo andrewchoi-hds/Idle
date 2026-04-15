@@ -9502,6 +9502,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function resolveOpsDigestJumpStageDurations(tone) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "let opsDigestJumpTargetTimers = {",
     "app.mjs",
     failures,
@@ -9527,6 +9533,12 @@ async function main() {
   assertIncludes(
     app,
     'contextNode.classList.remove("ops-jump-context");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const jumpDurations = resolveOpsDigestJumpStageDurations(jumpTone);",
     "app.mjs",
     failures,
   );
