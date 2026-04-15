@@ -4395,3 +4395,11 @@
 
 ## 1027) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(group freshness badge 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1028) 다음 순차 작업
+1. [완료] grouped history header의 freshness badge를 대표 tone과 분리해, freshness 자체가 `resolveOpsDigestFreshnessTone()` 기준으로 더 직접적으로 읽히도록 보강.
+2. [완료] grouped timeline 렌더가 `groupFreshnessBadge`에 freshness 전용 tone을 적용하고, 건수/urgency/freshness가 서로 다른 신호로 보이도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 freshness tone split 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1029) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(freshness tone split 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

@@ -9796,6 +9796,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function resolveOpsDigestFreshnessTone(updatedAtMs) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function setOpsDigestInboxSourceFilter(source) {",
     "app.mjs",
     failures,
@@ -10282,7 +10288,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    'groupFreshnessBadge.className = `ops-digest-badge tone-${groupActionTone}`;',
+    'groupFreshnessBadge.className = `ops-digest-badge tone-${resolveOpsDigestFreshnessTone(',
     "app.mjs",
     failures,
   );
