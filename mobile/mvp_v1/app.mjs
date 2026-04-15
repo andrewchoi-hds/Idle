@@ -116,6 +116,7 @@ const dom = {
   btnOpsDigestOpenBreakthrough: document.getElementById("btnOpsDigestOpenBreakthrough"),
   btnOpsDigestOpenSave: document.getElementById("btnOpsDigestOpenSave"),
   opsDigestRecentAction: document.getElementById("opsDigestRecentAction"),
+  opsDigestToplineFreshness: document.getElementById("opsDigestToplineFreshness"),
   opsDigestTriageStrip: document.getElementById("opsDigestTriageStrip"),
   btnOpsDigestTriageWarning: document.getElementById("btnOpsDigestTriageWarning"),
   btnOpsDigestTriageAction: document.getElementById("btnOpsDigestTriageAction"),
@@ -1792,9 +1793,11 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
   const normalizedMessage = String(message || "최근 조작 대기 중").trim() || "최근 조작 대기 중";
   const tone = isError ? "warn" : "info";
   const normalizedSource = String(source || "system").trim() || "system";
+  const updatedAt = Date.now();
   dom.opsDigestPanel.dataset.recentAction = normalizedMessage;
   dom.opsDigestPanel.dataset.recentActionTone = tone;
   dom.opsDigestPanel.dataset.recentActionSource = normalizedSource;
+  dom.opsDigestPanel.dataset.recentActionUpdatedAt = String(updatedAt);
   if (dom.opsDigestRecentAction) {
     const recentIcon =
       normalizedSource === "system"
@@ -2034,12 +2037,27 @@ function syncOpsDigestTriageStrip() {
   dom.opsDigestPanel.dataset.triageFilterDisabled = String(filterDisabled);
   dom.opsDigestPanel.dataset.triageSummary =
     `${warningLabel} · ${triageActionLabel} · ${filterLabel}`;
+  const latestToplineUpdatedAt = Math.max(
+    Number(dom.opsDigestPanel.dataset.recentActionUpdatedAt || 0),
+    Number(dom.opsDigestPanel.dataset.inboxLastUpdatedAt || 0),
+  );
+  const toplineUpdatedLabel =
+    latestToplineUpdatedAt > 0
+      ? formatOpsDigestInboxUpdatedLabel(latestToplineUpdatedAt)
+      : "갱신 대기";
+  const toplineFreshnessTone =
+    latestToplineUpdatedAt > 0
+      ? resolveOpsDigestFreshnessTone(latestToplineUpdatedAt)
+      : "info";
   dom.opsDigestPanel.dataset.toplineSummary =
-    `${dom.opsDigestPanel.dataset.recentAction || "최근 조작 대기 중"} · ${dom.opsDigestPanel.dataset.triageSummary}`;
+    `${dom.opsDigestPanel.dataset.recentAction || "최근 조작 대기 중"} · ${dom.opsDigestPanel.dataset.triageSummary} · ${toplineUpdatedLabel}`;
   dom.opsDigestPanel.dataset.toplineTone =
     warningTone === "error" || warningTone === "warn"
       ? warningTone
       : String(dom.opsDigestPanel.dataset.recentActionTone || "info");
+  dom.opsDigestPanel.dataset.toplineUpdatedAt = String(latestToplineUpdatedAt);
+  dom.opsDigestPanel.dataset.toplineUpdatedLabel = toplineUpdatedLabel;
+  dom.opsDigestPanel.dataset.toplineFreshnessTone = toplineFreshnessTone;
 
   if (dom.btnOpsDigestTriageWarning) {
     setOpsDigestFilterChipContent(dom.btnOpsDigestTriageWarning, "!", warningLabel);
@@ -2058,6 +2076,11 @@ function syncOpsDigestTriageStrip() {
     dom.btnOpsDigestTriageFilter.disabled = filterDisabled;
     dom.btnOpsDigestTriageFilter.title = filterSummary;
     applyRiskTone(dom.btnOpsDigestTriageFilter, filterTone);
+  }
+  if (dom.opsDigestToplineFreshness) {
+    dom.opsDigestToplineFreshness.textContent = toplineUpdatedLabel;
+    dom.opsDigestToplineFreshness.title = `상단 최신 갱신 ${toplineUpdatedLabel}`;
+    applyRiskTone(dom.opsDigestToplineFreshness, toplineFreshnessTone);
   }
 }
 
@@ -2989,6 +3012,7 @@ function syncOpsDigestInbox() {
     Number(dom.opsDigestInboxPrimary?.dataset.inboxUpdatedAt || 0),
     Number(dom.opsDigestInboxSecondary?.dataset.inboxUpdatedAt || 0),
   );
+  dom.opsDigestPanel.dataset.inboxLastUpdatedAt = String(latestInboxUpdatedAt);
   dom.opsDigestPanel.dataset.inboxLastUpdatedLabel =
     formatOpsDigestInboxUpdatedLabel(latestInboxUpdatedAt);
   if (dom.opsDigestInboxMeta) {

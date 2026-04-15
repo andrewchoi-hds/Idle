@@ -4491,3 +4491,11 @@
 
 ## 1051) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ops digest compact topline feed 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1052) 다음 순차 작업
+1. [완료] ops digest topline feed에 freshness badge를 추가해 최근 조작/triage가 얼마나 최근 상태인지 상단에서 바로 읽히도록 보강.
+2. [완료] 패널 루트에 `data-topline-updated-at`, `data-topline-updated-label`, `data-topline-freshness-tone`을 추가하고, `recentActionUpdatedAt`과 `inboxLastUpdatedAt` 중 더 최신 값을 기준으로 relative-time ticker와 함께 자동 갱신되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ops digest topline freshness badge 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1053) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ops digest topline freshness 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
