@@ -4507,3 +4507,11 @@
 
 ## 1055) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ops digest topline priority 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1056) 다음 순차 작업
+1. [완료] ops digest topline priority chip에 kind별 icon 규칙을 붙여 warning/action/filter 성격이 텍스트를 다 읽기 전에도 더 직접적으로 드러나게 보강.
+2. [완료] `resolveOpsDigestToplinePriorityIcon()`를 추가하고, priority chip이 `! 우선 주의`, `↗ 우선 ...`, `⌁ 우선 필터`, `★ 우선 대기` 형태로 렌더되도록 정합화.
+3. [완료] 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 topline priority icon 규칙 기준으로 동기화.
+
+## 1057) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ops digest topline priority icon 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
