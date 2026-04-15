@@ -116,6 +116,7 @@ const dom = {
   btnOpsDigestOpenBreakthrough: document.getElementById("btnOpsDigestOpenBreakthrough"),
   btnOpsDigestOpenSave: document.getElementById("btnOpsDigestOpenSave"),
   opsDigestRecentAction: document.getElementById("opsDigestRecentAction"),
+  opsDigestToplineMeta: document.getElementById("opsDigestToplineMeta"),
   btnOpsDigestToplinePriority: document.getElementById("btnOpsDigestToplinePriority"),
   opsDigestToplineFreshness: document.getElementById("opsDigestToplineFreshness"),
   opsDigestTriageStrip: document.getElementById("opsDigestTriageStrip"),
@@ -2124,6 +2125,10 @@ function syncOpsDigestTriageStrip() {
   dom.opsDigestPanel.dataset.toplineUpdatedAt = String(latestToplineUpdatedAt);
   dom.opsDigestPanel.dataset.toplineUpdatedLabel = toplineUpdatedLabel;
   dom.opsDigestPanel.dataset.toplineFreshnessTone = toplineFreshnessTone;
+  dom.opsDigestPanel.dataset.toplineMetaSummary =
+    `${toplinePriorityLabel} · ${toplineUpdatedLabel}`;
+  dom.opsDigestPanel.dataset.toplineMetaTone =
+    toplinePriorityKind !== "none" ? toplinePriorityTone : toplineFreshnessTone;
   dom.opsDigestPanel.dataset.toplinePriorityKind = toplinePriorityKind;
   dom.opsDigestPanel.dataset.toplinePriorityLabel = toplinePriorityLabel;
   dom.opsDigestPanel.dataset.toplinePriorityTone = toplinePriorityTone;
@@ -2162,6 +2167,14 @@ function syncOpsDigestTriageStrip() {
     dom.btnOpsDigestToplinePriority.disabled = toplinePriorityDisabled;
     dom.btnOpsDigestToplinePriority.title = toplinePrioritySummary;
     applyRiskTone(dom.btnOpsDigestToplinePriority, toplinePriorityTone);
+  }
+  if (dom.opsDigestToplineMeta) {
+    dom.opsDigestToplineMeta.title =
+      `${toplinePrioritySummary} · ${toplineUpdatedLabel}`;
+    applyRiskTone(
+      dom.opsDigestToplineMeta,
+      dom.opsDigestPanel.dataset.toplineMetaTone || "info",
+    );
   }
 }
 
