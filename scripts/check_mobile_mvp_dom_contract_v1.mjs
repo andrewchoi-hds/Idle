@@ -9724,6 +9724,30 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function setOpsDigestFilterChipContent(node, icon, label) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'iconNode.className = "ops-digest-filter-chip-icon";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'labelNode.className = "ops-digest-filter-chip-label";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "node.replaceChildren(iconNode, labelNode);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function formatOpsDigestTimelineToneLabel(tone) {",
     "app.mjs",
     failures,
@@ -10108,7 +10132,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    'dom.btnOpsDigestPresetAuto.textContent = formatOpsDigestFilterChipLabel(',
+    'setOpsDigestFilterChipContent(',
     "app.mjs",
     failures,
   );
@@ -10120,13 +10144,25 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.btnOpsDigestPresetBreakthrough.textContent =",
+    '"↺",',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'formatOpsDigestFilterChipLabel(',
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
     "dom.btnOpsDigestPresetBreakthrough.title =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    '"▲",',
     "app.mjs",
     failures,
   );
@@ -10144,7 +10180,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.btnOpsDigestPresetBattle.textContent =",
+    'dom.opsDigestPanel.dataset.filterBattleLabel,',
     "app.mjs",
     failures,
   );
@@ -10156,13 +10192,25 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.btnOpsDigestPresetSave.textContent =",
+    '"✦",',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestPanel.dataset.filterSaveLabel,',
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
     "dom.btnOpsDigestPresetSave.title = dom.opsDigestPanel.dataset.filterSaveLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    '"▣",',
     "app.mjs",
     failures,
   );
@@ -10180,7 +10228,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    'dom.btnOpsDigestPresetWarning.textContent = formatOpsDigestFilterChipLabel(',
+    'dom.opsDigestPanel.dataset.filterPresetLabel,',
     "app.mjs",
     failures,
   );
@@ -10192,13 +10240,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    '"!",',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.btnOpsDigestPresetWarning.classList.toggle(",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    'dom.opsDigestActiveSourceFilter.textContent = formatOpsDigestFilterChipLabel(',
+    'formatOpsDigestFilterChipLabel("source", sourceLabel)',
     "app.mjs",
     failures,
   );
@@ -10210,7 +10264,13 @@ async function main() {
   );
   assertIncludes(
     app,
-    'dom.opsDigestActiveToneFilter.textContent = formatOpsDigestFilterChipLabel(',
+    '"⌁",',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'formatOpsDigestFilterChipLabel("tone", toneLabel)',
     "app.mjs",
     failures,
   );
@@ -10222,13 +10282,19 @@ async function main() {
   );
   assertIncludes(
     app,
-    'dom.btnOpsDigestClearFilters.textContent = formatOpsDigestFilterChipLabel(',
+    'formatOpsDigestFilterChipLabel(',
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
     "dom.btnOpsDigestClearFilters.title = dom.opsDigestPanel.dataset.filterResetLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    '"×",',
     "app.mjs",
     failures,
   );
