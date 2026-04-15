@@ -4467,3 +4467,11 @@
 
 ## 1045) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ops digest card badge jump 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1046) 다음 순차 작업
+1. [완료] warning/next action/filter 상태를 상단 한 줄에서 더 빨리 훑을 수 있도록 ops digest compact triage strip을 추가.
+2. [완료] `syncOpsDigestTriageStrip()`를 추가하고, `btnOpsDigestTriageWarning`, `btnOpsDigestTriageAction`, `btnOpsDigestTriageFilter`가 각각 경고 원인 패널 이동, 추천 다음 행동 실행, 필터 해제로 기존 helper 흐름을 그대로 재사용하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ops digest triage strip 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1047) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ops digest triage strip 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

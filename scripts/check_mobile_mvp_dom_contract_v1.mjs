@@ -40,6 +40,10 @@ const REQUIRED_HTML_IDS = [
   "btnOpsDigestOpenBreakthrough",
   "btnOpsDigestOpenSave",
   "opsDigestRecentAction",
+  "opsDigestTriageStrip",
+  "btnOpsDigestTriageWarning",
+  "btnOpsDigestTriageAction",
+  "btnOpsDigestTriageFilter",
   "opsDigestWarnings",
   "opsDigestQuickSummary",
   "opsDigestSecondarySummary",
@@ -236,6 +240,10 @@ const REQUIRED_DOM_KEYS = [
   "btnOpsDigestOpenBreakthrough",
   "btnOpsDigestOpenSave",
   "opsDigestRecentAction",
+  "opsDigestTriageStrip",
+  "btnOpsDigestTriageWarning",
+  "btnOpsDigestTriageAction",
+  "btnOpsDigestTriageFilter",
   "opsDigestWarnings",
   "opsDigestQuickSummary",
   "opsDigestSecondarySummary",
@@ -1797,6 +1805,30 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestTriageStrip"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="btnOpsDigestTriageWarning"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="btnOpsDigestTriageAction"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="btnOpsDigestTriageFilter"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="btnOpsDigestNextAction"',
     "index.html",
     failures,
@@ -2044,6 +2076,30 @@ async function main() {
   assertIncludes(
     html,
     'data-recent-action="최근 조작 대기 중"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-triage-warning-label="주의 없음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-triage-action-label="다음 자동 시작"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-triage-filter-label="필터 없음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-triage-summary="주의 없음 · 다음 자동 시작 · 필터 없음"',
     "index.html",
     failures,
   );
@@ -10368,6 +10424,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "syncOpsDigestTriageStrip();",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestTimelineSourceBadge.textContent = sourceSummary;",
     "app.mjs",
     failures,
@@ -10824,6 +10886,24 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.btnOpsDigestTriageWarning?.addEventListener("click", () => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.btnOpsDigestTriageAction?.addEventListener("click", () => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.btnOpsDigestTriageFilter?.addEventListener("click", () => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.recentAction = normalizedMessage;",
     "app.mjs",
     failures,
@@ -10873,6 +10953,12 @@ async function main() {
   assertIncludes(
     app,
     "function syncOpsDigestCardBadge(node, label, tone = \"info\") {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function syncOpsDigestTriageStrip() {",
     "app.mjs",
     failures,
   );
@@ -10951,6 +11037,24 @@ async function main() {
   assertIncludes(
     app,
     "badge?.addEventListener(\"keydown\", (event) => {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnOpsDigestTriageWarning.textContent = warningLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnOpsDigestTriageAction.textContent = triageActionLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnOpsDigestTriageFilter.textContent = filterLabel;",
     "app.mjs",
     failures,
   );
@@ -12889,6 +12993,8 @@ async function main() {
   assertIncludes(css, ".offline-compare-result.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-current-summary.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-target-summary.tone-error", "app.css", failures);
+  assertIncludes(css, ".ops-digest-triage", "app.css", failures);
+  assertIncludes(css, ".ops-digest-triage-chip", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-head", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-head .ops-digest-badge[role=\"button\"]", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-label", "app.css", failures);

@@ -116,6 +116,10 @@ const dom = {
   btnOpsDigestOpenBreakthrough: document.getElementById("btnOpsDigestOpenBreakthrough"),
   btnOpsDigestOpenSave: document.getElementById("btnOpsDigestOpenSave"),
   opsDigestRecentAction: document.getElementById("opsDigestRecentAction"),
+  opsDigestTriageStrip: document.getElementById("opsDigestTriageStrip"),
+  btnOpsDigestTriageWarning: document.getElementById("btnOpsDigestTriageWarning"),
+  btnOpsDigestTriageAction: document.getElementById("btnOpsDigestTriageAction"),
+  btnOpsDigestTriageFilter: document.getElementById("btnOpsDigestTriageFilter"),
   btnOpsDigestNextAction: document.getElementById("btnOpsDigestNextAction"),
   opsDigestNextAction: document.getElementById("opsDigestNextAction"),
   opsDigestNextReason: document.getElementById("opsDigestNextReason"),
@@ -1032,6 +1036,15 @@ function syncOpsDigestCardBadge(node, label, tone = "info") {
   applyRiskTone(node, tone);
 }
 
+function formatOpsDigestTriageActionLabel(label, disabled) {
+  if (disabled) {
+    return "다음 대기";
+  }
+  const compactLabel =
+    formatOpsDigestTimelinePreviewChipLabel(label) || String(label || "").trim() || "대기";
+  return `다음 ${compactLabel}`;
+}
+
 function formatOpsDigestFilterChipLabel(kind, label) {
   const normalizedKind = String(kind || "").trim();
   const normalizedLabel = String(label || "").trim();
@@ -1942,6 +1955,88 @@ function syncOpsDigestWarnings() {
   }
   if (dom.opsDigestInboxWarning) {
     dom.opsDigestInboxWarning.textContent = warningSummary;
+  }
+}
+
+function syncOpsDigestTriageStrip() {
+  if (!dom.opsDigestPanel) {
+    return;
+  }
+  const warningCount = Math.max(
+    0,
+    Math.floor(Number(dom.opsDigestPanel.dataset.warningCount || 0)),
+  );
+  const warningTone = String(dom.opsDigestPanel.dataset.warningTone || "info");
+  const warningSummary = String(
+    dom.opsDigestPanel.dataset.warningSummary || "주의 상태 없음",
+  ).trim() || "주의 상태 없음";
+  const warningLabel = warningCount > 0 ? `주의 ${warningCount}건` : "주의 없음";
+  const warningDisabled = warningCount === 0;
+
+  const nextActionDisabled =
+    String(dom.opsDigestPanel.dataset.nextActionDisabled || "false") === "true";
+  const nextActionLabel = String(
+    dom.opsDigestPanel.dataset.nextActionLabel || "다음 행동",
+  ).trim() || "다음 행동";
+  const nextActionSummary = String(
+    dom.opsDigestPanel.dataset.nextActionSummary || nextActionLabel,
+  ).trim() || nextActionLabel;
+  const nextActionTone = resolveOpsDigestActionTone(
+    dom.opsDigestPanel.dataset.nextActionKind,
+    dom.opsDigestPanel.dataset.nextActionTarget,
+    dom.opsDigestPanel.dataset.nextActionSource,
+  );
+  const triageActionLabel = formatOpsDigestTriageActionLabel(
+    nextActionLabel,
+    nextActionDisabled,
+  );
+
+  const filterActiveCount = Math.max(
+    0,
+    Math.floor(Number(dom.opsDigestPanel.dataset.filterActiveCount || 0)),
+  );
+  const filterSummary = String(
+    dom.opsDigestPanel.dataset.filterSummary || "필터 없음",
+  ).trim() || "필터 없음";
+  const filterLabel =
+    filterActiveCount > 0 ? `필터 ${filterActiveCount}건` : "필터 없음";
+  const filterTone =
+    filterActiveCount === 0
+      ? "info"
+      : String(dom.opsDigestPanel.dataset.timelineToneFilter || "all") === "alert"
+        ? "warn"
+        : "success";
+  const filterDisabled = filterActiveCount === 0;
+
+  dom.opsDigestPanel.dataset.triageWarningLabel = warningLabel;
+  dom.opsDigestPanel.dataset.triageWarningTone = warningTone;
+  dom.opsDigestPanel.dataset.triageWarningDisabled = String(warningDisabled);
+  dom.opsDigestPanel.dataset.triageActionLabel = triageActionLabel;
+  dom.opsDigestPanel.dataset.triageActionTone = nextActionTone;
+  dom.opsDigestPanel.dataset.triageActionDisabled = String(nextActionDisabled);
+  dom.opsDigestPanel.dataset.triageFilterLabel = filterLabel;
+  dom.opsDigestPanel.dataset.triageFilterTone = filterTone;
+  dom.opsDigestPanel.dataset.triageFilterDisabled = String(filterDisabled);
+  dom.opsDigestPanel.dataset.triageSummary =
+    `${warningLabel} · ${triageActionLabel} · ${filterLabel}`;
+
+  if (dom.btnOpsDigestTriageWarning) {
+    dom.btnOpsDigestTriageWarning.textContent = warningLabel;
+    dom.btnOpsDigestTriageWarning.disabled = warningDisabled;
+    dom.btnOpsDigestTriageWarning.title = warningSummary;
+    applyRiskTone(dom.btnOpsDigestTriageWarning, warningTone);
+  }
+  if (dom.btnOpsDigestTriageAction) {
+    dom.btnOpsDigestTriageAction.textContent = triageActionLabel;
+    dom.btnOpsDigestTriageAction.disabled = nextActionDisabled;
+    dom.btnOpsDigestTriageAction.title = nextActionSummary;
+    applyRiskTone(dom.btnOpsDigestTriageAction, nextActionTone);
+  }
+  if (dom.btnOpsDigestTriageFilter) {
+    dom.btnOpsDigestTriageFilter.textContent = filterLabel;
+    dom.btnOpsDigestTriageFilter.disabled = filterDisabled;
+    dom.btnOpsDigestTriageFilter.title = filterSummary;
+    applyRiskTone(dom.btnOpsDigestTriageFilter, filterTone);
   }
 }
 
@@ -2940,6 +3035,7 @@ function syncOpsDigestInbox() {
     );
   }
   syncOpsDigestTimeline();
+  syncOpsDigestTriageStrip();
 }
 
 function executeOpsDigestNextAction() {
@@ -15636,6 +15732,24 @@ function bindEvents() {
   });
   dom.btnOpsDigestAltAction?.addEventListener("click", () => {
     executeOpsDigestAltAction();
+  });
+  dom.btnOpsDigestTriageWarning?.addEventListener("click", () => {
+    if (dom.btnOpsDigestTriageWarning.disabled) {
+      return;
+    }
+    openOpsDigestWarningTarget();
+  });
+  dom.btnOpsDigestTriageAction?.addEventListener("click", () => {
+    if (dom.btnOpsDigestTriageAction.disabled) {
+      return;
+    }
+    executeOpsDigestNextAction();
+  });
+  dom.btnOpsDigestTriageFilter?.addEventListener("click", () => {
+    if (dom.btnOpsDigestTriageFilter.disabled) {
+      return;
+    }
+    clearOpsDigestFilters();
   });
   const opsDigestPanelButtons = [
     [dom.btnOpsDigestOpenFocus, "focusControlsPanel", "집중 패널 열기", "ops_focus"],
