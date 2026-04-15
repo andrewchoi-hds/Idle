@@ -129,6 +129,19 @@ h2 {
   gap: 6px;
 }
 
+.ops-digest-triage {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.ops-digest-triage-chip {
+  min-height: 30px;
+  padding: 5px 9px;
+  font-size: 11px;
+  flex: 0 0 auto;
+}
+
 .ops-digest-next-row {
   display: grid;
   gap: 8px;
