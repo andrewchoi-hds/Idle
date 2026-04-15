@@ -116,6 +116,7 @@ const dom = {
   btnOpsDigestOpenBreakthrough: document.getElementById("btnOpsDigestOpenBreakthrough"),
   btnOpsDigestOpenSave: document.getElementById("btnOpsDigestOpenSave"),
   opsDigestRecentAction: document.getElementById("opsDigestRecentAction"),
+  opsDigestTopline: document.getElementById("opsDigestTopline"),
   opsDigestToplineMeta: document.getElementById("opsDigestToplineMeta"),
   btnOpsDigestToplinePriority: document.getElementById("btnOpsDigestToplinePriority"),
   opsDigestToplineFreshness: document.getElementById("opsDigestToplineFreshness"),
@@ -1084,6 +1085,18 @@ function resolveOpsDigestToplinePriorityIcon(kind) {
     default:
       return "★";
   }
+}
+
+function syncOpsDigestToplineOrder(priorityFirst) {
+  if (!dom.opsDigestTopline) {
+    return;
+  }
+  const normalizedPriorityFirst = priorityFirst === true;
+  dom.opsDigestTopline.classList.toggle("priority-first", normalizedPriorityFirst);
+  const orderedNodes = normalizedPriorityFirst
+    ? [dom.opsDigestToplineMeta, dom.opsDigestRecentAction, dom.opsDigestTriageStrip]
+    : [dom.opsDigestRecentAction, dom.opsDigestToplineMeta, dom.opsDigestTriageStrip];
+  dom.opsDigestTopline.replaceChildren(...orderedNodes.filter(Boolean));
 }
 
 function formatOpsDigestFilterChipLabel(kind, label) {
@@ -2122,6 +2135,11 @@ function syncOpsDigestTriageStrip() {
       : warningTone === "error" || warningTone === "warn"
         ? warningTone
         : String(dom.opsDigestPanel.dataset.recentActionTone || "info");
+  const priorityFirst = toplinePriorityKind === "warning" || toplinePriorityKind === "action";
+  dom.opsDigestPanel.dataset.toplineOrder = priorityFirst
+    ? "meta,recent,triage"
+    : "recent,meta,triage";
+  dom.opsDigestPanel.dataset.toplinePriorityFirst = String(priorityFirst);
   dom.opsDigestPanel.dataset.toplineUpdatedAt = String(latestToplineUpdatedAt);
   dom.opsDigestPanel.dataset.toplineUpdatedLabel = toplineUpdatedLabel;
   dom.opsDigestPanel.dataset.toplineFreshnessTone = toplineFreshnessTone;
@@ -2176,6 +2194,7 @@ function syncOpsDigestTriageStrip() {
       dom.opsDigestPanel.dataset.toplineMetaTone || "info",
     );
   }
+  syncOpsDigestToplineOrder(priorityFirst);
 }
 
 function flashOpsDigestJumpTarget(targetNode, label = "바로 확인", contextNode = null) {

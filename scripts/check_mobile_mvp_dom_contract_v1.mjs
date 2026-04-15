@@ -40,6 +40,7 @@ const REQUIRED_HTML_IDS = [
   "btnOpsDigestOpenBreakthrough",
   "btnOpsDigestOpenSave",
   "opsDigestRecentAction",
+  "opsDigestTopline",
   "opsDigestToplineMeta",
   "btnOpsDigestToplinePriority",
   "opsDigestToplineFreshness",
@@ -243,6 +244,7 @@ const REQUIRED_DOM_KEYS = [
   "btnOpsDigestOpenBreakthrough",
   "btnOpsDigestOpenSave",
   "opsDigestRecentAction",
+  "opsDigestTopline",
   "opsDigestToplineMeta",
   "btnOpsDigestToplinePriority",
   "opsDigestToplineFreshness",
@@ -2142,6 +2144,18 @@ async function main() {
   assertIncludes(
     html,
     'data-topline-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-order="recent,meta,triage"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-priority-first="false"',
     "index.html",
     failures,
   );
@@ -10994,6 +11008,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function syncOpsDigestToplineOrder(priorityFirst) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "const opsDigestPanelButtons = [",
     "app.mjs",
     failures,
@@ -11240,6 +11260,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.opsDigestPanel.dataset.toplineOrder = priorityFirst',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestPanel.dataset.toplinePriorityFirst = String(priorityFirst);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.toplineUpdatedAt = String(latestToplineUpdatedAt);",
     "app.mjs",
     failures,
@@ -11313,6 +11345,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestToplineMeta.title =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncOpsDigestToplineOrder(priorityFirst);",
     "app.mjs",
     failures,
   );
@@ -13264,6 +13302,7 @@ async function main() {
   assertIncludes(css, ".offline-compare-current-summary.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-target-summary.tone-error", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline", "app.css", failures);
+  assertIncludes(css, ".ops-digest-topline.priority-first", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-meta", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline .ops-digest-badge", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage", "app.css", failures);

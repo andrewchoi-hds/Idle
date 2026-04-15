@@ -4523,3 +4523,11 @@
 
 ## 1059) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ops digest topline meta cluster 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1060) 다음 순차 작업
+1. [완료] ops digest topline에서 `warning/action`이 실제로 중요할 때 meta cluster가 recent action보다 앞에 오도록 재배치 규칙을 추가.
+2. [완료] `syncOpsDigestToplineOrder()`를 추가하고, 패널 루트에 `data-topline-order`, `data-topline-priority-first`를 기록해 상단 배치 우선순위가 contract로도 드러나게 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ops digest topline priority-first ordering 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1061) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ops digest topline priority-first ordering 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
