@@ -1796,7 +1796,22 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
   dom.opsDigestPanel.dataset.recentActionTone = tone;
   dom.opsDigestPanel.dataset.recentActionSource = normalizedSource;
   if (dom.opsDigestRecentAction) {
-    dom.opsDigestRecentAction.textContent = normalizedMessage;
+    const recentIcon =
+      normalizedSource === "system"
+        ? "•"
+        : normalizedSource.includes("save")
+          ? "▣"
+          : normalizedSource.includes("battle")
+            ? "✦"
+            : normalizedSource.includes("breakthrough")
+              ? "▲"
+              : normalizedSource.includes("auto") || normalizedSource.includes("Realtime")
+                ? "↺"
+                : "•";
+    setOpsDigestFilterChipContent(dom.opsDigestRecentAction, recentIcon, normalizedMessage);
+    dom.opsDigestRecentAction.title =
+      `${formatOpsDigestInboxSourceLabel(normalizedSource)} · ${normalizedMessage}`;
+    applyRiskTone(dom.opsDigestRecentAction, tone);
   }
   if (dom.opsDigestInboxRecent) {
     dom.opsDigestInboxRecent.textContent = normalizedMessage;
@@ -2019,6 +2034,12 @@ function syncOpsDigestTriageStrip() {
   dom.opsDigestPanel.dataset.triageFilterDisabled = String(filterDisabled);
   dom.opsDigestPanel.dataset.triageSummary =
     `${warningLabel} · ${triageActionLabel} · ${filterLabel}`;
+  dom.opsDigestPanel.dataset.toplineSummary =
+    `${dom.opsDigestPanel.dataset.recentAction || "최근 조작 대기 중"} · ${dom.opsDigestPanel.dataset.triageSummary}`;
+  dom.opsDigestPanel.dataset.toplineTone =
+    warningTone === "error" || warningTone === "warn"
+      ? warningTone
+      : String(dom.opsDigestPanel.dataset.recentActionTone || "info");
 
   if (dom.btnOpsDigestTriageWarning) {
     setOpsDigestFilterChipContent(dom.btnOpsDigestTriageWarning, "!", warningLabel);
