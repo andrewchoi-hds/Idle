@@ -92,13 +92,21 @@ const dom = {
   focusControlsPanel: document.getElementById("focusControlsPanel"),
   opsDigestPanel: document.getElementById("opsDigestPanel"),
   opsDigestFocus: document.getElementById("opsDigestFocus"),
+  opsDigestFocusBadge: document.getElementById("opsDigestFocusBadge"),
   opsDigestSettings: document.getElementById("opsDigestSettings"),
+  opsDigestSettingsBadge: document.getElementById("opsDigestSettingsBadge"),
   opsDigestStage: document.getElementById("opsDigestStage"),
+  opsDigestStageBadge: document.getElementById("opsDigestStageBadge"),
   opsDigestBattle: document.getElementById("opsDigestBattle"),
+  opsDigestBattleBadge: document.getElementById("opsDigestBattleBadge"),
   opsDigestResources: document.getElementById("opsDigestResources"),
+  opsDigestResourcesBadge: document.getElementById("opsDigestResourcesBadge"),
   opsDigestActions: document.getElementById("opsDigestActions"),
+  opsDigestActionsBadge: document.getElementById("opsDigestActionsBadge"),
   opsDigestBreakthrough: document.getElementById("opsDigestBreakthrough"),
+  opsDigestBreakthroughBadge: document.getElementById("opsDigestBreakthroughBadge"),
   opsDigestSave: document.getElementById("opsDigestSave"),
+  opsDigestSaveBadge: document.getElementById("opsDigestSaveBadge"),
   btnOpsDigestOpenFocus: document.getElementById("btnOpsDigestOpenFocus"),
   btnOpsDigestOpenSettings: document.getElementById("btnOpsDigestOpenSettings"),
   btnOpsDigestOpenStage: document.getElementById("btnOpsDigestOpenStage"),
@@ -1011,6 +1019,14 @@ function formatOpsDigestTimelinePreviewChipLabel(label) {
     return `${compactLabel.slice(0, 15)}…`;
   }
   return compactLabel;
+}
+
+function syncOpsDigestCardBadge(node, label, tone = "info") {
+  if (!node) {
+    return;
+  }
+  node.textContent = String(label || "").trim() || "대기";
+  applyRiskTone(node, tone);
 }
 
 function formatOpsDigestFilterChipLabel(kind, label) {
@@ -3063,6 +3079,58 @@ function syncOpsDigestPanel() {
   if (dom.opsDigestSave) {
     dom.opsDigestSave.textContent = saveOverview;
   }
+  syncOpsDigestCardBadge(
+    dom.opsDigestFocusBadge,
+    dom.focusControlsPanel?.dataset.battleFocus === "true" ? "ON" : "OFF",
+    dom.focusControlsPanel?.dataset.battleFocus === "true" ? "success" : "info",
+  );
+  const hasAnyAutomation =
+    dom.settingsPanel?.dataset.autoBattle === "true" ||
+    dom.settingsPanel?.dataset.autoBreakthrough === "true" ||
+    dom.settingsPanel?.dataset.autoTribulation === "true";
+  syncOpsDigestCardBadge(
+    dom.opsDigestSettingsBadge,
+    hasAnyAutomation ? "자동" : "수동",
+    hasAnyAutomation ? "success" : "info",
+  );
+  syncOpsDigestCardBadge(
+    dom.opsDigestStageBadge,
+    dom.stagePanel?.dataset.breakthroughReady === "true" ? "준비" : "대기",
+    dom.stagePanel?.dataset.breakthroughReady === "true" ? "success" : "info",
+  );
+  const battleCardTone = String(dom.battleScenePanel?.dataset.statusTone || "info");
+  syncOpsDigestCardBadge(
+    dom.opsDigestBattleBadge,
+    formatOpsDigestTimelineToneLabel(battleCardTone),
+    battleCardTone,
+  );
+  const qiValue = Number(dom.statsPanel?.dataset.qi || 0);
+  const essenceValue = Number(dom.statsPanel?.dataset.rebirthEssence || 0);
+  syncOpsDigestCardBadge(
+    dom.opsDigestResourcesBadge,
+    qiValue > 0 || essenceValue > 0 ? "축적" : "초기",
+    qiValue > 0 || essenceValue > 0 ? "success" : "info",
+  );
+  syncOpsDigestCardBadge(
+    dom.opsDigestActionsBadge,
+    dom.actionsPanel?.dataset.realtimeRunning === "true" ? "가동" : "대기",
+    dom.actionsPanel?.dataset.realtimeRunning === "true" ? "success" : "info",
+  );
+  const breakthroughCardTone = String(
+    dom.breakthroughPreviewPanel?.dataset.riskTone || "info",
+  );
+  syncOpsDigestCardBadge(
+    dom.opsDigestBreakthroughBadge,
+    formatOpsDigestTimelineToneLabel(breakthroughCardTone),
+    breakthroughCardTone,
+  );
+  const saveSlotState = String(dom.savePanel?.dataset.sourceSlotState || "empty");
+  const hasSavedRun = String(dom.savePanel?.dataset.lastSavedAt || "").trim() !== "";
+  syncOpsDigestCardBadge(
+    dom.opsDigestSaveBadge,
+    saveSlotState === "corrupt" ? "손상" : hasSavedRun ? "기록" : "대기",
+    saveSlotState === "corrupt" ? "error" : hasSavedRun ? "success" : "info",
+  );
   syncOpsDigestWarnings();
   syncOpsDigestQuickActions();
   syncOpsDigestNextAction();

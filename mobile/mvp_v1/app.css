@@ -581,6 +581,13 @@ h2 {
   gap: 6px;
 }
 
+.ops-digest-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
 .ops-digest-link {
   justify-self: start;
   min-height: 28px;

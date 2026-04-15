@@ -4451,3 +4451,11 @@
 
 ## 1041) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(compact ops digest card header/link 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1042) 다음 순차 작업
+1. [완료] ops digest 상단 8개 요약 카드 헤더 옆에 compact tone/status badge를 추가해, 카드 제목만 봐도 현재 상태를 더 빨리 읽히게 보강.
+2. [완료] `syncOpsDigestCardBadge()`를 추가하고, 각 카드가 기존 panel dataset에서 바로 파생한 `ON/OFF`, `자동/수동`, `준비/대기`, `안내/주의/위험/완료`, `축적/초기`, `가동/대기`, `손상/기록/대기` badge를 공통 규칙으로 쓰도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ops digest card status badge 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1043) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ops digest card status badge 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
