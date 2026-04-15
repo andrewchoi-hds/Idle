@@ -4459,3 +4459,11 @@
 
 ## 1043) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ops digest card status badge 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1044) 다음 순차 작업
+1. [완료] ops digest 상단 카드 badge를 읽기 전용 상태 표시에서 한 단계 더 확장해, badge 자체도 해당 패널로 바로 들어가는 compact jump point로 보강.
+2. [완료] 각 badge에 `role="button"`, `tabindex="0"`, `data-badge-target-panel`, `data-badge-action-label`, `data-badge-source`, `data-badge-focus-target`를 부여하고, 클릭/Enter/Space가 기존 `openOpsDigestPanelTarget(...)` deep-link 흐름으로 바로 이어지도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ops digest card badge jump 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1045) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ops digest card badge jump 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

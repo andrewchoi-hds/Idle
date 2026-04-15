@@ -1026,6 +1026,9 @@ function syncOpsDigestCardBadge(node, label, tone = "info") {
     return;
   }
   node.textContent = String(label || "").trim() || "대기";
+  if (node.dataset.badgeActionLabel) {
+    node.title = `${node.dataset.badgeActionLabel} · ${node.textContent}`;
+  }
   applyRiskTone(node, tone);
 }
 
@@ -15652,6 +15655,37 @@ function bindEvents() {
   for (const [button, targetId, label, source] of opsDigestPanelButtons) {
     button?.addEventListener("click", () => {
       openOpsDigestPanelTarget(targetId, label, source);
+    });
+  }
+  for (const badge of [
+    dom.opsDigestFocusBadge,
+    dom.opsDigestSettingsBadge,
+    dom.opsDigestStageBadge,
+    dom.opsDigestBattleBadge,
+    dom.opsDigestResourcesBadge,
+    dom.opsDigestActionsBadge,
+    dom.opsDigestBreakthroughBadge,
+    dom.opsDigestSaveBadge,
+  ]) {
+    badge?.addEventListener("click", () => {
+      openOpsDigestPanelTarget(
+        badge.dataset.badgeTargetPanel || "",
+        badge.dataset.badgeActionLabel || badge.textContent || "상태 열기",
+        badge.dataset.badgeSource || "ops_digest",
+        badge.dataset.badgeFocusTarget || "",
+      );
+    });
+    badge?.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") {
+        return;
+      }
+      event.preventDefault();
+      openOpsDigestPanelTarget(
+        badge.dataset.badgeTargetPanel || "",
+        badge.dataset.badgeActionLabel || badge.textContent || "상태 열기",
+        badge.dataset.badgeSource || "ops_digest",
+        badge.dataset.badgeFocusTarget || "",
+      );
     });
   }
   dom.btnOpsDigestFocus?.addEventListener("click", () => {

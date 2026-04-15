@@ -1743,6 +1743,24 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-badge-target-panel="focusControlsPanel"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-badge-focus-target="battleFocusHint"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'role="button"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="opsDigestSaveBadge"',
     "index.html",
     failures,
@@ -10914,6 +10932,30 @@ async function main() {
   );
   assertIncludes(
     app,
+    "badge?.addEventListener(\"click\", () => {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "badge.dataset.badgeTargetPanel || \"\",",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "badge.dataset.badgeFocusTarget || \"\",",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "badge?.addEventListener(\"keydown\", (event) => {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestSettings.textContent = settingsOverview;",
     "app.mjs",
     failures,
@@ -12848,6 +12890,7 @@ async function main() {
   assertIncludes(css, ".offline-compare-current-summary.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-target-summary.tone-error", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-head", "app.css", failures);
+  assertIncludes(css, ".ops-digest-card-head .ops-digest-badge[role=\"button\"]", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-label", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-icon", "app.css", failures);
   assertIncludes(css, ".ops-digest-link-icon", "app.css", failures);
