@@ -40,6 +40,7 @@ const REQUIRED_HTML_IDS = [
   "btnOpsDigestOpenBreakthrough",
   "btnOpsDigestOpenSave",
   "opsDigestRecentAction",
+  "btnOpsDigestToplinePriority",
   "opsDigestToplineFreshness",
   "opsDigestTriageStrip",
   "btnOpsDigestTriageWarning",
@@ -241,6 +242,7 @@ const REQUIRED_DOM_KEYS = [
   "btnOpsDigestOpenBreakthrough",
   "btnOpsDigestOpenSave",
   "opsDigestRecentAction",
+  "btnOpsDigestToplinePriority",
   "opsDigestToplineFreshness",
   "opsDigestTriageStrip",
   "btnOpsDigestTriageWarning",
@@ -1819,6 +1821,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="btnOpsDigestToplinePriority"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="opsDigestTriageStrip"',
     "index.html",
     failures,
@@ -2119,7 +2127,7 @@ async function main() {
   );
   assertIncludes(
     html,
-    'data-topline-summary="최근 조작 대기 중 · 주의 없음 · 다음 자동 시작 · 필터 없음 · 갱신 대기"',
+    'data-topline-summary="최근 조작 대기 중 · 우선 대기 · 주의 없음 · 다음 자동 시작 · 필터 없음 · 갱신 대기"',
     "index.html",
     failures,
   );
@@ -2144,6 +2152,36 @@ async function main() {
   assertIncludes(
     html,
     'data-topline-freshness-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-priority-label="우선 대기"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-priority-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-priority-kind="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-priority-disabled="true"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-priority-summary="우선 항목 없음"',
     "index.html",
     failures,
   );
@@ -10924,6 +10962,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function executeOpsDigestToplinePriority() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "const opsDigestPanelButtons = [",
     "app.mjs",
     failures,
@@ -10949,6 +10993,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.btnOpsDigestTriageFilter?.addEventListener("click", () => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.btnOpsDigestToplinePriority?.addEventListener("click", () => {',
     "app.mjs",
     failures,
   );
@@ -11116,6 +11166,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    'setOpsDigestFilterChipContent(',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    '"★",',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.toplineSummary =",
     "app.mjs",
     failures,
@@ -11146,7 +11208,43 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.opsDigestPanel.dataset.toplinePriorityKind = toplinePriorityKind;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplinePriorityLabel = toplinePriorityLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplinePriorityTone = toplinePriorityTone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplinePriorityDisabled = String(toplinePriorityDisabled);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplinePrioritySummary = toplinePrioritySummary;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestToplineFreshness.textContent = toplineUpdatedLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnOpsDigestToplinePriority.disabled = toplinePriorityDisabled;",
     "app.mjs",
     failures,
   );
