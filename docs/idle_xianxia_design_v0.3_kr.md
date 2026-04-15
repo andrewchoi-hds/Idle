@@ -4475,3 +4475,11 @@
 
 ## 1047) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ops digest triage strip 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1048) 다음 순차 작업
+1. [완료] ops digest triage strip chip에 icon+label 구조를 붙여 warning/action/filter 구분이 텍스트를 끝까지 읽기 전에도 더 빨리 드러나도록 보강.
+2. [완료] `setOpsDigestFilterChipContent()`를 triage chip에도 재사용해 `! 주의`, `↗ 다음`, `⌁ 필터` 형태의 compact chip 규칙으로 정합화하고, 기존 warning/action/filter 동작은 그대로 유지.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 triage strip icon+label 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1049) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(triage strip icon+label 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

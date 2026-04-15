@@ -11042,19 +11042,19 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.btnOpsDigestTriageWarning.textContent = warningLabel;",
+    'setOpsDigestFilterChipContent(dom.btnOpsDigestTriageWarning, "!", warningLabel);',
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.btnOpsDigestTriageAction.textContent = triageActionLabel;",
+    'setOpsDigestFilterChipContent(dom.btnOpsDigestTriageAction, "↗", triageActionLabel);',
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.btnOpsDigestTriageFilter.textContent = filterLabel;",
+    'setOpsDigestFilterChipContent(dom.btnOpsDigestTriageFilter, "⌁", filterLabel);',
     "app.mjs",
     failures,
   );
