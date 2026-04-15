@@ -1088,6 +1088,20 @@ function resolveOpsDigestTimelineGroupActionOrder(
   return ["filter", "panel"];
 }
 
+function setOpsDigestTimelineGroupActionLabel(button, icon, label) {
+  if (!button) {
+    return;
+  }
+  const iconNode = document.createElement("span");
+  iconNode.className = "ops-digest-timeline-group-action-icon";
+  iconNode.textContent = String(icon || "").trim() || "·";
+  iconNode.setAttribute("aria-hidden", "true");
+  const labelNode = document.createElement("span");
+  labelNode.className = "ops-digest-timeline-group-action-label";
+  labelNode.textContent = String(label || "").trim() || "대기";
+  button.replaceChildren(iconNode, labelNode);
+}
+
 function focusOpsDigestTimelineGroup(groupFilter) {
   if (!dom.opsDigestPanel) {
     return;
@@ -1546,7 +1560,11 @@ function syncOpsDigestTimeline() {
     groupFilterButton.className = "ghost-btn ops-digest-timeline-group-filter";
     groupFilterButton.dataset.groupFilter = groupFilter;
     const groupFilterActive = groupFilter !== "none" && groupFilter === sourceFilter;
-    groupFilterButton.textContent = groupFilterActive ? "복귀" : "보기";
+    setOpsDigestTimelineGroupActionLabel(
+      groupFilterButton,
+      groupFilterActive ? "↺" : "◎",
+      groupFilterActive ? "복귀" : "보기",
+    );
     groupFilterButton.classList.toggle("filter-active", groupFilterActive);
     groupFilterButton.setAttribute("aria-pressed", String(groupFilterActive));
     groupFilterButton.title = groupFilterActive
@@ -1566,7 +1584,11 @@ function syncOpsDigestTimeline() {
       groupPanelTarget?.source || "ops_digest";
     groupPanelButton.dataset.groupPanelFocusTarget =
       groupPanelTarget?.focusId || "";
-    groupPanelButton.textContent = groupPanelTarget ? "열기" : "없음";
+    setOpsDigestTimelineGroupActionLabel(
+      groupPanelButton,
+      groupPanelTarget ? "↗" : "·",
+      groupPanelTarget ? "열기" : "없음",
+    );
     groupPanelButton.title = groupPanelTarget?.label || "패널 없음";
     groupPanelButton.disabled = !groupPanelTarget;
     applyRiskTone(groupPanelButton, groupActionTone);
