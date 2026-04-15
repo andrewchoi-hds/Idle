@@ -4499,3 +4499,11 @@
 
 ## 1053) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ops digest topline freshness 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1054) 다음 순차 작업
+1. [완료] ops digest topline에 `priority chip`을 추가해 warning/action/filter 중 가장 먼저 볼 항목을 상단에서 바로 드러나게 보강.
+2. [완료] `executeOpsDigestToplinePriority()`를 추가하고, `data-topline-priority-label`, `data-topline-priority-tone`, `data-topline-priority-kind`, `data-topline-priority-disabled`, `data-topline-priority-summary` contract를 기준으로 `★ 우선 ...` chip이 경고 이동 / 다음 행동 실행 / 필터 해제로 직접 이어지도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ops digest topline priority 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1055) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ops digest topline priority 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

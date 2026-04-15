@@ -116,6 +116,7 @@ const dom = {
   btnOpsDigestOpenBreakthrough: document.getElementById("btnOpsDigestOpenBreakthrough"),
   btnOpsDigestOpenSave: document.getElementById("btnOpsDigestOpenSave"),
   opsDigestRecentAction: document.getElementById("opsDigestRecentAction"),
+  btnOpsDigestToplinePriority: document.getElementById("btnOpsDigestToplinePriority"),
   opsDigestToplineFreshness: document.getElementById("opsDigestToplineFreshness"),
   opsDigestTriageStrip: document.getElementById("opsDigestTriageStrip"),
   btnOpsDigestTriageWarning: document.getElementById("btnOpsDigestTriageWarning"),
@@ -1044,6 +1045,31 @@ function formatOpsDigestTriageActionLabel(label, disabled) {
   const compactLabel =
     formatOpsDigestTimelinePreviewChipLabel(label) || String(label || "").trim() || "대기";
   return `다음 ${compactLabel}`;
+}
+
+function executeOpsDigestToplinePriority() {
+  if (!dom.opsDigestPanel) {
+    return;
+  }
+  const disabled =
+    String(dom.opsDigestPanel.dataset.toplinePriorityDisabled || "true") === "true";
+  if (disabled) {
+    return;
+  }
+  const kind = String(dom.opsDigestPanel.dataset.toplinePriorityKind || "none").trim();
+  switch (kind) {
+    case "warning":
+      openOpsDigestWarningTarget();
+      return;
+    case "action":
+      executeOpsDigestNextAction();
+      return;
+    case "filter":
+      clearOpsDigestFilters();
+      return;
+    default:
+      return;
+  }
 }
 
 function formatOpsDigestFilterChipLabel(kind, label) {
@@ -2049,15 +2075,47 @@ function syncOpsDigestTriageStrip() {
     latestToplineUpdatedAt > 0
       ? resolveOpsDigestFreshnessTone(latestToplineUpdatedAt)
       : "info";
+  let toplinePriorityKind = "none";
+  let toplinePriorityLabel = "우선 대기";
+  let toplinePriorityTone = "info";
+  let toplinePriorityDisabled = true;
+  let toplinePrioritySummary = "우선 항목 없음";
+  if (!warningDisabled) {
+    toplinePriorityKind = "warning";
+    toplinePriorityLabel = "우선 주의";
+    toplinePriorityTone = warningTone;
+    toplinePriorityDisabled = false;
+    toplinePrioritySummary = warningSummary;
+  } else if (!nextActionDisabled) {
+    toplinePriorityKind = "action";
+    toplinePriorityLabel =
+      `우선 ${formatOpsDigestTimelinePreviewChipLabel(nextActionLabel) || nextActionLabel}`;
+    toplinePriorityTone = nextActionTone;
+    toplinePriorityDisabled = false;
+    toplinePrioritySummary = nextActionSummary;
+  } else if (!filterDisabled) {
+    toplinePriorityKind = "filter";
+    toplinePriorityLabel = "우선 필터";
+    toplinePriorityTone = filterTone;
+    toplinePriorityDisabled = false;
+    toplinePrioritySummary = filterSummary;
+  }
   dom.opsDigestPanel.dataset.toplineSummary =
-    `${dom.opsDigestPanel.dataset.recentAction || "최근 조작 대기 중"} · ${dom.opsDigestPanel.dataset.triageSummary} · ${toplineUpdatedLabel}`;
+    `${dom.opsDigestPanel.dataset.recentAction || "최근 조작 대기 중"} · ${toplinePriorityLabel} · ${dom.opsDigestPanel.dataset.triageSummary} · ${toplineUpdatedLabel}`;
   dom.opsDigestPanel.dataset.toplineTone =
-    warningTone === "error" || warningTone === "warn"
-      ? warningTone
-      : String(dom.opsDigestPanel.dataset.recentActionTone || "info");
+    toplinePriorityKind !== "none"
+      ? toplinePriorityTone
+      : warningTone === "error" || warningTone === "warn"
+        ? warningTone
+        : String(dom.opsDigestPanel.dataset.recentActionTone || "info");
   dom.opsDigestPanel.dataset.toplineUpdatedAt = String(latestToplineUpdatedAt);
   dom.opsDigestPanel.dataset.toplineUpdatedLabel = toplineUpdatedLabel;
   dom.opsDigestPanel.dataset.toplineFreshnessTone = toplineFreshnessTone;
+  dom.opsDigestPanel.dataset.toplinePriorityKind = toplinePriorityKind;
+  dom.opsDigestPanel.dataset.toplinePriorityLabel = toplinePriorityLabel;
+  dom.opsDigestPanel.dataset.toplinePriorityTone = toplinePriorityTone;
+  dom.opsDigestPanel.dataset.toplinePriorityDisabled = String(toplinePriorityDisabled);
+  dom.opsDigestPanel.dataset.toplinePrioritySummary = toplinePrioritySummary;
 
   if (dom.btnOpsDigestTriageWarning) {
     setOpsDigestFilterChipContent(dom.btnOpsDigestTriageWarning, "!", warningLabel);
@@ -2081,6 +2139,16 @@ function syncOpsDigestTriageStrip() {
     dom.opsDigestToplineFreshness.textContent = toplineUpdatedLabel;
     dom.opsDigestToplineFreshness.title = `상단 최신 갱신 ${toplineUpdatedLabel}`;
     applyRiskTone(dom.opsDigestToplineFreshness, toplineFreshnessTone);
+  }
+  if (dom.btnOpsDigestToplinePriority) {
+    setOpsDigestFilterChipContent(
+      dom.btnOpsDigestToplinePriority,
+      "★",
+      toplinePriorityLabel,
+    );
+    dom.btnOpsDigestToplinePriority.disabled = toplinePriorityDisabled;
+    dom.btnOpsDigestToplinePriority.title = toplinePrioritySummary;
+    applyRiskTone(dom.btnOpsDigestToplinePriority, toplinePriorityTone);
   }
 }
 
@@ -15795,6 +15863,12 @@ function bindEvents() {
       return;
     }
     clearOpsDigestFilters();
+  });
+  dom.btnOpsDigestToplinePriority?.addEventListener("click", () => {
+    if (dom.btnOpsDigestToplinePriority.disabled) {
+      return;
+    }
+    executeOpsDigestToplinePriority();
   });
   const opsDigestPanelButtons = [
     [dom.btnOpsDigestOpenFocus, "focusControlsPanel", "집중 패널 열기", "ops_focus"],
