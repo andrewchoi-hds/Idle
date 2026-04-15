@@ -583,9 +583,12 @@ h2 {
 
 .ops-digest-link {
   justify-self: start;
-  min-height: 30px;
-  padding: 6px 10px;
+  min-height: 28px;
+  padding: 5px 9px;
   font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .ops-digest-label {
@@ -593,6 +596,28 @@ h2 {
   font-size: 11px;
   letter-spacing: 0.2px;
   text-transform: uppercase;
+}
+
+.ops-digest-card-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ops-digest-card-icon {
+  font-size: 11px;
+  line-height: 1;
+  opacity: 0.82;
+}
+
+.ops-digest-link-icon {
+  font-size: 11px;
+  line-height: 1;
+  opacity: 0.84;
+}
+
+.ops-digest-link-label {
+  white-space: nowrap;
 }
 
 .ops-digest-value {

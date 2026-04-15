@@ -1729,6 +1729,24 @@ async function main() {
   );
   assertIncludes(
     html,
+    'class="ops-digest-label ops-digest-card-label"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'class="ops-digest-link-icon"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'title="집중 패널 열기"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="opsDigestRecentAction"',
     "index.html",
     failures,
@@ -12743,6 +12761,10 @@ async function main() {
   assertIncludes(css, ".offline-compare-result.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-current-summary.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-target-summary.tone-error", "app.css", failures);
+  assertIncludes(css, ".ops-digest-card-label", "app.css", failures);
+  assertIncludes(css, ".ops-digest-card-icon", "app.css", failures);
+  assertIncludes(css, ".ops-digest-link-icon", "app.css", failures);
+  assertIncludes(css, ".ops-digest-link-label", "app.css", failures);
   assertIncludes(css, ".offline-compare-delta-summary.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-match-summary.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-source.tone-error", "app.css", failures);

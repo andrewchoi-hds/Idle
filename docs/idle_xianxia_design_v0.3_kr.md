@@ -4443,3 +4443,11 @@
 
 ## 1039) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(icon+label filter chip 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1040) 다음 순차 작업
+1. [완료] ops digest 상단 8개 요약 카드의 헤더를 icon+label 구조로 compact하게 정리하고, 카드별 `열기` 버튼도 `↗ 열기` 형태로 축약.
+2. [완료] 카드 헤더는 `ops-digest-card-label`, `ops-digest-card-icon` 규칙으로 `◎ 집중`, `⚙ 설정`, `◫ 진행`, `✦ 전장`, `◌ 자원`, `↺ 자동화`, `▲ 돌파`, `▣ 저장`처럼 보이게 하고, 링크 버튼은 `ops-digest-link-icon`, `ops-digest-link-label` 규칙으로 full 문맥은 `title`에 유지되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 compact ops digest card header/link 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1041) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(compact ops digest card header/link 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
