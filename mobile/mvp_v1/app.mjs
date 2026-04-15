@@ -1499,6 +1499,16 @@ function syncOpsDigestTimeline() {
     groupCountBadge.title = `${groupLabel} 최근 흐름 ${entries.length}건`;
     groupActions.append(groupCountBadge);
 
+    const groupFreshnessBadge = document.createElement("span");
+    groupFreshnessBadge.className = `ops-digest-badge tone-${groupActionTone}`;
+    groupFreshnessBadge.textContent = formatOpsDigestInboxUpdatedLabel(
+      previewEntry?.updatedAt || 0,
+    );
+    groupFreshnessBadge.title = previewEntry
+      ? `${groupLabel} 최신 갱신 ${formatOpsDigestInboxUpdatedLabel(previewEntry.updatedAt)}`
+      : `${groupLabel} 갱신 대기`;
+    groupActions.append(groupFreshnessBadge);
+
     const groupFilterButton = document.createElement("button");
     groupFilterButton.type = "button";
     groupFilterButton.className = "ghost-btn ops-digest-timeline-group-filter";

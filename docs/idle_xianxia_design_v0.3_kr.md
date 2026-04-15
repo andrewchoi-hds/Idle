@@ -4387,3 +4387,11 @@
 
 ## 1025) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(tone-aware jump duration 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1026) 다음 순차 작업
+1. [완료] grouped history header action 영역에 freshness badge를 추가해, 각 그룹의 최근 경과 시간까지 건수와 함께 바로 읽히도록 보강.
+2. [완료] grouped timeline 렌더가 `groupFreshnessBadge`를 만들고 `formatOpsDigestInboxUpdatedLabel(previewEntry.updatedAt)`를 사용해 대표 freshness를 헤더에 같이 반영하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 group freshness badge 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1027) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(group freshness badge 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
