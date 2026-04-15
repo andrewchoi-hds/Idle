@@ -4363,3 +4363,11 @@
 
 ## 1019) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(group count badge 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1020) 다음 순차 작업
+1. [완료] 접힌 grouped timeline preview chip 라벨을 `formatOpsDigestTimelinePreviewChipLabel()`로 축약해 모바일 한 줄 밀도를 더 높이도록 보강.
+2. [완료] `formatOpsDigestTimelineCollapsedPreview()`가 full label 대신 compact chip label을 합성하고, full label은 chip title로 유지하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 compact preview chip label 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1021) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(compact preview chip label 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
