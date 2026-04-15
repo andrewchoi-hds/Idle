@@ -16,13 +16,21 @@ const REQUIRED_HTML_IDS = [
   "battleHapticHint",
   "opsDigestPanel",
   "opsDigestFocus",
+  "opsDigestFocusBadge",
   "opsDigestSettings",
+  "opsDigestSettingsBadge",
   "opsDigestStage",
+  "opsDigestStageBadge",
   "opsDigestBattle",
+  "opsDigestBattleBadge",
   "opsDigestResources",
+  "opsDigestResourcesBadge",
   "opsDigestActions",
+  "opsDigestActionsBadge",
   "opsDigestBreakthrough",
+  "opsDigestBreakthroughBadge",
   "opsDigestSave",
+  "opsDigestSaveBadge",
   "btnOpsDigestOpenFocus",
   "btnOpsDigestOpenSettings",
   "btnOpsDigestOpenStage",
@@ -1729,7 +1737,25 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestFocusBadge"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="opsDigestSaveBadge"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'class="ops-digest-label ops-digest-card-label"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'class="ops-digest-card-head"',
     "index.html",
     failures,
   );
@@ -10828,6 +10854,66 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function syncOpsDigestCardBadge(node, label, tone = \"info\") {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncOpsDigestCardBadge(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestFocusBadge,",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestSettingsBadge,",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestStageBadge,",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestBattleBadge,",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestResourcesBadge,",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestActionsBadge,",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestBreakthroughBadge,",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestSaveBadge,",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestSettings.textContent = settingsOverview;",
     "app.mjs",
     failures,
@@ -12761,6 +12847,7 @@ async function main() {
   assertIncludes(css, ".offline-compare-result.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-current-summary.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-target-summary.tone-error", "app.css", failures);
+  assertIncludes(css, ".ops-digest-card-head", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-label", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-icon", "app.css", failures);
   assertIncludes(css, ".ops-digest-link-icon", "app.css", failures);
