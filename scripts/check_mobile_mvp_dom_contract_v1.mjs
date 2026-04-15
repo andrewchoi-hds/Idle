@@ -9748,6 +9748,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function resolveOpsDigestTimelineGroupActionOrder(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function focusOpsDigestTimelineGroup(groupFilter) {",
     "app.mjs",
     failures,
@@ -10331,6 +10337,18 @@ async function main() {
   assertIncludes(
     app,
     'groupPanelButton.textContent = groupPanelTarget ? "열기" : "없음";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const orderedGroupActions = resolveOpsDigestTimelineGroupActionOrder(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "for (const actionKey of orderedGroupActions) {",
     "app.mjs",
     failures,
   );

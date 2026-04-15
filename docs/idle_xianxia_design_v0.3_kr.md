@@ -4403,3 +4403,11 @@
 
 ## 1029) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(freshness tone split 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1030) 다음 순차 작업
+1. [완료] grouped history header action 순서를 `tone/state`에 따라 자동 재배열해, 급한 그룹이나 이미 보고 있는 그룹은 `열기`가 먼저 오도록 보강.
+2. [완료] `resolveOpsDigestTimelineGroupActionOrder()`를 추가하고 group action 렌더가 ordered action list를 기준으로 버튼을 배치하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 tone/state action ordering 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1031) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(tone/state action ordering 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
