@@ -1073,6 +1073,19 @@ function resolveOpsDigestTimelineGroupPanelTarget(groupLabel) {
   }
 }
 
+function resolveOpsDigestTimelineGroupActionOrder(
+  groupActionTone,
+  groupFilterActive,
+  groupPanelTarget,
+) {
+  const hasPanelTarget = Boolean(groupPanelTarget?.targetId);
+  const urgentGroup = groupActionTone === "error" || groupActionTone === "warn";
+  if (hasPanelTarget && (urgentGroup || groupFilterActive)) {
+    return ["panel", "filter"];
+  }
+  return ["filter", "panel"];
+}
+
 function focusOpsDigestTimelineGroup(groupFilter) {
   if (!dom.opsDigestPanel) {
     return;
@@ -1555,7 +1568,21 @@ function syncOpsDigestTimeline() {
     groupPanelButton.title = groupPanelTarget?.label || "패널 없음";
     groupPanelButton.disabled = !groupPanelTarget;
     applyRiskTone(groupPanelButton, groupActionTone);
-    groupActions.append(groupPanelButton);
+    const orderedGroupActions = resolveOpsDigestTimelineGroupActionOrder(
+      groupActionTone,
+      groupFilterActive,
+      groupPanelTarget,
+    );
+    const groupActionButtons = {
+      filter: groupFilterButton,
+      panel: groupPanelButton,
+    };
+    for (const actionKey of orderedGroupActions) {
+      const actionButton = groupActionButtons[actionKey];
+      if (actionButton) {
+        groupActions.append(actionButton);
+      }
+    }
     groupHead.append(groupActions);
     groupItem.append(groupHead);
 
