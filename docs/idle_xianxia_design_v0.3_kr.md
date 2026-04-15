@@ -4355,3 +4355,11 @@
 
 ## 1017) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(jump context highlight 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1018) 다음 순차 작업
+1. [완료] compact group header action 영역에 그룹 건수 badge를 추가해, 해당 흐름의 최근 건수와 urgency가 액션 가까이서 바로 읽히도록 보강.
+2. [완료] grouped timeline 렌더가 `groupCountBadge`를 만들고 대표 tone을 함께 적용하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 group count badge 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1019) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(group count badge 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

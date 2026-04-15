@@ -301,6 +301,7 @@ h2 {
   display: inline-flex;
   gap: 6px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .ops-digest-timeline-group-filter {
