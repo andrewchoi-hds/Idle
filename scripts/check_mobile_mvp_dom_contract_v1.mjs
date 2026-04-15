@@ -9682,6 +9682,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function formatOpsDigestTimelinePreviewChipLabel(label) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function formatOpsDigestTimelineCollapsedPreview(entries, maxItems = 2) {",
     "app.mjs",
     failures,

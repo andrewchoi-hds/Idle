@@ -941,7 +941,7 @@ function formatOpsDigestTimelineCollapsedPreview(entries, maxItems = 2) {
     return "미리보기 없음";
   }
   return previewEntries
-    .map((entry) => String(entry?.label || "").trim())
+    .map((entry) => formatOpsDigestTimelinePreviewChipLabel(entry?.label || ""))
     .filter(Boolean)
     .join(" / ");
 }
@@ -966,6 +966,31 @@ function collectOpsDigestTimelineCollapsedPreviewEntries(entries, maxItems = 2) 
       );
     })
     .slice(0, normalizedMaxItems);
+}
+
+function formatOpsDigestTimelinePreviewChipLabel(label) {
+  const normalizedLabel = String(label || "").trim();
+  if (!normalizedLabel) {
+    return "";
+  }
+  const replacements = [
+    ["자동 진행 정지", "자동 정지"],
+    ["실시간 자동 시작", "자동 시작"],
+    ["권장 설정 적용", "권장 적용"],
+    ["돌파 준비 완료", "돌파 준비"],
+    ["돌파 시도", "돌파"],
+    ["즉시 진행 가능", "즉시 진행"],
+    ["오프라인 정산 보기", "정산 보기"],
+    ["주의 상태 확인", "주의 확인"],
+  ];
+  let compactLabel = normalizedLabel;
+  for (const [from, to] of replacements) {
+    compactLabel = compactLabel.replace(from, to);
+  }
+  if (compactLabel.length > 16) {
+    return `${compactLabel.slice(0, 15)}…`;
+  }
+  return compactLabel;
 }
 
 function toggleOpsDigestTimelineGroup(groupLabel) {
