@@ -9718,6 +9718,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function formatOpsDigestFilterChipLabel(kind, label) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function formatOpsDigestTimelineToneLabel(tone) {",
     "app.mjs",
     failures,
@@ -10102,13 +10108,25 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.btnOpsDigestPresetAuto.textContent =",
+    'dom.btnOpsDigestPresetAuto.textContent = formatOpsDigestFilterChipLabel(',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnOpsDigestPresetAuto.title = dom.opsDigestPanel.dataset.filterAutoLabel;",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
     "dom.btnOpsDigestPresetBreakthrough.textContent =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnOpsDigestPresetBreakthrough.title =",
     "app.mjs",
     failures,
   );
@@ -10132,7 +10150,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.btnOpsDigestPresetBattle.title =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.btnOpsDigestPresetSave.textContent =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnOpsDigestPresetSave.title = dom.opsDigestPanel.dataset.filterSaveLabel;",
     "app.mjs",
     failures,
   );
@@ -10150,7 +10180,13 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.btnOpsDigestPresetWarning.textContent =",
+    'dom.btnOpsDigestPresetWarning.textContent = formatOpsDigestFilterChipLabel(',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnOpsDigestPresetWarning.title =",
     "app.mjs",
     failures,
   );
@@ -10162,13 +10198,37 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.opsDigestActiveSourceFilter.textContent = sourceLabel;",
+    'dom.opsDigestActiveSourceFilter.textContent = formatOpsDigestFilterChipLabel(',
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestActiveToneFilter.textContent = toneLabel;",
+    "dom.opsDigestActiveSourceFilter.title = sourceLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestActiveToneFilter.textContent = formatOpsDigestFilterChipLabel(',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestActiveToneFilter.title = toneLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.btnOpsDigestClearFilters.textContent = formatOpsDigestFilterChipLabel(',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.btnOpsDigestClearFilters.title = dom.opsDigestPanel.dataset.filterResetLabel;",
     "app.mjs",
     failures,
   );

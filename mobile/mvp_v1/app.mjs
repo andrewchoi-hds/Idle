@@ -1013,6 +1013,24 @@ function formatOpsDigestTimelinePreviewChipLabel(label) {
   return compactLabel;
 }
 
+function formatOpsDigestFilterChipLabel(kind, label) {
+  const normalizedKind = String(kind || "").trim();
+  const normalizedLabel = String(label || "").trim();
+  if (!normalizedLabel) {
+    return "대기";
+  }
+  switch (normalizedKind) {
+    case "source":
+      return normalizedLabel.replace(/^출처\s+/, "").trim() || "전체";
+    case "tone":
+      return normalizedLabel === "전체 흐름" ? "전체" : normalizedLabel;
+    case "reset":
+      return normalizedLabel.replace(/^필터\s+/, "").trim() || "해제";
+    default:
+      return normalizedLabel.replace(/\s*흐름$/, "").trim() || normalizedLabel;
+  }
+}
+
 function toggleOpsDigestTimelineGroup(groupLabel) {
   const normalizedGroupLabel = String(groupLabel || "").trim();
   if (!normalizedGroupLabel) {
@@ -1253,14 +1271,22 @@ function syncOpsDigestFilterBar() {
   dom.opsDigestPanel.dataset.filterResetLabel = "필터 해제";
   dom.opsDigestPanel.dataset.filterResetDisabled = String(activeCount === 0);
   if (dom.opsDigestActiveSourceFilter) {
-    dom.opsDigestActiveSourceFilter.textContent = sourceLabel;
+    dom.opsDigestActiveSourceFilter.textContent = formatOpsDigestFilterChipLabel(
+      "source",
+      sourceLabel,
+    );
+    dom.opsDigestActiveSourceFilter.title = sourceLabel;
     applyRiskTone(
       dom.opsDigestActiveSourceFilter,
       sourceFilter === "all" ? "info" : "success",
     );
   }
   if (dom.opsDigestActiveToneFilter) {
-    dom.opsDigestActiveToneFilter.textContent = toneLabel;
+    dom.opsDigestActiveToneFilter.textContent = formatOpsDigestFilterChipLabel(
+      "tone",
+      toneLabel,
+    );
+    dom.opsDigestActiveToneFilter.title = toneLabel;
     applyRiskTone(
       dom.opsDigestActiveToneFilter,
       toneFilter === "all" ? "info" : "warn",
@@ -1271,12 +1297,19 @@ function syncOpsDigestFilterBar() {
       dom.opsDigestPanel.dataset.filterSummary;
   }
   if (dom.btnOpsDigestClearFilters) {
-    dom.btnOpsDigestClearFilters.textContent =
-      dom.opsDigestPanel.dataset.filterResetLabel;
+    dom.btnOpsDigestClearFilters.textContent = formatOpsDigestFilterChipLabel(
+      "reset",
+      dom.opsDigestPanel.dataset.filterResetLabel,
+    );
+    dom.btnOpsDigestClearFilters.title = dom.opsDigestPanel.dataset.filterResetLabel;
     dom.btnOpsDigestClearFilters.disabled = activeCount === 0;
   }
   if (dom.btnOpsDigestPresetWarning) {
-    dom.btnOpsDigestPresetWarning.textContent =
+    dom.btnOpsDigestPresetWarning.textContent = formatOpsDigestFilterChipLabel(
+      "preset",
+      dom.opsDigestPanel.dataset.filterPresetLabel,
+    );
+    dom.btnOpsDigestPresetWarning.title =
       dom.opsDigestPanel.dataset.filterPresetLabel;
     dom.btnOpsDigestPresetWarning.classList.toggle(
       "filter-active",
@@ -1288,7 +1321,11 @@ function syncOpsDigestFilterBar() {
     );
   }
   if (dom.btnOpsDigestPresetBattle) {
-    dom.btnOpsDigestPresetBattle.textContent =
+    dom.btnOpsDigestPresetBattle.textContent = formatOpsDigestFilterChipLabel(
+      "preset",
+      dom.opsDigestPanel.dataset.filterBattleLabel,
+    );
+    dom.btnOpsDigestPresetBattle.title =
       dom.opsDigestPanel.dataset.filterBattleLabel;
     dom.btnOpsDigestPresetBattle.classList.toggle(
       "filter-active",
@@ -1300,8 +1337,11 @@ function syncOpsDigestFilterBar() {
     );
   }
   if (dom.btnOpsDigestPresetAuto) {
-    dom.btnOpsDigestPresetAuto.textContent =
-      dom.opsDigestPanel.dataset.filterAutoLabel;
+    dom.btnOpsDigestPresetAuto.textContent = formatOpsDigestFilterChipLabel(
+      "preset",
+      dom.opsDigestPanel.dataset.filterAutoLabel,
+    );
+    dom.btnOpsDigestPresetAuto.title = dom.opsDigestPanel.dataset.filterAutoLabel;
     dom.btnOpsDigestPresetAuto.classList.toggle(
       "filter-active",
       autoPresetActive,
@@ -1313,6 +1353,11 @@ function syncOpsDigestFilterBar() {
   }
   if (dom.btnOpsDigestPresetBreakthrough) {
     dom.btnOpsDigestPresetBreakthrough.textContent =
+      formatOpsDigestFilterChipLabel(
+        "preset",
+        dom.opsDigestPanel.dataset.filterBreakthroughLabel,
+      );
+    dom.btnOpsDigestPresetBreakthrough.title =
       dom.opsDigestPanel.dataset.filterBreakthroughLabel;
     dom.btnOpsDigestPresetBreakthrough.classList.toggle(
       "filter-active",
@@ -1324,8 +1369,11 @@ function syncOpsDigestFilterBar() {
     );
   }
   if (dom.btnOpsDigestPresetSave) {
-    dom.btnOpsDigestPresetSave.textContent =
-      dom.opsDigestPanel.dataset.filterSaveLabel;
+    dom.btnOpsDigestPresetSave.textContent = formatOpsDigestFilterChipLabel(
+      "preset",
+      dom.opsDigestPanel.dataset.filterSaveLabel,
+    );
+    dom.btnOpsDigestPresetSave.title = dom.opsDigestPanel.dataset.filterSaveLabel;
     dom.btnOpsDigestPresetSave.classList.toggle(
       "filter-active",
       savePresetActive,
