@@ -1765,6 +1765,8 @@ function flashOpsDigestJumpTarget(targetNode, label = "바로 확인", contextNo
   if (!targetNode) {
     return;
   }
+  const jumpTone = String(targetNode.dataset?.tone || "info").trim() || "info";
+  const jumpDurations = resolveOpsDigestJumpStageDurations(jumpTone);
   document.querySelectorAll(".ops-jump-target").forEach((node) => {
     node.classList.remove("ops-jump-target");
     node.classList.remove("ops-jump-target-soft");
@@ -1791,7 +1793,7 @@ function flashOpsDigestJumpTarget(targetNode, label = "바로 확인", contextNo
     targetNode.classList.add("ops-jump-target-soft");
     delete targetNode.dataset.jumpLabel;
     opsDigestJumpTargetTimers.soften = null;
-  }, 900);
+  }, jumpDurations.softenMs);
   opsDigestJumpTargetTimers.clear = window.setTimeout(() => {
     targetNode.classList.remove("ops-jump-target");
     targetNode.classList.remove("ops-jump-target-soft");
@@ -1800,7 +1802,20 @@ function flashOpsDigestJumpTarget(targetNode, label = "바로 확인", contextNo
       contextNode.classList.remove("ops-jump-context");
     }
     opsDigestJumpTargetTimers.clear = null;
-  }, 1700);
+  }, jumpDurations.clearMs);
+}
+
+function resolveOpsDigestJumpStageDurations(tone) {
+  switch (String(tone || "info").trim()) {
+    case "error":
+      return { softenMs: 1200, clearMs: 2300 };
+    case "warn":
+      return { softenMs: 1050, clearMs: 2050 };
+    case "success":
+      return { softenMs: 820, clearMs: 1550 };
+    default:
+      return { softenMs: 900, clearMs: 1700 };
+  }
 }
 
 function formatOpsDigestJumpToneLabel(tone) {

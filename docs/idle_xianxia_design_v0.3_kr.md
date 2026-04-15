@@ -4379,3 +4379,11 @@
 
 ## 1023) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(staged jump highlight 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1024) 다음 순차 작업
+1. [완료] jump highlight duration을 tone별로 나눠 `error`는 더 오래, `warn`은 중간, `success/info`는 짧게 남도록 보강.
+2. [완료] `resolveOpsDigestJumpStageDurations()`를 추가하고 `flashOpsDigestJumpTarget(...)`가 `jumpDurations.softenMs / clearMs`를 사용하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 tone-aware jump duration 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1025) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(tone-aware jump duration 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
