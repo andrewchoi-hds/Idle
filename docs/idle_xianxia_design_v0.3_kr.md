@@ -4419,3 +4419,11 @@
 
 ## 1033) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ops digest relative-time ticker 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1034) 다음 순차 작업
+1. [완료] grouped history header action button을 모바일 폭에서 더 빨리 읽히도록 `icon+label` 조합으로 축약.
+2. [완료] `setOpsDigestTimelineGroupActionLabel()`를 추가하고, group filter/panel button이 각각 `↺ 복귀`, `◎ 보기`, `↗ 열기`, `· 없음` 형태의 compact action label을 공통 규칙으로 쓰도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 compact group action icon+label 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1035) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(compact group action icon+label 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

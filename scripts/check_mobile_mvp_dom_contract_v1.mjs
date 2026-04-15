@@ -10354,6 +10354,30 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function setOpsDigestTimelineGroupActionLabel(button, icon, label) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'iconNode.className = "ops-digest-timeline-group-action-icon";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'labelNode.className = "ops-digest-timeline-group-action-label";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "button.replaceChildren(iconNode, labelNode);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'groupFilterButton.className = "ghost-btn ops-digest-timeline-group-filter";',
     "app.mjs",
     failures,
@@ -10361,6 +10385,24 @@ async function main() {
   assertIncludes(
     app,
     "applyRiskTone(groupFilterButton, groupActionTone);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "setOpsDigestTimelineGroupActionLabel(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'groupFilterActive ? "↺" : "◎",',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'groupFilterActive ? "복귀" : "보기",',
     "app.mjs",
     failures,
   );
@@ -10384,7 +10426,13 @@ async function main() {
   );
   assertIncludes(
     app,
-    'groupPanelButton.textContent = groupPanelTarget ? "열기" : "없음";',
+    'groupPanelTarget ? "↗" : "·",',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'groupPanelTarget ? "열기" : "없음",',
     "app.mjs",
     failures,
   );
@@ -10397,12 +10445,6 @@ async function main() {
   assertIncludes(
     app,
     "for (const actionKey of orderedGroupActions) {",
-    "app.mjs",
-    failures,
-  );
-  assertIncludes(
-    app,
-    'groupFilterButton.textContent = groupFilterActive ? "복귀" : "보기";',
     "app.mjs",
     failures,
   );

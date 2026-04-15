@@ -305,10 +305,30 @@ h2 {
 }
 
 .ops-digest-timeline-group-filter {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  min-width: 0;
+  padding: 6px 8px;
   white-space: nowrap;
 }
 
 .ops-digest-timeline-group-panel {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  min-width: 0;
+  padding: 6px 8px;
+  white-space: nowrap;
+}
+
+.ops-digest-timeline-group-action-icon {
+  font-size: 11px;
+  line-height: 1;
+  opacity: 0.82;
+}
+
+.ops-digest-timeline-group-action-label {
   white-space: nowrap;
 }
 
