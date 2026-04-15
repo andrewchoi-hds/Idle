@@ -1805,6 +1805,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestTopline"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="opsDigestTriageStrip"',
     "index.html",
     failures,
@@ -2100,6 +2106,18 @@ async function main() {
   assertIncludes(
     html,
     'data-triage-summary="주의 없음 · 다음 자동 시작 · 필터 없음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-summary="최근 조작 대기 중 · 주의 없음 · 다음 자동 시작 · 필터 없음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-tone="info"',
     "index.html",
     failures,
   );
@@ -9602,6 +9620,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "setOpsDigestFilterChipContent(dom.opsDigestRecentAction, recentIcon, normalizedMessage);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function syncOpsDigestWarnings() {",
     "app.mjs",
     failures,
@@ -11055,6 +11079,18 @@ async function main() {
   assertIncludes(
     app,
     'setOpsDigestFilterChipContent(dom.btnOpsDigestTriageFilter, "⌁", filterLabel);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplineSummary =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplineTone =",
     "app.mjs",
     failures,
   );
@@ -12993,6 +13029,7 @@ async function main() {
   assertIncludes(css, ".offline-compare-result.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-current-summary.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-target-summary.tone-error", "app.css", failures);
+  assertIncludes(css, ".ops-digest-topline", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage-chip", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-head", "app.css", failures);

@@ -129,6 +129,13 @@ h2 {
   gap: 6px;
 }
 
+.ops-digest-topline {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
 .ops-digest-triage {
   display: flex;
   gap: 6px;
@@ -514,10 +521,16 @@ h2 {
 
 .ops-digest-status {
   margin: 0;
-  padding: 8px 10px;
+  padding: 5px 9px;
   border-radius: 10px;
   border: 1px solid #294941;
   background: rgba(11, 22, 20, 0.88);
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  flex: 1 1 220px;
 }
 
 .ops-digest-warning {

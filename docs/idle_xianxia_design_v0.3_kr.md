@@ -4483,3 +4483,11 @@
 
 ## 1049) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(triage strip icon+label 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1050) 다음 순차 작업
+1. [완료] `최근 조작`과 triage strip을 `opsDigestTopline` 안에서 더 가깝게 묶어 상단 compact feed처럼 읽히도록 보강.
+2. [완료] 패널 루트에 `data-topline-summary`, `data-topline-tone`를 추가하고, `opsDigestRecentAction`도 source-aware icon+label chip(`•`, `↺`, `✦`, `▲`, `▣`)로 정합화해 최근 조작과 triage를 한 번에 훑기 좋게 맞춤.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ops digest compact topline feed 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1051) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ops digest compact topline feed 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
