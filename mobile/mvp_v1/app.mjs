@@ -406,6 +406,7 @@ let battleSfxLastPlayAtMs = 0;
 let battleSfxAmbientLastPlayAtMs = 0;
 let battleHapticEnabled = false;
 let battleHapticLastPlayAtMs = 0;
+let opsDigestRelativeTimeTimer = null;
 let opsDigestJumpTargetTimers = {
   soften: null,
   clear: null,
@@ -418,6 +419,7 @@ const BATTLE_SFX_AMBIENT_MIN_INTERVAL_AUTO_MS = 1450;
 const BATTLE_SFX_AMBIENT_MIN_INTERVAL_REALTIME_MS = 980;
 const BATTLE_HAPTIC_MIN_INTERVAL_MS = 105;
 const SLOT_QUICK_LOAD_DEBOUNCE_MS = 700;
+const OPS_DIGEST_RELATIVE_TIME_REFRESH_MS = 15000;
 const DEFAULT_AUTO_BREAKTHROUGH_RESUME_WARMUP_SEC = 6;
 const BATTLE_SCENE_TONES = new Set(["info", "success", "warn", "error"]);
 const BATTLE_SCENE_TONE_CLASSES = ["tone-info", "tone-success", "tone-warn", "tone-error"];
@@ -1870,6 +1872,30 @@ function resolveOpsDigestJumpStageDurations(tone) {
     default:
       return { softenMs: 900, clearMs: 1700 };
   }
+}
+
+function refreshOpsDigestRelativeTimeUi() {
+  if (!dom.opsDigestPanel || document.hidden) {
+    return;
+  }
+  syncOpsDigestInbox();
+}
+
+function startOpsDigestRelativeTimeTicker() {
+  if (!dom.opsDigestPanel || opsDigestRelativeTimeTimer) {
+    return;
+  }
+  opsDigestRelativeTimeTimer = window.setInterval(() => {
+    refreshOpsDigestRelativeTimeUi();
+  }, OPS_DIGEST_RELATIVE_TIME_REFRESH_MS);
+}
+
+function stopOpsDigestRelativeTimeTicker() {
+  if (!opsDigestRelativeTimeTimer) {
+    return;
+  }
+  window.clearInterval(opsDigestRelativeTimeTimer);
+  opsDigestRelativeTimeTimer = null;
 }
 
 function formatOpsDigestJumpToneLabel(tone) {
@@ -15561,6 +15587,7 @@ function bindEvents() {
   });
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
+      stopOpsDigestRelativeTimeTicker();
       stopBattleSceneAmbientLoop();
       suspendBattleSfxContext();
       cancelBattleHaptic();
@@ -15573,6 +15600,8 @@ function bindEvents() {
     }
 
     if (!document.hidden && state && context) {
+      startOpsDigestRelativeTimeTicker();
+      refreshOpsDigestRelativeTimeUi();
       startBattleSceneAmbientLoop();
       requestResumeBattleSfxContext();
       const resumed = applyResumeCatchupIfNeeded();
@@ -15586,6 +15615,7 @@ function bindEvents() {
     }
   });
   window.addEventListener("pagehide", () => {
+    stopOpsDigestRelativeTimeTicker();
     stopBattleSceneAmbientLoop();
     suspendBattleSfxContext();
     cancelBattleHaptic();
@@ -16165,6 +16195,7 @@ async function bootstrap() {
     bindEvents();
     applyBattleFocusMode(true);
     render();
+    startOpsDigestRelativeTimeTicker();
     setStatus(bootstrapStatus);
     const resumedRealtime = maybeAutoStartRealtime("앱 진입");
     if (resumedRealtime) {

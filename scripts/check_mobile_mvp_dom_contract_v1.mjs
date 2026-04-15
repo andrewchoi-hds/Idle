@@ -9514,6 +9514,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "let opsDigestRelativeTimeTimer = null;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const OPS_DIGEST_RELATIVE_TIME_REFRESH_MS = 15000;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'document.querySelectorAll(".ops-jump-context").forEach((node) => {',
     "app.mjs",
     failures,
@@ -9551,6 +9563,24 @@ async function main() {
   assertIncludes(
     app,
     "function buildOpsDigestJumpLabel(actionLabel, source, targetNode) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function refreshOpsDigestRelativeTimeUi() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function startOpsDigestRelativeTimeTicker() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function stopOpsDigestRelativeTimeTicker() {",
     "app.mjs",
     failures,
   );
@@ -10253,6 +10283,24 @@ async function main() {
   assertIncludes(
     app,
     "clearOpsDigestFilters();",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "startOpsDigestRelativeTimeTicker();",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "refreshOpsDigestRelativeTimeUi();",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "stopOpsDigestRelativeTimeTicker();",
     "app.mjs",
     failures,
   );
