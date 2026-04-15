@@ -832,6 +832,21 @@ function formatOpsDigestInboxUpdatedLabel(updatedAtMs) {
   return `${elapsedHour}시간 전`;
 }
 
+function resolveOpsDigestFreshnessTone(updatedAtMs) {
+  const normalized = Math.max(0, Math.floor(Number(updatedAtMs) || 0));
+  if (normalized <= 0) {
+    return "info";
+  }
+  const elapsedSec = Math.max(0, Math.floor((Date.now() - normalized) / 1000));
+  if (elapsedSec <= 20) {
+    return "success";
+  }
+  if (elapsedSec <= 180) {
+    return "info";
+  }
+  return "warn";
+}
+
 function formatOpsDigestTimelineToneLabel(tone) {
   const normalizedTone = String(tone || "info").trim();
   switch (normalizedTone) {
@@ -1500,7 +1515,9 @@ function syncOpsDigestTimeline() {
     groupActions.append(groupCountBadge);
 
     const groupFreshnessBadge = document.createElement("span");
-    groupFreshnessBadge.className = `ops-digest-badge tone-${groupActionTone}`;
+    groupFreshnessBadge.className = `ops-digest-badge tone-${resolveOpsDigestFreshnessTone(
+      previewEntry?.updatedAt || 0,
+    )}`;
     groupFreshnessBadge.textContent = formatOpsDigestInboxUpdatedLabel(
       previewEntry?.updatedAt || 0,
     );
