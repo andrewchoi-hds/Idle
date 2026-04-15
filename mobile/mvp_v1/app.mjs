@@ -1072,6 +1072,19 @@ function executeOpsDigestToplinePriority() {
   }
 }
 
+function resolveOpsDigestToplinePriorityIcon(kind) {
+  switch (String(kind || "none").trim()) {
+    case "warning":
+      return "!";
+    case "action":
+      return "↗";
+    case "filter":
+      return "⌁";
+    default:
+      return "★";
+  }
+}
+
 function formatOpsDigestFilterChipLabel(kind, label) {
   const normalizedKind = String(kind || "").trim();
   const normalizedLabel = String(label || "").trim();
@@ -2143,7 +2156,7 @@ function syncOpsDigestTriageStrip() {
   if (dom.btnOpsDigestToplinePriority) {
     setOpsDigestFilterChipContent(
       dom.btnOpsDigestToplinePriority,
-      "★",
+      resolveOpsDigestToplinePriorityIcon(toplinePriorityKind),
       toplinePriorityLabel,
     );
     dom.btnOpsDigestToplinePriority.disabled = toplinePriorityDisabled;

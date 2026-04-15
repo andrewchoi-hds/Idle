@@ -10968,6 +10968,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function resolveOpsDigestToplinePriorityIcon(kind) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "const opsDigestPanelButtons = [",
     "app.mjs",
     failures,
@@ -11172,7 +11178,31 @@ async function main() {
   );
   assertIncludes(
     app,
-    '"★",',
+    'resolveOpsDigestToplinePriorityIcon(toplinePriorityKind),',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'return "!";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'return "↗";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'return "⌁";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'return "★";',
     "app.mjs",
     failures,
   );
