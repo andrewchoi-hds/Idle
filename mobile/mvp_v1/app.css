@@ -153,6 +153,12 @@ h2 {
   opacity: 0.72;
 }
 
+.ops-digest-topline-source-cluster {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+
 .ops-digest-topline-meta {
   display: inline-flex;
   gap: 6px;

@@ -4540,6 +4540,14 @@
 ## 1065) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ops digest topline source badge 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
 
+## 1066) 다음 순차 작업
+1. [완료] ops digest topline source를 `badge + jump button` 2단 진입점으로 확장해, 같은 위치에서 관련 흐름 filter와 패널 deep-link를 모두 제공하도록 보강.
+2. [완료] `resolveOpsDigestToplineSourceTarget()`를 추가하고, `data-topline-source-target`, `data-topline-source-target-label`, `data-topline-source-target-source`, `data-topline-source-focus-target`, `data-topline-source-target-disabled` contract와 `btnOpsDigestToplineSourceJump`를 통해 source별 관련 패널 jump가 직접 이어지도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 topline source 2-stage entry 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1067) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ops digest topline source 2-stage entry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
 ## 1062) 다음 순차 작업
 1. [완료] ops digest topline의 `priority-first` 조건을 warning/action뿐 아니라 stale freshness와 warn 필터까지 반영하도록 확장.
 2. [완료] `syncOpsDigestToplineOrder()`가 `toplineFreshnessTone === "warn"` 또는 활성 filter tone이 `warn`인 경우에도 meta cluster를 recent action보다 먼저 배치하도록 정합화.

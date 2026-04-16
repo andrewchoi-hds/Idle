@@ -117,7 +117,9 @@ const dom = {
   btnOpsDigestOpenSave: document.getElementById("btnOpsDigestOpenSave"),
   opsDigestRecentAction: document.getElementById("opsDigestRecentAction"),
   opsDigestTopline: document.getElementById("opsDigestTopline"),
+  opsDigestToplineSourceCluster: document.getElementById("opsDigestToplineSourceCluster"),
   opsDigestToplineSource: document.getElementById("opsDigestToplineSource"),
+  btnOpsDigestToplineSourceJump: document.getElementById("btnOpsDigestToplineSourceJump"),
   opsDigestToplineMeta: document.getElementById("opsDigestToplineMeta"),
   btnOpsDigestToplinePriority: document.getElementById("btnOpsDigestToplinePriority"),
   opsDigestToplineFreshness: document.getElementById("opsDigestToplineFreshness"),
@@ -1108,6 +1110,77 @@ function resolveOpsDigestToplineSourceFilter(source) {
   return normalizedSource;
 }
 
+function resolveOpsDigestToplineSourceTarget(source) {
+  const normalizedSource = String(source || "system").trim() || "system";
+  switch (normalizedSource) {
+    case "ops_focus":
+      return {
+        targetId: "focusControlsPanel",
+        label: "집중 패널 열기",
+        source: "ops_focus",
+        focusId: "battleFocusHint",
+      };
+    case "ops_settings":
+      return {
+        targetId: "settingsPanel",
+        label: "설정 패널 열기",
+        source: "ops_settings",
+        focusId: "optAutoBattle",
+      };
+    case "ops_stage":
+      return {
+        targetId: "stagePanel",
+        label: "진행 패널 열기",
+        source: "ops_stage",
+        focusId: "qiProgressBar",
+      };
+    case "btnBattle":
+    case "ops_battle":
+      return {
+        targetId: "battleScenePanel",
+        label: "전장 패널 열기",
+        source: "ops_battle",
+        focusId: "battleSceneStatus",
+      };
+    case "ops_resources":
+      return {
+        targetId: "statsPanel",
+        label: "자원 패널 열기",
+        source: "ops_resources",
+        focusId: "statQi",
+      };
+    case "btnRealtimeAuto":
+    case "ops_actions":
+      return {
+        targetId: "actionsPanel",
+        label: "자동화 패널 열기",
+        source: "ops_actions",
+        focusId: "realtimeAutoStatus",
+      };
+    case "btnApplyRecommendation":
+    case "btnBreakthrough":
+    case "ops_breakthrough":
+      return {
+        targetId: "breakthroughPreviewPanel",
+        label: "돌파 패널 열기",
+        source: "ops_breakthrough",
+        focusId: "previewRecommendationLabel",
+      };
+    case "btnSaveLocal":
+    case "btnLoadLocal":
+    case "btnResetRun":
+    case "ops_save":
+      return {
+        targetId: "savePanel",
+        label: "저장 패널 열기",
+        source: "ops_save",
+        focusId: "saveSlotSummaryList",
+      };
+    default:
+      return null;
+  }
+}
+
 function syncOpsDigestToplineOrder(priorityFirst) {
   if (!dom.opsDigestTopline) {
     return;
@@ -1876,9 +1949,21 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
   );
   dom.opsDigestPanel.dataset.toplineSourceTone = tone;
   const toplineSourceFilter = resolveOpsDigestToplineSourceFilter(normalizedSource);
+  const toplineSourceTarget = resolveOpsDigestToplineSourceTarget(normalizedSource);
   dom.opsDigestPanel.dataset.toplineSourceFilter = toplineSourceFilter;
   dom.opsDigestPanel.dataset.toplineSourceDisabled = String(
     normalizedSource === "system",
+  );
+  dom.opsDigestPanel.dataset.toplineSourceTarget =
+    toplineSourceTarget?.targetId || "none";
+  dom.opsDigestPanel.dataset.toplineSourceTargetLabel =
+    toplineSourceTarget?.label || "이동 대기";
+  dom.opsDigestPanel.dataset.toplineSourceTargetSource =
+    toplineSourceTarget?.source || "ops_digest";
+  dom.opsDigestPanel.dataset.toplineSourceFocusTarget =
+    toplineSourceTarget?.focusId || "";
+  dom.opsDigestPanel.dataset.toplineSourceTargetDisabled = String(
+    !toplineSourceTarget,
   );
   dom.opsDigestPanel.dataset.recentActionUpdatedAt = String(updatedAt);
   if (dom.opsDigestRecentAction) {
@@ -1919,6 +2004,24 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
     );
     applyRiskTone(
       dom.opsDigestToplineSource,
+      dom.opsDigestPanel.dataset.toplineSourceTone || "info",
+    );
+  }
+  if (dom.btnOpsDigestToplineSourceJump) {
+    setOpsDigestFilterChipContent(dom.btnOpsDigestToplineSourceJump, "↗", "열기");
+    dom.btnOpsDigestToplineSourceJump.disabled = !toplineSourceTarget;
+    dom.btnOpsDigestToplineSourceJump.title =
+      toplineSourceTarget?.label || "이동 대기";
+    dom.btnOpsDigestToplineSourceJump.dataset.toplineSourceTarget =
+      toplineSourceTarget?.targetId || "none";
+    dom.btnOpsDigestToplineSourceJump.dataset.toplineSourceTargetLabel =
+      toplineSourceTarget?.label || "이동 대기";
+    dom.btnOpsDigestToplineSourceJump.dataset.toplineSourceTargetSource =
+      toplineSourceTarget?.source || "ops_digest";
+    dom.btnOpsDigestToplineSourceJump.dataset.toplineSourceFocusTarget =
+      toplineSourceTarget?.focusId || "";
+    applyRiskTone(
+      dom.btnOpsDigestToplineSourceJump,
       dom.opsDigestPanel.dataset.toplineSourceTone || "info",
     );
   }
@@ -15924,6 +16027,37 @@ function bindEvents() {
     event.stopPropagation();
     setOpsDigestInboxSourceFilter("all");
   });
+  dom.opsDigestToplineSource?.addEventListener("click", () => {
+    if (dom.opsDigestToplineSource.dataset.toplineSourceDisabled === "true") {
+      return;
+    }
+    setOpsDigestInboxSourceFilter(
+      dom.opsDigestToplineSource.dataset.toplineSourceFilter || "all",
+    );
+  });
+  dom.opsDigestToplineSource?.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+    event.preventDefault();
+    if (dom.opsDigestToplineSource.dataset.toplineSourceDisabled === "true") {
+      return;
+    }
+    setOpsDigestInboxSourceFilter(
+      dom.opsDigestToplineSource.dataset.toplineSourceFilter || "all",
+    );
+  });
+  dom.btnOpsDigestToplineSourceJump?.addEventListener("click", () => {
+    if (dom.btnOpsDigestToplineSourceJump.disabled) {
+      return;
+    }
+    openOpsDigestPanelTarget(
+      dom.btnOpsDigestToplineSourceJump.dataset.toplineSourceTarget || "",
+      dom.btnOpsDigestToplineSourceJump.dataset.toplineSourceTargetLabel || "관련 패널 열기",
+      dom.btnOpsDigestToplineSourceJump.dataset.toplineSourceTargetSource || "ops_digest",
+      dom.btnOpsDigestToplineSourceJump.dataset.toplineSourceFocusTarget || "",
+    );
+  });
   dom.opsDigestInboxMeta?.addEventListener("keydown", (event) => {
     if (event.key !== "Enter" && event.key !== " ") {
       return;
@@ -15962,26 +16096,6 @@ function bindEvents() {
       return;
     }
     clearOpsDigestFilters();
-  });
-  dom.opsDigestToplineSource?.addEventListener("click", () => {
-    if (dom.opsDigestToplineSource.dataset.toplineSourceDisabled === "true") {
-      return;
-    }
-    setOpsDigestInboxSourceFilter(
-      dom.opsDigestToplineSource.dataset.toplineSourceFilter || "all",
-    );
-  });
-  dom.opsDigestToplineSource?.addEventListener("keydown", (event) => {
-    if (event.key !== "Enter" && event.key !== " ") {
-      return;
-    }
-    event.preventDefault();
-    if (dom.opsDigestToplineSource.dataset.toplineSourceDisabled === "true") {
-      return;
-    }
-    setOpsDigestInboxSourceFilter(
-      dom.opsDigestToplineSource.dataset.toplineSourceFilter || "all",
-    );
   });
   dom.btnOpsDigestToplinePriority?.addEventListener("click", () => {
     if (dom.btnOpsDigestToplinePriority.disabled) {
