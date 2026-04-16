@@ -2197,6 +2197,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-topline-source-cluster-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-source-cluster-summary="시스템 · 최근 조작 출처"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-topline-source-filter="all"',
     "index.html",
     failures,
@@ -11176,6 +11188,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.opsDigestPanel.dataset.toplineSourceClusterTone = tone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplineSourceClusterSummary =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "const toplineSourceFilter = resolveOpsDigestToplineSourceFilter(normalizedSource);",
     "app.mjs",
     failures,
@@ -11482,6 +11506,24 @@ async function main() {
   );
   assertIncludes(
     app,
+    "const toplineSourceClusterTone = resolveOpsDigestToplineSourceClusterTone(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplineSourceClusterTone = toplineSourceClusterTone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplineSourceClusterSummary = toplineSourceClusterSummary;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.toplineMetaSummary =",
     "app.mjs",
     failures,
@@ -11609,6 +11651,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestToplineMeta.title =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestToplineSourceCluster.title =",
     "app.mjs",
     failures,
   );

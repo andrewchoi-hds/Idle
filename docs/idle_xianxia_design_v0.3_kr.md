@@ -4571,3 +4571,11 @@
 
 ## 1071) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(topline source cluster tone 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1072) 다음 순차 작업
+1. [완료] topline source cluster tone이 recent source tone만이 아니라 freshness까지 함께 반영하도록 합성 규칙을 보강.
+2. [완료] `resolveOpsDigestToplineSourceClusterTone()`를 기준으로 `data-topline-source-cluster-tone`, `data-topline-source-cluster-summary`를 갱신하고, source badge/jump button/wrapper가 같은 합성 tone을 공유하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 topline source cluster composite tone 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1073) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(topline source cluster composite tone 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
