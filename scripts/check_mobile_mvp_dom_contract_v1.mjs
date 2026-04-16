@@ -11542,6 +11542,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.opsDigestToplineSourceCluster.title =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.opsDigestToplineSource.dataset.toplineSourceFilter = toplineSourceFilter;',
     "app.mjs",
     failures,
@@ -13562,6 +13568,8 @@ async function main() {
   assertIncludes(css, ".ghost-btn.tone-success", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline.priority-first", "app.css", failures);
+  assertIncludes(css, ".ops-digest-topline-source-cluster", "app.css", failures);
+  assertIncludes(css, ".ops-digest-topline-source-cluster.tone-success", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-meta", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline .ops-digest-badge", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline .ops-digest-badge[role=\"button\"]", "app.css", failures);

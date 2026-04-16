@@ -2007,6 +2007,14 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
       dom.opsDigestPanel.dataset.toplineSourceTone || "info",
     );
   }
+  if (dom.opsDigestToplineSourceCluster) {
+    dom.opsDigestToplineSourceCluster.title =
+      `${dom.opsDigestPanel.dataset.toplineSourceLabel || "시스템"} · 최근 조작 출처`;
+    applyRiskTone(
+      dom.opsDigestToplineSourceCluster,
+      dom.opsDigestPanel.dataset.toplineSourceTone || "info",
+    );
+  }
   if (dom.btnOpsDigestToplineSourceJump) {
     setOpsDigestFilterChipContent(dom.btnOpsDigestToplineSourceJump, "↗", "열기");
     dom.btnOpsDigestToplineSourceJump.disabled = !toplineSourceTarget;
