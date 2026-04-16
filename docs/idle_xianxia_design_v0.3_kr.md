@@ -4563,3 +4563,11 @@
 
 ## 1069) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(success tone propagation 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1070) 다음 순차 작업
+1. [완료] topline source cluster wrapper 자체에도 source tone을 반영해 badge와 jump button이 한 덩어리 시각 언어로 읽히도록 보강.
+2. [완료] `.ops-digest-topline-source-cluster.tone-success|tone-warn|tone-error` 규칙을 추가하고, render 경로에서 `applyRiskTone(dom.opsDigestToplineSourceCluster, toplineSourceTone)`가 함께 호출되도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 topline source cluster tone 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1071) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(topline source cluster tone 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
