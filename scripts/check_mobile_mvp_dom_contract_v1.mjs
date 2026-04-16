@@ -11254,6 +11254,24 @@ async function main() {
   );
   assertIncludes(
     app,
+    'node.classList.remove("tone-info", "tone-success", "tone-warn", "tone-error");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'if (tone === "success") {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'node.classList.add("tone-success");',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function syncOpsDigestOfflineButton() {",
     "app.mjs",
     failures,
@@ -13541,6 +13559,7 @@ async function main() {
   assertIncludes(css, ".offline-compare-result.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-current-summary.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-target-summary.tone-error", "app.css", failures);
+  assertIncludes(css, ".ghost-btn.tone-success", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline.priority-first", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-meta", "app.css", failures);
