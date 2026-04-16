@@ -158,6 +158,30 @@ h2 {
   gap: 6px;
   align-items: center;
   flex-wrap: wrap;
+  padding: 4px 6px;
+  border-radius: 999px;
+  border: 1px solid #294941;
+  background: rgba(11, 22, 20, 0.72);
+}
+
+.ops-digest-topline-recent-cluster.tone-info {
+  border-color: #35514a;
+  background: rgba(11, 22, 20, 0.72);
+}
+
+.ops-digest-topline-recent-cluster.tone-success {
+  border-color: #2e8f68;
+  background: rgba(18, 61, 46, 0.46);
+}
+
+.ops-digest-topline-recent-cluster.tone-warn {
+  border-color: #c08d34;
+  background: rgba(59, 42, 12, 0.52);
+}
+
+.ops-digest-topline-recent-cluster.tone-error {
+  border-color: #b14b45;
+  background: rgba(61, 22, 22, 0.54);
 }
 
 .ops-digest-topline-source-cluster {
