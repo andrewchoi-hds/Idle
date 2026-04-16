@@ -153,6 +153,13 @@ h2 {
   opacity: 0.72;
 }
 
+.ops-digest-topline-recent-cluster {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 .ops-digest-topline-source-cluster {
   display: inline-flex;
   gap: 4px;
@@ -607,6 +614,15 @@ h2 {
   gap: 4px;
   font-size: 11px;
   flex: 1 1 220px;
+}
+
+.ops-digest-status[role="button"] {
+  cursor: pointer;
+}
+
+.ops-digest-status[role="button"][data-recent-disabled="true"] {
+  cursor: default;
+  opacity: 0.72;
 }
 
 .ops-digest-warning {

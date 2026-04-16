@@ -39,6 +39,7 @@ const REQUIRED_HTML_IDS = [
   "btnOpsDigestOpenActions",
   "btnOpsDigestOpenBreakthrough",
   "btnOpsDigestOpenSave",
+  "opsDigestToplineRecentCluster",
   "opsDigestRecentAction",
   "opsDigestTopline",
   "opsDigestToplineSourceCluster",
@@ -246,6 +247,7 @@ const REQUIRED_DOM_KEYS = [
   "btnOpsDigestOpenActions",
   "btnOpsDigestOpenBreakthrough",
   "btnOpsDigestOpenSave",
+  "opsDigestToplineRecentCluster",
   "opsDigestRecentAction",
   "opsDigestTopline",
   "opsDigestToplineSourceCluster",
@@ -1819,7 +1821,31 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-recent-action-kind="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-recent-action-target=""',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-recent-action-disabled="true"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="opsDigestTopline"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="opsDigestToplineRecentCluster"',
     "index.html",
     failures,
   );
@@ -11110,6 +11136,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    '? [dom.opsDigestToplineMeta, dom.opsDigestToplineRecentCluster, dom.opsDigestTriageStrip]',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    ': [dom.opsDigestToplineRecentCluster, dom.opsDigestToplineMeta, dom.opsDigestTriageStrip];',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "const opsDigestPanelButtons = [",
     "app.mjs",
     failures,
@@ -13616,6 +13654,7 @@ async function main() {
   assertIncludes(css, ".ghost-btn.tone-success", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline.priority-first", "app.css", failures);
+  assertIncludes(css, ".ops-digest-topline-recent-cluster", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-source-cluster", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-source-cluster.tone-success", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-meta", "app.css", failures);

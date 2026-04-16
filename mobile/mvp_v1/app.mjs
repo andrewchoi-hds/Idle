@@ -117,6 +117,7 @@ const dom = {
   btnOpsDigestOpenSave: document.getElementById("btnOpsDigestOpenSave"),
   opsDigestRecentAction: document.getElementById("opsDigestRecentAction"),
   opsDigestTopline: document.getElementById("opsDigestTopline"),
+  opsDigestToplineRecentCluster: document.getElementById("opsDigestToplineRecentCluster"),
   opsDigestToplineSourceCluster: document.getElementById("opsDigestToplineSourceCluster"),
   opsDigestToplineSource: document.getElementById("opsDigestToplineSource"),
   btnOpsDigestToplineSourceJump: document.getElementById("btnOpsDigestToplineSourceJump"),
@@ -1203,8 +1204,8 @@ function syncOpsDigestToplineOrder(priorityFirst) {
   const normalizedPriorityFirst = priorityFirst === true;
   dom.opsDigestTopline.classList.toggle("priority-first", normalizedPriorityFirst);
   const orderedNodes = normalizedPriorityFirst
-    ? [dom.opsDigestToplineMeta, dom.opsDigestRecentAction, dom.opsDigestTriageStrip]
-    : [dom.opsDigestRecentAction, dom.opsDigestToplineMeta, dom.opsDigestTriageStrip];
+    ? [dom.opsDigestToplineMeta, dom.opsDigestToplineRecentCluster, dom.opsDigestTriageStrip]
+    : [dom.opsDigestToplineRecentCluster, dom.opsDigestToplineMeta, dom.opsDigestTriageStrip];
   dom.opsDigestTopline.replaceChildren(...orderedNodes.filter(Boolean));
 }
 
@@ -1959,6 +1960,12 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
   dom.opsDigestPanel.dataset.recentAction = normalizedMessage;
   dom.opsDigestPanel.dataset.recentActionTone = tone;
   dom.opsDigestPanel.dataset.recentActionSource = normalizedSource;
+  const recentDescriptor = resolveOpsDigestRecentActionDescriptor();
+  dom.opsDigestPanel.dataset.recentActionKind = recentDescriptor.kind || "none";
+  dom.opsDigestPanel.dataset.recentActionTarget = recentDescriptor.target || "";
+  dom.opsDigestPanel.dataset.recentActionDisabled = String(
+    recentDescriptor.disabled === true,
+  );
   dom.opsDigestPanel.dataset.toplineSourceLabel = formatOpsDigestInboxSourceLabel(
     normalizedSource,
   );
@@ -2002,7 +2009,18 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
                 : "•";
     setOpsDigestFilterChipContent(dom.opsDigestRecentAction, recentIcon, normalizedMessage);
     dom.opsDigestRecentAction.title =
-      `${formatOpsDigestInboxSourceLabel(normalizedSource)} · ${normalizedMessage}`;
+      recentDescriptor.disabled === true
+        ? `${formatOpsDigestInboxSourceLabel(normalizedSource)} · ${normalizedMessage}`
+        : `${formatOpsDigestInboxSourceLabel(normalizedSource)} · ${normalizedMessage} · 다시 열기`;
+    dom.opsDigestRecentAction.dataset.recentKind = recentDescriptor.kind || "none";
+    dom.opsDigestRecentAction.dataset.recentTarget = recentDescriptor.target || "";
+    dom.opsDigestRecentAction.dataset.recentDisabled = String(
+      recentDescriptor.disabled === true,
+    );
+    dom.opsDigestRecentAction.setAttribute(
+      "aria-disabled",
+      String(recentDescriptor.disabled === true),
+    );
     applyRiskTone(dom.opsDigestRecentAction, tone);
   }
   if (dom.opsDigestInboxRecent) {
@@ -15944,6 +15962,32 @@ function clampPercent(value) {
 function bindEvents() {
   dom.btnToggleBattleFocus.addEventListener("click", () => {
     applyBattleFocusMode(!battleFocusMode, { announce: true });
+  });
+  dom.opsDigestRecentAction?.addEventListener("click", () => {
+    if (dom.opsDigestRecentAction.dataset.recentDisabled === "true") {
+      return;
+    }
+    executeOpsDigestAction(
+      dom.opsDigestRecentAction.dataset.recentKind,
+      dom.opsDigestRecentAction.dataset.recentTarget,
+      dom.opsDigestPanel?.dataset.recentActionSource || "system",
+      dom.opsDigestRecentAction.textContent || "최근 조작 다시 열기",
+    );
+  });
+  dom.opsDigestRecentAction?.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+    event.preventDefault();
+    if (dom.opsDigestRecentAction.dataset.recentDisabled === "true") {
+      return;
+    }
+    executeOpsDigestAction(
+      dom.opsDigestRecentAction.dataset.recentKind,
+      dom.opsDigestRecentAction.dataset.recentTarget,
+      dom.opsDigestPanel?.dataset.recentActionSource || "system",
+      dom.opsDigestRecentAction.textContent || "최근 조작 다시 열기",
+    );
   });
   const opsDigestInboxNodes = [
     dom.opsDigestInboxRecent,
