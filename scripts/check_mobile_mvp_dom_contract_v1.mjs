@@ -1851,6 +1851,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-recent-disabled="true"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="opsDigestToplineSourceCluster"',
     "index.html",
     failures,
@@ -11130,6 +11136,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function executeOpsDigestRecentAction() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function resolveOpsDigestToplinePriorityIcon(kind) {",
     "app.mjs",
     failures,
@@ -11196,6 +11208,30 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.opsDigestRecentAction?.addEventListener("click", (event) => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestRecentAction?.addEventListener("keydown", (event) => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestToplineRecentCluster?.addEventListener("click", () => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "executeOpsDigestRecentAction();",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.opsDigestToplineSource?.addEventListener("click", () => {',
     "app.mjs",
     failures,
@@ -11221,6 +11257,30 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestPanel.dataset.recentAction = normalizedMessage;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const recentDescriptor = resolveOpsDigestRecentActionDescriptor();",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.recentActionKind = recentDescriptor.kind || \"none\";",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.recentActionTarget = recentDescriptor.target || \"\";",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.recentActionDisabled = String(",
     "app.mjs",
     failures,
   );
@@ -11317,6 +11377,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestPanel.dataset.recentActionUpdatedAt = String(updatedAt);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestToplineRecentCluster.dataset.recentDisabled = String(",
     "app.mjs",
     failures,
   );
@@ -11653,6 +11719,30 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestToplineSource.textContent =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestRecentAction.dataset.recentKind = recentDescriptor.kind || \"none\";",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestRecentAction.dataset.recentTarget = recentDescriptor.target || \"\";",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestRecentAction.dataset.recentDisabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestRecentAction.setAttribute(",
     "app.mjs",
     failures,
   );
