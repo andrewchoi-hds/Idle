@@ -2181,6 +2181,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-topline-source-filter="all"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-source-disabled="true"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-topline-updated-at="0"',
     "index.html",
     failures,
@@ -11070,6 +11082,24 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.opsDigestToplineSource?.addEventListener("click", () => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestToplineSource?.addEventListener("keydown", (event) => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'setOpsDigestInboxSourceFilter(',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.recentAction = normalizedMessage;",
     "app.mjs",
     failures,
@@ -11083,6 +11113,24 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestPanel.dataset.toplineSourceTone = tone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const toplineSourceFilter = resolveOpsDigestToplineSourceFilter(normalizedSource);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplineSourceFilter = toplineSourceFilter;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestPanel.dataset.toplineSourceDisabled = String(',
     "app.mjs",
     failures,
   );
@@ -11377,6 +11425,24 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestToplineSource.title =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestToplineSource.dataset.toplineSourceFilter = toplineSourceFilter;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestToplineSource.dataset.toplineSourceDisabled = String(',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestToplineSource.setAttribute(',
     "app.mjs",
     failures,
   );
@@ -13355,6 +13421,7 @@ async function main() {
   assertIncludes(css, ".ops-digest-topline.priority-first", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-meta", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline .ops-digest-badge", "app.css", failures);
+  assertIncludes(css, ".ops-digest-topline .ops-digest-badge[role=\"button\"]", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage-chip", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-head", "app.css", failures);
