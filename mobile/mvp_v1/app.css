@@ -144,6 +144,15 @@ h2 {
   flex: 0 0 auto;
 }
 
+.ops-digest-topline .ops-digest-badge[role="button"] {
+  cursor: pointer;
+}
+
+.ops-digest-topline .ops-digest-badge[role="button"][data-topline-source-disabled="true"] {
+  cursor: default;
+  opacity: 0.72;
+}
+
 .ops-digest-topline-meta {
   display: inline-flex;
   gap: 6px;

@@ -1088,6 +1088,26 @@ function resolveOpsDigestToplinePriorityIcon(kind) {
   }
 }
 
+function resolveOpsDigestToplineSourceFilter(source) {
+  const normalizedSource = String(source || "system").trim() || "system";
+  if (normalizedSource === "system") {
+    return "all";
+  }
+  if (matchesOpsDigestSourceFilter(normalizedSource, "group:auto")) {
+    return "group:auto";
+  }
+  if (matchesOpsDigestSourceFilter(normalizedSource, "group:breakthrough")) {
+    return "group:breakthrough";
+  }
+  if (matchesOpsDigestSourceFilter(normalizedSource, "group:battle")) {
+    return normalizedSource === "ops_focus" ? "ops_focus" : "group:battle";
+  }
+  if (matchesOpsDigestSourceFilter(normalizedSource, "group:save")) {
+    return "group:save";
+  }
+  return normalizedSource;
+}
+
 function syncOpsDigestToplineOrder(priorityFirst) {
   if (!dom.opsDigestTopline) {
     return;
@@ -1855,6 +1875,11 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
     normalizedSource,
   );
   dom.opsDigestPanel.dataset.toplineSourceTone = tone;
+  const toplineSourceFilter = resolveOpsDigestToplineSourceFilter(normalizedSource);
+  dom.opsDigestPanel.dataset.toplineSourceFilter = toplineSourceFilter;
+  dom.opsDigestPanel.dataset.toplineSourceDisabled = String(
+    normalizedSource === "system",
+  );
   dom.opsDigestPanel.dataset.recentActionUpdatedAt = String(updatedAt);
   if (dom.opsDigestRecentAction) {
     const recentIcon =
@@ -1881,7 +1906,17 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
     dom.opsDigestToplineSource.textContent =
       dom.opsDigestPanel.dataset.toplineSourceLabel || "시스템";
     dom.opsDigestToplineSource.title =
-      `${dom.opsDigestPanel.dataset.toplineSourceLabel || "시스템"} · 최근 조작 출처`;
+      normalizedSource === "system"
+        ? `${dom.opsDigestPanel.dataset.toplineSourceLabel || "시스템"} · 최근 조작 출처`
+        : `${dom.opsDigestPanel.dataset.toplineSourceLabel || "시스템"}만 보기`;
+    dom.opsDigestToplineSource.dataset.toplineSourceFilter = toplineSourceFilter;
+    dom.opsDigestToplineSource.dataset.toplineSourceDisabled = String(
+      normalizedSource === "system",
+    );
+    dom.opsDigestToplineSource.setAttribute(
+      "aria-disabled",
+      String(normalizedSource === "system"),
+    );
     applyRiskTone(
       dom.opsDigestToplineSource,
       dom.opsDigestPanel.dataset.toplineSourceTone || "info",
@@ -15927,6 +15962,26 @@ function bindEvents() {
       return;
     }
     clearOpsDigestFilters();
+  });
+  dom.opsDigestToplineSource?.addEventListener("click", () => {
+    if (dom.opsDigestToplineSource.dataset.toplineSourceDisabled === "true") {
+      return;
+    }
+    setOpsDigestInboxSourceFilter(
+      dom.opsDigestToplineSource.dataset.toplineSourceFilter || "all",
+    );
+  });
+  dom.opsDigestToplineSource?.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+    event.preventDefault();
+    if (dom.opsDigestToplineSource.dataset.toplineSourceDisabled === "true") {
+      return;
+    }
+    setOpsDigestInboxSourceFilter(
+      dom.opsDigestToplineSource.dataset.toplineSourceFilter || "all",
+    );
   });
   dom.btnOpsDigestToplinePriority?.addEventListener("click", () => {
     if (dom.btnOpsDigestToplinePriority.disabled) {
