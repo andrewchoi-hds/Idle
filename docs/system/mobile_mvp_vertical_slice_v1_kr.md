@@ -532,3 +532,5 @@ npm run mobile:mvp:check
   - 오프라인 경과시간 0초일 때 정산 skip(`time_not_elapsed`) 검증
   - 저장 직렬화/복원 roundtrip
   - 모바일 화면 필수 DOM id/모달 요소/safe-area 스타일 계약 검증
+  - ops digest topline triage cluster tone 헬퍼(`resolveOpsDigestToplineTriageClusterTone`)가 warning/action/filter disabled 상태와 tone 조합에 맞는 `info/success/warn/error`를 일관되게 반환하는지 검증
+  - ops digest topline ordering(`syncOpsDigestToplineOrder`)이 `priority-first`일 때 `meta → triage → recent-cluster`, 기본 상태일 때 `recent-cluster → meta → triage` 순서를 일관되게 유지하는지 검증

@@ -1241,6 +1241,26 @@ function resolveOpsDigestToplineRecentClusterTone(
   return "info";
 }
 
+function resolveOpsDigestToplineTriageClusterTone(
+  warningTone,
+  warningDisabled,
+  actionTone,
+  actionDisabled,
+  filterTone,
+  filterDisabled,
+) {
+  if (warningDisabled !== true) {
+    return String(warningTone || "info").trim() || "info";
+  }
+  if (actionDisabled !== true) {
+    return String(actionTone || "info").trim() || "info";
+  }
+  if (filterDisabled !== true) {
+    return String(filterTone || "info").trim() || "info";
+  }
+  return "info";
+}
+
 function syncOpsDigestToplineOrder(priorityFirst) {
   if (!dom.opsDigestTopline) {
     return;
@@ -1248,7 +1268,7 @@ function syncOpsDigestToplineOrder(priorityFirst) {
   const normalizedPriorityFirst = priorityFirst === true;
   dom.opsDigestTopline.classList.toggle("priority-first", normalizedPriorityFirst);
   const orderedNodes = normalizedPriorityFirst
-    ? [dom.opsDigestToplineMeta, dom.opsDigestToplineRecentCluster, dom.opsDigestTriageStrip]
+    ? [dom.opsDigestToplineMeta, dom.opsDigestTriageStrip, dom.opsDigestToplineRecentCluster]
     : [dom.opsDigestToplineRecentCluster, dom.opsDigestToplineMeta, dom.opsDigestTriageStrip];
   dom.opsDigestTopline.replaceChildren(...orderedNodes.filter(Boolean));
 }
@@ -2020,9 +2040,6 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
   dom.opsDigestPanel.dataset.toplineSourceDisabled = String(
     normalizedSource === "system",
   );
-  dom.opsDigestPanel.dataset.toplineSourceClusterTone = tone;
-  dom.opsDigestPanel.dataset.toplineSourceClusterSummary =
-    `${dom.opsDigestPanel.dataset.toplineSourceLabel || "시스템"} · 최근 조작 출처`;
   dom.opsDigestPanel.dataset.toplineSourceTarget =
     toplineSourceTarget?.targetId || "none";
   dom.opsDigestPanel.dataset.toplineSourceTargetLabel =
@@ -2368,6 +2385,17 @@ function syncOpsDigestTriageStrip() {
   );
   const toplineRecentClusterSummary =
     `${dom.opsDigestPanel.dataset.recentAction || "최근 조작 대기 중"} · ${dom.opsDigestPanel.dataset.toplineSourceLabel || "시스템"} · ${toplineUpdatedLabel}`;
+  const toplineTriageClusterTone = resolveOpsDigestToplineTriageClusterTone(
+    warningTone,
+    warningDisabled,
+    nextActionTone,
+    nextActionDisabled,
+    filterTone,
+    filterDisabled,
+  );
+  const toplineTriageClusterSummary =
+    dom.opsDigestPanel.dataset.triageSummary ||
+    `${warningLabel} · ${triageActionLabel} · ${filterLabel}`;
   let toplinePriorityKind = "none";
   let toplinePriorityLabel = "우선 대기";
   let toplinePriorityTone = "info";
@@ -2404,17 +2432,21 @@ function syncOpsDigestTriageStrip() {
   const priorityFirst =
     toplinePriorityKind === "warning" ||
     toplinePriorityKind === "action" ||
+    toplineTriageClusterTone === "error" ||
+    toplineTriageClusterTone === "warn" ||
     toplineFreshnessTone === "warn" ||
     (!filterDisabled && filterTone === "warn");
   dom.opsDigestPanel.dataset.toplineOrder = priorityFirst
-    ? "meta,recent,triage"
-    : "recent,meta,triage";
+    ? "meta,triage,recent-cluster"
+    : "recent-cluster,meta,triage";
   dom.opsDigestPanel.dataset.toplinePriorityFirst = String(priorityFirst);
   dom.opsDigestPanel.dataset.toplineUpdatedAt = String(latestToplineUpdatedAt);
   dom.opsDigestPanel.dataset.toplineUpdatedLabel = toplineUpdatedLabel;
   dom.opsDigestPanel.dataset.toplineFreshnessTone = toplineFreshnessTone;
   dom.opsDigestPanel.dataset.toplineRecentClusterTone = toplineRecentClusterTone;
   dom.opsDigestPanel.dataset.toplineRecentSummary = toplineRecentClusterSummary;
+  dom.opsDigestPanel.dataset.toplineTriageSummary = toplineTriageClusterSummary;
+  dom.opsDigestPanel.dataset.toplineTriageTone = toplineTriageClusterTone;
   dom.opsDigestPanel.dataset.toplineSourceClusterTone = toplineSourceClusterTone;
   dom.opsDigestPanel.dataset.toplineSourceClusterSummary = toplineSourceClusterSummary;
   dom.opsDigestPanel.dataset.toplineMetaSummary =
@@ -2493,6 +2525,15 @@ function syncOpsDigestTriageStrip() {
     applyRiskTone(
       dom.opsDigestToplineSourceCluster,
       dom.opsDigestPanel.dataset.toplineSourceClusterTone || "info",
+    );
+  }
+  if (dom.opsDigestTriageStrip) {
+    dom.opsDigestTriageStrip.title =
+      dom.opsDigestPanel.dataset.toplineTriageSummary ||
+      `${warningLabel} · ${triageActionLabel} · ${filterLabel}`;
+    applyRiskTone(
+      dom.opsDigestTriageStrip,
+      dom.opsDigestPanel.dataset.toplineTriageTone || "info",
     );
   }
   syncOpsDigestToplineOrder(priorityFirst);
@@ -16226,37 +16267,6 @@ function bindEvents() {
     event.preventDefault();
     event.stopPropagation();
     setOpsDigestInboxSourceFilter("all");
-  });
-  dom.opsDigestToplineSource?.addEventListener("click", () => {
-    if (dom.opsDigestToplineSource.dataset.toplineSourceDisabled === "true") {
-      return;
-    }
-    setOpsDigestInboxSourceFilter(
-      dom.opsDigestToplineSource.dataset.toplineSourceFilter || "all",
-    );
-  });
-  dom.opsDigestToplineSource?.addEventListener("keydown", (event) => {
-    if (event.key !== "Enter" && event.key !== " ") {
-      return;
-    }
-    event.preventDefault();
-    if (dom.opsDigestToplineSource.dataset.toplineSourceDisabled === "true") {
-      return;
-    }
-    setOpsDigestInboxSourceFilter(
-      dom.opsDigestToplineSource.dataset.toplineSourceFilter || "all",
-    );
-  });
-  dom.btnOpsDigestToplineSourceJump?.addEventListener("click", () => {
-    if (dom.btnOpsDigestToplineSourceJump.disabled) {
-      return;
-    }
-    openOpsDigestPanelTarget(
-      dom.btnOpsDigestToplineSourceJump.dataset.toplineSourceTarget || "",
-      dom.btnOpsDigestToplineSourceJump.dataset.toplineSourceTargetLabel || "관련 패널 열기",
-      dom.btnOpsDigestToplineSourceJump.dataset.toplineSourceTargetSource || "ops_digest",
-      dom.btnOpsDigestToplineSourceJump.dataset.toplineSourceFocusTarget || "",
-    );
   });
   dom.opsDigestInboxMeta?.addEventListener("keydown", (event) => {
     if (event.key !== "Enter" && event.key !== " ") {

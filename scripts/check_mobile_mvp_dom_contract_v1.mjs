@@ -2205,7 +2205,7 @@ async function main() {
   );
   assertIncludes(
     html,
-    'data-topline-order="recent,meta,triage"',
+    'data-topline-order="recent-cluster,meta,triage"',
     "index.html",
     failures,
   );
@@ -2295,6 +2295,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-topline-order="recent-cluster,meta,triage"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-topline-updated-at="0"',
     "index.html",
     failures,
@@ -2320,6 +2326,18 @@ async function main() {
   assertIncludes(
     html,
     'data-topline-meta-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-triage-summary="주의 없음 · 다음 자동 시작 · 필터 없음"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-triage-tone="info"',
     "index.html",
     failures,
   );
@@ -11154,13 +11172,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function resolveOpsDigestToplineTriageClusterTone(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function syncOpsDigestToplineOrder(priorityFirst) {",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    '? [dom.opsDigestToplineMeta, dom.opsDigestToplineRecentCluster, dom.opsDigestTriageStrip]',
+    '? [dom.opsDigestToplineMeta, dom.opsDigestTriageStrip, dom.opsDigestToplineRecentCluster]',
     "app.mjs",
     failures,
   );
@@ -11232,7 +11256,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    'dom.opsDigestToplineSource?.addEventListener("click", () => {',
+    'dom.opsDigestToplineSource?.addEventListener("click", (event) => {',
     "app.mjs",
     failures,
   );
@@ -11244,7 +11268,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    'dom.btnOpsDigestToplineSourceJump?.addEventListener("click", () => {',
+    'dom.btnOpsDigestToplineSourceJump?.addEventListener("click", (event) => {',
     "app.mjs",
     failures,
   );
@@ -11826,6 +11850,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.opsDigestPanel.dataset.toplineTriageSummary = toplineTriageClusterSummary;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplineTriageTone = toplineTriageClusterTone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestToplineRecentCluster.title =",
     "app.mjs",
     failures,
@@ -11833,6 +11869,18 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestToplineSourceCluster.title =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestTriageStrip.title =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplineOrder = priorityFirst",
     "app.mjs",
     failures,
   );
@@ -13800,6 +13848,8 @@ async function main() {
   assertIncludes(css, ".ops-digest-topline .ops-digest-badge", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline .ops-digest-badge[role=\"button\"]", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage", "app.css", failures);
+  assertIncludes(css, ".ops-digest-triage.tone-success", "app.css", failures);
+  assertIncludes(css, ".ops-digest-triage.tone-warn", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage-chip", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-head", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-head .ops-digest-badge[role=\"button\"]", "app.css", failures);
