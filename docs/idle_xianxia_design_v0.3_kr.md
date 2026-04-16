@@ -4587,3 +4587,11 @@
 
 ## 1075) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ops digest topline recent-cluster 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1076) 다음 순차 작업
+1. [완료] ops digest topline의 `triage strip`을 recent/meta와 같은 tone-aware cluster로 승격시켜, warning/action/filter 묶음이 하나의 우선순위 단위처럼 읽히도록 보강.
+2. [완료] `syncOpsDigestToplineOrder()`가 `priority-first`일 때 `meta → triage → recent-cluster` 순서를 사용하도록 정합화하고, 중복된 topline source filter/jump 이벤트 바인딩을 정리해 이중 실행 여지를 제거.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 topline triage cluster / ordering 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1077) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(topline triage cluster 및 ordering 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
