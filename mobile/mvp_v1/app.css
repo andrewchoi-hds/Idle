@@ -3248,6 +3248,12 @@ textarea:focus-visible,
   color: #d6efe8;
 }
 
+.ghost-btn.tone-success {
+  border-color: #2e8f68;
+  background: rgba(18, 61, 46, 0.92);
+  color: #b7f5d8;
+}
+
 .ghost-btn.tone-warn {
   border-color: #c08d34;
   background: rgba(59, 42, 12, 0.94);

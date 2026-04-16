@@ -4555,3 +4555,11 @@
 
 ## 1063) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(expanded topline priority-first ordering 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1068) 다음 순차 작업
+1. [완료] 공용 `applyRiskTone()`가 `success`를 실제로 반영하도록 보강해, ops digest를 포함한 소비 레이어의 성공 신호가 더 이상 `info` 색으로 뭉개지지 않게 정합화.
+2. [완료] `.ghost-btn.tone-success`를 추가해 버튼 계열도 badge와 같은 초록 success 시각 언어를 공유하도록 맞춤.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 success tone propagation 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1069) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(success tone propagation 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

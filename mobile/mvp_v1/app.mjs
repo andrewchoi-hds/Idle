@@ -13718,7 +13718,11 @@ function applyRiskTone(node, tone) {
   if (!node) {
     return;
   }
-  node.classList.remove("tone-info", "tone-warn", "tone-error");
+  node.classList.remove("tone-info", "tone-success", "tone-warn", "tone-error");
+  if (tone === "success") {
+    node.classList.add("tone-success");
+    return;
+  }
   if (tone === "error") {
     node.classList.add("tone-error");
     return;
