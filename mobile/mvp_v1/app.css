@@ -164,6 +164,14 @@ h2 {
   background: rgba(11, 22, 20, 0.72);
 }
 
+.ops-digest-topline-recent-cluster[data-recent-disabled="false"] {
+  cursor: pointer;
+}
+
+.ops-digest-topline-recent-cluster[data-recent-disabled="true"] {
+  cursor: default;
+}
+
 .ops-digest-topline-recent-cluster.tone-info {
   border-color: #35514a;
   background: rgba(11, 22, 20, 0.72);

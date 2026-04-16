@@ -1078,6 +1078,21 @@ function executeOpsDigestToplinePriority() {
   }
 }
 
+function executeOpsDigestRecentAction() {
+  if (!dom.opsDigestPanel || !dom.opsDigestRecentAction) {
+    return;
+  }
+  if (dom.opsDigestRecentAction.dataset.recentDisabled === "true") {
+    return;
+  }
+  executeOpsDigestAction(
+    dom.opsDigestRecentAction.dataset.recentKind,
+    dom.opsDigestRecentAction.dataset.recentTarget,
+    dom.opsDigestPanel.dataset.recentActionSource || "system",
+    dom.opsDigestRecentAction.textContent || "최근 조작 다시 열기",
+  );
+}
+
 function resolveOpsDigestToplinePriorityIcon(kind) {
   switch (String(kind || "none").trim()) {
     case "warning":
@@ -2054,6 +2069,11 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
       String(recentDescriptor.disabled === true),
     );
     applyRiskTone(dom.opsDigestRecentAction, tone);
+  }
+  if (dom.opsDigestToplineRecentCluster) {
+    dom.opsDigestToplineRecentCluster.dataset.recentDisabled = String(
+      recentDescriptor.disabled === true,
+    );
   }
   if (dom.opsDigestInboxRecent) {
     dom.opsDigestInboxRecent.textContent = normalizedMessage;
@@ -16016,30 +16036,56 @@ function bindEvents() {
   dom.btnToggleBattleFocus.addEventListener("click", () => {
     applyBattleFocusMode(!battleFocusMode, { announce: true });
   });
-  dom.opsDigestRecentAction?.addEventListener("click", () => {
-    if (dom.opsDigestRecentAction.dataset.recentDisabled === "true") {
-      return;
-    }
-    executeOpsDigestAction(
-      dom.opsDigestRecentAction.dataset.recentKind,
-      dom.opsDigestRecentAction.dataset.recentTarget,
-      dom.opsDigestPanel?.dataset.recentActionSource || "system",
-      dom.opsDigestRecentAction.textContent || "최근 조작 다시 열기",
-    );
+  dom.opsDigestRecentAction?.addEventListener("click", (event) => {
+    event.stopPropagation();
+    executeOpsDigestRecentAction();
   });
   dom.opsDigestRecentAction?.addEventListener("keydown", (event) => {
     if (event.key !== "Enter" && event.key !== " ") {
       return;
     }
     event.preventDefault();
-    if (dom.opsDigestRecentAction.dataset.recentDisabled === "true") {
+    event.stopPropagation();
+    executeOpsDigestRecentAction();
+  });
+  dom.opsDigestToplineRecentCluster?.addEventListener("click", () => {
+    if (dom.opsDigestToplineRecentCluster.dataset.recentDisabled === "true") {
       return;
     }
-    executeOpsDigestAction(
-      dom.opsDigestRecentAction.dataset.recentKind,
-      dom.opsDigestRecentAction.dataset.recentTarget,
-      dom.opsDigestPanel?.dataset.recentActionSource || "system",
-      dom.opsDigestRecentAction.textContent || "최근 조작 다시 열기",
+    executeOpsDigestRecentAction();
+  });
+  dom.opsDigestToplineSource?.addEventListener("click", (event) => {
+    event.stopPropagation();
+    if (dom.opsDigestToplineSource.dataset.toplineSourceDisabled === "true") {
+      return;
+    }
+    setOpsDigestInboxSourceFilter(
+      dom.opsDigestToplineSource.dataset.toplineSourceFilter || "all",
+    );
+  });
+  dom.opsDigestToplineSource?.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    if (dom.opsDigestToplineSource.dataset.toplineSourceDisabled === "true") {
+      return;
+    }
+    setOpsDigestInboxSourceFilter(
+      dom.opsDigestToplineSource.dataset.toplineSourceFilter || "all",
+    );
+  });
+  dom.btnOpsDigestToplineSourceJump?.addEventListener("click", (event) => {
+    event.stopPropagation();
+    if (dom.btnOpsDigestToplineSourceJump.disabled) {
+      return;
+    }
+    openOpsDigestPanelTarget(
+      dom.btnOpsDigestToplineSourceJump.dataset.toplineSourceTarget || "",
+      dom.btnOpsDigestToplineSourceJump.dataset.toplineSourceTargetLabel || "관련 패널 열기",
+      dom.btnOpsDigestToplineSourceJump.dataset.toplineSourceTargetSource || "ops_digest",
+      dom.btnOpsDigestToplineSourceJump.dataset.toplineSourceFocusTarget || "",
     );
   });
   const opsDigestInboxNodes = [
