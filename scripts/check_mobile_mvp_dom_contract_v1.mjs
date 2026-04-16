@@ -2277,6 +2277,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-topline-recent-summary="최근 조작 대기 중 · 시스템 · 갱신 대기"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-recent-cluster-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-topline-updated-at="0"',
     "index.html",
     failures,
@@ -11214,6 +11226,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.opsDigestPanel.dataset.toplineRecentSummary =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplineRecentClusterTone = tone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.toplineSourceLabel = formatOpsDigestInboxSourceLabel(",
     "app.mjs",
     failures,
@@ -11550,6 +11574,24 @@ async function main() {
   );
   assertIncludes(
     app,
+    "const toplineRecentClusterTone = resolveOpsDigestToplineRecentClusterTone(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplineRecentClusterTone = toplineRecentClusterTone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplineRecentSummary = toplineRecentClusterSummary;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.toplineSourceClusterTone = toplineSourceClusterTone;",
     "app.mjs",
     failures,
@@ -11689,6 +11731,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestToplineMeta.title =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestToplineRecentCluster.title =",
     "app.mjs",
     failures,
   );
@@ -13655,6 +13703,7 @@ async function main() {
   assertIncludes(css, ".ops-digest-topline", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline.priority-first", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-recent-cluster", "app.css", failures);
+  assertIncludes(css, ".ops-digest-topline-recent-cluster.tone-success", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-source-cluster", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-source-cluster.tone-success", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-meta", "app.css", failures);
