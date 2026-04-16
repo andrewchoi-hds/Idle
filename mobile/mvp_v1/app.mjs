@@ -117,6 +117,7 @@ const dom = {
   btnOpsDigestOpenSave: document.getElementById("btnOpsDigestOpenSave"),
   opsDigestRecentAction: document.getElementById("opsDigestRecentAction"),
   opsDigestTopline: document.getElementById("opsDigestTopline"),
+  opsDigestToplineSource: document.getElementById("opsDigestToplineSource"),
   opsDigestToplineMeta: document.getElementById("opsDigestToplineMeta"),
   btnOpsDigestToplinePriority: document.getElementById("btnOpsDigestToplinePriority"),
   opsDigestToplineFreshness: document.getElementById("opsDigestToplineFreshness"),
@@ -1850,6 +1851,10 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
   dom.opsDigestPanel.dataset.recentAction = normalizedMessage;
   dom.opsDigestPanel.dataset.recentActionTone = tone;
   dom.opsDigestPanel.dataset.recentActionSource = normalizedSource;
+  dom.opsDigestPanel.dataset.toplineSourceLabel = formatOpsDigestInboxSourceLabel(
+    normalizedSource,
+  );
+  dom.opsDigestPanel.dataset.toplineSourceTone = tone;
   dom.opsDigestPanel.dataset.recentActionUpdatedAt = String(updatedAt);
   if (dom.opsDigestRecentAction) {
     const recentIcon =
@@ -1871,6 +1876,16 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
   }
   if (dom.opsDigestInboxRecent) {
     dom.opsDigestInboxRecent.textContent = normalizedMessage;
+  }
+  if (dom.opsDigestToplineSource) {
+    dom.opsDigestToplineSource.textContent =
+      dom.opsDigestPanel.dataset.toplineSourceLabel || "시스템";
+    dom.opsDigestToplineSource.title =
+      `${dom.opsDigestPanel.dataset.toplineSourceLabel || "시스템"} · 최근 조작 출처`;
+    applyRiskTone(
+      dom.opsDigestToplineSource,
+      dom.opsDigestPanel.dataset.toplineSourceTone || "info",
+    );
   }
 }
 

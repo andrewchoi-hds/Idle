@@ -41,6 +41,7 @@ const REQUIRED_HTML_IDS = [
   "btnOpsDigestOpenSave",
   "opsDigestRecentAction",
   "opsDigestTopline",
+  "opsDigestToplineSource",
   "opsDigestToplineMeta",
   "btnOpsDigestToplinePriority",
   "opsDigestToplineFreshness",
@@ -245,6 +246,7 @@ const REQUIRED_DOM_KEYS = [
   "btnOpsDigestOpenSave",
   "opsDigestRecentAction",
   "opsDigestTopline",
+  "opsDigestToplineSource",
   "opsDigestToplineMeta",
   "btnOpsDigestToplinePriority",
   "opsDigestToplineFreshness",
@@ -1819,6 +1821,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestToplineSource"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="opsDigestToplineMeta"',
     "index.html",
     failures,
@@ -2156,6 +2164,18 @@ async function main() {
   assertIncludes(
     html,
     'data-topline-priority-first="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-source-label="시스템"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-source-tone="info"',
     "index.html",
     failures,
   );
@@ -11056,6 +11076,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.opsDigestPanel.dataset.toplineSourceLabel = formatOpsDigestInboxSourceLabel(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplineSourceTone = tone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.recentActionUpdatedAt = String(updatedAt);",
     "app.mjs",
     failures,
@@ -11333,6 +11365,24 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestToplineFreshness.textContent = toplineUpdatedLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestToplineSource.textContent =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestToplineSource.title =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplineSourceTone || \"info\"",
     "app.mjs",
     failures,
   );
