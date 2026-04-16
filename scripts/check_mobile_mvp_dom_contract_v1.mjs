@@ -41,7 +41,9 @@ const REQUIRED_HTML_IDS = [
   "btnOpsDigestOpenSave",
   "opsDigestRecentAction",
   "opsDigestTopline",
+  "opsDigestToplineSourceCluster",
   "opsDigestToplineSource",
+  "btnOpsDigestToplineSourceJump",
   "opsDigestToplineMeta",
   "btnOpsDigestToplinePriority",
   "opsDigestToplineFreshness",
@@ -246,7 +248,9 @@ const REQUIRED_DOM_KEYS = [
   "btnOpsDigestOpenSave",
   "opsDigestRecentAction",
   "opsDigestTopline",
+  "opsDigestToplineSourceCluster",
   "opsDigestToplineSource",
+  "btnOpsDigestToplineSourceJump",
   "opsDigestToplineMeta",
   "btnOpsDigestToplinePriority",
   "opsDigestToplineFreshness",
@@ -1821,7 +1825,19 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestToplineSourceCluster"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="opsDigestToplineSource"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="btnOpsDigestToplineSourceJump"',
     "index.html",
     failures,
   );
@@ -2188,6 +2204,36 @@ async function main() {
   assertIncludes(
     html,
     'data-topline-source-disabled="true"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-source-target="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-source-target-label="이동 대기"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-source-target-source="ops_digest"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-source-focus-target=""',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-source-target-disabled="true"',
     "index.html",
     failures,
   );
@@ -11040,6 +11086,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function resolveOpsDigestToplineSourceTarget(source) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function syncOpsDigestToplineOrder(priorityFirst) {",
     "app.mjs",
     failures,
@@ -11094,6 +11146,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.btnOpsDigestToplineSourceJump?.addEventListener("click", () => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'setOpsDigestInboxSourceFilter(',
     "app.mjs",
     failures,
@@ -11124,6 +11182,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "const toplineSourceTarget = resolveOpsDigestToplineSourceTarget(normalizedSource);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.toplineSourceFilter = toplineSourceFilter;",
     "app.mjs",
     failures,
@@ -11131,6 +11195,36 @@ async function main() {
   assertIncludes(
     app,
     'dom.opsDigestPanel.dataset.toplineSourceDisabled = String(',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestPanel.dataset.toplineSourceTarget =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestPanel.dataset.toplineSourceTargetLabel =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestPanel.dataset.toplineSourceTargetSource =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestPanel.dataset.toplineSourceFocusTarget =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestPanel.dataset.toplineSourceTargetDisabled = String(',
     "app.mjs",
     failures,
   );
@@ -11443,6 +11537,36 @@ async function main() {
   assertIncludes(
     app,
     'dom.opsDigestToplineSource.setAttribute(',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.btnOpsDigestToplineSourceJump.disabled = !toplineSourceTarget;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.btnOpsDigestToplineSourceJump.dataset.toplineSourceTarget =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.btnOpsDigestToplineSourceJump.dataset.toplineSourceTargetLabel =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.btnOpsDigestToplineSourceJump.dataset.toplineSourceTargetSource =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.btnOpsDigestToplineSourceJump.dataset.toplineSourceFocusTarget =',
     "app.mjs",
     failures,
   );
