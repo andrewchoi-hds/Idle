@@ -4531,3 +4531,11 @@
 
 ## 1061) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ops digest topline priority-first ordering 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1062) 다음 순차 작업
+1. [완료] ops digest topline의 `priority-first` 조건을 warning/action뿐 아니라 stale freshness와 warn 필터까지 반영하도록 확장.
+2. [완료] `syncOpsDigestToplineOrder()`가 `toplineFreshnessTone === "warn"` 또는 활성 filter tone이 `warn`인 경우에도 meta cluster를 recent action보다 먼저 배치하도록 정합화.
+3. [완료] 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 expanded priority-first ordering 규칙 기준으로 동기화.
+
+## 1063) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(expanded topline priority-first ordering 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

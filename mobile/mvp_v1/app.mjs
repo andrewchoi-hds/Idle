@@ -2135,7 +2135,11 @@ function syncOpsDigestTriageStrip() {
       : warningTone === "error" || warningTone === "warn"
         ? warningTone
         : String(dom.opsDigestPanel.dataset.recentActionTone || "info");
-  const priorityFirst = toplinePriorityKind === "warning" || toplinePriorityKind === "action";
+  const priorityFirst =
+    toplinePriorityKind === "warning" ||
+    toplinePriorityKind === "action" ||
+    toplineFreshnessTone === "warn" ||
+    (!filterDisabled && filterTone === "warn");
   dom.opsDigestPanel.dataset.toplineOrder = priorityFirst
     ? "meta,recent,triage"
     : "recent,meta,triage";
