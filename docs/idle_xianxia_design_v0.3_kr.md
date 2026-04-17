@@ -4667,3 +4667,11 @@
 
 ## 1095) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(topline recent chip compact label 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1096) 다음 순차 작업
+1. [완료] ops digest topline `source jump` visible label을 `formatOpsDigestToplineSourceJumpLabel()` 기준으로 아이콘 중심으로 축약하고, recent/source/meta/triage cluster 및 chip padding·gap을 한 단계 더 줄여 모바일 first-screen 밀도를 보강.
+2. [완료] `btnOpsDigestToplineSourceJump`는 compact visible label을 쓰되 title/deep-link dataset은 그대로 유지해서 조작 의미 손실 없이 폭만 줄이도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 topline source jump compact mode 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1097) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(topline source jump compact mode 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

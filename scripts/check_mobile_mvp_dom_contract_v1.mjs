@@ -11246,6 +11246,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function formatOpsDigestToplineSourceJumpLabel() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function buildOpsDigestToplineRecentSummary(recentAction, sourceLabel, updatedLabel = \"\") {",
     "app.mjs",
     failures,
@@ -12069,6 +12075,12 @@ async function main() {
   assertIncludes(
     app,
     'dom.btnOpsDigestToplineSourceJump.dataset.toplineSourceFocusTarget =',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "formatOpsDigestToplineSourceJumpLabel(),",
     "app.mjs",
     failures,
   );
