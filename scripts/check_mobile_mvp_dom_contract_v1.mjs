@@ -50,6 +50,7 @@ const REQUIRED_HTML_IDS = [
   "btnOpsDigestToplinePriority",
   "opsDigestToplineFreshness",
   "opsDigestTriageStrip",
+  "opsDigestDivider",
   "btnOpsDigestTriageWarning",
   "btnOpsDigestTriageAction",
   "btnOpsDigestTriageFilter",
@@ -259,6 +260,7 @@ const REQUIRED_DOM_KEYS = [
   "btnOpsDigestToplinePriority",
   "opsDigestToplineFreshness",
   "opsDigestTriageStrip",
+  "opsDigestDivider",
   "btnOpsDigestTriageWarning",
   "btnOpsDigestTriageAction",
   "btnOpsDigestTriageFilter",
@@ -1931,6 +1933,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestDivider"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="btnOpsDigestTriageWarning"',
     "index.html",
     failures,
@@ -2346,6 +2354,18 @@ async function main() {
   assertIncludes(
     html,
     'data-topline-freshness-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-divider-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-divider-label="상세 상태"',
     "index.html",
     failures,
   );
@@ -11990,6 +12010,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "panel.dataset.dividerTone = toplineState.toplineTone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'panel.dataset.dividerLabel = toplineState.priorityFirst ? "우선 후 상세" : "상세 상태";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestToplineFreshness.textContent = toplineUpdatedLabel;",
     "app.mjs",
     failures,
@@ -12183,6 +12215,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestTriageStrip.title =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestDivider.textContent =",
     "app.mjs",
     failures,
   );
@@ -14209,6 +14247,8 @@ async function main() {
   assertIncludes(css, "grid-template-columns: repeat(2, minmax(0, 1fr));", "app.css", failures);
   assertIncludes(css, "grid-column: 1 / -1;", "app.css", failures);
   assertIncludes(css, ".ops-digest-next,", "app.css", failures);
+  assertIncludes(css, ".ops-digest-divider", "app.css", failures);
+  assertIncludes(css, ".ops-digest-divider.tone-warn", "app.css", failures);
   assertIncludes(css, ".ops-digest-grid {", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage.tone-success", "app.css", failures);

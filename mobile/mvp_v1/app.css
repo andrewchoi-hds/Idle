@@ -404,6 +404,12 @@ h2 {
     gap: 5px;
   }
 
+  .ops-digest-divider {
+    gap: 6px;
+    min-height: 16px;
+    font-size: 9px;
+  }
+
   .ops-digest-grid {
     gap: 6px;
   }
@@ -473,6 +479,52 @@ h2 {
 .ops-digest-filter-bar {
   display: grid;
   gap: 6px;
+}
+
+.ops-digest-divider {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 18px;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ops-digest-divider::before,
+.ops-digest-divider::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: rgba(77, 111, 103, 0.42);
+}
+
+.ops-digest-divider.tone-success {
+  color: #c9f7e0;
+}
+
+.ops-digest-divider.tone-success::before,
+.ops-digest-divider.tone-success::after {
+  background: rgba(46, 143, 104, 0.58);
+}
+
+.ops-digest-divider.tone-warn {
+  color: #ffe0a1;
+}
+
+.ops-digest-divider.tone-warn::before,
+.ops-digest-divider.tone-warn::after {
+  background: rgba(192, 141, 52, 0.68);
+}
+
+.ops-digest-divider.tone-error {
+  color: #ffd0cc;
+}
+
+.ops-digest-divider.tone-error::before,
+.ops-digest-divider.tone-error::after {
+  background: rgba(177, 75, 69, 0.72);
 }
 
 .ops-digest-filter-strip {

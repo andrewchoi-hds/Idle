@@ -554,3 +554,4 @@ npm run mobile:mvp:check
   - ops digest topline strong tone contrast 규칙이 `recent/source/meta/triage` wrapper와 내부 badge/chip의 `success/warn/error` 상태에 더 강한 outline/shadow/foreground 대비를 부여해 info보다 먼저 읽히게 만드는지 검증
   - ops digest card badge hierarchy 규칙(`.ops-digest-card-badge`)이 카드 그리드 첫 줄 status badge를 한 단계 더 작은 계층으로 렌더해 first-screen 카드 헤더 부피를 줄이는지 검증
   - ops digest card value compact helper(`formatOpsDigestCardValueCompact`, `syncOpsDigestCardValue`)가 focus/settings/stage/battle/resources/actions/breakthrough/save summary visible text를 모바일 기준으로 압축하면서 full summary는 `title`로 유지하는지 검증
+  - ops digest tone-aware divider(`opsDigestDivider`)가 `toplineTone`을 재사용해 상단 triage 영역과 카드 그리드 사이 시선 경계를 더 분명하게 만들고, `priorityFirst` 상태에 따라 `상세 상태/우선 후 상세` label을 일관되게 반영하는지 검증
