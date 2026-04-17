@@ -4699,3 +4699,11 @@
 
 ## 1103) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(mobile first-pass spacing 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1104) 다음 순차 작업
+1. [완료] ops digest topline의 `recent/source/meta/triage` tone strong 상태(`success/warn/error`)에 outline/shadow와 더 강한 전경색을 추가해 info보다 먼저 읽히게 대비를 보강.
+2. [완료] cluster wrapper와 내부 badge/chip이 같은 tone 문맥을 더 강하게 공유하도록 CSS 대비를 조정해 first-screen triage 우선순위가 더 빨리 잡히게 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 topline strong tone contrast 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1105) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(topline strong tone contrast 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

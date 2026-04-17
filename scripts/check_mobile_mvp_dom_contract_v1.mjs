@@ -14151,6 +14151,7 @@ async function main() {
   assertIncludes(css, ".ops-digest-topline.priority-first", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-recent-cluster", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-recent-cluster.tone-success", "app.css", failures);
+  assertIncludes(css, ".ops-digest-topline-recent-cluster.tone-error", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-cluster[role=\"button\"][data-topline-cluster-disabled=\"false\"]", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-cluster[role=\"button\"]:focus-visible", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-triage-cluster", "app.css", failures);
@@ -14160,6 +14161,8 @@ async function main() {
   assertIncludes(css, ".ops-digest-topline-meta", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline .ops-digest-badge", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline .ops-digest-badge[role=\"button\"]", "app.css", failures);
+  assertIncludes(css, ".ops-digest-topline .ghost-btn.tone-warn", "app.css", failures);
+  assertIncludes(css, ".ops-digest-topline .ops-digest-badge.tone-error", "app.css", failures);
   assertIncludes(css, "@media (max-width: 560px)", "app.css", failures);
   assertIncludes(css, "grid-template-columns: repeat(2, minmax(0, 1fr));", "app.css", failures);
   assertIncludes(css, "grid-column: 1 / -1;", "app.css", failures);
