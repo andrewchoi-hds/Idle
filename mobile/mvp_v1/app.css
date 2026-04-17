@@ -131,7 +131,7 @@ h2 {
 
 .ops-digest-topline {
   display: flex;
-  gap: 6px;
+  gap: 4px;
   flex-wrap: wrap;
   align-items: center;
 }
@@ -155,10 +155,10 @@ h2 {
 
 .ops-digest-topline-recent-cluster {
   display: inline-flex;
-  gap: 6px;
+  gap: 4px;
   align-items: center;
   flex-wrap: wrap;
-  padding: 4px 6px;
+  padding: 3px 5px;
   border-radius: 999px;
   border: 1px solid #294941;
   background: rgba(11, 22, 20, 0.72);
@@ -204,9 +204,9 @@ h2 {
 
 .ops-digest-topline-source-cluster {
   display: inline-flex;
-  gap: 4px;
+  gap: 3px;
   align-items: center;
-  padding: 4px 6px;
+  padding: 3px 5px;
   border-radius: 999px;
   border: 1px solid #294941;
   background: rgba(11, 22, 20, 0.72);
@@ -234,9 +234,9 @@ h2 {
 
 .ops-digest-topline-meta {
   display: inline-flex;
-  gap: 6px;
+  gap: 4px;
   align-items: center;
-  padding: 4px 6px;
+  padding: 3px 5px;
   border-radius: 999px;
   border: 1px solid #294941;
   background: rgba(11, 22, 20, 0.72);
@@ -263,10 +263,10 @@ h2 {
 
 .ops-digest-triage {
   display: inline-flex;
-  gap: 6px;
+  gap: 4px;
   flex-wrap: wrap;
   align-items: center;
-  padding: 4px 6px;
+  padding: 3px 5px;
   border-radius: 999px;
   border: 1px solid #294941;
   background: rgba(11, 22, 20, 0.72);
@@ -293,8 +293,8 @@ h2 {
 }
 
 .ops-digest-triage-chip {
-  min-height: 30px;
-  padding: 5px 9px;
+  min-height: 28px;
+  padding: 4px 7px;
   font-size: 11px;
   flex: 0 0 auto;
   display: inline-flex;

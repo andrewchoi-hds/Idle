@@ -1081,6 +1081,10 @@ function formatOpsDigestToplineRecentChipLabel(message) {
   return compactLabel;
 }
 
+function formatOpsDigestToplineSourceJumpLabel() {
+  return "↗";
+}
+
 function buildOpsDigestToplineRecentSummary(recentAction, sourceLabel, updatedLabel = "") {
   const parts = [
     String(recentAction || "최근 조작 대기 중").trim() || "최근 조작 대기 중",
@@ -2496,7 +2500,11 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
     );
   }
   if (dom.btnOpsDigestToplineSourceJump) {
-    setOpsDigestFilterChipContent(dom.btnOpsDigestToplineSourceJump, "↗", "열기");
+    setOpsDigestFilterChipContent(
+      dom.btnOpsDigestToplineSourceJump,
+      formatOpsDigestToplineSourceJumpLabel(),
+      "",
+    );
     dom.btnOpsDigestToplineSourceJump.disabled = !toplineSourceTarget;
     dom.btnOpsDigestToplineSourceJump.title =
       toplineSourceTarget?.label || "이동 대기";

@@ -547,3 +547,4 @@ npm run mobile:mvp:check
   - ops digest topline 문구 헬퍼(`buildOpsDigestToplineSourceClusterSummary`, `buildOpsDigestToplineRecentSummary`, `buildOpsDigestToplineTriageSummary`, `buildOpsDigestToplineMetaSummary`, `buildOpsDigestToplineSummary`, `buildOpsDigestToplineRecentTitle`)가 recent/meta/triage/source summary·title 문구를 일관되게 생성하는지 검증
   - ops digest topline chip compact label 헬퍼(`formatOpsDigestToplineChipLabel`)가 `우선/다음/주의 N건/필터 N건` 계열 라벨을 모바일 폭에 맞게 축약하면서 title 문맥은 유지하는지 검증
   - ops digest topline recent chip compact label 헬퍼(`formatOpsDigestToplineRecentChipLabel`)가 `최근 조작 대기 중/실시간 자동 시작/로컬 저장/로컬 불러오기/런 초기화/전투 집중/오프라인 정산 대기/세이브 슬롯 변경/저장 데이터가 없음` 계열 recent label을 모바일 폭에 맞게 축약하면서 title 문맥은 유지하는지 검증
+  - ops digest topline source jump compact label 헬퍼(`formatOpsDigestToplineSourceJumpLabel`)와 topline pill spacing 축소가 `source cluster` visible 폭을 줄이면서 title/deep-link 문맥은 유지하는지 검증
