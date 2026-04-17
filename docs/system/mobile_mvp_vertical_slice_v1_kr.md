@@ -538,3 +538,5 @@ npm run mobile:mvp:check
   - ops digest topline triage cluster wrapper(`opsDigestToplineTriageCluster`)가 개별 triage chip 클릭과 충돌하지 않으면서 cluster click/keydown 진입점을 일관되게 제공하는지 검증
   - ops digest topline meta cluster re-entry 헬퍼(`executeOpsDigestToplineMetaCluster`)가 priority disabled 상태를 존중하면서 우선 항목 동작으로 안전하게 재진입하는지 검증
   - ops digest topline meta cluster wrapper(`opsDigestToplineMeta`)가 priority chip click과 충돌하지 않으면서 cluster click/keydown 진입점을 일관되게 제공하는지 검증
+  - ops digest topline recent cluster wrapper(`opsDigestToplineRecentCluster`)가 `role/button`, `tabindex`, `aria-disabled`를 통해 keyboard/focus 진입점을 일관되게 제공하는지 검증
+  - ops digest topline recent cluster keydown re-entry가 recent/source 하위 interactive child와 충돌하지 않으면서 `Enter/Space` 재진입을 안정적으로 처리하는지 검증
