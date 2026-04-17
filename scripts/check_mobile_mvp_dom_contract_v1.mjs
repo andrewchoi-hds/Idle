@@ -9926,7 +9926,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    "setOpsDigestFilterChipContent(dom.opsDigestRecentAction, recentIcon, normalizedMessage);",
+    "setOpsDigestFilterChipContent(dom.opsDigestRecentAction, recentIcon, recentVisibleLabel);",
     "app.mjs",
     failures,
   );
@@ -11235,6 +11235,12 @@ async function main() {
   assertIncludes(
     app,
     "function buildOpsDigestToplineSourceClusterSummary(sourceLabel, contextLabel = \"최근 조작 출처\") {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function formatOpsDigestToplineRecentChipLabel(message) {",
     "app.mjs",
     failures,
   );
