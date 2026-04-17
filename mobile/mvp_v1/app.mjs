@@ -1054,6 +1054,49 @@ function formatOpsDigestTriageActionLabel(label, disabled) {
   return `다음 ${compactLabel}`;
 }
 
+function buildOpsDigestToplineSourceClusterSummary(sourceLabel, contextLabel = "최근 조작 출처") {
+  return `${String(sourceLabel || "시스템").trim() || "시스템"} · ${String(contextLabel || "최근 조작 출처").trim() || "최근 조작 출처"}`;
+}
+
+function buildOpsDigestToplineRecentSummary(recentAction, sourceLabel, updatedLabel = "") {
+  const parts = [
+    String(recentAction || "최근 조작 대기 중").trim() || "최근 조작 대기 중",
+    String(sourceLabel || "시스템").trim() || "시스템",
+    String(updatedLabel || "").trim(),
+  ].filter(Boolean);
+  return parts.join(" · ");
+}
+
+function buildOpsDigestToplineTriageSummary(warningLabel, actionLabel, filterLabel) {
+  return [
+    String(warningLabel || "주의 없음").trim() || "주의 없음",
+    String(actionLabel || "다음 대기").trim() || "다음 대기",
+    String(filterLabel || "필터 없음").trim() || "필터 없음",
+  ].join(" · ");
+}
+
+function buildOpsDigestToplineMetaSummary(priorityLabel, updatedLabel) {
+  return [
+    String(priorityLabel || "우선 대기").trim() || "우선 대기",
+    String(updatedLabel || "갱신 대기").trim() || "갱신 대기",
+  ].join(" · ");
+}
+
+function buildOpsDigestToplineSummary(recentAction, priorityLabel, triageSummary, updatedLabel) {
+  return [
+    String(recentAction || "최근 조작 대기 중").trim() || "최근 조작 대기 중",
+    String(priorityLabel || "우선 대기").trim() || "우선 대기",
+    String(triageSummary || "주의 없음 · 다음 대기 · 필터 없음").trim() ||
+      "주의 없음 · 다음 대기 · 필터 없음",
+    String(updatedLabel || "갱신 대기").trim() || "갱신 대기",
+  ].join(" · ");
+}
+
+function buildOpsDigestToplineRecentTitle(sourceLabel, recentAction, disabled) {
+  const baseLabel = buildOpsDigestToplineRecentSummary(recentAction, sourceLabel);
+  return disabled === true ? baseLabel : `${baseLabel} · 다시 열기`;
+}
+
 function buildOpsDigestToplineChipState(input) {
   return {
     warningChip: {
@@ -1360,15 +1403,20 @@ function buildOpsDigestToplineState(input) {
     input.toplineSourceTone || "info",
     toplineFreshnessTone,
   );
-  const toplineSourceClusterSummary =
-    `${input.toplineSourceLabel || "시스템"} · ${toplineUpdatedLabel}`;
+  const toplineSourceClusterSummary = buildOpsDigestToplineSourceClusterSummary(
+    input.toplineSourceLabel || "시스템",
+    toplineUpdatedLabel,
+  );
   const toplineRecentClusterTone = resolveOpsDigestToplineRecentClusterTone(
     input.recentActionTone || "info",
     toplineSourceClusterTone,
     toplineFreshnessTone,
   );
-  const toplineRecentClusterSummary =
-    `${input.recentAction || "최근 조작 대기 중"} · ${input.toplineSourceLabel || "시스템"} · ${toplineUpdatedLabel}`;
+  const toplineRecentClusterSummary = buildOpsDigestToplineRecentSummary(
+    input.recentAction || "최근 조작 대기 중",
+    input.toplineSourceLabel || "시스템",
+    toplineUpdatedLabel,
+  );
   const toplineTriageClusterTone = resolveOpsDigestToplineTriageClusterTone(
     input.warningTone,
     input.warningDisabled,
@@ -1379,7 +1427,11 @@ function buildOpsDigestToplineState(input) {
   );
   const toplineTriageClusterSummary =
     input.triageSummary ||
-    `${input.warningLabel} · ${input.triageActionLabel} · ${input.filterLabel}`;
+    buildOpsDigestToplineTriageSummary(
+      input.warningLabel,
+      input.triageActionLabel,
+      input.filterLabel,
+    );
   let toplineTriageClusterKind = "none";
   let toplineTriageClusterDisabled = true;
   let toplineTriageClusterActionLabel = "triage 대기";
@@ -1421,8 +1473,12 @@ function buildOpsDigestToplineState(input) {
     toplinePriorityDisabled = false;
     toplinePrioritySummary = input.filterSummary;
   }
-  const toplineSummary =
-    `${input.recentAction || "최근 조작 대기 중"} · ${toplinePriorityLabel} · ${input.triageSummary} · ${toplineUpdatedLabel}`;
+  const toplineSummary = buildOpsDigestToplineSummary(
+    input.recentAction || "최근 조작 대기 중",
+    toplinePriorityLabel,
+    input.triageSummary,
+    toplineUpdatedLabel,
+  );
   const toplineTone =
     toplinePriorityKind !== "none"
       ? toplinePriorityTone
@@ -1458,7 +1514,10 @@ function buildOpsDigestToplineState(input) {
     toplineTone,
     priorityFirst,
     toplineOrder: priorityFirst ? "meta,triage,recent-cluster" : "recent-cluster,meta,triage",
-    toplineMetaSummary: `${toplinePriorityLabel} · ${toplineUpdatedLabel}`,
+    toplineMetaSummary: buildOpsDigestToplineMetaSummary(
+      toplinePriorityLabel,
+      toplineUpdatedLabel,
+    ),
     toplineMetaTone:
       toplinePriorityKind !== "none" ? toplinePriorityTone : toplineFreshnessTone,
   };
@@ -2311,10 +2370,13 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
     !toplineSourceTarget,
   );
   dom.opsDigestPanel.dataset.toplineSourceClusterTone = tone;
-  dom.opsDigestPanel.dataset.toplineSourceClusterSummary =
-    `${dom.opsDigestPanel.dataset.toplineSourceLabel || "시스템"} · 최근 조작 출처`;
-  dom.opsDigestPanel.dataset.toplineRecentSummary =
-    `${normalizedMessage} · ${dom.opsDigestPanel.dataset.toplineSourceLabel || "시스템"}`;
+  dom.opsDigestPanel.dataset.toplineSourceClusterSummary = buildOpsDigestToplineSourceClusterSummary(
+    dom.opsDigestPanel.dataset.toplineSourceLabel || "시스템",
+  );
+  dom.opsDigestPanel.dataset.toplineRecentSummary = buildOpsDigestToplineRecentSummary(
+    normalizedMessage,
+    dom.opsDigestPanel.dataset.toplineSourceLabel || "시스템",
+  );
   dom.opsDigestPanel.dataset.toplineRecentClusterTone = tone;
   dom.opsDigestPanel.dataset.recentActionUpdatedAt = String(updatedAt);
   if (dom.opsDigestRecentAction) {
@@ -2331,10 +2393,11 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
                 ? "↺"
                 : "•";
     setOpsDigestFilterChipContent(dom.opsDigestRecentAction, recentIcon, normalizedMessage);
-    dom.opsDigestRecentAction.title =
-      recentDescriptor.disabled === true
-        ? `${formatOpsDigestInboxSourceLabel(normalizedSource)} · ${normalizedMessage}`
-        : `${formatOpsDigestInboxSourceLabel(normalizedSource)} · ${normalizedMessage} · 다시 열기`;
+    dom.opsDigestRecentAction.title = buildOpsDigestToplineRecentTitle(
+      formatOpsDigestInboxSourceLabel(normalizedSource),
+      normalizedMessage,
+      recentDescriptor.disabled === true,
+    );
     dom.opsDigestRecentAction.dataset.recentKind = recentDescriptor.kind || "none";
     dom.opsDigestRecentAction.dataset.recentTarget = recentDescriptor.target || "";
     dom.opsDigestRecentAction.dataset.recentDisabled = String(
@@ -2350,10 +2413,11 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
     syncOpsDigestToplineClusterState(dom.opsDigestToplineRecentCluster, {
       disabled: recentDescriptor.disabled === true,
       disabledKey: "recentDisabled",
-      title:
-        recentDescriptor.disabled === true
-          ? `${formatOpsDigestInboxSourceLabel(normalizedSource)} · ${normalizedMessage}`
-          : `${formatOpsDigestInboxSourceLabel(normalizedSource)} · ${normalizedMessage} · 다시 열기`,
+      title: buildOpsDigestToplineRecentTitle(
+        formatOpsDigestInboxSourceLabel(normalizedSource),
+        normalizedMessage,
+        recentDescriptor.disabled === true,
+      ),
       tone,
     });
   }
@@ -2383,7 +2447,9 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
   if (dom.opsDigestToplineSourceCluster) {
     dom.opsDigestToplineSourceCluster.title =
       dom.opsDigestPanel.dataset.toplineSourceClusterSummary ||
-      `${dom.opsDigestPanel.dataset.toplineSourceLabel || "시스템"} · 최근 조작 출처`;
+      buildOpsDigestToplineSourceClusterSummary(
+        dom.opsDigestPanel.dataset.toplineSourceLabel || "시스템",
+      );
     applyRiskTone(
       dom.opsDigestToplineSourceCluster,
       dom.opsDigestPanel.dataset.toplineSourceClusterTone || "info",
@@ -2623,8 +2689,11 @@ function syncOpsDigestTriageStrip() {
   dom.opsDigestPanel.dataset.triageFilterLabel = filterLabel;
   dom.opsDigestPanel.dataset.triageFilterTone = filterTone;
   dom.opsDigestPanel.dataset.triageFilterDisabled = String(filterDisabled);
-  dom.opsDigestPanel.dataset.triageSummary =
-    `${warningLabel} · ${triageActionLabel} · ${filterLabel}`;
+  dom.opsDigestPanel.dataset.triageSummary = buildOpsDigestToplineTriageSummary(
+    warningLabel,
+    triageActionLabel,
+    filterLabel,
+  );
   const toplineState = buildOpsDigestToplineState({
     latestToplineUpdatedAt: Math.max(
       Number(dom.opsDigestPanel.dataset.recentActionUpdatedAt || 0),
