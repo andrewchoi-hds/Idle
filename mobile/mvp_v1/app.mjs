@@ -1097,32 +1097,48 @@ function buildOpsDigestToplineRecentTitle(sourceLabel, recentAction, disabled) {
   return disabled === true ? baseLabel : `${baseLabel} · 다시 열기`;
 }
 
+function formatOpsDigestToplineChipLabel(kind, label) {
+  const normalizedKind = String(kind || "").trim();
+  const normalizedLabel = String(label || "").trim() || "대기";
+  switch (normalizedKind) {
+    case "priority":
+      return normalizedLabel.replace(/^우선\s+/, "").trim() || "대기";
+    case "action":
+      return normalizedLabel.replace(/^다음\s+/, "").trim() || "대기";
+    case "warning":
+    case "filter":
+      return normalizedLabel.replace(/\s*건$/, "").trim() || normalizedLabel;
+    default:
+      return normalizedLabel;
+  }
+}
+
 function buildOpsDigestToplineChipState(input) {
   return {
     warningChip: {
       icon: "!",
-      label: input.warningLabel,
+      label: formatOpsDigestToplineChipLabel("warning", input.warningLabel),
       disabled: input.warningDisabled === true,
       title: input.warningSummary,
       tone: input.warningTone || "info",
     },
     actionChip: {
       icon: "↗",
-      label: input.triageActionLabel,
+      label: formatOpsDigestToplineChipLabel("action", input.triageActionLabel),
       disabled: input.nextActionDisabled === true,
       title: input.nextActionSummary,
       tone: input.nextActionTone || "info",
     },
     filterChip: {
       icon: "⌁",
-      label: input.filterLabel,
+      label: formatOpsDigestToplineChipLabel("filter", input.filterLabel),
       disabled: input.filterDisabled === true,
       title: input.filterSummary,
       tone: input.filterTone || "info",
     },
     priorityChip: {
       icon: resolveOpsDigestToplinePriorityIcon(input.toplinePriorityKind),
-      label: input.toplinePriorityLabel,
+      label: formatOpsDigestToplineChipLabel("priority", input.toplinePriorityLabel),
       disabled: input.toplinePriorityDisabled === true,
       title: input.toplinePrioritySummary,
       tone: input.toplinePriorityTone || "info",
