@@ -245,6 +245,14 @@ h2 {
   background: rgba(11, 22, 20, 0.72);
 }
 
+.ops-digest-topline-meta[data-topline-meta-disabled="false"] {
+  cursor: pointer;
+}
+
+.ops-digest-topline-meta[data-topline-meta-disabled="true"] {
+  cursor: default;
+}
+
 .ops-digest-topline-meta.tone-info {
   border-color: #35514a;
   background: rgba(11, 22, 20, 0.72);

@@ -1889,6 +1889,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-topline-meta-disabled="true"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="opsDigestToplineFreshness"',
     "index.html",
     failures,
@@ -2334,6 +2340,12 @@ async function main() {
   assertIncludes(
     html,
     'data-topline-meta-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-meta-action-label="우선 대기"',
     "index.html",
     failures,
   );
@@ -11180,6 +11192,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function executeOpsDigestToplineMetaCluster() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function executeOpsDigestToplineTriageCluster() {",
     "app.mjs",
     failures,
@@ -11240,6 +11258,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.opsDigestToplineMeta?.addEventListener("click", (event) => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestToplineMeta?.addEventListener("keydown", (event) => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.opsDigestToplineTriageCluster?.addEventListener("click", (event) => {',
     "app.mjs",
     failures,
@@ -11270,7 +11300,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    'dom.btnOpsDigestToplinePriority?.addEventListener("click", () => {',
+    'dom.btnOpsDigestToplinePriority?.addEventListener("click", (event) => {',
     "app.mjs",
     failures,
   );
@@ -11888,7 +11918,25 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.opsDigestPanel.dataset.toplineMetaDisabled = String(toplinePriorityDisabled);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplineMetaActionLabel = toplinePriorityLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestToplineMeta.title =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestToplineMeta.dataset.toplineMetaDisabled = String(",
     "app.mjs",
     failures,
   );
@@ -13914,6 +13962,7 @@ async function main() {
   assertIncludes(css, ".ops-digest-topline-source-cluster", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-source-cluster.tone-success", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-meta", "app.css", failures);
+  assertIncludes(css, ".ops-digest-topline-meta[data-topline-meta-disabled=\"false\"]", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline .ops-digest-badge", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline .ops-digest-badge[role=\"button\"]", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage", "app.css", failures);

@@ -536,3 +536,5 @@ npm run mobile:mvp:check
   - ops digest topline ordering(`syncOpsDigestToplineOrder`)이 `priority-first`일 때 `meta → triage → recent-cluster`, 기본 상태일 때 `recent-cluster → meta → triage` 순서를 일관되게 유지하는지 검증
   - ops digest topline triage cluster re-entry 헬퍼(`executeOpsDigestToplineTriageCluster`)가 triage disabled/warning/action/filter 상태에 맞춰 우선 triage 동작으로 안전하게 재진입하는지 검증
   - ops digest topline triage cluster wrapper(`opsDigestToplineTriageCluster`)가 개별 triage chip 클릭과 충돌하지 않으면서 cluster click/keydown 진입점을 일관되게 제공하는지 검증
+  - ops digest topline meta cluster re-entry 헬퍼(`executeOpsDigestToplineMetaCluster`)가 priority disabled 상태를 존중하면서 우선 항목 동작으로 안전하게 재진입하는지 검증
+  - ops digest topline meta cluster wrapper(`opsDigestToplineMeta`)가 priority chip click과 충돌하지 않으면서 cluster click/keydown 진입점을 일관되게 제공하는지 검증
