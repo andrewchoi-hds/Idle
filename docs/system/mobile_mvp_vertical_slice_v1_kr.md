@@ -550,3 +550,4 @@ npm run mobile:mvp:check
   - ops digest topline source jump compact label 헬퍼(`formatOpsDigestToplineSourceJumpLabel`)와 topline pill spacing 축소가 `source cluster` visible 폭을 줄이면서 title/deep-link 문맥은 유지하는지 검증
   - ops digest topline mobile responsive layout(`@media (max-width: 560px)`)이 기본 상태에서 `recent`를 1행 전체 폭, `meta/triage`를 2행 2열로 배치하고, `priority-first` 상태에서도 `meta/triage → recent` 흐름을 더 분명하게 드러내는지 검증
   - ops digest topline micro badge 규칙(`.ops-digest-topline-micro`)이 `source/freshness`를 한 단계 더 작은 hierarchy로 렌더하고, `source jump`는 최소 폭 아이콘 버튼으로 유지해 first-screen 정보 밀도를 높이는지 검증
+  - ops digest mobile first-pass spacing 규칙이 `ops-digest` 상단 흐름 블록(`topline/next/filter/inbox/timeline`)과 카드 그리드(`ops-digest-grid`) 사이 간격을 더 조여 first-screen triage 영역을 한 덩어리처럼 보이게 하는지 검증
