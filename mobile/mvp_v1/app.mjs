@@ -1058,6 +1058,29 @@ function buildOpsDigestToplineSourceClusterSummary(sourceLabel, contextLabel = "
   return `${String(sourceLabel || "시스템").trim() || "시스템"} · ${String(contextLabel || "최근 조작 출처").trim() || "최근 조작 출처"}`;
 }
 
+function formatOpsDigestToplineRecentChipLabel(message) {
+  const normalizedMessage = String(message || "최근 조작 대기 중").trim() || "최근 조작 대기 중";
+  let compactLabel = normalizedMessage;
+  const replacements = [
+    ["최근 조작 대기 중", "조작 대기"],
+    ["실시간 자동 시작", "자동 시작"],
+    ["로컬 저장", "저장"],
+    ["로컬 불러오기", "불러오기"],
+    ["런 초기화", "초기화"],
+    ["전투 집중", "집중"],
+    ["오프라인 정산 대기", "오프라인 대기"],
+    ["세이브 슬롯 변경", "슬롯 변경"],
+    ["저장 데이터가 없음", "비어 있음"],
+  ];
+  for (const [from, to] of replacements) {
+    compactLabel = compactLabel.replaceAll(from, to);
+  }
+  if (compactLabel.length > 12) {
+    return `${compactLabel.slice(0, 11)}…`;
+  }
+  return compactLabel;
+}
+
 function buildOpsDigestToplineRecentSummary(recentAction, sourceLabel, updatedLabel = "") {
   const parts = [
     String(recentAction || "최근 조작 대기 중").trim() || "최근 조작 대기 중",
@@ -2396,6 +2419,7 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
   dom.opsDigestPanel.dataset.toplineRecentClusterTone = tone;
   dom.opsDigestPanel.dataset.recentActionUpdatedAt = String(updatedAt);
   if (dom.opsDigestRecentAction) {
+    const recentVisibleLabel = formatOpsDigestToplineRecentChipLabel(normalizedMessage);
     const recentIcon =
       normalizedSource === "system"
         ? "•"
@@ -2404,11 +2428,11 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
           : normalizedSource.includes("battle")
             ? "✦"
             : normalizedSource.includes("breakthrough")
-              ? "▲"
+            ? "▲"
               : normalizedSource.includes("auto") || normalizedSource.includes("Realtime")
                 ? "↺"
                 : "•";
-    setOpsDigestFilterChipContent(dom.opsDigestRecentAction, recentIcon, normalizedMessage);
+    setOpsDigestFilterChipContent(dom.opsDigestRecentAction, recentIcon, recentVisibleLabel);
     dom.opsDigestRecentAction.title = buildOpsDigestToplineRecentTitle(
       formatOpsDigestInboxSourceLabel(normalizedSource),
       normalizedMessage,
