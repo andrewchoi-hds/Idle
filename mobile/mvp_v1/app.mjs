@@ -1045,6 +1045,87 @@ function syncOpsDigestCardBadge(node, label, tone = "info") {
   applyRiskTone(node, tone);
 }
 
+function formatOpsDigestCardValueCompact(kind, summary) {
+  const normalizedKind = String(kind || "").trim();
+  const normalizedSummary = String(summary || "").trim();
+  if (!normalizedSummary) {
+    return "-";
+  }
+  const segments = normalizedSummary
+    .split("·")
+    .map((segment) => segment.trim())
+    .filter(Boolean);
+  const mapSegments = (sourceSegments, replacements = []) =>
+    sourceSegments.map((segment) => {
+      let value = segment;
+      for (const [from, to] of replacements) {
+        value = value.replaceAll(from, to);
+      }
+      return value.trim();
+    });
+
+  switch (normalizedKind) {
+    case "focus":
+      return mapSegments(segments.slice(0, 3), [
+        ["전투 집중", "집중"],
+        ["전투 효과음", "효과음"],
+        ["전투 진동", "진동"],
+      ]).join(" · ");
+    case "settings":
+      return mapSegments(segments.slice(0, 4)).join(" · ");
+    case "stage":
+      return mapSegments(
+        segments.filter((segment) => segment !== "-").slice(0, 3),
+      ).join(" · ");
+    case "battle":
+      return mapSegments(
+        [segments[0], segments[2], segments[4], segments[6]].filter(Boolean),
+        [
+          ["수련자 HP ", "수련자 "],
+          ["적수 HP ", "적수 "],
+        ],
+      ).join(" · ");
+    case "resources":
+      return mapSegments(segments.slice(0, 4), [
+        ["환생정수", "정수"],
+        ["환생 ", "환생 "],
+        ["회", ""],
+      ]).join(" · ");
+    case "actions":
+      return mapSegments(segments.slice(0, 4), [
+        ["회", ""],
+      ]).join(" · ");
+    case "breakthrough":
+      return mapSegments(
+        [segments[0], segments[1], segments[4], segments[5]].filter(Boolean),
+        [
+          ["재고 영약", "영약"],
+          ["확률 성공", "성공"],
+        ],
+      ).join(" · ");
+    case "save": {
+      const compactFirst = mapSegments(segments.slice(0, 1), [["번", ""]]);
+      const slotSummary = String(segments[1] || "")
+        .replaceAll("슬롯 ", "슬롯")
+        .replaceAll("대상 슬롯 ", "대상 ")
+        .replaceAll(":", "")
+        .trim();
+      return [...compactFirst, slotSummary].filter(Boolean).join(" · ");
+    }
+    default:
+      return normalizedSummary;
+  }
+}
+
+function syncOpsDigestCardValue(node, summary, kind) {
+  if (!node) {
+    return;
+  }
+  const normalizedSummary = String(summary || "").trim() || "-";
+  node.textContent = formatOpsDigestCardValueCompact(kind, normalizedSummary);
+  node.title = normalizedSummary;
+}
+
 function formatOpsDigestTriageActionLabel(label, disabled) {
   if (disabled) {
     return "다음 대기";
@@ -3995,30 +4076,18 @@ function syncOpsDigestPanel() {
   dom.opsDigestPanel.dataset.actionOverview = actionOverview;
   dom.opsDigestPanel.dataset.breakthroughOverview = breakthroughOverview;
   dom.opsDigestPanel.dataset.saveOverview = saveOverview;
-  if (dom.opsDigestFocus) {
-    dom.opsDigestFocus.textContent = focusOverview;
-  }
-  if (dom.opsDigestSettings) {
-    dom.opsDigestSettings.textContent = settingsOverview;
-  }
-  if (dom.opsDigestStage) {
-    dom.opsDigestStage.textContent = stageOverview;
-  }
-  if (dom.opsDigestBattle) {
-    dom.opsDigestBattle.textContent = battleOverview;
-  }
-  if (dom.opsDigestResources) {
-    dom.opsDigestResources.textContent = resourceOverview;
-  }
-  if (dom.opsDigestActions) {
-    dom.opsDigestActions.textContent = actionOverview;
-  }
-  if (dom.opsDigestBreakthrough) {
-    dom.opsDigestBreakthrough.textContent = breakthroughOverview;
-  }
-  if (dom.opsDigestSave) {
-    dom.opsDigestSave.textContent = saveOverview;
-  }
+  syncOpsDigestCardValue(dom.opsDigestFocus, focusOverview, "focus");
+  syncOpsDigestCardValue(dom.opsDigestSettings, settingsOverview, "settings");
+  syncOpsDigestCardValue(dom.opsDigestStage, stageOverview, "stage");
+  syncOpsDigestCardValue(dom.opsDigestBattle, battleOverview, "battle");
+  syncOpsDigestCardValue(dom.opsDigestResources, resourceOverview, "resources");
+  syncOpsDigestCardValue(dom.opsDigestActions, actionOverview, "actions");
+  syncOpsDigestCardValue(
+    dom.opsDigestBreakthrough,
+    breakthroughOverview,
+    "breakthrough",
+  );
+  syncOpsDigestCardValue(dom.opsDigestSave, saveOverview, "save");
   syncOpsDigestCardBadge(
     dom.opsDigestFocusBadge,
     dom.focusControlsPanel?.dataset.battleFocus === "true" ? "ON" : "OFF",

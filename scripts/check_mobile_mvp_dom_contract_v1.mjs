@@ -11678,7 +11678,13 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.opsDigestFocus.textContent = focusOverview;",
+    "function formatOpsDigestCardValueCompact(kind, summary) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function syncOpsDigestCardValue(node, summary, kind) {",
     "app.mjs",
     failures,
   );
@@ -12212,19 +12218,55 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.opsDigestSettings.textContent = settingsOverview;",
+    "syncOpsDigestCardValue(dom.opsDigestFocus, focusOverview, \"focus\");",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.stageOverview = stageOverview;",
+    "syncOpsDigestCardValue(dom.opsDigestSettings, settingsOverview, \"settings\");",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestStage.textContent = stageOverview;",
+    "syncOpsDigestCardValue(dom.opsDigestStage, stageOverview, \"stage\");",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncOpsDigestCardValue(dom.opsDigestBattle, battleOverview, \"battle\");",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncOpsDigestCardValue(dom.opsDigestResources, resourceOverview, \"resources\");",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncOpsDigestCardValue(dom.opsDigestActions, actionOverview, \"actions\");",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncOpsDigestCardValue(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "\"breakthrough\",",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncOpsDigestCardValue(dom.opsDigestSave, saveOverview, \"save\");",
     "app.mjs",
     failures,
   );
