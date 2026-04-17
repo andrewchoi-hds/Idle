@@ -2138,6 +2138,10 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
     dom.opsDigestToplineRecentCluster.dataset.recentDisabled = String(
       recentDescriptor.disabled === true,
     );
+    dom.opsDigestToplineRecentCluster.setAttribute(
+      "aria-disabled",
+      String(recentDescriptor.disabled === true),
+    );
   }
   if (dom.opsDigestInboxRecent) {
     dom.opsDigestInboxRecent.textContent = normalizedMessage;
@@ -16179,6 +16183,22 @@ function bindEvents() {
     executeOpsDigestRecentAction();
   });
   dom.opsDigestToplineRecentCluster?.addEventListener("click", () => {
+    if (dom.opsDigestToplineRecentCluster.dataset.recentDisabled === "true") {
+      return;
+    }
+    executeOpsDigestRecentAction();
+  });
+  dom.opsDigestToplineRecentCluster?.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+    if (
+      event.target instanceof Element &&
+      event.target.closest(".ops-digest-status, .ops-digest-topline-source-cluster")
+    ) {
+      return;
+    }
+    event.preventDefault();
     if (dom.opsDigestToplineRecentCluster.dataset.recentDisabled === "true") {
       return;
     }

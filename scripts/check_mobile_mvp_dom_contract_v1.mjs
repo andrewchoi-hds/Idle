@@ -1853,6 +1853,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'role="button"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'tabindex="0"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="opsDigestToplineTriageCluster"',
     "index.html",
     failures,
@@ -11324,6 +11336,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.opsDigestToplineRecentCluster?.addEventListener("keydown", (event) => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "executeOpsDigestRecentAction();",
     "app.mjs",
     failures,
@@ -11481,6 +11499,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestToplineRecentCluster.dataset.recentDisabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestToplineRecentCluster.setAttribute(',
     "app.mjs",
     failures,
   );
@@ -13958,6 +13982,7 @@ async function main() {
   assertIncludes(css, ".ops-digest-topline.priority-first", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-recent-cluster", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-recent-cluster.tone-success", "app.css", failures);
+  assertIncludes(css, ".ops-digest-topline-recent-cluster[role=\"button\"]:focus-visible", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-triage-cluster", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-source-cluster", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-source-cluster.tone-success", "app.css", failures);

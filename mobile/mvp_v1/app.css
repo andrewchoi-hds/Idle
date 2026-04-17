@@ -172,6 +172,11 @@ h2 {
   cursor: default;
 }
 
+.ops-digest-topline-recent-cluster[role="button"]:focus-visible {
+  outline: 2px solid rgba(243, 189, 77, 0.9);
+  outline-offset: 2px;
+}
+
 .ops-digest-topline-recent-cluster.tone-info {
   border-color: #35514a;
   background: rgba(11, 22, 20, 0.72);

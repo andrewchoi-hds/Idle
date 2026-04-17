@@ -4611,3 +4611,11 @@
 
 ## 1081) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(topline meta cluster re-entry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1082) 다음 순차 작업
+1. [완료] ops digest topline의 `recent cluster` wrapper에 `role/button`, `tabindex`, `aria-disabled`를 붙여 `meta/triage`와 같은 keyboard/focus 재진입 모델로 정합화.
+2. [완료] `opsDigestToplineRecentCluster`에 `Enter/Space` keydown 재진입을 추가하고, recent text/source cluster 하위 interactive child와 충돌하지 않도록 key target guard를 정리.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 topline recent cluster keyboard re-entry 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1083) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(topline recent cluster keyboard re-entry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
