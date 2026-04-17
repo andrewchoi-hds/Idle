@@ -14158,6 +14158,9 @@ async function main() {
   assertIncludes(css, ".ops-digest-topline-meta", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline .ops-digest-badge", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline .ops-digest-badge[role=\"button\"]", "app.css", failures);
+  assertIncludes(css, "@media (max-width: 560px)", "app.css", failures);
+  assertIncludes(css, "grid-template-columns: repeat(2, minmax(0, 1fr));", "app.css", failures);
+  assertIncludes(css, "grid-column: 1 / -1;", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage.tone-success", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage.tone-warn", "app.css", failures);

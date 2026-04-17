@@ -302,6 +302,45 @@ h2 {
   gap: 4px;
 }
 
+@media (max-width: 560px) {
+  .ops-digest-topline {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 3px;
+  }
+
+  .ops-digest-topline-recent-cluster {
+    grid-column: 1 / -1;
+    justify-content: space-between;
+  }
+
+  .ops-digest-topline-meta,
+  .ops-digest-topline-triage-cluster {
+    min-width: 0;
+  }
+
+  .ops-digest-topline-source-cluster,
+  .ops-digest-topline-meta,
+  .ops-digest-triage {
+    width: 100%;
+  }
+
+  .ops-digest-topline-source-cluster,
+  .ops-digest-topline-meta {
+    justify-content: space-between;
+  }
+
+  .ops-digest-triage {
+    justify-content: flex-start;
+  }
+
+  .ops-digest-topline .ops-digest-triage-chip {
+    min-height: 26px;
+    padding: 4px 6px;
+  }
+}
+
 .ops-digest-next-row {
   display: grid;
   gap: 8px;
