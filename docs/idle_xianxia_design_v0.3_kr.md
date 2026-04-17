@@ -4723,3 +4723,11 @@
 
 ## 1109) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(card value compact helper 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1110) 다음 순차 작업
+1. [완료] ops digest `topline`과 카드 그리드 사이에 `opsDigestDivider`를 추가해 triage 영역과 card 영역의 시선 경계를 더 분명하게 만들고, `toplineTone`을 재사용한 tone-aware divider로 정합화.
+2. [완료] `applyOpsDigestToplineState()`가 divider contract(`data-divider-tone`, `data-divider-label`)를 함께 기록하고, render 경로에서 `opsDigestDivider`가 `상세 상태/우선 후 상세` label과 tone을 반영하도록 연결.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 ops digest tone-aware divider 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1111) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(ops digest tone-aware divider 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
