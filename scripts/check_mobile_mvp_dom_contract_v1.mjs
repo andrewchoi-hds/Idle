@@ -11780,43 +11780,43 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplineSummary =",
+    "function applyOpsDigestToplineState(panel, toplineState) {",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplineTone =",
+    "applyOpsDigestToplineState(dom.opsDigestPanel, toplineState);",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplineOrder = toplineOrder;",
+    "panel.dataset.toplineSummary = toplineState.toplineSummary;",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    'dom.opsDigestPanel.dataset.toplinePriorityFirst = String(priorityFirst);',
+    "panel.dataset.toplineTone = toplineState.toplineTone;",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplineUpdatedAt = String(latestToplineUpdatedAt);",
+    "panel.dataset.toplineOrder = toplineState.toplineOrder;",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplineUpdatedLabel = toplineUpdatedLabel;",
+    'panel.dataset.toplinePriorityFirst = String(toplineState.priorityFirst);',
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplineFreshnessTone = toplineFreshnessTone;",
+    "panel.dataset.toplineUpdatedAt = String(toplineState.latestToplineUpdatedAt);",
     "app.mjs",
     failures,
   );
@@ -11834,67 +11834,67 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplineRecentClusterTone = toplineRecentClusterTone;",
+    "panel.dataset.toplineRecentClusterTone = toplineState.toplineRecentClusterTone;",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplineRecentSummary = toplineRecentClusterSummary;",
+    "panel.dataset.toplineRecentSummary = toplineState.toplineRecentClusterSummary;",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplineSourceClusterTone = toplineSourceClusterTone;",
+    "panel.dataset.toplineSourceClusterTone = toplineState.toplineSourceClusterTone;",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplineSourceClusterSummary = toplineSourceClusterSummary;",
+    "panel.dataset.toplineSourceClusterSummary = toplineState.toplineSourceClusterSummary;",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplineMetaSummary =",
+    "panel.dataset.toplineMetaSummary = toplineState.toplineMetaSummary;",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplineMetaTone =",
+    "panel.dataset.toplineMetaTone = toplineState.toplineMetaTone;",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplinePriorityKind = toplinePriorityKind;",
+    "panel.dataset.toplinePriorityKind = toplineState.toplinePriorityKind;",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplinePriorityLabel = toplinePriorityLabel;",
+    "panel.dataset.toplinePriorityLabel = toplineState.toplinePriorityLabel;",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplinePriorityTone = toplinePriorityTone;",
+    "panel.dataset.toplinePriorityTone = toplineState.toplinePriorityTone;",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplinePriorityDisabled = String(toplinePriorityDisabled);",
+    "panel.dataset.toplinePriorityDisabled = String(toplineState.toplinePriorityDisabled);",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplinePrioritySummary = toplinePrioritySummary;",
+    "panel.dataset.toplinePrioritySummary = toplineState.toplinePrioritySummary;",
     "app.mjs",
     failures,
   );
@@ -12014,13 +12014,13 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplineMetaDisabled = String(toplinePriorityDisabled);",
+    "panel.dataset.toplineMetaDisabled = String(toplineState.toplinePriorityDisabled);",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplineMetaActionLabel = toplinePriorityLabel;",
+    "panel.dataset.toplineMetaActionLabel = toplineState.toplinePriorityLabel;",
     "app.mjs",
     failures,
   );
@@ -12038,31 +12038,31 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplineTriageSummary = toplineTriageClusterSummary;",
+    "panel.dataset.toplineTriageSummary = toplineState.toplineTriageClusterSummary;",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplineTriageTone = toplineTriageClusterTone;",
+    "panel.dataset.toplineTriageTone = toplineState.toplineTriageClusterTone;",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplineTriageKind = toplineTriageClusterKind;",
+    "panel.dataset.toplineTriageKind = toplineState.toplineTriageClusterKind;",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplineTriageDisabled = String(",
+    "panel.dataset.toplineTriageDisabled = String(toplineState.toplineTriageClusterDisabled);",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplineTriageActionLabel = toplineTriageClusterActionLabel;",
+    "panel.dataset.toplineTriageActionLabel = toplineState.toplineTriageClusterActionLabel;",
     "app.mjs",
     failures,
   );
@@ -12092,7 +12092,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplineOrder = toplineOrder;",
+    "panel.dataset.toplineOrder = toplineState.toplineOrder;",
     "app.mjs",
     failures,
   );
