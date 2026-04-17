@@ -1300,6 +1300,127 @@ function resolveOpsDigestToplineTriageClusterTone(
   return "info";
 }
 
+function buildOpsDigestToplineState(input) {
+  const latestToplineUpdatedAt = Math.max(
+    0,
+    Math.floor(Number(input.latestToplineUpdatedAt || 0)),
+  );
+  const toplineUpdatedLabel =
+    latestToplineUpdatedAt > 0
+      ? formatOpsDigestInboxUpdatedLabel(latestToplineUpdatedAt)
+      : "갱신 대기";
+  const toplineFreshnessTone =
+    latestToplineUpdatedAt > 0
+      ? resolveOpsDigestFreshnessTone(latestToplineUpdatedAt)
+      : "info";
+  const toplineSourceClusterTone = resolveOpsDigestToplineSourceClusterTone(
+    input.toplineSourceTone || "info",
+    toplineFreshnessTone,
+  );
+  const toplineSourceClusterSummary =
+    `${input.toplineSourceLabel || "시스템"} · ${toplineUpdatedLabel}`;
+  const toplineRecentClusterTone = resolveOpsDigestToplineRecentClusterTone(
+    input.recentActionTone || "info",
+    toplineSourceClusterTone,
+    toplineFreshnessTone,
+  );
+  const toplineRecentClusterSummary =
+    `${input.recentAction || "최근 조작 대기 중"} · ${input.toplineSourceLabel || "시스템"} · ${toplineUpdatedLabel}`;
+  const toplineTriageClusterTone = resolveOpsDigestToplineTriageClusterTone(
+    input.warningTone,
+    input.warningDisabled,
+    input.nextActionTone,
+    input.nextActionDisabled,
+    input.filterTone,
+    input.filterDisabled,
+  );
+  const toplineTriageClusterSummary =
+    input.triageSummary ||
+    `${input.warningLabel} · ${input.triageActionLabel} · ${input.filterLabel}`;
+  let toplineTriageClusterKind = "none";
+  let toplineTriageClusterDisabled = true;
+  let toplineTriageClusterActionLabel = "triage 대기";
+  if (!input.warningDisabled) {
+    toplineTriageClusterKind = "warning";
+    toplineTriageClusterDisabled = false;
+    toplineTriageClusterActionLabel = input.warningActionLabel || "주의 원인 확인";
+  } else if (!input.nextActionDisabled) {
+    toplineTriageClusterKind = "action";
+    toplineTriageClusterDisabled = false;
+    toplineTriageClusterActionLabel = input.nextActionLabel || "다음 행동 실행";
+  } else if (!input.filterDisabled) {
+    toplineTriageClusterKind = "filter";
+    toplineTriageClusterDisabled = false;
+    toplineTriageClusterActionLabel = "필터 해제";
+  }
+  let toplinePriorityKind = "none";
+  let toplinePriorityLabel = "우선 대기";
+  let toplinePriorityTone = "info";
+  let toplinePriorityDisabled = true;
+  let toplinePrioritySummary = "우선 항목 없음";
+  if (!input.warningDisabled) {
+    toplinePriorityKind = "warning";
+    toplinePriorityLabel = "우선 주의";
+    toplinePriorityTone = input.warningTone;
+    toplinePriorityDisabled = false;
+    toplinePrioritySummary = input.warningSummary;
+  } else if (!input.nextActionDisabled) {
+    toplinePriorityKind = "action";
+    toplinePriorityLabel =
+      `우선 ${formatOpsDigestTimelinePreviewChipLabel(input.nextActionLabel) || input.nextActionLabel}`;
+    toplinePriorityTone = input.nextActionTone;
+    toplinePriorityDisabled = false;
+    toplinePrioritySummary = input.nextActionSummary;
+  } else if (!input.filterDisabled) {
+    toplinePriorityKind = "filter";
+    toplinePriorityLabel = "우선 필터";
+    toplinePriorityTone = input.filterTone;
+    toplinePriorityDisabled = false;
+    toplinePrioritySummary = input.filterSummary;
+  }
+  const toplineSummary =
+    `${input.recentAction || "최근 조작 대기 중"} · ${toplinePriorityLabel} · ${input.triageSummary} · ${toplineUpdatedLabel}`;
+  const toplineTone =
+    toplinePriorityKind !== "none"
+      ? toplinePriorityTone
+      : input.warningTone === "error" || input.warningTone === "warn"
+        ? input.warningTone
+        : String(input.recentActionTone || "info");
+  const priorityFirst =
+    toplinePriorityKind === "warning" ||
+    toplinePriorityKind === "action" ||
+    toplineTriageClusterTone === "error" ||
+    toplineTriageClusterTone === "warn" ||
+    toplineFreshnessTone === "warn" ||
+    (!input.filterDisabled && input.filterTone === "warn");
+  return {
+    latestToplineUpdatedAt,
+    toplineUpdatedLabel,
+    toplineFreshnessTone,
+    toplineSourceClusterTone,
+    toplineSourceClusterSummary,
+    toplineRecentClusterTone,
+    toplineRecentClusterSummary,
+    toplineTriageClusterTone,
+    toplineTriageClusterSummary,
+    toplineTriageClusterKind,
+    toplineTriageClusterDisabled,
+    toplineTriageClusterActionLabel,
+    toplinePriorityKind,
+    toplinePriorityLabel,
+    toplinePriorityTone,
+    toplinePriorityDisabled,
+    toplinePrioritySummary,
+    toplineSummary,
+    toplineTone,
+    priorityFirst,
+    toplineOrder: priorityFirst ? "meta,triage,recent-cluster" : "recent-cluster,meta,triage",
+    toplineMetaSummary: `${toplinePriorityLabel} · ${toplineUpdatedLabel}`,
+    toplineMetaTone:
+      toplinePriorityKind !== "none" ? toplinePriorityTone : toplineFreshnessTone,
+  };
+}
+
 function syncOpsDigestToplineOrder(priorityFirst) {
   if (!dom.opsDigestTopline) {
     return;
@@ -2430,102 +2551,60 @@ function syncOpsDigestTriageStrip() {
   dom.opsDigestPanel.dataset.triageFilterDisabled = String(filterDisabled);
   dom.opsDigestPanel.dataset.triageSummary =
     `${warningLabel} · ${triageActionLabel} · ${filterLabel}`;
-  const latestToplineUpdatedAt = Math.max(
-    Number(dom.opsDigestPanel.dataset.recentActionUpdatedAt || 0),
-    Number(dom.opsDigestPanel.dataset.inboxLastUpdatedAt || 0),
-  );
-  const toplineUpdatedLabel =
-    latestToplineUpdatedAt > 0
-      ? formatOpsDigestInboxUpdatedLabel(latestToplineUpdatedAt)
-      : "갱신 대기";
-  const toplineFreshnessTone =
-    latestToplineUpdatedAt > 0
-      ? resolveOpsDigestFreshnessTone(latestToplineUpdatedAt)
-      : "info";
-  const toplineSourceClusterTone = resolveOpsDigestToplineSourceClusterTone(
-    dom.opsDigestPanel.dataset.toplineSourceTone || "info",
-    toplineFreshnessTone,
-  );
-  const toplineSourceClusterSummary =
-    `${dom.opsDigestPanel.dataset.toplineSourceLabel || "시스템"} · ${toplineUpdatedLabel}`;
-  const toplineRecentClusterTone = resolveOpsDigestToplineRecentClusterTone(
-    dom.opsDigestPanel.dataset.recentActionTone || "info",
-    toplineSourceClusterTone,
-    toplineFreshnessTone,
-  );
-  const toplineRecentClusterSummary =
-    `${dom.opsDigestPanel.dataset.recentAction || "최근 조작 대기 중"} · ${dom.opsDigestPanel.dataset.toplineSourceLabel || "시스템"} · ${toplineUpdatedLabel}`;
-  const toplineTriageClusterTone = resolveOpsDigestToplineTriageClusterTone(
+  const toplineState = buildOpsDigestToplineState({
+    latestToplineUpdatedAt: Math.max(
+      Number(dom.opsDigestPanel.dataset.recentActionUpdatedAt || 0),
+      Number(dom.opsDigestPanel.dataset.inboxLastUpdatedAt || 0),
+    ),
     warningTone,
     warningDisabled,
+    warningSummary,
+    warningLabel,
+    warningActionLabel:
+      dom.opsDigestPanel.dataset.warningActionLabel || "주의 원인 확인",
     nextActionTone,
     nextActionDisabled,
+    nextActionLabel,
+    nextActionSummary,
+    triageActionLabel,
     filterTone,
     filterDisabled,
-  );
-  const toplineTriageClusterSummary =
-    dom.opsDigestPanel.dataset.triageSummary ||
-    `${warningLabel} · ${triageActionLabel} · ${filterLabel}`;
-  let toplineTriageClusterKind = "none";
-  let toplineTriageClusterDisabled = true;
-  let toplineTriageClusterActionLabel = "triage 대기";
-  if (!warningDisabled) {
-    toplineTriageClusterKind = "warning";
-    toplineTriageClusterDisabled = false;
-    toplineTriageClusterActionLabel =
-      dom.opsDigestPanel.dataset.warningActionLabel || "주의 원인 확인";
-  } else if (!nextActionDisabled) {
-    toplineTriageClusterKind = "action";
-    toplineTriageClusterDisabled = false;
-    toplineTriageClusterActionLabel = nextActionLabel || "다음 행동 실행";
-  } else if (!filterDisabled) {
-    toplineTriageClusterKind = "filter";
-    toplineTriageClusterDisabled = false;
-    toplineTriageClusterActionLabel = "필터 해제";
-  }
-  let toplinePriorityKind = "none";
-  let toplinePriorityLabel = "우선 대기";
-  let toplinePriorityTone = "info";
-  let toplinePriorityDisabled = true;
-  let toplinePrioritySummary = "우선 항목 없음";
-  if (!warningDisabled) {
-    toplinePriorityKind = "warning";
-    toplinePriorityLabel = "우선 주의";
-    toplinePriorityTone = warningTone;
-    toplinePriorityDisabled = false;
-    toplinePrioritySummary = warningSummary;
-  } else if (!nextActionDisabled) {
-    toplinePriorityKind = "action";
-    toplinePriorityLabel =
-      `우선 ${formatOpsDigestTimelinePreviewChipLabel(nextActionLabel) || nextActionLabel}`;
-    toplinePriorityTone = nextActionTone;
-    toplinePriorityDisabled = false;
-    toplinePrioritySummary = nextActionSummary;
-  } else if (!filterDisabled) {
-    toplinePriorityKind = "filter";
-    toplinePriorityLabel = "우선 필터";
-    toplinePriorityTone = filterTone;
-    toplinePriorityDisabled = false;
-    toplinePrioritySummary = filterSummary;
-  }
-  dom.opsDigestPanel.dataset.toplineSummary =
-    `${dom.opsDigestPanel.dataset.recentAction || "최근 조작 대기 중"} · ${toplinePriorityLabel} · ${dom.opsDigestPanel.dataset.triageSummary} · ${toplineUpdatedLabel}`;
-  dom.opsDigestPanel.dataset.toplineTone =
-    toplinePriorityKind !== "none"
-      ? toplinePriorityTone
-      : warningTone === "error" || warningTone === "warn"
-        ? warningTone
-        : String(dom.opsDigestPanel.dataset.recentActionTone || "info");
-  const priorityFirst =
-    toplinePriorityKind === "warning" ||
-    toplinePriorityKind === "action" ||
-    toplineTriageClusterTone === "error" ||
-    toplineTriageClusterTone === "warn" ||
-    toplineFreshnessTone === "warn" ||
-    (!filterDisabled && filterTone === "warn");
-  dom.opsDigestPanel.dataset.toplineOrder = priorityFirst
-    ? "meta,triage,recent-cluster"
-    : "recent-cluster,meta,triage";
+    filterLabel,
+    filterSummary,
+    triageSummary: dom.opsDigestPanel.dataset.triageSummary,
+    recentAction: dom.opsDigestPanel.dataset.recentAction || "최근 조작 대기 중",
+    recentActionTone: dom.opsDigestPanel.dataset.recentActionTone || "info",
+    toplineSourceLabel: dom.opsDigestPanel.dataset.toplineSourceLabel || "시스템",
+    toplineSourceTone: dom.opsDigestPanel.dataset.toplineSourceTone || "info",
+  });
+  const {
+    latestToplineUpdatedAt,
+    toplineUpdatedLabel,
+    toplineFreshnessTone,
+    toplineSourceClusterTone,
+    toplineSourceClusterSummary,
+    toplineRecentClusterTone,
+    toplineRecentClusterSummary,
+    toplineTriageClusterTone,
+    toplineTriageClusterSummary,
+    toplineTriageClusterKind,
+    toplineTriageClusterDisabled,
+    toplineTriageClusterActionLabel,
+    toplinePriorityKind,
+    toplinePriorityLabel,
+    toplinePriorityTone,
+    toplinePriorityDisabled,
+    toplinePrioritySummary,
+    toplineSummary,
+    toplineTone,
+    priorityFirst,
+    toplineOrder,
+    toplineMetaSummary,
+    toplineMetaTone,
+  } = toplineState;
+  dom.opsDigestPanel.dataset.toplineSummary = toplineSummary;
+  dom.opsDigestPanel.dataset.toplineTone = toplineTone;
+  dom.opsDigestPanel.dataset.toplineOrder = toplineOrder;
   dom.opsDigestPanel.dataset.toplinePriorityFirst = String(priorityFirst);
   dom.opsDigestPanel.dataset.toplineUpdatedAt = String(latestToplineUpdatedAt);
   dom.opsDigestPanel.dataset.toplineUpdatedLabel = toplineUpdatedLabel;
@@ -2541,10 +2620,8 @@ function syncOpsDigestTriageStrip() {
   dom.opsDigestPanel.dataset.toplineTriageActionLabel = toplineTriageClusterActionLabel;
   dom.opsDigestPanel.dataset.toplineSourceClusterTone = toplineSourceClusterTone;
   dom.opsDigestPanel.dataset.toplineSourceClusterSummary = toplineSourceClusterSummary;
-  dom.opsDigestPanel.dataset.toplineMetaSummary =
-    `${toplinePriorityLabel} · ${toplineUpdatedLabel}`;
-  dom.opsDigestPanel.dataset.toplineMetaTone =
-    toplinePriorityKind !== "none" ? toplinePriorityTone : toplineFreshnessTone;
+  dom.opsDigestPanel.dataset.toplineMetaSummary = toplineMetaSummary;
+  dom.opsDigestPanel.dataset.toplineMetaTone = toplineMetaTone;
   dom.opsDigestPanel.dataset.toplineMetaDisabled = String(toplinePriorityDisabled);
   dom.opsDigestPanel.dataset.toplineMetaActionLabel = toplinePriorityLabel;
   dom.opsDigestPanel.dataset.toplinePriorityKind = toplinePriorityKind;

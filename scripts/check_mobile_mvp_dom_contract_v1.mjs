@@ -11246,6 +11246,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function buildOpsDigestToplineState(input) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function syncOpsDigestToplineOrder(priorityFirst) {",
     "app.mjs",
     failures,
@@ -11624,6 +11630,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "const toplineState = buildOpsDigestToplineState({",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "syncOpsDigestCardBadge(",
     "app.mjs",
     failures,
@@ -11768,7 +11780,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    'dom.opsDigestPanel.dataset.toplineOrder = priorityFirst',
+    "dom.opsDigestPanel.dataset.toplineOrder = toplineOrder;",
     "app.mjs",
     failures,
   );
@@ -12062,7 +12074,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.toplineOrder = priorityFirst",
+    "dom.opsDigestPanel.dataset.toplineOrder = toplineOrder;",
     "app.mjs",
     failures,
   );
