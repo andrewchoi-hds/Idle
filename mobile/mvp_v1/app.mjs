@@ -126,6 +126,7 @@ const dom = {
   btnOpsDigestToplinePriority: document.getElementById("btnOpsDigestToplinePriority"),
   opsDigestToplineFreshness: document.getElementById("opsDigestToplineFreshness"),
   opsDigestTriageStrip: document.getElementById("opsDigestTriageStrip"),
+  opsDigestDivider: document.getElementById("opsDigestDivider"),
   btnOpsDigestTriageWarning: document.getElementById("btnOpsDigestTriageWarning"),
   btnOpsDigestTriageAction: document.getElementById("btnOpsDigestTriageAction"),
   btnOpsDigestTriageFilter: document.getElementById("btnOpsDigestTriageFilter"),
@@ -1676,6 +1677,8 @@ function applyOpsDigestToplineState(panel, toplineState) {
   panel.dataset.toplinePriorityTone = toplineState.toplinePriorityTone;
   panel.dataset.toplinePriorityDisabled = String(toplineState.toplinePriorityDisabled);
   panel.dataset.toplinePrioritySummary = toplineState.toplinePrioritySummary;
+  panel.dataset.dividerTone = toplineState.toplineTone;
+  panel.dataset.dividerLabel = toplineState.priorityFirst ? "우선 후 상세" : "상세 상태";
 }
 
 function syncOpsDigestToplineOrder(priorityFirst) {
@@ -2957,6 +2960,14 @@ function syncOpsDigestTriageStrip() {
       title: `${toplineTriageClusterActionLabel} · ${toplineTriageClusterSummary}`,
       tone: dom.opsDigestPanel.dataset.toplineTriageTone || "info",
     });
+  }
+  if (dom.opsDigestDivider) {
+    dom.opsDigestDivider.textContent =
+      dom.opsDigestPanel.dataset.dividerLabel || "상세 상태";
+    applyRiskTone(
+      dom.opsDigestDivider,
+      dom.opsDigestPanel.dataset.dividerTone || "info",
+    );
   }
   syncOpsDigestToplineOrder(priorityFirst);
 }
