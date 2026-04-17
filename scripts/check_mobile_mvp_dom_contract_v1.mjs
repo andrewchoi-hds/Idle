@@ -42,6 +42,7 @@ const REQUIRED_HTML_IDS = [
   "opsDigestToplineRecentCluster",
   "opsDigestRecentAction",
   "opsDigestTopline",
+  "opsDigestToplineTriageCluster",
   "opsDigestToplineSourceCluster",
   "opsDigestToplineSource",
   "btnOpsDigestToplineSourceJump",
@@ -250,6 +251,7 @@ const REQUIRED_DOM_KEYS = [
   "opsDigestToplineRecentCluster",
   "opsDigestRecentAction",
   "opsDigestTopline",
+  "opsDigestToplineTriageCluster",
   "opsDigestToplineSourceCluster",
   "opsDigestToplineSource",
   "btnOpsDigestToplineSourceJump",
@@ -1851,6 +1853,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestToplineTriageCluster"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-recent-disabled="true"',
     "index.html",
     failures,
@@ -2205,7 +2213,7 @@ async function main() {
   );
   assertIncludes(
     html,
-    'data-topline-order="recent-cluster,meta,triage"',
+    'data-topline-order="recent-cluster,meta,triage-cluster"',
     "index.html",
     failures,
   );
@@ -2295,7 +2303,7 @@ async function main() {
   );
   assertIncludes(
     html,
-    'data-topline-order="recent-cluster,meta,triage"',
+    'data-topline-order="recent-cluster,meta,triage-cluster"',
     "index.html",
     failures,
   );
@@ -2338,6 +2346,24 @@ async function main() {
   assertIncludes(
     html,
     'data-topline-triage-tone="info"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-triage-kind="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-triage-disabled="true"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-topline-triage-action-label="triage 대기"',
     "index.html",
     failures,
   );
@@ -11154,6 +11180,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function executeOpsDigestToplineTriageCluster() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function executeOpsDigestRecentAction() {",
     "app.mjs",
     failures,
@@ -11184,13 +11216,13 @@ async function main() {
   );
   assertIncludes(
     app,
-    '? [dom.opsDigestToplineMeta, dom.opsDigestTriageStrip, dom.opsDigestToplineRecentCluster]',
+    "dom.opsDigestToplineTriageCluster,",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    ': [dom.opsDigestToplineRecentCluster, dom.opsDigestToplineMeta, dom.opsDigestTriageStrip];',
+    "dom.opsDigestTopline.replaceChildren(...orderedNodes.filter(Boolean));",
     "app.mjs",
     failures,
   );
@@ -11208,19 +11240,31 @@ async function main() {
   );
   assertIncludes(
     app,
-    'dom.btnOpsDigestTriageWarning?.addEventListener("click", () => {',
+    'dom.opsDigestToplineTriageCluster?.addEventListener("click", (event) => {',
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    'dom.btnOpsDigestTriageAction?.addEventListener("click", () => {',
+    'dom.opsDigestToplineTriageCluster?.addEventListener("keydown", (event) => {',
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    'dom.btnOpsDigestTriageFilter?.addEventListener("click", () => {',
+    'dom.btnOpsDigestTriageWarning?.addEventListener("click", (event) => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.btnOpsDigestTriageAction?.addEventListener("click", (event) => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.btnOpsDigestTriageFilter?.addEventListener("click", (event) => {',
     "app.mjs",
     failures,
   );
@@ -11862,6 +11906,24 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.opsDigestPanel.dataset.toplineTriageKind = toplineTriageClusterKind;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplineTriageDisabled = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.toplineTriageActionLabel = toplineTriageClusterActionLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestToplineRecentCluster.title =",
     "app.mjs",
     failures,
@@ -11875,6 +11937,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestTriageStrip.title =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestToplineTriageCluster.title =",
     "app.mjs",
     failures,
   );
@@ -13842,6 +13910,7 @@ async function main() {
   assertIncludes(css, ".ops-digest-topline.priority-first", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-recent-cluster", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-recent-cluster.tone-success", "app.css", failures);
+  assertIncludes(css, ".ops-digest-topline-triage-cluster", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-source-cluster", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-source-cluster.tone-success", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-meta", "app.css", failures);

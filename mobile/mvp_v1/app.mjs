@@ -118,6 +118,7 @@ const dom = {
   opsDigestRecentAction: document.getElementById("opsDigestRecentAction"),
   opsDigestTopline: document.getElementById("opsDigestTopline"),
   opsDigestToplineRecentCluster: document.getElementById("opsDigestToplineRecentCluster"),
+  opsDigestToplineTriageCluster: document.getElementById("opsDigestToplineTriageCluster"),
   opsDigestToplineSourceCluster: document.getElementById("opsDigestToplineSourceCluster"),
   opsDigestToplineSource: document.getElementById("opsDigestToplineSource"),
   btnOpsDigestToplineSourceJump: document.getElementById("btnOpsDigestToplineSourceJump"),
@@ -1078,6 +1079,32 @@ function executeOpsDigestToplinePriority() {
   }
 }
 
+function executeOpsDigestToplineTriageCluster() {
+  if (!dom.opsDigestPanel) {
+    return;
+  }
+  const disabled =
+    String(dom.opsDigestPanel.dataset.toplineTriageDisabled || "true") === "true";
+  if (disabled) {
+    return;
+  }
+  const kind = String(dom.opsDigestPanel.dataset.toplineTriageKind || "none").trim();
+  switch (kind) {
+    case "warning":
+      openOpsDigestWarningTarget();
+      return;
+    case "action":
+      executeOpsDigestNextAction();
+      return;
+    case "filter":
+      clearOpsDigestFilters();
+      return;
+    default:
+      executeOpsDigestToplinePriority();
+      return;
+  }
+}
+
 function executeOpsDigestRecentAction() {
   if (!dom.opsDigestPanel || !dom.opsDigestRecentAction) {
     return;
@@ -1268,8 +1295,16 @@ function syncOpsDigestToplineOrder(priorityFirst) {
   const normalizedPriorityFirst = priorityFirst === true;
   dom.opsDigestTopline.classList.toggle("priority-first", normalizedPriorityFirst);
   const orderedNodes = normalizedPriorityFirst
-    ? [dom.opsDigestToplineMeta, dom.opsDigestTriageStrip, dom.opsDigestToplineRecentCluster]
-    : [dom.opsDigestToplineRecentCluster, dom.opsDigestToplineMeta, dom.opsDigestTriageStrip];
+    ? [
+        dom.opsDigestToplineMeta,
+        dom.opsDigestToplineTriageCluster,
+        dom.opsDigestToplineRecentCluster,
+      ]
+    : [
+        dom.opsDigestToplineRecentCluster,
+        dom.opsDigestToplineMeta,
+        dom.opsDigestToplineTriageCluster,
+      ];
   dom.opsDigestTopline.replaceChildren(...orderedNodes.filter(Boolean));
 }
 
@@ -2396,6 +2431,23 @@ function syncOpsDigestTriageStrip() {
   const toplineTriageClusterSummary =
     dom.opsDigestPanel.dataset.triageSummary ||
     `${warningLabel} · ${triageActionLabel} · ${filterLabel}`;
+  let toplineTriageClusterKind = "none";
+  let toplineTriageClusterDisabled = true;
+  let toplineTriageClusterActionLabel = "triage 대기";
+  if (!warningDisabled) {
+    toplineTriageClusterKind = "warning";
+    toplineTriageClusterDisabled = false;
+    toplineTriageClusterActionLabel =
+      dom.opsDigestPanel.dataset.warningActionLabel || "주의 원인 확인";
+  } else if (!nextActionDisabled) {
+    toplineTriageClusterKind = "action";
+    toplineTriageClusterDisabled = false;
+    toplineTriageClusterActionLabel = nextActionLabel || "다음 행동 실행";
+  } else if (!filterDisabled) {
+    toplineTriageClusterKind = "filter";
+    toplineTriageClusterDisabled = false;
+    toplineTriageClusterActionLabel = "필터 해제";
+  }
   let toplinePriorityKind = "none";
   let toplinePriorityLabel = "우선 대기";
   let toplinePriorityTone = "info";
@@ -2447,6 +2499,11 @@ function syncOpsDigestTriageStrip() {
   dom.opsDigestPanel.dataset.toplineRecentSummary = toplineRecentClusterSummary;
   dom.opsDigestPanel.dataset.toplineTriageSummary = toplineTriageClusterSummary;
   dom.opsDigestPanel.dataset.toplineTriageTone = toplineTriageClusterTone;
+  dom.opsDigestPanel.dataset.toplineTriageKind = toplineTriageClusterKind;
+  dom.opsDigestPanel.dataset.toplineTriageDisabled = String(
+    toplineTriageClusterDisabled,
+  );
+  dom.opsDigestPanel.dataset.toplineTriageActionLabel = toplineTriageClusterActionLabel;
   dom.opsDigestPanel.dataset.toplineSourceClusterTone = toplineSourceClusterTone;
   dom.opsDigestPanel.dataset.toplineSourceClusterSummary = toplineSourceClusterSummary;
   dom.opsDigestPanel.dataset.toplineMetaSummary =
@@ -2535,6 +2592,17 @@ function syncOpsDigestTriageStrip() {
       dom.opsDigestTriageStrip,
       dom.opsDigestPanel.dataset.toplineTriageTone || "info",
     );
+  }
+  if (dom.opsDigestToplineTriageCluster) {
+    dom.opsDigestToplineTriageCluster.dataset.toplineTriageDisabled = String(
+      toplineTriageClusterDisabled,
+    );
+    dom.opsDigestToplineTriageCluster.setAttribute(
+      "aria-disabled",
+      String(toplineTriageClusterDisabled),
+    );
+    dom.opsDigestToplineTriageCluster.title =
+      `${toplineTriageClusterActionLabel} · ${toplineTriageClusterSummary}`;
   }
   syncOpsDigestToplineOrder(priorityFirst);
 }
@@ -16095,6 +16163,28 @@ function bindEvents() {
     }
     executeOpsDigestRecentAction();
   });
+  dom.opsDigestToplineTriageCluster?.addEventListener("click", (event) => {
+    if (event.target instanceof Element && event.target.closest(".ops-digest-triage-chip")) {
+      return;
+    }
+    if (dom.opsDigestToplineTriageCluster.dataset.toplineTriageDisabled === "true") {
+      return;
+    }
+    executeOpsDigestToplineTriageCluster();
+  });
+  dom.opsDigestToplineTriageCluster?.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+    if (event.target instanceof Element && event.target.closest(".ops-digest-triage-chip")) {
+      return;
+    }
+    event.preventDefault();
+    if (dom.opsDigestToplineTriageCluster.dataset.toplineTriageDisabled === "true") {
+      return;
+    }
+    executeOpsDigestToplineTriageCluster();
+  });
   dom.opsDigestToplineSource?.addEventListener("click", (event) => {
     event.stopPropagation();
     if (dom.opsDigestToplineSource.dataset.toplineSourceDisabled === "true") {
@@ -16289,19 +16379,22 @@ function bindEvents() {
   dom.btnOpsDigestAltAction?.addEventListener("click", () => {
     executeOpsDigestAltAction();
   });
-  dom.btnOpsDigestTriageWarning?.addEventListener("click", () => {
+  dom.btnOpsDigestTriageWarning?.addEventListener("click", (event) => {
+    event.stopPropagation();
     if (dom.btnOpsDigestTriageWarning.disabled) {
       return;
     }
     openOpsDigestWarningTarget();
   });
-  dom.btnOpsDigestTriageAction?.addEventListener("click", () => {
+  dom.btnOpsDigestTriageAction?.addEventListener("click", (event) => {
+    event.stopPropagation();
     if (dom.btnOpsDigestTriageAction.disabled) {
       return;
     }
     executeOpsDigestNextAction();
   });
-  dom.btnOpsDigestTriageFilter?.addEventListener("click", () => {
+  dom.btnOpsDigestTriageFilter?.addEventListener("click", (event) => {
+    event.stopPropagation();
     if (dom.btnOpsDigestTriageFilter.disabled) {
       return;
     }

@@ -192,6 +192,19 @@ h2 {
   background: rgba(61, 22, 22, 0.54);
 }
 
+.ops-digest-topline-triage-cluster {
+  display: inline-flex;
+  align-items: center;
+}
+
+.ops-digest-topline-triage-cluster[data-topline-triage-disabled="false"] {
+  cursor: pointer;
+}
+
+.ops-digest-topline-triage-cluster[data-topline-triage-disabled="true"] {
+  cursor: default;
+}
+
 .ops-digest-topline-source-cluster {
   display: inline-flex;
   gap: 4px;
