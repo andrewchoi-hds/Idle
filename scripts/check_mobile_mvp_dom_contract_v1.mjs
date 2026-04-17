@@ -11234,6 +11234,42 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function buildOpsDigestToplineSourceClusterSummary(sourceLabel, contextLabel = \"최근 조작 출처\") {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function buildOpsDigestToplineRecentSummary(recentAction, sourceLabel, updatedLabel = \"\") {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function buildOpsDigestToplineTriageSummary(warningLabel, actionLabel, filterLabel) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function buildOpsDigestToplineMetaSummary(priorityLabel, updatedLabel) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function buildOpsDigestToplineSummary(recentAction, priorityLabel, triageSummary, updatedLabel) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function buildOpsDigestToplineRecentTitle(sourceLabel, recentAction, disabled) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function syncOpsDigestToplineChip(node, descriptor) {",
     "app.mjs",
     failures,
@@ -11846,7 +11882,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    "buildOpsDigestToplineRecentSummary(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "panel.dataset.toplineSourceClusterTone = toplineState.toplineSourceClusterTone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "buildOpsDigestToplineSourceClusterSummary(",
     "app.mjs",
     failures,
   );
@@ -11859,6 +11907,12 @@ async function main() {
   assertIncludes(
     app,
     "panel.dataset.toplineMetaSummary = toplineState.toplineMetaSummary;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "buildOpsDigestToplineMetaSummary(",
     "app.mjs",
     failures,
   );
@@ -12039,6 +12093,12 @@ async function main() {
   assertIncludes(
     app,
     "panel.dataset.toplineTriageSummary = toplineState.toplineTriageClusterSummary;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "buildOpsDigestToplineTriageSummary(",
     "app.mjs",
     failures,
   );
