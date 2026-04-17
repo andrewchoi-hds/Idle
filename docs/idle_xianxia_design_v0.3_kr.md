@@ -4635,3 +4635,11 @@
 
 ## 1087) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(topline state helper 추출 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1088) 다음 순차 작업
+1. [완료] ops digest topline의 warning/action/filter/priority chip descriptor를 `buildOpsDigestToplineChipState()`로 추출해 icon·label·title·tone·disabled 계산을 공통화.
+2. [완료] `syncOpsDigestToplineChip()`를 추가해 chip DOM 반영을 공통 경로로 묶고, `syncOpsDigestTriageStrip()` 안의 반복 `setOpsDigestFilterChipContent + disabled + title + tone` 코드를 정리.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 topline chip helper 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1089) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(topline chip helper 정리 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

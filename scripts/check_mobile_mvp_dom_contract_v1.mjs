@@ -11228,6 +11228,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function buildOpsDigestToplineChipState(input) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function syncOpsDigestToplineChip(node, descriptor) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function resolveOpsDigestToplinePriorityIcon(kind) {",
     "app.mjs",
     failures,
@@ -11714,19 +11726,19 @@ async function main() {
   );
   assertIncludes(
     app,
-    'setOpsDigestFilterChipContent(dom.btnOpsDigestTriageWarning, "!", warningLabel);',
+    "syncOpsDigestToplineChip(dom.btnOpsDigestTriageWarning, toplineChipState.warningChip);",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    'setOpsDigestFilterChipContent(dom.btnOpsDigestTriageAction, "↗", triageActionLabel);',
+    "syncOpsDigestToplineChip(dom.btnOpsDigestTriageAction, toplineChipState.actionChip);",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    'setOpsDigestFilterChipContent(dom.btnOpsDigestTriageFilter, "⌁", filterLabel);',
+    "syncOpsDigestToplineChip(dom.btnOpsDigestTriageFilter, toplineChipState.filterChip);",
     "app.mjs",
     failures,
   );
@@ -11738,7 +11750,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    'resolveOpsDigestToplinePriorityIcon(toplinePriorityKind),',
+    "const toplineChipState = buildOpsDigestToplineChipState({",
     "app.mjs",
     failures,
   );
@@ -11990,7 +12002,13 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.btnOpsDigestToplinePriority.disabled = toplinePriorityDisabled;",
+    "node.disabled = descriptor.disabled === true;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncOpsDigestToplineChip(dom.btnOpsDigestToplinePriority, toplineChipState.priorityChip);",
     "app.mjs",
     failures,
   );

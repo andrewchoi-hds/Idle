@@ -1054,6 +1054,49 @@ function formatOpsDigestTriageActionLabel(label, disabled) {
   return `다음 ${compactLabel}`;
 }
 
+function buildOpsDigestToplineChipState(input) {
+  return {
+    warningChip: {
+      icon: "!",
+      label: input.warningLabel,
+      disabled: input.warningDisabled === true,
+      title: input.warningSummary,
+      tone: input.warningTone || "info",
+    },
+    actionChip: {
+      icon: "↗",
+      label: input.triageActionLabel,
+      disabled: input.nextActionDisabled === true,
+      title: input.nextActionSummary,
+      tone: input.nextActionTone || "info",
+    },
+    filterChip: {
+      icon: "⌁",
+      label: input.filterLabel,
+      disabled: input.filterDisabled === true,
+      title: input.filterSummary,
+      tone: input.filterTone || "info",
+    },
+    priorityChip: {
+      icon: resolveOpsDigestToplinePriorityIcon(input.toplinePriorityKind),
+      label: input.toplinePriorityLabel,
+      disabled: input.toplinePriorityDisabled === true,
+      title: input.toplinePrioritySummary,
+      tone: input.toplinePriorityTone || "info",
+    },
+  };
+}
+
+function syncOpsDigestToplineChip(node, descriptor) {
+  if (!node || !descriptor) {
+    return;
+  }
+  setOpsDigestFilterChipContent(node, descriptor.icon, descriptor.label);
+  node.disabled = descriptor.disabled === true;
+  node.title = String(descriptor.title || "").trim();
+  applyRiskTone(node, descriptor.tone || "info");
+}
+
 function executeOpsDigestToplinePriority() {
   if (!dom.opsDigestPanel) {
     return;
@@ -2602,6 +2645,25 @@ function syncOpsDigestTriageStrip() {
     toplineMetaSummary,
     toplineMetaTone,
   } = toplineState;
+  const toplineChipState = buildOpsDigestToplineChipState({
+    warningLabel,
+    warningDisabled,
+    warningSummary,
+    warningTone,
+    triageActionLabel,
+    nextActionDisabled,
+    nextActionSummary,
+    nextActionTone,
+    filterLabel,
+    filterDisabled,
+    filterSummary,
+    filterTone,
+    toplinePriorityKind,
+    toplinePriorityLabel,
+    toplinePriorityDisabled,
+    toplinePrioritySummary,
+    toplinePriorityTone,
+  });
   dom.opsDigestPanel.dataset.toplineSummary = toplineSummary;
   dom.opsDigestPanel.dataset.toplineTone = toplineTone;
   dom.opsDigestPanel.dataset.toplineOrder = toplineOrder;
@@ -2630,24 +2692,9 @@ function syncOpsDigestTriageStrip() {
   dom.opsDigestPanel.dataset.toplinePriorityDisabled = String(toplinePriorityDisabled);
   dom.opsDigestPanel.dataset.toplinePrioritySummary = toplinePrioritySummary;
 
-  if (dom.btnOpsDigestTriageWarning) {
-    setOpsDigestFilterChipContent(dom.btnOpsDigestTriageWarning, "!", warningLabel);
-    dom.btnOpsDigestTriageWarning.disabled = warningDisabled;
-    dom.btnOpsDigestTriageWarning.title = warningSummary;
-    applyRiskTone(dom.btnOpsDigestTriageWarning, warningTone);
-  }
-  if (dom.btnOpsDigestTriageAction) {
-    setOpsDigestFilterChipContent(dom.btnOpsDigestTriageAction, "↗", triageActionLabel);
-    dom.btnOpsDigestTriageAction.disabled = nextActionDisabled;
-    dom.btnOpsDigestTriageAction.title = nextActionSummary;
-    applyRiskTone(dom.btnOpsDigestTriageAction, nextActionTone);
-  }
-  if (dom.btnOpsDigestTriageFilter) {
-    setOpsDigestFilterChipContent(dom.btnOpsDigestTriageFilter, "⌁", filterLabel);
-    dom.btnOpsDigestTriageFilter.disabled = filterDisabled;
-    dom.btnOpsDigestTriageFilter.title = filterSummary;
-    applyRiskTone(dom.btnOpsDigestTriageFilter, filterTone);
-  }
+  syncOpsDigestToplineChip(dom.btnOpsDigestTriageWarning, toplineChipState.warningChip);
+  syncOpsDigestToplineChip(dom.btnOpsDigestTriageAction, toplineChipState.actionChip);
+  syncOpsDigestToplineChip(dom.btnOpsDigestTriageFilter, toplineChipState.filterChip);
   if (dom.opsDigestRecentAction) {
     applyRiskTone(dom.opsDigestRecentAction, toplineRecentClusterTone);
   }
@@ -2662,16 +2709,7 @@ function syncOpsDigestTriageStrip() {
     dom.opsDigestToplineFreshness.title = `상단 최신 갱신 ${toplineUpdatedLabel}`;
     applyRiskTone(dom.opsDigestToplineFreshness, toplineFreshnessTone);
   }
-  if (dom.btnOpsDigestToplinePriority) {
-    setOpsDigestFilterChipContent(
-      dom.btnOpsDigestToplinePriority,
-      resolveOpsDigestToplinePriorityIcon(toplinePriorityKind),
-      toplinePriorityLabel,
-    );
-    dom.btnOpsDigestToplinePriority.disabled = toplinePriorityDisabled;
-    dom.btnOpsDigestToplinePriority.title = toplinePrioritySummary;
-    applyRiskTone(dom.btnOpsDigestToplinePriority, toplinePriorityTone);
-  }
+  syncOpsDigestToplineChip(dom.btnOpsDigestToplinePriority, toplineChipState.priorityChip);
   if (dom.opsDigestToplineMeta) {
     syncOpsDigestToplineClusterState(dom.opsDigestToplineMeta, {
       disabled: toplinePriorityDisabled,
