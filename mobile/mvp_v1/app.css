@@ -412,6 +412,16 @@ h2 {
     gap: 5px;
     padding: 9px;
   }
+
+  .ops-digest-card-head {
+    gap: 6px;
+  }
+
+  .ops-digest-card-badge {
+    min-height: 20px;
+    padding: 0 5px;
+    font-size: 9px;
+  }
 }
 
 .ops-digest-next-row {
@@ -886,6 +896,12 @@ h2 {
   justify-content: space-between;
   align-items: center;
   gap: 8px;
+}
+
+.ops-digest-card-badge {
+  min-height: 22px;
+  padding: 0 6px;
+  font-size: 10px;
 }
 
 .ops-digest-card-head .ops-digest-badge[role="button"] {

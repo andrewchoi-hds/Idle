@@ -14173,6 +14173,7 @@ async function main() {
   assertIncludes(css, ".ops-digest-triage.tone-warn", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage-chip", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-head", "app.css", failures);
+  assertIncludes(css, ".ops-digest-card-badge", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-head .ops-digest-badge[role=\"button\"]", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-label", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-icon", "app.css", failures);

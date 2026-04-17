@@ -552,3 +552,4 @@ npm run mobile:mvp:check
   - ops digest topline micro badge 규칙(`.ops-digest-topline-micro`)이 `source/freshness`를 한 단계 더 작은 hierarchy로 렌더하고, `source jump`는 최소 폭 아이콘 버튼으로 유지해 first-screen 정보 밀도를 높이는지 검증
   - ops digest mobile first-pass spacing 규칙이 `ops-digest` 상단 흐름 블록(`topline/next/filter/inbox/timeline`)과 카드 그리드(`ops-digest-grid`) 사이 간격을 더 조여 first-screen triage 영역을 한 덩어리처럼 보이게 하는지 검증
   - ops digest topline strong tone contrast 규칙이 `recent/source/meta/triage` wrapper와 내부 badge/chip의 `success/warn/error` 상태에 더 강한 outline/shadow/foreground 대비를 부여해 info보다 먼저 읽히게 만드는지 검증
+  - ops digest card badge hierarchy 규칙(`.ops-digest-card-badge`)이 카드 그리드 첫 줄 status badge를 한 단계 더 작은 계층으로 렌더해 first-screen 카드 헤더 부피를 줄이는지 검증
