@@ -11270,6 +11270,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function formatOpsDigestToplineChipLabel(kind, label) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function syncOpsDigestToplineChip(node, descriptor) {",
     "app.mjs",
     failures,
@@ -11883,6 +11889,18 @@ async function main() {
   assertIncludes(
     app,
     "buildOpsDigestToplineRecentSummary(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'formatOpsDigestToplineChipLabel("priority", input.toplinePriorityLabel)',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'formatOpsDigestToplineChipLabel("action", input.triageActionLabel)',
     "app.mjs",
     failures,
   );

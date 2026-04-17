@@ -545,3 +545,4 @@ npm run mobile:mvp:check
   - ops digest topline 계산 헬퍼(`buildOpsDigestToplineState`)가 freshness/source/recent/triage/priority/order 계산을 한 번에 집약하면서 기존 dataset 결과를 일관되게 유지하는지 검증
   - ops digest topline chip state 헬퍼(`buildOpsDigestToplineChipState`, `syncOpsDigestToplineChip`)가 warning/action/filter/priority chip의 icon·label·title·tone·disabled 적용을 공통 경로로 일관되게 처리하는지 검증
   - ops digest topline 문구 헬퍼(`buildOpsDigestToplineSourceClusterSummary`, `buildOpsDigestToplineRecentSummary`, `buildOpsDigestToplineTriageSummary`, `buildOpsDigestToplineMetaSummary`, `buildOpsDigestToplineSummary`, `buildOpsDigestToplineRecentTitle`)가 recent/meta/triage/source summary·title 문구를 일관되게 생성하는지 검증
+  - ops digest topline chip compact label 헬퍼(`formatOpsDigestToplineChipLabel`)가 `우선/다음/주의 N건/필터 N건` 계열 라벨을 모바일 폭에 맞게 축약하면서 title 문맥은 유지하는지 검증

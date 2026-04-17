@@ -4651,3 +4651,11 @@
 
 ## 1091) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(topline copy helper 정리 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1092) 다음 순차 작업
+1. [완료] ops digest topline chip 라벨을 `formatOpsDigestToplineChipLabel()` 기준으로 축약해 `우선 대기 → 대기`, `다음 자동 시작 → 자동 시작`, `주의 3건 → 주의 3`, `필터 2건 → 필터 2`처럼 모바일 폭에서 더 짧게 보이도록 정리.
+2. [완료] `buildOpsDigestToplineChipState()`가 priority/action/warning/filter chip label을 direct 원문 대신 compact label helper를 거치도록 정합화하고, 기본 HTML visible text도 새 compact 기준에 맞춤.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 topline chip compact label 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1093) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(topline chip compact label 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
