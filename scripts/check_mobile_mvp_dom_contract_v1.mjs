@@ -1853,6 +1853,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-topline-cluster-disabled="true"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'role="button"',
     "index.html",
     failures,
@@ -11246,6 +11252,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function syncOpsDigestToplineClusterState(node, options = {}) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestToplineTriageCluster,",
     "app.mjs",
     failures,
@@ -11498,13 +11510,43 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.opsDigestToplineRecentCluster.dataset.recentDisabled = String(",
+    'node.dataset.toplineClusterDisabled = String(disabled);',
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    'dom.opsDigestToplineRecentCluster.setAttribute(',
+    'if (disabledKey) {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'node.setAttribute("aria-disabled", String(disabled));',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'node.title = title;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'syncOpsDigestToplineClusterState(dom.opsDigestToplineRecentCluster, {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'syncOpsDigestToplineClusterState(dom.opsDigestToplineMeta, {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'syncOpsDigestToplineClusterState(dom.opsDigestToplineTriageCluster, {',
     "app.mjs",
     failures,
   );
@@ -11954,13 +11996,13 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.opsDigestToplineMeta.title =",
+    'syncOpsDigestToplineClusterState(dom.opsDigestToplineMeta, {',
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "dom.opsDigestToplineMeta.dataset.toplineMetaDisabled = String(",
+    'disabledKey: "toplineMetaDisabled",',
     "app.mjs",
     failures,
   );
@@ -11996,7 +12038,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.opsDigestToplineRecentCluster.title =",
+    'syncOpsDigestToplineClusterState(dom.opsDigestToplineRecentCluster, {',
     "app.mjs",
     failures,
   );
@@ -12014,7 +12056,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.opsDigestToplineTriageCluster.title =",
+    'syncOpsDigestToplineClusterState(dom.opsDigestToplineTriageCluster, {',
     "app.mjs",
     failures,
   );
@@ -13982,12 +14024,12 @@ async function main() {
   assertIncludes(css, ".ops-digest-topline.priority-first", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-recent-cluster", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-recent-cluster.tone-success", "app.css", failures);
-  assertIncludes(css, ".ops-digest-topline-recent-cluster[role=\"button\"]:focus-visible", "app.css", failures);
+  assertIncludes(css, ".ops-digest-topline-cluster[role=\"button\"][data-topline-cluster-disabled=\"false\"]", "app.css", failures);
+  assertIncludes(css, ".ops-digest-topline-cluster[role=\"button\"]:focus-visible", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-triage-cluster", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-source-cluster", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-source-cluster.tone-success", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-meta", "app.css", failures);
-  assertIncludes(css, ".ops-digest-topline-meta[data-topline-meta-disabled=\"false\"]", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline .ops-digest-badge", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline .ops-digest-badge[role=\"button\"]", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage", "app.css", failures);
