@@ -4707,3 +4707,11 @@
 
 ## 1105) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(topline strong tone contrast 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1106) 다음 순차 작업
+1. [완료] 카드 그리드 첫 줄의 status badge에 `ops-digest-card-badge` 계층을 부여해 헤더 badge를 한 단계 더 작게 렌더하도록 정리.
+2. [완료] 모바일 폭에서 `ops-digest-card-head` gap과 card badge 크기(`min-height/padding/font-size`)를 더 줄여 card header 부피를 first-screen 기준으로 한 단계 더 압축.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 card badge hierarchy 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1107) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(card badge hierarchy 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
