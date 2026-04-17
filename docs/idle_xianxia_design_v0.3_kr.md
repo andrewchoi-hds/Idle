@@ -4603,3 +4603,11 @@
 
 ## 1079) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(topline triage cluster re-entry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1080) 다음 순차 작업
+1. [완료] ops digest topline의 `meta cluster`를 priority chip/freshness badge 묶음 자체로 재진입 가능한 상위 진입점으로 승격.
+2. [완료] `executeOpsDigestToplineMetaCluster()`와 wrapper click/keydown 바인딩을 추가하고, priority chip click은 `stopPropagation()`으로 분리해 cluster 재진입과 충돌하지 않도록 정리.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 topline meta cluster re-entry 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1081) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(topline meta cluster re-entry 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

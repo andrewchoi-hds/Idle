@@ -1079,6 +1079,18 @@ function executeOpsDigestToplinePriority() {
   }
 }
 
+function executeOpsDigestToplineMetaCluster() {
+  if (!dom.opsDigestPanel) {
+    return;
+  }
+  const disabled =
+    String(dom.opsDigestPanel.dataset.toplineMetaDisabled || "true") === "true";
+  if (disabled) {
+    return;
+  }
+  executeOpsDigestToplinePriority();
+}
+
 function executeOpsDigestToplineTriageCluster() {
   if (!dom.opsDigestPanel) {
     return;
@@ -2510,6 +2522,8 @@ function syncOpsDigestTriageStrip() {
     `${toplinePriorityLabel} · ${toplineUpdatedLabel}`;
   dom.opsDigestPanel.dataset.toplineMetaTone =
     toplinePriorityKind !== "none" ? toplinePriorityTone : toplineFreshnessTone;
+  dom.opsDigestPanel.dataset.toplineMetaDisabled = String(toplinePriorityDisabled);
+  dom.opsDigestPanel.dataset.toplineMetaActionLabel = toplinePriorityLabel;
   dom.opsDigestPanel.dataset.toplinePriorityKind = toplinePriorityKind;
   dom.opsDigestPanel.dataset.toplinePriorityLabel = toplinePriorityLabel;
   dom.opsDigestPanel.dataset.toplinePriorityTone = toplinePriorityTone;
@@ -2559,6 +2573,13 @@ function syncOpsDigestTriageStrip() {
     applyRiskTone(dom.btnOpsDigestToplinePriority, toplinePriorityTone);
   }
   if (dom.opsDigestToplineMeta) {
+    dom.opsDigestToplineMeta.dataset.toplineMetaDisabled = String(
+      toplinePriorityDisabled,
+    );
+    dom.opsDigestToplineMeta.setAttribute(
+      "aria-disabled",
+      String(toplinePriorityDisabled),
+    );
     dom.opsDigestToplineMeta.title =
       `${toplinePrioritySummary} · ${toplineUpdatedLabel}`;
     applyRiskTone(
@@ -16163,6 +16184,28 @@ function bindEvents() {
     }
     executeOpsDigestRecentAction();
   });
+  dom.opsDigestToplineMeta?.addEventListener("click", (event) => {
+    if (event.target instanceof Element && event.target.closest(".ops-digest-triage-chip")) {
+      return;
+    }
+    if (dom.opsDigestToplineMeta.dataset.toplineMetaDisabled === "true") {
+      return;
+    }
+    executeOpsDigestToplineMetaCluster();
+  });
+  dom.opsDigestToplineMeta?.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+    if (event.target instanceof Element && event.target.closest(".ops-digest-triage-chip")) {
+      return;
+    }
+    event.preventDefault();
+    if (dom.opsDigestToplineMeta.dataset.toplineMetaDisabled === "true") {
+      return;
+    }
+    executeOpsDigestToplineMetaCluster();
+  });
   dom.opsDigestToplineTriageCluster?.addEventListener("click", (event) => {
     if (event.target instanceof Element && event.target.closest(".ops-digest-triage-chip")) {
       return;
@@ -16400,7 +16443,8 @@ function bindEvents() {
     }
     clearOpsDigestFilters();
   });
-  dom.btnOpsDigestToplinePriority?.addEventListener("click", () => {
+  dom.btnOpsDigestToplinePriority?.addEventListener("click", (event) => {
+    event.stopPropagation();
     if (dom.btnOpsDigestToplinePriority.disabled) {
       return;
     }
