@@ -317,6 +317,15 @@ h2 {
 }
 
 @media (max-width: 560px) {
+  .ops-digest {
+    gap: 8px;
+  }
+
+  .ops-digest-head {
+    align-items: start;
+    gap: 6px;
+  }
+
   .ops-digest-topline {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -358,6 +367,22 @@ h2 {
     min-height: 22px;
     padding: 2px 5px;
     font-size: 9px;
+  }
+
+  .ops-digest-next,
+  .ops-digest-filter-bar,
+  .ops-digest-inbox,
+  .ops-digest-timeline {
+    gap: 5px;
+  }
+
+  .ops-digest-grid {
+    gap: 6px;
+  }
+
+  .ops-digest-item {
+    gap: 5px;
+    padding: 9px;
   }
 }
 
