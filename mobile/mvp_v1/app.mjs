@@ -1352,6 +1352,23 @@ function setOpsDigestFilterChipContent(node, icon, label) {
   node.replaceChildren(iconNode, labelNode);
 }
 
+function syncOpsDigestToplineClusterState(node, options = {}) {
+  if (!node) {
+    return;
+  }
+  const disabled = options.disabled === true;
+  const title = String(options.title || "").trim();
+  const tone = String(options.tone || "info").trim() || "info";
+  const disabledKey = String(options.disabledKey || "").trim();
+  node.dataset.toplineClusterDisabled = String(disabled);
+  if (disabledKey) {
+    node.dataset[disabledKey] = String(disabled);
+  }
+  node.setAttribute("aria-disabled", String(disabled));
+  node.title = title;
+  applyRiskTone(node, tone);
+}
+
 function toggleOpsDigestTimelineGroup(groupLabel) {
   const normalizedGroupLabel = String(groupLabel || "").trim();
   if (!normalizedGroupLabel) {
@@ -2135,13 +2152,15 @@ function syncOpsDigestRecentAction(message, isError = false, source = "system") 
     applyRiskTone(dom.opsDigestRecentAction, tone);
   }
   if (dom.opsDigestToplineRecentCluster) {
-    dom.opsDigestToplineRecentCluster.dataset.recentDisabled = String(
-      recentDescriptor.disabled === true,
-    );
-    dom.opsDigestToplineRecentCluster.setAttribute(
-      "aria-disabled",
-      String(recentDescriptor.disabled === true),
-    );
+    syncOpsDigestToplineClusterState(dom.opsDigestToplineRecentCluster, {
+      disabled: recentDescriptor.disabled === true,
+      disabledKey: "recentDisabled",
+      title:
+        recentDescriptor.disabled === true
+          ? `${formatOpsDigestInboxSourceLabel(normalizedSource)} · ${normalizedMessage}`
+          : `${formatOpsDigestInboxSourceLabel(normalizedSource)} · ${normalizedMessage} · 다시 열기`,
+      tone,
+    });
   }
   if (dom.opsDigestInboxRecent) {
     dom.opsDigestInboxRecent.textContent = normalizedMessage;
@@ -2577,28 +2596,23 @@ function syncOpsDigestTriageStrip() {
     applyRiskTone(dom.btnOpsDigestToplinePriority, toplinePriorityTone);
   }
   if (dom.opsDigestToplineMeta) {
-    dom.opsDigestToplineMeta.dataset.toplineMetaDisabled = String(
-      toplinePriorityDisabled,
-    );
-    dom.opsDigestToplineMeta.setAttribute(
-      "aria-disabled",
-      String(toplinePriorityDisabled),
-    );
-    dom.opsDigestToplineMeta.title =
-      `${toplinePrioritySummary} · ${toplineUpdatedLabel}`;
-    applyRiskTone(
-      dom.opsDigestToplineMeta,
-      dom.opsDigestPanel.dataset.toplineMetaTone || "info",
-    );
+    syncOpsDigestToplineClusterState(dom.opsDigestToplineMeta, {
+      disabled: toplinePriorityDisabled,
+      disabledKey: "toplineMetaDisabled",
+      title: `${toplinePrioritySummary} · ${toplineUpdatedLabel}`,
+      tone: dom.opsDigestPanel.dataset.toplineMetaTone || "info",
+    });
   }
   if (dom.opsDigestToplineRecentCluster) {
-    dom.opsDigestToplineRecentCluster.title =
-      dom.opsDigestPanel.dataset.toplineRecentSummary ||
-      `${dom.opsDigestPanel.dataset.recentAction || "최근 조작 대기 중"} · ${dom.opsDigestPanel.dataset.toplineSourceLabel || "시스템"} · ${toplineUpdatedLabel}`;
-    applyRiskTone(
-      dom.opsDigestToplineRecentCluster,
-      dom.opsDigestPanel.dataset.toplineRecentClusterTone || "info",
-    );
+    syncOpsDigestToplineClusterState(dom.opsDigestToplineRecentCluster, {
+      disabled:
+        String(dom.opsDigestPanel.dataset.recentActionDisabled || "true") === "true",
+      disabledKey: "recentDisabled",
+      title:
+        dom.opsDigestPanel.dataset.toplineRecentSummary ||
+        `${dom.opsDigestPanel.dataset.recentAction || "최근 조작 대기 중"} · ${dom.opsDigestPanel.dataset.toplineSourceLabel || "시스템"} · ${toplineUpdatedLabel}`,
+      tone: dom.opsDigestPanel.dataset.toplineRecentClusterTone || "info",
+    });
   }
   if (dom.opsDigestToplineSourceCluster) {
     dom.opsDigestToplineSourceCluster.title =
@@ -2619,15 +2633,12 @@ function syncOpsDigestTriageStrip() {
     );
   }
   if (dom.opsDigestToplineTriageCluster) {
-    dom.opsDigestToplineTriageCluster.dataset.toplineTriageDisabled = String(
-      toplineTriageClusterDisabled,
-    );
-    dom.opsDigestToplineTriageCluster.setAttribute(
-      "aria-disabled",
-      String(toplineTriageClusterDisabled),
-    );
-    dom.opsDigestToplineTriageCluster.title =
-      `${toplineTriageClusterActionLabel} · ${toplineTriageClusterSummary}`;
+    syncOpsDigestToplineClusterState(dom.opsDigestToplineTriageCluster, {
+      disabled: toplineTriageClusterDisabled,
+      disabledKey: "toplineTriageDisabled",
+      title: `${toplineTriageClusterActionLabel} · ${toplineTriageClusterSummary}`,
+      tone: dom.opsDigestPanel.dataset.toplineTriageTone || "info",
+    });
   }
   syncOpsDigestToplineOrder(priorityFirst);
 }
