@@ -1464,6 +1464,37 @@ function buildOpsDigestToplineState(input) {
   };
 }
 
+function applyOpsDigestToplineState(panel, toplineState) {
+  if (!panel || !toplineState) {
+    return;
+  }
+  panel.dataset.toplineSummary = toplineState.toplineSummary;
+  panel.dataset.toplineTone = toplineState.toplineTone;
+  panel.dataset.toplineOrder = toplineState.toplineOrder;
+  panel.dataset.toplinePriorityFirst = String(toplineState.priorityFirst);
+  panel.dataset.toplineUpdatedAt = String(toplineState.latestToplineUpdatedAt);
+  panel.dataset.toplineUpdatedLabel = toplineState.toplineUpdatedLabel;
+  panel.dataset.toplineFreshnessTone = toplineState.toplineFreshnessTone;
+  panel.dataset.toplineRecentClusterTone = toplineState.toplineRecentClusterTone;
+  panel.dataset.toplineRecentSummary = toplineState.toplineRecentClusterSummary;
+  panel.dataset.toplineTriageSummary = toplineState.toplineTriageClusterSummary;
+  panel.dataset.toplineTriageTone = toplineState.toplineTriageClusterTone;
+  panel.dataset.toplineTriageKind = toplineState.toplineTriageClusterKind;
+  panel.dataset.toplineTriageDisabled = String(toplineState.toplineTriageClusterDisabled);
+  panel.dataset.toplineTriageActionLabel = toplineState.toplineTriageClusterActionLabel;
+  panel.dataset.toplineSourceClusterTone = toplineState.toplineSourceClusterTone;
+  panel.dataset.toplineSourceClusterSummary = toplineState.toplineSourceClusterSummary;
+  panel.dataset.toplineMetaSummary = toplineState.toplineMetaSummary;
+  panel.dataset.toplineMetaTone = toplineState.toplineMetaTone;
+  panel.dataset.toplineMetaDisabled = String(toplineState.toplinePriorityDisabled);
+  panel.dataset.toplineMetaActionLabel = toplineState.toplinePriorityLabel;
+  panel.dataset.toplinePriorityKind = toplineState.toplinePriorityKind;
+  panel.dataset.toplinePriorityLabel = toplineState.toplinePriorityLabel;
+  panel.dataset.toplinePriorityTone = toplineState.toplinePriorityTone;
+  panel.dataset.toplinePriorityDisabled = String(toplineState.toplinePriorityDisabled);
+  panel.dataset.toplinePrioritySummary = toplineState.toplinePrioritySummary;
+}
+
 function syncOpsDigestToplineOrder(priorityFirst) {
   if (!dom.opsDigestTopline) {
     return;
@@ -2664,33 +2695,7 @@ function syncOpsDigestTriageStrip() {
     toplinePrioritySummary,
     toplinePriorityTone,
   });
-  dom.opsDigestPanel.dataset.toplineSummary = toplineSummary;
-  dom.opsDigestPanel.dataset.toplineTone = toplineTone;
-  dom.opsDigestPanel.dataset.toplineOrder = toplineOrder;
-  dom.opsDigestPanel.dataset.toplinePriorityFirst = String(priorityFirst);
-  dom.opsDigestPanel.dataset.toplineUpdatedAt = String(latestToplineUpdatedAt);
-  dom.opsDigestPanel.dataset.toplineUpdatedLabel = toplineUpdatedLabel;
-  dom.opsDigestPanel.dataset.toplineFreshnessTone = toplineFreshnessTone;
-  dom.opsDigestPanel.dataset.toplineRecentClusterTone = toplineRecentClusterTone;
-  dom.opsDigestPanel.dataset.toplineRecentSummary = toplineRecentClusterSummary;
-  dom.opsDigestPanel.dataset.toplineTriageSummary = toplineTriageClusterSummary;
-  dom.opsDigestPanel.dataset.toplineTriageTone = toplineTriageClusterTone;
-  dom.opsDigestPanel.dataset.toplineTriageKind = toplineTriageClusterKind;
-  dom.opsDigestPanel.dataset.toplineTriageDisabled = String(
-    toplineTriageClusterDisabled,
-  );
-  dom.opsDigestPanel.dataset.toplineTriageActionLabel = toplineTriageClusterActionLabel;
-  dom.opsDigestPanel.dataset.toplineSourceClusterTone = toplineSourceClusterTone;
-  dom.opsDigestPanel.dataset.toplineSourceClusterSummary = toplineSourceClusterSummary;
-  dom.opsDigestPanel.dataset.toplineMetaSummary = toplineMetaSummary;
-  dom.opsDigestPanel.dataset.toplineMetaTone = toplineMetaTone;
-  dom.opsDigestPanel.dataset.toplineMetaDisabled = String(toplinePriorityDisabled);
-  dom.opsDigestPanel.dataset.toplineMetaActionLabel = toplinePriorityLabel;
-  dom.opsDigestPanel.dataset.toplinePriorityKind = toplinePriorityKind;
-  dom.opsDigestPanel.dataset.toplinePriorityLabel = toplinePriorityLabel;
-  dom.opsDigestPanel.dataset.toplinePriorityTone = toplinePriorityTone;
-  dom.opsDigestPanel.dataset.toplinePriorityDisabled = String(toplinePriorityDisabled);
-  dom.opsDigestPanel.dataset.toplinePrioritySummary = toplinePrioritySummary;
+  applyOpsDigestToplineState(dom.opsDigestPanel, toplineState);
 
   syncOpsDigestToplineChip(dom.btnOpsDigestTriageWarning, toplineChipState.warningChip);
   syncOpsDigestToplineChip(dom.btnOpsDigestTriageAction, toplineChipState.actionChip);
