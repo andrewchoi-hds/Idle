@@ -14147,6 +14147,7 @@ async function main() {
   assertIncludes(css, ".offline-compare-target-summary.tone-error", "app.css", failures);
   assertIncludes(css, ".ghost-btn.tone-success", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline", "app.css", failures);
+  assertIncludes(css, ".ops-digest-topline-micro", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline.priority-first", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-recent-cluster", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-recent-cluster.tone-success", "app.css", failures);
@@ -14154,6 +14155,7 @@ async function main() {
   assertIncludes(css, ".ops-digest-topline-cluster[role=\"button\"]:focus-visible", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-triage-cluster", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-source-cluster", "app.css", failures);
+  assertIncludes(css, ".ops-digest-topline-source-cluster .ops-digest-triage-chip", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-source-cluster.tone-success", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline-meta", "app.css", failures);
   assertIncludes(css, ".ops-digest-topline .ops-digest-badge", "app.css", failures);
