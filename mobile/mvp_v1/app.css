@@ -144,6 +144,14 @@ h2 {
   flex: 0 0 auto;
 }
 
+.ops-digest-topline-micro {
+  min-height: 24px;
+  padding: 2px 6px;
+  font-size: 10px;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+}
+
 .ops-digest-topline .ops-digest-badge[role="button"] {
   cursor: pointer;
 }
@@ -210,6 +218,12 @@ h2 {
   border-radius: 999px;
   border: 1px solid #294941;
   background: rgba(11, 22, 20, 0.72);
+}
+
+.ops-digest-topline-source-cluster .ops-digest-triage-chip {
+  min-width: 24px;
+  justify-content: center;
+  padding-inline: 5px;
 }
 
 .ops-digest-topline-source-cluster.tone-info {
@@ -338,6 +352,12 @@ h2 {
   .ops-digest-topline .ops-digest-triage-chip {
     min-height: 26px;
     padding: 4px 6px;
+  }
+
+  .ops-digest-topline-micro {
+    min-height: 22px;
+    padding: 2px 5px;
+    font-size: 9px;
   }
 }
 
