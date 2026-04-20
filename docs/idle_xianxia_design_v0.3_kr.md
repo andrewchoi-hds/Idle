@@ -4731,3 +4731,11 @@
 
 ## 1111) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(ops digest tone-aware divider 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1112) 다음 순차 작업
+1. [완료] ops digest 카드 본문 summary가 card badge tone을 재사용하도록 `syncOpsDigestCardValue(node, summary, kind, tone)`로 확장해 strong 상태 카드가 card 영역에서도 더 먼저 읽히게 정리.
+2. [완료] `.ops-digest-value.tone-success|tone-warn|tone-error` 규칙을 추가해 strong 카드 본문에 좌측 강조선과 더 강한 전경색을 부여하고, `warn/error`는 weight도 높여 hierarchy를 분명하게 만듦.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 card value tone emphasis 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1113) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(card value tone emphasis 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

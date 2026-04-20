@@ -1118,13 +1118,14 @@ function formatOpsDigestCardValueCompact(kind, summary) {
   }
 }
 
-function syncOpsDigestCardValue(node, summary, kind) {
+function syncOpsDigestCardValue(node, summary, kind, tone = "info") {
   if (!node) {
     return;
   }
   const normalizedSummary = String(summary || "").trim() || "-";
   node.textContent = formatOpsDigestCardValueCompact(kind, normalizedSummary);
   node.title = normalizedSummary;
+  applyRiskTone(node, tone);
 }
 
 function formatOpsDigestTriageActionLabel(label, disabled) {
@@ -4087,69 +4088,91 @@ function syncOpsDigestPanel() {
   dom.opsDigestPanel.dataset.actionOverview = actionOverview;
   dom.opsDigestPanel.dataset.breakthroughOverview = breakthroughOverview;
   dom.opsDigestPanel.dataset.saveOverview = saveOverview;
-  syncOpsDigestCardValue(dom.opsDigestFocus, focusOverview, "focus");
-  syncOpsDigestCardValue(dom.opsDigestSettings, settingsOverview, "settings");
-  syncOpsDigestCardValue(dom.opsDigestStage, stageOverview, "stage");
-  syncOpsDigestCardValue(dom.opsDigestBattle, battleOverview, "battle");
-  syncOpsDigestCardValue(dom.opsDigestResources, resourceOverview, "resources");
-  syncOpsDigestCardValue(dom.opsDigestActions, actionOverview, "actions");
-  syncOpsDigestCardValue(
-    dom.opsDigestBreakthrough,
-    breakthroughOverview,
-    "breakthrough",
-  );
-  syncOpsDigestCardValue(dom.opsDigestSave, saveOverview, "save");
-  syncOpsDigestCardBadge(
-    dom.opsDigestFocusBadge,
-    dom.focusControlsPanel?.dataset.battleFocus === "true" ? "ON" : "OFF",
-    dom.focusControlsPanel?.dataset.battleFocus === "true" ? "success" : "info",
-  );
+  const focusCardTone =
+    dom.focusControlsPanel?.dataset.battleFocus === "true" ? "success" : "info";
   const hasAnyAutomation =
     dom.settingsPanel?.dataset.autoBattle === "true" ||
     dom.settingsPanel?.dataset.autoBreakthrough === "true" ||
     dom.settingsPanel?.dataset.autoTribulation === "true";
+  const settingsCardTone = hasAnyAutomation ? "success" : "info";
+  const stageCardTone =
+    dom.stagePanel?.dataset.breakthroughReady === "true" ? "success" : "info";
+  const battleCardTone = String(dom.battleScenePanel?.dataset.statusTone || "info");
+  const qiValue = Number(dom.statsPanel?.dataset.qi || 0);
+  const essenceValue = Number(dom.statsPanel?.dataset.rebirthEssence || 0);
+  const resourcesCardTone = qiValue > 0 || essenceValue > 0 ? "success" : "info";
+  const actionsCardTone =
+    dom.actionsPanel?.dataset.realtimeRunning === "true" ? "success" : "info";
+  const breakthroughCardTone = String(
+    dom.breakthroughPreviewPanel?.dataset.riskTone || "info",
+  );
+  const saveSlotState = String(dom.savePanel?.dataset.sourceSlotState || "empty");
+  const hasSavedRun = String(dom.savePanel?.dataset.lastSavedAt || "").trim() !== "";
+  const saveCardTone =
+    saveSlotState === "corrupt" ? "error" : hasSavedRun ? "success" : "info";
+
+  syncOpsDigestCardValue(dom.opsDigestFocus, focusOverview, "focus", focusCardTone);
+  syncOpsDigestCardValue(
+    dom.opsDigestSettings,
+    settingsOverview,
+    "settings",
+    settingsCardTone,
+  );
+  syncOpsDigestCardValue(dom.opsDigestStage, stageOverview, "stage", stageCardTone);
+  syncOpsDigestCardValue(dom.opsDigestBattle, battleOverview, "battle", battleCardTone);
+  syncOpsDigestCardValue(
+    dom.opsDigestResources,
+    resourceOverview,
+    "resources",
+    resourcesCardTone,
+  );
+  syncOpsDigestCardValue(dom.opsDigestActions, actionOverview, "actions", actionsCardTone);
+  syncOpsDigestCardValue(
+    dom.opsDigestBreakthrough,
+    breakthroughOverview,
+    "breakthrough",
+    breakthroughCardTone,
+  );
+  syncOpsDigestCardValue(dom.opsDigestSave, saveOverview, "save", saveCardTone);
+  syncOpsDigestCardBadge(
+    dom.opsDigestFocusBadge,
+    dom.focusControlsPanel?.dataset.battleFocus === "true" ? "ON" : "OFF",
+    focusCardTone,
+  );
   syncOpsDigestCardBadge(
     dom.opsDigestSettingsBadge,
     hasAnyAutomation ? "자동" : "수동",
-    hasAnyAutomation ? "success" : "info",
+    settingsCardTone,
   );
   syncOpsDigestCardBadge(
     dom.opsDigestStageBadge,
     dom.stagePanel?.dataset.breakthroughReady === "true" ? "준비" : "대기",
-    dom.stagePanel?.dataset.breakthroughReady === "true" ? "success" : "info",
+    stageCardTone,
   );
-  const battleCardTone = String(dom.battleScenePanel?.dataset.statusTone || "info");
   syncOpsDigestCardBadge(
     dom.opsDigestBattleBadge,
     formatOpsDigestTimelineToneLabel(battleCardTone),
     battleCardTone,
   );
-  const qiValue = Number(dom.statsPanel?.dataset.qi || 0);
-  const essenceValue = Number(dom.statsPanel?.dataset.rebirthEssence || 0);
   syncOpsDigestCardBadge(
     dom.opsDigestResourcesBadge,
     qiValue > 0 || essenceValue > 0 ? "축적" : "초기",
-    qiValue > 0 || essenceValue > 0 ? "success" : "info",
+    resourcesCardTone,
   );
   syncOpsDigestCardBadge(
     dom.opsDigestActionsBadge,
     dom.actionsPanel?.dataset.realtimeRunning === "true" ? "가동" : "대기",
-    dom.actionsPanel?.dataset.realtimeRunning === "true" ? "success" : "info",
-  );
-  const breakthroughCardTone = String(
-    dom.breakthroughPreviewPanel?.dataset.riskTone || "info",
+    actionsCardTone,
   );
   syncOpsDigestCardBadge(
     dom.opsDigestBreakthroughBadge,
     formatOpsDigestTimelineToneLabel(breakthroughCardTone),
     breakthroughCardTone,
   );
-  const saveSlotState = String(dom.savePanel?.dataset.sourceSlotState || "empty");
-  const hasSavedRun = String(dom.savePanel?.dataset.lastSavedAt || "").trim() !== "";
   syncOpsDigestCardBadge(
     dom.opsDigestSaveBadge,
     saveSlotState === "corrupt" ? "손상" : hasSavedRun ? "기록" : "대기",
-    saveSlotState === "corrupt" ? "error" : hasSavedRun ? "success" : "info",
+    saveCardTone,
   );
   syncOpsDigestWarnings();
   syncOpsDigestQuickActions();

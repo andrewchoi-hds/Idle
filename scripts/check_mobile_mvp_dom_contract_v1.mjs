@@ -11704,7 +11704,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    "function syncOpsDigestCardValue(node, summary, kind) {",
+    "function syncOpsDigestCardValue(node, summary, kind, tone = \"info\") {",
     "app.mjs",
     failures,
   );
@@ -12256,37 +12256,49 @@ async function main() {
   );
   assertIncludes(
     app,
-    "syncOpsDigestCardValue(dom.opsDigestFocus, focusOverview, \"focus\");",
+    "syncOpsDigestCardValue(dom.opsDigestFocus, focusOverview, \"focus\", focusCardTone);",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "syncOpsDigestCardValue(dom.opsDigestSettings, settingsOverview, \"settings\");",
+    "\"settings\",",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "syncOpsDigestCardValue(dom.opsDigestStage, stageOverview, \"stage\");",
+    "settingsCardTone,",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "syncOpsDigestCardValue(dom.opsDigestBattle, battleOverview, \"battle\");",
+    "syncOpsDigestCardValue(dom.opsDigestBattle, battleOverview, \"battle\", battleCardTone);",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "syncOpsDigestCardValue(dom.opsDigestResources, resourceOverview, \"resources\");",
+    "syncOpsDigestCardValue(dom.opsDigestStage, stageOverview, \"stage\", stageCardTone);",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "syncOpsDigestCardValue(dom.opsDigestActions, actionOverview, \"actions\");",
+    "dom.opsDigestResources,",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "\"resources\",",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncOpsDigestCardValue(dom.opsDigestActions, actionOverview, \"actions\", actionsCardTone);",
     "app.mjs",
     failures,
   );
@@ -12298,13 +12310,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    "applyRiskTone(node, tone);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "\"breakthrough\",",
     "app.mjs",
     failures,
   );
   assertIncludes(
     app,
-    "syncOpsDigestCardValue(dom.opsDigestSave, saveOverview, \"save\");",
+    "syncOpsDigestCardValue(dom.opsDigestSave, saveOverview, \"save\", saveCardTone);",
     "app.mjs",
     failures,
   );
@@ -14257,6 +14275,8 @@ async function main() {
   assertIncludes(css, ".ops-digest-card-head", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-badge", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-head .ops-digest-badge[role=\"button\"]", "app.css", failures);
+  assertIncludes(css, ".ops-digest-value.tone-warn", "app.css", failures);
+  assertIncludes(css, ".ops-digest-value.tone-error", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-label", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-icon", "app.css", failures);
   assertIncludes(css, ".ops-digest-link-icon", "app.css", failures);
