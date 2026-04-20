@@ -14361,6 +14361,7 @@ async function main() {
   assertIncludes(css, ".ops-digest-card-meta", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-badge", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-priority", "app.css", failures);
+  assertIncludes(css, "flex-direction: column;", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-head .ops-digest-badge[role=\"button\"]", "app.css", failures);
   assertIncludes(css, ".ops-digest-value.tone-warn", "app.css", failures);
   assertIncludes(css, ".ops-digest-value.tone-error", "app.css", failures);
