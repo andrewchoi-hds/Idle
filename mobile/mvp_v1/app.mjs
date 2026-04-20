@@ -1162,6 +1162,13 @@ function syncOpsDigestCardPriorityChip(node, priority, tone = "info") {
   applyRiskTone(node, tone);
 }
 
+function syncOpsDigestCardLink(node, tone = "info") {
+  if (!node) {
+    return;
+  }
+  applyRiskTone(node, tone);
+}
+
 function syncOpsDigestCardContainer(node, cardKey, tone) {
   if (!node) {
     return;
@@ -4373,6 +4380,14 @@ function syncOpsDigestPanel() {
     resolveOpsDigestCardPriority("save", saveCardTone),
     saveCardTone,
   );
+  syncOpsDigestCardLink(dom.btnOpsDigestOpenFocus, focusCardTone);
+  syncOpsDigestCardLink(dom.btnOpsDigestOpenSettings, settingsCardTone);
+  syncOpsDigestCardLink(dom.btnOpsDigestOpenStage, stageCardTone);
+  syncOpsDigestCardLink(dom.btnOpsDigestOpenBattle, battleCardTone);
+  syncOpsDigestCardLink(dom.btnOpsDigestOpenResources, resourcesCardTone);
+  syncOpsDigestCardLink(dom.btnOpsDigestOpenActions, actionsCardTone);
+  syncOpsDigestCardLink(dom.btnOpsDigestOpenBreakthrough, breakthroughCardTone);
+  syncOpsDigestCardLink(dom.btnOpsDigestOpenSave, saveCardTone);
   dom.opsDigestPanel.dataset.dividerTone = resolveOpsDigestDividerTone(
     dom.opsDigestPanel.dataset.dividerTone || "info",
     cardDividerState.tone,

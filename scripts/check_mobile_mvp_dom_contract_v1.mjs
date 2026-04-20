@@ -11766,6 +11766,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function syncOpsDigestCardLink(node, tone = \"info\") {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'node.style.setProperty("--card-order-rank", String(orderRank));',
     "app.mjs",
     failures,
@@ -12343,6 +12349,18 @@ async function main() {
   assertIncludes(
     app,
     "syncOpsDigestCardPriorityChip(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncOpsDigestCardLink(dom.btnOpsDigestOpenBattle, battleCardTone);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncOpsDigestCardLink(dom.btnOpsDigestOpenBreakthrough, breakthroughCardTone);",
     "app.mjs",
     failures,
   );
@@ -14402,6 +14420,9 @@ async function main() {
   assertIncludes(css, ".ops-digest-card-icon", "app.css", failures);
   assertIncludes(css, ".ops-digest-link-icon", "app.css", failures);
   assertIncludes(css, ".ops-digest-link-label", "app.css", failures);
+  assertIncludes(css, ".ops-digest-link.tone-warn", "app.css", failures);
+  assertIncludes(css, ".ops-digest-link.tone-error", "app.css", failures);
+  assertIncludes(css, ".ops-digest-link.tone-success .ops-digest-link-icon", "app.css", failures);
   assertIncludes(css, ".offline-compare-delta-summary.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-match-summary.tone-error", "app.css", failures);
   assertIncludes(css, ".offline-compare-source.tone-error", "app.css", failures);
