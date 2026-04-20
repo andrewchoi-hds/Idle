@@ -439,10 +439,20 @@ h2 {
     gap: 6px;
   }
 
+  .ops-digest-card-meta {
+    gap: 3px;
+  }
+
   .ops-digest-card-badge {
     min-height: 20px;
     padding: 0 5px;
     font-size: 9px;
+  }
+
+  .ops-digest-card-priority {
+    min-height: 18px;
+    padding: 0 4px;
+    font-size: 8px;
   }
 }
 
@@ -989,10 +999,22 @@ h2 {
   gap: 8px;
 }
 
+.ops-digest-card-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .ops-digest-card-badge {
   min-height: 22px;
   padding: 0 6px;
   font-size: 10px;
+}
+
+.ops-digest-card-priority {
+  min-height: 20px;
+  padding: 0 5px;
+  font-size: 9px;
 }
 
 .ops-digest-card-head .ops-digest-badge[role="button"] {

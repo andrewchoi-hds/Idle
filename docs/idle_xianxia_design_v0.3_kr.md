@@ -4756,6 +4756,14 @@
 ## 1117) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(card header tone emphasis 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
 
+## 1118) 다음 순차 작업
+1. [완료] 카드 header 오른쪽에 `ops-digest-card-priority` micro chip을 추가해 `긴급/주의/활성/일반` 우선순위를 card badge와 함께 바로 읽히게 정리.
+2. [완료] `formatOpsDigestCardPriorityLabel()` 및 `syncOpsDigestCardPriorityChip()` helper를 추가하고, 카드별 `data-card-priority`를 직접 visible chip으로 동기화해 mobile 카드 영역의 hierarchy를 더 분명하게 만듦.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 card priority chip 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1119) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(card priority chip 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
 ## 1114) 다음 순차 작업
 1. [완료] ops digest 카드 article 자체에 `data-card-tone="success|warn|error"` 대비 규칙을 추가해 strong 카드가 카드 영역 안에서도 배경/그림자 차이로 더 먼저 읽히게 정리.
 2. [완료] 기존 card badge tone, card value tone emphasis, mobile priority ordering을 유지한 채 container contrast까지 더해 카드 단위 hierarchy를 한 단계 더 강화.
