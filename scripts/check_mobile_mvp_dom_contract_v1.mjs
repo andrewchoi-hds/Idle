@@ -11766,6 +11766,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function resolveOpsDigestDividerTone(primaryTone, secondaryTone) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function buildOpsDigestDividerLabel(priorityFirst, cardDividerLabel) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function syncOpsDigestTriageStrip() {",
     "app.mjs",
     failures,
@@ -12066,7 +12078,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    'panel.dataset.dividerLabel = toplineState.priorityFirst ? "우선 후 상세" : "상세 상태";',
+    "panel.dataset.dividerLabel = buildOpsDigestDividerLabel(",
     "app.mjs",
     failures,
   );
@@ -12402,7 +12414,13 @@ async function main() {
   );
   assertIncludes(
     app,
-    'dom.opsDigestPanel.dataset.dividerLabel = cardDividerState.label;',
+    "dom.opsDigestPanel.dataset.dividerTone = resolveOpsDigestDividerTone(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.dividerLabel = buildOpsDigestDividerLabel(",
     "app.mjs",
     failures,
   );

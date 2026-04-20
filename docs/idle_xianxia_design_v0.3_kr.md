@@ -4765,6 +4765,14 @@
 - 모바일 MVP 수직슬라이스 가이드(card priority chip 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
 
 ## 1120) 다음 순차 작업
+1. [완료] divider label 합성을 `resolveOpsDigestDividerTone()`, `buildOpsDigestDividerLabel()` helper로 정리해 topline 우선 상태와 card 최상위 priority가 같은 vocabulary로 읽히게 보강.
+2. [완료] `applyOpsDigestToplineState()`의 기본 divider 문구와 `syncOpsDigestPanel()`의 card priority 보정 경로를 helper 기준으로 정합화해 `우선 후 긴급 카드/우선 후 주의 카드/우선 후 활성 카드` 같은 label이 더 직접적으로 드러나게 만듦.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 divider label synthesis 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1121) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(divider label synthesis 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1120) 다음 순차 작업
 1. [완료] 모바일 폭에서 card header 오른쪽 `priority chip + status badge`를 `.ops-digest-card-meta` 세로 2-tier stack으로 바꿔 가로 폭을 줄이고 hierarchy를 더 또렷하게 정리.
 2. [완료] `ops-digest-card-meta` gap을 더 줄이고 `align-items: end`로 맞춰서 좁은 화면에서도 priority chip이 status badge 위에서 안정적으로 읽히게 정합화.
 3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 card meta mobile stack 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
