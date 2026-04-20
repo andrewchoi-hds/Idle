@@ -4773,6 +4773,14 @@
 - 모바일 MVP 수직슬라이스 가이드(divider label synthesis 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
 
 ## 1122) 다음 순차 작업
+1. [완료] `priority chip` 자체에도 `.tone-success|tone-warn|tone-error` 대비를 더해 card header 단계에서 `긴급/주의/활성`이 일반보다 더 먼저 읽히게 보강.
+2. [완료] 기존 card badge/header/value/container emphasis 위에 priority chip contrast를 더해 카드 영역의 hierarchy가 header부터 body까지 한 흐름으로 이어지게 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 card priority chip contrast 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1123) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(card priority chip contrast 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1122) 다음 순차 작업
 1. [완료] card ordering을 `priority bucket`만이 아니라 `resolveOpsDigestCardOrderRank()` tie-break까지 포함한 rank로 확장해 같은 priority 카드 안에서도 더 의미 있는 순서로 보이게 정리.
 2. [완료] 모바일 카드 item이 `order: var(--card-order-rank, 99)`를 사용하고, `syncOpsDigestCardContainer()`가 `data-card-order-rank`와 CSS custom property를 함께 기록하도록 정합화.
 3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 card order rank 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
