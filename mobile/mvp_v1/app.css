@@ -1009,6 +1009,30 @@ h2 {
   line-height: 1.45;
 }
 
+.ops-digest-value.tone-success,
+.ops-digest-value.tone-warn,
+.ops-digest-value.tone-error {
+  padding-left: 6px;
+  border-left: 2px solid transparent;
+}
+
+.ops-digest-value.tone-success {
+  color: #d9ffec;
+  border-left-color: rgba(46, 143, 104, 0.72);
+}
+
+.ops-digest-value.tone-warn {
+  color: #fff1c7;
+  border-left-color: rgba(192, 141, 52, 0.82);
+  font-weight: 600;
+}
+
+.ops-digest-value.tone-error {
+  color: #ffe1de;
+  border-left-color: rgba(177, 75, 69, 0.86);
+  font-weight: 600;
+}
+
 .app.battle-focus-mode .panel[data-panel-role="secondary"] {
   display: none;
 }
