@@ -93,27 +93,35 @@ const dom = {
   opsDigestPanel: document.getElementById("opsDigestPanel"),
   opsDigestFocus: document.getElementById("opsDigestFocus"),
   opsDigestFocusBadge: document.getElementById("opsDigestFocusBadge"),
+  opsDigestFocusPriority: document.getElementById("opsDigestFocusPriority"),
   opsDigestFocusCard: document.getElementById("opsDigestFocusCard"),
   opsDigestSettings: document.getElementById("opsDigestSettings"),
   opsDigestSettingsBadge: document.getElementById("opsDigestSettingsBadge"),
+  opsDigestSettingsPriority: document.getElementById("opsDigestSettingsPriority"),
   opsDigestSettingsCard: document.getElementById("opsDigestSettingsCard"),
   opsDigestStage: document.getElementById("opsDigestStage"),
   opsDigestStageBadge: document.getElementById("opsDigestStageBadge"),
+  opsDigestStagePriority: document.getElementById("opsDigestStagePriority"),
   opsDigestStageCard: document.getElementById("opsDigestStageCard"),
   opsDigestBattle: document.getElementById("opsDigestBattle"),
   opsDigestBattleBadge: document.getElementById("opsDigestBattleBadge"),
+  opsDigestBattlePriority: document.getElementById("opsDigestBattlePriority"),
   opsDigestBattleCard: document.getElementById("opsDigestBattleCard"),
   opsDigestResources: document.getElementById("opsDigestResources"),
   opsDigestResourcesBadge: document.getElementById("opsDigestResourcesBadge"),
+  opsDigestResourcesPriority: document.getElementById("opsDigestResourcesPriority"),
   opsDigestResourcesCard: document.getElementById("opsDigestResourcesCard"),
   opsDigestActions: document.getElementById("opsDigestActions"),
   opsDigestActionsBadge: document.getElementById("opsDigestActionsBadge"),
+  opsDigestActionsPriority: document.getElementById("opsDigestActionsPriority"),
   opsDigestActionsCard: document.getElementById("opsDigestActionsCard"),
   opsDigestBreakthrough: document.getElementById("opsDigestBreakthrough"),
   opsDigestBreakthroughBadge: document.getElementById("opsDigestBreakthroughBadge"),
+  opsDigestBreakthroughPriority: document.getElementById("opsDigestBreakthroughPriority"),
   opsDigestBreakthroughCard: document.getElementById("opsDigestBreakthroughCard"),
   opsDigestSave: document.getElementById("opsDigestSave"),
   opsDigestSaveBadge: document.getElementById("opsDigestSaveBadge"),
+  opsDigestSavePriority: document.getElementById("opsDigestSavePriority"),
   opsDigestSaveCard: document.getElementById("opsDigestSaveCard"),
   btnOpsDigestOpenFocus: document.getElementById("btnOpsDigestOpenFocus"),
   btnOpsDigestOpenSettings: document.getElementById("btnOpsDigestOpenSettings"),
@@ -1088,6 +1096,29 @@ function buildOpsDigestCardDividerState(cardPriorities = []) {
     return { tone: "success", label: "활성 카드" };
   }
   return { tone: "info", label: "상세 상태" };
+}
+
+function formatOpsDigestCardPriorityLabel(priority) {
+  switch (String(priority || "low").trim()) {
+    case "critical":
+      return "긴급";
+    case "high":
+      return "주의";
+    case "medium":
+      return "활성";
+    default:
+      return "일반";
+  }
+}
+
+function syncOpsDigestCardPriorityChip(node, priority, tone = "info") {
+  if (!node) {
+    return;
+  }
+  const label = formatOpsDigestCardPriorityLabel(priority);
+  node.textContent = label;
+  node.title = `우선순위 ${label}`;
+  applyRiskTone(node, tone);
 }
 
 function syncOpsDigestCardContainer(node, cardKey, tone) {
@@ -4255,6 +4286,46 @@ function syncOpsDigestPanel() {
     breakthroughCardTone,
   );
   syncOpsDigestCardContainer(dom.opsDigestSaveCard, "save", saveCardTone);
+  syncOpsDigestCardPriorityChip(
+    dom.opsDigestFocusPriority,
+    resolveOpsDigestCardPriority("focus", focusCardTone),
+    focusCardTone,
+  );
+  syncOpsDigestCardPriorityChip(
+    dom.opsDigestSettingsPriority,
+    resolveOpsDigestCardPriority("settings", settingsCardTone),
+    settingsCardTone,
+  );
+  syncOpsDigestCardPriorityChip(
+    dom.opsDigestStagePriority,
+    resolveOpsDigestCardPriority("stage", stageCardTone),
+    stageCardTone,
+  );
+  syncOpsDigestCardPriorityChip(
+    dom.opsDigestBattlePriority,
+    resolveOpsDigestCardPriority("battle", battleCardTone),
+    battleCardTone,
+  );
+  syncOpsDigestCardPriorityChip(
+    dom.opsDigestResourcesPriority,
+    resolveOpsDigestCardPriority("resources", resourcesCardTone),
+    resourcesCardTone,
+  );
+  syncOpsDigestCardPriorityChip(
+    dom.opsDigestActionsPriority,
+    resolveOpsDigestCardPriority("actions", actionsCardTone),
+    actionsCardTone,
+  );
+  syncOpsDigestCardPriorityChip(
+    dom.opsDigestBreakthroughPriority,
+    resolveOpsDigestCardPriority("breakthrough", breakthroughCardTone),
+    breakthroughCardTone,
+  );
+  syncOpsDigestCardPriorityChip(
+    dom.opsDigestSavePriority,
+    resolveOpsDigestCardPriority("save", saveCardTone),
+    saveCardTone,
+  );
   if (dom.opsDigestPanel.dataset.dividerTone === "info") {
     dom.opsDigestPanel.dataset.dividerTone = cardDividerState.tone;
   }

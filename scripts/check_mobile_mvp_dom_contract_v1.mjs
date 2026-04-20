@@ -1779,6 +1779,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestFocusPriority"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'data-badge-target-panel="focusControlsPanel"',
     "index.html",
     failures,
@@ -1798,6 +1804,18 @@ async function main() {
   assertIncludes(
     html,
     'id="opsDigestSaveBadge"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="opsDigestSavePriority"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'class="ops-digest-card-meta"',
     "index.html",
     failures,
   );
@@ -11730,6 +11748,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function formatOpsDigestCardPriorityLabel(priority) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function syncOpsDigestCardPriorityChip(node, priority, tone = \"info\") {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function buildOpsDigestCardDividerState(cardPriorities = []) {",
     "app.mjs",
     failures,
@@ -12283,6 +12313,24 @@ async function main() {
   assertIncludes(
     app,
     "syncOpsDigestCardValue(dom.opsDigestFocus, focusOverview, \"focus\", focusCardTone);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncOpsDigestCardPriorityChip(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestFocusPriority,",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestSavePriority,",
     "app.mjs",
     failures,
   );
@@ -14310,7 +14358,9 @@ async function main() {
   assertIncludes(css, ".ops-digest-triage.tone-warn", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage-chip", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-head", "app.css", failures);
+  assertIncludes(css, ".ops-digest-card-meta", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-badge", "app.css", failures);
+  assertIncludes(css, ".ops-digest-card-priority", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-head .ops-digest-badge[role=\"button\"]", "app.css", failures);
   assertIncludes(css, ".ops-digest-value.tone-warn", "app.css", failures);
   assertIncludes(css, ".ops-digest-value.tone-error", "app.css", failures);
