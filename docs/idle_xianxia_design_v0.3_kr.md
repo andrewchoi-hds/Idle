@@ -4741,6 +4741,14 @@
 - 모바일 MVP 수직슬라이스 가이드(card value tone emphasis 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
 
 ## 1114) 다음 순차 작업
+1. [완료] 카드 최상위 priority 집계를 `buildOpsDigestCardDividerState()` helper로 추출해 divider가 `긴급 카드/주의 카드/활성 카드/상세 상태` label과 tone을 카드 영역 우선순위와 함께 반영하도록 정리.
+2. [완료] `syncOpsDigestPanel()`이 카드 tone/priority를 모두 계산한 뒤 divider label/tone도 보정하도록 정합화해, 상단 topline과 카드 영역이 같은 우선순위 언어로 이어지게 만듦.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 card divider state 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1115) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(card divider state 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1114) 다음 순차 작업
 1. [완료] ops digest 카드 article 자체에 `data-card-tone="success|warn|error"` 대비 규칙을 추가해 strong 카드가 카드 영역 안에서도 배경/그림자 차이로 더 먼저 읽히게 정리.
 2. [완료] 기존 card badge tone, card value tone emphasis, mobile priority ordering을 유지한 채 container contrast까지 더해 카드 단위 hierarchy를 한 단계 더 강화.
 3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 card tone container 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.

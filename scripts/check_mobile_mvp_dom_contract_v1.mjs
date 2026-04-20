@@ -11724,6 +11724,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function resolveOpsDigestCardPriority(cardKey, tone) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function buildOpsDigestCardDividerState(cardPriorities = []) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function syncOpsDigestTriageStrip() {",
     "app.mjs",
     failures,
@@ -12030,6 +12042,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "const cardDividerState = buildOpsDigestCardDividerState(cardPriorities);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestToplineFreshness.textContent = toplineUpdatedLabel;",
     "app.mjs",
     failures,
@@ -12331,6 +12349,12 @@ async function main() {
   assertIncludes(
     app,
     "syncOpsDigestCardValue(dom.opsDigestSave, saveOverview, \"save\", saveCardTone);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.opsDigestPanel.dataset.dividerLabel = cardDividerState.label;',
     "app.mjs",
     failures,
   );

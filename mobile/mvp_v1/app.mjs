@@ -1074,6 +1074,22 @@ function resolveOpsDigestCardPriority(cardKey, tone) {
   return "low";
 }
 
+function buildOpsDigestCardDividerState(cardPriorities = []) {
+  const normalizedPriorities = Array.isArray(cardPriorities)
+    ? cardPriorities.filter(Boolean)
+    : [];
+  if (normalizedPriorities.includes("critical")) {
+    return { tone: "error", label: "긴급 카드" };
+  }
+  if (normalizedPriorities.includes("high")) {
+    return { tone: "warn", label: "주의 카드" };
+  }
+  if (normalizedPriorities.includes("medium")) {
+    return { tone: "success", label: "활성 카드" };
+  }
+  return { tone: "info", label: "상세 상태" };
+}
+
 function syncOpsDigestCardContainer(node, cardKey, tone) {
   if (!node) {
     return;
@@ -4148,6 +4164,17 @@ function syncOpsDigestPanel() {
   const hasSavedRun = String(dom.savePanel?.dataset.lastSavedAt || "").trim() !== "";
   const saveCardTone =
     saveSlotState === "corrupt" ? "error" : hasSavedRun ? "success" : "info";
+  const cardPriorities = [
+    resolveOpsDigestCardPriority("focus", focusCardTone),
+    resolveOpsDigestCardPriority("settings", settingsCardTone),
+    resolveOpsDigestCardPriority("stage", stageCardTone),
+    resolveOpsDigestCardPriority("battle", battleCardTone),
+    resolveOpsDigestCardPriority("resources", resourcesCardTone),
+    resolveOpsDigestCardPriority("actions", actionsCardTone),
+    resolveOpsDigestCardPriority("breakthrough", breakthroughCardTone),
+    resolveOpsDigestCardPriority("save", saveCardTone),
+  ];
+  const cardDividerState = buildOpsDigestCardDividerState(cardPriorities);
 
   syncOpsDigestCardValue(dom.opsDigestFocus, focusOverview, "focus", focusCardTone);
   syncOpsDigestCardValue(
@@ -4228,6 +4255,12 @@ function syncOpsDigestPanel() {
     breakthroughCardTone,
   );
   syncOpsDigestCardContainer(dom.opsDigestSaveCard, "save", saveCardTone);
+  if (dom.opsDigestPanel.dataset.dividerTone === "info") {
+    dom.opsDigestPanel.dataset.dividerTone = cardDividerState.tone;
+  }
+  if (dom.opsDigestPanel.dataset.dividerLabel === "상세 상태") {
+    dom.opsDigestPanel.dataset.dividerLabel = cardDividerState.label;
+  }
   syncOpsDigestWarnings();
   syncOpsDigestQuickActions();
   syncOpsDigestNextAction();
