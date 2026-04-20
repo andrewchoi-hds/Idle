@@ -93,20 +93,28 @@ const dom = {
   opsDigestPanel: document.getElementById("opsDigestPanel"),
   opsDigestFocus: document.getElementById("opsDigestFocus"),
   opsDigestFocusBadge: document.getElementById("opsDigestFocusBadge"),
+  opsDigestFocusCard: document.getElementById("opsDigestFocusCard"),
   opsDigestSettings: document.getElementById("opsDigestSettings"),
   opsDigestSettingsBadge: document.getElementById("opsDigestSettingsBadge"),
+  opsDigestSettingsCard: document.getElementById("opsDigestSettingsCard"),
   opsDigestStage: document.getElementById("opsDigestStage"),
   opsDigestStageBadge: document.getElementById("opsDigestStageBadge"),
+  opsDigestStageCard: document.getElementById("opsDigestStageCard"),
   opsDigestBattle: document.getElementById("opsDigestBattle"),
   opsDigestBattleBadge: document.getElementById("opsDigestBattleBadge"),
+  opsDigestBattleCard: document.getElementById("opsDigestBattleCard"),
   opsDigestResources: document.getElementById("opsDigestResources"),
   opsDigestResourcesBadge: document.getElementById("opsDigestResourcesBadge"),
+  opsDigestResourcesCard: document.getElementById("opsDigestResourcesCard"),
   opsDigestActions: document.getElementById("opsDigestActions"),
   opsDigestActionsBadge: document.getElementById("opsDigestActionsBadge"),
+  opsDigestActionsCard: document.getElementById("opsDigestActionsCard"),
   opsDigestBreakthrough: document.getElementById("opsDigestBreakthrough"),
   opsDigestBreakthroughBadge: document.getElementById("opsDigestBreakthroughBadge"),
+  opsDigestBreakthroughCard: document.getElementById("opsDigestBreakthroughCard"),
   opsDigestSave: document.getElementById("opsDigestSave"),
   opsDigestSaveBadge: document.getElementById("opsDigestSaveBadge"),
+  opsDigestSaveCard: document.getElementById("opsDigestSaveCard"),
   btnOpsDigestOpenFocus: document.getElementById("btnOpsDigestOpenFocus"),
   btnOpsDigestOpenSettings: document.getElementById("btnOpsDigestOpenSettings"),
   btnOpsDigestOpenStage: document.getElementById("btnOpsDigestOpenStage"),
@@ -1044,6 +1052,36 @@ function syncOpsDigestCardBadge(node, label, tone = "info") {
     node.title = `${node.dataset.badgeActionLabel} · ${node.textContent}`;
   }
   applyRiskTone(node, tone);
+}
+
+function resolveOpsDigestCardPriority(cardKey, tone) {
+  const normalizedKey = String(cardKey || "").trim();
+  const normalizedTone = String(tone || "info").trim() || "info";
+  if (normalizedTone === "error") {
+    return "critical";
+  }
+  if (normalizedTone === "warn") {
+    return normalizedKey === "focus" || normalizedKey === "settings" ? "medium" : "high";
+  }
+  if (normalizedTone === "success") {
+    return normalizedKey === "actions" ||
+      normalizedKey === "breakthrough" ||
+      normalizedKey === "stage" ||
+      normalizedKey === "save"
+      ? "medium"
+      : "low";
+  }
+  return "low";
+}
+
+function syncOpsDigestCardContainer(node, cardKey, tone) {
+  if (!node) {
+    return;
+  }
+  const normalizedTone = String(tone || "info").trim() || "info";
+  const priority = resolveOpsDigestCardPriority(cardKey, normalizedTone);
+  node.dataset.cardTone = normalizedTone;
+  node.dataset.cardPriority = priority;
 }
 
 function formatOpsDigestCardValueCompact(kind, summary) {
@@ -4174,6 +4212,22 @@ function syncOpsDigestPanel() {
     saveSlotState === "corrupt" ? "손상" : hasSavedRun ? "기록" : "대기",
     saveCardTone,
   );
+  syncOpsDigestCardContainer(dom.opsDigestFocusCard, "focus", focusCardTone);
+  syncOpsDigestCardContainer(dom.opsDigestSettingsCard, "settings", settingsCardTone);
+  syncOpsDigestCardContainer(dom.opsDigestStageCard, "stage", stageCardTone);
+  syncOpsDigestCardContainer(dom.opsDigestBattleCard, "battle", battleCardTone);
+  syncOpsDigestCardContainer(
+    dom.opsDigestResourcesCard,
+    "resources",
+    resourcesCardTone,
+  );
+  syncOpsDigestCardContainer(dom.opsDigestActionsCard, "actions", actionsCardTone);
+  syncOpsDigestCardContainer(
+    dom.opsDigestBreakthroughCard,
+    "breakthrough",
+    breakthroughCardTone,
+  );
+  syncOpsDigestCardContainer(dom.opsDigestSaveCard, "save", saveCardTone);
   syncOpsDigestWarnings();
   syncOpsDigestQuickActions();
   syncOpsDigestNextAction();

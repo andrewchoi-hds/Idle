@@ -17,20 +17,28 @@ const REQUIRED_HTML_IDS = [
   "opsDigestPanel",
   "opsDigestFocus",
   "opsDigestFocusBadge",
+  "opsDigestFocusCard",
   "opsDigestSettings",
   "opsDigestSettingsBadge",
+  "opsDigestSettingsCard",
   "opsDigestStage",
   "opsDigestStageBadge",
+  "opsDigestStageCard",
   "opsDigestBattle",
   "opsDigestBattleBadge",
+  "opsDigestBattleCard",
   "opsDigestResources",
   "opsDigestResourcesBadge",
+  "opsDigestResourcesCard",
   "opsDigestActions",
   "opsDigestActionsBadge",
+  "opsDigestActionsCard",
   "opsDigestBreakthrough",
   "opsDigestBreakthroughBadge",
+  "opsDigestBreakthroughCard",
   "opsDigestSave",
   "opsDigestSaveBadge",
+  "opsDigestSaveCard",
   "btnOpsDigestOpenFocus",
   "btnOpsDigestOpenSettings",
   "btnOpsDigestOpenStage",
@@ -14268,6 +14276,9 @@ async function main() {
   assertIncludes(css, ".ops-digest-divider", "app.css", failures);
   assertIncludes(css, ".ops-digest-divider.tone-warn", "app.css", failures);
   assertIncludes(css, ".ops-digest-grid {", "app.css", failures);
+  assertIncludes(css, ".ops-digest-item[data-card-tone=\"success\"]", "app.css", failures);
+  assertIncludes(css, ".ops-digest-item[data-card-tone=\"warn\"]", "app.css", failures);
+  assertIncludes(css, ".ops-digest-item[data-card-tone=\"error\"]", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage.tone-success", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage.tone-warn", "app.css", failures);
