@@ -11748,6 +11748,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function resolveOpsDigestCardOrderRank(cardKey, priority) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function formatOpsDigestCardPriorityLabel(priority) {",
     "app.mjs",
     failures,
@@ -11755,6 +11761,12 @@ async function main() {
   assertIncludes(
     app,
     "function syncOpsDigestCardPriorityChip(node, priority, tone = \"info\") {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'node.style.setProperty("--card-order-rank", String(orderRank));',
     "app.mjs",
     failures,
   );
@@ -14369,6 +14381,7 @@ async function main() {
   assertIncludes(css, ".ops-digest-item[data-card-tone=\"success\"]", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-tone=\"warn\"]", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-tone=\"error\"]", "app.css", failures);
+  assertIncludes(css, "order: var(--card-order-rank, 99);", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-tone=\"warn\"] .ops-digest-card-label", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-tone=\"error\"] .ops-digest-card-icon", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage", "app.css", failures);

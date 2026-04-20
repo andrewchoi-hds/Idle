@@ -417,22 +417,7 @@ h2 {
   .ops-digest-item {
     gap: 5px;
     padding: 9px;
-  }
-
-  .ops-digest-item[data-card-priority="critical"] {
-    order: 0;
-  }
-
-  .ops-digest-item[data-card-priority="high"] {
-    order: 1;
-  }
-
-  .ops-digest-item[data-card-priority="medium"] {
-    order: 2;
-  }
-
-  .ops-digest-item[data-card-priority="low"] {
-    order: 3;
+    order: var(--card-order-rank, 99);
   }
 
   .ops-digest-card-head {

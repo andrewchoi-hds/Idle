@@ -562,3 +562,4 @@ npm run mobile:mvp:check
   - ops digest card priority chip 규칙(`formatOpsDigestCardPriorityLabel`, `syncOpsDigestCardPriorityChip`, `.ops-digest-card-priority`)이 카드 header에서 `긴급/주의/활성/일반` hierarchy를 직접 노출해 strong 카드의 우선순위를 더 빨리 읽히게 만드는지 검증
   - ops digest card header tone emphasis 규칙이 strong 카드의 header label/icon도 card tone을 공유해 카드 영역에서 헤더부터 우선순위가 더 먼저 읽히게 만드는지 검증
   - ops digest card meta mobile stack 규칙이 모바일 폭에서 `priority chip + status badge`를 세로 2-tier stack으로 배치해 card header 가로 폭을 줄이고 hierarchy를 더 또렷하게 만드는지 검증
+  - ops digest card order rank 헬퍼(`resolveOpsDigestCardOrderRank`)와 mobile `order: var(--card-order-rank)` 규칙이 같은 priority 카드 안에서도 `battle/breakthrough/save/actions/stage/resources/focus/settings` 순으로 더 의미 있게 정렬되게 만드는지 검증
