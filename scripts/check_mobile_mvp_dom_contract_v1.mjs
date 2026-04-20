@@ -1833,6 +1833,18 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-card-section-start="false"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-card-section-label=""',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'class="ops-digest-link-icon"',
     "index.html",
     failures,
@@ -11760,6 +11772,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function formatOpsDigestCardSectionLabel(priority) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function syncOpsDigestCardPriorityChip(node, priority, tone = \"info\") {",
     "app.mjs",
     failures,
@@ -11767,6 +11785,12 @@ async function main() {
   assertIncludes(
     app,
     "function syncOpsDigestCardLink(node, tone = \"info\") {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function syncOpsDigestCardSectionState(nodes = []) {",
     "app.mjs",
     failures,
   );
@@ -12355,6 +12379,24 @@ async function main() {
   assertIncludes(
     app,
     "syncOpsDigestCardLink(dom.btnOpsDigestOpenBattle, battleCardTone);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "syncOpsDigestCardSectionState([",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "card.node.dataset.cardSectionStart = \"true\";",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "card.node.dataset.cardSectionLabel = formatOpsDigestCardSectionLabel(card.priority);",
     "app.mjs",
     failures,
   );
@@ -14412,6 +14454,9 @@ async function main() {
   assertIncludes(css, ".ops-digest-card-priority", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-priority.tone-warn", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-priority.tone-error", "app.css", failures);
+  assertIncludes(css, ".ops-digest-item[data-card-section-start=\"true\"] {", "app.css", failures);
+  assertIncludes(css, ".ops-digest-item[data-card-section-start=\"true\"]::before", "app.css", failures);
+  assertIncludes(css, ".ops-digest-item[data-card-section-start=\"true\"][data-card-priority=\"critical\"]::before", "app.css", failures);
   assertIncludes(css, "flex-direction: column;", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-head .ops-digest-badge[role=\"button\"]", "app.css", failures);
   assertIncludes(css, ".ops-digest-value.tone-warn", "app.css", failures);

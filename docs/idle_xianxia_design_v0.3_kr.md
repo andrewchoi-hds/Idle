@@ -4811,3 +4811,11 @@
 
 ## 1125) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(card link tone propagation 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1126) 다음 순차 작업
+1. [완료] `formatOpsDigestCardSectionLabel()`과 `syncOpsDigestCardSectionState()` helper를 추가해 모바일 카드 그리드에서 priority bucket 첫 카드를 section start로 표기.
+2. [완료] `data-card-section-start`, `data-card-section-label` contract와 mobile full-width section marker CSS를 추가해 `긴급 카드/주의 카드/활성 카드/일반 카드` 구획이 first-screen에서 바로 읽히게 정리.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 card section marker 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1127) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(card section marker 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

@@ -1152,6 +1152,19 @@ function formatOpsDigestCardPriorityLabel(priority) {
   }
 }
 
+function formatOpsDigestCardSectionLabel(priority) {
+  switch (String(priority || "low").trim()) {
+    case "critical":
+      return "긴급 카드";
+    case "high":
+      return "주의 카드";
+    case "medium":
+      return "활성 카드";
+    default:
+      return "일반 카드";
+  }
+}
+
 function syncOpsDigestCardPriorityChip(node, priority, tone = "info") {
   if (!node) {
     return;
@@ -1180,6 +1193,36 @@ function syncOpsDigestCardContainer(node, cardKey, tone) {
   node.dataset.cardPriority = priority;
   node.dataset.cardOrderRank = String(orderRank);
   node.style.setProperty("--card-order-rank", String(orderRank));
+}
+
+function syncOpsDigestCardSectionState(nodes = []) {
+  const normalizedCards = Array.isArray(nodes)
+    ? nodes
+        .filter(Boolean)
+        .map((node) => ({
+          node,
+          priority: String(node.dataset.cardPriority || "low").trim() || "low",
+          orderRank: Math.floor(Number(node.dataset.cardOrderRank) || 99),
+        }))
+        .sort((left, right) => left.orderRank - right.orderRank)
+    : [];
+  const shouldShowSections = normalizedCards.some((card) => card.priority !== "low");
+  for (const card of normalizedCards) {
+    card.node.dataset.cardSectionStart = "false";
+    card.node.dataset.cardSectionLabel = "";
+  }
+  if (!shouldShowSections) {
+    return;
+  }
+  let lastPriority = "";
+  for (const card of normalizedCards) {
+    if (card.priority === lastPriority) {
+      continue;
+    }
+    card.node.dataset.cardSectionStart = "true";
+    card.node.dataset.cardSectionLabel = formatOpsDigestCardSectionLabel(card.priority);
+    lastPriority = card.priority;
+  }
 }
 
 function formatOpsDigestCardValueCompact(kind, summary) {
@@ -4340,6 +4383,16 @@ function syncOpsDigestPanel() {
     breakthroughCardTone,
   );
   syncOpsDigestCardContainer(dom.opsDigestSaveCard, "save", saveCardTone);
+  syncOpsDigestCardSectionState([
+    dom.opsDigestFocusCard,
+    dom.opsDigestSettingsCard,
+    dom.opsDigestStageCard,
+    dom.opsDigestBattleCard,
+    dom.opsDigestResourcesCard,
+    dom.opsDigestActionsCard,
+    dom.opsDigestBreakthroughCard,
+    dom.opsDigestSaveCard,
+  ]);
   syncOpsDigestCardPriorityChip(
     dom.opsDigestFocusPriority,
     resolveOpsDigestCardPriority("focus", focusCardTone),
