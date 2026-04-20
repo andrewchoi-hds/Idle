@@ -1002,6 +1002,29 @@ h2 {
   min-height: 20px;
   padding: 0 5px;
   font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.ops-digest-card-priority.tone-success {
+  border-color: rgba(46, 143, 104, 0.82);
+  background: rgba(18, 61, 46, 0.98);
+  color: #d9ffec;
+  box-shadow: 0 0 0 1px rgba(46, 143, 104, 0.26);
+}
+
+.ops-digest-card-priority.tone-warn {
+  border-color: rgba(192, 141, 52, 0.88);
+  background: rgba(59, 42, 12, 0.98);
+  color: #fff1c7;
+  box-shadow: 0 0 0 1px rgba(192, 141, 52, 0.32);
+}
+
+.ops-digest-card-priority.tone-error {
+  border-color: rgba(177, 75, 69, 0.9);
+  background: rgba(61, 22, 22, 0.98);
+  color: #ffe1de;
+  box-shadow: 0 0 0 1px rgba(177, 75, 69, 0.34);
 }
 
 .ops-digest-card-head .ops-digest-badge[role="button"] {
