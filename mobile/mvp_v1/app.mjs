@@ -1098,6 +1098,25 @@ function buildOpsDigestCardDividerState(cardPriorities = []) {
   return { tone: "info", label: "상세 상태" };
 }
 
+function resolveOpsDigestDividerTone(primaryTone, secondaryTone) {
+  const tonePriority = { error: 3, warn: 2, success: 1, info: 0 };
+  const normalizedPrimary = String(primaryTone || "info").trim() || "info";
+  const normalizedSecondary = String(secondaryTone || "info").trim() || "info";
+  return (tonePriority[normalizedSecondary] || 0) > (tonePriority[normalizedPrimary] || 0)
+    ? normalizedSecondary
+    : normalizedPrimary;
+}
+
+function buildOpsDigestDividerLabel(priorityFirst, cardDividerLabel) {
+  const normalizedCardLabel = String(cardDividerLabel || "상세 상태").trim() || "상세 상태";
+  if (priorityFirst === true) {
+    return normalizedCardLabel === "상세 상태"
+      ? "우선 후 상세"
+      : `우선 후 ${normalizedCardLabel}`;
+  }
+  return normalizedCardLabel;
+}
+
 function formatOpsDigestCardPriorityLabel(priority) {
   switch (String(priority || "low").trim()) {
     case "critical":
@@ -1764,7 +1783,10 @@ function applyOpsDigestToplineState(panel, toplineState) {
   panel.dataset.toplinePriorityDisabled = String(toplineState.toplinePriorityDisabled);
   panel.dataset.toplinePrioritySummary = toplineState.toplinePrioritySummary;
   panel.dataset.dividerTone = toplineState.toplineTone;
-  panel.dataset.dividerLabel = toplineState.priorityFirst ? "우선 후 상세" : "상세 상태";
+  panel.dataset.dividerLabel = buildOpsDigestDividerLabel(
+    toplineState.priorityFirst,
+    "상세 상태",
+  );
 }
 
 function syncOpsDigestToplineOrder(priorityFirst) {
@@ -4326,12 +4348,14 @@ function syncOpsDigestPanel() {
     resolveOpsDigestCardPriority("save", saveCardTone),
     saveCardTone,
   );
-  if (dom.opsDigestPanel.dataset.dividerTone === "info") {
-    dom.opsDigestPanel.dataset.dividerTone = cardDividerState.tone;
-  }
-  if (dom.opsDigestPanel.dataset.dividerLabel === "상세 상태") {
-    dom.opsDigestPanel.dataset.dividerLabel = cardDividerState.label;
-  }
+  dom.opsDigestPanel.dataset.dividerTone = resolveOpsDigestDividerTone(
+    dom.opsDigestPanel.dataset.dividerTone || "info",
+    cardDividerState.tone,
+  );
+  dom.opsDigestPanel.dataset.dividerLabel = buildOpsDigestDividerLabel(
+    dom.opsDigestPanel.dataset.toplinePriorityFirst === "true",
+    cardDividerState.label,
+  );
   syncOpsDigestWarnings();
   syncOpsDigestQuickActions();
   syncOpsDigestNextAction();
