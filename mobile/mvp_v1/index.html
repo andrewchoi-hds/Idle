@@ -147,7 +147,7 @@
         </div>
         <div id="opsDigestDivider" class="ops-digest-divider tone-info" role="separator" aria-label="상세 상태">상세 상태</div>
         <div class="ops-digest-grid">
-          <article class="ops-digest-item">
+          <article id="opsDigestFocusCard" class="ops-digest-item" data-card-tone="info" data-card-priority="low">
             <div class="ops-digest-card-head">
               <p class="ops-digest-label ops-digest-card-label"><span class="ops-digest-card-icon" aria-hidden="true">◎</span><span>집중</span></p>
               <span id="opsDigestFocusBadge" class="ops-digest-badge ops-digest-card-badge tone-info" tabindex="0" role="button" data-badge-target-panel="focusControlsPanel" data-badge-source="ops_focus" data-badge-action-label="집중 상태 열기" data-badge-focus-target="battleFocusHint" title="집중 상태 열기">OFF</span>
@@ -155,7 +155,7 @@
             <p id="opsDigestFocus" class="ops-digest-value">집중 ON · 효과음 OFF · 진동 OFF</p>
             <button id="btnOpsDigestOpenFocus" type="button" class="ghost-btn ops-digest-link" data-target-panel="focusControlsPanel" title="집중 패널 열기"><span class="ops-digest-link-icon" aria-hidden="true">↗</span><span class="ops-digest-link-label">열기</span></button>
           </article>
-          <article class="ops-digest-item">
+          <article id="opsDigestSettingsCard" class="ops-digest-item" data-card-tone="info" data-card-priority="low">
             <div class="ops-digest-card-head">
               <p class="ops-digest-label ops-digest-card-label"><span class="ops-digest-card-icon" aria-hidden="true">⚙</span><span>설정</span></p>
               <span id="opsDigestSettingsBadge" class="ops-digest-badge ops-digest-card-badge tone-info" tabindex="0" role="button" data-badge-target-panel="settingsPanel" data-badge-source="ops_settings" data-badge-action-label="설정 상태 열기" data-badge-focus-target="optAutoBattle" title="설정 상태 열기">수동</span>
@@ -163,7 +163,7 @@
             <p id="opsDigestSettings" class="ops-digest-value">전투 ON · 돌파 OFF · 도겁 OFF · 워밍업 6초</p>
             <button id="btnOpsDigestOpenSettings" type="button" class="ghost-btn ops-digest-link" data-target-panel="settingsPanel" title="설정 패널 열기"><span class="ops-digest-link-icon" aria-hidden="true">↗</span><span class="ops-digest-link-label">열기</span></button>
           </article>
-          <article class="ops-digest-item">
+          <article id="opsDigestStageCard" class="ops-digest-item" data-card-tone="info" data-card-priority="low">
             <div class="ops-digest-card-head">
               <p class="ops-digest-label ops-digest-card-label"><span class="ops-digest-card-icon" aria-hidden="true">◫</span><span>진행</span></p>
               <span id="opsDigestStageBadge" class="ops-digest-badge ops-digest-card-badge tone-info" tabindex="0" role="button" data-badge-target-panel="stagePanel" data-badge-source="ops_stage" data-badge-action-label="진행 상태 열기" data-badge-focus-target="qiProgressBar" title="진행 상태 열기">대기</span>
@@ -171,7 +171,7 @@
             <p id="opsDigestStage" class="ops-digest-value">난이도 0 · 기 0 / 0 · 돌파 대기</p>
             <button id="btnOpsDigestOpenStage" type="button" class="ghost-btn ops-digest-link" data-target-panel="stagePanel" title="진행 패널 열기"><span class="ops-digest-link-icon" aria-hidden="true">↗</span><span class="ops-digest-link-label">열기</span></button>
           </article>
-          <article class="ops-digest-item">
+          <article id="opsDigestBattleCard" class="ops-digest-item" data-card-tone="info" data-card-priority="low">
             <div class="ops-digest-card-head">
               <p class="ops-digest-label ops-digest-card-label"><span class="ops-digest-card-icon" aria-hidden="true">✦</span><span>전장</span></p>
               <span id="opsDigestBattleBadge" class="ops-digest-badge ops-digest-card-badge tone-info" tabindex="0" role="button" data-badge-target-panel="battleScenePanel" data-badge-source="ops_battle" data-badge-action-label="전장 상태 열기" data-badge-focus-target="battleSceneStatus" title="전장 상태 열기">안내</span>
@@ -179,7 +179,7 @@
             <p id="opsDigestBattle" class="ops-digest-value">대기 · 압력 낮음 · 수련자 100% · 적수 100%</p>
             <button id="btnOpsDigestOpenBattle" type="button" class="ghost-btn ops-digest-link" data-target-panel="battleScenePanel" title="전장 패널 열기"><span class="ops-digest-link-icon" aria-hidden="true">↗</span><span class="ops-digest-link-label">열기</span></button>
           </article>
-          <article class="ops-digest-item">
+          <article id="opsDigestResourcesCard" class="ops-digest-item" data-card-tone="info" data-card-priority="low">
             <div class="ops-digest-card-head">
               <p class="ops-digest-label ops-digest-card-label"><span class="ops-digest-card-icon" aria-hidden="true">◌</span><span>자원</span></p>
               <span id="opsDigestResourcesBadge" class="ops-digest-badge ops-digest-card-badge tone-info" tabindex="0" role="button" data-badge-target-panel="statsPanel" data-badge-source="ops_resources" data-badge-action-label="자원 상태 열기" data-badge-focus-target="statQi" title="자원 상태 열기">초기</span>
@@ -187,7 +187,7 @@
             <p id="opsDigestResources" class="ops-digest-value">기 0 · 영석 0 · 정수 0 · 환생 0</p>
             <button id="btnOpsDigestOpenResources" type="button" class="ghost-btn ops-digest-link" data-target-panel="statsPanel" title="자원 패널 열기"><span class="ops-digest-link-icon" aria-hidden="true">↗</span><span class="ops-digest-link-label">열기</span></button>
           </article>
-          <article class="ops-digest-item">
+          <article id="opsDigestActionsCard" class="ops-digest-item" data-card-tone="info" data-card-priority="low">
             <div class="ops-digest-card-head">
               <p class="ops-digest-label ops-digest-card-label"><span class="ops-digest-card-icon" aria-hidden="true">↺</span><span>자동화</span></p>
               <span id="opsDigestActionsBadge" class="ops-digest-badge ops-digest-card-badge tone-info" tabindex="0" role="button" data-badge-target-panel="actionsPanel" data-badge-source="ops_actions" data-badge-action-label="자동화 상태 열기" data-badge-focus-target="realtimeAutoStatus" title="자동화 상태 열기">대기</span>
@@ -195,7 +195,7 @@
             <p id="opsDigestActions" class="ops-digest-value">중지 · 전투 0 · 돌파 0 · 환생 0</p>
             <button id="btnOpsDigestOpenActions" type="button" class="ghost-btn ops-digest-link" data-target-panel="actionsPanel" title="자동화 패널 열기"><span class="ops-digest-link-icon" aria-hidden="true">↗</span><span class="ops-digest-link-label">열기</span></button>
           </article>
-          <article class="ops-digest-item">
+          <article id="opsDigestBreakthroughCard" class="ops-digest-item" data-card-tone="info" data-card-priority="low">
             <div class="ops-digest-card-head">
               <p class="ops-digest-label ops-digest-card-label"><span class="ops-digest-card-icon" aria-hidden="true">▲</span><span>돌파</span></p>
               <span id="opsDigestBreakthroughBadge" class="ops-digest-badge ops-digest-card-badge tone-info" tabindex="0" role="button" data-badge-target-panel="breakthroughPreviewPanel" data-badge-source="ops_breakthrough" data-badge-action-label="돌파 상태 열기" data-badge-focus-target="previewRecommendationLabel" title="돌파 상태 열기">안내</span>
@@ -203,7 +203,7 @@
             <p id="opsDigestBreakthrough" class="ops-digest-value">영약 0 · 수호부 0 · 성공 0.0% · 사망 0.0%</p>
             <button id="btnOpsDigestOpenBreakthrough" type="button" class="ghost-btn ops-digest-link" data-target-panel="breakthroughPreviewPanel" title="돌파 패널 열기"><span class="ops-digest-link-icon" aria-hidden="true">↗</span><span class="ops-digest-link-label">열기</span></button>
           </article>
-          <article class="ops-digest-item">
+          <article id="opsDigestSaveCard" class="ops-digest-item" data-card-tone="info" data-card-priority="low">
             <div class="ops-digest-card-head">
               <p class="ops-digest-label ops-digest-card-label"><span class="ops-digest-card-icon" aria-hidden="true">▣</span><span>저장</span></p>
               <span id="opsDigestSaveBadge" class="ops-digest-badge ops-digest-card-badge tone-info" tabindex="0" role="button" data-badge-target-panel="savePanel" data-badge-source="ops_save" data-badge-action-label="저장 상태 열기" data-badge-focus-target="saveSlotSummaryList" title="저장 상태 열기">대기</span>
