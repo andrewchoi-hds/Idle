@@ -1082,6 +1082,28 @@ function resolveOpsDigestCardPriority(cardKey, tone) {
   return "low";
 }
 
+function resolveOpsDigestCardOrderRank(cardKey, priority) {
+  const normalizedKey = String(cardKey || "").trim();
+  const normalizedPriority = String(priority || "low").trim() || "low";
+  const priorityRank = {
+    critical: 0,
+    high: 10,
+    medium: 20,
+    low: 30,
+  };
+  const keyRank = {
+    battle: 0,
+    breakthrough: 1,
+    save: 2,
+    actions: 3,
+    stage: 4,
+    resources: 5,
+    focus: 6,
+    settings: 7,
+  };
+  return (priorityRank[normalizedPriority] ?? 30) + (keyRank[normalizedKey] ?? 9);
+}
+
 function buildOpsDigestCardDividerState(cardPriorities = []) {
   const normalizedPriorities = Array.isArray(cardPriorities)
     ? cardPriorities.filter(Boolean)
@@ -1146,8 +1168,11 @@ function syncOpsDigestCardContainer(node, cardKey, tone) {
   }
   const normalizedTone = String(tone || "info").trim() || "info";
   const priority = resolveOpsDigestCardPriority(cardKey, normalizedTone);
+  const orderRank = resolveOpsDigestCardOrderRank(cardKey, priority);
   node.dataset.cardTone = normalizedTone;
   node.dataset.cardPriority = priority;
+  node.dataset.cardOrderRank = String(orderRank);
+  node.style.setProperty("--card-order-rank", String(orderRank));
 }
 
 function formatOpsDigestCardValueCompact(kind, summary) {

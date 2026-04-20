@@ -4772,6 +4772,14 @@
 ## 1121) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(divider label synthesis 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
 
+## 1122) 다음 순차 작업
+1. [완료] card ordering을 `priority bucket`만이 아니라 `resolveOpsDigestCardOrderRank()` tie-break까지 포함한 rank로 확장해 같은 priority 카드 안에서도 더 의미 있는 순서로 보이게 정리.
+2. [완료] 모바일 카드 item이 `order: var(--card-order-rank, 99)`를 사용하고, `syncOpsDigestCardContainer()`가 `data-card-order-rank`와 CSS custom property를 함께 기록하도록 정합화.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 card order rank 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1123) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(card order rank 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
 ## 1120) 다음 순차 작업
 1. [완료] 모바일 폭에서 card header 오른쪽 `priority chip + status badge`를 `.ops-digest-card-meta` 세로 2-tier stack으로 바꿔 가로 폭을 줄이고 hierarchy를 더 또렷하게 정리.
 2. [완료] `ops-digest-card-meta` gap을 더 줄이고 `align-items: end`로 맞춰서 좁은 화면에서도 priority chip이 status badge 위에서 안정적으로 읽히게 정합화.
