@@ -1046,6 +1046,18 @@ h2 {
   gap: 4px;
 }
 
+.ops-digest-link.tone-success {
+  box-shadow: 0 0 0 1px rgba(46, 143, 104, 0.24);
+}
+
+.ops-digest-link.tone-warn {
+  box-shadow: 0 0 0 1px rgba(192, 141, 52, 0.28);
+}
+
+.ops-digest-link.tone-error {
+  box-shadow: 0 0 0 1px rgba(177, 75, 69, 0.3);
+}
+
 .ops-digest-label {
   color: var(--muted);
   font-size: 11px;
@@ -1091,6 +1103,12 @@ h2 {
 
 .ops-digest-link-label {
   white-space: nowrap;
+}
+
+.ops-digest-link.tone-success .ops-digest-link-icon,
+.ops-digest-link.tone-warn .ops-digest-link-icon,
+.ops-digest-link.tone-error .ops-digest-link-icon {
+  opacity: 1;
 }
 
 .ops-digest-value {

@@ -564,3 +564,4 @@ npm run mobile:mvp:check
   - ops digest card meta mobile stack 규칙이 모바일 폭에서 `priority chip + status badge`를 세로 2-tier stack으로 배치해 card header 가로 폭을 줄이고 hierarchy를 더 또렷하게 만드는지 검증
   - ops digest card priority chip contrast 규칙(`.ops-digest-card-priority.tone-success|tone-warn|tone-error`)이 header chip 단계에서도 strong 상태를 더 먼저 읽히게 만들어 card badge/value/container와 hierarchy를 맞추는지 검증
   - ops digest card order rank 헬퍼(`resolveOpsDigestCardOrderRank`)와 mobile `order: var(--card-order-rank)` 규칙이 같은 priority 카드 안에서도 `battle/breakthrough/save/actions/stage/resources/focus/settings` 순으로 더 의미 있게 정렬되게 만드는지 검증
+  - ops digest card link tone propagation 규칙(`syncOpsDigestCardLink`, `.ops-digest-link.tone-success|tone-warn|tone-error`)이 strong 카드의 `열기` 링크도 card tone과 같은 hierarchy로 읽히게 만들어, header/value/container/link가 한 흐름으로 이어지는지 검증

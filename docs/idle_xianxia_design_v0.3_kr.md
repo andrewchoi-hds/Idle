@@ -4803,3 +4803,11 @@
 
 ## 1115) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(card tone container contrast 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1124) 다음 순차 작업
+1. [완료] 카드 `열기` 링크도 `syncOpsDigestCardLink()` helper를 통해 card tone을 직접 재사용하게 연결.
+2. [완료] `.ops-digest-link.tone-success|tone-warn|tone-error` 대비를 추가해 strong 카드의 action link가 info 링크보다 먼저 읽히게 보강.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 card link tone propagation 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1125) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(card link tone propagation 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
