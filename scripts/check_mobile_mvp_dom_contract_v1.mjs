@@ -14303,6 +14303,8 @@ async function main() {
   assertIncludes(css, ".ops-digest-item[data-card-tone=\"success\"]", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-tone=\"warn\"]", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-tone=\"error\"]", "app.css", failures);
+  assertIncludes(css, ".ops-digest-item[data-card-tone=\"warn\"] .ops-digest-card-label", "app.css", failures);
+  assertIncludes(css, ".ops-digest-item[data-card-tone=\"error\"] .ops-digest-card-icon", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage.tone-success", "app.css", failures);
   assertIncludes(css, ".ops-digest-triage.tone-warn", "app.css", failures);

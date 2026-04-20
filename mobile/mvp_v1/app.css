@@ -1033,6 +1033,24 @@ h2 {
   opacity: 0.82;
 }
 
+.ops-digest-item[data-card-tone="success"] .ops-digest-card-label,
+.ops-digest-item[data-card-tone="success"] .ops-digest-card-icon {
+  color: #c9f7e0;
+  opacity: 0.96;
+}
+
+.ops-digest-item[data-card-tone="warn"] .ops-digest-card-label,
+.ops-digest-item[data-card-tone="warn"] .ops-digest-card-icon {
+  color: #ffe0a1;
+  opacity: 1;
+}
+
+.ops-digest-item[data-card-tone="error"] .ops-digest-card-label,
+.ops-digest-item[data-card-tone="error"] .ops-digest-card-icon {
+  color: #ffd0cc;
+  opacity: 1;
+}
+
 .ops-digest-link-icon {
   font-size: 11px;
   line-height: 1;

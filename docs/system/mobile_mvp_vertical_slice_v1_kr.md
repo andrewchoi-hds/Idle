@@ -558,3 +558,4 @@ npm run mobile:mvp:check
   - ops digest card value tone emphasis 규칙이 card badge tone을 재사용해 `warn/error/success` 카드 본문 summary를 더 먼저 읽히게 만들고, info 카드와 대비를 벌리는지 검증
   - ops digest card tone container 규칙(`.ops-digest-item[data-card-tone="success|warn|error"]`)이 strong 카드 전체에 더 강한 배경/그림자 대비를 부여해 카드 영역에서도 우선 카드가 더 먼저 읽히게 만드는지 검증
   - ops digest divider와 card priority 동기화 헬퍼(`buildOpsDigestCardDividerState`)가 카드 최상위 priority를 `긴급 카드/주의 카드/활성 카드` label과 tone으로 환산해 topline/card 경계를 더 일관되게 읽히게 만드는지 검증
+  - ops digest card header tone emphasis 규칙이 strong 카드의 header label/icon도 card tone을 공유해 카드 영역에서 헤더부터 우선순위가 더 먼저 읽히게 만드는지 검증
