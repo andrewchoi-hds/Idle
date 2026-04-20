@@ -560,3 +560,4 @@ npm run mobile:mvp:check
   - ops digest divider와 card priority 동기화 헬퍼(`buildOpsDigestCardDividerState`)가 카드 최상위 priority를 `긴급 카드/주의 카드/활성 카드` label과 tone으로 환산해 topline/card 경계를 더 일관되게 읽히게 만드는지 검증
   - ops digest card priority chip 규칙(`formatOpsDigestCardPriorityLabel`, `syncOpsDigestCardPriorityChip`, `.ops-digest-card-priority`)이 카드 header에서 `긴급/주의/활성/일반` hierarchy를 직접 노출해 strong 카드의 우선순위를 더 빨리 읽히게 만드는지 검증
   - ops digest card header tone emphasis 규칙이 strong 카드의 header label/icon도 card tone을 공유해 카드 영역에서 헤더부터 우선순위가 더 먼저 읽히게 만드는지 검증
+  - ops digest card meta mobile stack 규칙이 모바일 폭에서 `priority chip + status badge`를 세로 2-tier stack으로 배치해 card header 가로 폭을 줄이고 hierarchy를 더 또렷하게 만드는지 검증
