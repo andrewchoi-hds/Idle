@@ -571,3 +571,4 @@ npm run mobile:mvp:check
   - ops digest card peer de-emphasis 규칙(`.ops-digest-item[data-card-section-role="peer"] .ops-digest-card-meta`, `.ops-digest-item[data-card-section-role="peer"] .ops-digest-link`)이 같은 section의 후속 카드를 한 단계 덜 강조해 lead card와의 시선 차이를 더 분명하게 만드는지 검증
   - ops digest card lead link emphasis 규칙(`.ops-digest-item[data-card-section-role="lead"] .ops-digest-link`, `.ops-digest-item[data-card-section-role="lead"] .ops-digest-link-label`)이 section marker 아래 첫 카드의 행동 진입점을 더 먼저 드러내는지 검증
   - ops digest card peer value de-emphasis 규칙(`.ops-digest-item[data-card-section-role="peer"] .ops-digest-value`)이 같은 section의 후속 카드 본문 value를 살짝 눌러 lead 카드 본문과의 시선 차이를 더 또렷하게 만드는지 검증
+  - ops digest card lead action cluster spacing 규칙(`.ops-digest-item[data-card-section-role="lead"]`, `.ops-digest-item[data-card-section-role="lead"] .ops-digest-link`)이 section marker 아래 첫 카드의 meta/value/link 간격을 더 조여 첫 행동 cluster를 더 단단하게 보이게 만드는지 검증

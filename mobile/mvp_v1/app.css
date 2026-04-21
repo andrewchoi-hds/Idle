@@ -473,6 +473,10 @@ h2 {
     box-shadow: 0 0 0 1px rgba(10, 17, 16, 0.24);
   }
 
+  .ops-digest-item[data-card-section-role="lead"] {
+    gap: 4px;
+  }
+
   .ops-digest-item[data-card-section-role="lead"][data-card-tone="success"] .ops-digest-card-meta {
     border-color: rgba(46, 143, 104, 0.42);
     background: rgba(18, 61, 46, 0.5);
@@ -490,6 +494,7 @@ h2 {
 
   .ops-digest-item[data-card-section-role="lead"] .ops-digest-link {
     opacity: 1;
+    margin-top: -1px;
     box-shadow: 0 0 0 1px rgba(76, 111, 103, 0.22);
   }
 
