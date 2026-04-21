@@ -59,6 +59,7 @@ const REQUIRED_HTML_IDS = [
   "opsDigestToplineFreshness",
   "opsDigestTriageStrip",
   "opsDigestDivider",
+  "opsDigestDividerLabel",
   "btnOpsDigestTriageWarning",
   "btnOpsDigestTriageAction",
   "btnOpsDigestTriageFilter",
@@ -269,6 +270,7 @@ const REQUIRED_DOM_KEYS = [
   "opsDigestToplineFreshness",
   "opsDigestTriageStrip",
   "opsDigestDivider",
+  "opsDigestDividerLabel",
   "btnOpsDigestTriageWarning",
   "btnOpsDigestTriageAction",
   "btnOpsDigestTriageFilter",
@@ -1977,6 +1979,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'id="opsDigestDividerLabel"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'id="btnOpsDigestTriageWarning"',
     "index.html",
     failures,
@@ -2404,6 +2412,12 @@ async function main() {
   assertIncludes(
     html,
     'data-divider-label="상세 상태"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'data-divider-priority="low"',
     "index.html",
     failures,
   );
@@ -11766,6 +11780,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function resolveOpsDigestCardPriorityDescriptor(priority) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function formatOpsDigestCardPriorityLabel(priority) {",
     "app.mjs",
     failures,
@@ -12115,6 +12135,12 @@ async function main() {
   assertIncludes(
     app,
     "panel.dataset.dividerTone = toplineState.toplineTone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "panel.dataset.dividerPriority = \"low\";",
     "app.mjs",
     failures,
   );
@@ -12492,7 +12518,25 @@ async function main() {
   );
   assertIncludes(
     app,
+    "dom.opsDigestPanel.dataset.dividerPriority = cardDividerState.priority;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.dividerLabel = buildOpsDigestDividerLabel(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestDividerLabel.textContent = dividerLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestDivider.dataset.dividerPriority =",
     "app.mjs",
     failures,
   );
@@ -14436,7 +14480,9 @@ async function main() {
   assertIncludes(css, "grid-column: 1 / -1;", "app.css", failures);
   assertIncludes(css, ".ops-digest-next,", "app.css", failures);
   assertIncludes(css, ".ops-digest-divider", "app.css", failures);
+  assertIncludes(css, ".ops-digest-divider-label", "app.css", failures);
   assertIncludes(css, ".ops-digest-divider.tone-warn", "app.css", failures);
+  assertIncludes(css, ".ops-digest-divider[data-divider-priority=\"critical\"] .ops-digest-divider-label", "app.css", failures);
   assertIncludes(css, ".ops-digest-grid {", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-tone=\"success\"]", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-tone=\"warn\"]", "app.css", failures);

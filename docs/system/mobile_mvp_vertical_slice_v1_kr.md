@@ -566,3 +566,4 @@ npm run mobile:mvp:check
   - ops digest card order rank 헬퍼(`resolveOpsDigestCardOrderRank`)와 mobile `order: var(--card-order-rank)` 규칙이 같은 priority 카드 안에서도 `battle/breakthrough/save/actions/stage/resources/focus/settings` 순으로 더 의미 있게 정렬되게 만드는지 검증
   - ops digest card link tone propagation 규칙(`syncOpsDigestCardLink`, `.ops-digest-link.tone-success|tone-warn|tone-error`)이 strong 카드의 `열기` 링크도 card tone과 같은 hierarchy로 읽히게 만들어, header/value/container/link가 한 흐름으로 이어지는지 검증
   - ops digest card section marker 규칙(`formatOpsDigestCardSectionLabel`, `syncOpsDigestCardSectionState`)이 모바일에서 priority bucket 첫 카드를 full-width section start로 승격하고 `긴급 카드/주의 카드/활성 카드/일반 카드` marker를 붙여 card 영역 triage를 더 빠르게 만드는지 검증
+  - ops digest divider label chip 규칙(`resolveOpsDigestCardPriorityDescriptor`, `.ops-digest-divider-label`)이 divider가 card section marker와 같은 priority vocabulary와 chip 계층을 재사용하게 만들어 `topline → divider → card section` 시선 흐름을 더 직접적으로 연결하는지 검증
