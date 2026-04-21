@@ -4819,3 +4819,11 @@
 
 ## 1127) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(card section marker 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1128) 다음 순차 작업
+1. [완료] `resolveOpsDigestCardPriorityDescriptor()`를 추가해 card priority chip, section marker, divider가 같은 priority vocabulary를 재사용하게 정리.
+2. [완료] `opsDigestDividerLabel` chip과 `data-divider-priority` contract를 추가해 divider가 `긴급/주의/활성` card section marker와 더 닮은 시각 언어를 쓰게 보강.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 divider label chip 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1129) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(divider label chip 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

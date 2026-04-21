@@ -143,6 +143,7 @@ const dom = {
   opsDigestToplineFreshness: document.getElementById("opsDigestToplineFreshness"),
   opsDigestTriageStrip: document.getElementById("opsDigestTriageStrip"),
   opsDigestDivider: document.getElementById("opsDigestDivider"),
+  opsDigestDividerLabel: document.getElementById("opsDigestDividerLabel"),
   btnOpsDigestTriageWarning: document.getElementById("btnOpsDigestTriageWarning"),
   btnOpsDigestTriageAction: document.getElementById("btnOpsDigestTriageAction"),
   btnOpsDigestTriageFilter: document.getElementById("btnOpsDigestTriageFilter"),
@@ -1104,20 +1105,57 @@ function resolveOpsDigestCardOrderRank(cardKey, priority) {
   return (priorityRank[normalizedPriority] ?? 30) + (keyRank[normalizedKey] ?? 9);
 }
 
+function resolveOpsDigestCardPriorityDescriptor(priority) {
+  switch (String(priority || "low").trim()) {
+    case "critical":
+      return {
+        priority: "critical",
+        tone: "error",
+        chipLabel: "긴급",
+        sectionLabel: "긴급 카드",
+        dividerLabel: "긴급 카드",
+      };
+    case "high":
+      return {
+        priority: "high",
+        tone: "warn",
+        chipLabel: "주의",
+        sectionLabel: "주의 카드",
+        dividerLabel: "주의 카드",
+      };
+    case "medium":
+      return {
+        priority: "medium",
+        tone: "success",
+        chipLabel: "활성",
+        sectionLabel: "활성 카드",
+        dividerLabel: "활성 카드",
+      };
+    default:
+      return {
+        priority: "low",
+        tone: "info",
+        chipLabel: "일반",
+        sectionLabel: "일반 카드",
+        dividerLabel: "상세 상태",
+      };
+  }
+}
+
 function buildOpsDigestCardDividerState(cardPriorities = []) {
   const normalizedPriorities = Array.isArray(cardPriorities)
     ? cardPriorities.filter(Boolean)
     : [];
   if (normalizedPriorities.includes("critical")) {
-    return { tone: "error", label: "긴급 카드" };
+    return resolveOpsDigestCardPriorityDescriptor("critical");
   }
   if (normalizedPriorities.includes("high")) {
-    return { tone: "warn", label: "주의 카드" };
+    return resolveOpsDigestCardPriorityDescriptor("high");
   }
   if (normalizedPriorities.includes("medium")) {
-    return { tone: "success", label: "활성 카드" };
+    return resolveOpsDigestCardPriorityDescriptor("medium");
   }
-  return { tone: "info", label: "상세 상태" };
+  return resolveOpsDigestCardPriorityDescriptor("low");
 }
 
 function resolveOpsDigestDividerTone(primaryTone, secondaryTone) {
@@ -1140,29 +1178,11 @@ function buildOpsDigestDividerLabel(priorityFirst, cardDividerLabel) {
 }
 
 function formatOpsDigestCardPriorityLabel(priority) {
-  switch (String(priority || "low").trim()) {
-    case "critical":
-      return "긴급";
-    case "high":
-      return "주의";
-    case "medium":
-      return "활성";
-    default:
-      return "일반";
-  }
+  return resolveOpsDigestCardPriorityDescriptor(priority).chipLabel;
 }
 
 function formatOpsDigestCardSectionLabel(priority) {
-  switch (String(priority || "low").trim()) {
-    case "critical":
-      return "긴급 카드";
-    case "high":
-      return "주의 카드";
-    case "medium":
-      return "활성 카드";
-    default:
-      return "일반 카드";
-  }
+  return resolveOpsDigestCardPriorityDescriptor(priority).sectionLabel;
 }
 
 function syncOpsDigestCardPriorityChip(node, priority, tone = "info") {
@@ -1858,6 +1878,7 @@ function applyOpsDigestToplineState(panel, toplineState) {
   panel.dataset.toplinePriorityDisabled = String(toplineState.toplinePriorityDisabled);
   panel.dataset.toplinePrioritySummary = toplineState.toplinePrioritySummary;
   panel.dataset.dividerTone = toplineState.toplineTone;
+  panel.dataset.dividerPriority = "low";
   panel.dataset.dividerLabel = buildOpsDigestDividerLabel(
     toplineState.priorityFirst,
     "상세 상태",
@@ -3145,8 +3166,15 @@ function syncOpsDigestTriageStrip() {
     });
   }
   if (dom.opsDigestDivider) {
-    dom.opsDigestDivider.textContent =
-      dom.opsDigestPanel.dataset.dividerLabel || "상세 상태";
+    const dividerLabel = dom.opsDigestPanel.dataset.dividerLabel || "상세 상태";
+    if (dom.opsDigestDividerLabel) {
+      dom.opsDigestDividerLabel.textContent = dividerLabel;
+    } else {
+      dom.opsDigestDivider.textContent = dividerLabel;
+    }
+    dom.opsDigestDivider.setAttribute("aria-label", dividerLabel);
+    dom.opsDigestDivider.dataset.dividerPriority =
+      dom.opsDigestPanel.dataset.dividerPriority || "low";
     applyRiskTone(
       dom.opsDigestDivider,
       dom.opsDigestPanel.dataset.dividerTone || "info",
@@ -4445,9 +4473,10 @@ function syncOpsDigestPanel() {
     dom.opsDigestPanel.dataset.dividerTone || "info",
     cardDividerState.tone,
   );
+  dom.opsDigestPanel.dataset.dividerPriority = cardDividerState.priority;
   dom.opsDigestPanel.dataset.dividerLabel = buildOpsDigestDividerLabel(
     dom.opsDigestPanel.dataset.toplinePriorityFirst === "true",
-    cardDividerState.label,
+    cardDividerState.dividerLabel,
   );
   syncOpsDigestWarnings();
   syncOpsDigestQuickActions();
