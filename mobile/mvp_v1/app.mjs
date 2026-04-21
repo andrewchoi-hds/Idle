@@ -1230,6 +1230,7 @@ function syncOpsDigestCardSectionState(nodes = []) {
   for (const card of normalizedCards) {
     card.node.dataset.cardSectionStart = "false";
     card.node.dataset.cardSectionLabel = "";
+    card.node.dataset.cardSectionRole = "none";
   }
   if (!shouldShowSections) {
     return;
@@ -1237,10 +1238,12 @@ function syncOpsDigestCardSectionState(nodes = []) {
   let lastPriority = "";
   for (const card of normalizedCards) {
     if (card.priority === lastPriority) {
+      card.node.dataset.cardSectionRole = "peer";
       continue;
     }
     card.node.dataset.cardSectionStart = "true";
     card.node.dataset.cardSectionLabel = formatOpsDigestCardSectionLabel(card.priority);
+    card.node.dataset.cardSectionRole = "lead";
     lastPriority = card.priority;
   }
 }

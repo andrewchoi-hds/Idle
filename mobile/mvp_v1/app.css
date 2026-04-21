@@ -465,6 +465,29 @@ h2 {
     color: #d9ffec;
   }
 
+  .ops-digest-item[data-card-section-role="lead"] .ops-digest-card-meta {
+    padding: 3px;
+    border-radius: 9px;
+    border: 1px solid rgba(76, 111, 103, 0.34);
+    background: rgba(16, 32, 28, 0.68);
+    box-shadow: 0 0 0 1px rgba(10, 17, 16, 0.24);
+  }
+
+  .ops-digest-item[data-card-section-role="lead"][data-card-tone="success"] .ops-digest-card-meta {
+    border-color: rgba(46, 143, 104, 0.42);
+    background: rgba(18, 61, 46, 0.5);
+  }
+
+  .ops-digest-item[data-card-section-role="lead"][data-card-tone="warn"] .ops-digest-card-meta {
+    border-color: rgba(192, 141, 52, 0.46);
+    background: rgba(59, 42, 12, 0.52);
+  }
+
+  .ops-digest-item[data-card-section-role="lead"][data-card-tone="error"] .ops-digest-card-meta {
+    border-color: rgba(177, 75, 69, 0.48);
+    background: rgba(61, 22, 22, 0.54);
+  }
+
   .ops-digest-card-head {
     gap: 6px;
   }

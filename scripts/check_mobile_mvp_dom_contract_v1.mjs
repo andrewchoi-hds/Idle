@@ -1847,6 +1847,12 @@ async function main() {
   );
   assertIncludes(
     html,
+    'data-card-section-role="none"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
     'class="ops-digest-link-icon"',
     "index.html",
     failures,
@@ -12422,6 +12428,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "card.node.dataset.cardSectionRole = \"lead\";",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "card.node.dataset.cardSectionRole = \"peer\";",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "card.node.dataset.cardSectionLabel = formatOpsDigestCardSectionLabel(card.priority);",
     "app.mjs",
     failures,
@@ -14503,6 +14521,8 @@ async function main() {
   assertIncludes(css, ".ops-digest-item[data-card-section-start=\"true\"] {", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-start=\"true\"]::before", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-start=\"true\"][data-card-priority=\"critical\"]::before", "app.css", failures);
+  assertIncludes(css, ".ops-digest-item[data-card-section-role=\"lead\"] .ops-digest-card-meta", "app.css", failures);
+  assertIncludes(css, ".ops-digest-item[data-card-section-role=\"lead\"][data-card-tone=\"warn\"] .ops-digest-card-meta", "app.css", failures);
   assertIncludes(css, "flex-direction: column;", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-head .ops-digest-badge[role=\"button\"]", "app.css", failures);
   assertIncludes(css, ".ops-digest-value.tone-warn", "app.css", failures);

@@ -4827,3 +4827,11 @@
 
 ## 1129) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(divider label chip 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1130) 다음 순차 작업
+1. [완료] `syncOpsDigestCardSectionState()`가 section bucket 카드에 `data-card-section-role="lead|peer|none"`를 같이 기록하도록 확장.
+2. [완료] 모바일에서 `lead` 카드의 `.ops-digest-card-meta`만 capsule 강조를 추가해, section marker 바로 아래 첫 카드 header meta가 더 확실한 anchor처럼 읽히게 정리.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 card section lead meta 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1131) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(card section lead meta 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
