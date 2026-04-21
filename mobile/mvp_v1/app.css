@@ -510,6 +510,11 @@ h2 {
     filter: saturate(0.9);
   }
 
+  .ops-digest-item[data-card-section-role="peer"] .ops-digest-value {
+    opacity: 0.88;
+    filter: saturate(0.92);
+  }
+
   .ops-digest-item[data-card-section-role="peer"] .ops-digest-link {
     opacity: 0.88;
   }

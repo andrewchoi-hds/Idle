@@ -4851,3 +4851,11 @@
 
 ## 1135) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(card lead link emphasis 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1136) 다음 순차 작업
+1. [완료] mobile section 내부에서 `peer` 카드의 `.ops-digest-value`도 한 단계 덜 강조하도록 opacity/saturation을 조정.
+2. [완료] `lead` 카드 value는 유지하고 `peer` 카드 value만 눌러서, 같은 section 내부 본문 시선 흐름이 더 자연스럽게 `lead → peer`로 이어지게 정리.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 card peer value de-emphasis 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1137) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(card peer value de-emphasis 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

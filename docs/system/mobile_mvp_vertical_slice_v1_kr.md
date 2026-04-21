@@ -570,3 +570,4 @@ npm run mobile:mvp:check
   - ops digest card section lead meta 규칙(`data-card-section-role`, `.ops-digest-item[data-card-section-role="lead"] .ops-digest-card-meta`)이 같은 priority section의 첫 카드 header meta를 더 또렷한 anchor로 보여 줘, section marker 다음에 무엇을 먼저 읽어야 하는지 빠르게 드러내는지 검증
   - ops digest card peer de-emphasis 규칙(`.ops-digest-item[data-card-section-role="peer"] .ops-digest-card-meta`, `.ops-digest-item[data-card-section-role="peer"] .ops-digest-link`)이 같은 section의 후속 카드를 한 단계 덜 강조해 lead card와의 시선 차이를 더 분명하게 만드는지 검증
   - ops digest card lead link emphasis 규칙(`.ops-digest-item[data-card-section-role="lead"] .ops-digest-link`, `.ops-digest-item[data-card-section-role="lead"] .ops-digest-link-label`)이 section marker 아래 첫 카드의 행동 진입점을 더 먼저 드러내는지 검증
+  - ops digest card peer value de-emphasis 규칙(`.ops-digest-item[data-card-section-role="peer"] .ops-digest-value`)이 같은 section의 후속 카드 본문 value를 살짝 눌러 lead 카드 본문과의 시선 차이를 더 또렷하게 만드는지 검증
