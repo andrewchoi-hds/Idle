@@ -14523,6 +14523,8 @@ async function main() {
   assertIncludes(css, ".ops-digest-item[data-card-section-start=\"true\"][data-card-priority=\"critical\"]::before", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-role=\"lead\"] .ops-digest-card-meta", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-role=\"lead\"][data-card-tone=\"warn\"] .ops-digest-card-meta", "app.css", failures);
+  assertIncludes(css, ".ops-digest-item[data-card-section-role=\"peer\"] .ops-digest-card-meta", "app.css", failures);
+  assertIncludes(css, ".ops-digest-item[data-card-section-role=\"peer\"] .ops-digest-link", "app.css", failures);
   assertIncludes(css, "flex-direction: column;", "app.css", failures);
   assertIncludes(css, ".ops-digest-card-head .ops-digest-badge[role=\"button\"]", "app.css", failures);
   assertIncludes(css, ".ops-digest-value.tone-warn", "app.css", failures);

@@ -488,6 +488,15 @@ h2 {
     background: rgba(61, 22, 22, 0.54);
   }
 
+  .ops-digest-item[data-card-section-role="peer"] .ops-digest-card-meta {
+    opacity: 0.82;
+    filter: saturate(0.9);
+  }
+
+  .ops-digest-item[data-card-section-role="peer"] .ops-digest-link {
+    opacity: 0.88;
+  }
+
   .ops-digest-card-head {
     gap: 6px;
   }
