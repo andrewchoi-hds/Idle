@@ -488,6 +488,23 @@ h2 {
     background: rgba(61, 22, 22, 0.54);
   }
 
+  .ops-digest-item[data-card-section-role="lead"] .ops-digest-link {
+    opacity: 1;
+    box-shadow: 0 0 0 1px rgba(76, 111, 103, 0.22);
+  }
+
+  .ops-digest-item[data-card-section-role="lead"] .ops-digest-link-label {
+    font-weight: 600;
+  }
+
+  .ops-digest-item[data-card-section-role="lead"][data-card-tone="warn"] .ops-digest-link {
+    box-shadow: 0 0 0 1px rgba(192, 141, 52, 0.24);
+  }
+
+  .ops-digest-item[data-card-section-role="lead"][data-card-tone="error"] .ops-digest-link {
+    box-shadow: 0 0 0 1px rgba(177, 75, 69, 0.26);
+  }
+
   .ops-digest-item[data-card-section-role="peer"] .ops-digest-card-meta {
     opacity: 0.82;
     filter: saturate(0.9);
