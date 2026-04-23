@@ -14524,6 +14524,7 @@ async function main() {
   assertIncludes(css, ".ops-digest-item[data-card-section-role=\"lead\"] .ops-digest-card-meta", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-role=\"lead\"] {", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-role=\"lead\"][data-card-tone=\"warn\"] .ops-digest-card-meta", "app.css", failures);
+  assertIncludes(css, ".ops-digest-item[data-card-section-role=\"lead\"] .ops-digest-card-head", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-role=\"lead\"] .ops-digest-link", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-role=\"lead\"] .ops-digest-link-label", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-role=\"peer\"] .ops-digest-card-meta", "app.css", failures);
