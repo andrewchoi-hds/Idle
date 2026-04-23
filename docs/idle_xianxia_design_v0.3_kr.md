@@ -4867,3 +4867,11 @@
 
 ## 1139) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(card lead action cluster spacing 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1140) 다음 순차 작업
+1. [완료] mobile section 내부에서 `peer` 카드 자체 gap도 한 단계 줄여, 같은 section의 후속 카드 리듬이 더 compact하게 이어지도록 정리.
+2. [완료] `peer` 카드 `열기` 링크 margin-top도 살짝 당겨 meta/value/link 간격을 조금 더 조여 줌.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 card peer cluster spacing 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1141) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(card peer cluster spacing 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
