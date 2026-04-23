@@ -4875,3 +4875,11 @@
 
 ## 1141) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(card peer cluster spacing 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1142) 다음 순차 작업
+1. [완료] `lead` 카드에 `--ops-digest-section-lead-outline` custom property를 두고 tone별로 같은 outline 값을 재사용하게 정리.
+2. [완료] `lead` 카드의 `card-head` margin-bottom과 `열기` 링크 box-shadow를 같은 outline 언어로 맞춰 header meta와 첫 행동 진입점이 더 직접적으로 묶여 보이게 보강.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 card lead outline sync 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1143) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(card lead outline sync 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
