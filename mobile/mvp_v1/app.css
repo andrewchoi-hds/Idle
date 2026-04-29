@@ -455,6 +455,7 @@ h2 {
     margin-bottom: 3px;
     font-weight: 800;
     letter-spacing: 0.1em;
+    box-shadow: 0 0 0 1px rgba(10, 17, 16, 0.22);
   }
 
   .ops-digest-item[data-card-section-start="true"][data-card-priority="critical"]::before {
@@ -486,6 +487,7 @@ h2 {
   .ops-digest-item[data-card-section-role="lead"] .ops-digest-card-priority,
   .ops-digest-item[data-card-section-role="lead"] .ops-digest-card-badge {
     font-weight: 700;
+    filter: saturate(1.04) brightness(1.03);
   }
 
   .ops-digest-item[data-card-section-role="lead"] {

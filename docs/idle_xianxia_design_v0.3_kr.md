@@ -4923,3 +4923,11 @@
 
 ## 1153) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(lead marker/meta typography 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1154) 다음 순차 작업
+1. [완료] section marker가 붙은 `lead` 카드의 `::before`에 아주 얇은 box-shadow를 추가해 marker chip이 조금 더 또렷하게 보이도록 보강.
+2. [완료] 같은 `lead` 카드의 `priority chip`/`status badge`에 미세한 `saturate/brightness` 보정을 넣어 header meta contrast를 살짝 끌어올림.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 lead marker/meta contrast 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1155) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(lead marker/meta contrast 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
