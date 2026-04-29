@@ -14527,6 +14527,7 @@ async function main() {
   assertIncludes(css, ".ops-digest-item[data-card-section-role=\"lead\"] .ops-digest-card-meta", "app.css", failures);
   assertIncludes(css, "box-shadow: 0 0 0 1px rgba(10, 17, 16, 0.28);", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-role=\"lead\"] {", "app.css", failures);
+  assertIncludes(css, "box-shadow: 0 8px 18px rgba(10, 17, 16, 0.18);", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-role=\"lead\"][data-card-tone=\"warn\"] .ops-digest-card-meta", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-role=\"lead\"] .ops-digest-card-head", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-start=\"true\"][data-card-section-role=\"lead\"] .ops-digest-card-label", "app.css", failures);
@@ -14539,6 +14540,7 @@ async function main() {
   assertIncludes(css, ".ops-digest-item[data-card-section-role=\"peer\"][data-card-tone=\"error\"]::before", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-role=\"peer\"] .ops-digest-card-head", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-role=\"peer\"] {", "app.css", failures);
+  assertIncludes(css, "box-shadow: 0 4px 10px rgba(10, 17, 16, 0.12);", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-role=\"peer\"] .ops-digest-value", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-role=\"peer\"][data-card-tone=\"warn\"] .ops-digest-card-priority,", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-role=\"peer\"][data-card-tone=\"error\"] .ops-digest-value", "app.css", failures);
