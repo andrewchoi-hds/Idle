@@ -4891,3 +4891,11 @@
 
 ## 1145) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(section-to-lead rhythm 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1146) 다음 순차 작업
+1. [완료] mobile section 내부에서 `peer` 카드의 `.ops-digest-card-head` 하단 간격을 한 단계 더 줄여 header meta에서 value로 내려가는 흐름을 조금 더 조밀하게 정리.
+2. [완료] `lead` 카드 리듬은 유지하고 `peer` 카드만 눌러서, 같은 section 안에서 후속 카드의 시선 리듬이 더 차분하게 이어지게 보강.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 peer head-to-value rhythm 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1147) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(peer head-to-value rhythm 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
