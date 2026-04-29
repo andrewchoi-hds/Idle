@@ -3619,10 +3619,15 @@ h2 {
 }
 
 .collection-source-list {
-  margin: 0;
-  padding-left: 18px;
   display: grid;
-  gap: 4px;
+  gap: 6px;
+}
+
+.collection-source-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 label {

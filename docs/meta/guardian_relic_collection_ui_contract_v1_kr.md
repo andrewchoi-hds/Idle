@@ -201,3 +201,15 @@
 4. minimal collection panel UI 추가
 5. duplicate conversion UX 추가
 6. 그 뒤 collection banner 여부 결정
+
+## 12) 현재 MVP 연결 범위
+- starter guardian/relic 1개씩 기본 지급
+- 탭 전환 state 저장
+- guardian/relic 카드 선택
+- 주 슬롯 장착/해제
+- 장착/비장착 상태 summary 반영
+- 아직 없는 것:
+  - free source 실제 claim
+  - duplicate conversion 계산
+  - secondary slot unlock
+  - banner/pity 소비 루프

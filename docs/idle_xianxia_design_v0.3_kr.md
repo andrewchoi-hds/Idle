@@ -4948,6 +4948,9 @@
 - collection panel, 장착 슬롯, 무료 수급 노출, duplicate conversion, 향후 가챠 확장까지 포함한 UI contract 초안 추가.
 - 문서: `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`
 
+## 1171) collectionPanel runtime 연결
+- starter guardian/relic 지급, 탭 저장, 카드 선택, 주 슬롯 장착/해제까지 포함한 최소 runtime 연결을 mobile MVP에 추가한다.
+
 ## 1170) collectionPanel 최소 발판
 - 모바일 MVP에 `collectionPanel` 최소 DOM contract를 추가하고, guardian/relic/exchange/journal 탭과 장착/전환 placeholder action을 포함한 첫 구현 발판을 만든다.
 

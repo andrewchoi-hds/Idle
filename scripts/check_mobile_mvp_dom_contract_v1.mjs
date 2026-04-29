@@ -104,6 +104,12 @@ const REQUIRED_HTML_IDS = [
   "collectionTokenLabel",
   "collectionPityLabel",
   "collectionFreeSourceLabel",
+  "collectionDailySourceStatus",
+  "collectionWeeklySourceStatus",
+  "collectionEventSourceStatus",
+  "btnClaimCollectionDaily",
+  "btnClaimCollectionWeekly",
+  "btnClaimCollectionEvent",
   "btnCollectionTabGuardian",
   "btnCollectionTabRelic",
   "btnCollectionTabExchange",
@@ -360,6 +366,12 @@ const REQUIRED_DOM_KEYS = [
   "collectionTokenLabel",
   "collectionPityLabel",
   "collectionFreeSourceLabel",
+  "collectionDailySourceStatus",
+  "collectionWeeklySourceStatus",
+  "collectionEventSourceStatus",
+  "btnClaimCollectionDaily",
+  "btnClaimCollectionWeekly",
+  "btnClaimCollectionEvent",
   "btnCollectionTabGuardian",
   "btnCollectionTabRelic",
   "btnCollectionTabExchange",
@@ -13238,6 +13250,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function buildCollectionFreeSourceDefinitions() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function grantCollectionPull(collection, poolId) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "syncCollectionPanel();",
     "app.mjs",
     failures,
@@ -13251,6 +13275,24 @@ async function main() {
   assertIncludes(
     app,
     "ensureCollectionStateShape().activeTab = normalizeCollectionPanelTab(tab);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'collection.freeSourceClaims[definition.id] = true;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'collection.guardianLoadout.primary = "";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'collection.relicLoadout.primary = "";',
     "app.mjs",
     failures,
   );
@@ -14601,6 +14643,8 @@ async function main() {
   assertIncludes(css, ".collection-panel", "app.css", failures);
   assertIncludes(css, ".collection-tab-strip", "app.css", failures);
   assertIncludes(css, ".collection-loadout", "app.css", failures);
+  assertIncludes(css, ".collection-card-choice", "app.css", failures);
+  assertIncludes(css, ".collection-source-row", "app.css", failures);
   assertIncludes(css, ".collection-source-list", "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-pressure-spike-high", "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-pressure-resonance-high", "app.css", failures);
