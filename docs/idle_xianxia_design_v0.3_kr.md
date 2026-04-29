@@ -4963,3 +4963,11 @@
 
 ## 1163) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(peer divider priority sizing 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1164) 다음 순차 작업
+1. [완료] mobile section 내부에서 `lead` 카드 container shadow를 아주 조금 더 강하게 만들어 first card가 더 떠 보이도록 조정.
+2. [완료] `peer` 카드 container shadow는 더 낮고 짧은 그림자로 재조정해 후속 카드가 한 단계 더 눌린 느낌으로 이어지게 보강.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 lead/peer container shadow split 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1165) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(lead/peer container shadow split 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
