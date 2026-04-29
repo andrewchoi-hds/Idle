@@ -150,3 +150,7 @@
 ## 12) 연동 테이블
 - 호법/법보/중복 전환/무료 수급 스펙 테이블:
   - `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_tables_v1_kr.md`
+
+## 13) UI / 장착 UX
+- collection panel, 장착 슬롯, 무료 수급 노출, 중복 전환, 향후 배너 확장 contract:
+  - `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`
