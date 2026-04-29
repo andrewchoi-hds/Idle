@@ -1,0 +1,74 @@
+[
+  {
+    "source_kind": "guardian",
+    "rarity": "rare",
+    "duplicate_count_required": "1",
+    "yield_currency_type": "collection_shard",
+    "yield_currency_value": "8",
+    "secondary_currency_type": "collection_token",
+    "secondary_currency_value": "0",
+    "pity_progress_value": "1",
+    "unlock_condition": "difficulty>=18",
+    "note": "기본 호법 중복 전환"
+  },
+  {
+    "source_kind": "guardian",
+    "rarity": "epic",
+    "duplicate_count_required": "1",
+    "yield_currency_type": "collection_shard",
+    "yield_currency_value": "16",
+    "secondary_currency_type": "collection_token",
+    "secondary_currency_value": "1",
+    "pity_progress_value": "1",
+    "unlock_condition": "difficulty>=64",
+    "note": "에픽 호법 중복 전환"
+  },
+  {
+    "source_kind": "guardian",
+    "rarity": "legendary",
+    "duplicate_count_required": "1",
+    "yield_currency_type": "collection_shard",
+    "yield_currency_value": "40",
+    "secondary_currency_type": "collection_token",
+    "secondary_currency_value": "3",
+    "pity_progress_value": "1",
+    "unlock_condition": "difficulty>=145",
+    "note": "전설 호법 중복 전환"
+  },
+  {
+    "source_kind": "relic",
+    "rarity": "rare",
+    "duplicate_count_required": "1",
+    "yield_currency_type": "collection_shard",
+    "yield_currency_value": "8",
+    "secondary_currency_type": "collection_token",
+    "secondary_currency_value": "0",
+    "pity_progress_value": "1",
+    "unlock_condition": "difficulty>=22",
+    "note": "기본 법보 중복 전환"
+  },
+  {
+    "source_kind": "relic",
+    "rarity": "epic",
+    "duplicate_count_required": "1",
+    "yield_currency_type": "collection_shard",
+    "yield_currency_value": "16",
+    "secondary_currency_type": "collection_token",
+    "secondary_currency_value": "1",
+    "pity_progress_value": "1",
+    "unlock_condition": "difficulty>=96",
+    "note": "에픽 법보 중복 전환"
+  },
+  {
+    "source_kind": "relic",
+    "rarity": "legendary",
+    "duplicate_count_required": "1",
+    "yield_currency_type": "collection_shard",
+    "yield_currency_value": "40",
+    "secondary_currency_type": "collection_token",
+    "secondary_currency_value": "3",
+    "pity_progress_value": "1",
+    "unlock_condition": "difficulty>=168",
+    "note": "전설 법보 중복 전환"
+  }
+]

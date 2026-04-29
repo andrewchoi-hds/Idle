@@ -146,3 +146,7 @@
   세 가지를 먼저 문서화한다.
 - 가챠는 그 다음이다.
 - 즉, `가챠 먼저`가 아니라 `collection layer 먼저`가 맞다.
+
+## 12) 연동 테이블
+- 호법/법보/중복 전환/무료 수급 스펙 테이블:
+  - `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_tables_v1_kr.md`

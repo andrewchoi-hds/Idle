@@ -1,0 +1,9 @@
+source_id,source_type,name_ko,cycle,entry_ref,reward_kind,reward_ref,reward_qty,unlock_condition,note
+col_src_001,main_quest,호법 초입 의식,once,q_main_004,guardian_pull,guardian_core,1,difficulty>=20,메인 퀘스트 보상
+col_src_002,milestone,부적 수집가 보급,once,ms_collection_001,relic_pull,relic_core,1,difficulty>=40,컬렉션 마일스톤
+col_src_003,daily,일일 호법 공양,daily,q_daily_003,collection_token,none,2,difficulty>=32,일일 무료 수급
+col_src_004,weekly,주간 법보 탐색,weekly,q_weekly_001,relic_pull,relic_core,2,difficulty>=32,주간 무료 수급
+col_src_005,weekly,도겁 준비 보급,weekly,q_weekly_002,guardian_pull,guardian_core,1,difficulty>=84,고위 돌파 대비
+col_src_006,milestone,신선계 호법 초대,once,ms_core_004,guardian_pull,guardian_core,2,difficulty>=118,중반 collection boost
+col_src_007,milestone,진선계 법보 개방,once,ms_core_007,relic_pull,relic_advanced,1,difficulty>=190,후반 collection unlock
+col_src_008,event_exchange,윤회 파편 교환,seasonal,event_exchange_001,collection_shard,none,30,difficulty>=70,이벤트 누적 교환

@@ -1,0 +1,11 @@
+relic_id,name_ko,rarity,theme,effect_lane,effect_type,effect_value,effect_unit,activation_rule,unlock_condition,acquire_pool,duplicate_shard_yield,note
+rlc_001,정기잔향,rare,tempo,combat,battle_start_qi_pct,0.03,pct,always,difficulty>=22,relic_core,8,전투 시작 기 보조
+rlc_002,호천패,rare,guard,breakthrough,minor_fail_weight_pct,-3,pct,tribulation_only,difficulty>=48,relic_core,8,경상 실패 가중치 완화
+rlc_003,귀맥석,rare,flow,automation,auto_breakthrough_warmup_sec,-2,sec,automation_only,difficulty>=70,relic_core,8,자동돌파 워밍업 단축
+rlc_004,월광인,epic,tempo,offline,offline_event_limit_pct,0.15,pct,offline_only,difficulty>=96,relic_core,16,오프라인 이벤트 밀도 보조
+rlc_005,도심주,epic,guard,breakthrough,death_fail_pct,-2.4,pct,tribulation_only,difficulty>=120,relic_core,16,도겁 사망률 완화
+rlc_006,연화경,epic,flow,breakthrough,breakthrough_expected_qi_loss_pct,-0.08,pct,tribulation_only,difficulty>=132,relic_core,16,평균 기 손실 완화
+rlc_007,귀허인,epic,operations,automation,auto_pause_threshold_bonus,1,count,automation_only,difficulty>=150,relic_advanced,16,자동 일시정지 임계치 보조
+rlc_008,천쇄거울,legendary,guard,breakthrough,retreat_layers_max_delta,-1,layer,tribulation_only,difficulty>=168,relic_advanced,40,후퇴 단계 상한 완화
+rlc_009,현문잔패,legendary,tempo,combat,battle_loss_pressure_relief_pct,0.18,pct,on_loss,difficulty>=183,relic_advanced,40,패배 후 압력 회복 보조
+rlc_010,윤회사슬,legendary,rebirth,rebirth,rebirth_upgrade_discount_pct,0.07,pct,meta_only,difficulty>=194,relic_advanced,40,환생 트리 비용 완화
