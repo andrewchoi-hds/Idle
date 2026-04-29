@@ -4931,3 +4931,11 @@
 
 ## 1155) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(lead marker/meta contrast 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1156) 다음 순차 작업
+1. [완료] `peer` 카드의 기본 de-emphasis는 유지하되 `warn/error` 후속 카드에서는 `priority chip`/`status badge`만 아주 미세하게 더 살려 위험도 신호가 너무 죽지 않게 조정.
+2. [완료] 같은 `warn/error` peer 카드의 `value`는 아주 조금 더 눌러, 후속 카드 안에서도 `badge → value` 순서가 더 자연스럽게 읽히도록 정리.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 peer badge/value balance 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1157) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(peer badge/value balance 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

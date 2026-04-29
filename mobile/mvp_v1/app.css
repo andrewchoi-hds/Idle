@@ -559,6 +559,19 @@ h2 {
     filter: saturate(0.92);
   }
 
+  .ops-digest-item[data-card-section-role="peer"][data-card-tone="warn"] .ops-digest-card-priority,
+  .ops-digest-item[data-card-section-role="peer"][data-card-tone="warn"] .ops-digest-card-badge,
+  .ops-digest-item[data-card-section-role="peer"][data-card-tone="error"] .ops-digest-card-priority,
+  .ops-digest-item[data-card-section-role="peer"][data-card-tone="error"] .ops-digest-card-badge {
+    opacity: 0.9;
+    filter: saturate(0.98) brightness(1.01);
+  }
+
+  .ops-digest-item[data-card-section-role="peer"][data-card-tone="warn"] .ops-digest-value,
+  .ops-digest-item[data-card-section-role="peer"][data-card-tone="error"] .ops-digest-value {
+    opacity: 0.86;
+  }
+
   .ops-digest-item[data-card-section-role="peer"] .ops-digest-link {
     opacity: 0.88;
     margin-top: -1px;
