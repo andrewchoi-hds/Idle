@@ -560,6 +560,115 @@
         ></textarea>
       </section>
 
+      <section id="collectionPanel" class="panel collection-panel" data-panel-role="secondary" data-collection-active-tab="guardian" data-collection-shard-label="파편 0" data-collection-token-label="토큰 0" data-collection-pity-label="천장 0 / 40" data-collection-free-source-summary="무료 수급 대기" data-guardian-summary="호법 0 보유 · 장착 0/1" data-guardian-slot-primary="비어 있음" data-guardian-slot-secondary="잠금" data-relic-summary="법보 0 보유 · 장착 0/1" data-relic-slot-primary="비어 있음" data-relic-slot-secondary="잠금" data-duplicate-summary="중복 전환 대기" data-journal-summary="수집 도감 준비 중" data-overview-summary="호법 0 보유 · 장착 0/1 · 법보 0 보유 · 장착 0/1 · 파편 0 · 토큰 0">
+        <div class="collection-head">
+          <h2>호법 / 법보 수집</h2>
+          <p id="collectionHeaderSummary" class="sub">호법 0 보유 · 장착 0/1 · 법보 0 보유 · 장착 0/1 · 파편 0 · 토큰 0</p>
+        </div>
+        <div class="collection-meta">
+          <span id="collectionShardLabel" class="ops-digest-badge tone-info">파편 0</span>
+          <span id="collectionTokenLabel" class="ops-digest-badge tone-info">토큰 0</span>
+          <span id="collectionPityLabel" class="ops-digest-badge tone-info">천장 0 / 40</span>
+          <span id="collectionFreeSourceLabel" class="ops-digest-badge tone-info">무료 수급 대기</span>
+        </div>
+        <div class="collection-tab-strip" role="tablist" aria-label="호법 법보 탭">
+          <button id="btnCollectionTabGuardian" type="button" class="ghost-btn" aria-pressed="true">호법</button>
+          <button id="btnCollectionTabRelic" type="button" class="ghost-btn" aria-pressed="false">법보</button>
+          <button id="btnCollectionTabExchange" type="button" class="ghost-btn" aria-pressed="false">전환</button>
+          <button id="btnCollectionTabJournal" type="button" class="ghost-btn" aria-pressed="false">도감</button>
+        </div>
+
+        <section id="guardianCollectionTab" class="collection-tab-panel">
+          <p id="guardianOwnedSummary" class="sub">호법 0 보유 · 장착 0/1</p>
+          <div id="guardianLoadoutPanel" class="collection-loadout">
+            <article class="collection-slot">
+              <h3>주 슬롯</h3>
+              <p id="guardianSlotPrimary">비어 있음</p>
+            </article>
+            <article class="collection-slot">
+              <h3>보조 슬롯</h3>
+              <p id="guardianSlotSecondary">잠금</p>
+            </article>
+          </div>
+          <div id="guardianRosterGrid" class="collection-card-grid">
+            <article class="collection-card">
+              <strong>청운학</strong>
+              <span class="sub">전투 속도 보조</span>
+            </article>
+            <article class="collection-card">
+              <strong>현갑령</strong>
+              <span class="sub">도겁 사망률 완화</span>
+            </article>
+          </div>
+          <div id="guardianDetailPanel" class="collection-detail">
+            <h3 id="guardianDetailName">호법 상세 대기</h3>
+            <p id="guardianDetailEffect" class="sub">전투/돌파/운영 보조 효과를 이곳에 노출합니다.</p>
+            <div class="button-grid">
+              <button id="btnEquipGuardianPrimary" type="button">주 슬롯 장착</button>
+              <button id="btnEquipGuardianSecondary" type="button">보조 슬롯 장착</button>
+              <button id="btnUnequipGuardian" type="button">장착 해제</button>
+              <button id="btnConvertGuardianDuplicate" type="button">중복 전환</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="relicCollectionTab" class="collection-tab-panel hidden">
+          <p id="relicOwnedSummary" class="sub">법보 0 보유 · 장착 0/1</p>
+          <div id="relicLoadoutPanel" class="collection-loadout">
+            <article class="collection-slot">
+              <h3>주 슬롯</h3>
+              <p id="relicSlotPrimary">비어 있음</p>
+            </article>
+            <article class="collection-slot">
+              <h3>보조 슬롯</h3>
+              <p id="relicSlotSecondary">잠금</p>
+            </article>
+          </div>
+          <div id="relicArchiveGrid" class="collection-card-grid">
+            <article class="collection-card">
+              <strong>정기잔향</strong>
+              <span class="sub">전투 시작 기 보조</span>
+            </article>
+            <article class="collection-card">
+              <strong>호천패</strong>
+              <span class="sub">경상 실패 가중치 완화</span>
+            </article>
+          </div>
+          <div id="relicDetailPanel" class="collection-detail">
+            <h3 id="relicDetailName">법보 상세 대기</h3>
+            <p id="relicDetailEffect" class="sub">규칙 변형/준비 선택지 확장 효과를 이곳에 노출합니다.</p>
+            <div class="button-grid">
+              <button id="btnEquipRelicPrimary" type="button">주 슬롯 장착</button>
+              <button id="btnEquipRelicSecondary" type="button">보조 슬롯 장착</button>
+              <button id="btnUnequipRelic" type="button">장착 해제</button>
+              <button id="btnConvertRelicDuplicate" type="button">중복 전환</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="collectionExchangeTab" class="collection-tab-panel hidden">
+          <div id="collectionDuplicatePanel" class="collection-detail">
+            <h3>중복 전환</h3>
+            <p id="collectionDuplicateSummary" class="sub">중복 전환 대기</p>
+          </div>
+          <div id="collectionFreeSourcesPanel" class="collection-detail">
+            <h3>무료 수급 경로</h3>
+            <ul class="collection-source-list">
+              <li>메인 퀘스트 보상</li>
+              <li>일일 / 주간 무료 수급</li>
+              <li>이벤트 교환</li>
+            </ul>
+          </div>
+        </section>
+
+        <section id="collectionJournalTab" class="collection-tab-panel hidden">
+          <div class="collection-detail">
+            <h3>수집 도감</h3>
+            <p id="collectionJournalSummary" class="sub">수집 도감 준비 중</p>
+          </div>
+        </section>
+      </section>
+
       <section id="assetsPanel" class="panel assets" data-panel-role="secondary" data-link-count="3" data-primary-source="kenney" data-primary-label="Kenney Asset Library (CC0)" data-source-summary="Kenney Asset Library (CC0) · Oriental Roof Tiles (CC0) · Pixel FX Pack (CC0)" data-license-summary="CC0 3건" data-overview-summary="Kenney Asset Library (CC0) · 3개 링크 · CC0 3건">
         <h2>무료 에셋 바로가기</h2>
         <ul>

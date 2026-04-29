@@ -223,6 +223,48 @@ const dom = {
   battleSceneResult: document.getElementById("battleSceneResult"),
   battleSceneTicker: document.getElementById("battleSceneTicker"),
   statsPanel: document.getElementById("statsPanel"),
+  collectionPanel: document.getElementById("collectionPanel"),
+  collectionHeaderSummary: document.getElementById("collectionHeaderSummary"),
+  collectionShardLabel: document.getElementById("collectionShardLabel"),
+  collectionTokenLabel: document.getElementById("collectionTokenLabel"),
+  collectionPityLabel: document.getElementById("collectionPityLabel"),
+  collectionFreeSourceLabel: document.getElementById("collectionFreeSourceLabel"),
+  btnCollectionTabGuardian: document.getElementById("btnCollectionTabGuardian"),
+  btnCollectionTabRelic: document.getElementById("btnCollectionTabRelic"),
+  btnCollectionTabExchange: document.getElementById("btnCollectionTabExchange"),
+  btnCollectionTabJournal: document.getElementById("btnCollectionTabJournal"),
+  guardianCollectionTab: document.getElementById("guardianCollectionTab"),
+  guardianOwnedSummary: document.getElementById("guardianOwnedSummary"),
+  guardianLoadoutPanel: document.getElementById("guardianLoadoutPanel"),
+  guardianSlotPrimary: document.getElementById("guardianSlotPrimary"),
+  guardianSlotSecondary: document.getElementById("guardianSlotSecondary"),
+  guardianRosterGrid: document.getElementById("guardianRosterGrid"),
+  guardianDetailPanel: document.getElementById("guardianDetailPanel"),
+  guardianDetailName: document.getElementById("guardianDetailName"),
+  guardianDetailEffect: document.getElementById("guardianDetailEffect"),
+  btnEquipGuardianPrimary: document.getElementById("btnEquipGuardianPrimary"),
+  btnEquipGuardianSecondary: document.getElementById("btnEquipGuardianSecondary"),
+  btnUnequipGuardian: document.getElementById("btnUnequipGuardian"),
+  btnConvertGuardianDuplicate: document.getElementById("btnConvertGuardianDuplicate"),
+  relicCollectionTab: document.getElementById("relicCollectionTab"),
+  relicOwnedSummary: document.getElementById("relicOwnedSummary"),
+  relicLoadoutPanel: document.getElementById("relicLoadoutPanel"),
+  relicSlotPrimary: document.getElementById("relicSlotPrimary"),
+  relicSlotSecondary: document.getElementById("relicSlotSecondary"),
+  relicArchiveGrid: document.getElementById("relicArchiveGrid"),
+  relicDetailPanel: document.getElementById("relicDetailPanel"),
+  relicDetailName: document.getElementById("relicDetailName"),
+  relicDetailEffect: document.getElementById("relicDetailEffect"),
+  btnEquipRelicPrimary: document.getElementById("btnEquipRelicPrimary"),
+  btnEquipRelicSecondary: document.getElementById("btnEquipRelicSecondary"),
+  btnUnequipRelic: document.getElementById("btnUnequipRelic"),
+  btnConvertRelicDuplicate: document.getElementById("btnConvertRelicDuplicate"),
+  collectionExchangeTab: document.getElementById("collectionExchangeTab"),
+  collectionDuplicatePanel: document.getElementById("collectionDuplicatePanel"),
+  collectionDuplicateSummary: document.getElementById("collectionDuplicateSummary"),
+  collectionFreeSourcesPanel: document.getElementById("collectionFreeSourcesPanel"),
+  collectionJournalTab: document.getElementById("collectionJournalTab"),
+  collectionJournalSummary: document.getElementById("collectionJournalSummary"),
   savePanel: document.getElementById("savePanel"),
   assetsPanel: document.getElementById("assetsPanel"),
   statQi: document.getElementById("statQi"),
@@ -849,9 +891,123 @@ const opsDigestInboxStampState = {
   primary: { signature: "", updatedAt: 0 },
   secondary: { signature: "", updatedAt: 0 },
 };
+const COLLECTION_PANEL_TABS = ["guardian", "relic", "exchange", "journal"];
 const OPS_DIGEST_TIMELINE_LIMIT = 6;
 const opsDigestTimelineState = [];
 const opsDigestTimelineGroupCollapseState = {};
+
+function normalizeCollectionPanelTab(tab) {
+  const normalized = String(tab || "guardian").trim() || "guardian";
+  return COLLECTION_PANEL_TABS.includes(normalized) ? normalized : "guardian";
+}
+
+function buildCollectionPanelOverviewSummary() {
+  const guardianSummary =
+    String(dom.collectionPanel?.dataset.guardianSummary || "호법 0 보유 · 장착 0/1").trim() ||
+    "호법 0 보유 · 장착 0/1";
+  const relicSummary =
+    String(dom.collectionPanel?.dataset.relicSummary || "법보 0 보유 · 장착 0/1").trim() ||
+    "법보 0 보유 · 장착 0/1";
+  const shardLabel =
+    String(dom.collectionPanel?.dataset.collectionShardLabel || "파편 0").trim() || "파편 0";
+  const tokenLabel =
+    String(dom.collectionPanel?.dataset.collectionTokenLabel || "토큰 0").trim() || "토큰 0";
+  return `${guardianSummary} · ${relicSummary} · ${shardLabel} · ${tokenLabel}`;
+}
+
+function setCollectionPanelActiveTab(tab) {
+  if (!dom.collectionPanel) {
+    return;
+  }
+  dom.collectionPanel.dataset.collectionActiveTab = normalizeCollectionPanelTab(tab);
+  syncCollectionPanel();
+}
+
+function syncCollectionPanel() {
+  if (!dom.collectionPanel) {
+    return;
+  }
+  const activeTab = normalizeCollectionPanelTab(
+    dom.collectionPanel.dataset.collectionActiveTab || "guardian",
+  );
+  dom.collectionPanel.dataset.collectionActiveTab = activeTab;
+  dom.collectionPanel.dataset.overviewSummary = buildCollectionPanelOverviewSummary();
+  if (dom.collectionHeaderSummary) {
+    dom.collectionHeaderSummary.textContent =
+      dom.collectionPanel.dataset.overviewSummary ||
+      "호법 0 보유 · 장착 0/1 · 법보 0 보유 · 장착 0/1 · 파편 0 · 토큰 0";
+  }
+  if (dom.collectionShardLabel) {
+    dom.collectionShardLabel.textContent =
+      dom.collectionPanel.dataset.collectionShardLabel || "파편 0";
+  }
+  if (dom.collectionTokenLabel) {
+    dom.collectionTokenLabel.textContent =
+      dom.collectionPanel.dataset.collectionTokenLabel || "토큰 0";
+  }
+  if (dom.collectionPityLabel) {
+    dom.collectionPityLabel.textContent =
+      dom.collectionPanel.dataset.collectionPityLabel || "천장 0 / 40";
+  }
+  if (dom.collectionFreeSourceLabel) {
+    dom.collectionFreeSourceLabel.textContent =
+      dom.collectionPanel.dataset.collectionFreeSourceSummary || "무료 수급 대기";
+  }
+  if (dom.guardianOwnedSummary) {
+    dom.guardianOwnedSummary.textContent =
+      dom.collectionPanel.dataset.guardianSummary || "호법 0 보유 · 장착 0/1";
+  }
+  if (dom.guardianSlotPrimary) {
+    dom.guardianSlotPrimary.textContent =
+      dom.collectionPanel.dataset.guardianSlotPrimary || "비어 있음";
+  }
+  if (dom.guardianSlotSecondary) {
+    dom.guardianSlotSecondary.textContent =
+      dom.collectionPanel.dataset.guardianSlotSecondary || "잠금";
+  }
+  if (dom.relicOwnedSummary) {
+    dom.relicOwnedSummary.textContent =
+      dom.collectionPanel.dataset.relicSummary || "법보 0 보유 · 장착 0/1";
+  }
+  if (dom.relicSlotPrimary) {
+    dom.relicSlotPrimary.textContent =
+      dom.collectionPanel.dataset.relicSlotPrimary || "비어 있음";
+  }
+  if (dom.relicSlotSecondary) {
+    dom.relicSlotSecondary.textContent =
+      dom.collectionPanel.dataset.relicSlotSecondary || "잠금";
+  }
+  if (dom.collectionDuplicateSummary) {
+    dom.collectionDuplicateSummary.textContent =
+      dom.collectionPanel.dataset.duplicateSummary || "중복 전환 대기";
+  }
+  if (dom.collectionJournalSummary) {
+    dom.collectionJournalSummary.textContent =
+      dom.collectionPanel.dataset.journalSummary || "수집 도감 준비 중";
+  }
+  for (const [button, tabKey] of [
+    [dom.btnCollectionTabGuardian, "guardian"],
+    [dom.btnCollectionTabRelic, "relic"],
+    [dom.btnCollectionTabExchange, "exchange"],
+    [dom.btnCollectionTabJournal, "journal"],
+  ]) {
+    if (!button) {
+      continue;
+    }
+    button.setAttribute("aria-pressed", String(activeTab === tabKey));
+  }
+  for (const [pane, tabKey] of [
+    [dom.guardianCollectionTab, "guardian"],
+    [dom.relicCollectionTab, "relic"],
+    [dom.collectionExchangeTab, "exchange"],
+    [dom.collectionJournalTab, "journal"],
+  ]) {
+    if (!pane) {
+      continue;
+    }
+    pane.classList.toggle("hidden", activeTab !== tabKey);
+  }
+}
 
 function formatOpsDigestInboxUpdatedLabel(updatedAtMs) {
   const normalized = Math.max(0, Math.floor(Number(updatedAtMs) || 0));
@@ -16713,6 +16869,7 @@ function render() {
       `${settingsToggleSummaryLabel} · ${settingsLimitSummaryLabel}`;
   }
   syncAssetsPanelContract();
+  syncCollectionPanel();
   syncCopySlotTargetSelection();
   syncSlotActionButtons();
   renderLogs();
@@ -17497,6 +17654,32 @@ function bindEvents() {
     );
     render();
   });
+
+  for (const [button, tabKey] of [
+    [dom.btnCollectionTabGuardian, "guardian"],
+    [dom.btnCollectionTabRelic, "relic"],
+    [dom.btnCollectionTabExchange, "exchange"],
+    [dom.btnCollectionTabJournal, "journal"],
+  ]) {
+    button?.addEventListener("click", () => {
+      setCollectionPanelActiveTab(tabKey);
+    });
+  }
+
+  for (const button of [
+    dom.btnEquipGuardianPrimary,
+    dom.btnEquipGuardianSecondary,
+    dom.btnUnequipGuardian,
+    dom.btnConvertGuardianDuplicate,
+    dom.btnEquipRelicPrimary,
+    dom.btnEquipRelicSecondary,
+    dom.btnUnequipRelic,
+    dom.btnConvertRelicDuplicate,
+  ]) {
+    button?.addEventListener("click", () => {
+      setStatus(`${button.textContent?.trim() || "수집 액션"} 준비 중`);
+    });
+  }
 
   dom.optSaveSlot.addEventListener("change", () => {
     const prevSlot = activeSaveSlot;

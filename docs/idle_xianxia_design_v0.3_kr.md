@@ -4948,6 +4948,9 @@
 - collection panel, 장착 슬롯, 무료 수급 노출, duplicate conversion, 향후 가챠 확장까지 포함한 UI contract 초안 추가.
 - 문서: `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`
 
+## 1170) collectionPanel 최소 발판
+- 모바일 MVP에 `collectionPanel` 최소 DOM contract를 추가하고, guardian/relic/exchange/journal 탭과 장착/전환 placeholder action을 포함한 첫 구현 발판을 만든다.
+
 ## 1156) 다음 순차 작업
 1. [완료] `peer` 카드의 기본 de-emphasis는 유지하되 `warn/error` 후속 카드에서는 `priority chip`/`status badge`만 아주 미세하게 더 살려 위험도 신호가 너무 죽지 않게 조정.
 2. [완료] 같은 `warn/error` peer 카드의 `value`는 아주 조금 더 눌러, 후속 카드 안에서도 `badge → value` 순서가 더 자연스럽게 읽히도록 정리.
