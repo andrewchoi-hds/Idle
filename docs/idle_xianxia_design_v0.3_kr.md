@@ -4939,3 +4939,11 @@
 
 ## 1157) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(peer badge/value balance 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1158) 다음 순차 작업
+1. [완료] mobile section 내부에서 `peer` 카드 상단에 짧은 divider line(`::before`)을 추가해 후속 카드 문맥을 더 직접적으로 보여 주도록 정리.
+2. [완료] same selector의 `warn/error` peer line에는 tone 색을 살짝 반영해 위험도 문맥이 아주 약하게 남도록 보강.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 peer follow-up divider 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1159) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(peer follow-up divider 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
