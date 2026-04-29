@@ -4936,6 +4936,10 @@
 - 남은 작업 우선순위, 진행 밸런스 리스크, 경제 진단, 과금/뽑기 가드레일을 별도 문서로 정리.
 - 문서: `/Users/hirediversity/Idle/docs/system/mobile_mvp_backlog_balance_monetization_v1_kr.md`
 
+## 1167) 호법/법보 수집 레이어 초안
+- 과금/가챠를 붙이기 전에 필요한 collection lane으로서 `호법/법보` 축을 별도 문서로 정리.
+- 문서: `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_layer_v1_kr.md`
+
 ## 1156) 다음 순차 작업
 1. [완료] `peer` 카드의 기본 de-emphasis는 유지하되 `warn/error` 후속 카드에서는 `priority chip`/`status badge`만 아주 미세하게 더 살려 위험도 신호가 너무 죽지 않게 조정.
 2. [완료] 같은 `warn/error` peer 카드의 `value`는 아주 조금 더 눌러, 후속 카드 안에서도 `badge → value` 순서가 더 자연스럽게 읽히도록 정리.
