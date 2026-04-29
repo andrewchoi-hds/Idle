@@ -555,6 +555,16 @@ h2 {
     margin-top: -1px;
   }
 
+  .ops-digest-item[data-card-section-role="peer"][data-card-tone="warn"] .ops-digest-link,
+  .ops-digest-item[data-card-section-role="peer"][data-card-tone="error"] .ops-digest-link {
+    opacity: 0.93;
+  }
+
+  .ops-digest-item[data-card-section-role="peer"][data-card-tone="warn"] .ops-digest-link-icon,
+  .ops-digest-item[data-card-section-role="peer"][data-card-tone="error"] .ops-digest-link-icon {
+    opacity: 0.96;
+  }
+
   .ops-digest-card-head {
     gap: 6px;
   }
