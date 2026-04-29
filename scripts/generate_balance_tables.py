@@ -22,6 +22,10 @@ OPTIONS_UNLOCKS_OUT = ROOT / "data/system/options_unlocks_v1.csv"
 QUESTS_OUT = ROOT / "data/meta/quests_v1.csv"
 ACHIEVEMENTS_OUT = ROOT / "data/meta/achievements_v1.csv"
 MILESTONES_OUT = ROOT / "data/meta/milestones_v1.csv"
+GUARDIANS_OUT = ROOT / "data/meta/guardians_v1.csv"
+RELICS_OUT = ROOT / "data/meta/relics_v1.csv"
+COLLECTION_DUPLICATE_OUT = ROOT / "data/meta/collection_duplicate_conversion_v1.csv"
+COLLECTION_FREE_SOURCES_OUT = ROOT / "data/meta/collection_free_sources_v1.csv"
 SHOP_CATALOG_BASE_OUT = ROOT / "data/economy/shop_catalog_v1.csv"
 SHOP_CATALOG_TUNED_OUT = ROOT / "data/economy/shop_catalog_tuned_v1.csv"
 CURRENCY_SINKS_BASE_OUT = ROOT / "data/economy/currency_sinks_v1.csv"
@@ -489,6 +493,18 @@ def main(economy_profile: str) -> None:
 
     milestone_rows = read_csv_rows(MILESTONES_OUT)
     write_json(EXPORT_DIR / "milestones_v1.json", milestone_rows)
+
+    guardian_rows = read_csv_rows(GUARDIANS_OUT)
+    write_json(EXPORT_DIR / "guardians_v1.json", guardian_rows)
+
+    relic_rows = read_csv_rows(RELICS_OUT)
+    write_json(EXPORT_DIR / "relics_v1.json", relic_rows)
+
+    collection_duplicate_rows = read_csv_rows(COLLECTION_DUPLICATE_OUT)
+    write_json(EXPORT_DIR / "collection_duplicate_conversion_v1.json", collection_duplicate_rows)
+
+    collection_free_source_rows = read_csv_rows(COLLECTION_FREE_SOURCES_OUT)
+    write_json(EXPORT_DIR / "collection_free_sources_v1.json", collection_free_source_rows)
 
     shop_catalog_rows = read_csv_rows(shop_catalog_source)
     write_json(EXPORT_DIR / "shop_catalog_v1.json", shop_catalog_rows)

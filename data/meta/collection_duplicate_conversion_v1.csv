@@ -1,0 +1,7 @@
+source_kind,rarity,duplicate_count_required,yield_currency_type,yield_currency_value,secondary_currency_type,secondary_currency_value,pity_progress_value,unlock_condition,note
+guardian,rare,1,collection_shard,8,collection_token,0,1,difficulty>=18,기본 호법 중복 전환
+guardian,epic,1,collection_shard,16,collection_token,1,1,difficulty>=64,에픽 호법 중복 전환
+guardian,legendary,1,collection_shard,40,collection_token,3,1,difficulty>=145,전설 호법 중복 전환
+relic,rare,1,collection_shard,8,collection_token,0,1,difficulty>=22,기본 법보 중복 전환
+relic,epic,1,collection_shard,16,collection_token,1,1,difficulty>=96,에픽 법보 중복 전환
+relic,legendary,1,collection_shard,40,collection_token,3,1,difficulty>=168,전설 법보 중복 전환

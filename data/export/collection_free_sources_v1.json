@@ -1,0 +1,98 @@
+[
+  {
+    "source_id": "col_src_001",
+    "source_type": "main_quest",
+    "name_ko": "호법 초입 의식",
+    "cycle": "once",
+    "entry_ref": "q_main_004",
+    "reward_kind": "guardian_pull",
+    "reward_ref": "guardian_core",
+    "reward_qty": "1",
+    "unlock_condition": "difficulty>=20",
+    "note": "메인 퀘스트 보상"
+  },
+  {
+    "source_id": "col_src_002",
+    "source_type": "milestone",
+    "name_ko": "부적 수집가 보급",
+    "cycle": "once",
+    "entry_ref": "ms_collection_001",
+    "reward_kind": "relic_pull",
+    "reward_ref": "relic_core",
+    "reward_qty": "1",
+    "unlock_condition": "difficulty>=40",
+    "note": "컬렉션 마일스톤"
+  },
+  {
+    "source_id": "col_src_003",
+    "source_type": "daily",
+    "name_ko": "일일 호법 공양",
+    "cycle": "daily",
+    "entry_ref": "q_daily_003",
+    "reward_kind": "collection_token",
+    "reward_ref": "none",
+    "reward_qty": "2",
+    "unlock_condition": "difficulty>=32",
+    "note": "일일 무료 수급"
+  },
+  {
+    "source_id": "col_src_004",
+    "source_type": "weekly",
+    "name_ko": "주간 법보 탐색",
+    "cycle": "weekly",
+    "entry_ref": "q_weekly_001",
+    "reward_kind": "relic_pull",
+    "reward_ref": "relic_core",
+    "reward_qty": "2",
+    "unlock_condition": "difficulty>=32",
+    "note": "주간 무료 수급"
+  },
+  {
+    "source_id": "col_src_005",
+    "source_type": "weekly",
+    "name_ko": "도겁 준비 보급",
+    "cycle": "weekly",
+    "entry_ref": "q_weekly_002",
+    "reward_kind": "guardian_pull",
+    "reward_ref": "guardian_core",
+    "reward_qty": "1",
+    "unlock_condition": "difficulty>=84",
+    "note": "고위 돌파 대비"
+  },
+  {
+    "source_id": "col_src_006",
+    "source_type": "milestone",
+    "name_ko": "신선계 호법 초대",
+    "cycle": "once",
+    "entry_ref": "ms_core_004",
+    "reward_kind": "guardian_pull",
+    "reward_ref": "guardian_core",
+    "reward_qty": "2",
+    "unlock_condition": "difficulty>=118",
+    "note": "중반 collection boost"
+  },
+  {
+    "source_id": "col_src_007",
+    "source_type": "milestone",
+    "name_ko": "진선계 법보 개방",
+    "cycle": "once",
+    "entry_ref": "ms_core_007",
+    "reward_kind": "relic_pull",
+    "reward_ref": "relic_advanced",
+    "reward_qty": "1",
+    "unlock_condition": "difficulty>=190",
+    "note": "후반 collection unlock"
+  },
+  {
+    "source_id": "col_src_008",
+    "source_type": "event_exchange",
+    "name_ko": "윤회 파편 교환",
+    "cycle": "seasonal",
+    "entry_ref": "event_exchange_001",
+    "reward_kind": "collection_shard",
+    "reward_ref": "none",
+    "reward_qty": "30",
+    "unlock_condition": "difficulty>=70",
+    "note": "이벤트 누적 교환"
+  }
+]

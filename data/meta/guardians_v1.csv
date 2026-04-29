@@ -1,0 +1,13 @@
+guardian_id,name_ko,rarity,role_group,effect_lane,effect_type,effect_value,effect_unit,stack_rule,unlock_condition,acquire_pool,duplicate_shard_yield,note
+gdn_001,청운학,rare,combat,combat,battle_speed_pct,0.04,pct,additive,difficulty>=18,guardian_core,8,전투 템포 보조
+gdn_002,현갑령,rare,tribulation,breakthrough,death_fail_pct,-1.5,pct,additive,difficulty>=52,guardian_core,8,도겁 사망률 완화
+gdn_003,진기동자,rare,operations,offline,offline_efficiency_pct,0.06,pct,additive,difficulty>=32,guardian_core,8,오프라인 품질 보정
+gdn_004,적풍수,epic,combat,combat,battle_reward_spirit_coin_pct,0.08,pct,additive,difficulty>=64,guardian_core,16,전투 영석 수급 보조
+gdn_005,영수부,epic,breakthrough,breakthrough,breakthrough_success_pct,1.8,pct,additive,difficulty>=84,guardian_core,16,돌파 성공률 보조
+gdn_006,호심매,epic,tribulation,breakthrough,retreat_fail_weight_pct,-4,pct,additive,difficulty>=105,guardian_core,16,퇴보 실패 가중치 완화
+gdn_007,월하비,epic,operations,automation,auto_breakthrough_block_relief_pct,0.12,pct,additive,difficulty>=118,guardian_core,16,자동돌파 차단 완화
+gdn_008,금신호법,legendary,combat,combat,crit_rate_pct,0.03,pct,additive,difficulty>=145,guardian_advanced,40,고위 전투 화력 보조
+gdn_009,태허수,legendary,breakthrough,breakthrough,potion_bonus_amp_pct,0.12,pct,additive,difficulty>=166,guardian_advanced,40,영약 효율 증폭
+gdn_010,무상령,legendary,tribulation,breakthrough,talisman_guard_amp_pct,0.15,pct,additive,difficulty>=183,guardian_advanced,40,부적 보호 효율 증폭
+gdn_011,윤회사,legendary,operations,rebirth,rebirth_essence_gain_pct,0.1,pct,additive,difficulty>=190,guardian_advanced,40,환생 정수 수급 보조
+gdn_012,천문도,legendary,operations,report,report_signal_clarity_pct,0.2,pct,noncombat,difficulty>=194,guardian_advanced,40,운영 리포트/가시성 보조
