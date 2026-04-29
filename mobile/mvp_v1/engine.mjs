@@ -3245,8 +3245,11 @@ export function createInitialSliceState(context, options = {}) {
       token: 0,
       pityProgress: 0,
       pityMax: 40,
-      guardianOwnedIds: [],
-      relicOwnedIds: [],
+      guardianOwnedIds: ["gdn_001"],
+      relicOwnedIds: ["rlc_001"],
+      selectedGuardianId: "gdn_001",
+      selectedRelicId: "rlc_001",
+      starterGranted: true,
       guardianLoadout: {
         primary: "",
         secondary: "",
@@ -4156,6 +4159,15 @@ export function parseSliceState(raw, context) {
             .filter((value) => typeof value === "string" && value.trim())
             .map((value) => value.trim())
         : [],
+      selectedGuardianId:
+        typeof parsed.collection?.selectedGuardianId === "string"
+          ? parsed.collection.selectedGuardianId.trim()
+          : "",
+      selectedRelicId:
+        typeof parsed.collection?.selectedRelicId === "string"
+          ? parsed.collection.selectedRelicId.trim()
+          : "",
+      starterGranted: pickBoolean(parsed.collection?.starterGranted, false),
       guardianLoadout: {
         primary:
           typeof parsed.collection?.guardianLoadout?.primary === "string"
