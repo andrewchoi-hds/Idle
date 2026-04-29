@@ -453,6 +453,8 @@ h2 {
 
   .ops-digest-item[data-card-section-start="true"][data-card-section-role="lead"]::before {
     margin-bottom: 3px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
   }
 
   .ops-digest-item[data-card-section-start="true"][data-card-priority="critical"]::before {
@@ -479,6 +481,11 @@ h2 {
     border: 1px solid rgba(76, 111, 103, 0.34);
     background: rgba(16, 32, 28, 0.68);
     box-shadow: 0 0 0 1px rgba(10, 17, 16, 0.24);
+  }
+
+  .ops-digest-item[data-card-section-role="lead"] .ops-digest-card-priority,
+  .ops-digest-item[data-card-section-role="lead"] .ops-digest-card-badge {
+    font-weight: 700;
   }
 
   .ops-digest-item[data-card-section-role="lead"] {
