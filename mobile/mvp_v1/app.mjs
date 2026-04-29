@@ -902,6 +902,16 @@ const COLLECTION_RELIC_NAME_BY_ID = {
   rlc_002: "호천패",
   rlc_003: "귀맥석",
 };
+const COLLECTION_GUARDIAN_EFFECT_LABEL_BY_ID = {
+  gdn_001: "전투 속도 보조",
+  gdn_002: "도겁 사망률 완화",
+  gdn_003: "오프라인 품질 보정",
+};
+const COLLECTION_RELIC_EFFECT_LABEL_BY_ID = {
+  rlc_001: "전투 시작 기 보조",
+  rlc_002: "경상 실패 가중치 완화",
+  rlc_003: "자동돌파 워밍업 단축",
+};
 const OPS_DIGEST_TIMELINE_LIMIT = 6;
 const opsDigestTimelineState = [];
 const opsDigestTimelineGroupCollapseState = {};
@@ -930,6 +940,23 @@ function ensureCollectionStateShape() {
         .filter((value) => typeof value === "string" && value.trim())
         .map((value) => value.trim())
     : [];
+  if (
+    state.collection.starterGranted !== true &&
+    state.collection.guardianOwnedIds.length === 0 &&
+    state.collection.relicOwnedIds.length === 0
+  ) {
+    state.collection.guardianOwnedIds = ["gdn_001"];
+    state.collection.relicOwnedIds = ["rlc_001"];
+    state.collection.selectedGuardianId = "gdn_001";
+    state.collection.selectedRelicId = "rlc_001";
+    state.collection.starterGranted = true;
+  }
+  if (!state.collection.guardianOwnedIds.includes(state.collection.selectedGuardianId)) {
+    state.collection.selectedGuardianId = state.collection.guardianOwnedIds[0] || "";
+  }
+  if (!state.collection.relicOwnedIds.includes(state.collection.selectedRelicId)) {
+    state.collection.selectedRelicId = state.collection.relicOwnedIds[0] || "";
+  }
   if (!state.collection.guardianLoadout || typeof state.collection.guardianLoadout !== "object") {
     state.collection.guardianLoadout = { primary: "", secondary: "" };
   }
@@ -1026,6 +1053,8 @@ function syncCollectionPanel() {
   } · 주간 ${collection.freeSourceClaims.weekly ? "수령" : "미수령"} · 이벤트 ${
     collection.freeSourceClaims.event ? "교환 가능" : "교환 대기"
   }`;
+  const selectedGuardianId = collection.selectedGuardianId || "";
+  const selectedRelicId = collection.selectedRelicId || "";
   dom.collectionPanel.dataset.collectionActiveTab = activeTab;
   dom.collectionPanel.dataset.collectionShardLabel = `파편 ${collection.shard}`;
   dom.collectionPanel.dataset.collectionTokenLabel = `토큰 ${collection.token}`;
@@ -1101,6 +1130,38 @@ function syncCollectionPanel() {
   if (dom.collectionJournalSummary) {
     dom.collectionJournalSummary.textContent =
       dom.collectionPanel.dataset.journalSummary || "수집 도감 준비 중";
+  }
+  if (dom.guardianDetailName) {
+    dom.guardianDetailName.textContent =
+      COLLECTION_GUARDIAN_NAME_BY_ID[selectedGuardianId] ||
+      (selectedGuardianId ? selectedGuardianId : "호법 상세 대기");
+  }
+  if (dom.guardianDetailEffect) {
+    dom.guardianDetailEffect.textContent =
+      COLLECTION_GUARDIAN_EFFECT_LABEL_BY_ID[selectedGuardianId] ||
+      "전투/돌파/운영 보조 효과를 이곳에 노출합니다.";
+  }
+  if (dom.relicDetailName) {
+    dom.relicDetailName.textContent =
+      COLLECTION_RELIC_NAME_BY_ID[selectedRelicId] ||
+      (selectedRelicId ? selectedRelicId : "법보 상세 대기");
+  }
+  if (dom.relicDetailEffect) {
+    dom.relicDetailEffect.textContent =
+      COLLECTION_RELIC_EFFECT_LABEL_BY_ID[selectedRelicId] ||
+      "규칙 변형/준비 선택지 확장 효과를 이곳에 노출합니다.";
+  }
+  for (const card of dom.guardianRosterGrid?.querySelectorAll("[data-guardian-id]") || []) {
+    const guardianId = card.dataset.guardianId || "";
+    card.dataset.owned = String(collection.guardianOwnedIds.includes(guardianId));
+    card.dataset.selected = String(selectedGuardianId === guardianId);
+    card.setAttribute("aria-pressed", String(selectedGuardianId === guardianId));
+  }
+  for (const card of dom.relicArchiveGrid?.querySelectorAll("[data-relic-id]") || []) {
+    const relicId = card.dataset.relicId || "";
+    card.dataset.owned = String(collection.relicOwnedIds.includes(relicId));
+    card.dataset.selected = String(selectedRelicId === relicId);
+    card.setAttribute("aria-pressed", String(selectedRelicId === relicId));
   }
   for (const [button, tabKey] of [
     [dom.btnCollectionTabGuardian, "guardian"],
@@ -17800,21 +17861,44 @@ function bindEvents() {
         button === dom.btnEquipGuardianPrimary ||
         button === dom.btnEquipGuardianSecondary
       ) {
+        if (
+          button === dom.btnEquipGuardianSecondary &&
+          collection.guardianSlotSecondaryUnlocked !== true
+        ) {
+          setStatus("보조 호법 슬롯 잠금", true);
+          return;
+        }
+        const selectedId = collection.selectedGuardianId || collection.guardianOwnedIds[0] || "";
         setStatus(
-          collection.guardianOwnedIds.length > 0
-            ? `${label} 준비 중`
+          collection.guardianOwnedIds.length > 0 && selectedId
+            ? (button === dom.btnEquipGuardianPrimary
+                ? ((collection.guardianLoadout.primary = selectedId), `${label}: ${
+                    COLLECTION_GUARDIAN_NAME_BY_ID[selectedId] || selectedId
+                  }`)
+                : ((collection.guardianLoadout.secondary = selectedId), `${label}: ${
+                    COLLECTION_GUARDIAN_NAME_BY_ID[selectedId] || selectedId
+                  }`))
             : "장착 가능한 호법 없음",
           collection.guardianOwnedIds.length <= 0,
         );
+        if (collection.guardianOwnedIds.length > 0 && selectedId) {
+          persistLocal();
+          render();
+        }
         return;
       }
       if (button === dom.btnUnequipGuardian) {
-        setStatus(
-          collection.guardianLoadout.primary || collection.guardianLoadout.secondary
-            ? `${label} 준비 중`
-            : "장착된 호법 없음",
-          !(collection.guardianLoadout.primary || collection.guardianLoadout.secondary),
-        );
+        const hadGuardianLoadout =
+          collection.guardianLoadout.primary || collection.guardianLoadout.secondary;
+        if (!hadGuardianLoadout) {
+          setStatus("장착된 호법 없음", true);
+          return;
+        }
+        collection.guardianLoadout.primary = "";
+        collection.guardianLoadout.secondary = "";
+        persistLocal();
+        setStatus(`${label}: 호법 장착 해제 완료`);
+        render();
         return;
       }
       if (button === dom.btnConvertGuardianDuplicate) {
@@ -17830,21 +17914,44 @@ function bindEvents() {
         button === dom.btnEquipRelicPrimary ||
         button === dom.btnEquipRelicSecondary
       ) {
+        if (
+          button === dom.btnEquipRelicSecondary &&
+          collection.relicSlotSecondaryUnlocked !== true
+        ) {
+          setStatus("보조 법보 슬롯 잠금", true);
+          return;
+        }
+        const selectedId = collection.selectedRelicId || collection.relicOwnedIds[0] || "";
         setStatus(
-          collection.relicOwnedIds.length > 0
-            ? `${label} 준비 중`
+          collection.relicOwnedIds.length > 0 && selectedId
+            ? (button === dom.btnEquipRelicPrimary
+                ? ((collection.relicLoadout.primary = selectedId), `${label}: ${
+                    COLLECTION_RELIC_NAME_BY_ID[selectedId] || selectedId
+                  }`)
+                : ((collection.relicLoadout.secondary = selectedId), `${label}: ${
+                    COLLECTION_RELIC_NAME_BY_ID[selectedId] || selectedId
+                  }`))
             : "장착 가능한 법보 없음",
           collection.relicOwnedIds.length <= 0,
         );
+        if (collection.relicOwnedIds.length > 0 && selectedId) {
+          persistLocal();
+          render();
+        }
         return;
       }
       if (button === dom.btnUnequipRelic) {
-        setStatus(
-          collection.relicLoadout.primary || collection.relicLoadout.secondary
-            ? `${label} 준비 중`
-            : "장착된 법보 없음",
-          !(collection.relicLoadout.primary || collection.relicLoadout.secondary),
-        );
+        const hadRelicLoadout =
+          collection.relicLoadout.primary || collection.relicLoadout.secondary;
+        if (!hadRelicLoadout) {
+          setStatus("장착된 법보 없음", true);
+          return;
+        }
+        collection.relicLoadout.primary = "";
+        collection.relicLoadout.secondary = "";
+        persistLocal();
+        setStatus(`${label}: 법보 장착 해제 완료`);
+        render();
         return;
       }
       if (button === dom.btnConvertRelicDuplicate) {
@@ -17855,6 +17962,48 @@ function bindEvents() {
           !(collection.shard > 0 || collection.token > 0),
         );
       }
+    });
+  }
+
+  for (const card of dom.guardianRosterGrid?.querySelectorAll("[data-guardian-id]") || []) {
+    card.addEventListener("click", () => {
+      const guardianId = card.dataset.guardianId || "";
+      const collection = ensureCollectionStateShape();
+      if (!collection.guardianOwnedIds.includes(guardianId)) {
+        setStatus("보유하지 않은 호법", true);
+        return;
+      }
+      collection.selectedGuardianId = guardianId;
+      persistLocal();
+      render();
+    });
+    card.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") {
+        return;
+      }
+      event.preventDefault();
+      card.click();
+    });
+  }
+
+  for (const card of dom.relicArchiveGrid?.querySelectorAll("[data-relic-id]") || []) {
+    card.addEventListener("click", () => {
+      const relicId = card.dataset.relicId || "";
+      const collection = ensureCollectionStateShape();
+      if (!collection.relicOwnedIds.includes(relicId)) {
+        setStatus("보유하지 않은 법보", true);
+        return;
+      }
+      collection.selectedRelicId = relicId;
+      persistLocal();
+      render();
+    });
+    card.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") {
+        return;
+      }
+      event.preventDefault();
+      card.click();
     });
   }
 

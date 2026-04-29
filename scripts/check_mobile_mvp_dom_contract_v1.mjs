@@ -13256,6 +13256,24 @@ async function main() {
   );
   assertIncludes(
     app,
+    'state.collection.starterGranted = true;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'collection.guardianLoadout.primary = "";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'collection.relicLoadout.primary = "";',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.previewExpectedLabel.dataset.tone = expectedDelta.tone;",
     "app.mjs",
     failures,

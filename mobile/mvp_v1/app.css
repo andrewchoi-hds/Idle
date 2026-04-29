@@ -3603,6 +3603,21 @@ h2 {
   font-size: 13px;
 }
 
+.collection-card-choice {
+  display: grid;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.collection-card-choice[data-selected="true"] {
+  border-color: #3f8b76;
+  box-shadow: 0 0 0 1px rgba(63, 139, 118, 0.28);
+}
+
+.collection-card-choice[data-owned="false"] {
+  opacity: 0.58;
+}
+
 .collection-source-list {
   margin: 0;
   padding-left: 18px;
