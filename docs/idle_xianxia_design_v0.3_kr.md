@@ -4899,3 +4899,11 @@
 
 ## 1147) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(peer head-to-value rhythm 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1148) 다음 순차 작업
+1. [완료] section marker가 붙은 `lead` 카드의 `.ops-digest-card-label` weight와 letter-spacing을 미세 조정해 첫 카드 anchor 감을 더 또렷하게 정리.
+2. [완료] 구조나 tone을 바꾸지 않고 typography만 손봐서 marker 아래 첫 card header가 조금 더 먼저 읽히게 보강.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 lead header typography 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1149) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(lead header typography 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
