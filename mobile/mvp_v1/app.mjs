@@ -229,6 +229,12 @@ const dom = {
   collectionTokenLabel: document.getElementById("collectionTokenLabel"),
   collectionPityLabel: document.getElementById("collectionPityLabel"),
   collectionFreeSourceLabel: document.getElementById("collectionFreeSourceLabel"),
+  collectionDailySourceStatus: document.getElementById("collectionDailySourceStatus"),
+  collectionWeeklySourceStatus: document.getElementById("collectionWeeklySourceStatus"),
+  collectionEventSourceStatus: document.getElementById("collectionEventSourceStatus"),
+  btnClaimCollectionDaily: document.getElementById("btnClaimCollectionDaily"),
+  btnClaimCollectionWeekly: document.getElementById("btnClaimCollectionWeekly"),
+  btnClaimCollectionEvent: document.getElementById("btnClaimCollectionEvent"),
   btnCollectionTabGuardian: document.getElementById("btnCollectionTabGuardian"),
   btnCollectionTabRelic: document.getElementById("btnCollectionTabRelic"),
   btnCollectionTabExchange: document.getElementById("btnCollectionTabExchange"),
@@ -912,6 +918,10 @@ const COLLECTION_RELIC_EFFECT_LABEL_BY_ID = {
   rlc_002: "경상 실패 가중치 완화",
   rlc_003: "자동돌파 워밍업 단축",
 };
+const COLLECTION_POOL_BY_ID = {
+  guardian_core: ["gdn_001", "gdn_002"],
+  relic_core: ["rlc_001", "rlc_002"],
+};
 const OPS_DIGEST_TIMELINE_LIMIT = 6;
 const opsDigestTimelineState = [];
 const opsDigestTimelineGroupCollapseState = {};
@@ -996,6 +1006,53 @@ function normalizeCollectionPanelTab(tab) {
   return COLLECTION_PANEL_TABS.includes(normalized) ? normalized : "guardian";
 }
 
+function buildCollectionFreeSourceDefinitions() {
+  return [
+    {
+      id: "daily",
+      label: "일일 공양",
+      unlockDifficulty: 1,
+      rewardKind: "collection_token",
+      rewardRef: "none",
+      rewardQty: 2,
+    },
+    {
+      id: "weekly",
+      label: "주간 초대",
+      unlockDifficulty: 32,
+      rewardKind: "guardian_pull",
+      rewardRef: "guardian_core",
+      rewardQty: 1,
+    },
+    {
+      id: "event",
+      label: "이벤트 교환",
+      unlockDifficulty: 70,
+      rewardKind: "collection_shard",
+      rewardRef: "none",
+      rewardQty: 30,
+    },
+  ];
+}
+
+function grantCollectionPull(collection, poolId) {
+  const pool = COLLECTION_POOL_BY_ID[poolId] || [];
+  const isGuardianPool = poolId.startsWith("guardian");
+  const ownedIds = isGuardianPool ? collection.guardianOwnedIds : collection.relicOwnedIds;
+  const nextId = pool.find((id) => !ownedIds.includes(id));
+  if (nextId) {
+    ownedIds.push(nextId);
+    if (isGuardianPool) {
+      collection.selectedGuardianId = nextId;
+      return `${COLLECTION_GUARDIAN_NAME_BY_ID[nextId] || nextId} 확보`;
+    }
+    collection.selectedRelicId = nextId;
+    return `${COLLECTION_RELIC_NAME_BY_ID[nextId] || nextId} 확보`;
+  }
+  collection.shard += 8;
+  return "중복 전환 보상 · 파편 +8";
+}
+
 function buildCollectionPanelOverviewSummary() {
   const collection = ensureCollectionStateShape();
   const guardianEquippedCount =
@@ -1029,6 +1086,8 @@ function syncCollectionPanel() {
     return;
   }
   const collection = ensureCollectionStateShape();
+  const currentDifficultyIndex = Number(state?.progression?.difficultyIndex || 1);
+  const freeSourceDefinitions = buildCollectionFreeSourceDefinitions();
   const activeTab = normalizeCollectionPanelTab(collection.activeTab);
   const guardianPrimaryLabel =
     COLLECTION_GUARDIAN_NAME_BY_ID[collection.guardianLoadout.primary] ||
@@ -1048,11 +1107,14 @@ function syncCollectionPanel() {
       collection.relicLoadout.secondary ||
       "비어 있음"
     : "잠금";
-  const freeSourceSummary = `일일 ${
-    collection.freeSourceClaims.daily ? "수령" : "미수령"
-  } · 주간 ${collection.freeSourceClaims.weekly ? "수령" : "미수령"} · 이벤트 ${
-    collection.freeSourceClaims.event ? "교환 가능" : "교환 대기"
-  }`;
+  const freeSourceSummary = freeSourceDefinitions
+    .map((entry) => {
+      const unlocked = currentDifficultyIndex >= entry.unlockDifficulty;
+      const claimed = collection.freeSourceClaims[entry.id] === true;
+      const stateLabel = !unlocked ? "잠금" : claimed ? "수령됨" : "수령 가능";
+      return `${entry.label} ${stateLabel}`;
+    })
+    .join(" · ");
   const selectedGuardianId = collection.selectedGuardianId || "";
   const selectedRelicId = collection.selectedRelicId || "";
   dom.collectionPanel.dataset.collectionActiveTab = activeTab;
@@ -1098,6 +1160,35 @@ function syncCollectionPanel() {
   if (dom.collectionFreeSourceLabel) {
     dom.collectionFreeSourceLabel.textContent =
       dom.collectionPanel.dataset.collectionFreeSourceSummary || "무료 수급 대기";
+  }
+  for (const definition of freeSourceDefinitions) {
+    const unlocked = currentDifficultyIndex >= definition.unlockDifficulty;
+    const claimed = collection.freeSourceClaims[definition.id] === true;
+    const statusLabel = !unlocked
+      ? `난이도 ${definition.unlockDifficulty} 필요`
+      : claimed
+        ? "수령 완료"
+        : "수령 가능";
+    const button =
+      definition.id === "daily"
+        ? dom.btnClaimCollectionDaily
+        : definition.id === "weekly"
+          ? dom.btnClaimCollectionWeekly
+          : dom.btnClaimCollectionEvent;
+    const statusNode =
+      definition.id === "daily"
+        ? dom.collectionDailySourceStatus
+        : definition.id === "weekly"
+          ? dom.collectionWeeklySourceStatus
+          : dom.collectionEventSourceStatus;
+    if (statusNode) {
+      statusNode.textContent = statusLabel;
+    }
+    if (button) {
+      button.disabled = !unlocked || claimed;
+      button.textContent = claimed ? "완료" : "수령";
+      button.title = `${definition.label} · ${statusLabel}`;
+    }
   }
   if (dom.guardianOwnedSummary) {
     dom.guardianOwnedSummary.textContent =
@@ -17841,6 +17932,44 @@ function bindEvents() {
   ]) {
     button?.addEventListener("click", () => {
       setCollectionPanelActiveTab(tabKey);
+    });
+  }
+
+  for (const definition of buildCollectionFreeSourceDefinitions()) {
+    const button =
+      definition.id === "daily"
+        ? dom.btnClaimCollectionDaily
+        : definition.id === "weekly"
+          ? dom.btnClaimCollectionWeekly
+          : dom.btnClaimCollectionEvent;
+    button?.addEventListener("click", () => {
+      const collection = ensureCollectionStateShape();
+      const currentDifficultyIndex = Number(state?.progression?.difficultyIndex || 1);
+      if (currentDifficultyIndex < definition.unlockDifficulty) {
+        setStatus(`수집 수급 잠금 · 난이도 ${definition.unlockDifficulty} 필요`, true);
+        return;
+      }
+      if (collection.freeSourceClaims[definition.id] === true) {
+        setStatus(`${definition.label} 이미 수령 완료`, true);
+        return;
+      }
+      let rewardLabel = `${definition.label} 수령`;
+      if (definition.rewardKind === "collection_token") {
+        collection.token += definition.rewardQty;
+        rewardLabel = `${definition.label} · 토큰 +${definition.rewardQty}`;
+      } else if (definition.rewardKind === "collection_shard") {
+        collection.shard += definition.rewardQty;
+        rewardLabel = `${definition.label} · 파편 +${definition.rewardQty}`;
+      } else if (
+        definition.rewardKind === "guardian_pull" ||
+        definition.rewardKind === "relic_pull"
+      ) {
+        rewardLabel = `${definition.label} · ${grantCollectionPull(collection, definition.rewardRef)}`;
+      }
+      collection.freeSourceClaims[definition.id] = true;
+      persistLocal();
+      setStatus(rewardLabel);
+      render();
     });
   }
 
