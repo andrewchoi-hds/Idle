@@ -13220,6 +13220,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function ensureCollectionStateShape() {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function setCollectionPanelActiveTab(tab) {",
     "app.mjs",
     failures,
@@ -13233,6 +13239,18 @@ async function main() {
   assertIncludes(
     app,
     "syncCollectionPanel();",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "state.collection = {};",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "ensureCollectionStateShape().activeTab = normalizeCollectionPanelTab(tab);",
     "app.mjs",
     failures,
   );
