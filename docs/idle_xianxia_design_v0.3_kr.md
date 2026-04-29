@@ -4907,3 +4907,11 @@
 
 ## 1149) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(lead header typography 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1150) 다음 순차 작업
+1. [완료] `peer` 카드 기본 link de-emphasis는 유지하되, `warn/error` tone peer link는 opacity를 아주 조금 더 살려 위험도 문맥이 완전히 죽지 않게 조정.
+2. [완료] 같은 selector 계열에서 `warn/error` peer link icon도 미세하게 더 또렷하게 만들어, 후속 카드라도 위험도 신호는 약하게 남기도록 정리.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 peer risk-link nuance 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1151) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(peer risk-link nuance 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
