@@ -3239,6 +3239,30 @@ export function createInitialSliceState(context, options = {}) {
       breakthroughElixir: 3,
       tribulationTalisman: 2,
     },
+    collection: {
+      activeTab: "guardian",
+      shard: 0,
+      token: 0,
+      pityProgress: 0,
+      pityMax: 40,
+      guardianOwnedIds: [],
+      relicOwnedIds: [],
+      guardianLoadout: {
+        primary: "",
+        secondary: "",
+      },
+      relicLoadout: {
+        primary: "",
+        secondary: "",
+      },
+      guardianSlotSecondaryUnlocked: false,
+      relicSlotSecondaryUnlocked: false,
+      freeSourceClaims: {
+        daily: false,
+        weekly: false,
+        event: false,
+      },
+    },
     settings: {
       autoBattle: true,
       autoBreakthrough: false,
@@ -4111,6 +4135,60 @@ export function parseSliceState(raw, context) {
     inventory: {
       breakthroughElixir: toNonNegativeInt(parsed.inventory?.breakthroughElixir, 0),
       tribulationTalisman: toNonNegativeInt(parsed.inventory?.tribulationTalisman, 0),
+    },
+    collection: {
+      activeTab:
+        typeof parsed.collection?.activeTab === "string" &&
+        parsed.collection.activeTab.trim()
+          ? parsed.collection.activeTab.trim()
+          : "guardian",
+      shard: toNonNegativeInt(parsed.collection?.shard, 0),
+      token: toNonNegativeInt(parsed.collection?.token, 0),
+      pityProgress: toNonNegativeInt(parsed.collection?.pityProgress, 0),
+      pityMax: clamp(toNonNegativeInt(parsed.collection?.pityMax, 40), 1, 999),
+      guardianOwnedIds: Array.isArray(parsed.collection?.guardianOwnedIds)
+        ? parsed.collection.guardianOwnedIds
+            .filter((value) => typeof value === "string" && value.trim())
+            .map((value) => value.trim())
+        : [],
+      relicOwnedIds: Array.isArray(parsed.collection?.relicOwnedIds)
+        ? parsed.collection.relicOwnedIds
+            .filter((value) => typeof value === "string" && value.trim())
+            .map((value) => value.trim())
+        : [],
+      guardianLoadout: {
+        primary:
+          typeof parsed.collection?.guardianLoadout?.primary === "string"
+            ? parsed.collection.guardianLoadout.primary.trim()
+            : "",
+        secondary:
+          typeof parsed.collection?.guardianLoadout?.secondary === "string"
+            ? parsed.collection.guardianLoadout.secondary.trim()
+            : "",
+      },
+      relicLoadout: {
+        primary:
+          typeof parsed.collection?.relicLoadout?.primary === "string"
+            ? parsed.collection.relicLoadout.primary.trim()
+            : "",
+        secondary:
+          typeof parsed.collection?.relicLoadout?.secondary === "string"
+            ? parsed.collection.relicLoadout.secondary.trim()
+            : "",
+      },
+      guardianSlotSecondaryUnlocked: pickBoolean(
+        parsed.collection?.guardianSlotSecondaryUnlocked,
+        false,
+      ),
+      relicSlotSecondaryUnlocked: pickBoolean(
+        parsed.collection?.relicSlotSecondaryUnlocked,
+        false,
+      ),
+      freeSourceClaims: {
+        daily: pickBoolean(parsed.collection?.freeSourceClaims?.daily, false),
+        weekly: pickBoolean(parsed.collection?.freeSourceClaims?.weekly, false),
+        event: pickBoolean(parsed.collection?.freeSourceClaims?.event, false),
+      },
     },
     settings: {
       autoBattle: pickBoolean(parsed.settings?.autoBattle, true),

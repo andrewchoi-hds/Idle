@@ -892,9 +892,77 @@ const opsDigestInboxStampState = {
   secondary: { signature: "", updatedAt: 0 },
 };
 const COLLECTION_PANEL_TABS = ["guardian", "relic", "exchange", "journal"];
+const COLLECTION_GUARDIAN_NAME_BY_ID = {
+  gdn_001: "청운학",
+  gdn_002: "현갑령",
+  gdn_003: "진기동자",
+};
+const COLLECTION_RELIC_NAME_BY_ID = {
+  rlc_001: "정기잔향",
+  rlc_002: "호천패",
+  rlc_003: "귀맥석",
+};
 const OPS_DIGEST_TIMELINE_LIMIT = 6;
 const opsDigestTimelineState = [];
 const opsDigestTimelineGroupCollapseState = {};
+
+function ensureCollectionStateShape() {
+  if (!state.collection || typeof state.collection !== "object") {
+    state.collection = {};
+  }
+  state.collection.activeTab = normalizeCollectionPanelTab(
+    state.collection.activeTab || "guardian",
+  );
+  state.collection.shard = Math.max(0, Math.floor(Number(state.collection.shard) || 0));
+  state.collection.token = Math.max(0, Math.floor(Number(state.collection.token) || 0));
+  state.collection.pityProgress = Math.max(
+    0,
+    Math.floor(Number(state.collection.pityProgress) || 0),
+  );
+  state.collection.pityMax = Math.max(1, Math.floor(Number(state.collection.pityMax) || 40));
+  state.collection.guardianOwnedIds = Array.isArray(state.collection.guardianOwnedIds)
+    ? state.collection.guardianOwnedIds
+        .filter((value) => typeof value === "string" && value.trim())
+        .map((value) => value.trim())
+    : [];
+  state.collection.relicOwnedIds = Array.isArray(state.collection.relicOwnedIds)
+    ? state.collection.relicOwnedIds
+        .filter((value) => typeof value === "string" && value.trim())
+        .map((value) => value.trim())
+    : [];
+  if (!state.collection.guardianLoadout || typeof state.collection.guardianLoadout !== "object") {
+    state.collection.guardianLoadout = { primary: "", secondary: "" };
+  }
+  if (!state.collection.relicLoadout || typeof state.collection.relicLoadout !== "object") {
+    state.collection.relicLoadout = { primary: "", secondary: "" };
+  }
+  state.collection.guardianLoadout.primary =
+    typeof state.collection.guardianLoadout.primary === "string"
+      ? state.collection.guardianLoadout.primary.trim()
+      : "";
+  state.collection.guardianLoadout.secondary =
+    typeof state.collection.guardianLoadout.secondary === "string"
+      ? state.collection.guardianLoadout.secondary.trim()
+      : "";
+  state.collection.relicLoadout.primary =
+    typeof state.collection.relicLoadout.primary === "string"
+      ? state.collection.relicLoadout.primary.trim()
+      : "";
+  state.collection.relicLoadout.secondary =
+    typeof state.collection.relicLoadout.secondary === "string"
+      ? state.collection.relicLoadout.secondary.trim()
+      : "";
+  state.collection.guardianSlotSecondaryUnlocked =
+    state.collection.guardianSlotSecondaryUnlocked === true;
+  state.collection.relicSlotSecondaryUnlocked = state.collection.relicSlotSecondaryUnlocked === true;
+  if (!state.collection.freeSourceClaims || typeof state.collection.freeSourceClaims !== "object") {
+    state.collection.freeSourceClaims = {};
+  }
+  state.collection.freeSourceClaims.daily = state.collection.freeSourceClaims.daily === true;
+  state.collection.freeSourceClaims.weekly = state.collection.freeSourceClaims.weekly === true;
+  state.collection.freeSourceClaims.event = state.collection.freeSourceClaims.event === true;
+  return state.collection;
+}
 
 function normalizeCollectionPanelTab(tab) {
   const normalized = String(tab || "guardian").trim() || "guardian";
@@ -902,24 +970,30 @@ function normalizeCollectionPanelTab(tab) {
 }
 
 function buildCollectionPanelOverviewSummary() {
-  const guardianSummary =
-    String(dom.collectionPanel?.dataset.guardianSummary || "호법 0 보유 · 장착 0/1").trim() ||
-    "호법 0 보유 · 장착 0/1";
-  const relicSummary =
-    String(dom.collectionPanel?.dataset.relicSummary || "법보 0 보유 · 장착 0/1").trim() ||
-    "법보 0 보유 · 장착 0/1";
-  const shardLabel =
-    String(dom.collectionPanel?.dataset.collectionShardLabel || "파편 0").trim() || "파편 0";
-  const tokenLabel =
-    String(dom.collectionPanel?.dataset.collectionTokenLabel || "토큰 0").trim() || "토큰 0";
+  const collection = ensureCollectionStateShape();
+  const guardianEquippedCount =
+    (collection.guardianLoadout.primary ? 1 : 0) +
+    (collection.guardianSlotSecondaryUnlocked && collection.guardianLoadout.secondary ? 1 : 0);
+  const relicEquippedCount =
+    (collection.relicLoadout.primary ? 1 : 0) +
+    (collection.relicSlotSecondaryUnlocked && collection.relicLoadout.secondary ? 1 : 0);
+  const guardianSummary = `호법 ${collection.guardianOwnedIds.length} 보유 · 장착 ${guardianEquippedCount}/${
+    collection.guardianSlotSecondaryUnlocked ? 2 : 1
+  }`;
+  const relicSummary = `법보 ${collection.relicOwnedIds.length} 보유 · 장착 ${relicEquippedCount}/${
+    collection.relicSlotSecondaryUnlocked ? 2 : 1
+  }`;
+  const shardLabel = `파편 ${collection.shard}`;
+  const tokenLabel = `토큰 ${collection.token}`;
   return `${guardianSummary} · ${relicSummary} · ${shardLabel} · ${tokenLabel}`;
 }
 
 function setCollectionPanelActiveTab(tab) {
-  if (!dom.collectionPanel) {
+  if (!dom.collectionPanel || !state) {
     return;
   }
-  dom.collectionPanel.dataset.collectionActiveTab = normalizeCollectionPanelTab(tab);
+  ensureCollectionStateShape().activeTab = normalizeCollectionPanelTab(tab);
+  persistLocal();
   syncCollectionPanel();
 }
 
@@ -927,10 +1001,53 @@ function syncCollectionPanel() {
   if (!dom.collectionPanel) {
     return;
   }
-  const activeTab = normalizeCollectionPanelTab(
-    dom.collectionPanel.dataset.collectionActiveTab || "guardian",
-  );
+  const collection = ensureCollectionStateShape();
+  const activeTab = normalizeCollectionPanelTab(collection.activeTab);
+  const guardianPrimaryLabel =
+    COLLECTION_GUARDIAN_NAME_BY_ID[collection.guardianLoadout.primary] ||
+    collection.guardianLoadout.primary ||
+    "비어 있음";
+  const guardianSecondaryLabel = collection.guardianSlotSecondaryUnlocked
+    ? COLLECTION_GUARDIAN_NAME_BY_ID[collection.guardianLoadout.secondary] ||
+      collection.guardianLoadout.secondary ||
+      "비어 있음"
+    : "잠금";
+  const relicPrimaryLabel =
+    COLLECTION_RELIC_NAME_BY_ID[collection.relicLoadout.primary] ||
+    collection.relicLoadout.primary ||
+    "비어 있음";
+  const relicSecondaryLabel = collection.relicSlotSecondaryUnlocked
+    ? COLLECTION_RELIC_NAME_BY_ID[collection.relicLoadout.secondary] ||
+      collection.relicLoadout.secondary ||
+      "비어 있음"
+    : "잠금";
+  const freeSourceSummary = `일일 ${
+    collection.freeSourceClaims.daily ? "수령" : "미수령"
+  } · 주간 ${collection.freeSourceClaims.weekly ? "수령" : "미수령"} · 이벤트 ${
+    collection.freeSourceClaims.event ? "교환 가능" : "교환 대기"
+  }`;
   dom.collectionPanel.dataset.collectionActiveTab = activeTab;
+  dom.collectionPanel.dataset.collectionShardLabel = `파편 ${collection.shard}`;
+  dom.collectionPanel.dataset.collectionTokenLabel = `토큰 ${collection.token}`;
+  dom.collectionPanel.dataset.collectionPityLabel =
+    `천장 ${collection.pityProgress} / ${collection.pityMax}`;
+  dom.collectionPanel.dataset.collectionFreeSourceSummary = freeSourceSummary;
+  dom.collectionPanel.dataset.guardianSummary = `호법 ${collection.guardianOwnedIds.length} 보유 · 장착 ${
+    (collection.guardianLoadout.primary ? 1 : 0) +
+    (collection.guardianSlotSecondaryUnlocked && collection.guardianLoadout.secondary ? 1 : 0)
+  }/${collection.guardianSlotSecondaryUnlocked ? 2 : 1}`;
+  dom.collectionPanel.dataset.guardianSlotPrimary = guardianPrimaryLabel;
+  dom.collectionPanel.dataset.guardianSlotSecondary = guardianSecondaryLabel;
+  dom.collectionPanel.dataset.relicSummary = `법보 ${collection.relicOwnedIds.length} 보유 · 장착 ${
+    (collection.relicLoadout.primary ? 1 : 0) +
+    (collection.relicSlotSecondaryUnlocked && collection.relicLoadout.secondary ? 1 : 0)
+  }/${collection.relicSlotSecondaryUnlocked ? 2 : 1}`;
+  dom.collectionPanel.dataset.relicSlotPrimary = relicPrimaryLabel;
+  dom.collectionPanel.dataset.relicSlotSecondary = relicSecondaryLabel;
+  dom.collectionPanel.dataset.duplicateSummary =
+    `파편 ${collection.shard} · 토큰 ${collection.token} · 천장 ${collection.pityProgress}/${collection.pityMax}`;
+  dom.collectionPanel.dataset.journalSummary =
+    `호법 ${collection.guardianOwnedIds.length} · 법보 ${collection.relicOwnedIds.length} 수집`;
   dom.collectionPanel.dataset.overviewSummary = buildCollectionPanelOverviewSummary();
   if (dom.collectionHeaderSummary) {
     dom.collectionHeaderSummary.textContent =
@@ -17677,7 +17794,67 @@ function bindEvents() {
     dom.btnConvertRelicDuplicate,
   ]) {
     button?.addEventListener("click", () => {
-      setStatus(`${button.textContent?.trim() || "수집 액션"} 준비 중`);
+      const collection = ensureCollectionStateShape();
+      const label = button.textContent?.trim() || "수집 액션";
+      if (
+        button === dom.btnEquipGuardianPrimary ||
+        button === dom.btnEquipGuardianSecondary
+      ) {
+        setStatus(
+          collection.guardianOwnedIds.length > 0
+            ? `${label} 준비 중`
+            : "장착 가능한 호법 없음",
+          collection.guardianOwnedIds.length <= 0,
+        );
+        return;
+      }
+      if (button === dom.btnUnequipGuardian) {
+        setStatus(
+          collection.guardianLoadout.primary || collection.guardianLoadout.secondary
+            ? `${label} 준비 중`
+            : "장착된 호법 없음",
+          !(collection.guardianLoadout.primary || collection.guardianLoadout.secondary),
+        );
+        return;
+      }
+      if (button === dom.btnConvertGuardianDuplicate) {
+        setStatus(
+          collection.shard > 0 || collection.token > 0
+            ? `${label} 준비 중`
+            : "전환 가능한 호법 중복 없음",
+          !(collection.shard > 0 || collection.token > 0),
+        );
+        return;
+      }
+      if (
+        button === dom.btnEquipRelicPrimary ||
+        button === dom.btnEquipRelicSecondary
+      ) {
+        setStatus(
+          collection.relicOwnedIds.length > 0
+            ? `${label} 준비 중`
+            : "장착 가능한 법보 없음",
+          collection.relicOwnedIds.length <= 0,
+        );
+        return;
+      }
+      if (button === dom.btnUnequipRelic) {
+        setStatus(
+          collection.relicLoadout.primary || collection.relicLoadout.secondary
+            ? `${label} 준비 중`
+            : "장착된 법보 없음",
+          !(collection.relicLoadout.primary || collection.relicLoadout.secondary),
+        );
+        return;
+      }
+      if (button === dom.btnConvertRelicDuplicate) {
+        setStatus(
+          collection.shard > 0 || collection.token > 0
+            ? `${label} 준비 중`
+            : "전환 가능한 법보 중복 없음",
+          !(collection.shard > 0 || collection.token > 0),
+        );
+      }
     });
   }
 
