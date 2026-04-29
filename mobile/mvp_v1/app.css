@@ -447,6 +447,14 @@ h2 {
     letter-spacing: 0.08em;
   }
 
+  .ops-digest-item[data-card-section-start="true"][data-card-section-role="lead"] {
+    padding-top: 16px;
+  }
+
+  .ops-digest-item[data-card-section-start="true"][data-card-section-role="lead"]::before {
+    margin-bottom: 3px;
+  }
+
   .ops-digest-item[data-card-section-start="true"][data-card-priority="critical"]::before {
     border-color: rgba(177, 75, 69, 0.76);
     background: rgba(61, 22, 22, 0.88);

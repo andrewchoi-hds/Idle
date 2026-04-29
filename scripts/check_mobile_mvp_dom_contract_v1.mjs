@@ -14520,6 +14520,7 @@ async function main() {
   assertIncludes(css, ".ops-digest-card-priority.tone-error", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-start=\"true\"] {", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-start=\"true\"]::before", "app.css", failures);
+  assertIncludes(css, ".ops-digest-item[data-card-section-start=\"true\"][data-card-section-role=\"lead\"] {", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-start=\"true\"][data-card-priority=\"critical\"]::before", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-role=\"lead\"] .ops-digest-card-meta", "app.css", failures);
   assertIncludes(css, ".ops-digest-item[data-card-section-role=\"lead\"] {", "app.css", failures);

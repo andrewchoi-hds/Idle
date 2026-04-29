@@ -4883,3 +4883,11 @@
 
 ## 1143) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(card lead outline sync 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1144) 다음 순차 작업
+1. [완료] section marker가 붙은 `lead` 카드에만 top padding을 한 단계 줄여 marker 아래 첫 카드 진입이 더 자연스럽게 이어지도록 정리.
+2. [완료] 같은 selector에서 marker 하단 간격도 조금 더 줄여, marker에서 card head로 내려가는 리듬이 더 매끈하게 보이게 보강.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 section-to-lead rhythm 규칙 기준으로 동기화하고, `npm run mobile:mvp:dom:check`, `npm run mobile:mvp:check`를 통과.
+
+## 1145) 추가 문서
+- 모바일 MVP 수직슬라이스 가이드(section-to-lead rhythm 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
