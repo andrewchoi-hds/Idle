@@ -5009,3 +5009,11 @@
 
 ## 1169) 추가 문서
 - collection UI contract(data-driven guardian/relic roster 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`
+
+## 1170) 다음 순차 작업
+1. [완료] `collection_free_sources_v1`의 `entry_ref`가 quest/milestone export와 연결되도록 `quests_v1.json`, `milestones_v1.json`을 collection catalog 로드에 추가.
+2. [완료] free source row가 raw ref id 대신 실제 이름과 목표 문장으로 보이게 정리해, 수급 경로가 플레이어 시점에서 더 읽기 쉽게 보이도록 개선.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 entry reference enrichment 기준으로 동기화.
+
+## 1171) 추가 문서
+- collection UI contract(entry ref quest/milestone enrichment 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`

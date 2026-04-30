@@ -972,11 +972,60 @@ function parseCollectionUnlockDifficulty(unlockCondition, fallback = 1) {
   return matched ? Math.max(1, Math.floor(Number(matched[1]) || fallback)) : fallback;
 }
 
+function formatCollectionObjectiveLabel(objectiveType, objectiveValue) {
+  if (objectiveType === "reach_difficulty") {
+    return `난이도 ${objectiveValue} 도달`;
+  }
+  if (objectiveType === "kill_boss") {
+    return `보스 ${objectiveValue}회`;
+  }
+  if (objectiveType === "kill_elite") {
+    return `정예 ${objectiveValue}회`;
+  }
+  if (objectiveType === "clear_zone") {
+    return `구역 ${objectiveValue} 정리`;
+  }
+  if (objectiveType === "survive_tribulation") {
+    return `도겁 생존 ${objectiveValue}회`;
+  }
+  if (objectiveType === "collect_item_count") {
+    return `${objectiveValue} 수집`;
+  }
+  if (objectiveType === "collect_item") {
+    return `${objectiveValue} 확보`;
+  }
+  if (objectiveType === "consume_item") {
+    return `${objectiveValue} 소비`;
+  }
+  return String(objectiveValue || "목표 준비 중");
+}
+
+function formatCollectionTriggerLabel(triggerType, triggerValue) {
+  if (triggerType === "reach_difficulty") {
+    return `난이도 ${triggerValue} 도달`;
+  }
+  if (triggerType === "survive_tribulation_count") {
+    return `도겁 생존 ${triggerValue}회`;
+  }
+  if (triggerType === "collect_item_count") {
+    return `${triggerValue} 수집`;
+  }
+  if (triggerType === "collect_item") {
+    return `${triggerValue} 확보`;
+  }
+  if (triggerType === "spend_spirit_coin") {
+    return `영석 ${triggerValue} 사용`;
+  }
+  return String(triggerValue || "조건 준비 중");
+}
+
 function buildCollectionCatalog(
   guardianRows = DEFAULT_COLLECTION_GUARDIAN_ROWS,
   relicRows = DEFAULT_COLLECTION_RELIC_ROWS,
   duplicateRows = DEFAULT_COLLECTION_DUPLICATE_ROWS,
   freeSourceRows = DEFAULT_COLLECTION_FREE_SOURCE_ROWS,
+  questRows = [],
+  milestoneRows = [],
 ) {
   const guardianList = guardianRows.map((row) => ({
     id: row.guardian_id,
@@ -1034,19 +1083,61 @@ function buildCollectionCatalog(
       pity: Math.max(0, Math.floor(Number(row.pity_progress_value) || 0)),
     };
   }
+  const questRefsById = Object.fromEntries(
+    questRows.map((row) => [
+      row.quest_id,
+      {
+        id: row.quest_id,
+        nameKo: row.name_ko || row.quest_id,
+        summary: formatCollectionObjectiveLabel(row.objective_type, row.objective_value),
+        note: row.note || "",
+      },
+    ]),
+  );
+  const milestoneRefsById = Object.fromEntries(
+    milestoneRows.map((row) => [
+      row.milestone_id,
+      {
+        id: row.milestone_id,
+        nameKo: row.name_ko || row.milestone_id,
+        summary: formatCollectionTriggerLabel(row.trigger_type, row.trigger_value),
+        note: row.note || "",
+      },
+    ]),
+  );
   const freeSources = freeSourceRows.map((row, index) => ({
     id: row.source_id || `collection_source_${index + 1}`,
     label: row.name_ko || "무료 수급",
     sourceType: row.source_type || "daily",
     cycle: row.cycle || "once",
     entryRef: row.entry_ref || "none",
+    entryLabel:
+      questRefsById[row.entry_ref]?.nameKo ||
+      milestoneRefsById[row.entry_ref]?.nameKo ||
+      row.entry_ref ||
+      "연계 준비 중",
+    entrySummary:
+      questRefsById[row.entry_ref]?.summary ||
+      milestoneRefsById[row.entry_ref]?.summary ||
+      row.note ||
+      "조건 준비 중",
     unlockDifficulty: parseCollectionUnlockDifficulty(row.unlock_condition, 1),
     rewardKind: row.reward_kind || "collection_token",
     rewardRef: row.reward_ref || "none",
     rewardQty: Math.max(0, Math.floor(Number(row.reward_qty) || 0)),
     note: row.note || "",
   }));
-  return { guardianList, relicList, guardiansById, relicsById, poolsById, duplicateRules, freeSources };
+  return {
+    guardianList,
+    relicList,
+    guardiansById,
+    relicsById,
+    poolsById,
+    duplicateRules,
+    freeSources,
+    questRefsById,
+    milestoneRefsById,
+  };
 }
 
 function ensureCollectionStateShape() {
@@ -1655,18 +1746,21 @@ function syncCollectionPanel() {
       const meta = document.createElement("p");
       meta.className = "sub collection-source-meta";
       meta.textContent =
-        `${resolveCollectionFreeSourceTypeLabel(definition.sourceType)} · ${resolveCollectionFreeSourceCycleLabel(definition.cycle)} · ${definition.entryRef}`;
+        `${resolveCollectionFreeSourceTypeLabel(definition.sourceType)} · ${resolveCollectionFreeSourceCycleLabel(definition.cycle)} · ${definition.entryLabel || definition.entryRef}`;
+      const entry = document.createElement("p");
+      entry.className = "sub collection-source-entry";
+      entry.textContent = definition.entrySummary || definition.note || definition.entryRef;
       const reward = document.createElement("p");
       reward.className = "sub collection-source-reward";
       reward.textContent = `${resolveCollectionFreeSourceRewardLabel(definition)} · ${status.label}`;
-      copy.append(title, meta, reward);
+      copy.append(title, meta, entry, reward);
       const button = document.createElement("button");
       button.type = "button";
       button.className = "ghost-btn";
       button.dataset.collectionSourceClaim = definition.id;
       button.disabled = status.disabled;
       button.textContent = status.buttonLabel;
-      button.title = `${definition.label} · ${status.label}`;
+      button.title = `${definition.label} · ${definition.entryLabel || definition.entryRef} · ${status.label}`;
       row.append(copy, button);
       fragment.append(row);
     }
@@ -19050,6 +19144,8 @@ async function bootstrap() {
       relicRows,
       collectionDuplicateRows,
       collectionFreeSourceRows,
+      questRows,
+      milestoneRows,
     ] = await Promise.all([
       fetchJson("../../data/export/realm_progression_v1.json"),
       fetchJson("../../data/export/realm_locale_ko_v1.json"),
@@ -19057,12 +19153,16 @@ async function bootstrap() {
       fetchJson("../../data/export/relics_v1.json"),
       fetchJson("../../data/export/collection_duplicate_conversion_v1.json"),
       fetchJson("../../data/export/collection_free_sources_v1.json"),
+      fetchJson("../../data/export/quests_v1.json"),
+      fetchJson("../../data/export/milestones_v1.json"),
     ]);
     collectionCatalog = buildCollectionCatalog(
       guardianRows,
       relicRows,
       collectionDuplicateRows,
       collectionFreeSourceRows,
+      questRows,
+      milestoneRows,
     );
     context = buildSliceContext(progressionRows, localeRows);
     state = createInitialSliceState(context, { playerName: "도심" });
