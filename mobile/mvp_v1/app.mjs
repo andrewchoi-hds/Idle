@@ -41,6 +41,7 @@ import {
   buildOfflineDetailFilterSummaryLabelKo,
   extractOfflineDetailCompareCode,
   extractOfflineDetailCompareCodeFromPayloadTextWithSource,
+  formatBattleEncounterClassLabelKo,
   getStage,
   getStageDisplayNameKo,
   isCopyTargetSlotDisabled,
@@ -1620,8 +1621,8 @@ function resolveCollectionFreeSourceEntryProgress(
       achieved: bossBattleWinCount >= required,
       label:
         bossBattleWinCount >= required
-          ? `목표 달성 · 보스형 전투 ${required}회`
-          : `보스형 전투 ${bossBattleWinCount}/${required}`,
+          ? `목표 달성 · ${formatBattleEncounterClassLabelKo("boss")} ${required}회`
+          : `${formatBattleEncounterClassLabelKo("boss")} ${bossBattleWinCount}/${required}`,
     };
   }
   if (questRef?.objectiveType === "kill_elite") {
@@ -1631,8 +1632,8 @@ function resolveCollectionFreeSourceEntryProgress(
       achieved: eliteBattleWinCount >= required,
       label:
         eliteBattleWinCount >= required
-          ? `목표 달성 · 정예형 전투 ${required}회`
-          : `정예형 전투 ${eliteBattleWinCount}/${required}`,
+          ? `목표 달성 · ${formatBattleEncounterClassLabelKo("elite")} ${required}회`
+          : `${formatBattleEncounterClassLabelKo("elite")} ${eliteBattleWinCount}/${required}`,
     };
   }
   if (questRef?.objectiveType === "clear_zone" || questRef?.objectiveType === "clear_node") {
