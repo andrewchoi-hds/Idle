@@ -5081,3 +5081,11 @@
 
 ## 1187) 추가 문서
 - collection UI contract(kill_elite elite-class proxy 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`
+
+## 1188) 다음 순차 작업
+1. [완료] free source row마다 현재 계산 방식이 `실측 / 프록시 / 수동` 중 무엇인지 나타내는 tracking descriptor/helper를 추가.
+2. [완료] row 안에 tracking chip을 렌더해 플레이어가 왜 저 상태인지 바로 이해할 수 있게 정리.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 tracking chip 규칙 기준으로 동기화.
+
+## 1189) 추가 문서
+- collection UI contract(tracking chip 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`

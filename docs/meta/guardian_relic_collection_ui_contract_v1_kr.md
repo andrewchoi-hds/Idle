@@ -146,6 +146,7 @@
 - `collect_item_count / collect_item` 계열은 현재 MVP에서 `inventory proxy`(영약=`breakthroughElixir`, 부적=`tribulationTalisman`)로 추적한다는 점을 명시적으로 유지한다.
 - `clear_zone / clear_node` 계열은 현재 MVP에서 quest `recommended_difficulty_max`를 진행 proxy로 사용한다는 점을 명시적으로 유지한다.
 - `event_exchange` 계열은 현재 MVP에서 `collection_token`을 사용하는 exchange proxy(필요 토큰=`reward_qty`)로 추적한다는 점을 명시적으로 유지한다.
+- 각 row에는 현재 계산 방식이 `실측 / 프록시 / 수동` 중 무엇인지 보여 주는 tracking chip이 같이 있어야 한다.
 
 ## 6) 중복 전환 UX
 

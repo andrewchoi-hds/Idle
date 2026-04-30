@@ -1732,6 +1732,33 @@ function resolveCollectionFreeSourceManualStatusLabel(definition) {
   return "조건 확인 필요";
 }
 
+function resolveCollectionFreeSourceTrackingDescriptor(definition) {
+  const questRef = collectionCatalog?.questRefsById?.[definition.entryRef] || null;
+  const milestoneRef = collectionCatalog?.milestoneRefsById?.[definition.entryRef] || null;
+  const objectiveType = questRef?.objectiveType || milestoneRef?.triggerType || "";
+  if (definition.sourceType === "event_exchange") {
+    return { mode: "proxy", label: "프록시", tone: "warn" };
+  }
+  if (
+    objectiveType === "kill_boss" ||
+    objectiveType === "kill_elite" ||
+    objectiveType === "clear_zone" ||
+    objectiveType === "clear_node" ||
+    objectiveType === "collect_item_count" ||
+    objectiveType === "collect_item"
+  ) {
+    return { mode: "proxy", label: "프록시", tone: "warn" };
+  }
+  if (
+    objectiveType === "reach_difficulty" ||
+    objectiveType === "survive_tribulation" ||
+    objectiveType === "survive_tribulation_count"
+  ) {
+    return { mode: "live", label: "실측", tone: "success" };
+  }
+  return { mode: "manual", label: "수동", tone: "info" };
+}
+
 function buildCollectionFreeSourceStatus(definition, collection, currentDifficultyIndex) {
   if (currentDifficultyIndex < definition.unlockDifficulty) {
     return {
@@ -1999,6 +2026,7 @@ function syncCollectionPanel() {
         currentDifficultyIndex,
         state?.inventory,
       );
+      const trackingDescriptor = resolveCollectionFreeSourceTrackingDescriptor(definition);
       const row = document.createElement("div");
       row.className = "collection-source-row";
       row.dataset.sourceId = definition.id;
@@ -2009,12 +2037,17 @@ function syncCollectionPanel() {
       row.dataset.rewardRef = definition.rewardRef;
       row.dataset.claimState = status.state;
       row.dataset.sourceState = status.state;
+      row.dataset.trackingMode = trackingDescriptor.mode;
       const copy = document.createElement("div");
       copy.className = "collection-source-copy";
       const title = document.createElement("strong");
       title.textContent = definition.label;
       const meta = document.createElement("p");
       meta.className = "sub collection-source-meta";
+      const trackingChip = document.createElement("span");
+      trackingChip.className = "collection-source-chip";
+      trackingChip.dataset.tone = trackingDescriptor.tone;
+      trackingChip.textContent = trackingDescriptor.label;
       meta.textContent =
         `${resolveCollectionFreeSourceTypeLabel(definition.sourceType)} · ${resolveCollectionFreeSourceCycleLabel(definition.cycle)} · ${definition.entryLabel || definition.entryRef}`;
       const entry = document.createElement("p");
@@ -2025,7 +2058,7 @@ function syncCollectionPanel() {
       const reward = document.createElement("p");
       reward.className = "sub collection-source-reward";
       reward.textContent = `${resolveCollectionFreeSourceRewardLabel(definition)} · ${status.label}`;
-      copy.append(title, meta, entry, reward);
+      copy.append(title, trackingChip, meta, entry, reward);
       const button = document.createElement("button");
       button.type = "button";
       button.className = "ghost-btn";

@@ -3669,6 +3669,30 @@ h2 {
   min-width: 0;
 }
 
+.collection-source-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  min-height: 18px;
+  padding: 0 7px;
+  border-radius: 999px;
+  border: 1px solid #27453f;
+  background: rgba(23, 42, 37, 0.7);
+  color: #adc5be;
+  font-size: 11px;
+  line-height: 1;
+}
+
+.collection-source-chip[data-tone="success"] {
+  border-color: #2f705d;
+  color: #8cf2c3;
+}
+
+.collection-source-chip[data-tone="warn"] {
+  border-color: #7e6833;
+  color: #f7d79f;
+}
+
 .collection-source-meta,
 .collection-source-entry,
 .collection-source-reward {
