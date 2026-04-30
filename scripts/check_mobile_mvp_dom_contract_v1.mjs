@@ -13294,6 +13294,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "state.collection.bossBattleWinCount = Math.max(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function renderCollectionChoiceGrid(",
     "app.mjs",
     failures,
