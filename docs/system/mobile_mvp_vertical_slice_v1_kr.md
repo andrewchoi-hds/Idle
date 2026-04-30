@@ -594,3 +594,4 @@ npm run mobile:mvp:check
 - collection free source status contract가 아직 자동 추적되지 않는 source를 `manual` 상태로 분리해 `확인 수령/교환` 문맥으로 더 정직하게 보이게 만드는지 검증
 - collection free source progress contract가 `kill_boss` 계열 entry ref에 한해 MVP boss-class battle proxy(`도겁 단계 또는 perfect phase 전투 승리`) 기준으로 `progress / ready / claimed` 상태를 반영하는지 검증
 - collection free source progress contract가 `collect_item_count / collect_item` 계열 entry ref에 한해 current inventory proxy(`영약/부적`) 기준으로 `progress / ready / claimed` 상태를 반영하는지 검증
+- collection free source progress contract가 `clear_zone / clear_node` 계열 entry ref에 한해 quest `recommended_difficulty_max` proxy 기준으로 `progress / ready / claimed` 상태를 반영하는지 검증

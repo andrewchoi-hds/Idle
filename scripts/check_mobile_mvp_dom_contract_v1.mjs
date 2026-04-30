@@ -13294,6 +13294,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "recommendedDifficultyMax: Math.max(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function resolveCollectionItemProxyLabel(itemKey) {",
     "app.mjs",
     failures,
