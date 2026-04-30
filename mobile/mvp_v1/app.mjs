@@ -56,6 +56,7 @@ import {
   resolveAutoBreakthroughWarmupRemainingSec,
   resolveAutoBreakthroughResumeConfirmPolicy,
   resolveAutoBreakthroughResumeRecommendationPlan,
+  resolveBattleEncounterDescriptor,
   resolveOfflineWarmupTelemetry,
   previewBreakthroughChance,
   resolveAutoBreakthroughResumePolicy,
@@ -193,6 +194,8 @@ const dom = {
   settingsPanel: document.getElementById("settingsPanel"),
   stagePanel: document.getElementById("stagePanel"),
   stageDisplay: document.getElementById("stageDisplay"),
+  stageNodeSummary: document.getElementById("stageNodeSummary"),
+  btnCycleStageNode: document.getElementById("btnCycleStageNode"),
   worldTag: document.getElementById("worldTag"),
   difficultyIndex: document.getElementById("difficultyIndex"),
   qiRequired: document.getElementById("qiRequired"),
@@ -494,6 +497,26 @@ let opsDigestJumpTargetTimers = {
   soften: null,
   clear: null,
 };
+
+function ensureCurrentStageNodeState(stage) {
+  const candidates =
+    context?.encounterCandidatesByDifficulty instanceof Map
+      ? context.encounterCandidatesByDifficulty.get(Number(stage?.difficulty_index) || 0) || []
+      : [];
+  const currentNodeId =
+    typeof state?.progression?.currentNodeId === "string"
+      ? state.progression.currentNodeId.trim()
+      : "";
+  if (candidates.length <= 0) {
+    state.progression.currentNodeId = "";
+    return { descriptor: resolveBattleEncounterDescriptor(stage, context, state), candidates };
+  }
+  if (currentNodeId && candidates.some((descriptor) => descriptor.nodeId === currentNodeId)) {
+    return { descriptor: resolveBattleEncounterDescriptor(stage, context, state), candidates };
+  }
+  state.progression.currentNodeId = candidates[0]?.nodeId || "";
+  return { descriptor: resolveBattleEncounterDescriptor(stage, context, state), candidates };
+}
 const MOBILE_MVP_BATTLE_SFX_PREF_KEY = "idle_xianxia_mobile_mvp_v1_battle_sfx";
 const MOBILE_MVP_BATTLE_HAPTIC_PREF_KEY = "idle_xianxia_mobile_mvp_v1_battle_haptic";
 const BATTLE_SFX_MIN_INTERVAL_MS = 90;
@@ -17602,6 +17625,8 @@ function syncAssetsPanelContract() {
 function render() {
   ensureRealtimeStatsShape();
   const stage = getStage(context, state.progression.difficultyIndex);
+  const currentStageNodeState = ensureCurrentStageNodeState(stage);
+  const currentEncounterDescriptor = currentStageNodeState.descriptor;
   const displayName = getStageDisplayNameKo(context, stage);
   const preview = previewBreakthroughChance(context, state, {
     useBreakthroughElixir: dom.useBreakthroughElixir.checked,
@@ -17758,7 +17783,25 @@ function render() {
     dom.stagePanel.dataset.breakthroughReady = String(breakthroughReady);
     dom.stagePanel.dataset.stageSummary = stageSummaryLabel;
     dom.stagePanel.dataset.qiSummary = qiSummaryLabel;
-    dom.stagePanel.dataset.overviewSummary = overviewSummaryLabel;
+    dom.stagePanel.dataset.currentNodeId = currentEncounterDescriptor?.nodeId || "";
+    dom.stagePanel.dataset.currentNodeType = currentEncounterDescriptor?.nodeType || "proxy";
+    dom.stagePanel.dataset.currentNodeName = currentEncounterDescriptor?.nodeNameKo || "현재 노드 대기";
+    dom.stagePanel.dataset.currentEncounterClass = currentEncounterDescriptor?.class || "normal";
+    dom.stagePanel.dataset.overviewSummary =
+      `${overviewSummaryLabel} · ${currentEncounterDescriptor?.nodeNameKo || "현재 노드 대기"}`;
+  }
+
+  if (dom.stageNodeSummary) {
+    const nodeLabel = currentEncounterDescriptor?.nodeNameKo || "현재 노드 대기";
+    dom.stageNodeSummary.textContent = `${nodeLabel} · ${
+      formatBattleEncounterClassLabelKo(currentEncounterDescriptor?.class || "normal")
+    }`;
+  }
+  if (dom.btnCycleStageNode) {
+    const candidateCount = currentStageNodeState.candidates.length;
+    dom.btnCycleStageNode.disabled = candidateCount <= 1;
+    dom.btnCycleStageNode.title =
+      candidateCount <= 1 ? "전환 가능한 노드 없음" : `노드 ${candidateCount}개 순환`;
   }
 
   dom.stageDisplay.textContent = displayName;
@@ -19106,6 +19149,31 @@ function bindEvents() {
       `슬롯 ${activeSaveSlot} ${nextLocked ? "잠금 설정" : "잠금 해제"} 완료${persisted ? "" : " (저장소 접근 제한 가능)"}`,
       !persisted,
     );
+    render();
+  });
+
+  dom.btnCycleStageNode?.addEventListener("click", () => {
+    const stage = getStage(context, state.progression.difficultyIndex);
+    const candidates =
+      context?.encounterCandidatesByDifficulty instanceof Map
+        ? context.encounterCandidatesByDifficulty.get(Number(stage?.difficulty_index) || 0) || []
+        : [];
+    if (candidates.length <= 1) {
+      setStatus("전환 가능한 현재 노드 없음", true);
+      return;
+    }
+    const currentNodeId =
+      typeof state?.progression?.currentNodeId === "string"
+        ? state.progression.currentNodeId.trim()
+        : "";
+    const currentIndex = Math.max(
+      0,
+      candidates.findIndex((descriptor) => descriptor.nodeId === currentNodeId),
+    );
+    const next = candidates[(currentIndex + 1) % candidates.length];
+    state.progression.currentNodeId = next?.nodeId || "";
+    persistLocal();
+    setStatus(`현재 노드 전환: ${next?.nodeNameKo || "미지정"}`);
     render();
   });
 

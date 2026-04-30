@@ -5097,3 +5097,11 @@
 
 ## 1191) 추가 문서
 - combat 최소 루프 문서(encounter class rail 반영): `/Users/hirediversity/Idle/docs/combat/minimal_combat_loop_v1_kr.md`
+
+## 1192) 다음 순차 작업
+1. [완료] `progression.currentNodeId`를 현재 노드 상태로 사용하고, stage 패널에 `stageNodeSummary`와 `btnCycleStageNode`를 추가.
+2. [완료] 현재 난이도에서 후보 노드가 여러 개면 순환 가능하도록 연결하고, battle encounter rail이 이 선택 노드를 우선 따르도록 정리.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 collection/stage 관련 문서를 current node contract 기준으로 동기화.
+
+## 1193) 추가 문서
+- collection UI contract(current node state 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`

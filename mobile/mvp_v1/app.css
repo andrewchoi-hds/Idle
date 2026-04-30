@@ -1402,6 +1402,13 @@ h2 {
   color: #bce8d8;
 }
 
+.stage-node-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
 .sub {
   margin-top: 8px;
   color: var(--muted);
