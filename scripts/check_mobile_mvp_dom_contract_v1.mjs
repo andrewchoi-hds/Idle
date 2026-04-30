@@ -13282,7 +13282,19 @@ async function main() {
   );
   assertIncludes(
     app,
+    'fetchJson("../../data/export/map_nodes_v1.json")',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "formatBattleEncounterClassLabelKo,",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "mapNodeRows,",
     "app.mjs",
     failures,
   );
