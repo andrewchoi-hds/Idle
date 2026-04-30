@@ -5025,3 +5025,11 @@
 
 ## 1173) 추가 문서
 - collection UI contract(reach_difficulty free source progress 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`
+
+## 1174) 다음 순차 작업
+1. [완료] engine collection state에 `tribulationSurvivalCount`를 추가하고, 도겁 단계 돌파 성공 시 실제로 카운트가 누적되게 연결.
+2. [완료] free source progress helper가 `survive_tribulation`, `survive_tribulation_count` entry ref도 읽어 `도겁 생존 x/y` 상태를 실제로 표시하게 확장.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 tribulation progress 규칙 기준으로 동기화.
+
+## 1175) 추가 문서
+- collection UI contract(tribulation survival progress 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`

@@ -3245,6 +3245,7 @@ export function createInitialSliceState(context, options = {}) {
       token: 0,
       pityProgress: 0,
       pityMax: 40,
+      tribulationSurvivalCount: 0,
       guardianOwnedIds: ["gdn_001"],
       relicOwnedIds: ["rlc_001"],
       selectedGuardianId: "gdn_001",
@@ -3488,6 +3489,15 @@ export function runBreakthroughAttempt(context, state, rng, options = {}) {
 
   if (outcome === "success") {
     const prev = state.progression.difficultyIndex;
+    if (stage.is_tribulation === 1) {
+      state.collection = state.collection && typeof state.collection === "object"
+        ? state.collection
+        : {};
+      state.collection.tribulationSurvivalCount = Math.max(
+        0,
+        Math.floor(Number(state.collection.tribulationSurvivalCount) || 0),
+      ) + 1;
+    }
     state.progression.difficultyIndex = clamp(
       prev + 1,
       1,
@@ -4152,6 +4162,10 @@ export function parseSliceState(raw, context) {
       token: toNonNegativeInt(parsed.collection?.token, 0),
       pityProgress: toNonNegativeInt(parsed.collection?.pityProgress, 0),
       pityMax: clamp(toNonNegativeInt(parsed.collection?.pityMax, 40), 1, 999),
+      tribulationSurvivalCount: toNonNegativeInt(
+        parsed.collection?.tribulationSurvivalCount,
+        0,
+      ),
       guardianOwnedIds: Array.isArray(parsed.collection?.guardianOwnedIds)
         ? parsed.collection.guardianOwnedIds
             .filter((value) => typeof value === "string" && value.trim())
