@@ -13270,6 +13270,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function formatCollectionObjectiveLabel(objectiveType, objectiveValue) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function formatCollectionTriggerLabel(triggerType, triggerValue) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function renderCollectionChoiceGrid(",
     "app.mjs",
     failures,
@@ -13373,6 +13385,18 @@ async function main() {
   assertIncludes(
     app,
     'fetchJson("../../data/export/collection_duplicate_conversion_v1.json")',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'fetchJson("../../data/export/quests_v1.json")',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'fetchJson("../../data/export/milestones_v1.json")',
     "app.mjs",
     failures,
   );
@@ -14766,6 +14790,7 @@ async function main() {
   assertIncludes(css, ".collection-source-row", "app.css", failures);
   assertIncludes(css, ".collection-source-list", "app.css", failures);
   assertIncludes(css, ".collection-source-copy", "app.css", failures);
+  assertIncludes(css, ".collection-source-entry", "app.css", failures);
   assertIncludes(css, '.collection-source-row[data-source-state="locked"]', "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-pressure-spike-high", "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-pressure-resonance-high", "app.css", failures);
