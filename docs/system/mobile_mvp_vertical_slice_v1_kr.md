@@ -597,3 +597,4 @@ npm run mobile:mvp:check
 - collection free source progress contract가 `collect_item_count / collect_item` 계열 entry ref에 한해 current inventory proxy(`영약/부적`) 기준으로 `progress / ready / claimed` 상태를 반영하는지 검증
 - collection free source progress contract가 `clear_zone / clear_node` 계열 entry ref에 한해 quest `recommended_difficulty_max` proxy 기준으로 `progress / ready / claimed` 상태를 반영하는지 검증
 - collection free source progress contract가 `event_exchange` 계열 entry ref에 한해 `collection_token` 소비 기반 MVP exchange proxy(`교환 토큰 x/y`)로 `progress / ready / claimed` 상태를 반영하는지 검증
+- collection free source row가 `실측 / 프록시 / 수동` tracking chip을 같이 노출해 왜 그 상태로 계산되는지 바로 읽히게 만드는지 검증
