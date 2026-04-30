@@ -3247,6 +3247,7 @@ export function createInitialSliceState(context, options = {}) {
       pityMax: 40,
       tribulationSurvivalCount: 0,
       bossBattleWinCount: 0,
+      eliteBattleWinCount: 0,
       guardianOwnedIds: ["gdn_001"],
       relicOwnedIds: ["rlc_001"],
       selectedGuardianId: "gdn_001",
@@ -3357,6 +3358,7 @@ export function runBattleOnce(context, state, rng, options = {}) {
   const winChance = clamp(0.78 - stage.difficulty_index * 0.0018 - worldPenalty + rebirthBonus, 0.1, 0.95);
   const win = rng.next() < winChance;
   const bossBattleStage = stage.is_tribulation === 1 || stage.phase === "perfect";
+  const eliteBattleStage = stage.is_tribulation !== 1 && stage.phase === "late";
 
   if (win) {
     const qiGain = Math.max(
@@ -3378,6 +3380,12 @@ export function runBattleOnce(context, state, rng, options = {}) {
       state.collection.bossBattleWinCount = Math.max(
         0,
         Math.floor(Number(state.collection.bossBattleWinCount) || 0),
+      ) + 1;
+    }
+    if (eliteBattleStage) {
+      state.collection.eliteBattleWinCount = Math.max(
+        0,
+        Math.floor(Number(state.collection.eliteBattleWinCount) || 0),
       ) + 1;
     }
     if (!suppressLogs) {
@@ -4179,6 +4187,10 @@ export function parseSliceState(raw, context) {
       ),
       bossBattleWinCount: toNonNegativeInt(
         parsed.collection?.bossBattleWinCount,
+        0,
+      ),
+      eliteBattleWinCount: toNonNegativeInt(
+        parsed.collection?.eliteBattleWinCount,
         0,
       ),
       guardianOwnedIds: Array.isArray(parsed.collection?.guardianOwnedIds)
