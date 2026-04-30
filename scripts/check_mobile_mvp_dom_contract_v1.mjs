@@ -13288,6 +13288,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function resolveCollectionFreeSourceManualStatusLabel(definition) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function renderCollectionChoiceGrid(",
     "app.mjs",
     failures,
@@ -14797,6 +14803,7 @@ async function main() {
   assertIncludes(css, ".collection-source-list", "app.css", failures);
   assertIncludes(css, ".collection-source-copy", "app.css", failures);
   assertIncludes(css, ".collection-source-entry", "app.css", failures);
+  assertIncludes(css, '.collection-source-row[data-source-state="manual"]', "app.css", failures);
   assertIncludes(css, '.collection-source-row[data-source-state="progress"]', "app.css", failures);
   assertIncludes(css, '.collection-source-row[data-source-state="locked"]', "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-pressure-spike-high", "app.css", failures);

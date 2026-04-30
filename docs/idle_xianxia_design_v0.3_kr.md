@@ -5033,3 +5033,11 @@
 
 ## 1175) 추가 문서
 - collection UI contract(tribulation survival progress 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`
+
+## 1176) 다음 순차 작업
+1. [완료] 아직 자동 추적되지 않는 free source를 `manual` 상태로 분리해 `수령 가능`처럼 과장되지 않도록 정리.
+2. [완료] 보스/정예/구역/수집/교환 계열 source는 objective type에 맞는 `보스 목표 확인`, `교환 조건 확인` 같은 수동 확인 라벨을 붙이도록 보강.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 manual source state 규칙 기준으로 동기화.
+
+## 1177) 추가 문서
+- collection UI contract(manual source state 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`
