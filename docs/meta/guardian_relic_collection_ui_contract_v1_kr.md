@@ -33,6 +33,9 @@
 ### 로스터 영역
 - `guardianRosterGrid`
   - 카드 리스트
+- 원칙
+  - 고정 샘플 카드가 아니라 export row 전체를 기준으로 렌더한다.
+  - 카드에서 이름, rarity, 보유 여부, 잠금 난이도, 대표 효과를 바로 읽을 수 있어야 한다.
 - 카드 1개 contract
   - `data-guardian-id`
   - `data-rarity`
@@ -75,6 +78,9 @@
 ### 아카이브 영역
 - `relicArchiveGrid`
   - 법보 카드 리스트
+- 원칙
+  - 고정 샘플 카드가 아니라 export row 전체를 기준으로 렌더한다.
+  - 카드에서 이름, rarity, 보유 여부, 잠금 난이도, 대표 효과를 바로 읽을 수 있어야 한다.
 - 카드 1개 contract
   - `data-relic-id`
   - `data-rarity`

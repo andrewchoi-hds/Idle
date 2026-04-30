@@ -978,27 +978,35 @@ function buildCollectionCatalog(
   duplicateRows = DEFAULT_COLLECTION_DUPLICATE_ROWS,
   freeSourceRows = DEFAULT_COLLECTION_FREE_SOURCE_ROWS,
 ) {
+  const guardianList = guardianRows.map((row) => ({
+    id: row.guardian_id,
+    nameKo: row.name_ko,
+    rarity: row.rarity,
+    effectLabel: row.note || row.effect_type || "효과 준비 중",
+    acquirePool: row.acquire_pool || "guardian_core",
+    unlockDifficulty: parseCollectionUnlockDifficulty(row.unlock_condition, 1),
+  }));
+  const relicList = relicRows.map((row) => ({
+    id: row.relic_id,
+    nameKo: row.name_ko,
+    rarity: row.rarity,
+    effectLabel: row.note || row.effect_type || "효과 준비 중",
+    acquirePool: row.acquire_pool || "relic_core",
+    unlockDifficulty: parseCollectionUnlockDifficulty(row.unlock_condition, 1),
+  }));
   const guardiansById = Object.fromEntries(
-    guardianRows.map((row) => [
-      row.guardian_id,
+    guardianList.map((guardian) => [
+      guardian.id,
       {
-        id: row.guardian_id,
-        nameKo: row.name_ko,
-        rarity: row.rarity,
-        effectLabel: row.note || row.effect_type || "효과 준비 중",
-        acquirePool: row.acquire_pool || "guardian_core",
+        ...guardian,
       },
     ]),
   );
   const relicsById = Object.fromEntries(
-    relicRows.map((row) => [
-      row.relic_id,
+    relicList.map((relic) => [
+      relic.id,
       {
-        id: row.relic_id,
-        nameKo: row.name_ko,
-        rarity: row.rarity,
-        effectLabel: row.note || row.effect_type || "효과 준비 중",
-        acquirePool: row.acquire_pool || "relic_core",
+        ...relic,
       },
     ]),
   );
@@ -1038,7 +1046,7 @@ function buildCollectionCatalog(
     rewardQty: Math.max(0, Math.floor(Number(row.reward_qty) || 0)),
     note: row.note || "",
   }));
-  return { guardiansById, relicsById, poolsById, duplicateRules, freeSources };
+  return { guardianList, relicList, guardiansById, relicsById, poolsById, duplicateRules, freeSources };
 }
 
 function ensureCollectionStateShape() {
@@ -1150,6 +1158,126 @@ function normalizeCollectionPanelTab(tab) {
 
 function buildCollectionFreeSourceDefinitions() {
   return collectionCatalog?.freeSources || buildCollectionCatalog().freeSources;
+}
+
+function resolveCollectionGuardianName(id) {
+  return (
+    collectionCatalog?.guardiansById?.[id]?.nameKo ||
+    COLLECTION_GUARDIAN_NAME_BY_ID[id] ||
+    id ||
+    "호법 미선택"
+  );
+}
+
+function resolveCollectionRelicName(id) {
+  return (
+    collectionCatalog?.relicsById?.[id]?.nameKo ||
+    COLLECTION_RELIC_NAME_BY_ID[id] ||
+    id ||
+    "법보 미선택"
+  );
+}
+
+function resolveCollectionGuardianEffectLabel(id) {
+  return (
+    collectionCatalog?.guardiansById?.[id]?.effectLabel ||
+    COLLECTION_GUARDIAN_EFFECT_LABEL_BY_ID[id] ||
+    "전투/돌파/운영 보조 효과"
+  );
+}
+
+function resolveCollectionRelicEffectLabel(id) {
+  return (
+    collectionCatalog?.relicsById?.[id]?.effectLabel ||
+    COLLECTION_RELIC_EFFECT_LABEL_BY_ID[id] ||
+    "규칙 변형/준비 선택지 확장 효과"
+  );
+}
+
+function resolveCollectionGuardianRarity(id) {
+  return (
+    collectionCatalog?.guardiansById?.[id]?.rarity ||
+    COLLECTION_GUARDIAN_RARITY_BY_ID[id] ||
+    "rare"
+  );
+}
+
+function resolveCollectionRelicRarity(id) {
+  return (
+    collectionCatalog?.relicsById?.[id]?.rarity ||
+    COLLECTION_RELIC_RARITY_BY_ID[id] ||
+    "rare"
+  );
+}
+
+function resolveCollectionRarityLabel(rarity) {
+  if (rarity === "legendary") {
+    return "전설";
+  }
+  if (rarity === "epic") {
+    return "에픽";
+  }
+  return "기본";
+}
+
+function renderCollectionChoiceGrid(
+  node,
+  definitions,
+  { kind, ownedIds, selectedId, currentDifficultyIndex },
+) {
+  if (!node) {
+    return;
+  }
+  const fragment = document.createDocumentFragment();
+  for (const definition of definitions) {
+    const owned = ownedIds.includes(definition.id);
+    const selected = selectedId === definition.id;
+    const unlocked = currentDifficultyIndex >= definition.unlockDifficulty;
+    const article = document.createElement("article");
+    article.className = "collection-card collection-card-choice";
+    article.setAttribute("role", "button");
+    article.setAttribute("tabindex", "0");
+    article.setAttribute("aria-pressed", String(selected));
+    if (kind === "guardian") {
+      article.dataset.guardianId = definition.id;
+    } else {
+      article.dataset.relicId = definition.id;
+    }
+    article.dataset.owned = String(owned);
+    article.dataset.selected = String(selected);
+    article.dataset.unlocked = String(unlocked);
+    article.dataset.rarity = definition.rarity || "rare";
+    article.title = `${definition.nameKo} · ${resolveCollectionRarityLabel(definition.rarity)} · ${definition.effectLabel}`;
+
+    const title = document.createElement("strong");
+    title.textContent = definition.nameKo;
+
+    const meta = document.createElement("div");
+    meta.className = "collection-card-meta";
+
+    const rarityChip = document.createElement("span");
+    rarityChip.className = "collection-card-chip";
+    rarityChip.textContent = resolveCollectionRarityLabel(definition.rarity);
+
+    const stateChip = document.createElement("span");
+    stateChip.className = "collection-card-chip";
+    stateChip.dataset.tone = !unlocked ? "warn" : owned ? "success" : "info";
+    stateChip.textContent = !unlocked
+      ? `난이도 ${definition.unlockDifficulty}`
+      : owned
+        ? "보유"
+        : "미보유";
+
+    meta.append(rarityChip, stateChip);
+
+    const effect = document.createElement("span");
+    effect.className = "sub";
+    effect.textContent = definition.effectLabel;
+
+    article.append(title, meta, effect);
+    fragment.append(article);
+  }
+  node.replaceChildren(fragment);
 }
 
 function resolveCollectionFreeSourceWeekKey(referenceDate = new Date()) {
@@ -1344,10 +1472,10 @@ function grantCollectionPull(collection, poolId) {
     ownedIds.push(nextId);
     if (isGuardianPool) {
       collection.selectedGuardianId = nextId;
-      return `${COLLECTION_GUARDIAN_NAME_BY_ID[nextId] || nextId} 확보`;
+      return `${resolveCollectionGuardianName(nextId)} 확보`;
     }
     collection.selectedRelicId = nextId;
-    return `${COLLECTION_RELIC_NAME_BY_ID[nextId] || nextId} 확보`;
+    return `${resolveCollectionRelicName(nextId)} 확보`;
   }
   const duplicateId = pool[0] || "";
   if (!duplicateId) {
@@ -1356,11 +1484,11 @@ function grantCollectionPull(collection, poolId) {
   if (isGuardianPool) {
     collection.guardianDuplicateCounts[duplicateId] =
       Math.max(0, Math.floor(Number(collection.guardianDuplicateCounts[duplicateId]) || 0)) + 1;
-    return `${COLLECTION_GUARDIAN_NAME_BY_ID[duplicateId] || duplicateId} 중복 +1`;
+    return `${resolveCollectionGuardianName(duplicateId)} 중복 +1`;
   }
   collection.relicDuplicateCounts[duplicateId] =
     Math.max(0, Math.floor(Number(collection.relicDuplicateCounts[duplicateId]) || 0)) + 1;
-  return `${COLLECTION_RELIC_NAME_BY_ID[duplicateId] || duplicateId} 중복 +1`;
+  return `${resolveCollectionRelicName(duplicateId)} 중복 +1`;
 }
 
 function resolveCollectionDuplicateRule(kind, rarity) {
@@ -1414,23 +1542,21 @@ function syncCollectionPanel() {
   const freeSourceDefinitions = buildCollectionFreeSourceDefinitions();
   ensureCollectionFreeSourceClaimState(collection, freeSourceDefinitions);
   const activeTab = normalizeCollectionPanelTab(collection.activeTab);
-  const guardianPrimaryLabel =
-    COLLECTION_GUARDIAN_NAME_BY_ID[collection.guardianLoadout.primary] ||
-    collection.guardianLoadout.primary ||
-    "비어 있음";
+  const guardianPrimaryLabel = collection.guardianLoadout.primary
+    ? resolveCollectionGuardianName(collection.guardianLoadout.primary)
+    : "비어 있음";
   const guardianSecondaryLabel = collection.guardianSlotSecondaryUnlocked
-    ? COLLECTION_GUARDIAN_NAME_BY_ID[collection.guardianLoadout.secondary] ||
-      collection.guardianLoadout.secondary ||
-      "비어 있음"
+    ? collection.guardianLoadout.secondary
+      ? resolveCollectionGuardianName(collection.guardianLoadout.secondary)
+      : "비어 있음"
     : "잠금";
-  const relicPrimaryLabel =
-    COLLECTION_RELIC_NAME_BY_ID[collection.relicLoadout.primary] ||
-    collection.relicLoadout.primary ||
-    "비어 있음";
+  const relicPrimaryLabel = collection.relicLoadout.primary
+    ? resolveCollectionRelicName(collection.relicLoadout.primary)
+    : "비어 있음";
   const relicSecondaryLabel = collection.relicSlotSecondaryUnlocked
-    ? COLLECTION_RELIC_NAME_BY_ID[collection.relicLoadout.secondary] ||
-      collection.relicLoadout.secondary ||
-      "비어 있음"
+    ? collection.relicLoadout.secondary
+      ? resolveCollectionRelicName(collection.relicLoadout.secondary)
+      : "비어 있음"
     : "잠금";
   const freeSourceStatuses = freeSourceDefinitions.map((definition) => ({
     definition,
@@ -1454,11 +1580,11 @@ function syncCollectionPanel() {
   );
   const selectedGuardianRule = resolveCollectionDuplicateRule(
     "guardian",
-    COLLECTION_GUARDIAN_RARITY_BY_ID[selectedGuardianId] || "rare",
+    resolveCollectionGuardianRarity(selectedGuardianId),
   );
   const selectedRelicRule = resolveCollectionDuplicateRule(
     "relic",
-    COLLECTION_RELIC_RARITY_BY_ID[selectedRelicId] || "rare",
+    resolveCollectionRelicRarity(selectedRelicId),
   );
   dom.collectionPanel.dataset.collectionActiveTab = activeTab;
   dom.collectionPanel.dataset.collectionShardLabel = `파편 ${collection.shard}`;
@@ -1594,37 +1720,41 @@ function syncCollectionPanel() {
     dom.collectionJournalSummary.textContent =
       dom.collectionPanel.dataset.journalSummary || "수집 도감 준비 중";
   }
+  renderCollectionChoiceGrid(
+    dom.guardianRosterGrid,
+    collectionCatalog?.guardianList || buildCollectionCatalog().guardianList,
+    {
+      kind: "guardian",
+      ownedIds: collection.guardianOwnedIds,
+      selectedId: selectedGuardianId,
+      currentDifficultyIndex,
+    },
+  );
+  renderCollectionChoiceGrid(
+    dom.relicArchiveGrid,
+    collectionCatalog?.relicList || buildCollectionCatalog().relicList,
+    {
+      kind: "relic",
+      ownedIds: collection.relicOwnedIds,
+      selectedId: selectedRelicId,
+      currentDifficultyIndex,
+    },
+  );
   if (dom.guardianDetailName) {
     dom.guardianDetailName.textContent =
-      collectionCatalog?.guardiansById?.[selectedGuardianId]?.nameKo ||
-      COLLECTION_GUARDIAN_NAME_BY_ID[selectedGuardianId] ||
-      (selectedGuardianId ? selectedGuardianId : "호법 상세 대기");
+      selectedGuardianId ? resolveCollectionGuardianName(selectedGuardianId) : "호법 상세 대기";
   }
   if (dom.guardianDetailEffect) {
     dom.guardianDetailEffect.textContent =
-      `${collectionCatalog?.guardiansById?.[selectedGuardianId]?.effectLabel || COLLECTION_GUARDIAN_EFFECT_LABEL_BY_ID[selectedGuardianId] || "전투/돌파/운영 보조 효과"} · 중복 ${selectedGuardianDuplicateCount}개`;
+      `${resolveCollectionGuardianEffectLabel(selectedGuardianId)} · 중복 ${selectedGuardianDuplicateCount}개`;
   }
   if (dom.relicDetailName) {
     dom.relicDetailName.textContent =
-      collectionCatalog?.relicsById?.[selectedRelicId]?.nameKo ||
-      COLLECTION_RELIC_NAME_BY_ID[selectedRelicId] ||
-      (selectedRelicId ? selectedRelicId : "법보 상세 대기");
+      selectedRelicId ? resolveCollectionRelicName(selectedRelicId) : "법보 상세 대기";
   }
   if (dom.relicDetailEffect) {
     dom.relicDetailEffect.textContent =
-      `${collectionCatalog?.relicsById?.[selectedRelicId]?.effectLabel || COLLECTION_RELIC_EFFECT_LABEL_BY_ID[selectedRelicId] || "규칙 변형/준비 선택지 확장 효과"} · 중복 ${selectedRelicDuplicateCount}개`;
-  }
-  for (const card of dom.guardianRosterGrid?.querySelectorAll("[data-guardian-id]") || []) {
-    const guardianId = card.dataset.guardianId || "";
-    card.dataset.owned = String(collection.guardianOwnedIds.includes(guardianId));
-    card.dataset.selected = String(selectedGuardianId === guardianId);
-    card.setAttribute("aria-pressed", String(selectedGuardianId === guardianId));
-  }
-  for (const card of dom.relicArchiveGrid?.querySelectorAll("[data-relic-id]") || []) {
-    const relicId = card.dataset.relicId || "";
-    card.dataset.owned = String(collection.relicOwnedIds.includes(relicId));
-    card.dataset.selected = String(selectedRelicId === relicId);
-    card.setAttribute("aria-pressed", String(selectedRelicId === relicId));
+      `${resolveCollectionRelicEffectLabel(selectedRelicId)} · 중복 ${selectedRelicDuplicateCount}개`;
   }
   for (const [button, tabKey] of [
     [dom.btnCollectionTabGuardian, "guardian"],
@@ -18369,10 +18499,10 @@ function bindEvents() {
           collection.guardianOwnedIds.length > 0 && selectedId
             ? (button === dom.btnEquipGuardianPrimary
                 ? ((collection.guardianLoadout.primary = selectedId), `${label}: ${
-                    COLLECTION_GUARDIAN_NAME_BY_ID[selectedId] || selectedId
+                    resolveCollectionGuardianName(selectedId)
                   }`)
                 : ((collection.guardianLoadout.secondary = selectedId), `${label}: ${
-                    COLLECTION_GUARDIAN_NAME_BY_ID[selectedId] || selectedId
+                    resolveCollectionGuardianName(selectedId)
                   }`))
             : "장착 가능한 호법 없음",
           collection.guardianOwnedIds.length <= 0,
@@ -18401,7 +18531,7 @@ function bindEvents() {
         const selectedId = collection.selectedGuardianId || "";
         const rule = resolveCollectionDuplicateRule(
           "guardian",
-          COLLECTION_GUARDIAN_RARITY_BY_ID[selectedId] || "rare",
+          resolveCollectionGuardianRarity(selectedId),
         );
         const duplicateCount = resolveCollectionDuplicateCount(collection, "guardian", selectedId);
         if (!selectedId || !rule || duplicateCount < rule.required) {
@@ -18417,7 +18547,7 @@ function bindEvents() {
         collection.pityProgress = Math.min(collection.pityMax, collection.pityProgress + rule.pity);
         persistLocal();
         setStatus(
-          `${COLLECTION_GUARDIAN_NAME_BY_ID[selectedId] || selectedId} 중복 전환 · 파편 +${rule.shard} · 토큰 +${rule.token} · 천장 +${rule.pity}`,
+          `${resolveCollectionGuardianName(selectedId)} 중복 전환 · 파편 +${rule.shard} · 토큰 +${rule.token} · 천장 +${rule.pity}`,
         );
         render();
         return;
@@ -18438,10 +18568,10 @@ function bindEvents() {
           collection.relicOwnedIds.length > 0 && selectedId
             ? (button === dom.btnEquipRelicPrimary
                 ? ((collection.relicLoadout.primary = selectedId), `${label}: ${
-                    COLLECTION_RELIC_NAME_BY_ID[selectedId] || selectedId
+                    resolveCollectionRelicName(selectedId)
                   }`)
                 : ((collection.relicLoadout.secondary = selectedId), `${label}: ${
-                    COLLECTION_RELIC_NAME_BY_ID[selectedId] || selectedId
+                    resolveCollectionRelicName(selectedId)
                   }`))
             : "장착 가능한 법보 없음",
           collection.relicOwnedIds.length <= 0,
@@ -18470,7 +18600,7 @@ function bindEvents() {
         const selectedId = collection.selectedRelicId || "";
         const rule = resolveCollectionDuplicateRule(
           "relic",
-          COLLECTION_RELIC_RARITY_BY_ID[selectedId] || "rare",
+          resolveCollectionRelicRarity(selectedId),
         );
         const duplicateCount = resolveCollectionDuplicateCount(collection, "relic", selectedId);
         if (!selectedId || !rule || duplicateCount < rule.required) {
@@ -18486,54 +18616,78 @@ function bindEvents() {
         collection.pityProgress = Math.min(collection.pityMax, collection.pityProgress + rule.pity);
         persistLocal();
         setStatus(
-          `${COLLECTION_RELIC_NAME_BY_ID[selectedId] || selectedId} 중복 전환 · 파편 +${rule.shard} · 토큰 +${rule.token} · 천장 +${rule.pity}`,
+          `${resolveCollectionRelicName(selectedId)} 중복 전환 · 파편 +${rule.shard} · 토큰 +${rule.token} · 천장 +${rule.pity}`,
         );
         render();
       }
     });
   }
 
-  for (const card of dom.guardianRosterGrid?.querySelectorAll("[data-guardian-id]") || []) {
-    card.addEventListener("click", () => {
-      const guardianId = card.dataset.guardianId || "";
-      const collection = ensureCollectionStateShape();
-      if (!collection.guardianOwnedIds.includes(guardianId)) {
-        setStatus("보유하지 않은 호법", true);
-        return;
-      }
-      collection.selectedGuardianId = guardianId;
-      persistLocal();
-      render();
-    });
-    card.addEventListener("keydown", (event) => {
-      if (event.key !== "Enter" && event.key !== " ") {
-        return;
-      }
-      event.preventDefault();
-      card.click();
-    });
-  }
+  dom.guardianRosterGrid?.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element)) {
+      return;
+    }
+    const card = event.target.closest("[data-guardian-id]");
+    if (!(card instanceof HTMLElement)) {
+      return;
+    }
+    const guardianId = card.dataset.guardianId || "";
+    const collection = ensureCollectionStateShape();
+    if (!collection.guardianOwnedIds.includes(guardianId)) {
+      setStatus("보유하지 않은 호법", true);
+      return;
+    }
+    collection.selectedGuardianId = guardianId;
+    persistLocal();
+    render();
+  });
+  dom.guardianRosterGrid?.addEventListener("keydown", (event) => {
+    if (!(event.target instanceof Element)) {
+      return;
+    }
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+    const card = event.target.closest("[data-guardian-id]");
+    if (!(card instanceof HTMLElement)) {
+      return;
+    }
+    event.preventDefault();
+    card.click();
+  });
 
-  for (const card of dom.relicArchiveGrid?.querySelectorAll("[data-relic-id]") || []) {
-    card.addEventListener("click", () => {
-      const relicId = card.dataset.relicId || "";
-      const collection = ensureCollectionStateShape();
-      if (!collection.relicOwnedIds.includes(relicId)) {
-        setStatus("보유하지 않은 법보", true);
-        return;
-      }
-      collection.selectedRelicId = relicId;
-      persistLocal();
-      render();
-    });
-    card.addEventListener("keydown", (event) => {
-      if (event.key !== "Enter" && event.key !== " ") {
-        return;
-      }
-      event.preventDefault();
-      card.click();
-    });
-  }
+  dom.relicArchiveGrid?.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element)) {
+      return;
+    }
+    const card = event.target.closest("[data-relic-id]");
+    if (!(card instanceof HTMLElement)) {
+      return;
+    }
+    const relicId = card.dataset.relicId || "";
+    const collection = ensureCollectionStateShape();
+    if (!collection.relicOwnedIds.includes(relicId)) {
+      setStatus("보유하지 않은 법보", true);
+      return;
+    }
+    collection.selectedRelicId = relicId;
+    persistLocal();
+    render();
+  });
+  dom.relicArchiveGrid?.addEventListener("keydown", (event) => {
+    if (!(event.target instanceof Element)) {
+      return;
+    }
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+    const card = event.target.closest("[data-relic-id]");
+    if (!(card instanceof HTMLElement)) {
+      return;
+    }
+    event.preventDefault();
+    card.click();
+  });
 
   dom.optSaveSlot.addEventListener("change", () => {
     const prevSlot = activeSaveSlot;

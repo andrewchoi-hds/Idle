@@ -13246,6 +13246,36 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function resolveCollectionGuardianName(id) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function resolveCollectionRelicName(id) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function resolveCollectionGuardianRarity(id) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function resolveCollectionRelicRarity(id) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function renderCollectionChoiceGrid(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function resolveCollectionFreeSourceClaimKey(definition, referenceDate = new Date()) {",
     "app.mjs",
     failures,
@@ -13349,6 +13379,24 @@ async function main() {
   assertIncludes(
     app,
     "collectionCatalog = buildCollectionCatalog(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "renderCollectionChoiceGrid(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.guardianRosterGrid?.addEventListener("click", (event) => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.relicArchiveGrid?.addEventListener("click", (event) => {',
     "app.mjs",
     failures,
   );
@@ -14712,6 +14760,9 @@ async function main() {
   assertIncludes(css, ".collection-tab-strip", "app.css", failures);
   assertIncludes(css, ".collection-loadout", "app.css", failures);
   assertIncludes(css, ".collection-card-choice", "app.css", failures);
+  assertIncludes(css, ".collection-card-meta", "app.css", failures);
+  assertIncludes(css, ".collection-card-chip", "app.css", failures);
+  assertIncludes(css, '.collection-card-choice[data-unlocked="false"]', "app.css", failures);
   assertIncludes(css, ".collection-source-row", "app.css", failures);
   assertIncludes(css, ".collection-source-list", "app.css", failures);
   assertIncludes(css, ".collection-source-copy", "app.css", failures);
