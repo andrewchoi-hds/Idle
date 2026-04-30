@@ -13262,6 +13262,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function resolveCollectionDuplicateRule(kind, rarity) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function resolveCollectionDuplicateCount(collection, kind, id) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "syncCollectionPanel();",
     "app.mjs",
     failures,
@@ -13281,6 +13293,18 @@ async function main() {
   assertIncludes(
     app,
     'collection.freeSourceClaims[definition.id] = true;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'collection.guardianDuplicateCounts[selectedId] = Math.max(',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'collection.relicDuplicateCounts[selectedId] = Math.max(',
     "app.mjs",
     failures,
   );
