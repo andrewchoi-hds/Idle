@@ -19452,6 +19452,7 @@ async function bootstrap() {
       collectionFreeSourceRows,
       questRows,
       milestoneRows,
+      mapNodeRows,
     ] = await Promise.all([
       fetchJson("../../data/export/realm_progression_v1.json"),
       fetchJson("../../data/export/realm_locale_ko_v1.json"),
@@ -19461,6 +19462,7 @@ async function bootstrap() {
       fetchJson("../../data/export/collection_free_sources_v1.json"),
       fetchJson("../../data/export/quests_v1.json"),
       fetchJson("../../data/export/milestones_v1.json"),
+      fetchJson("../../data/export/map_nodes_v1.json"),
     ]);
     collectionCatalog = buildCollectionCatalog(
       guardianRows,
@@ -19470,7 +19472,7 @@ async function bootstrap() {
       questRows,
       milestoneRows,
     );
-    context = buildSliceContext(progressionRows, localeRows);
+    context = buildSliceContext(progressionRows, localeRows, mapNodeRows);
     state = createInitialSliceState(context, { playerName: "도심" });
     ensureRealtimeStatsShape();
     resetBattleSceneDuelState({ clearTicker: true });

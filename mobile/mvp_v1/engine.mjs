@@ -2290,6 +2290,56 @@ export function resolveBattleEncounterClass(stage) {
   return "normal";
 }
 
+function resolveBattleEncounterClassFromNodeType(nodeType) {
+  if (nodeType === "tribulation" || nodeType === "boss") {
+    return "boss";
+  }
+  if (nodeType === "elite") {
+    return "elite";
+  }
+  return "normal";
+}
+
+function resolveBattleEncounterNodePriority(nodeType) {
+  if (nodeType === "tribulation") {
+    return 4;
+  }
+  if (nodeType === "boss") {
+    return 3;
+  }
+  if (nodeType === "elite") {
+    return 2;
+  }
+  return 1;
+}
+
+export function resolveBattleEncounterDescriptor(stage, context = null) {
+  if (!stage || typeof stage !== "object") {
+    return {
+      class: "normal",
+      nodeType: "proxy",
+      nodeId: "",
+      nodeNameKo: "",
+      source: "fallback",
+    };
+  }
+  const difficultyIndex = toNonNegativeInt(stage.difficulty_index, 0);
+  const mappedDescriptor =
+    context?.encounterDescriptorByDifficulty instanceof Map
+      ? context.encounterDescriptorByDifficulty.get(difficultyIndex)
+      : null;
+  if (mappedDescriptor) {
+    return mappedDescriptor;
+  }
+  return {
+    class: resolveBattleEncounterClass(stage),
+    nodeType: "proxy",
+    nodeId: "",
+    nodeNameKo: "",
+    source: "stage_proxy",
+  };
+}
+
 export function formatBattleEncounterClassLabelKo(encounterClass) {
   if (encounterClass === "boss") {
     return "보스 전투";
@@ -3151,7 +3201,7 @@ export function createSeededRng(seed = 20260224) {
   };
 }
 
-export function buildSliceContext(progressionRows, localeRows) {
+export function buildSliceContext(progressionRows, localeRows, mapNodeRows = []) {
   if (!Array.isArray(progressionRows) || progressionRows.length === 0) {
     throw new Error("progressionRows must be a non-empty array");
   }
@@ -3182,10 +3232,59 @@ export function buildSliceContext(progressionRows, localeRows) {
     }
   }
 
+  const normalizedMapNodes = Array.isArray(mapNodeRows)
+    ? mapNodeRows
+        .filter((row) => row && typeof row === "object")
+        .map((row) => ({
+          ...row,
+          recommended_difficulty_min: toNonNegativeInt(row.recommended_difficulty_min, 1),
+          recommended_difficulty_max: toNonNegativeInt(row.recommended_difficulty_max, 1),
+          encounter_weight: toNonNegativeInt(row.encounter_weight, 0),
+          node_type: String(row.node_type || "hunt"),
+          node_id: String(row.node_id || ""),
+          node_name_ko: String(row.node_name_ko || ""),
+          world: String(row.world || ""),
+        }))
+    : [];
+
+  const encounterDescriptorByDifficulty = new Map();
+  for (const stage of sorted) {
+    const candidates = normalizedMapNodes
+      .filter(
+        (row) =>
+          row.world === stage.world &&
+          stage.difficulty_index >= row.recommended_difficulty_min &&
+          stage.difficulty_index <= row.recommended_difficulty_max,
+      )
+      .sort((left, right) => {
+        if (right.recommended_difficulty_min !== left.recommended_difficulty_min) {
+          return right.recommended_difficulty_min - left.recommended_difficulty_min;
+        }
+        const priorityDelta =
+          resolveBattleEncounterNodePriority(right.node_type) -
+          resolveBattleEncounterNodePriority(left.node_type);
+        if (priorityDelta !== 0) {
+          return priorityDelta;
+        }
+        return right.encounter_weight - left.encounter_weight;
+      });
+    const chosen = candidates[0];
+    if (chosen) {
+      encounterDescriptorByDifficulty.set(stage.difficulty_index, {
+        class: resolveBattleEncounterClassFromNodeType(chosen.node_type),
+        nodeType: chosen.node_type,
+        nodeId: chosen.node_id,
+        nodeNameKo: chosen.node_name_ko,
+        source: "map_node",
+      });
+    }
+  }
+
   return {
     progressionRows: sorted,
     stageByDifficulty,
     localeMap,
+    encounterDescriptorByDifficulty,
     maxDifficultyIndex: sorted[sorted.length - 1].difficulty_index,
   };
 }
@@ -3380,7 +3479,8 @@ export function runBattleOnce(context, state, rng, options = {}) {
   const rebirthBonus = state.progression.rebirthCount * 0.008;
   const winChance = clamp(0.78 - stage.difficulty_index * 0.0018 - worldPenalty + rebirthBonus, 0.1, 0.95);
   const win = rng.next() < winChance;
-  const encounterClass = resolveBattleEncounterClass(stage);
+  const encounterDescriptor = resolveBattleEncounterDescriptor(stage, context);
+  const encounterClass = encounterDescriptor.class;
   const encounterLabelKo = formatBattleEncounterClassLabelKo(encounterClass);
 
   if (win) {

@@ -5091,9 +5091,9 @@
 - collection UI contract(tracking chip 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`
 
 ## 1190) 다음 순차 작업
-1. [완료] engine에 `resolveBattleEncounterClass(stage)`와 `formatBattleEncounterClassLabelKo(...)`를 추가해 `normal / elite / boss` 판정을 단일 레일로 정리.
-2. [완료] `runBattleOnce` 결과/로그/이벤트와 collection `kill_boss / kill_elite` progress가 같은 encounter class 용어를 쓰도록 정합화.
-3. [완료] combat 문서와 collection 문서를 encounter class rail 기준으로 동기화.
+1. [완료] engine에 `resolveBattleEncounterDescriptor(stage, context)`를 추가해 `map_nodes_v1.json` 기반 `normal / elite / boss` 판정을 우선 사용하는 encounter class rail로 확장.
+2. [완료] `runBattleOnce` 결과/로그/이벤트와 collection `kill_boss / kill_elite` progress가 같은 encounter class 용어를 map-node rail 기준으로 재사용하도록 정합화.
+3. [완료] combat 문서와 collection 문서를 map-node encounter class rail 기준으로 동기화.
 
 ## 1191) 추가 문서
 - combat 최소 루프 문서(encounter class rail 반영): `/Users/hirediversity/Idle/docs/combat/minimal_combat_loop_v1_kr.md`

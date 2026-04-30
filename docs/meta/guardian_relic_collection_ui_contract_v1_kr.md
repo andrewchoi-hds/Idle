@@ -141,10 +141,12 @@
 - `reach_difficulty`처럼 현재 state로 확실히 계산 가능한 entry는 `진행 중 / 목표 달성 / 수령 완료`를 실제 진행 기준으로 보여 준다.
 - `survive_tribulation` 계열도 현재 state에서 카운트가 잡히면 같은 방식으로 실제 progress를 보여 준다.
 - 아직 자동 추적되지 않는 source는 `수령 가능`로 가장하지 말고 `manual` 상태로 분리해 `확인 수령` 또는 `교환` 문맥으로 보여 준다.
-- `kill_boss`, `kill_elite` 계열은 현재 MVP에서 `resolveBattleEncounterClass(stage)` rail을 기반으로 추적한다.
+- `kill_boss`, `kill_elite` 계열은 현재 MVP에서 `resolveBattleEncounterDescriptor(stage, context)` rail을 기반으로 추적한다.
 - 현재 rail 기준:
-  - `boss`: 도겁 단계 또는 `perfect phase`
-  - `elite`: `late phase` non-tribulation
+  - `map_nodes_v1.json`에서 같은 난이도 범위의 node 후보를 찾는다.
+  - 가장 높은 `recommended_difficulty_min` 후보를 우선 채택한다.
+  - 채택 node가 `boss/tribulation`이면 `boss`, `elite`면 `elite`로 본다.
+  - 후보가 없을 때만 stage proxy로 fallback한다.
 - `collect_item_count / collect_item` 계열은 현재 MVP에서 `inventory proxy`(영약=`breakthroughElixir`, 부적=`tribulationTalisman`)로 추적한다는 점을 명시적으로 유지한다.
 - `clear_zone / clear_node` 계열은 현재 MVP에서 quest `recommended_difficulty_max`를 진행 proxy로 사용한다는 점을 명시적으로 유지한다.
 - `event_exchange` 계열은 현재 MVP에서 `collection_token`을 사용하는 exchange proxy(필요 토큰=`reward_qty`)로 추적한다는 점을 명시적으로 유지한다.
