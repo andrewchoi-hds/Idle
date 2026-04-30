@@ -13256,6 +13256,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function buildCollectionCatalog(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function grantCollectionPull(collection, poolId) {",
     "app.mjs",
     failures,
@@ -13305,6 +13311,24 @@ async function main() {
   assertIncludes(
     app,
     'collection.relicDuplicateCounts[selectedId] = Math.max(',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'fetchJson("../../data/export/guardians_v1.json")',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'fetchJson("../../data/export/collection_duplicate_conversion_v1.json")',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "collectionCatalog = buildCollectionCatalog(",
     "app.mjs",
     failures,
   );

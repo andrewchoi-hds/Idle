@@ -898,6 +898,29 @@ const opsDigestInboxStampState = {
   secondary: { signature: "", updatedAt: 0 },
 };
 const COLLECTION_PANEL_TABS = ["guardian", "relic", "exchange", "journal"];
+const DEFAULT_COLLECTION_GUARDIAN_ROWS = [
+  { guardian_id: "gdn_001", name_ko: "청운학", rarity: "rare", effect_type: "battle_speed_pct", note: "전투 속도 보조", acquire_pool: "guardian_core" },
+  { guardian_id: "gdn_002", name_ko: "현갑령", rarity: "rare", effect_type: "death_fail_pct", note: "도겁 사망률 완화", acquire_pool: "guardian_core" },
+  { guardian_id: "gdn_003", name_ko: "진기동자", rarity: "rare", effect_type: "offline_efficiency_pct", note: "오프라인 품질 보정", acquire_pool: "guardian_core" },
+];
+const DEFAULT_COLLECTION_RELIC_ROWS = [
+  { relic_id: "rlc_001", name_ko: "정기잔향", rarity: "rare", effect_type: "battle_start_qi_pct", note: "전투 시작 기 보조", acquire_pool: "relic_core" },
+  { relic_id: "rlc_002", name_ko: "호천패", rarity: "rare", effect_type: "minor_fail_weight_pct", note: "경상 실패 가중치 완화", acquire_pool: "relic_core" },
+  { relic_id: "rlc_003", name_ko: "귀맥석", rarity: "rare", effect_type: "auto_breakthrough_warmup_sec", note: "자동돌파 워밍업 단축", acquire_pool: "relic_core" },
+];
+const DEFAULT_COLLECTION_DUPLICATE_ROWS = [
+  { source_kind: "guardian", rarity: "rare", duplicate_count_required: "1", yield_currency_value: "8", secondary_currency_value: "0", pity_progress_value: "1" },
+  { source_kind: "guardian", rarity: "epic", duplicate_count_required: "1", yield_currency_value: "16", secondary_currency_value: "1", pity_progress_value: "1" },
+  { source_kind: "guardian", rarity: "legendary", duplicate_count_required: "1", yield_currency_value: "40", secondary_currency_value: "3", pity_progress_value: "1" },
+  { source_kind: "relic", rarity: "rare", duplicate_count_required: "1", yield_currency_value: "8", secondary_currency_value: "0", pity_progress_value: "1" },
+  { source_kind: "relic", rarity: "epic", duplicate_count_required: "1", yield_currency_value: "16", secondary_currency_value: "1", pity_progress_value: "1" },
+  { source_kind: "relic", rarity: "legendary", duplicate_count_required: "1", yield_currency_value: "40", secondary_currency_value: "3", pity_progress_value: "1" },
+];
+const DEFAULT_COLLECTION_FREE_SOURCE_ROWS = [
+  { source_id: "col_src_003", name_ko: "일일 공양", reward_kind: "collection_token", reward_ref: "none", reward_qty: "2", unlock_condition: "difficulty>=1" },
+  { source_id: "col_src_004", name_ko: "주간 초대", reward_kind: "guardian_pull", reward_ref: "guardian_core", reward_qty: "1", unlock_condition: "difficulty>=32" },
+  { source_id: "col_src_008", name_ko: "이벤트 교환", reward_kind: "collection_shard", reward_ref: "none", reward_qty: "30", unlock_condition: "difficulty>=70" },
+];
 const COLLECTION_GUARDIAN_NAME_BY_ID = {
   gdn_001: "청운학",
   gdn_002: "현갑령",
@@ -944,9 +967,80 @@ const COLLECTION_DUPLICATE_RULES = {
     legendary: { required: 1, shard: 40, token: 3, pity: 1 },
   },
 };
+let collectionCatalog = null;
 const OPS_DIGEST_TIMELINE_LIMIT = 6;
 const opsDigestTimelineState = [];
 const opsDigestTimelineGroupCollapseState = {};
+
+function parseCollectionUnlockDifficulty(unlockCondition, fallback = 1) {
+  const matched = String(unlockCondition || "").match(/difficulty>=([0-9]+)/);
+  return matched ? Math.max(1, Math.floor(Number(matched[1]) || fallback)) : fallback;
+}
+
+function buildCollectionCatalog(
+  guardianRows = DEFAULT_COLLECTION_GUARDIAN_ROWS,
+  relicRows = DEFAULT_COLLECTION_RELIC_ROWS,
+  duplicateRows = DEFAULT_COLLECTION_DUPLICATE_ROWS,
+  freeSourceRows = DEFAULT_COLLECTION_FREE_SOURCE_ROWS,
+) {
+  const guardiansById = Object.fromEntries(
+    guardianRows.map((row) => [
+      row.guardian_id,
+      {
+        id: row.guardian_id,
+        nameKo: row.name_ko,
+        rarity: row.rarity,
+        effectLabel: row.note || row.effect_type || "효과 준비 중",
+        acquirePool: row.acquire_pool || "guardian_core",
+      },
+    ]),
+  );
+  const relicsById = Object.fromEntries(
+    relicRows.map((row) => [
+      row.relic_id,
+      {
+        id: row.relic_id,
+        nameKo: row.name_ko,
+        rarity: row.rarity,
+        effectLabel: row.note || row.effect_type || "효과 준비 중",
+        acquirePool: row.acquire_pool || "relic_core",
+      },
+    ]),
+  );
+  const poolsById = {};
+  for (const guardian of Object.values(guardiansById)) {
+    poolsById[guardian.acquirePool] = poolsById[guardian.acquirePool] || [];
+    poolsById[guardian.acquirePool].push(guardian.id);
+  }
+  for (const relic of Object.values(relicsById)) {
+    poolsById[relic.acquirePool] = poolsById[relic.acquirePool] || [];
+    poolsById[relic.acquirePool].push(relic.id);
+  }
+  const duplicateRules = { guardian: {}, relic: {} };
+  for (const row of duplicateRows) {
+    const kind = String(row.source_kind || "").trim();
+    const rarity = String(row.rarity || "").trim();
+    if (!kind || !rarity) {
+      continue;
+    }
+    duplicateRules[kind] = duplicateRules[kind] || {};
+    duplicateRules[kind][rarity] = {
+      required: Math.max(1, Math.floor(Number(row.duplicate_count_required) || 1)),
+      shard: Math.max(0, Math.floor(Number(row.yield_currency_value) || 0)),
+      token: Math.max(0, Math.floor(Number(row.secondary_currency_value) || 0)),
+      pity: Math.max(0, Math.floor(Number(row.pity_progress_value) || 0)),
+    };
+  }
+  const freeSources = freeSourceRows.map((row, index) => ({
+    id: index === 0 ? "daily" : index === 1 ? "weekly" : "event",
+    label: row.name_ko || "무료 수급",
+    unlockDifficulty: parseCollectionUnlockDifficulty(row.unlock_condition, 1),
+    rewardKind: row.reward_kind || "collection_token",
+    rewardRef: row.reward_ref || "none",
+    rewardQty: Math.max(0, Math.floor(Number(row.reward_qty) || 0)),
+  }));
+  return { guardiansById, relicsById, poolsById, duplicateRules, freeSources };
+}
 
 function ensureCollectionStateShape() {
   if (!state.collection || typeof state.collection !== "object") {
@@ -1051,36 +1145,12 @@ function normalizeCollectionPanelTab(tab) {
 }
 
 function buildCollectionFreeSourceDefinitions() {
-  return [
-    {
-      id: "daily",
-      label: "일일 공양",
-      unlockDifficulty: 1,
-      rewardKind: "collection_token",
-      rewardRef: "none",
-      rewardQty: 2,
-    },
-    {
-      id: "weekly",
-      label: "주간 초대",
-      unlockDifficulty: 32,
-      rewardKind: "guardian_pull",
-      rewardRef: "guardian_core",
-      rewardQty: 1,
-    },
-    {
-      id: "event",
-      label: "이벤트 교환",
-      unlockDifficulty: 70,
-      rewardKind: "collection_shard",
-      rewardRef: "none",
-      rewardQty: 30,
-    },
-  ];
+  return collectionCatalog?.freeSources || buildCollectionCatalog().freeSources;
 }
 
 function grantCollectionPull(collection, poolId) {
-  const pool = COLLECTION_POOL_BY_ID[poolId] || [];
+  const pool =
+    collectionCatalog?.poolsById?.[poolId] || COLLECTION_POOL_BY_ID[poolId] || [];
   const isGuardianPool = poolId.startsWith("guardian");
   const ownedIds = isGuardianPool ? collection.guardianOwnedIds : collection.relicOwnedIds;
   const nextId = pool.find((id) => !ownedIds.includes(id));
@@ -1108,7 +1178,11 @@ function grantCollectionPull(collection, poolId) {
 }
 
 function resolveCollectionDuplicateRule(kind, rarity) {
-  return COLLECTION_DUPLICATE_RULES[kind]?.[rarity] || null;
+  return (
+    collectionCatalog?.duplicateRules?.[kind]?.[rarity] ||
+    COLLECTION_DUPLICATE_RULES[kind]?.[rarity] ||
+    null
+  );
 }
 
 function resolveCollectionDuplicateCount(collection, kind, id) {
@@ -1322,21 +1396,23 @@ function syncCollectionPanel() {
   }
   if (dom.guardianDetailName) {
     dom.guardianDetailName.textContent =
+      collectionCatalog?.guardiansById?.[selectedGuardianId]?.nameKo ||
       COLLECTION_GUARDIAN_NAME_BY_ID[selectedGuardianId] ||
       (selectedGuardianId ? selectedGuardianId : "호법 상세 대기");
   }
   if (dom.guardianDetailEffect) {
     dom.guardianDetailEffect.textContent =
-      `${COLLECTION_GUARDIAN_EFFECT_LABEL_BY_ID[selectedGuardianId] || "전투/돌파/운영 보조 효과"} · 중복 ${selectedGuardianDuplicateCount}개`;
+      `${collectionCatalog?.guardiansById?.[selectedGuardianId]?.effectLabel || COLLECTION_GUARDIAN_EFFECT_LABEL_BY_ID[selectedGuardianId] || "전투/돌파/운영 보조 효과"} · 중복 ${selectedGuardianDuplicateCount}개`;
   }
   if (dom.relicDetailName) {
     dom.relicDetailName.textContent =
+      collectionCatalog?.relicsById?.[selectedRelicId]?.nameKo ||
       COLLECTION_RELIC_NAME_BY_ID[selectedRelicId] ||
       (selectedRelicId ? selectedRelicId : "법보 상세 대기");
   }
   if (dom.relicDetailEffect) {
     dom.relicDetailEffect.textContent =
-      `${COLLECTION_RELIC_EFFECT_LABEL_BY_ID[selectedRelicId] || "규칙 변형/준비 선택지 확장 효과"} · 중복 ${selectedRelicDuplicateCount}개`;
+      `${collectionCatalog?.relicsById?.[selectedRelicId]?.effectLabel || COLLECTION_RELIC_EFFECT_LABEL_BY_ID[selectedRelicId] || "규칙 변형/준비 선택지 확장 효과"} · 중복 ${selectedRelicDuplicateCount}개`;
   }
   for (const card of dom.guardianRosterGrid?.querySelectorAll("[data-guardian-id]") || []) {
     const guardianId = card.dataset.guardianId || "";
@@ -18618,10 +18694,27 @@ async function fetchJson(path) {
 async function bootstrap() {
   try {
     setStatus("밸런스 데이터 로딩 중...");
-    const [progressionRows, localeRows] = await Promise.all([
+    const [
+      progressionRows,
+      localeRows,
+      guardianRows,
+      relicRows,
+      collectionDuplicateRows,
+      collectionFreeSourceRows,
+    ] = await Promise.all([
       fetchJson("../../data/export/realm_progression_v1.json"),
       fetchJson("../../data/export/realm_locale_ko_v1.json"),
+      fetchJson("../../data/export/guardians_v1.json"),
+      fetchJson("../../data/export/relics_v1.json"),
+      fetchJson("../../data/export/collection_duplicate_conversion_v1.json"),
+      fetchJson("../../data/export/collection_free_sources_v1.json"),
     ]);
+    collectionCatalog = buildCollectionCatalog(
+      guardianRows,
+      relicRows,
+      collectionDuplicateRows,
+      collectionFreeSourceRows,
+    );
     context = buildSliceContext(progressionRows, localeRows);
     state = createInitialSliceState(context, { playerName: "도심" });
     ensureRealtimeStatsShape();
