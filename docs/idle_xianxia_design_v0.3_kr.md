@@ -5065,3 +5065,11 @@
 
 ## 1183) 추가 문서
 - collection UI contract(clear_zone progress proxy 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`
+
+## 1184) 다음 순차 작업
+1. [완료] `event_exchange_001`에 대해 `collection_token` 소비 기반 MVP exchange proxy를 추가해 `교환 토큰 x/y` 진행 상태를 계산.
+2. [완료] 교환 가능 상태가 되면 버튼이 `교환`으로 바뀌고, 실행 시 `토큰 -cost · 파편 +reward`가 실제로 반영되도록 연결.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 exchange proxy 규칙 기준으로 동기화.
+
+## 1185) 추가 문서
+- collection UI contract(event exchange proxy 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`

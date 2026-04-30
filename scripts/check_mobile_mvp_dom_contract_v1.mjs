@@ -13312,6 +13312,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function resolveCollectionFreeSourceExchangeProxy(definition) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function resolveCollectionFreeSourceManualStatusLabel(definition) {",
     "app.mjs",
     failures,
