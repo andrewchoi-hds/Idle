@@ -3250,6 +3250,13 @@ export function createInitialSliceState(context, options = {}) {
       selectedGuardianId: "gdn_001",
       selectedRelicId: "rlc_001",
       starterGranted: true,
+      duplicateBootstrapGranted: true,
+      guardianDuplicateCounts: {
+        gdn_001: 1,
+      },
+      relicDuplicateCounts: {
+        rlc_001: 1,
+      },
       guardianLoadout: {
         primary: "",
         secondary: "",
@@ -4168,6 +4175,28 @@ export function parseSliceState(raw, context) {
           ? parsed.collection.selectedRelicId.trim()
           : "",
       starterGranted: pickBoolean(parsed.collection?.starterGranted, false),
+      duplicateBootstrapGranted: pickBoolean(
+        parsed.collection?.duplicateBootstrapGranted,
+        false,
+      ),
+      guardianDuplicateCounts:
+        parsed.collection?.guardianDuplicateCounts &&
+        typeof parsed.collection.guardianDuplicateCounts === "object"
+          ? Object.fromEntries(
+              Object.entries(parsed.collection.guardianDuplicateCounts)
+                .filter(([key]) => typeof key === "string" && key.trim())
+                .map(([key, value]) => [key.trim(), toNonNegativeInt(value, 0)]),
+            )
+          : {},
+      relicDuplicateCounts:
+        parsed.collection?.relicDuplicateCounts &&
+        typeof parsed.collection.relicDuplicateCounts === "object"
+          ? Object.fromEntries(
+              Object.entries(parsed.collection.relicDuplicateCounts)
+                .filter(([key]) => typeof key === "string" && key.trim())
+                .map(([key, value]) => [key.trim(), toNonNegativeInt(value, 0)]),
+            )
+          : {},
       guardianLoadout: {
         primary:
           typeof parsed.collection?.guardianLoadout?.primary === "string"
