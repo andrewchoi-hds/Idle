@@ -589,3 +589,4 @@ npm run mobile:mvp:check
 - collection free source list contract(`collectionFreeSourceList`)이 export row 전체를 기준으로 동적 렌더되고, `source_id / cycle / entry_ref / reward` 문맥과 cycle-aware claim state를 함께 노출하는지 검증
 - collection guardian/relic roster contract(`guardianRosterGrid`, `relicArchiveGrid`)가 export row 전체를 기준으로 동적 렌더되고, rarity/보유 상태/잠금 난이도 문맥이 카드에 직접 반영되는지 검증
 - collection free source reference contract가 `quests_v1.json`, `milestones_v1.json`을 함께 읽어 row가 raw ref id 대신 실제 이름과 목표 문장으로 보이는지 검증
+- collection free source progress contract가 `reach_difficulty` 계열 entry ref에 한해 `progress / ready / claimed` 상태를 실제 난이도 기준으로 반영하는지 검증

@@ -5017,3 +5017,11 @@
 
 ## 1171) 추가 문서
 - collection UI contract(entry ref quest/milestone enrichment 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`
+
+## 1172) 다음 순차 작업
+1. [완료] `entry_ref`가 `reach_difficulty`인 free source에 한해 실제 현재 난이도를 기준으로 `진행 중 / 목표 달성` 상태를 계산하도록 helper를 추가.
+2. [완료] 아직 state로 확실히 계산할 수 없는 source는 기존처럼 안전하게 유지하고, 계산 가능한 source만 먼저 진짜 progress signal을 붙이는 방식으로 범위를 제한.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 free source progress 규칙 기준으로 동기화.
+
+## 1173) 추가 문서
+- collection UI contract(reach_difficulty free source progress 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`

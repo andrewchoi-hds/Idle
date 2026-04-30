@@ -138,6 +138,7 @@
 - collection layer가 막혀 보이지 않게 `다음 무료 확보 경로`를 명확히 표시한다.
 - daily/weekly는 영구 소모가 아니라 cycle-aware claim 기준으로 다시 열려야 한다.
 - `entry_ref`는 raw id를 그대로 노출하지 말고, 가능하면 quest/milestone 이름과 목표 문장으로 번역해서 보여 준다.
+- `reach_difficulty`처럼 현재 state로 확실히 계산 가능한 entry는 `진행 중 / 목표 달성 / 수령 완료`를 실제 진행 기준으로 보여 준다.
 
 ## 6) 중복 전환 UX
 

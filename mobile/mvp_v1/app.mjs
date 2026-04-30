@@ -1089,6 +1089,8 @@ function buildCollectionCatalog(
       {
         id: row.quest_id,
         nameKo: row.name_ko || row.quest_id,
+        objectiveType: row.objective_type || "",
+        objectiveValue: row.objective_value || "",
         summary: formatCollectionObjectiveLabel(row.objective_type, row.objective_value),
         note: row.note || "",
       },
@@ -1100,6 +1102,8 @@ function buildCollectionCatalog(
       {
         id: row.milestone_id,
         nameKo: row.name_ko || row.milestone_id,
+        triggerType: row.trigger_type || "",
+        triggerValue: row.trigger_value || "",
         summary: formatCollectionTriggerLabel(row.trigger_type, row.trigger_value),
         note: row.note || "",
       },
@@ -1498,6 +1502,33 @@ function resolveCollectionFreeSourceRewardLabel(definition) {
   return definition.label;
 }
 
+function resolveCollectionFreeSourceEntryProgress(definition, currentDifficultyIndex) {
+  const questRef = collectionCatalog?.questRefsById?.[definition.entryRef] || null;
+  const milestoneRef = collectionCatalog?.milestoneRefsById?.[definition.entryRef] || null;
+  const current = Math.max(0, Math.floor(Number(currentDifficultyIndex) || 0));
+  if (questRef?.objectiveType === "reach_difficulty") {
+    const required = Math.max(1, Math.floor(Number(questRef.objectiveValue) || 1));
+    return {
+      tracked: true,
+      achieved: current >= required,
+      label: current >= required ? `목표 달성 · 난이도 ${required}` : `난이도 ${current}/${required}`,
+    };
+  }
+  if (milestoneRef?.triggerType === "reach_difficulty") {
+    const required = Math.max(1, Math.floor(Number(milestoneRef.triggerValue) || 1));
+    return {
+      tracked: true,
+      achieved: current >= required,
+      label: current >= required ? `목표 달성 · 난이도 ${required}` : `난이도 ${current}/${required}`,
+    };
+  }
+  return {
+    tracked: false,
+    achieved: false,
+    label: "",
+  };
+}
+
 function buildCollectionFreeSourceStatus(definition, collection, currentDifficultyIndex) {
   if (currentDifficultyIndex < definition.unlockDifficulty) {
     return {
@@ -1520,6 +1551,23 @@ function buildCollectionFreeSourceStatus(definition, collection, currentDifficul
               : "수령 완료",
       buttonLabel: "완료",
       disabled: true,
+    };
+  }
+  const progress = resolveCollectionFreeSourceEntryProgress(definition, currentDifficultyIndex);
+  if (progress.tracked && !progress.achieved) {
+    return {
+      state: "progress",
+      label: progress.label,
+      buttonLabel: "진행",
+      disabled: true,
+    };
+  }
+  if (progress.tracked && progress.achieved) {
+    return {
+      state: "ready",
+      label: progress.label,
+      buttonLabel: "수령",
+      disabled: false,
     };
   }
   return {
@@ -1729,6 +1777,10 @@ function syncCollectionPanel() {
     dom.collectionFreeSourceList.dataset.overviewSummary = freeSourceSummary;
     const fragment = document.createDocumentFragment();
     for (const { definition, status } of freeSourceStatuses) {
+      const progress = resolveCollectionFreeSourceEntryProgress(
+        definition,
+        currentDifficultyIndex,
+      );
       const row = document.createElement("div");
       row.className = "collection-source-row";
       row.dataset.sourceId = definition.id;
@@ -1749,7 +1801,9 @@ function syncCollectionPanel() {
         `${resolveCollectionFreeSourceTypeLabel(definition.sourceType)} · ${resolveCollectionFreeSourceCycleLabel(definition.cycle)} · ${definition.entryLabel || definition.entryRef}`;
       const entry = document.createElement("p");
       entry.className = "sub collection-source-entry";
-      entry.textContent = definition.entrySummary || definition.note || definition.entryRef;
+      entry.textContent = progress.tracked
+        ? `${definition.entrySummary || definition.note || definition.entryRef} · ${progress.label}`
+        : definition.entrySummary || definition.note || definition.entryRef;
       const reward = document.createElement("p");
       reward.className = "sub collection-source-reward";
       reward.textContent = `${resolveCollectionFreeSourceRewardLabel(definition)} · ${status.label}`;
