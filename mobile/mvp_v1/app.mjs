@@ -1091,6 +1091,14 @@ function buildCollectionCatalog(
         nameKo: row.name_ko || row.quest_id,
         objectiveType: row.objective_type || "",
         objectiveValue: row.objective_value || "",
+        recommendedDifficultyMin: Math.max(
+          1,
+          Math.floor(Number(row.recommended_difficulty_min) || 1),
+        ),
+        recommendedDifficultyMax: Math.max(
+          1,
+          Math.floor(Number(row.recommended_difficulty_max) || 1),
+        ),
         summary: formatCollectionObjectiveLabel(row.objective_type, row.objective_value),
         note: row.note || "",
       },
@@ -1583,6 +1591,20 @@ function resolveCollectionFreeSourceEntryProgress(
         bossBattleWinCount >= required
           ? `목표 달성 · 보스형 전투 ${required}회`
           : `보스형 전투 ${bossBattleWinCount}/${required}`,
+    };
+  }
+  if (questRef?.objectiveType === "clear_zone" || questRef?.objectiveType === "clear_node") {
+    const required = Math.max(
+      questRef.recommendedDifficultyMin || 1,
+      questRef.recommendedDifficultyMax || 1,
+    );
+    return {
+      tracked: true,
+      achieved: current >= required,
+      label:
+        current >= required
+          ? `목표 달성 · 난이도 ${required}`
+          : `구역 진행 ${current}/${required}`,
     };
   }
   if (questRef?.objectiveType === "collect_item_count" || questRef?.objectiveType === "collect_item") {

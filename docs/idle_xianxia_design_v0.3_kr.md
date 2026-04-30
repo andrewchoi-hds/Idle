@@ -5057,3 +5057,11 @@
 
 ## 1181) 추가 문서
 - collection UI contract(collect_item inventory proxy 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`
+
+## 1182) 다음 순차 작업
+1. [완료] `clear_zone / clear_node` 계열 entry ref에 대해 quest `recommended_difficulty_max`를 MVP progress proxy로 읽도록 확장.
+2. [완료] 메인 quest source는 `manual`에서 한 단계 올라가 `구역 진행 x/y` 또는 `목표 달성`으로 보이게 정리.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 clear-zone proxy 규칙 기준으로 동기화.
+
+## 1183) 추가 문서
+- collection UI contract(clear_zone progress proxy 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`
