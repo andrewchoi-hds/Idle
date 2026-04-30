@@ -3609,13 +3609,46 @@ h2 {
   cursor: pointer;
 }
 
+.collection-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.collection-card-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 0 7px;
+  border-radius: 999px;
+  border: 1px solid #284841;
+  background: rgba(31, 54, 48, 0.6);
+  color: #b8d0c9;
+  font-size: 11px;
+  line-height: 1;
+}
+
+.collection-card-chip[data-tone="success"] {
+  border-color: #2f705d;
+  color: #8cf2c3;
+}
+
+.collection-card-chip[data-tone="warn"] {
+  border-color: #7e6833;
+  color: #f7d79f;
+}
+
 .collection-card-choice[data-selected="true"] {
   border-color: #3f8b76;
   box-shadow: 0 0 0 1px rgba(63, 139, 118, 0.28);
 }
 
 .collection-card-choice[data-owned="false"] {
-  opacity: 0.58;
+  opacity: 0.84;
+}
+
+.collection-card-choice[data-unlocked="false"] {
+  opacity: 0.56;
 }
 
 .collection-source-list {

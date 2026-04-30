@@ -587,3 +587,4 @@ npm run mobile:mvp:check
   - ops digest lead/peer container shadow split 규칙(`.ops-digest-item[data-card-section-role="lead"]`, `.ops-digest-item[data-card-section-role="peer"]`)이 mobile에서 lead card는 더 떠 보이고 peer card는 더 눌려 보이게 만들어 section 내부 hierarchy를 한 단계 더 분명하게 만드는지 검증
 - collection panel contract(`collectionPanel`, `guardianCollectionTab`, `relicCollectionTab`, `collectionExchangeTab`, `collectionJournalTab`)이 탭 전환/장착 슬롯/무료 수급/중복 전환 최소 발판으로 일관되게 존재하고, `syncCollectionPanel()`이 root dataset을 visible label로 반영하는지 검증
 - collection free source list contract(`collectionFreeSourceList`)이 export row 전체를 기준으로 동적 렌더되고, `source_id / cycle / entry_ref / reward` 문맥과 cycle-aware claim state를 함께 노출하는지 검증
+- collection guardian/relic roster contract(`guardianRosterGrid`, `relicArchiveGrid`)가 export row 전체를 기준으로 동적 렌더되고, rarity/보유 상태/잠금 난이도 문맥이 카드에 직접 반영되는지 검증

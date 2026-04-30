@@ -5001,3 +5001,11 @@
 
 ## 1167) 추가 문서
 - collection UI contract(동적 free source list/cycle-aware claim 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`
+
+## 1168) 다음 순차 작업
+1. [완료] guardian/relic roster를 일부 고정 카드가 아니라 export row 전체를 읽는 data-driven grid로 전환.
+2. [완료] 카드마다 rarity, 보유 여부, 잠금 난이도 문맥을 직접 노출해 collection 패널이 샘플 화면이 아니라 실제 수집 카탈로그처럼 읽히게 정리.
+3. [완료] 정적 카드 직접 바인딩을 grid event delegation으로 바꿔, 이후 row 수가 늘어나도 selection 흐름이 그대로 유지되게 정리.
+
+## 1169) 추가 문서
+- collection UI contract(data-driven guardian/relic roster 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`
