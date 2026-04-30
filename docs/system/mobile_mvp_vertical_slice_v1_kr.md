@@ -592,3 +592,4 @@ npm run mobile:mvp:check
 - collection free source progress contract가 `reach_difficulty` 계열 entry ref에 한해 `progress / ready / claimed` 상태를 실제 난이도 기준으로 반영하는지 검증
 - collection free source progress contract가 `survive_tribulation` 계열 entry ref에 한해 `progress / ready / claimed` 상태를 실제 도겁 생존 횟수 기준으로 반영하는지 검증
 - collection free source status contract가 아직 자동 추적되지 않는 source를 `manual` 상태로 분리해 `확인 수령/교환` 문맥으로 더 정직하게 보이게 만드는지 검증
+- collection free source progress contract가 `kill_boss` 계열 entry ref에 한해 MVP boss-class battle proxy(`도겁 단계 또는 perfect phase 전투 승리`) 기준으로 `progress / ready / claimed` 상태를 반영하는지 검증

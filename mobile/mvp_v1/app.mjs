@@ -1162,6 +1162,10 @@ function ensureCollectionStateShape() {
     0,
     Math.floor(Number(state.collection.tribulationSurvivalCount) || 0),
   );
+  state.collection.bossBattleWinCount = Math.max(
+    0,
+    Math.floor(Number(state.collection.bossBattleWinCount) || 0),
+  );
   state.collection.guardianOwnedIds = Array.isArray(state.collection.guardianOwnedIds)
     ? state.collection.guardianOwnedIds
         .filter((value) => typeof value === "string" && value.trim())
@@ -1514,6 +1518,10 @@ function resolveCollectionFreeSourceEntryProgress(definition, collection, curren
     0,
     Math.floor(Number(collection?.tribulationSurvivalCount) || 0),
   );
+  const bossBattleWinCount = Math.max(
+    0,
+    Math.floor(Number(collection?.bossBattleWinCount) || 0),
+  );
   if (questRef?.objectiveType === "reach_difficulty") {
     const required = Math.max(1, Math.floor(Number(questRef.objectiveValue) || 1));
     return {
@@ -1531,6 +1539,17 @@ function resolveCollectionFreeSourceEntryProgress(definition, collection, curren
         tribulationSurvivalCount >= required
           ? `목표 달성 · 도겁 생존 ${required}회`
           : `도겁 생존 ${tribulationSurvivalCount}/${required}`,
+    };
+  }
+  if (questRef?.objectiveType === "kill_boss") {
+    const required = Math.max(1, Math.floor(Number(questRef.objectiveValue) || 1));
+    return {
+      tracked: true,
+      achieved: bossBattleWinCount >= required,
+      label:
+        bossBattleWinCount >= required
+          ? `목표 달성 · 보스형 전투 ${required}회`
+          : `보스형 전투 ${bossBattleWinCount}/${required}`,
     };
   }
   if (milestoneRef?.triggerType === "reach_difficulty") {
