@@ -593,6 +593,7 @@ npm run mobile:mvp:check
 - collection free source progress contract가 `survive_tribulation` 계열 entry ref에 한해 `progress / ready / claimed` 상태를 실제 도겁 생존 횟수 기준으로 반영하는지 검증
 - collection free source status contract가 아직 자동 추적되지 않는 source를 `manual` 상태로 분리해 `확인 수령/교환` 문맥으로 더 정직하게 보이게 만드는지 검증
 - collection free source progress contract가 `kill_boss` 계열 entry ref에 한해 MVP boss-class battle proxy(`도겁 단계 또는 perfect phase 전투 승리`) 기준으로 `progress / ready / claimed` 상태를 반영하는지 검증
+- collection free source progress contract가 `kill_elite` 계열 entry ref에 한해 MVP elite-class battle proxy(`late phase non-tribulation 전투 승리`) 기준으로 `progress / ready / claimed` 상태를 반영하는지 검증
 - collection free source progress contract가 `collect_item_count / collect_item` 계열 entry ref에 한해 current inventory proxy(`영약/부적`) 기준으로 `progress / ready / claimed` 상태를 반영하는지 검증
 - collection free source progress contract가 `clear_zone / clear_node` 계열 entry ref에 한해 quest `recommended_difficulty_max` proxy 기준으로 `progress / ready / claimed` 상태를 반영하는지 검증
 - collection free source progress contract가 `event_exchange` 계열 entry ref에 한해 `collection_token` 소비 기반 MVP exchange proxy(`교환 토큰 x/y`)로 `progress / ready / claimed` 상태를 반영하는지 검증

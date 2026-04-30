@@ -5073,3 +5073,11 @@
 
 ## 1185) 추가 문서
 - collection UI contract(event exchange proxy 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`
+
+## 1186) 다음 순차 작업
+1. [완료] engine collection state에 `eliteBattleWinCount`를 추가하고, `late phase non-tribulation` 전투 승리를 MVP elite-class battle proxy로 카운트하도록 연결.
+2. [완료] `kill_elite` free source는 이 proxy 카운터를 읽어 `정예형 전투 x/y` progress로 표시되게 확장.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 elite-class battle proxy 규칙 기준으로 동기화.
+
+## 1187) 추가 문서
+- collection UI contract(kill_elite elite-class proxy 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`
