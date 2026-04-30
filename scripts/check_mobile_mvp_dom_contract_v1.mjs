@@ -13282,7 +13282,25 @@ async function main() {
   );
   assertIncludes(
     app,
-    "function resolveCollectionFreeSourceEntryProgress(definition, collection, currentDifficultyIndex) {",
+    "function resolveCollectionFreeSourceEntryProgress(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function parseCollectionItemTarget(value) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function resolveCollectionItemProxyLabel(itemKey) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function resolveCollectionInventoryProxyCount(itemKey, inventory) {",
     "app.mjs",
     failures,
   );

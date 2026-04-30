@@ -1510,7 +1510,40 @@ function resolveCollectionFreeSourceRewardLabel(definition) {
   return definition.label;
 }
 
-function resolveCollectionFreeSourceEntryProgress(definition, collection, currentDifficultyIndex) {
+function parseCollectionItemTarget(value) {
+  const [rawKey = "", rawRequired = "0"] = String(value || "").split(":");
+  return {
+    key: rawKey.trim(),
+    required: Math.max(1, Math.floor(Number(rawRequired) || 1)),
+  };
+}
+
+function resolveCollectionItemProxyLabel(itemKey) {
+  if (itemKey === "talisman" || itemKey.startsWith("tal_")) {
+    return "부적";
+  }
+  if (itemKey === "potion" || itemKey.startsWith("pot_")) {
+    return "영약";
+  }
+  return "아이템";
+}
+
+function resolveCollectionInventoryProxyCount(itemKey, inventory) {
+  if (itemKey === "talisman" || itemKey.startsWith("tal_")) {
+    return Math.max(0, Math.floor(Number(inventory?.tribulationTalisman) || 0));
+  }
+  if (itemKey === "potion" || itemKey.startsWith("pot_")) {
+    return Math.max(0, Math.floor(Number(inventory?.breakthroughElixir) || 0));
+  }
+  return 0;
+}
+
+function resolveCollectionFreeSourceEntryProgress(
+  definition,
+  collection,
+  currentDifficultyIndex,
+  inventory,
+) {
   const questRef = collectionCatalog?.questRefsById?.[definition.entryRef] || null;
   const milestoneRef = collectionCatalog?.milestoneRefsById?.[definition.entryRef] || null;
   const current = Math.max(0, Math.floor(Number(currentDifficultyIndex) || 0));
@@ -1552,6 +1585,19 @@ function resolveCollectionFreeSourceEntryProgress(definition, collection, curren
           : `보스형 전투 ${bossBattleWinCount}/${required}`,
     };
   }
+  if (questRef?.objectiveType === "collect_item_count" || questRef?.objectiveType === "collect_item") {
+    const target = parseCollectionItemTarget(questRef.objectiveValue);
+    const currentCount = resolveCollectionInventoryProxyCount(target.key, inventory);
+    const label = resolveCollectionItemProxyLabel(target.key);
+    return {
+      tracked: true,
+      achieved: currentCount >= target.required,
+      label:
+        currentCount >= target.required
+          ? `목표 달성 · ${label} ${target.required}개`
+          : `${label} ${currentCount}/${target.required}`,
+    };
+  }
   if (milestoneRef?.triggerType === "reach_difficulty") {
     const required = Math.max(1, Math.floor(Number(milestoneRef.triggerValue) || 1));
     return {
@@ -1569,6 +1615,22 @@ function resolveCollectionFreeSourceEntryProgress(definition, collection, curren
         tribulationSurvivalCount >= required
           ? `목표 달성 · 도겁 생존 ${required}회`
           : `도겁 생존 ${tribulationSurvivalCount}/${required}`,
+    };
+  }
+  if (
+    milestoneRef?.triggerType === "collect_item_count" ||
+    milestoneRef?.triggerType === "collect_item"
+  ) {
+    const target = parseCollectionItemTarget(milestoneRef.triggerValue);
+    const currentCount = resolveCollectionInventoryProxyCount(target.key, inventory);
+    const label = resolveCollectionItemProxyLabel(target.key);
+    return {
+      tracked: true,
+      achieved: currentCount >= target.required,
+      label:
+        currentCount >= target.required
+          ? `목표 달성 · ${label} ${target.required}개`
+          : `${label} ${currentCount}/${target.required}`,
     };
   }
   return {
@@ -1634,6 +1696,7 @@ function buildCollectionFreeSourceStatus(definition, collection, currentDifficul
     definition,
     collection,
     currentDifficultyIndex,
+    state?.inventory,
   );
   if (progress.tracked && !progress.achieved) {
     return {
@@ -1864,6 +1927,7 @@ function syncCollectionPanel() {
         definition,
         collection,
         currentDifficultyIndex,
+        state?.inventory,
       );
       const row = document.createElement("div");
       row.className = "collection-source-row";

@@ -142,6 +142,7 @@
 - `survive_tribulation` 계열도 현재 state에서 카운트가 잡히면 같은 방식으로 실제 progress를 보여 준다.
 - 아직 자동 추적되지 않는 source는 `수령 가능`로 가장하지 말고 `manual` 상태로 분리해 `확인 수령` 또는 `교환` 문맥으로 보여 준다.
 - `kill_boss` 계열은 현재 MVP에서 `boss-class battle` proxy(도겁 단계 또는 perfect phase 전투 승리)로 추적한다는 점을 명시적으로 유지한다.
+- `collect_item_count / collect_item` 계열은 현재 MVP에서 `inventory proxy`(영약=`breakthroughElixir`, 부적=`tribulationTalisman`)로 추적한다는 점을 명시적으로 유지한다.
 
 ## 6) 중복 전환 UX
 
