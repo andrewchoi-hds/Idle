@@ -1559,6 +1559,34 @@ function resolveCollectionFreeSourceEntryProgress(definition, collection, curren
   };
 }
 
+function resolveCollectionFreeSourceManualStatusLabel(definition) {
+  const questRef = collectionCatalog?.questRefsById?.[definition.entryRef] || null;
+  const milestoneRef = collectionCatalog?.milestoneRefsById?.[definition.entryRef] || null;
+  const objectiveType = questRef?.objectiveType || milestoneRef?.triggerType || "";
+  if (definition.sourceType === "event_exchange") {
+    return "교환 조건 확인";
+  }
+  if (objectiveType === "kill_boss") {
+    return "보스 목표 확인";
+  }
+  if (objectiveType === "kill_elite") {
+    return "정예 목표 확인";
+  }
+  if (objectiveType === "clear_zone") {
+    return "구역 목표 확인";
+  }
+  if (objectiveType === "collect_item_count") {
+    return "수집 목표 확인";
+  }
+  if (objectiveType === "collect_item") {
+    return "보유 목표 확인";
+  }
+  if (objectiveType === "consume_item") {
+    return "소비 목표 확인";
+  }
+  return "조건 확인 필요";
+}
+
 function buildCollectionFreeSourceStatus(definition, collection, currentDifficultyIndex) {
   if (currentDifficultyIndex < definition.unlockDifficulty) {
     return {
@@ -1605,9 +1633,9 @@ function buildCollectionFreeSourceStatus(definition, collection, currentDifficul
     };
   }
   return {
-    state: "ready",
-    label: "수령 가능",
-    buttonLabel: "수령",
+    state: "manual",
+    label: resolveCollectionFreeSourceManualStatusLabel(definition),
+    buttonLabel: definition.sourceType === "event_exchange" ? "교환" : "확인 수령",
     disabled: false,
   };
 }
@@ -1736,9 +1764,10 @@ function syncCollectionPanel() {
     status: buildCollectionFreeSourceStatus(definition, collection, currentDifficultyIndex),
   }));
   const readySourceCount = freeSourceStatuses.filter((entry) => entry.status.state === "ready").length;
+  const manualSourceCount = freeSourceStatuses.filter((entry) => entry.status.state === "manual").length;
   const claimedSourceCount = freeSourceStatuses.filter((entry) => entry.status.state === "claimed").length;
   const lockedSourceCount = freeSourceStatuses.filter((entry) => entry.status.state === "locked").length;
-  const freeSourceSummary = `수급 준비 ${readySourceCount} · 완료 ${claimedSourceCount} · 잠금 ${lockedSourceCount}`;
+  const freeSourceSummary = `수급 준비 ${readySourceCount} · 확인 ${manualSourceCount} · 완료 ${claimedSourceCount} · 잠금 ${lockedSourceCount}`;
   const selectedGuardianId = collection.selectedGuardianId || "";
   const selectedRelicId = collection.selectedRelicId || "";
   const selectedGuardianDuplicateCount = resolveCollectionDuplicateCount(
@@ -1806,6 +1835,7 @@ function syncCollectionPanel() {
   if (dom.collectionFreeSourceList) {
     dom.collectionFreeSourceList.dataset.sourceCount = String(freeSourceStatuses.length);
     dom.collectionFreeSourceList.dataset.readyCount = String(readySourceCount);
+    dom.collectionFreeSourceList.dataset.manualCount = String(manualSourceCount);
     dom.collectionFreeSourceList.dataset.claimedCount = String(claimedSourceCount);
     dom.collectionFreeSourceList.dataset.lockedCount = String(lockedSourceCount);
     dom.collectionFreeSourceList.dataset.overviewSummary = freeSourceSummary;
@@ -18649,7 +18679,7 @@ function bindEvents() {
     const rewardLabel = grantCollectionSourceReward(collection, definition);
     collection.freeSourceClaims[definition.id] = resolveCollectionFreeSourceClaimKey(definition);
     persistLocal();
-    setStatus(rewardLabel);
+    setStatus(status.state === "manual" ? `${definition.label} · 수동 확인 수령` : rewardLabel);
     render();
   });
 

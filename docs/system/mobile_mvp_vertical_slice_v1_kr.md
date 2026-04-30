@@ -591,3 +591,4 @@ npm run mobile:mvp:check
 - collection free source reference contract가 `quests_v1.json`, `milestones_v1.json`을 함께 읽어 row가 raw ref id 대신 실제 이름과 목표 문장으로 보이는지 검증
 - collection free source progress contract가 `reach_difficulty` 계열 entry ref에 한해 `progress / ready / claimed` 상태를 실제 난이도 기준으로 반영하는지 검증
 - collection free source progress contract가 `survive_tribulation` 계열 entry ref에 한해 `progress / ready / claimed` 상태를 실제 도겁 생존 횟수 기준으로 반영하는지 검증
+- collection free source status contract가 아직 자동 추적되지 않는 source를 `manual` 상태로 분리해 `확인 수령/교환` 문맥으로 더 정직하게 보이게 만드는지 검증
