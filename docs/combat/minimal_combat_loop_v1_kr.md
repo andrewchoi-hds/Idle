@@ -52,6 +52,11 @@ console.log(formatMinimalCombatReport(report));
 - 상성 규칙: `fire > wind > earth > thunder > ice > fire`, 그 외 속성은 `none`(중립) 처리.
 - 로그를 끄려면 `includeActionLogs: false` 사용.
 - 액션 로그는 `selfHeal`(이번 행동으로 회복한 체력) 필드를 포함한다.
+- mobile MVP 엔진은 `resolveBattleEncounterClass(stage)`를 통해 `normal / elite / boss` 전투 등급을 단일 레일로 판정한다.
+- 현재 MVP 기준:
+  - `boss`: 도겁 단계 또는 `perfect phase`
+  - `elite`: `late phase` non-tribulation
+  - `normal`: 그 외
 
 ## 7) special_mechanic 매핑(현재)
 - on-hit 상태이상

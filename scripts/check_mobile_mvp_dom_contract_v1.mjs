@@ -13282,6 +13282,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "formatBattleEncounterClassLabelKo,",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function resolveCollectionFreeSourceEntryProgress(",
     "app.mjs",
     failures,

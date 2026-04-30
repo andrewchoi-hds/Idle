@@ -2277,6 +2277,29 @@ function worldKo(world) {
   return "진선계";
 }
 
+export function resolveBattleEncounterClass(stage) {
+  if (!stage || typeof stage !== "object") {
+    return "normal";
+  }
+  if (Number(stage.is_tribulation) === 1 || stage.phase === "perfect") {
+    return "boss";
+  }
+  if (stage.phase === "late") {
+    return "elite";
+  }
+  return "normal";
+}
+
+export function formatBattleEncounterClassLabelKo(encounterClass) {
+  if (encounterClass === "boss") {
+    return "보스 전투";
+  }
+  if (encounterClass === "elite") {
+    return "정예 전투";
+  }
+  return "일반 전투";
+}
+
 function stageFallbackLabel(stage) {
   return `${worldKo(stage.world)} ${stage.major_stage_name} ${stage.sub_stage_name}`;
 }
@@ -3357,8 +3380,8 @@ export function runBattleOnce(context, state, rng, options = {}) {
   const rebirthBonus = state.progression.rebirthCount * 0.008;
   const winChance = clamp(0.78 - stage.difficulty_index * 0.0018 - worldPenalty + rebirthBonus, 0.1, 0.95);
   const win = rng.next() < winChance;
-  const bossBattleStage = stage.is_tribulation === 1 || stage.phase === "perfect";
-  const eliteBattleStage = stage.is_tribulation !== 1 && stage.phase === "late";
+  const encounterClass = resolveBattleEncounterClass(stage);
+  const encounterLabelKo = formatBattleEncounterClassLabelKo(encounterClass);
 
   if (win) {
     const qiGain = Math.max(
@@ -3376,13 +3399,13 @@ export function runBattleOnce(context, state, rng, options = {}) {
     state.collection = state.collection && typeof state.collection === "object"
       ? state.collection
       : {};
-    if (bossBattleStage) {
+    if (encounterClass === "boss") {
       state.collection.bossBattleWinCount = Math.max(
         0,
         Math.floor(Number(state.collection.bossBattleWinCount) || 0),
       ) + 1;
     }
-    if (eliteBattleStage) {
+    if (encounterClass === "elite") {
       state.collection.eliteBattleWinCount = Math.max(
         0,
         Math.floor(Number(state.collection.eliteBattleWinCount) || 0),
@@ -3392,7 +3415,7 @@ export function runBattleOnce(context, state, rng, options = {}) {
       addLog(
         state,
         "battle",
-        `전투 승리: 기 +${qiGain}, 영석 +${spiritGain}${
+        `${encounterLabelKo} 승리: 기 +${qiGain}, 영석 +${spiritGain}${
           essenceGain > 0 ? `, 환생정수 +${essenceGain}` : ""
         }`,
       );
@@ -3400,6 +3423,8 @@ export function runBattleOnce(context, state, rng, options = {}) {
     if (eventCollector) {
       eventCollector({
         kind: "battle_win",
+        encounterClass,
+        encounterLabelKo,
         difficultyIndex: stage.difficulty_index,
         stageQiRequired: stage.qi_required,
         qiDelta: qiGain,
@@ -3410,6 +3435,8 @@ export function runBattleOnce(context, state, rng, options = {}) {
     return {
       won: true,
       kind: "battle_win",
+      encounterClass,
+      encounterLabelKo,
       difficultyIndex: stage.difficulty_index,
       stageQiRequired: stage.qi_required,
       qiDelta: qiGain,
@@ -3421,11 +3448,13 @@ export function runBattleOnce(context, state, rng, options = {}) {
   const qiLoss = Math.max(1, Math.round(stage.qi_required * 0.035));
   state.currencies.qi = Math.max(0, state.currencies.qi - qiLoss);
   if (!suppressLogs) {
-    addLog(state, "battle", `전투 패배: 기 -${qiLoss}`);
+    addLog(state, "battle", `${encounterLabelKo} 패배: 기 -${qiLoss}`);
   }
   if (eventCollector) {
     eventCollector({
       kind: "battle_loss",
+      encounterClass,
+      encounterLabelKo,
       difficultyIndex: stage.difficulty_index,
       stageQiRequired: stage.qi_required,
       qiDelta: -qiLoss,
@@ -3436,6 +3465,8 @@ export function runBattleOnce(context, state, rng, options = {}) {
   return {
     won: false,
     kind: "battle_loss",
+    encounterClass,
+    encounterLabelKo,
     difficultyIndex: stage.difficulty_index,
     stageQiRequired: stage.qi_required,
     qiDelta: -qiLoss,
