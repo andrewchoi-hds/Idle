@@ -1158,6 +1158,10 @@ function ensureCollectionStateShape() {
     Math.floor(Number(state.collection.pityProgress) || 0),
   );
   state.collection.pityMax = Math.max(1, Math.floor(Number(state.collection.pityMax) || 40));
+  state.collection.tribulationSurvivalCount = Math.max(
+    0,
+    Math.floor(Number(state.collection.tribulationSurvivalCount) || 0),
+  );
   state.collection.guardianOwnedIds = Array.isArray(state.collection.guardianOwnedIds)
     ? state.collection.guardianOwnedIds
         .filter((value) => typeof value === "string" && value.trim())
@@ -1502,10 +1506,14 @@ function resolveCollectionFreeSourceRewardLabel(definition) {
   return definition.label;
 }
 
-function resolveCollectionFreeSourceEntryProgress(definition, currentDifficultyIndex) {
+function resolveCollectionFreeSourceEntryProgress(definition, collection, currentDifficultyIndex) {
   const questRef = collectionCatalog?.questRefsById?.[definition.entryRef] || null;
   const milestoneRef = collectionCatalog?.milestoneRefsById?.[definition.entryRef] || null;
   const current = Math.max(0, Math.floor(Number(currentDifficultyIndex) || 0));
+  const tribulationSurvivalCount = Math.max(
+    0,
+    Math.floor(Number(collection?.tribulationSurvivalCount) || 0),
+  );
   if (questRef?.objectiveType === "reach_difficulty") {
     const required = Math.max(1, Math.floor(Number(questRef.objectiveValue) || 1));
     return {
@@ -1514,12 +1522,34 @@ function resolveCollectionFreeSourceEntryProgress(definition, currentDifficultyI
       label: current >= required ? `목표 달성 · 난이도 ${required}` : `난이도 ${current}/${required}`,
     };
   }
+  if (questRef?.objectiveType === "survive_tribulation") {
+    const required = Math.max(1, Math.floor(Number(questRef.objectiveValue) || 1));
+    return {
+      tracked: true,
+      achieved: tribulationSurvivalCount >= required,
+      label:
+        tribulationSurvivalCount >= required
+          ? `목표 달성 · 도겁 생존 ${required}회`
+          : `도겁 생존 ${tribulationSurvivalCount}/${required}`,
+    };
+  }
   if (milestoneRef?.triggerType === "reach_difficulty") {
     const required = Math.max(1, Math.floor(Number(milestoneRef.triggerValue) || 1));
     return {
       tracked: true,
       achieved: current >= required,
       label: current >= required ? `목표 달성 · 난이도 ${required}` : `난이도 ${current}/${required}`,
+    };
+  }
+  if (milestoneRef?.triggerType === "survive_tribulation_count") {
+    const required = Math.max(1, Math.floor(Number(milestoneRef.triggerValue) || 1));
+    return {
+      tracked: true,
+      achieved: tribulationSurvivalCount >= required,
+      label:
+        tribulationSurvivalCount >= required
+          ? `목표 달성 · 도겁 생존 ${required}회`
+          : `도겁 생존 ${tribulationSurvivalCount}/${required}`,
     };
   }
   return {
@@ -1553,7 +1583,11 @@ function buildCollectionFreeSourceStatus(definition, collection, currentDifficul
       disabled: true,
     };
   }
-  const progress = resolveCollectionFreeSourceEntryProgress(definition, currentDifficultyIndex);
+  const progress = resolveCollectionFreeSourceEntryProgress(
+    definition,
+    collection,
+    currentDifficultyIndex,
+  );
   if (progress.tracked && !progress.achieved) {
     return {
       state: "progress",
@@ -1779,6 +1813,7 @@ function syncCollectionPanel() {
     for (const { definition, status } of freeSourceStatuses) {
       const progress = resolveCollectionFreeSourceEntryProgress(
         definition,
+        collection,
         currentDifficultyIndex,
       );
       const row = document.createElement("div");

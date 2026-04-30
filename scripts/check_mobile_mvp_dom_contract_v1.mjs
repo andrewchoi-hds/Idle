@@ -13282,7 +13282,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    "function resolveCollectionFreeSourceEntryProgress(definition, currentDifficultyIndex) {",
+    "function resolveCollectionFreeSourceEntryProgress(definition, collection, currentDifficultyIndex) {",
     "app.mjs",
     failures,
   );
