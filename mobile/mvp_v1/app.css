@@ -3679,6 +3679,10 @@ h2 {
   opacity: 0.72;
 }
 
+.collection-source-row[data-source-state="progress"] {
+  opacity: 0.88;
+}
+
 .collection-source-row[data-source-state="claimed"] {
   border-color: #26463d;
 }
