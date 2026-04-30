@@ -5049,3 +5049,11 @@
 
 ## 1179) 추가 문서
 - collection UI contract(kill_boss boss-class proxy 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`
+
+## 1180) 다음 순차 작업
+1. [완료] `collect_item_count / collect_item` 계열 entry ref를 읽어 current inventory proxy 기반 progress를 계산하도록 helper를 확장.
+2. [완료] 영약/부적 계열 목표는 각각 `breakthroughElixir`, `tribulationTalisman`을 MVP proxy로 사용해 `영약 x/y`, `부적 x/y` 진행 상태를 직접 보이게 정리.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서(`docs/system/mobile_mvp_vertical_slice_v1_kr.md`)를 inventory proxy 규칙 기준으로 동기화.
+
+## 1181) 추가 문서
+- collection UI contract(collect_item inventory proxy 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`
