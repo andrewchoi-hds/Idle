@@ -4993,3 +4993,11 @@
 
 ## 1165) 추가 문서
 - 모바일 MVP 수직슬라이스 가이드(lead/peer container shadow split 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1166) 다음 순차 작업
+1. [완료] `collectionFreeSourceList`를 추가하고 기존 `일일/주간/이벤트` 3개 고정 버튼을 export row 전체를 읽는 동적 수급 목록으로 전환.
+2. [완료] `source_id`, `cycle`, `entry_ref`, `reward_kind/reward_qty`를 row dataset과 visible copy에 같이 반영해 “어디서 무엇을 받는지”가 한 줄로 읽히게 정리.
+3. [완료] daily/weekly/seasonal claim을 cycle-aware key로 판단하도록 바꿔, 영구 1회 수령이 아니라 주기 기준으로 다시 열릴 수 있는 최소 레일을 추가.
+
+## 1167) 추가 문서
+- collection UI contract(동적 free source list/cycle-aware claim 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`

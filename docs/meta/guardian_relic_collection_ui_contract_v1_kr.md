@@ -114,10 +114,8 @@
 
 ### 노출 위치
 - `collectionFreeSourcesPanel`
-  - daily
-  - weekly
-  - main/milestone
-  - event exchange
+  - `collectionFreeSourceList`
+  - main/milestone/daily/weekly/event exchange row 전체
 
 ### 행 contract
 - `data-source-id`
@@ -127,10 +125,12 @@
 - `data-reward-kind`
 - `data-reward-ref`
 - `data-claim-state`
+- `data-source-state`
 
 ### 원칙
 - 무료 수급 경로는 항상 "어디서 얻는지"가 보여야 한다.
 - collection layer가 막혀 보이지 않게 `다음 무료 확보 경로`를 명확히 표시한다.
+- daily/weekly는 영구 소모가 아니라 cycle-aware claim 기준으로 다시 열려야 한다.
 
 ## 6) 중복 전환 UX
 

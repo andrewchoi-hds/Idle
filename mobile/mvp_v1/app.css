@@ -3630,6 +3630,25 @@ h2 {
   gap: 8px;
 }
 
+.collection-source-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.collection-source-meta,
+.collection-source-reward {
+  color: #8ca29c;
+}
+
+.collection-source-row[data-source-state="locked"] {
+  opacity: 0.72;
+}
+
+.collection-source-row[data-source-state="claimed"] {
+  border-color: #26463d;
+}
+
 label {
   display: flex;
   align-items: center;
