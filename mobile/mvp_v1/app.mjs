@@ -229,12 +229,7 @@ const dom = {
   collectionTokenLabel: document.getElementById("collectionTokenLabel"),
   collectionPityLabel: document.getElementById("collectionPityLabel"),
   collectionFreeSourceLabel: document.getElementById("collectionFreeSourceLabel"),
-  collectionDailySourceStatus: document.getElementById("collectionDailySourceStatus"),
-  collectionWeeklySourceStatus: document.getElementById("collectionWeeklySourceStatus"),
-  collectionEventSourceStatus: document.getElementById("collectionEventSourceStatus"),
-  btnClaimCollectionDaily: document.getElementById("btnClaimCollectionDaily"),
-  btnClaimCollectionWeekly: document.getElementById("btnClaimCollectionWeekly"),
-  btnClaimCollectionEvent: document.getElementById("btnClaimCollectionEvent"),
+  collectionFreeSourceList: document.getElementById("collectionFreeSourceList"),
   btnCollectionTabGuardian: document.getElementById("btnCollectionTabGuardian"),
   btnCollectionTabRelic: document.getElementById("btnCollectionTabRelic"),
   btnCollectionTabExchange: document.getElementById("btnCollectionTabExchange"),
@@ -1032,12 +1027,16 @@ function buildCollectionCatalog(
     };
   }
   const freeSources = freeSourceRows.map((row, index) => ({
-    id: index === 0 ? "daily" : index === 1 ? "weekly" : "event",
+    id: row.source_id || `collection_source_${index + 1}`,
     label: row.name_ko || "무료 수급",
+    sourceType: row.source_type || "daily",
+    cycle: row.cycle || "once",
+    entryRef: row.entry_ref || "none",
     unlockDifficulty: parseCollectionUnlockDifficulty(row.unlock_condition, 1),
     rewardKind: row.reward_kind || "collection_token",
     rewardRef: row.reward_ref || "none",
     rewardQty: Math.max(0, Math.floor(Number(row.reward_qty) || 0)),
+    note: row.note || "",
   }));
   return { guardiansById, relicsById, poolsById, duplicateRules, freeSources };
 }
@@ -1133,9 +1132,14 @@ function ensureCollectionStateShape() {
   if (!state.collection.freeSourceClaims || typeof state.collection.freeSourceClaims !== "object") {
     state.collection.freeSourceClaims = {};
   }
-  state.collection.freeSourceClaims.daily = state.collection.freeSourceClaims.daily === true;
-  state.collection.freeSourceClaims.weekly = state.collection.freeSourceClaims.weekly === true;
-  state.collection.freeSourceClaims.event = state.collection.freeSourceClaims.event === true;
+  state.collection.freeSourceClaims = Object.fromEntries(
+    Object.entries(state.collection.freeSourceClaims)
+      .filter(([key]) => typeof key === "string" && key.trim())
+      .map(([key, value]) => [
+        key.trim(),
+        typeof value === "string" && value.trim() ? value.trim() : value === true,
+      ]),
+  );
   return state.collection;
 }
 
@@ -1146,6 +1150,188 @@ function normalizeCollectionPanelTab(tab) {
 
 function buildCollectionFreeSourceDefinitions() {
   return collectionCatalog?.freeSources || buildCollectionCatalog().freeSources;
+}
+
+function resolveCollectionFreeSourceWeekKey(referenceDate = new Date()) {
+  const date = new Date(referenceDate);
+  date.setHours(0, 0, 0, 0);
+  date.setDate(date.getDate() + 3 - ((date.getDay() + 6) % 7));
+  const weekYear = date.getFullYear();
+  const firstThursday = new Date(weekYear, 0, 4);
+  firstThursday.setHours(0, 0, 0, 0);
+  firstThursday.setDate(firstThursday.getDate() + 3 - ((firstThursday.getDay() + 6) % 7));
+  const weekNumber = 1 + Math.round((date - firstThursday) / 604800000);
+  return `${weekYear}-W${String(weekNumber).padStart(2, "0")}`;
+}
+
+function resolveCollectionFreeSourceClaimKey(definition, referenceDate = new Date()) {
+  const cycle = String(definition?.cycle || "once").trim() || "once";
+  if (cycle === "daily") {
+    const date = new Date(referenceDate);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `daily:${year}-${month}-${day}`;
+  }
+  if (cycle === "weekly") {
+    return `weekly:${resolveCollectionFreeSourceWeekKey(referenceDate)}`;
+  }
+  if (cycle === "seasonal") {
+    return `seasonal:${definition?.id || "default"}`;
+  }
+  return "claimed";
+}
+
+function ensureCollectionFreeSourceClaimState(
+  collection,
+  definitions = buildCollectionFreeSourceDefinitions(),
+) {
+  const legacySourceMap = {
+    daily: "col_src_003",
+    weekly: "col_src_004",
+    event: "col_src_008",
+  };
+  if (!collection.freeSourceClaims || typeof collection.freeSourceClaims !== "object") {
+    collection.freeSourceClaims = {};
+  }
+  const normalized = Object.fromEntries(
+    Object.entries(collection.freeSourceClaims)
+      .filter(([key]) => typeof key === "string" && key.trim())
+      .map(([key, value]) => [
+        key.trim(),
+        typeof value === "string" && value.trim() ? value.trim() : value === true,
+      ]),
+  );
+  for (const definition of definitions) {
+    if (Object.prototype.hasOwnProperty.call(normalized, definition.id)) {
+      continue;
+    }
+    const legacyKey = Object.entries(legacySourceMap).find(([, sourceId]) => sourceId === definition.id)?.[0];
+    const legacyValue = legacyKey ? normalized[legacyKey] : false;
+    if (legacyValue === true) {
+      normalized[definition.id] = resolveCollectionFreeSourceClaimKey(definition);
+    } else if (typeof legacyValue === "string" && legacyValue.trim()) {
+      normalized[definition.id] = legacyValue.trim();
+    } else {
+      normalized[definition.id] = false;
+    }
+  }
+  delete normalized.daily;
+  delete normalized.weekly;
+  delete normalized.event;
+  collection.freeSourceClaims = normalized;
+  return collection.freeSourceClaims;
+}
+
+function hasClaimedCollectionFreeSource(collection, definition) {
+  const claimValue = collection.freeSourceClaims?.[definition.id];
+  if (definition.cycle === "once") {
+    return claimValue === true || claimValue === "claimed";
+  }
+  return claimValue === resolveCollectionFreeSourceClaimKey(definition);
+}
+
+function resolveCollectionFreeSourceTypeLabel(sourceType) {
+  if (sourceType === "main_quest") {
+    return "메인";
+  }
+  if (sourceType === "milestone") {
+    return "마일스톤";
+  }
+  if (sourceType === "daily") {
+    return "일일";
+  }
+  if (sourceType === "weekly") {
+    return "주간";
+  }
+  if (sourceType === "event_exchange") {
+    return "이벤트";
+  }
+  return "수급";
+}
+
+function resolveCollectionFreeSourceCycleLabel(cycle) {
+  if (cycle === "daily") {
+    return "매일";
+  }
+  if (cycle === "weekly") {
+    return "매주";
+  }
+  if (cycle === "seasonal") {
+    return "시즌";
+  }
+  return "1회";
+}
+
+function resolveCollectionFreeSourceRewardLabel(definition) {
+  if (definition.rewardKind === "collection_token") {
+    return `토큰 +${definition.rewardQty}`;
+  }
+  if (definition.rewardKind === "collection_shard") {
+    return `파편 +${definition.rewardQty}`;
+  }
+  if (definition.rewardKind === "guardian_pull") {
+    return `호법 ${definition.rewardQty}회`;
+  }
+  if (definition.rewardKind === "relic_pull") {
+    return `법보 ${definition.rewardQty}회`;
+  }
+  return definition.label;
+}
+
+function buildCollectionFreeSourceStatus(definition, collection, currentDifficultyIndex) {
+  if (currentDifficultyIndex < definition.unlockDifficulty) {
+    return {
+      state: "locked",
+      label: `난이도 ${definition.unlockDifficulty} 필요`,
+      buttonLabel: "잠금",
+      disabled: true,
+    };
+  }
+  if (hasClaimedCollectionFreeSource(collection, definition)) {
+    return {
+      state: "claimed",
+      label:
+        definition.cycle === "daily"
+          ? "오늘 수령 완료"
+          : definition.cycle === "weekly"
+            ? "이번 주 수령 완료"
+            : definition.cycle === "seasonal"
+              ? "시즌 수령 완료"
+              : "수령 완료",
+      buttonLabel: "완료",
+      disabled: true,
+    };
+  }
+  return {
+    state: "ready",
+    label: "수령 가능",
+    buttonLabel: "수령",
+    disabled: false,
+  };
+}
+
+function grantCollectionSourceReward(collection, definition) {
+  if (definition.rewardKind === "collection_token") {
+    collection.token += definition.rewardQty;
+    return `${definition.label} · 토큰 +${definition.rewardQty}`;
+  }
+  if (definition.rewardKind === "collection_shard") {
+    collection.shard += definition.rewardQty;
+    return `${definition.label} · 파편 +${definition.rewardQty}`;
+  }
+  if (definition.rewardKind === "guardian_pull" || definition.rewardKind === "relic_pull") {
+    const pulls = [];
+    const rewardCount = Math.max(0, definition.rewardQty);
+    if (rewardCount <= 0) {
+      return `${definition.label} · 수집 보상 없음`;
+    }
+    for (let index = 0; index < rewardCount; index += 1) {
+      pulls.push(grantCollectionPull(collection, definition.rewardRef));
+    }
+    return `${definition.label} · ${pulls.join(" · ")}`;
+  }
+  return `${definition.label} 수령`;
 }
 
 function grantCollectionPull(collection, poolId) {
@@ -1226,6 +1412,7 @@ function syncCollectionPanel() {
   const collection = ensureCollectionStateShape();
   const currentDifficultyIndex = Number(state?.progression?.difficultyIndex || 1);
   const freeSourceDefinitions = buildCollectionFreeSourceDefinitions();
+  ensureCollectionFreeSourceClaimState(collection, freeSourceDefinitions);
   const activeTab = normalizeCollectionPanelTab(collection.activeTab);
   const guardianPrimaryLabel =
     COLLECTION_GUARDIAN_NAME_BY_ID[collection.guardianLoadout.primary] ||
@@ -1245,14 +1432,14 @@ function syncCollectionPanel() {
       collection.relicLoadout.secondary ||
       "비어 있음"
     : "잠금";
-  const freeSourceSummary = freeSourceDefinitions
-    .map((entry) => {
-      const unlocked = currentDifficultyIndex >= entry.unlockDifficulty;
-      const claimed = collection.freeSourceClaims[entry.id] === true;
-      const stateLabel = !unlocked ? "잠금" : claimed ? "수령됨" : "수령 가능";
-      return `${entry.label} ${stateLabel}`;
-    })
-    .join(" · ");
+  const freeSourceStatuses = freeSourceDefinitions.map((definition) => ({
+    definition,
+    status: buildCollectionFreeSourceStatus(definition, collection, currentDifficultyIndex),
+  }));
+  const readySourceCount = freeSourceStatuses.filter((entry) => entry.status.state === "ready").length;
+  const claimedSourceCount = freeSourceStatuses.filter((entry) => entry.status.state === "claimed").length;
+  const lockedSourceCount = freeSourceStatuses.filter((entry) => entry.status.state === "locked").length;
+  const freeSourceSummary = `수급 준비 ${readySourceCount} · 완료 ${claimedSourceCount} · 잠금 ${lockedSourceCount}`;
   const selectedGuardianId = collection.selectedGuardianId || "";
   const selectedRelicId = collection.selectedRelicId || "";
   const selectedGuardianDuplicateCount = resolveCollectionDuplicateCount(
@@ -1317,34 +1504,47 @@ function syncCollectionPanel() {
     dom.collectionFreeSourceLabel.textContent =
       dom.collectionPanel.dataset.collectionFreeSourceSummary || "무료 수급 대기";
   }
-  for (const definition of freeSourceDefinitions) {
-    const unlocked = currentDifficultyIndex >= definition.unlockDifficulty;
-    const claimed = collection.freeSourceClaims[definition.id] === true;
-    const statusLabel = !unlocked
-      ? `난이도 ${definition.unlockDifficulty} 필요`
-      : claimed
-        ? "수령 완료"
-        : "수령 가능";
-    const button =
-      definition.id === "daily"
-        ? dom.btnClaimCollectionDaily
-        : definition.id === "weekly"
-          ? dom.btnClaimCollectionWeekly
-          : dom.btnClaimCollectionEvent;
-    const statusNode =
-      definition.id === "daily"
-        ? dom.collectionDailySourceStatus
-        : definition.id === "weekly"
-          ? dom.collectionWeeklySourceStatus
-          : dom.collectionEventSourceStatus;
-    if (statusNode) {
-      statusNode.textContent = statusLabel;
+  if (dom.collectionFreeSourceList) {
+    dom.collectionFreeSourceList.dataset.sourceCount = String(freeSourceStatuses.length);
+    dom.collectionFreeSourceList.dataset.readyCount = String(readySourceCount);
+    dom.collectionFreeSourceList.dataset.claimedCount = String(claimedSourceCount);
+    dom.collectionFreeSourceList.dataset.lockedCount = String(lockedSourceCount);
+    dom.collectionFreeSourceList.dataset.overviewSummary = freeSourceSummary;
+    const fragment = document.createDocumentFragment();
+    for (const { definition, status } of freeSourceStatuses) {
+      const row = document.createElement("div");
+      row.className = "collection-source-row";
+      row.dataset.sourceId = definition.id;
+      row.dataset.sourceType = definition.sourceType;
+      row.dataset.cycle = definition.cycle;
+      row.dataset.entryRef = definition.entryRef;
+      row.dataset.rewardKind = definition.rewardKind;
+      row.dataset.rewardRef = definition.rewardRef;
+      row.dataset.claimState = status.state;
+      row.dataset.sourceState = status.state;
+      const copy = document.createElement("div");
+      copy.className = "collection-source-copy";
+      const title = document.createElement("strong");
+      title.textContent = definition.label;
+      const meta = document.createElement("p");
+      meta.className = "sub collection-source-meta";
+      meta.textContent =
+        `${resolveCollectionFreeSourceTypeLabel(definition.sourceType)} · ${resolveCollectionFreeSourceCycleLabel(definition.cycle)} · ${definition.entryRef}`;
+      const reward = document.createElement("p");
+      reward.className = "sub collection-source-reward";
+      reward.textContent = `${resolveCollectionFreeSourceRewardLabel(definition)} · ${status.label}`;
+      copy.append(title, meta, reward);
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "ghost-btn";
+      button.dataset.collectionSourceClaim = definition.id;
+      button.disabled = status.disabled;
+      button.textContent = status.buttonLabel;
+      button.title = `${definition.label} · ${status.label}`;
+      row.append(copy, button);
+      fragment.append(row);
     }
-    if (button) {
-      button.disabled = !unlocked || claimed;
-      button.textContent = claimed ? "완료" : "수령";
-      button.title = `${definition.label} · ${statusLabel}`;
-    }
+    dom.collectionFreeSourceList.replaceChildren(fragment);
   }
   if (dom.guardianOwnedSummary) {
     dom.guardianOwnedSummary.textContent =
@@ -18107,43 +18307,38 @@ function bindEvents() {
     });
   }
 
-  for (const definition of buildCollectionFreeSourceDefinitions()) {
-    const button =
-      definition.id === "daily"
-        ? dom.btnClaimCollectionDaily
-        : definition.id === "weekly"
-          ? dom.btnClaimCollectionWeekly
-          : dom.btnClaimCollectionEvent;
-    button?.addEventListener("click", () => {
-      const collection = ensureCollectionStateShape();
-      const currentDifficultyIndex = Number(state?.progression?.difficultyIndex || 1);
-      if (currentDifficultyIndex < definition.unlockDifficulty) {
-        setStatus(`수집 수급 잠금 · 난이도 ${definition.unlockDifficulty} 필요`, true);
-        return;
-      }
-      if (collection.freeSourceClaims[definition.id] === true) {
-        setStatus(`${definition.label} 이미 수령 완료`, true);
-        return;
-      }
-      let rewardLabel = `${definition.label} 수령`;
-      if (definition.rewardKind === "collection_token") {
-        collection.token += definition.rewardQty;
-        rewardLabel = `${definition.label} · 토큰 +${definition.rewardQty}`;
-      } else if (definition.rewardKind === "collection_shard") {
-        collection.shard += definition.rewardQty;
-        rewardLabel = `${definition.label} · 파편 +${definition.rewardQty}`;
-      } else if (
-        definition.rewardKind === "guardian_pull" ||
-        definition.rewardKind === "relic_pull"
-      ) {
-        rewardLabel = `${definition.label} · ${grantCollectionPull(collection, definition.rewardRef)}`;
-      }
-      collection.freeSourceClaims[definition.id] = true;
-      persistLocal();
-      setStatus(rewardLabel);
-      render();
-    });
-  }
+  dom.collectionFreeSourceList?.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element)) {
+      return;
+    }
+    const button = event.target.closest("[data-collection-source-claim]");
+    if (!(button instanceof HTMLButtonElement)) {
+      return;
+    }
+    const sourceId = button.dataset.collectionSourceClaim || "";
+    const definition = buildCollectionFreeSourceDefinitions().find((entry) => entry.id === sourceId);
+    if (!definition) {
+      setStatus("수집 수급 정의를 찾지 못함", true);
+      return;
+    }
+    const collection = ensureCollectionStateShape();
+    ensureCollectionFreeSourceClaimState(collection);
+    const currentDifficultyIndex = Number(state?.progression?.difficultyIndex || 1);
+    const status = buildCollectionFreeSourceStatus(definition, collection, currentDifficultyIndex);
+    if (status.state === "locked") {
+      setStatus(`수집 수급 잠금 · 난이도 ${definition.unlockDifficulty} 필요`, true);
+      return;
+    }
+    if (status.state === "claimed") {
+      setStatus(`${definition.label} 이미 수령 완료`, true);
+      return;
+    }
+    const rewardLabel = grantCollectionSourceReward(collection, definition);
+    collection.freeSourceClaims[definition.id] = resolveCollectionFreeSourceClaimKey(definition);
+    persistLocal();
+    setStatus(rewardLabel);
+    render();
+  });
 
   for (const button of [
     dom.btnEquipGuardianPrimary,

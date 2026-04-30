@@ -104,12 +104,7 @@ const REQUIRED_HTML_IDS = [
   "collectionTokenLabel",
   "collectionPityLabel",
   "collectionFreeSourceLabel",
-  "collectionDailySourceStatus",
-  "collectionWeeklySourceStatus",
-  "collectionEventSourceStatus",
-  "btnClaimCollectionDaily",
-  "btnClaimCollectionWeekly",
-  "btnClaimCollectionEvent",
+  "collectionFreeSourceList",
   "btnCollectionTabGuardian",
   "btnCollectionTabRelic",
   "btnCollectionTabExchange",
@@ -366,12 +361,7 @@ const REQUIRED_DOM_KEYS = [
   "collectionTokenLabel",
   "collectionPityLabel",
   "collectionFreeSourceLabel",
-  "collectionDailySourceStatus",
-  "collectionWeeklySourceStatus",
-  "collectionEventSourceStatus",
-  "btnClaimCollectionDaily",
-  "btnClaimCollectionWeekly",
-  "btnClaimCollectionEvent",
+  "collectionFreeSourceList",
   "btnCollectionTabGuardian",
   "btnCollectionTabRelic",
   "btnCollectionTabExchange",
@@ -13256,6 +13246,30 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function resolveCollectionFreeSourceClaimKey(definition, referenceDate = new Date()) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function ensureCollectionFreeSourceClaimState(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function buildCollectionFreeSourceStatus(definition, collection, currentDifficultyIndex) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function grantCollectionSourceReward(collection, definition) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function buildCollectionCatalog(",
     "app.mjs",
     failures,
@@ -13298,7 +13312,13 @@ async function main() {
   );
   assertIncludes(
     app,
-    'collection.freeSourceClaims[definition.id] = true;',
+    'collection.freeSourceClaims[definition.id] = resolveCollectionFreeSourceClaimKey(definition);',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'button.dataset.collectionSourceClaim = definition.id;',
     "app.mjs",
     failures,
   );
@@ -14694,6 +14714,8 @@ async function main() {
   assertIncludes(css, ".collection-card-choice", "app.css", failures);
   assertIncludes(css, ".collection-source-row", "app.css", failures);
   assertIncludes(css, ".collection-source-list", "app.css", failures);
+  assertIncludes(css, ".collection-source-copy", "app.css", failures);
+  assertIncludes(css, '.collection-source-row[data-source-state="locked"]', "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-pressure-spike-high", "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-pressure-resonance-high", "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-danger-pulse-both", "app.css", failures);

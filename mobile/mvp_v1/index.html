@@ -653,29 +653,15 @@
           </div>
           <div id="collectionFreeSourcesPanel" class="collection-detail">
             <h3>무료 수급 경로</h3>
-            <div class="collection-source-list">
-              <div class="collection-source-row">
-                <div>
-                  <strong>일일 공양</strong>
-                  <p id="collectionDailySourceStatus" class="sub">미수령</p>
-                </div>
-                <button id="btnClaimCollectionDaily" type="button" class="ghost-btn">수령</button>
-              </div>
-              <div class="collection-source-row">
-                <div>
-                  <strong>주간 초대</strong>
-                  <p id="collectionWeeklySourceStatus" class="sub">잠금</p>
-                </div>
-                <button id="btnClaimCollectionWeekly" type="button" class="ghost-btn">수령</button>
-              </div>
-              <div class="collection-source-row">
-                <div>
-                  <strong>이벤트 교환</strong>
-                  <p id="collectionEventSourceStatus" class="sub">잠금</p>
-                </div>
-                <button id="btnClaimCollectionEvent" type="button" class="ghost-btn">수령</button>
-              </div>
-            </div>
+            <div
+              id="collectionFreeSourceList"
+              class="collection-source-list"
+              data-source-count="0"
+              data-ready-count="0"
+              data-claimed-count="0"
+              data-locked-count="0"
+              data-overview-summary="무료 수급 대기"
+            ></div>
           </div>
         </section>
 

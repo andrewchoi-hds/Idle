@@ -3267,11 +3267,7 @@ export function createInitialSliceState(context, options = {}) {
       },
       guardianSlotSecondaryUnlocked: false,
       relicSlotSecondaryUnlocked: false,
-      freeSourceClaims: {
-        daily: false,
-        weekly: false,
-        event: false,
-      },
+      freeSourceClaims: {},
     },
     settings: {
       autoBattle: true,
@@ -4225,11 +4221,20 @@ export function parseSliceState(raw, context) {
         parsed.collection?.relicSlotSecondaryUnlocked,
         false,
       ),
-      freeSourceClaims: {
-        daily: pickBoolean(parsed.collection?.freeSourceClaims?.daily, false),
-        weekly: pickBoolean(parsed.collection?.freeSourceClaims?.weekly, false),
-        event: pickBoolean(parsed.collection?.freeSourceClaims?.event, false),
-      },
+      freeSourceClaims:
+        parsed.collection?.freeSourceClaims &&
+        typeof parsed.collection.freeSourceClaims === "object"
+          ? Object.fromEntries(
+              Object.entries(parsed.collection.freeSourceClaims)
+                .filter(([key]) => typeof key === "string" && key.trim())
+                .map(([key, value]) => [
+                  key.trim(),
+                  typeof value === "string" && value.trim()
+                    ? value.trim()
+                    : pickBoolean(value, false),
+                ]),
+            )
+          : {},
     },
     settings: {
       autoBattle: pickBoolean(parsed.settings?.autoBattle, true),
