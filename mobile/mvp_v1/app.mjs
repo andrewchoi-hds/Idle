@@ -1546,6 +1546,17 @@ function resolveCollectionInventoryProxyCount(itemKey, inventory) {
   return 0;
 }
 
+function resolveCollectionFreeSourceExchangeProxy(definition) {
+  if (definition.sourceType !== "event_exchange") {
+    return null;
+  }
+  return {
+    currencyKind: "collection_token",
+    required: Math.max(1, definition.rewardQty),
+    label: "교환 토큰",
+  };
+}
+
 function resolveCollectionFreeSourceEntryProgress(
   definition,
   collection,
@@ -1563,6 +1574,18 @@ function resolveCollectionFreeSourceEntryProgress(
     0,
     Math.floor(Number(collection?.bossBattleWinCount) || 0),
   );
+  const exchangeProxy = resolveCollectionFreeSourceExchangeProxy(definition);
+  if (exchangeProxy) {
+    const currentCount = Math.max(0, Math.floor(Number(collection?.token) || 0));
+    return {
+      tracked: true,
+      achieved: currentCount >= exchangeProxy.required,
+      label:
+        currentCount >= exchangeProxy.required
+          ? `목표 달성 · ${exchangeProxy.label} ${exchangeProxy.required}`
+          : `${exchangeProxy.label} ${currentCount}/${exchangeProxy.required}`,
+    };
+  }
   if (questRef?.objectiveType === "reach_difficulty") {
     const required = Math.max(1, Math.floor(Number(questRef.objectiveValue) || 1));
     return {
@@ -1732,7 +1755,7 @@ function buildCollectionFreeSourceStatus(definition, collection, currentDifficul
     return {
       state: "ready",
       label: progress.label,
-      buttonLabel: "수령",
+      buttonLabel: definition.sourceType === "event_exchange" ? "교환" : "수령",
       disabled: false,
     };
   }
@@ -1745,13 +1768,19 @@ function buildCollectionFreeSourceStatus(definition, collection, currentDifficul
 }
 
 function grantCollectionSourceReward(collection, definition) {
+  const exchangeProxy = resolveCollectionFreeSourceExchangeProxy(definition);
+  if (exchangeProxy) {
+    collection.token = Math.max(0, collection.token - exchangeProxy.required);
+  }
   if (definition.rewardKind === "collection_token") {
     collection.token += definition.rewardQty;
     return `${definition.label} · 토큰 +${definition.rewardQty}`;
   }
   if (definition.rewardKind === "collection_shard") {
     collection.shard += definition.rewardQty;
-    return `${definition.label} · 파편 +${definition.rewardQty}`;
+    return exchangeProxy
+      ? `${definition.label} · 토큰 -${exchangeProxy.required} · 파편 +${definition.rewardQty}`
+      : `${definition.label} · 파편 +${definition.rewardQty}`;
   }
   if (definition.rewardKind === "guardian_pull" || definition.rewardKind === "relic_pull") {
     const pulls = [];
