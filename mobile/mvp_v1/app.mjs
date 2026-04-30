@@ -1174,6 +1174,10 @@ function ensureCollectionStateShape() {
     0,
     Math.floor(Number(state.collection.bossBattleWinCount) || 0),
   );
+  state.collection.eliteBattleWinCount = Math.max(
+    0,
+    Math.floor(Number(state.collection.eliteBattleWinCount) || 0),
+  );
   state.collection.guardianOwnedIds = Array.isArray(state.collection.guardianOwnedIds)
     ? state.collection.guardianOwnedIds
         .filter((value) => typeof value === "string" && value.trim())
@@ -1574,6 +1578,10 @@ function resolveCollectionFreeSourceEntryProgress(
     0,
     Math.floor(Number(collection?.bossBattleWinCount) || 0),
   );
+  const eliteBattleWinCount = Math.max(
+    0,
+    Math.floor(Number(collection?.eliteBattleWinCount) || 0),
+  );
   const exchangeProxy = resolveCollectionFreeSourceExchangeProxy(definition);
   if (exchangeProxy) {
     const currentCount = Math.max(0, Math.floor(Number(collection?.token) || 0));
@@ -1614,6 +1622,17 @@ function resolveCollectionFreeSourceEntryProgress(
         bossBattleWinCount >= required
           ? `목표 달성 · 보스형 전투 ${required}회`
           : `보스형 전투 ${bossBattleWinCount}/${required}`,
+    };
+  }
+  if (questRef?.objectiveType === "kill_elite") {
+    const required = Math.max(1, Math.floor(Number(questRef.objectiveValue) || 1));
+    return {
+      tracked: true,
+      achieved: eliteBattleWinCount >= required,
+      label:
+        eliteBattleWinCount >= required
+          ? `목표 달성 · 정예형 전투 ${required}회`
+          : `정예형 전투 ${eliteBattleWinCount}/${required}`,
     };
   }
   if (questRef?.objectiveType === "clear_zone" || questRef?.objectiveType === "clear_node") {
