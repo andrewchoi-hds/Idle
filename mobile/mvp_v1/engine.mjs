@@ -2313,7 +2313,7 @@ function resolveBattleEncounterNodePriority(nodeType) {
   return 1;
 }
 
-export function resolveBattleEncounterDescriptor(stage, context = null) {
+export function resolveBattleEncounterDescriptor(stage, context = null, state = null) {
   if (!stage || typeof stage !== "object") {
     return {
       class: "normal",
@@ -2324,6 +2324,22 @@ export function resolveBattleEncounterDescriptor(stage, context = null) {
     };
   }
   const difficultyIndex = toNonNegativeInt(stage.difficulty_index, 0);
+  const candidateDescriptors =
+    context?.encounterCandidatesByDifficulty instanceof Map
+      ? context.encounterCandidatesByDifficulty.get(difficultyIndex) || []
+      : [];
+  const selectedNodeId =
+    typeof state?.progression?.currentNodeId === "string"
+      ? state.progression.currentNodeId.trim()
+      : "";
+  if (selectedNodeId) {
+    const selectedDescriptor = candidateDescriptors.find(
+      (descriptor) => descriptor.nodeId === selectedNodeId,
+    );
+    if (selectedDescriptor) {
+      return selectedDescriptor;
+    }
+  }
   const mappedDescriptor =
     context?.encounterDescriptorByDifficulty instanceof Map
       ? context.encounterDescriptorByDifficulty.get(difficultyIndex)
@@ -3248,6 +3264,7 @@ export function buildSliceContext(progressionRows, localeRows, mapNodeRows = [])
     : [];
 
   const encounterDescriptorByDifficulty = new Map();
+  const encounterCandidatesByDifficulty = new Map();
   for (const stage of sorted) {
     const candidates = normalizedMapNodes
       .filter(
@@ -3268,6 +3285,16 @@ export function buildSliceContext(progressionRows, localeRows, mapNodeRows = [])
         }
         return right.encounter_weight - left.encounter_weight;
       });
+    encounterCandidatesByDifficulty.set(
+      stage.difficulty_index,
+      candidates.map((row) => ({
+        class: resolveBattleEncounterClassFromNodeType(row.node_type),
+        nodeType: row.node_type,
+        nodeId: row.node_id,
+        nodeNameKo: row.node_name_ko,
+        source: "map_node",
+      })),
+    );
     const chosen = candidates[0];
     if (chosen) {
       encounterDescriptorByDifficulty.set(stage.difficulty_index, {
@@ -3285,6 +3312,7 @@ export function buildSliceContext(progressionRows, localeRows, mapNodeRows = [])
     stageByDifficulty,
     localeMap,
     encounterDescriptorByDifficulty,
+    encounterCandidatesByDifficulty,
     maxDifficultyIndex: sorted[sorted.length - 1].difficulty_index,
   };
 }
@@ -3341,6 +3369,10 @@ export function resolveLoopTuningFromBattleSpeed(battleSpeed) {
 
 export function createInitialSliceState(context, options = {}) {
   const firstStage = getStage(context, options.startDifficultyIndex ?? 1);
+  const firstEncounterDescriptor =
+    context?.encounterDescriptorByDifficulty instanceof Map
+      ? context.encounterDescriptorByDifficulty.get(firstStage.difficulty_index)
+      : null;
   const speedTuning = resolveLoopTuningFromBattleSpeed(options.battleSpeed);
   const initialQi = Math.floor(firstStage.qi_required * 0.92);
   const initialSpiritCoin = 120;
@@ -3351,6 +3383,7 @@ export function createInitialSliceState(context, options = {}) {
     progression: {
       difficultyIndex: firstStage.difficulty_index,
       rebirthCount: 0,
+      currentNodeId: firstEncounterDescriptor?.nodeId || "",
     },
     currencies: {
       qi: initialQi,
@@ -3479,7 +3512,7 @@ export function runBattleOnce(context, state, rng, options = {}) {
   const rebirthBonus = state.progression.rebirthCount * 0.008;
   const winChance = clamp(0.78 - stage.difficulty_index * 0.0018 - worldPenalty + rebirthBonus, 0.1, 0.95);
   const win = rng.next() < winChance;
-  const encounterDescriptor = resolveBattleEncounterDescriptor(stage, context);
+  const encounterDescriptor = resolveBattleEncounterDescriptor(stage, context, state);
   const encounterClass = encounterDescriptor.class;
   const encounterLabelKo = formatBattleEncounterClassLabelKo(encounterClass);
 
@@ -4292,6 +4325,10 @@ export function parseSliceState(raw, context) {
     progression: {
       difficultyIndex: stage.difficulty_index,
       rebirthCount: toNonNegativeInt(parsed.progression?.rebirthCount, 0),
+      currentNodeId:
+        typeof parsed.progression?.currentNodeId === "string"
+          ? parsed.progression.currentNodeId.trim()
+          : "",
     },
     currencies: {
       qi: parsedQi,

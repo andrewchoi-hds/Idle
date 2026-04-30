@@ -142,6 +142,8 @@ const REQUIRED_HTML_IDS = [
   "collectionJournalTab",
   "collectionJournalSummary",
   "stageDisplay",
+  "stageNodeSummary",
+  "btnCycleStageNode",
   "worldTag",
   "difficultyIndex",
   "qiRequired",
@@ -398,6 +400,9 @@ const REQUIRED_DOM_KEYS = [
   "collectionFreeSourcesPanel",
   "collectionJournalTab",
   "collectionJournalSummary",
+  "stageDisplay",
+  "stageNodeSummary",
+  "btnCycleStageNode",
   "battleScenePanel",
   "battleSceneArena",
   "battleScenePlayer",
@@ -7324,7 +7329,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.stagePanel.dataset.overviewSummary = overviewSummaryLabel;",
+    'dom.stagePanel.dataset.currentNodeName = currentEncounterDescriptor?.nodeNameKo || "현재 노드 대기";',
     "app.mjs",
     failures,
   );
@@ -13300,6 +13305,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function ensureCurrentStageNodeState(stage) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'dom.btnCycleStageNode?.addEventListener("click", () => {',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function resolveCollectionFreeSourceEntryProgress(",
     "app.mjs",
     failures,
@@ -14870,6 +14887,7 @@ async function main() {
   assertIncludes(css, ".collection-source-copy", "app.css", failures);
   assertIncludes(css, ".collection-source-chip", "app.css", failures);
   assertIncludes(css, ".collection-source-entry", "app.css", failures);
+  assertIncludes(css, ".stage-node-row", "app.css", failures);
   assertIncludes(css, '.collection-source-row[data-source-state="manual"]', "app.css", failures);
   assertIncludes(css, '.collection-source-row[data-source-state="progress"]', "app.css", failures);
   assertIncludes(css, '.collection-source-row[data-source-state="locked"]', "app.css", failures);

@@ -152,6 +152,16 @@
 - `event_exchange` 계열은 현재 MVP에서 `collection_token`을 사용하는 exchange proxy(필요 토큰=`reward_qty`)로 추적한다는 점을 명시적으로 유지한다.
 - 각 row에는 현재 계산 방식이 `실측 / 프록시 / 수동` 중 무엇인지 보여 주는 tracking chip이 같이 있어야 한다.
 
+## 5-1) 현재 노드 UX
+- `stageNodeSummary`
+- `btnCycleStageNode`
+- `progression.currentNodeId`
+
+### 원칙
+- 현재 전투 encounter class는 가능하면 “현재 선택된 노드”를 우선 따라야 한다.
+- 노드 후보가 여러 개면 플레이어가 `노드 전환`으로 순환할 수 있어야 한다.
+- 후보가 1개 이하일 때는 전환 버튼이 비활성화되어야 한다.
+
 ## 6) 중복 전환 UX
 
 ### 중복 전환 패널
