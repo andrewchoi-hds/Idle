@@ -42,6 +42,7 @@ import {
   extractOfflineDetailCompareCode,
   extractOfflineDetailCompareCodeFromPayloadTextWithSource,
   formatBattleEncounterClassLabelKo,
+  formatBattleDropGroupLabelKo,
   getStage,
   getStageDisplayNameKo,
   isCopyTargetSlotDisabled,
@@ -196,6 +197,7 @@ const dom = {
   stageDisplay: document.getElementById("stageDisplay"),
   stageNodeSummary: document.getElementById("stageNodeSummary"),
   stageNodeEncounterHint: document.getElementById("stageNodeEncounterHint"),
+  stageNodeDropHint: document.getElementById("stageNodeDropHint"),
   btnCycleStageNode: document.getElementById("btnCycleStageNode"),
   worldTag: document.getElementById("worldTag"),
   difficultyIndex: document.getElementById("difficultyIndex"),
@@ -17806,6 +17808,13 @@ function render() {
         ? currentEncounterDescriptor.specialMechanic
         : "기믹 대기";
     dom.stageNodeEncounterHint.textContent = `${monsterLabel} · ${mechanicLabel}`;
+  }
+  if (dom.stageNodeDropHint) {
+    const dropGroup = currentEncounterDescriptor?.dropGroup || "";
+    dom.stageNodeDropHint.textContent = `${formatBattleDropGroupLabelKo(dropGroup)}${
+      dropGroup ? ` · ${dropGroup}` : ""
+    }`;
+    dom.stageNodeDropHint.title = dropGroup || "전리품 대기";
   }
   if (dom.btnCycleStageNode) {
     const candidateCount = currentStageNodeState.candidates.length;

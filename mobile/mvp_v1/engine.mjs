@@ -2366,6 +2366,29 @@ export function formatBattleEncounterClassLabelKo(encounterClass) {
   return "일반 전투";
 }
 
+export function formatBattleDropGroupLabelKo(dropGroupInput) {
+  const dropGroup = String(dropGroupInput || "").trim();
+  if (!dropGroup) {
+    return "전리품 대기";
+  }
+  if (dropGroup.includes("tribulation")) {
+    return "도겁 전리품";
+  }
+  if (dropGroup.includes("_boss_")) {
+    return "보스 전리품";
+  }
+  if (dropGroup.includes("_elite_")) {
+    return "정예 전리품";
+  }
+  if (dropGroup.includes("_common_")) {
+    return "공용 전리품";
+  }
+  if (dropGroup.includes("_event_")) {
+    return "기연 전리품";
+  }
+  return "전리품 묶음";
+}
+
 function stageFallbackLabel(stage) {
   return `${worldKo(stage.world)} ${stage.major_stage_name} ${stage.sub_stage_name}`;
 }
@@ -3306,6 +3329,7 @@ export function buildSliceContext(progressionRows, localeRows, mapNodeRows = [])
         nodeType: row.node_type,
         nodeId: row.node_id,
         nodeNameKo: row.node_name_ko,
+        dropGroup: String(row.drop_group || ""),
         bossId: String(row.boss_id || "none"),
         monsterNameKo: monsterById.get(String(row.boss_id || ""))?.name_ko || "",
         specialMechanic:
@@ -3321,6 +3345,7 @@ export function buildSliceContext(progressionRows, localeRows, mapNodeRows = [])
         nodeType: chosen.node_type,
         nodeId: chosen.node_id,
         nodeNameKo: chosen.node_name_ko,
+        dropGroup: String(chosen.drop_group || ""),
         bossId: String(chosen.boss_id || "none"),
         monsterNameKo: monsterById.get(String(chosen.boss_id || ""))?.name_ko || "",
         specialMechanic:
