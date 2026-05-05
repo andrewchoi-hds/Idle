@@ -143,6 +143,7 @@ const REQUIRED_HTML_IDS = [
   "collectionJournalSummary",
   "stageDisplay",
   "stageNodeSummary",
+  "stageNodeEncounterHint",
   "btnCycleStageNode",
   "worldTag",
   "difficultyIndex",
@@ -402,6 +403,7 @@ const REQUIRED_DOM_KEYS = [
   "collectionJournalSummary",
   "stageDisplay",
   "stageNodeSummary",
+  "stageNodeEncounterHint",
   "btnCycleStageNode",
   "battleScenePanel",
   "battleSceneArena",
@@ -13288,6 +13290,12 @@ async function main() {
   assertIncludes(
     app,
     'fetchJson("../../data/export/map_nodes_v1.json")',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'fetchJson("../../data/export/monsters_v1.json")',
     "app.mjs",
     failures,
   );

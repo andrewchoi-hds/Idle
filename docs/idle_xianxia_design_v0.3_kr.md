@@ -5105,3 +5105,11 @@
 
 ## 1193) 추가 문서
 - collection UI contract(current node state 반영): `/Users/hirediversity/Idle/docs/meta/guardian_relic_collection_ui_contract_v1_kr.md`
+
+## 1194) 다음 순차 작업
+1. [완료] `map_nodes.boss_id`와 `monsters_v1.json`을 연결해 현재 노드의 대표 몬스터 이름과 기믹 힌트를 stage 패널에 노출.
+2. [완료] `stageNodeEncounterHint`를 추가해 정예/보스 노드에서 “어떤 몬스터/기믹을 상대 중인지”를 바로 읽을 수 있게 정리.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 combat/collection 문서를 monster hint 기준으로 동기화.
+
+## 1195) 추가 문서
+- combat 최소 루프 문서(current node monster hint 반영): `/Users/hirediversity/Idle/docs/combat/minimal_combat_loop_v1_kr.md`

@@ -3263,6 +3263,20 @@ export function buildSliceContext(progressionRows, localeRows, mapNodeRows = [])
         }))
     : [];
 
+  const normalizedMonsters = Array.isArray(arguments[3])
+    ? arguments[3]
+        .filter((row) => row && typeof row === "object")
+        .map((row) => ({
+          ...row,
+          monster_id: String(row.monster_id || ""),
+          name_ko: String(row.name_ko || ""),
+          special_mechanic: String(row.special_mechanic || "none"),
+        }))
+    : [];
+  const monsterById = new Map(
+    normalizedMonsters.map((row) => [row.monster_id, row]),
+  );
+
   const encounterDescriptorByDifficulty = new Map();
   const encounterCandidatesByDifficulty = new Map();
   for (const stage of sorted) {
@@ -3292,6 +3306,11 @@ export function buildSliceContext(progressionRows, localeRows, mapNodeRows = [])
         nodeType: row.node_type,
         nodeId: row.node_id,
         nodeNameKo: row.node_name_ko,
+        bossId: String(row.boss_id || "none"),
+        monsterNameKo: monsterById.get(String(row.boss_id || ""))?.name_ko || "",
+        specialMechanic:
+          monsterById.get(String(row.boss_id || ""))?.special_mechanic ||
+          String(row.special_rule || "none"),
         source: "map_node",
       })),
     );
@@ -3302,6 +3321,11 @@ export function buildSliceContext(progressionRows, localeRows, mapNodeRows = [])
         nodeType: chosen.node_type,
         nodeId: chosen.node_id,
         nodeNameKo: chosen.node_name_ko,
+        bossId: String(chosen.boss_id || "none"),
+        monsterNameKo: monsterById.get(String(chosen.boss_id || ""))?.name_ko || "",
+        specialMechanic:
+          monsterById.get(String(chosen.boss_id || ""))?.special_mechanic ||
+          String(chosen.special_rule || "none"),
         source: "map_node",
       });
     }
@@ -3311,6 +3335,7 @@ export function buildSliceContext(progressionRows, localeRows, mapNodeRows = [])
     progressionRows: sorted,
     stageByDifficulty,
     localeMap,
+    monsterById,
     encounterDescriptorByDifficulty,
     encounterCandidatesByDifficulty,
     maxDifficultyIndex: sorted[sorted.length - 1].difficulty_index,

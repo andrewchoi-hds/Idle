@@ -596,6 +596,7 @@ npm run mobile:mvp:check
 - collection free source progress contract가 `kill_elite` 계열 entry ref에 한해 MVP elite-class battle proxy(`late phase non-tribulation 전투 승리`) 기준으로 `progress / ready / claimed` 상태를 반영하는지 검증
 - battle encounter class rail contract(`resolveBattleEncounterDescriptor(stage, context)`)이 `map_nodes_v1.json` 기반 `normal / elite / boss` 판정을 우선 사용하고, collection `kill_boss / kill_elite` progress가 그 rail의 용어를 그대로 재사용하는지 검증
 - current stage node contract(`stageNodeSummary`, `btnCycleStageNode`, `progression.currentNodeId`)가 현재 난이도 후보 노드 중 선택 상태를 저장/표시하고, battle encounter rail이 그 노드를 우선 따르는지 검증
+- current stage node hint contract(`stageNodeEncounterHint`)가 선택 노드의 `boss_id`와 `monsters_v1.json.special_mechanic`을 연결해 대표 몬스터/기믹을 함께 노출하는지 검증
 - collection free source progress contract가 `collect_item_count / collect_item` 계열 entry ref에 한해 current inventory proxy(`영약/부적`) 기준으로 `progress / ready / claimed` 상태를 반영하는지 검증
 - collection free source progress contract가 `clear_zone / clear_node` 계열 entry ref에 한해 quest `recommended_difficulty_max` proxy 기준으로 `progress / ready / claimed` 상태를 반영하는지 검증
 - collection free source progress contract가 `event_exchange` 계열 entry ref에 한해 `collection_token` 소비 기반 MVP exchange proxy(`교환 토큰 x/y`)로 `progress / ready / claimed` 상태를 반영하는지 검증
