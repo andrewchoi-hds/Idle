@@ -62,6 +62,7 @@ console.log(formatMinimalCombatReport(report));
     - 그 외 -> `normal`
 - `map node` 매칭이 없을 때만 기존 stage proxy로 fallback
 - `boss_id`가 있는 node는 `monsters_v1.json`과 연결해 대표 몬스터 이름/기믹 힌트를 같이 노출할 수 있다.
+- `drop_group`도 함께 읽어 `공용/정예/보스/도겁 전리품` 성격을 stage 패널에 노출할 수 있다.
 
 ## 7) special_mechanic 매핑(현재)
 - on-hit 상태이상

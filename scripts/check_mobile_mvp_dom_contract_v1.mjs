@@ -144,6 +144,7 @@ const REQUIRED_HTML_IDS = [
   "stageDisplay",
   "stageNodeSummary",
   "stageNodeEncounterHint",
+  "stageNodeDropHint",
   "btnCycleStageNode",
   "worldTag",
   "difficultyIndex",
@@ -404,6 +405,7 @@ const REQUIRED_DOM_KEYS = [
   "stageDisplay",
   "stageNodeSummary",
   "stageNodeEncounterHint",
+  "stageNodeDropHint",
   "btnCycleStageNode",
   "battleScenePanel",
   "battleSceneArena",
@@ -13302,6 +13304,12 @@ async function main() {
   assertIncludes(
     app,
     "formatBattleEncounterClassLabelKo,",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "formatBattleDropGroupLabelKo,",
     "app.mjs",
     failures,
   );

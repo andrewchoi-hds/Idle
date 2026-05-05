@@ -5113,3 +5113,11 @@
 
 ## 1195) 추가 문서
 - combat 최소 루프 문서(current node monster hint 반영): `/Users/hirediversity/Idle/docs/combat/minimal_combat_loop_v1_kr.md`
+
+## 1196) 다음 순차 작업
+1. [완료] encounter descriptor에 `dropGroup`를 추가하고, `formatBattleDropGroupLabelKo(...)`로 공용/정예/보스/도겁 전리품 성격을 해석하도록 정리.
+2. [완료] `stageNodeDropHint`를 추가해 현재 노드의 전리품 성격과 drop group key를 stage 패널에서 같이 읽게 연결.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 combat/collection 문서를 drop group hint 기준으로 동기화.
+
+## 1197) 추가 문서
+- combat 최소 루프 문서(current node drop hint 반영): `/Users/hirediversity/Idle/docs/combat/minimal_combat_loop_v1_kr.md`
