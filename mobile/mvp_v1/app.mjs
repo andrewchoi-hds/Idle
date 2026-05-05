@@ -195,6 +195,7 @@ const dom = {
   stagePanel: document.getElementById("stagePanel"),
   stageDisplay: document.getElementById("stageDisplay"),
   stageNodeSummary: document.getElementById("stageNodeSummary"),
+  stageNodeEncounterHint: document.getElementById("stageNodeEncounterHint"),
   btnCycleStageNode: document.getElementById("btnCycleStageNode"),
   worldTag: document.getElementById("worldTag"),
   difficultyIndex: document.getElementById("difficultyIndex"),
@@ -17797,6 +17798,15 @@ function render() {
       formatBattleEncounterClassLabelKo(currentEncounterDescriptor?.class || "normal")
     }`;
   }
+  if (dom.stageNodeEncounterHint) {
+    const monsterLabel = currentEncounterDescriptor?.monsterNameKo || "대표 몬스터 대기";
+    const mechanicLabel =
+      currentEncounterDescriptor?.specialMechanic &&
+      currentEncounterDescriptor.specialMechanic !== "none"
+        ? currentEncounterDescriptor.specialMechanic
+        : "기믹 대기";
+    dom.stageNodeEncounterHint.textContent = `${monsterLabel} · ${mechanicLabel}`;
+  }
   if (dom.btnCycleStageNode) {
     const candidateCount = currentStageNodeState.candidates.length;
     dom.btnCycleStageNode.disabled = candidateCount <= 1;
@@ -19521,6 +19531,7 @@ async function bootstrap() {
       questRows,
       milestoneRows,
       mapNodeRows,
+      monsterRows,
     ] = await Promise.all([
       fetchJson("../../data/export/realm_progression_v1.json"),
       fetchJson("../../data/export/realm_locale_ko_v1.json"),
@@ -19531,6 +19542,7 @@ async function bootstrap() {
       fetchJson("../../data/export/quests_v1.json"),
       fetchJson("../../data/export/milestones_v1.json"),
       fetchJson("../../data/export/map_nodes_v1.json"),
+      fetchJson("../../data/export/monsters_v1.json"),
     ]);
     collectionCatalog = buildCollectionCatalog(
       guardianRows,
@@ -19540,7 +19552,7 @@ async function bootstrap() {
       questRows,
       milestoneRows,
     );
-    context = buildSliceContext(progressionRows, localeRows, mapNodeRows);
+    context = buildSliceContext(progressionRows, localeRows, mapNodeRows, monsterRows);
     state = createInitialSliceState(context, { playerName: "도심" });
     ensureRealtimeStatsShape();
     resetBattleSceneDuelState({ clearTicker: true });
