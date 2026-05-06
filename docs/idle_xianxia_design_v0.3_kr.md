@@ -5161,3 +5161,11 @@
 
 ## 1207) 추가 문서
 - mobile 수직슬라이스 문서(ops digest encounter action reason 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1208) 다음 순차 작업
+1. [완료] `resolveOpsDigestEncounterActionScoreDelta(...)`를 추가해 현재 노드 핵심 드랍 문맥에 따라 전투를 이어 가는 액션의 점수 가중치를 계산하도록 정리.
+2. [완료] `syncOpsDigestNextAction()`에서 `base + filter + encounter` 점수 구조를 사용하고, `next/alt` action dataset에 encounter score delta도 함께 기록하도록 보강.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서를 새 encounter scoring 규칙 기준으로 동기화.
+
+## 1209) 추가 문서
+- mobile 수직슬라이스 문서(ops digest encounter scoring 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

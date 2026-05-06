@@ -10541,6 +10541,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function shouldBoostOpsDigestEncounterAction(action) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function resolveOpsDigestEncounterActionScoreDelta(action, encounterDescriptor) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function formatOpsDigestActionQueueReason(reason, sourceFilter, action) {",
     "app.mjs",
     failures,
@@ -10577,6 +10589,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "const encounterScoreDelta = resolveOpsDigestEncounterActionScoreDelta(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.opsDigestPanel.dataset.nextActionBaseScore = String(action.baseScore || 0);",
     "app.mjs",
     failures,
@@ -10584,6 +10602,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestPanel.dataset.nextActionFilterScoreDelta = String(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.nextActionEncounterScoreDelta = String(",
     "app.mjs",
     failures,
   );
@@ -10602,6 +10626,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestPanel.dataset.altActionReason = altActionReasonWithEncounter;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.altActionEncounterScoreDelta = String(",
     "app.mjs",
     failures,
   );
