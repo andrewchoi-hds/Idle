@@ -5185,3 +5185,11 @@
 
 ## 1213) 추가 문서
 - mobile 수직슬라이스 문서(ops digest inbox reward chip 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1214) 다음 순차 작업
+1. [완료] `opsDigestToplineRewardBadge`를 추가해 `topline meta` cluster에도 현재 노드 핵심 드랍 이유를 작은 chip으로 먼저 노출하도록 정리.
+2. [완료] `syncOpsDigestTriageStrip()`와 `buildOpsDigestToplineState()`가 reward label/tone을 함께 다루고, `topline meta summary/title`에도 reward 문맥을 포함하도록 보강.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서를 새 topline reward chip 규칙 기준으로 동기화.
+
+## 1215) 추가 문서
+- mobile 수직슬라이스 문서(ops digest topline reward chip 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

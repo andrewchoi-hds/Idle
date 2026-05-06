@@ -56,6 +56,7 @@ const REQUIRED_HTML_IDS = [
   "btnOpsDigestToplineSourceJump",
   "opsDigestToplineMeta",
   "btnOpsDigestToplinePriority",
+  "opsDigestToplineRewardBadge",
   "opsDigestToplineFreshness",
   "opsDigestTriageStrip",
   "opsDigestDivider",
@@ -319,6 +320,7 @@ const REQUIRED_DOM_KEYS = [
   "btnOpsDigestToplineSourceJump",
   "opsDigestToplineMeta",
   "btnOpsDigestToplinePriority",
+  "opsDigestToplineRewardBadge",
   "opsDigestToplineFreshness",
   "opsDigestTriageStrip",
   "opsDigestDivider",
@@ -2059,6 +2061,12 @@ async function main() {
   assertIncludes(
     html,
     'data-topline-meta-disabled="true"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="opsDigestToplineRewardBadge"',
     "index.html",
     failures,
   );
@@ -11517,7 +11525,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    "function buildOpsDigestToplineMetaSummary(priorityLabel, updatedLabel) {",
+    "function buildOpsDigestToplineMetaSummary(priorityLabel, updatedLabel, rewardLabel = \"\") {",
     "app.mjs",
     failures,
   );
@@ -12309,7 +12317,25 @@ async function main() {
   );
   assertIncludes(
     app,
+    "input.toplineRewardLabel || \"\",",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "panel.dataset.toplineMetaTone = toplineState.toplineMetaTone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "panel.dataset.toplineRewardLabel = toplineState.toplineRewardLabel || \"핵심 대기\";",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "panel.dataset.toplineRewardTone = toplineState.toplineRewardTone || \"info\";",
     "app.mjs",
     failures,
   );
@@ -12370,6 +12396,12 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestToplineFreshness.textContent = toplineUpdatedLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestToplineRewardBadge.textContent = toplineRewardLabel;",
     "app.mjs",
     failures,
   );

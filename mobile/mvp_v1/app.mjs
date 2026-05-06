@@ -144,6 +144,7 @@ const dom = {
   btnOpsDigestToplineSourceJump: document.getElementById("btnOpsDigestToplineSourceJump"),
   opsDigestToplineMeta: document.getElementById("opsDigestToplineMeta"),
   btnOpsDigestToplinePriority: document.getElementById("btnOpsDigestToplinePriority"),
+  opsDigestToplineRewardBadge: document.getElementById("opsDigestToplineRewardBadge"),
   opsDigestToplineFreshness: document.getElementById("opsDigestToplineFreshness"),
   opsDigestTriageStrip: document.getElementById("opsDigestTriageStrip"),
   opsDigestDivider: document.getElementById("opsDigestDivider"),
@@ -2829,11 +2830,12 @@ function buildOpsDigestToplineTriageSummary(warningLabel, actionLabel, filterLab
   ].join(" · ");
 }
 
-function buildOpsDigestToplineMetaSummary(priorityLabel, updatedLabel) {
+function buildOpsDigestToplineMetaSummary(priorityLabel, updatedLabel, rewardLabel = "") {
   return [
     String(priorityLabel || "우선 대기").trim() || "우선 대기",
+    String(rewardLabel || "").trim(),
     String(updatedLabel || "갱신 대기").trim() || "갱신 대기",
-  ].join(" · ");
+  ].filter(Boolean).join(" · ");
 }
 
 function buildOpsDigestToplineSummary(recentAction, priorityLabel, triageSummary, updatedLabel) {
@@ -3280,6 +3282,8 @@ function buildOpsDigestToplineState(input) {
     toplinePriorityTone,
     toplinePriorityDisabled,
     toplinePrioritySummary,
+    toplineRewardLabel: input.toplineRewardLabel || "핵심 대기",
+    toplineRewardTone: input.toplineRewardTone || "info",
     toplineSummary,
     toplineTone,
     priorityFirst,
@@ -3287,9 +3291,16 @@ function buildOpsDigestToplineState(input) {
     toplineMetaSummary: buildOpsDigestToplineMetaSummary(
       toplinePriorityLabel,
       toplineUpdatedLabel,
+      input.toplineRewardLabel || "",
     ),
     toplineMetaTone:
-      toplinePriorityKind !== "none" ? toplinePriorityTone : toplineFreshnessTone,
+      toplinePriorityKind !== "none"
+        ? toplinePriorityTone
+        : input.toplineRewardTone === "warn"
+          ? "warn"
+          : input.toplineRewardTone === "success"
+            ? "success"
+            : toplineFreshnessTone,
   };
 }
 
@@ -3315,6 +3326,8 @@ function applyOpsDigestToplineState(panel, toplineState) {
   panel.dataset.toplineSourceClusterSummary = toplineState.toplineSourceClusterSummary;
   panel.dataset.toplineMetaSummary = toplineState.toplineMetaSummary;
   panel.dataset.toplineMetaTone = toplineState.toplineMetaTone;
+  panel.dataset.toplineRewardLabel = toplineState.toplineRewardLabel || "핵심 대기";
+  panel.dataset.toplineRewardTone = toplineState.toplineRewardTone || "info";
   panel.dataset.toplineMetaDisabled = String(toplineState.toplinePriorityDisabled);
   panel.dataset.toplineMetaActionLabel = toplineState.toplinePriorityLabel;
   panel.dataset.toplinePriorityKind = toplineState.toplinePriorityKind;
@@ -4415,6 +4428,20 @@ function syncOpsDigestTriageStrip() {
   if (!dom.opsDigestPanel) {
     return;
   }
+  const currentStage = getStage(context, state.progression.difficultyIndex);
+  const currentEncounterDescriptor = currentStage
+    ? resolveBattleEncounterDescriptor(currentStage, context, state)
+    : null;
+  const toplineRewardLabel =
+    String(currentEncounterDescriptor?.dropHighlightLabel || "핵심 대기").trim() || "핵심 대기";
+  const toplineRewardTone =
+    currentEncounterDescriptor?.dropHasBossCore === true
+      ? "warn"
+      : currentEncounterDescriptor?.dropHighlightTone === "warn"
+        ? "warn"
+        : currentEncounterDescriptor?.dropHighlightLabel
+          ? "success"
+          : "info";
   const warningCount = Math.max(
     0,
     Math.floor(Number(dom.opsDigestPanel.dataset.warningCount || 0)),
@@ -4495,6 +4522,8 @@ function syncOpsDigestTriageStrip() {
     filterDisabled,
     filterLabel,
     filterSummary,
+    toplineRewardLabel,
+    toplineRewardTone,
     triageSummary: dom.opsDigestPanel.dataset.triageSummary,
     recentAction: dom.opsDigestPanel.dataset.recentAction || "최근 조작 대기 중",
     recentActionTone: dom.opsDigestPanel.dataset.recentActionTone || "info",
@@ -4564,12 +4593,20 @@ function syncOpsDigestTriageStrip() {
     dom.opsDigestToplineFreshness.title = `상단 최신 갱신 ${toplineUpdatedLabel}`;
     applyRiskTone(dom.opsDigestToplineFreshness, toplineFreshnessTone);
   }
+  if (dom.opsDigestToplineRewardBadge) {
+    dom.opsDigestToplineRewardBadge.textContent = toplineRewardLabel;
+    dom.opsDigestToplineRewardBadge.title =
+      currentEncounterDescriptor?.nodeNameKo && toplineRewardLabel !== "핵심 대기"
+        ? `${currentEncounterDescriptor.nodeNameKo} · ${toplineRewardLabel}`
+        : toplineRewardLabel;
+    applyRiskTone(dom.opsDigestToplineRewardBadge, toplineRewardTone);
+  }
   syncOpsDigestToplineChip(dom.btnOpsDigestToplinePriority, toplineChipState.priorityChip);
   if (dom.opsDigestToplineMeta) {
     syncOpsDigestToplineClusterState(dom.opsDigestToplineMeta, {
       disabled: toplinePriorityDisabled,
       disabledKey: "toplineMetaDisabled",
-      title: `${toplinePrioritySummary} · ${toplineUpdatedLabel}`,
+      title: `${toplinePrioritySummary} · ${toplineRewardLabel} · ${toplineUpdatedLabel}`,
       tone: dom.opsDigestPanel.dataset.toplineMetaTone || "info",
     });
   }
