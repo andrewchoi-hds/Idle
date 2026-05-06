@@ -1409,6 +1409,32 @@ h2 {
   gap: 8px;
 }
 
+.stage-node-badge,
+.battle-actor-reward-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 0 8px;
+  border-radius: 999px;
+  border: 1px solid #284841;
+  background: rgba(31, 54, 48, 0.65);
+  color: #b8d0c9;
+  font-size: 11px;
+  line-height: 1;
+}
+
+.stage-node-badge.tone-warn,
+.battle-actor-reward-badge.tone-warn {
+  border-color: #7e6833;
+  color: #f7d79f;
+}
+
+.stage-node-badge.tone-info,
+.battle-actor-reward-badge.tone-info {
+  border-color: #325950;
+  color: #b7d2ca;
+}
+
 .sub {
   margin-top: 8px;
   color: var(--muted);

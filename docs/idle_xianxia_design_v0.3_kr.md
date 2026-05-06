@@ -5129,3 +5129,11 @@
 
 ## 1199) 추가 문서
 - combat 최소 루프 문서(representative drop preview 반영): `/Users/hirediversity/Idle/docs/combat/minimal_combat_loop_v1_kr.md`
+
+## 1200) 다음 순차 작업
+1. [완료] 대표 전리품 중 보스 코어/핵심 소모품을 따로 추리는 `핵심 드랍` 레일을 추가.
+2. [완료] `stageNodeRewardBadge`, `battleSceneEnemyRewardBadge`를 추가해 핵심 전리품이 먼저 읽히도록 보강.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 combat/collection 문서를 reward badge 규칙 기준으로 동기화.
+
+## 1201) 추가 문서
+- combat 최소 루프 문서(key drop badge 반영): `/Users/hirediversity/Idle/docs/combat/minimal_combat_loop_v1_kr.md`
