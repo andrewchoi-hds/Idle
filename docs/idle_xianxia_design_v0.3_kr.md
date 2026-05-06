@@ -5169,3 +5169,11 @@
 
 ## 1209) 추가 문서
 - mobile 수직슬라이스 문서(ops digest encounter scoring 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1210) 다음 순차 작업
+1. [완료] `resolveOpsDigestEncounterRewardNeedScoreDelta(...)`를 추가해 `영약/부적/영석/정수` 핵심 드랍에 대해 현재 보유량 부족도를 점수 가중치로 환산하도록 정리.
+2. [완료] `resolveOpsDigestEncounterActionScoreDelta(...)`가 기존 encounter 가치 신호에 이 부족도 보너스를 더해, 실제로 필요한 재료 노드일수록 전투 계열 추천 액션이 더 앞서 오도록 보강.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서를 새 encounter need scoring 규칙 기준으로 동기화.
+
+## 1211) 추가 문서
+- mobile 수직슬라이스 문서(ops digest encounter need scoring 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

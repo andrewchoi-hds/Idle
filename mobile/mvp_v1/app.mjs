@@ -5059,7 +5059,33 @@ function shouldBoostOpsDigestEncounterAction(action) {
   );
 }
 
-function resolveOpsDigestEncounterActionScoreDelta(action, encounterDescriptor) {
+function resolveOpsDigestEncounterRewardNeedScoreDelta(encounterDescriptor, runtimeState) {
+  const highlightLabel = String(encounterDescriptor?.dropHighlightLabel || "").trim();
+  if (!highlightLabel) {
+    return 0;
+  }
+  const inventory = runtimeState?.inventory || {};
+  const currencies = runtimeState?.currencies || {};
+  if (highlightLabel.includes("영약")) {
+    const elixirCount = Math.max(0, Math.floor(Number(inventory.breakthroughElixir) || 0));
+    return elixirCount <= 0 ? 140 : elixirCount <= 1 ? 100 : elixirCount <= 2 ? 60 : 20;
+  }
+  if (highlightLabel.includes("부적")) {
+    const talismanCount = Math.max(0, Math.floor(Number(inventory.tribulationTalisman) || 0));
+    return talismanCount <= 0 ? 140 : talismanCount <= 1 ? 100 : talismanCount <= 2 ? 60 : 20;
+  }
+  if (highlightLabel.includes("영석")) {
+    const spiritCoin = Math.max(0, Math.floor(Number(currencies.spiritCoin) || 0));
+    return spiritCoin < 80 ? 110 : spiritCoin < 160 ? 70 : spiritCoin < 260 ? 35 : 0;
+  }
+  if (highlightLabel.includes("정수")) {
+    const rebirthEssence = Math.max(0, Math.floor(Number(currencies.rebirthEssence) || 0));
+    return rebirthEssence < 20 ? 110 : rebirthEssence < 60 ? 70 : rebirthEssence < 120 ? 35 : 0;
+  }
+  return 0;
+}
+
+function resolveOpsDigestEncounterActionScoreDelta(action, encounterDescriptor, runtimeState) {
   if (
     !shouldBoostOpsDigestEncounterAction(action) ||
     !encounterDescriptor ||
@@ -5068,17 +5094,21 @@ function resolveOpsDigestEncounterActionScoreDelta(action, encounterDescriptor) 
   ) {
     return 0;
   }
+  const rewardNeedScoreDelta = resolveOpsDigestEncounterRewardNeedScoreDelta(
+    encounterDescriptor,
+    runtimeState,
+  );
   if (encounterDescriptor.dropHasBossCore === true) {
-    return 180;
+    return 180 + rewardNeedScoreDelta;
   }
   if (encounterDescriptor.dropHighlightTone === "warn") {
-    return 120;
+    return 120 + rewardNeedScoreDelta;
   }
   if (encounterDescriptor.class === "elite") {
-    return 70;
+    return 70 + rewardNeedScoreDelta;
   }
   if (String(encounterDescriptor.dropHighlightLabel || "").trim()) {
-    return 35;
+    return 35 + rewardNeedScoreDelta;
   }
   return 0;
 }
@@ -5325,6 +5355,7 @@ function syncOpsDigestNextAction() {
       const encounterScoreDelta = resolveOpsDigestEncounterActionScoreDelta(
         candidate,
         currentEncounterDescriptor,
+        state,
       );
       return {
         ...candidate,
