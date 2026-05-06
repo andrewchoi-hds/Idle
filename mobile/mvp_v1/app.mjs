@@ -165,6 +165,7 @@ const dom = {
   opsDigestInboxFilterBadge: document.getElementById("opsDigestInboxFilterBadge"),
   opsDigestInboxPriorityBadge: document.getElementById("opsDigestInboxPriorityBadge"),
   opsDigestInboxActionableBadge: document.getElementById("opsDigestInboxActionableBadge"),
+  opsDigestInboxRewardBadge: document.getElementById("opsDigestInboxRewardBadge"),
   opsDigestInboxRecent: document.getElementById("opsDigestInboxRecent"),
   opsDigestInboxWarning: document.getElementById("opsDigestInboxWarning"),
   opsDigestInboxPrimary: document.getElementById("opsDigestInboxPrimary"),
@@ -5499,6 +5500,20 @@ function syncOpsDigestInbox() {
   if (!dom.opsDigestPanel) {
     return;
   }
+  const currentStage = getStage(context, state.progression.difficultyIndex);
+  const currentEncounterDescriptor = currentStage
+    ? resolveBattleEncounterDescriptor(currentStage, context, state)
+    : null;
+  const rewardBadgeLabel =
+    String(currentEncounterDescriptor?.dropHighlightLabel || "핵심 대기").trim() || "핵심 대기";
+  const rewardBadgeTone =
+    currentEncounterDescriptor?.dropHasBossCore === true
+      ? "warn"
+      : currentEncounterDescriptor?.dropHighlightTone === "warn"
+        ? "warn"
+        : currentEncounterDescriptor?.dropHighlightLabel
+          ? "success"
+          : "info";
   const recentLabel = dom.opsDigestPanel.dataset.recentAction || "최근 조작 대기 중";
   const warningLabel = dom.opsDigestPanel.dataset.warningSummary || "주의 상태 없음";
   const primaryLabel =
@@ -5634,8 +5649,10 @@ function syncOpsDigestInbox() {
   dom.opsDigestPanel.dataset.inboxTopScore = topScore;
   dom.opsDigestPanel.dataset.inboxTopSourceLabel = topSourceLabel;
   dom.opsDigestPanel.dataset.inboxActionableCount = String(actionableEntries.length);
+  dom.opsDigestPanel.dataset.inboxRewardLabel = rewardBadgeLabel;
+  dom.opsDigestPanel.dataset.inboxRewardTone = rewardBadgeTone;
   dom.opsDigestPanel.dataset.inboxMetaSummary =
-    `${dom.opsDigestPanel.dataset.inboxSourceFilterLabel || "전체"} · ${topSourceLabel} · 우선순위 ${topPriority} · 실행 가능 ${actionableEntries.length}건`;
+    `${dom.opsDigestPanel.dataset.inboxSourceFilterLabel || "전체"} · ${topSourceLabel} · 핵심 ${rewardBadgeLabel} · 우선순위 ${topPriority} · 실행 가능 ${actionableEntries.length}건`;
   dom.opsDigestPanel.dataset.inboxVisibleCount = String(visibleEntries.length);
   dom.opsDigestPanel.dataset.inboxPriorityBadge = topPriority;
   dom.opsDigestPanel.dataset.inboxActionableBadge =
@@ -5722,6 +5739,14 @@ function syncOpsDigestInbox() {
       dom.opsDigestInboxActionableBadge,
       actionableEntries.length > 0 ? "success" : "warn",
     );
+  }
+  if (dom.opsDigestInboxRewardBadge) {
+    dom.opsDigestInboxRewardBadge.textContent = rewardBadgeLabel;
+    dom.opsDigestInboxRewardBadge.title =
+      currentEncounterDescriptor?.nodeNameKo && rewardBadgeLabel !== "핵심 대기"
+        ? `${currentEncounterDescriptor.nodeNameKo} · ${rewardBadgeLabel}`
+        : rewardBadgeLabel;
+    applyRiskTone(dom.opsDigestInboxRewardBadge, rewardBadgeTone);
   }
   syncOpsDigestTimeline();
   syncOpsDigestTriageStrip();

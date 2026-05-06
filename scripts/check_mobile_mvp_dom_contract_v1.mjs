@@ -68,8 +68,10 @@ const REQUIRED_HTML_IDS = [
   "opsDigestSecondarySummary",
   "opsDigestInboxList",
   "opsDigestInboxMeta",
+  "opsDigestInboxFilterBadge",
   "opsDigestInboxPriorityBadge",
   "opsDigestInboxActionableBadge",
+  "opsDigestInboxRewardBadge",
   "opsDigestInboxRecent",
   "opsDigestInboxWarning",
   "opsDigestInboxPrimary",
@@ -329,8 +331,10 @@ const REQUIRED_DOM_KEYS = [
   "opsDigestSecondarySummary",
   "opsDigestInboxList",
   "opsDigestInboxMeta",
+  "opsDigestInboxFilterBadge",
   "opsDigestInboxPriorityBadge",
   "opsDigestInboxActionableBadge",
+  "opsDigestInboxRewardBadge",
   "opsDigestInboxRecent",
   "opsDigestInboxWarning",
   "opsDigestInboxPrimary",
@@ -2253,6 +2257,12 @@ async function main() {
   assertIncludes(
     html,
     'id="opsDigestInboxActionableBadge"',
+    "index.html",
+    failures,
+  );
+  assertIncludes(
+    html,
+    'id="opsDigestInboxRewardBadge"',
     "index.html",
     failures,
   );
@@ -10278,6 +10288,24 @@ async function main() {
   assertIncludes(
     app,
     "dom.opsDigestInboxActionableBadge.textContent =",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.inboxRewardLabel = rewardBadgeLabel;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestPanel.dataset.inboxRewardTone = rewardBadgeTone;",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "dom.opsDigestInboxRewardBadge.textContent = rewardBadgeLabel;",
     "app.mjs",
     failures,
   );

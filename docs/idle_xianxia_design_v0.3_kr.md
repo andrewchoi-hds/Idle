@@ -5177,3 +5177,11 @@
 
 ## 1211) 추가 문서
 - mobile 수직슬라이스 문서(ops digest encounter need scoring 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1212) 다음 순차 작업
+1. [완료] `opsDigestInboxRewardBadge`를 추가해 `운용 인박스` 메타에 현재 노드 핵심 드랍 이유를 먼저 노출하도록 정리.
+2. [완료] `syncOpsDigestInbox()`가 현재 encounter descriptor를 읽어 reward label/tone과 meta summary를 함께 갱신하게 보강.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서를 새 inbox reward chip 규칙 기준으로 동기화.
+
+## 1213) 추가 문서
+- mobile 수직슬라이스 문서(ops digest inbox reward chip 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
