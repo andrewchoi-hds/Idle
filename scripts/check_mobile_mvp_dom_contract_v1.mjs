@@ -10547,7 +10547,13 @@ async function main() {
   );
   assertIncludes(
     app,
-    "function resolveOpsDigestEncounterActionScoreDelta(action, encounterDescriptor) {",
+    "function resolveOpsDigestEncounterActionScoreDelta(action, encounterDescriptor, runtimeState) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function resolveOpsDigestEncounterRewardNeedScoreDelta(encounterDescriptor, runtimeState) {",
     "app.mjs",
     failures,
   );
@@ -10590,6 +10596,12 @@ async function main() {
   assertIncludes(
     app,
     "const encounterScoreDelta = resolveOpsDigestEncounterActionScoreDelta(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "state,",
     "app.mjs",
     failures,
   );
