@@ -5050,6 +5050,39 @@ function resolveOpsDigestActionFilterScoreDelta(action, sourceFilter) {
   return String(action.source || "none") === "ops_warning" ? -90 : -45;
 }
 
+function shouldBoostOpsDigestEncounterAction(action) {
+  const source = String(action?.source || "").trim();
+  return (
+    source === "btnRealtimeAuto" ||
+    source === "btnBattle" ||
+    source === "btnApplyRecommendation"
+  );
+}
+
+function resolveOpsDigestEncounterActionScoreDelta(action, encounterDescriptor) {
+  if (
+    !shouldBoostOpsDigestEncounterAction(action) ||
+    !encounterDescriptor ||
+    String(action?.kind || "none") === "none" ||
+    action?.disabled === true
+  ) {
+    return 0;
+  }
+  if (encounterDescriptor.dropHasBossCore === true) {
+    return 180;
+  }
+  if (encounterDescriptor.dropHighlightTone === "warn") {
+    return 120;
+  }
+  if (encounterDescriptor.class === "elite") {
+    return 70;
+  }
+  if (String(encounterDescriptor.dropHighlightLabel || "").trim()) {
+    return 35;
+  }
+  return 0;
+}
+
 function formatOpsDigestActionQueueReason(reason, sourceFilter, action) {
   const normalizedReason =
     String(reason || "").trim() || "후속 행동 후보를 기다립니다.";
@@ -5289,11 +5322,16 @@ function syncOpsDigestNextAction() {
         candidate,
         sourceFilter,
       );
+      const encounterScoreDelta = resolveOpsDigestEncounterActionScoreDelta(
+        candidate,
+        currentEncounterDescriptor,
+      );
       return {
         ...candidate,
         baseScore,
         filterScoreDelta,
-        score: baseScore + filterScoreDelta,
+        encounterScoreDelta,
+        score: baseScore + filterScoreDelta + encounterScoreDelta,
         filterOrder,
       };
     })
@@ -5313,6 +5351,7 @@ function syncOpsDigestNextAction() {
     reason: "현재 우선 행동 후보가 정리되면 여기에 표시됩니다.",
     baseScore: 0,
     filterScoreDelta: 0,
+    encounterScoreDelta: 0,
     score: 0,
   };
   const altAction = queueCandidates[1] || {
@@ -5325,6 +5364,7 @@ function syncOpsDigestNextAction() {
     reason: "현재는 첫 번째 추천 행동 처리 후 다음 후보가 정리됩니다.",
     baseScore: 0,
     filterScoreDelta: 0,
+    encounterScoreDelta: 0,
     score: 0,
   };
   const nextActionFilterMatch = matchesOpsDigestActionSourceFilter(action, sourceFilter);
@@ -5375,6 +5415,9 @@ function syncOpsDigestNextAction() {
   dom.opsDigestPanel.dataset.nextActionFilterScoreDelta = String(
     action.filterScoreDelta || 0,
   );
+  dom.opsDigestPanel.dataset.nextActionEncounterScoreDelta = String(
+    action.encounterScoreDelta || 0,
+  );
   dom.opsDigestPanel.dataset.nextActionScore = String(action.score || 0);
   dom.opsDigestPanel.dataset.nextActionFilterMatch = String(nextActionFilterMatch);
   dom.opsDigestPanel.dataset.altActionLabel = altAction.label;
@@ -5387,6 +5430,9 @@ function syncOpsDigestNextAction() {
   dom.opsDigestPanel.dataset.altActionBaseScore = String(altAction.baseScore || 0);
   dom.opsDigestPanel.dataset.altActionFilterScoreDelta = String(
     altAction.filterScoreDelta || 0,
+  );
+  dom.opsDigestPanel.dataset.altActionEncounterScoreDelta = String(
+    altAction.encounterScoreDelta || 0,
   );
   dom.opsDigestPanel.dataset.altActionScore = String(altAction.score || 0);
   dom.opsDigestPanel.dataset.altActionFilterMatch = String(altActionFilterMatch);
