@@ -10565,7 +10565,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.nextActionReason = nextActionReason;",
+    "dom.opsDigestPanel.dataset.nextActionReason = nextActionReasonWithEncounter;",
     "app.mjs",
     failures,
   );
@@ -10601,7 +10601,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.altActionReason = altActionReason;",
+    "dom.opsDigestPanel.dataset.altActionReason = altActionReasonWithEncounter;",
     "app.mjs",
     failures,
   );
@@ -11369,7 +11369,7 @@ async function main() {
   );
   assertIncludes(
     app,
-    "dom.opsDigestPanel.dataset.nextActionSummary = action.summary;",
+    "dom.opsDigestPanel.dataset.nextActionSummary = nextActionSummary;",
     "app.mjs",
     failures,
   );
@@ -11874,6 +11874,24 @@ async function main() {
   assertIncludes(
     app,
     "function buildOpsDigestBattleOverview(summary, encounterDescriptor) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function buildOpsDigestEncounterRewardContext(encounterDescriptor) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function formatOpsDigestEncounterActionSummary(summary, encounterDescriptor, action) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function formatOpsDigestEncounterActionReason(reason, encounterDescriptor, action) {",
     "app.mjs",
     failures,
   );
@@ -12600,6 +12618,30 @@ async function main() {
   assertIncludes(
     app,
     "const currentEncounterDescriptor = currentStage",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const nextActionSummary = formatOpsDigestEncounterActionSummary(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const nextActionReasonWithEncounter = formatOpsDigestEncounterActionReason(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const altActionSummary = formatOpsDigestEncounterActionSummary(",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const altActionReasonWithEncounter = formatOpsDigestEncounterActionReason(",
     "app.mjs",
     failures,
   );
