@@ -216,6 +216,7 @@ const dom = {
   battleSceneEnemyHpBar: document.getElementById("battleSceneEnemyHpBar"),
   battleSceneEnemyCastBar: document.getElementById("battleSceneEnemyCastBar"),
   battleSceneEnemyVitals: document.getElementById("battleSceneEnemyVitals"),
+  battleSceneEnemyHint: document.getElementById("battleSceneEnemyHint"),
   battleSceneClashCore: document.getElementById("battleSceneClashCore"),
   battleSceneRoundBadge: document.getElementById("battleSceneRoundBadge"),
   battleSceneComboBadge: document.getElementById("battleSceneComboBadge"),
@@ -14623,9 +14624,25 @@ function renderBattleScene(stage, displayName) {
   if (!stage) {
     return;
   }
+  const encounterDescriptor = resolveBattleEncounterDescriptor(stage, context, state);
   setBattleSceneAtmosphere(stage);
   setBattleSceneLoopMode(resolveBattleSceneAmbientMode());
   setBattleSceneStageLabels(stage, displayName);
+  if (dom.battleSceneEnemyHint) {
+    const monsterLabel = encounterDescriptor?.monsterNameKo || "대표 몬스터 대기";
+    const mechanicLabel =
+      encounterDescriptor?.specialMechanic &&
+      encounterDescriptor.specialMechanic !== "none"
+        ? encounterDescriptor.specialMechanic
+        : "기믹 대기";
+    const dropGroup = encounterDescriptor?.dropGroup || "";
+    const dropPreviewLabel = encounterDescriptor?.dropPreviewLabel || "";
+    const dropLabel = `${formatBattleDropGroupLabelKo(dropGroup)}${
+      dropPreviewLabel ? ` · ${dropPreviewLabel}` : ""
+    }`;
+    dom.battleSceneEnemyHint.textContent = `${monsterLabel} · ${mechanicLabel} · ${dropLabel}`;
+    dom.battleSceneEnemyHint.dataset.overviewSummary = dom.battleSceneEnemyHint.textContent;
+  }
   renderBattleSceneDuelHud();
   applyBattleSceneUiState();
   renderBattleSceneTicker();

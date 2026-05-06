@@ -160,6 +160,7 @@ const REQUIRED_HTML_IDS = [
   "battleSceneEnemyHpBar",
   "battleSceneEnemyCastBar",
   "battleSceneEnemyVitals",
+  "battleSceneEnemyHint",
   "battleSceneClashCore",
   "battleSceneRoundBadge",
   "battleSceneComboBadge",
@@ -417,6 +418,7 @@ const REQUIRED_DOM_KEYS = [
   "battleSceneEnemyHpBar",
   "battleSceneEnemyCastBar",
   "battleSceneEnemyVitals",
+  "battleSceneEnemyHint",
   "battleSceneClashCore",
   "battleSceneRoundBadge",
   "battleSceneComboBadge",
@@ -7255,6 +7257,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "const encounterDescriptor = resolveBattleEncounterDescriptor(stage, context, state);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "dom.battleSceneEnemyStage.dataset.stageLabel = enemyStageLabel;",
     "app.mjs",
     failures,
@@ -13909,6 +13917,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    'dom.battleSceneEnemyHint.dataset.overviewSummary = dom.battleSceneEnemyHint.textContent;',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     'dom.battleSceneEnemyVitals.dataset.hpPct = String(enemyHpPct);',
     "app.mjs",
     failures,
@@ -14898,6 +14912,7 @@ async function main() {
   assertIncludes(css, ".battle-scene-skill-banner", "app.css", failures);
   assertIncludes(css, ".battle-scene-combo-banner", "app.css", failures);
   assertIncludes(css, ".battle-scene-ticker", "app.css", failures);
+  assertIncludes(css, ".battle-actor-hint", "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-shake-heavy", "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-zoom-burst", "app.css", failures);
   assertIncludes(css, ".battle-scene-arena.scene-hit-stop-heavy", "app.css", failures);
