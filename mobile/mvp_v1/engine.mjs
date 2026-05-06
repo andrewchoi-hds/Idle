@@ -2389,6 +2389,81 @@ export function formatBattleDropGroupLabelKo(dropGroupInput) {
   return "전리품 묶음";
 }
 
+const BATTLE_DROP_MATERIAL_LABEL_BY_ID = {
+  mat_spirit_herb: "영초",
+  mat_spirit_essence: "영수",
+  mat_iron_powder: "철목분말",
+  mat_shadow_shard: "음영 파편",
+  mat_poison_gland: "독낭",
+  mat_thunder_stone: "뇌정석",
+  mat_frost_crystal: "빙정",
+  mat_immortal_leaf: "선엽",
+  mat_flame_core: "화염핵",
+  mat_immortal_core: "선핵",
+  mat_void_crystal: "허정 수정",
+  mat_origin_shard: "원초 파편",
+  mat_time_fragment: "시간 파편",
+  mat_boss_core_mortal: "인간계 보스 코어",
+  mat_boss_core_immortal: "신선계 보스 코어",
+};
+
+function formatBattleDropItemLabelKo(itemRef, potionTalismanById) {
+  const normalized = String(itemRef || "").trim();
+  if (!normalized) {
+    return "전리품 대기";
+  }
+  if (normalized === "coin_spirit") {
+    return "영석";
+  }
+  if (normalized === "rebirth_essence") {
+    return "환생정수";
+  }
+  const directLabel = potionTalismanById.get(normalized);
+  if (directLabel) {
+    return directLabel;
+  }
+  if (BATTLE_DROP_MATERIAL_LABEL_BY_ID[normalized]) {
+    return BATTLE_DROP_MATERIAL_LABEL_BY_ID[normalized];
+  }
+  if (normalized.startsWith("mat_")) {
+    return "재료";
+  }
+  return normalized;
+}
+
+function buildBattleDropPreviewByGroup(dropPoolRows, potionTalismanRows) {
+  const potionTalismanById = new Map(
+    Array.isArray(potionTalismanRows)
+      ? potionTalismanRows
+          .filter((row) => row && typeof row === "object")
+          .map((row) => [String(row.item_id || ""), String(row.name_ko || "").trim()])
+      : [],
+  );
+  const grouped = new Map();
+  if (Array.isArray(dropPoolRows)) {
+    for (const row of dropPoolRows) {
+      if (!row || typeof row !== "object") {
+        continue;
+      }
+      const dropGroup = String(row.drop_group || "").trim();
+      if (!dropGroup) {
+        continue;
+      }
+      const label = formatBattleDropItemLabelKo(row.item_ref, potionTalismanById);
+      const items = grouped.get(dropGroup) || [];
+      if (!items.includes(label)) {
+        items.push(label);
+      }
+      grouped.set(dropGroup, items);
+    }
+  }
+  const previewByGroup = new Map();
+  for (const [dropGroup, items] of grouped.entries()) {
+    previewByGroup.set(dropGroup, items.slice(0, 3).join(", "));
+  }
+  return previewByGroup;
+}
+
 function stageFallbackLabel(stage) {
   return `${worldKo(stage.world)} ${stage.major_stage_name} ${stage.sub_stage_name}`;
 }
@@ -3240,7 +3315,14 @@ export function createSeededRng(seed = 20260224) {
   };
 }
 
-export function buildSliceContext(progressionRows, localeRows, mapNodeRows = []) {
+export function buildSliceContext(
+  progressionRows,
+  localeRows,
+  mapNodeRows = [],
+  monsterRows = [],
+  dropPoolRows = [],
+  potionTalismanRows = [],
+) {
   if (!Array.isArray(progressionRows) || progressionRows.length === 0) {
     throw new Error("progressionRows must be a non-empty array");
   }
@@ -3286,8 +3368,8 @@ export function buildSliceContext(progressionRows, localeRows, mapNodeRows = [])
         }))
     : [];
 
-  const normalizedMonsters = Array.isArray(arguments[3])
-    ? arguments[3]
+  const normalizedMonsters = Array.isArray(monsterRows)
+    ? monsterRows
         .filter((row) => row && typeof row === "object")
         .map((row) => ({
           ...row,
@@ -3298,6 +3380,10 @@ export function buildSliceContext(progressionRows, localeRows, mapNodeRows = [])
     : [];
   const monsterById = new Map(
     normalizedMonsters.map((row) => [row.monster_id, row]),
+  );
+  const dropPreviewByGroup = buildBattleDropPreviewByGroup(
+    dropPoolRows,
+    potionTalismanRows,
   );
 
   const encounterDescriptorByDifficulty = new Map();
@@ -3330,6 +3416,7 @@ export function buildSliceContext(progressionRows, localeRows, mapNodeRows = [])
         nodeId: row.node_id,
         nodeNameKo: row.node_name_ko,
         dropGroup: String(row.drop_group || ""),
+        dropPreviewLabel: dropPreviewByGroup.get(String(row.drop_group || "")) || "",
         bossId: String(row.boss_id || "none"),
         monsterNameKo: monsterById.get(String(row.boss_id || ""))?.name_ko || "",
         specialMechanic:
@@ -3346,6 +3433,7 @@ export function buildSliceContext(progressionRows, localeRows, mapNodeRows = [])
         nodeId: chosen.node_id,
         nodeNameKo: chosen.node_name_ko,
         dropGroup: String(chosen.drop_group || ""),
+        dropPreviewLabel: dropPreviewByGroup.get(String(chosen.drop_group || "")) || "",
         bossId: String(chosen.boss_id || "none"),
         monsterNameKo: monsterById.get(String(chosen.boss_id || ""))?.name_ko || "",
         specialMechanic:

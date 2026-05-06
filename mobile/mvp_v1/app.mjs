@@ -17811,8 +17811,9 @@ function render() {
   }
   if (dom.stageNodeDropHint) {
     const dropGroup = currentEncounterDescriptor?.dropGroup || "";
+    const dropPreviewLabel = currentEncounterDescriptor?.dropPreviewLabel || "";
     dom.stageNodeDropHint.textContent = `${formatBattleDropGroupLabelKo(dropGroup)}${
-      dropGroup ? ` · ${dropGroup}` : ""
+      dropPreviewLabel ? ` · ${dropPreviewLabel}` : dropGroup ? ` · ${dropGroup}` : ""
     }`;
     dom.stageNodeDropHint.title = dropGroup || "전리품 대기";
   }
@@ -19541,6 +19542,8 @@ async function bootstrap() {
       milestoneRows,
       mapNodeRows,
       monsterRows,
+      dropPoolRows,
+      potionTalismanRows,
     ] = await Promise.all([
       fetchJson("../../data/export/realm_progression_v1.json"),
       fetchJson("../../data/export/realm_locale_ko_v1.json"),
@@ -19552,6 +19555,8 @@ async function bootstrap() {
       fetchJson("../../data/export/milestones_v1.json"),
       fetchJson("../../data/export/map_nodes_v1.json"),
       fetchJson("../../data/export/monsters_v1.json"),
+      fetchJson("../../data/export/drop_pools_v1.json"),
+      fetchJson("../../data/export/potions_talismans_v1.json"),
     ]);
     collectionCatalog = buildCollectionCatalog(
       guardianRows,
@@ -19561,7 +19566,14 @@ async function bootstrap() {
       questRows,
       milestoneRows,
     );
-    context = buildSliceContext(progressionRows, localeRows, mapNodeRows, monsterRows);
+    context = buildSliceContext(
+      progressionRows,
+      localeRows,
+      mapNodeRows,
+      monsterRows,
+      dropPoolRows,
+      potionTalismanRows,
+    );
     state = createInitialSliceState(context, { playerName: "도심" });
     ensureRealtimeStatsShape();
     resetBattleSceneDuelState({ clearTicker: true });
