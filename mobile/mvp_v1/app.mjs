@@ -196,6 +196,7 @@ const dom = {
   stagePanel: document.getElementById("stagePanel"),
   stageDisplay: document.getElementById("stageDisplay"),
   stageNodeSummary: document.getElementById("stageNodeSummary"),
+  stageNodeRewardBadge: document.getElementById("stageNodeRewardBadge"),
   stageNodeEncounterHint: document.getElementById("stageNodeEncounterHint"),
   stageNodeDropHint: document.getElementById("stageNodeDropHint"),
   btnCycleStageNode: document.getElementById("btnCycleStageNode"),
@@ -216,6 +217,7 @@ const dom = {
   battleSceneEnemyHpBar: document.getElementById("battleSceneEnemyHpBar"),
   battleSceneEnemyCastBar: document.getElementById("battleSceneEnemyCastBar"),
   battleSceneEnemyVitals: document.getElementById("battleSceneEnemyVitals"),
+  battleSceneEnemyRewardBadge: document.getElementById("battleSceneEnemyRewardBadge"),
   battleSceneEnemyHint: document.getElementById("battleSceneEnemyHint"),
   battleSceneClashCore: document.getElementById("battleSceneClashCore"),
   battleSceneRoundBadge: document.getElementById("battleSceneRoundBadge"),
@@ -14643,6 +14645,21 @@ function renderBattleScene(stage, displayName) {
     dom.battleSceneEnemyHint.textContent = `${monsterLabel} · ${mechanicLabel} · ${dropLabel}`;
     dom.battleSceneEnemyHint.dataset.overviewSummary = dom.battleSceneEnemyHint.textContent;
   }
+  if (dom.battleSceneEnemyRewardBadge) {
+    const highlightLabel = encounterDescriptor?.dropHighlightLabel || "핵심 대기";
+    dom.battleSceneEnemyRewardBadge.textContent = highlightLabel;
+    dom.battleSceneEnemyRewardBadge.classList.toggle(
+      "tone-warn",
+      encounterDescriptor?.dropHighlightTone === "warn",
+    );
+    dom.battleSceneEnemyRewardBadge.classList.toggle(
+      "tone-info",
+      encounterDescriptor?.dropHighlightTone !== "warn",
+    );
+    dom.battleSceneEnemyRewardBadge.title = encounterDescriptor?.dropHasBossCore
+      ? "보스 코어 포함"
+      : "대표 전리품";
+  }
   renderBattleSceneDuelHud();
   applyBattleSceneUiState();
   renderBattleSceneTicker();
@@ -17816,6 +17833,21 @@ function render() {
     dom.stageNodeSummary.textContent = `${nodeLabel} · ${
       formatBattleEncounterClassLabelKo(currentEncounterDescriptor?.class || "normal")
     }`;
+  }
+  if (dom.stageNodeRewardBadge) {
+    const highlightLabel = currentEncounterDescriptor?.dropHighlightLabel || "핵심 대기";
+    dom.stageNodeRewardBadge.textContent = highlightLabel;
+    dom.stageNodeRewardBadge.classList.toggle(
+      "tone-warn",
+      currentEncounterDescriptor?.dropHighlightTone === "warn",
+    );
+    dom.stageNodeRewardBadge.classList.toggle(
+      "tone-info",
+      currentEncounterDescriptor?.dropHighlightTone !== "warn",
+    );
+    dom.stageNodeRewardBadge.title = currentEncounterDescriptor?.dropHasBossCore
+      ? "보스 코어 포함"
+      : "대표 전리품";
   }
   if (dom.stageNodeEncounterHint) {
     const monsterLabel = currentEncounterDescriptor?.monsterNameKo || "대표 몬스터 대기";

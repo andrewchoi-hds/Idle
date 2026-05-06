@@ -2464,6 +2464,63 @@ function buildBattleDropPreviewByGroup(dropPoolRows, potionTalismanRows) {
   return previewByGroup;
 }
 
+function buildBattleDropHighlightByGroup(dropPoolRows, potionTalismanRows) {
+  const potionTalismanById = new Map(
+    Array.isArray(potionTalismanRows)
+      ? potionTalismanRows
+          .filter((row) => row && typeof row === "object")
+          .map((row) => [String(row.item_id || ""), String(row.name_ko || "").trim()])
+      : [],
+  );
+  const grouped = new Map();
+  if (Array.isArray(dropPoolRows)) {
+    for (const row of dropPoolRows) {
+      if (!row || typeof row !== "object") {
+        continue;
+      }
+      const dropGroup = String(row.drop_group || "").trim();
+      if (!dropGroup) {
+        continue;
+      }
+      const itemRef = String(row.item_ref || "").trim();
+      const itemLabel = formatBattleDropItemLabelKo(itemRef, potionTalismanById);
+      const items = grouped.get(dropGroup) || [];
+      items.push({ itemRef, itemLabel });
+      grouped.set(dropGroup, items);
+    }
+  }
+  const highlightByGroup = new Map();
+  for (const [dropGroup, items] of grouped.entries()) {
+    const bossCore = items.find((item) => item.itemRef.includes("boss_core"));
+    if (bossCore) {
+      highlightByGroup.set(dropGroup, {
+        label: bossCore.itemLabel,
+        tone: "warn",
+        hasBossCore: true,
+      });
+      continue;
+    }
+    const firstNonCurrency =
+      items.find((item) => item.itemRef !== "coin_spirit" && item.itemRef !== "rebirth_essence") ||
+      items[0] ||
+      null;
+    if (!firstNonCurrency) {
+      highlightByGroup.set(dropGroup, {
+        label: "핵심 대기",
+        tone: "info",
+        hasBossCore: false,
+      });
+      continue;
+    }
+    highlightByGroup.set(dropGroup, {
+      label: firstNonCurrency.itemLabel,
+      tone: dropGroup.includes("_boss_") || dropGroup.includes("tribulation") ? "warn" : "info",
+      hasBossCore: false,
+    });
+  }
+  return highlightByGroup;
+}
+
 function stageFallbackLabel(stage) {
   return `${worldKo(stage.world)} ${stage.major_stage_name} ${stage.sub_stage_name}`;
 }
@@ -3385,6 +3442,10 @@ export function buildSliceContext(
     dropPoolRows,
     potionTalismanRows,
   );
+  const dropHighlightByGroup = buildBattleDropHighlightByGroup(
+    dropPoolRows,
+    potionTalismanRows,
+  );
 
   const encounterDescriptorByDifficulty = new Map();
   const encounterCandidatesByDifficulty = new Map();
@@ -3417,6 +3478,9 @@ export function buildSliceContext(
         nodeNameKo: row.node_name_ko,
         dropGroup: String(row.drop_group || ""),
         dropPreviewLabel: dropPreviewByGroup.get(String(row.drop_group || "")) || "",
+        dropHighlightLabel: dropHighlightByGroup.get(String(row.drop_group || ""))?.label || "",
+        dropHighlightTone: dropHighlightByGroup.get(String(row.drop_group || ""))?.tone || "info",
+        dropHasBossCore: dropHighlightByGroup.get(String(row.drop_group || ""))?.hasBossCore === true,
         bossId: String(row.boss_id || "none"),
         monsterNameKo: monsterById.get(String(row.boss_id || ""))?.name_ko || "",
         specialMechanic:
@@ -3434,6 +3498,9 @@ export function buildSliceContext(
         nodeNameKo: chosen.node_name_ko,
         dropGroup: String(chosen.drop_group || ""),
         dropPreviewLabel: dropPreviewByGroup.get(String(chosen.drop_group || "")) || "",
+        dropHighlightLabel: dropHighlightByGroup.get(String(chosen.drop_group || ""))?.label || "",
+        dropHighlightTone: dropHighlightByGroup.get(String(chosen.drop_group || ""))?.tone || "info",
+        dropHasBossCore: dropHighlightByGroup.get(String(chosen.drop_group || ""))?.hasBossCore === true,
         bossId: String(chosen.boss_id || "none"),
         monsterNameKo: monsterById.get(String(chosen.boss_id || ""))?.name_ko || "",
         specialMechanic:
