@@ -13337,6 +13337,12 @@ async function main() {
   );
   assertIncludes(
     app,
+    "formatBattleSpecialMechanicLabelKo,",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "stageNodeRewardBadge: document.getElementById(\"stageNodeRewardBadge\"),",
     "app.mjs",
     failures,

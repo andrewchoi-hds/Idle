@@ -43,6 +43,7 @@ import {
   extractOfflineDetailCompareCodeFromPayloadTextWithSource,
   formatBattleEncounterClassLabelKo,
   formatBattleDropGroupLabelKo,
+  formatBattleSpecialMechanicLabelKo,
   getStage,
   getStageDisplayNameKo,
   isCopyTargetSlotDisabled,
@@ -14635,7 +14636,7 @@ function renderBattleScene(stage, displayName) {
     const mechanicLabel =
       encounterDescriptor?.specialMechanic &&
       encounterDescriptor.specialMechanic !== "none"
-        ? encounterDescriptor.specialMechanic
+        ? formatBattleSpecialMechanicLabelKo(encounterDescriptor.specialMechanic)
         : "기믹 대기";
     const dropGroup = encounterDescriptor?.dropGroup || "";
     const dropPreviewLabel = encounterDescriptor?.dropPreviewLabel || "";
@@ -17854,7 +17855,7 @@ function render() {
     const mechanicLabel =
       currentEncounterDescriptor?.specialMechanic &&
       currentEncounterDescriptor.specialMechanic !== "none"
-        ? currentEncounterDescriptor.specialMechanic
+        ? formatBattleSpecialMechanicLabelKo(currentEncounterDescriptor.specialMechanic)
         : "기믹 대기";
     dom.stageNodeEncounterHint.textContent = `${monsterLabel} · ${mechanicLabel}`;
   }

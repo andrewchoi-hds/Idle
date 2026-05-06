@@ -5137,3 +5137,11 @@
 
 ## 1201) 추가 문서
 - combat 최소 루프 문서(key drop badge 반영): `/Users/hirediversity/Idle/docs/combat/minimal_combat_loop_v1_kr.md`
+
+## 1202) 다음 순차 작업
+1. [완료] `formatBattleSpecialMechanicLabelKo(...)`를 추가해 `special_mechanic` raw code를 한글 설명으로 변환하는 레일 정리.
+2. [완료] stage/battle 힌트가 `burn_claw`, `armor_break` 같은 raw code 대신 `화상 발톱`, `방어 파괴`처럼 읽히게 보강.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 combat/collection 문서를 mechanic label 규칙 기준으로 동기화.
+
+## 1203) 추가 문서
+- combat 최소 루프 문서(mechanic label mapping 반영): `/Users/hirediversity/Idle/docs/combat/minimal_combat_loop_v1_kr.md`
