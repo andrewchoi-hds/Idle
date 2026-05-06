@@ -5153,3 +5153,11 @@
 
 ## 1205) 추가 문서
 - mobile 수직슬라이스 문서(ops digest encounter summary 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
+
+## 1206) 다음 순차 작업
+1. [완료] `buildOpsDigestEncounterRewardContext(...)`와 액션 문구 헬퍼(`formatOpsDigestEncounterActionSummary`, `formatOpsDigestEncounterActionReason`)를 추가해 추천/차선 행동이 현재 노드 전투 등급과 핵심 드랍 이유를 함께 말하게 정리.
+2. [완료] `syncOpsDigestNextAction()`에서 `next/alt` summary와 reason을 encounter 문맥으로 보강해, first-screen에서 “왜 지금 이 행동을 권장하는지”가 바로 이어지게 조정.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 수직슬라이스 문서를 새 encounter action reason 규칙 기준으로 동기화.
+
+## 1207) 추가 문서
+- mobile 수직슬라이스 문서(ops digest encounter action reason 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`

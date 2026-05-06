@@ -2719,6 +2719,48 @@ function buildOpsDigestBattleOverview(summary, encounterDescriptor) {
   ].join(" · ");
 }
 
+function buildOpsDigestEncounterRewardContext(encounterDescriptor) {
+  const nodeLabel = String(encounterDescriptor?.nodeNameKo || "").trim();
+  const highlightLabel = String(encounterDescriptor?.dropHighlightLabel || "").trim();
+  if (!nodeLabel || !highlightLabel || highlightLabel === "대기") {
+    return "";
+  }
+  return `${nodeLabel} · ${formatBattleEncounterClassLabelKo(
+    encounterDescriptor?.class || "normal",
+  )} · 핵심 ${highlightLabel}`;
+}
+
+function shouldAnnotateOpsDigestEncounterAction(action) {
+  const source = String(action?.source || "").trim();
+  return (
+    source === "btnRealtimeAuto" ||
+    source === "btnBattle" ||
+    source === "btnApplyRecommendation" ||
+    source === "btnBreakthrough"
+  );
+}
+
+function formatOpsDigestEncounterActionSummary(summary, encounterDescriptor, action) {
+  const normalizedSummary = String(summary || "").trim() || "후속 행동 대기";
+  if (!shouldAnnotateOpsDigestEncounterAction(action)) {
+    return normalizedSummary;
+  }
+  const encounterContext = buildOpsDigestEncounterRewardContext(encounterDescriptor);
+  return encounterContext ? `${normalizedSummary} · ${encounterContext}` : normalizedSummary;
+}
+
+function formatOpsDigestEncounterActionReason(reason, encounterDescriptor, action) {
+  const normalizedReason =
+    String(reason || "").trim() || "후속 행동 후보를 기다립니다.";
+  if (!shouldAnnotateOpsDigestEncounterAction(action)) {
+    return normalizedReason;
+  }
+  const encounterContext = buildOpsDigestEncounterRewardContext(encounterDescriptor);
+  return encounterContext
+    ? `${normalizedReason} 현재 ${encounterContext} 흐름을 이어갈 수 있습니다.`
+    : normalizedReason;
+}
+
 function syncOpsDigestCardValue(node, summary, kind, tone = "info") {
   if (!node) {
     return;
@@ -5105,6 +5147,10 @@ function syncOpsDigestNextAction() {
   if (!dom.opsDigestPanel) {
     return;
   }
+  const currentStage = getStage(context, state.progression.difficultyIndex);
+  const currentEncounterDescriptor = currentStage
+    ? resolveBattleEncounterDescriptor(currentStage, context, state)
+    : null;
   const sourceFilter =
     String(dom.opsDigestPanel.dataset.inboxSourceFilter || "all").trim() || "all";
   const candidates = [];
@@ -5288,9 +5334,29 @@ function syncOpsDigestNextAction() {
     sourceFilter,
     action,
   );
+  const nextActionSummary = formatOpsDigestEncounterActionSummary(
+    action.summary,
+    currentEncounterDescriptor,
+    action,
+  );
+  const nextActionReasonWithEncounter = formatOpsDigestEncounterActionReason(
+    nextActionReason,
+    currentEncounterDescriptor,
+    action,
+  );
   const altActionReason = formatOpsDigestActionQueueReason(
     altAction.reason,
     sourceFilter,
+    altAction,
+  );
+  const altActionSummary = formatOpsDigestEncounterActionSummary(
+    altAction.summary,
+    currentEncounterDescriptor,
+    altAction,
+  );
+  const altActionReasonWithEncounter = formatOpsDigestEncounterActionReason(
+    altActionReason,
+    currentEncounterDescriptor,
     altAction,
   );
   dom.opsDigestPanel.dataset.actionQueueScope = sourceFilter;
@@ -5303,8 +5369,8 @@ function syncOpsDigestNextAction() {
   dom.opsDigestPanel.dataset.nextActionKind = action.kind;
   dom.opsDigestPanel.dataset.nextActionTarget = action.target;
   dom.opsDigestPanel.dataset.nextActionSource = action.source;
-  dom.opsDigestPanel.dataset.nextActionSummary = action.summary;
-  dom.opsDigestPanel.dataset.nextActionReason = nextActionReason;
+  dom.opsDigestPanel.dataset.nextActionSummary = nextActionSummary;
+  dom.opsDigestPanel.dataset.nextActionReason = nextActionReasonWithEncounter;
   dom.opsDigestPanel.dataset.nextActionBaseScore = String(action.baseScore || 0);
   dom.opsDigestPanel.dataset.nextActionFilterScoreDelta = String(
     action.filterScoreDelta || 0,
@@ -5316,8 +5382,8 @@ function syncOpsDigestNextAction() {
   dom.opsDigestPanel.dataset.altActionKind = altAction.kind;
   dom.opsDigestPanel.dataset.altActionTarget = altAction.target;
   dom.opsDigestPanel.dataset.altActionSource = altAction.source;
-  dom.opsDigestPanel.dataset.altActionSummary = altAction.summary;
-  dom.opsDigestPanel.dataset.altActionReason = altActionReason;
+  dom.opsDigestPanel.dataset.altActionSummary = altActionSummary;
+  dom.opsDigestPanel.dataset.altActionReason = altActionReasonWithEncounter;
   dom.opsDigestPanel.dataset.altActionBaseScore = String(altAction.baseScore || 0);
   dom.opsDigestPanel.dataset.altActionFilterScoreDelta = String(
     altAction.filterScoreDelta || 0,
@@ -5329,26 +5395,26 @@ function syncOpsDigestNextAction() {
     dom.btnOpsDigestNextAction.disabled = action.disabled;
   }
   if (dom.opsDigestNextAction) {
-    dom.opsDigestNextAction.textContent = action.summary;
+    dom.opsDigestNextAction.textContent = nextActionSummary;
   }
   if (dom.opsDigestNextReason) {
-    dom.opsDigestNextReason.textContent = nextActionReason;
+    dom.opsDigestNextReason.textContent = nextActionReasonWithEncounter;
   }
   if (dom.opsDigestInboxPrimary) {
-    dom.opsDigestInboxPrimary.textContent = action.summary;
+    dom.opsDigestInboxPrimary.textContent = nextActionSummary;
   }
   if (dom.btnOpsDigestAltAction) {
     dom.btnOpsDigestAltAction.textContent = altAction.label;
     dom.btnOpsDigestAltAction.disabled = altAction.disabled;
   }
   if (dom.opsDigestAltAction) {
-    dom.opsDigestAltAction.textContent = altAction.summary;
+    dom.opsDigestAltAction.textContent = altActionSummary;
   }
   if (dom.opsDigestAltReason) {
-    dom.opsDigestAltReason.textContent = altActionReason;
+    dom.opsDigestAltReason.textContent = altActionReasonWithEncounter;
   }
   if (dom.opsDigestInboxSecondary) {
-    dom.opsDigestInboxSecondary.textContent = altAction.summary;
+    dom.opsDigestInboxSecondary.textContent = altActionSummary;
   }
 }
 
