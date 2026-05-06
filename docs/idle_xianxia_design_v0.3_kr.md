@@ -5121,3 +5121,11 @@
 
 ## 1197) 추가 문서
 - combat 최소 루프 문서(current node drop hint 반영): `/Users/hirediversity/Idle/docs/combat/minimal_combat_loop_v1_kr.md`
+
+## 1198) 다음 순차 작업
+1. [완료] `drop_pools_v1.json`, `potions_talismans_v1.json`을 함께 읽어 현재 노드 `drop_group`의 대표 전리품 2~3개를 요약하는 레일 추가.
+2. [완료] `stageNodeDropHint`가 단순 group key 대신 `정예 전리품 · 철목분말, 소기영액, 영석`처럼 더 직접적인 힌트를 보여 주도록 정리.
+3. [완료] DOM contract 체크(`scripts/check_mobile_mvp_dom_contract_v1.mjs`)와 combat/collection 문서를 대표 전리품 힌트 규칙 기준으로 동기화.
+
+## 1199) 추가 문서
+- combat 최소 루프 문서(representative drop preview 반영): `/Users/hirediversity/Idle/docs/combat/minimal_combat_loop_v1_kr.md`

@@ -13303,6 +13303,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    'fetchJson("../../data/export/drop_pools_v1.json")',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    'fetchJson("../../data/export/potions_talismans_v1.json")',
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "formatBattleEncounterClassLabelKo,",
     "app.mjs",
     failures,
