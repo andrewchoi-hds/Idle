@@ -2634,17 +2634,9 @@ function formatOpsDigestCardValueCompact(kind, summary) {
     case "settings":
       return mapSegments(segments.slice(0, 4)).join(" · ");
     case "stage":
-      return mapSegments(
-        segments.filter((segment) => segment !== "-").slice(0, 3),
-      ).join(" · ");
+      return mapSegments(segments.slice(0, 4), [["핵심 ", ""]]).join(" · ");
     case "battle":
-      return mapSegments(
-        [segments[0], segments[2], segments[4], segments[6]].filter(Boolean),
-        [
-          ["수련자 HP ", "수련자 "],
-          ["적수 HP ", "적수 "],
-        ],
-      ).join(" · ");
+      return mapSegments(segments.slice(0, 4), [["핵심 ", ""]]).join(" · ");
     case "resources":
       return mapSegments(segments.slice(0, 4), [
         ["환생정수", "정수"],
@@ -2675,6 +2667,56 @@ function formatOpsDigestCardValueCompact(kind, summary) {
     default:
       return normalizedSummary;
   }
+}
+
+function buildOpsDigestStageOverview(stage, encounterDescriptor, currentQi, breakthroughReady) {
+  const difficultyLabel = stage ? `난이도 ${fmtNumber(stage.difficulty_index)}` : "난이도 0";
+  const qiLabel = `기 ${fmtNumber(currentQi)} / ${fmtNumber(Number(stage?.qi_required) || 0)}`;
+  const readinessLabel = breakthroughReady ? "돌파 가능" : "돌파 대기";
+  const encounterLabel = formatBattleEncounterClassLabelKo(
+    encounterDescriptor?.class || "normal",
+  );
+  const nodeLabel = encounterDescriptor?.nodeNameKo || "현재 노드 대기";
+  const highlightLabel = encounterDescriptor?.dropHighlightLabel || "대기";
+  return [
+    difficultyLabel,
+    encounterLabel,
+    nodeLabel,
+    `핵심 ${highlightLabel}`,
+    qiLabel,
+    readinessLabel,
+  ].join(" · ");
+}
+
+function buildOpsDigestBattleOverview(summary, encounterDescriptor) {
+  const segments = String(summary || "")
+    .split("·")
+    .map((segment) => segment.trim())
+    .filter(Boolean);
+  const battleStateLabel = segments[1] || segments[0] || "전장 대기";
+  const pressureLabel = segments[2] || "압력 낮음";
+  const playerVitalsLabel = String(segments[4] || "수련자 HP 100%").replaceAll(
+    "수련자 HP ",
+    "수련자 ",
+  );
+  const enemyVitalsLabel = String(segments[6] || "적수 HP 100%").replaceAll(
+    "적수 HP ",
+    "적수 ",
+  );
+  const encounterLabel = formatBattleEncounterClassLabelKo(
+    encounterDescriptor?.class || "normal",
+  );
+  const highlightLabel = encounterDescriptor?.dropHighlightLabel || "대기";
+  const monsterLabel = encounterDescriptor?.monsterNameKo || "대표 몬스터 대기";
+  return [
+    battleStateLabel,
+    encounterLabel,
+    `핵심 ${highlightLabel}`,
+    monsterLabel,
+    pressureLabel,
+    playerVitalsLabel,
+    enemyVitalsLabel,
+  ].join(" · ");
 }
 
 function syncOpsDigestCardValue(node, summary, kind, tone = "info") {
@@ -5628,17 +5670,27 @@ function syncOpsDigestPanel() {
   if (!dom.opsDigestPanel) {
     return;
   }
+  const currentStage = getStage(context, state.progression.difficultyIndex);
+  const currentEncounterDescriptor = currentStage
+    ? resolveBattleEncounterDescriptor(currentStage, context, state)
+    : null;
   const focusOverview =
     dom.focusControlsPanel?.dataset.overviewSummary ||
     "전투 집중 ON · 전투 효과음 OFF · 전투 진동 OFF · 효과음 미지원 · 진동 미지원";
   const settingsOverview =
     dom.settingsPanel?.dataset.overviewSummary ||
     "전투 ON · 돌파 OFF · 도겁 OFF · 워밍업 6초 · 속도 표준 · 오프라인 12시간/24건";
-  const stageOverview =
-    dom.stagePanel?.dataset.overviewSummary || "- · - · 난이도 0 · 기 0 / 0 · 돌파 대기";
-  const battleOverview =
+  const stageOverview = buildOpsDigestStageOverview(
+    currentStage,
+    currentEncounterDescriptor,
+    Number(state.currencies?.qi) || 0,
+    dom.stagePanel?.dataset.breakthroughReady === "true",
+  );
+  const battleOverview = buildOpsDigestBattleOverview(
     dom.battleScenePanel?.dataset.overviewSummary ||
-    "대기 · 대기 · 압력 낮음 · 균형 · 수련자 HP 100% · 기세 0% · 적수 HP 100% · 기세 0%";
+      "대기 · 대기 · 압력 낮음 · 균형 · 수련자 HP 100% · 기세 0% · 적수 HP 100% · 기세 0%",
+    currentEncounterDescriptor,
+  );
   const resourceOverview =
     dom.statsPanel?.dataset.overviewSummary || "기 0 · 영석 0 · 환생정수 0 · 환생 0회";
   const actionOverview =
@@ -5665,9 +5717,18 @@ function syncOpsDigestPanel() {
     dom.settingsPanel?.dataset.autoBreakthrough === "true" ||
     dom.settingsPanel?.dataset.autoTribulation === "true";
   const settingsCardTone = hasAnyAutomation ? "success" : "info";
+  const encounterHighlightTone = currentEncounterDescriptor?.dropHighlightTone || "info";
   const stageCardTone =
-    dom.stagePanel?.dataset.breakthroughReady === "true" ? "success" : "info";
-  const battleCardTone = String(dom.battleScenePanel?.dataset.statusTone || "info");
+    dom.stagePanel?.dataset.breakthroughReady === "true"
+      ? "success"
+      : encounterHighlightTone === "warn"
+        ? "warn"
+        : "info";
+  const baseBattleCardTone = String(dom.battleScenePanel?.dataset.statusTone || "info");
+  const battleCardTone =
+    baseBattleCardTone === "info" && encounterHighlightTone === "warn"
+      ? "warn"
+      : baseBattleCardTone;
   const qiValue = Number(dom.statsPanel?.dataset.qi || 0);
   const essenceValue = Number(dom.statsPanel?.dataset.rebirthEssence || 0);
   const resourcesCardTone = qiValue > 0 || essenceValue > 0 ? "success" : "info";

@@ -1832,7 +1832,7 @@ async function main() {
   );
   assertIncludes(
     html,
-    'data-stage-overview="- · - · 난이도 0 · 기 0 / 0 · 돌파 대기"',
+    'data-stage-overview="난이도 0 · 일반 전투 · 현재 노드 대기 · 핵심 대기 · 기 0 / 0 · 돌파 대기"',
     "index.html",
     failures,
   );
@@ -11867,6 +11867,18 @@ async function main() {
   );
   assertIncludes(
     app,
+    "function buildOpsDigestStageOverview(stage, encounterDescriptor, currentQi, breakthroughReady) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "function buildOpsDigestBattleOverview(summary, encounterDescriptor) {",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
     "function syncOpsDigestCardValue(node, summary, kind, tone = \"info\") {",
     "app.mjs",
     failures,
@@ -12582,6 +12594,18 @@ async function main() {
   assertIncludes(
     app,
     "syncOpsDigestCardValue(dom.opsDigestBattle, battleOverview, \"battle\", battleCardTone);",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const currentEncounterDescriptor = currentStage",
+    "app.mjs",
+    failures,
+  );
+  assertIncludes(
+    app,
+    "const encounterHighlightTone = currentEncounterDescriptor?.dropHighlightTone || \"info\";",
     "app.mjs",
     failures,
   );

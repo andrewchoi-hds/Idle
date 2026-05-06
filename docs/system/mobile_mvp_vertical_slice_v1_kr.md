@@ -601,6 +601,7 @@ npm run mobile:mvp:check
 - current stage node drop contract(`stageNodeDropHint`)가 선택 노드의 `drop_group`를 읽어 전리품 성격을 함께 노출하는지 검증
 - current stage node drop contract(`stageNodeDropHint`)가 `drop_pools_v1.json`, `potions_talismans_v1.json`을 함께 읽어 대표 전리품 2~3개까지 함께 노출하는지 검증
 - current stage/battle reward badge contract(`stageNodeRewardBadge`, `battleSceneEnemyRewardBadge`)가 대표 전리품 중 핵심 드랍을 별도 badge로 더 강하게 노출하는지 검증
+- ops digest encounter summary contract(`buildOpsDigestStageOverview`, `buildOpsDigestBattleOverview`)가 `진행/전장` 카드에 현재 노드 전투 등급과 핵심 드랍 이유를 먼저 노출해 first-screen triage에서 “왜 이 노드를 도는지”를 바로 읽히게 만드는지 검증
 - collection free source progress contract가 `collect_item_count / collect_item` 계열 entry ref에 한해 current inventory proxy(`영약/부적`) 기준으로 `progress / ready / claimed` 상태를 반영하는지 검증
 - collection free source progress contract가 `clear_zone / clear_node` 계열 entry ref에 한해 quest `recommended_difficulty_max` proxy 기준으로 `progress / ready / claimed` 상태를 반영하는지 검증
 - collection free source progress contract가 `event_exchange` 계열 entry ref에 한해 `collection_token` 소비 기반 MVP exchange proxy(`교환 토큰 x/y`)로 `progress / ready / claimed` 상태를 반영하는지 검증

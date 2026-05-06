@@ -5145,3 +5145,11 @@
 
 ## 1203) 추가 문서
 - combat 최소 루프 문서(mechanic label mapping 반영): `/Users/hirediversity/Idle/docs/combat/minimal_combat_loop_v1_kr.md`
+
+## 1204) 다음 순차 작업
+1. [완료] `ops digest` 전용 encounter summary 헬퍼(`buildOpsDigestStageOverview`, `buildOpsDigestBattleOverview`)를 추가해 `진행/전장` 카드가 현재 노드 전투 등급과 핵심 드랍 이유를 먼저 읽게 정리.
+2. [완료] `formatOpsDigestCardValueCompact(...)`의 `stage/battle` compact 규칙을 새 summary 순서에 맞춰 바꿔, first-screen에서 `현재 노드 · 전투 등급 · 핵심 드랍`이 잘리지 않게 조정.
+3. [완료] stage/battle card tone이 현재 encounter 핵심 드랍 tone(`warn/info`)도 함께 반영하도록 보강하고, DOM contract 체크 및 수직슬라이스 문서를 새 규칙 기준으로 동기화.
+
+## 1205) 추가 문서
+- mobile 수직슬라이스 문서(ops digest encounter summary 반영): `/Users/hirediversity/Idle/docs/system/mobile_mvp_vertical_slice_v1_kr.md`
