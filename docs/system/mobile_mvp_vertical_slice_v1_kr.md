@@ -605,6 +605,7 @@ npm run mobile:mvp:check
 - ops digest encounter action reason contract(`formatOpsDigestEncounterActionSummary`, `formatOpsDigestEncounterActionReason`)가 추천 다음 행동/차선 행동 문장에도 현재 노드 전투 등급과 핵심 드랍 이유를 연결해 “왜 지금 이 행동을 권장하는지”를 바로 읽히게 만드는지 검증
 - ops digest encounter action scoring contract(`resolveOpsDigestEncounterActionScoreDelta`)가 보스 코어/정예 재료 노드일 때 전투를 이어 가는 액션(`실시간 자동 시작/전투 1회/권장 설정 적용`)의 우선순위를 조금 더 끌어올려 추천 순서가 현재 노드 보상 이유를 더 반영하는지 검증
 - ops digest encounter need scoring contract(`resolveOpsDigestEncounterRewardNeedScoreDelta`)가 `영약/부적/영석/정수` 핵심 드랍에 대해 현재 보유량이 낮을수록 추가 가중치를 더 얹어, 실제로 부족한 재료 노드일 때 추천 우선순위가 더 강하게 올라오는지 검증
+- ops digest inbox reward chip contract(`opsDigestInboxRewardBadge`)가 카드 영역까지 내려가기 전에 현재 노드 핵심 드랍 이유를 meta chip으로 먼저 노출해, first-screen에서 파밍 목적을 더 빨리 읽히게 만드는지 검증
 - collection free source progress contract가 `collect_item_count / collect_item` 계열 entry ref에 한해 current inventory proxy(`영약/부적`) 기준으로 `progress / ready / claimed` 상태를 반영하는지 검증
 - collection free source progress contract가 `clear_zone / clear_node` 계열 entry ref에 한해 quest `recommended_difficulty_max` proxy 기준으로 `progress / ready / claimed` 상태를 반영하는지 검증
 - collection free source progress contract가 `event_exchange` 계열 entry ref에 한해 `collection_token` 소비 기반 MVP exchange proxy(`교환 토큰 x/y`)로 `progress / ready / claimed` 상태를 반영하는지 검증

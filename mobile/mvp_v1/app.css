@@ -825,6 +825,8 @@ h2 {
   display: inline-flex;
   gap: 6px;
   align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   cursor: pointer;
 }
 
