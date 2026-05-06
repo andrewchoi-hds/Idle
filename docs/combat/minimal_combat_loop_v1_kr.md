@@ -62,6 +62,7 @@ console.log(formatMinimalCombatReport(report));
     - 그 외 -> `normal`
 - `map node` 매칭이 없을 때만 기존 stage proxy로 fallback
 - `boss_id`가 있는 node는 `monsters_v1.json`과 연결해 대표 몬스터 이름/기믹 힌트를 같이 노출할 수 있다.
+- `special_mechanic`는 `formatBattleSpecialMechanicLabelKo(...)`를 거쳐 사람이 읽는 한글 힌트로 변환할 수 있다.
 - `drop_group`도 함께 읽어 `공용/정예/보스/도겁 전리품` 성격을 stage 패널에 노출할 수 있다.
 - `drop_pools_v1.json`, `potions_talismans_v1.json`을 함께 읽으면 대표 전리품 2~3개를 stage 패널에 직접 요약해 노출할 수 있다.
 - 같은 레일에서 `핵심 드랍 badge`를 분리하면 보스 코어/대표 소모품이 먼저 눈에 들어오게 만들 수 있다.

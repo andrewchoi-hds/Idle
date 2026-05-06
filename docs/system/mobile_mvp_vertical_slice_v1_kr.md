@@ -597,6 +597,7 @@ npm run mobile:mvp:check
 - battle encounter class rail contract(`resolveBattleEncounterDescriptor(stage, context)`)이 `map_nodes_v1.json` 기반 `normal / elite / boss` 판정을 우선 사용하고, collection `kill_boss / kill_elite` progress가 그 rail의 용어를 그대로 재사용하는지 검증
 - current stage node contract(`stageNodeSummary`, `btnCycleStageNode`, `progression.currentNodeId`)가 현재 난이도 후보 노드 중 선택 상태를 저장/표시하고, battle encounter rail이 그 노드를 우선 따르는지 검증
 - current stage node hint contract(`stageNodeEncounterHint`)가 선택 노드의 `boss_id`와 `monsters_v1.json.special_mechanic`을 연결해 대표 몬스터/기믹을 함께 노출하는지 검증
+- current stage/battle mechanic hint contract가 `formatBattleSpecialMechanicLabelKo(...)`를 통해 raw mechanic code 대신 한글 설명을 노출하는지 검증
 - current stage node drop contract(`stageNodeDropHint`)가 선택 노드의 `drop_group`를 읽어 전리품 성격을 함께 노출하는지 검증
 - current stage node drop contract(`stageNodeDropHint`)가 `drop_pools_v1.json`, `potions_talismans_v1.json`을 함께 읽어 대표 전리품 2~3개까지 함께 노출하는지 검증
 - current stage/battle reward badge contract(`stageNodeRewardBadge`, `battleSceneEnemyRewardBadge`)가 대표 전리품 중 핵심 드랍을 별도 badge로 더 강하게 노출하는지 검증

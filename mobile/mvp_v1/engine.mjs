@@ -2389,6 +2389,49 @@ export function formatBattleDropGroupLabelKo(dropGroupInput) {
   return "전리품 묶음";
 }
 
+const BATTLE_SPECIAL_MECHANIC_LABEL_BY_ID = {
+  adaptive_armor: "적응형 장갑",
+  armor_break: "방어 파괴",
+  blink_strike: "순간 돌진",
+  burn_claw: "화상 발톱",
+  burn_field: "화염 장판",
+  burn_stack: "화상 중첩",
+  chain_lightning: "연쇄 번개",
+  charm_gaze: "매혹 시선",
+  execute_mark: "처형 표식",
+  fear_aura: "공포 오라",
+  frozen_prison: "빙결 감옥",
+  heal_link: "흡혈 연결",
+  high_crit: "고치명",
+  high_def: "고방어",
+  invuln_phase: "무적 단계",
+  judgment_mark: "심판 표식",
+  law_barrier: "법칙 장벽",
+  law_suppress: "법칙 억제",
+  multi_dash: "연속 돌진",
+  none: "기믹 없음",
+  origin_tribulation: "원초 도겁",
+  phase_shift: "위상 전환",
+  poison_stack: "중독 중첩",
+  root_bind: "속박 뿌리",
+  shield_cast: "보호막 시전",
+  slow_aura: "감속 오라",
+  slow_field: "감속 장판",
+  soul_harvest: "영혼 수확",
+  thunderstorm: "폭풍 낙뢰",
+  time_cut: "시간 절단",
+  time_stop: "시간 정지",
+  triple_tribulation: "삼중 도겁",
+};
+
+export function formatBattleSpecialMechanicLabelKo(mechanicInput) {
+  const normalized = String(mechanicInput || "").trim();
+  if (!normalized) {
+    return "기믹 대기";
+  }
+  return BATTLE_SPECIAL_MECHANIC_LABEL_BY_ID[normalized] || normalized;
+}
+
 const BATTLE_DROP_MATERIAL_LABEL_BY_ID = {
   mat_spirit_herb: "영초",
   mat_spirit_essence: "영수",
